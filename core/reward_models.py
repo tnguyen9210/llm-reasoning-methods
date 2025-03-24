@@ -41,6 +41,19 @@ class RLHFFlow(PRM):
     def load_model_and_tokenizer(
         self, **model_kwargs
     ) -> tuple[PreTrainedModel, PreTrainedTokenizer]:
+        model_id = "QuantFactory/Llama3.1-8B-PRM-Deepseek-Data-GGUF"
+        gguf_file = "Llama3.1-8B-PRM-Deepseek-Data.Q4_K_M.gguf"
+        tokenizer = AutoTokenizer.from_pretrained(model_id, gguf_file=gguf_file)
+        model = AutoModelForCausalLM.from_pretrained(model_id, gguf_file=gguf_file).eval()
+        # tokenizer = AutoTokenizer.from_pretrained(
+        #     self.model_path
+        # )
+        # model = AutoModelForCausalLM.from_pretrained(
+        #     self.model_path,
+        #     device_map=self.device_map,
+        #     torch_dtype=torch.float16,
+        #     **model_kwargs,
+        # ).eval()
         tokenizer = AutoTokenizer.from_pretrained(
             self.model_path
         )
@@ -91,7 +104,7 @@ class RLHFFlow(PRM):
                     conversation.append({"content": "+", "role": "assistant"})
                     input_ids = self.tokenizer.apply_chat_template(
                         conversation, return_tensors="pt"
-                    ).to(self.model.device)
+                    ).to("cuda")
                     with torch.no_grad():
                         logits = self.model(input_ids).logits[
                             :, -3, self.candidate_tokens
@@ -147,10 +160,10 @@ class RLHFFlow(PRM):
             convs2_batch = conversations2[i : i + batch_size]
             inputs_batch = self.tokenizer.apply_chat_template(
                 convs_batch, padding=True, return_tensors="pt"
-            ).to(self.model.device)
+            ).to("cuda")
             inputs2_batch = self.tokenizer.apply_chat_template(
                 convs2_batch, padding=True, return_tensors="pt"
-            ).to(self.model.device)
+            ).to("cuda")
             assert inputs_batch.shape == inputs2_batch.shape
             with torch.no_grad():
                 logits = self.model(inputs_batch).logits[:, :, self.candidate_tokens]
