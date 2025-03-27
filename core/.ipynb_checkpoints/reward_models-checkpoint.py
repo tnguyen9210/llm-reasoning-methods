@@ -1,3 +1,4 @@
+import gc
 from itertools import accumulate
 
 import torch
@@ -9,12 +10,12 @@ from transformers import (
 )
 
 from sal.config import Config
-# from sal.models.skywork_o1_prm.io_utils import (
-#     derive_step_rewards,
-#     prepare_batch_input_for_model,
-#     prepare_input,
-# )
-# from sal.models.skywork_o1_prm.prm_model import SkyworkPRMModel
+from sal.models.skywork_o1_prm.io_utils import (
+    derive_step_rewards,
+    prepare_batch_input_for_model,
+    prepare_input,
+)
+from sal.models.skywork_o1_prm.prm_model import SkyworkPRMModel
 
 CANDIDATE_TOKENS = [648, 387]
 STEP_TAG_ID = 12902
@@ -41,19 +42,10 @@ class RLHFFlow(PRM):
     def load_model_and_tokenizer(
         self, **model_kwargs
     ) -> tuple[PreTrainedModel, PreTrainedTokenizer]:
-        model_id = "QuantFactory/Llama3.1-8B-PRM-Deepseek-Data-GGUF"
-        gguf_file = "Llama3.1-8B-PRM-Deepseek-Data.Q4_K_M.gguf"
-        tokenizer = AutoTokenizer.from_pretrained(model_id, gguf_file=gguf_file)
-        model = AutoModelForCausalLM.from_pretrained(model_id, gguf_file=gguf_file).eval()
-        # tokenizer = AutoTokenizer.from_pretrained(
-        #     self.model_path
-        # )
-        # model = AutoModelForCausalLM.from_pretrained(
-        #     self.model_path,
-        #     device_map=self.device_map,
-        #     torch_dtype=torch.float16,
-        #     **model_kwargs,
-        # ).eval()
+        # model_id = "QuantFactory/Llama3.1-8B-PRM-Deepseek-Data-GGUF"
+        # gguf_file = "Llama3.1-8B-PRM-Deepseek-Data.Q4_K_M.gguf"
+        # tokenizer = AutoTokenizer.from_pretrained(model_id, gguf_file=gguf_file)
+        # model = AutoModelForCausalLM.from_pretrained(model_id, gguf_file=gguf_file).eval()
         tokenizer = AutoTokenizer.from_pretrained(
             self.model_path
         )
@@ -155,15 +147,16 @@ class RLHFFlow(PRM):
                 conversations2.append(conversation2)
 
         output_scores = []
+        device = self.model.device
         for i in range(0, len(conversations), batch_size):
             convs_batch = conversations[i : i + batch_size]
             convs2_batch = conversations2[i : i + batch_size]
             inputs_batch = self.tokenizer.apply_chat_template(
                 convs_batch, padding=True, return_tensors="pt"
-            ).to("cuda")
+            ).to(device)
             inputs2_batch = self.tokenizer.apply_chat_template(
                 convs2_batch, padding=True, return_tensors="pt"
-            ).to("cuda")
+            ).to(device)
             assert inputs_batch.shape == inputs2_batch.shape
             with torch.no_grad():
                 logits = self.model(inputs_batch).logits[:, :, self.candidate_tokens]
@@ -189,3 +182,93 @@ class RLHFFlow(PRM):
             reshaped_output_scores.append(scores)
 
         return reshaped_output_scores
+
+
+class SkyworkO1(PRM):
+    # @classmethod
+    def load_model_and_tokenizer(
+        self, **model_kwargs
+    ) -> tuple[PreTrainedModel, PreTrainedTokenizer]:
+        tokenizer = AutoTokenizer.from_pretrained(
+            self.model_path, trust_remote_code=True
+        )
+        model = SkyworkPRMModel.from_pretrained(
+            self.model_path,
+            device_map=self.device_map,
+            torch_dtype=torch.bfloat16,
+            **model_kwargs,
+        ).eval()
+
+        return model, tokenizer
+
+    def score(
+        self, questions: list[str], outputs: list[list[str]]
+    ) -> list[list[float]]:
+        # reference code: https://huggingface.co/Skywork/Skywork-o1-Open-PRM-Qwen-2.5-7B#huggingface-inference
+        all_scores = []
+        for question, answers in zip(questions, outputs):
+            processed_data = [
+                prepare_input(
+                    question, answer, tokenizer=self.tokenizer, step_token="\n"
+                )
+                for answer in answers
+            ]
+            input_ids, steps, reward_flags = zip(*processed_data)
+            print([len(input_ids[i]) for i in range(len(input_ids))])
+            # print(len(steps))
+            input_ids, attention_mask, reward_flags = prepare_batch_input_for_model(
+                input_ids, reward_flags, self.tokenizer.pad_token_id
+            )
+            print(input_ids.shape)
+            print(attention_mask.shape)
+            device = self.model.pretrained_model.device
+            device = "cuda"
+            # print(device)
+            inputs_id = input_ids.to(device)
+            attention_mask = attention_mask.to(device)
+            # print(len(input_ids))
+            # print(len(steps))
+            print('#--- memory:', torch.cuda.memory_allocated(0)/(1024**3))
+            print('#--- memory:', torch.cuda.memory_allocated(1)/(1024**3))
+            print('#--- memory:', torch.cuda.memory_allocated(2)/(1024**3))
+            print('#--- memory:', torch.cuda.memory_allocated(3)/(1024**3))
+            with torch.no_grad():
+                _, _, rewards = self.model(
+                    input_ids=input_ids,
+                    attention_mask=attention_mask,
+                    return_probs=True,
+                )
+                # _, _, rewards = self.model(
+                #     input_ids=input_ids.to(device),
+                #     attention_mask=attention_mask.to(device),
+                #     return_probs=True,
+                # )
+                stop
+                all_step_scores = derive_step_rewards(
+                    rewards.detach().to("cpu", dtype=torch.float32), reward_flags
+                )
+            all_scores.append(all_step_scores)
+            # del(input_ids)
+            # del(attention_mask)
+            # del(steps)
+            # del(reward_flags)
+            # del(processed_data)
+            torch.cuda.empty_cache()
+        return all_scores
+
+
+class SkyworkO1_1_5B(SkyworkO1):
+    def load_model_and_tokenizer(
+        self, **model_kwargs
+    ) -> tuple[PreTrainedModel, PreTrainedTokenizer]:
+        prm_model_path = "Skywork/Skywork-o1-Open-PRM-Qwen-2.5-1.5B"
+        return SkyworkO1._load_model_and_tokenizer(prm_model_path, **model_kwargs)
+
+
+class SkyworkO1_7B(SkyworkO1):
+    def load_model_and_tokenizer(
+        self, **model_kwargs
+    ) -> tuple[PreTrainedModel, PreTrainedTokenizer]:
+        prm_model_path = "Skywork/Skywork-o1-Open-PRM-Qwen-2.5-7B"
+        return SkyworkO1._load_model_and_tokenizer(prm_model_path, **model_kwargs)
+
