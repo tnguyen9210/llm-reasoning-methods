@@ -32,7 +32,8 @@ def main():
     llm_tokenizer_dir = base_dir + "/Llama-3.2-1B-Instruct"
     prm_tokenizer_dir = base_dir + "/Llama3.1-8B-PRM-Deepseek-Data"
 
-    os.environ["CUDA_VISIBLE_DEVICES"]="0,1,2,3"
+    os.environ["CUDA_VISIBLE_DEVICES"] = "0,1,2,3"
+    os.environ["TOKENIZERS_PARALLELISM"] = "false"
     
     if torch.cuda.is_available():
         GPUS = os.environ.get('CUDA_VISIBLE_DEVICES', "0").split(',')
@@ -81,7 +82,7 @@ def main():
     config.n = 8
     config.beam_width = 2
     config.lookahead = 0
-    config.num_iterations = 1
+    config.num_iterations = 2
     config.sort_completed = False
     
     # diverse_select params
@@ -90,9 +91,10 @@ def main():
     
     level = '4'
     num_questions = len(data_by_levels[level])
-    # num_questions = 2
-    num_trials = 1
+    # num_questions = 20
+    num_trials = 20
     print(f"num_questions = {num_questions}")
+    print(f"num_trials = {num_trials}")
     
     # get batch of questions
     batch_of_questions = [data_by_levels[level][q_idx]['problem'] for q_idx in range(num_questions)]

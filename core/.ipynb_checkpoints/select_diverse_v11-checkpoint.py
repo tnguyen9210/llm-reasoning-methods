@@ -4,8 +4,6 @@ from collections import defaultdict
 import copy 
 import time
 import numpy as np
-import multiprocessing as mp
-
 from dataclasses import dataclass
 
 
@@ -24,9 +22,9 @@ from sal.search.utils import build_conv, generate_k_steps, last
 
 @dataclass
 class Beam:
-    q_idx: int
-    question: str
-    templated_conv: str
+    prompt: str
+    templated_prompt: str
+    index: int
     current_text: str | None
     next_texts: list[str] | None
     lookahead_texts: list[str] | None
@@ -38,7 +36,6 @@ class Beam:
     history: list[str]
     completed: bool = False
     completion_tokens: int = 0
-
 
 def _select_diverse(X_embeds, X_lprobs, X_ppl, K, V):
     num_arms = len(X_embeds)
@@ -78,23 +75,8 @@ def _select_diverse(X_embeds, X_lprobs, X_ppl, K, V):
 
     return A_idxes
 
-def process_select_diverse(q_idx, q_active_beams, q_embeds, q_log_probs, q_ppl, K, V):
-    # V = config.lam*np.eye(2048)
-    # K = int(config.n/config.beam_width)
 
-    if len(q_active_beams) <= K:
-        return (q_idx, None)
-
-    selected_idxes  = _select_diverse(q_embeds, q_log_probs, q_ppl, K, V)
-
-    # for idx, beam in enumerate(q_active_beams):
-    #     if idx not in selected_idxes:
-    #         beam.pruned = True 
-            
-    return (q_idx, selected_idxes)
-    # return (q_idx, selected_idxes) 
-
-def select_diverse_search(batch_of_questions, config, llm_vllm, llm_tf, llm_tokenizer):
+def _select_diverse_search(batch_of_questions, config: Config, llm: LLM, llm_tf, llm_tokenizer) -> list[Beam]:
     sampling_params = SamplingParams(
         temperature=config.temperature,
         max_tokens=config.max_tokens,
@@ -104,18 +86,14 @@ def select_diverse_search(batch_of_questions, config, llm_vllm, llm_tf, llm_toke
         n=1,
     )
 
-    V = config.lam*np.eye(2048)
-    K = int(config.n / config.beam_width)
-    
-    completed_beams: list[Beam] = []
     beams: list[Beam] = []
-    for q_idx, question in enumerate(batch_of_questions):
-        for _ in range(config.n):
+    for prompt in batch_of_questions:
+        for i in range(config.n):
             beams.append(
                 Beam(
-                    q_idx=q_idx,
-                    question=question,
-                    templated_conv="",
+                    prompt=prompt,
+                    templated_prompt=prompt,
+                    index=i,
                     current_text="",
                     next_texts=None,
                     lookahead_texts=None,
@@ -128,50 +106,48 @@ def select_diverse_search(batch_of_questions, config, llm_vllm, llm_tf, llm_toke
                     previous_text=None,
                     completion_tokens=0,
                 )
-            ) 
+            )
 
+    completed_beams: list[Beam] = []
+    active_beams = [b for b in beams if not b.pruned]
+    print(len(active_beams))
+    
+    for b_idx, beam in enumerate(active_beams):
+        if b_idx % 2 == 0:
+            beam.pruned = True 
 
+    active_beams = [b for b in beams if not b.pruned]
+
+    print(len(active_beams))
+
+    stio
+
+    
     # for i in tqdm(range(config.num_iterations), desc="Beam search iterations"):
-    start_time = time.time()
-    for it in range(config.num_iterations):
-        # print(f"\n-> {it}")
-        if it == 0:
-            active_beams = beams
+    for i in range(config.num_iterations):
+        # print(f"iteration {i}")
+        if i == 0:
+            active_beams = [b for b in beams if not b.pruned]
         else:
-            # active_beams = [b for b in active_beams if not b.pruned]
-            extended_beams = []
-            for beam in active_beams:
-                if beam.pruned:
-                    continue 
-                    
-                for j in range(config.beam_width):
-                    extended_beams.append(copy.deepcopy(beam))
+            active_beams = [b for b in active_beams if not b.pruned]
 
-            active_beams = extended_beams
-        
-        # print(len(active_beams))
-        convs = [
-            build_conv(b.question, b.current_text, config.system_prompt)
-            for b in active_beams
-        ]
+        # Duplicate active beams to ensure that we have config.n beams per iteration
+        if len(active_beams) != config.n:
+            repeats = (config.n // len(active_beams)) + 1
+            # print(
+            #     f"Extending active_beams with {repeats} repetitions to reach size {config.n}"
+            # )
+            extended_active_beams = [
+                copy.deepcopy(b) for b in (active_beams * repeats)[: config.n]
+            ]
+            active_beams = extended_active_beams
+            if len(active_beams) != config.n:
+                raise ValueError(
+                    f"Expected {config.n} active beams, but got {len(active_beams)}"
+                )
 
-        add_generation_prompt = it == 0
-        continue_final_message = it > 0
-    
-        tokenizer = llm_vllm.get_tokenizer()
-    
-        if config.custom_chat_template is not None:
-            tokenizer.chat_template = config.custom_chat_template
-            
-        templated_convs = tokenizer.apply_chat_template(
-            convs,
-            add_generation_prompt=add_generation_prompt,
-            continue_final_message=continue_final_message,
-            tokenize=False,
-        )
-
-        # Last iteration, generate to EOS
-        if it == config.num_iterations - 1:
+        if i == config.num_iterations - 1:
+            # Last iteration, generate to EOS
             sampling_params = SamplingParams(
                 temperature=config.temperature,
                 max_tokens=config.max_tokens,
@@ -179,29 +155,41 @@ def select_diverse_search(batch_of_questions, config, llm_vllm, llm_tf, llm_toke
                 n=1,
             )
 
-        lookahead = 0 if it == config.num_iterations - 1 else config.lookahead
-        gen_results = generate_k_steps(
-            templated_convs, lookahead, llm_vllm, sampling_params, 1
-        )
-        # total_time = time.time() - start_time
-        # print(f"it takes {total_time:0.4f}s")
+        convs = [
+            build_conv(b.prompt, b.current_text, config.system_prompt)
+            for b in active_beams
+        ]
+        continue_final_message = i > 0
+        add_generation_prompt = i == 0
 
-        # Collecct gen_results into beams
+        tokenizer = llm.get_tokenizer()
+        if config.custom_chat_template is not None:
+            tokenizer.chat_template = config.custom_chat_template
+        templated_convs = tokenizer.apply_chat_template(
+            convs,
+            add_generation_prompt=add_generation_prompt,
+            continue_final_message=continue_final_message,
+            tokenize=False,
+        )
+        
+        lookahead = 0 if i == config.num_iterations - 1 else config.lookahead
+        gen_results = generate_k_steps(
+            templated_convs, lookahead, llm, sampling_params, 1
+        )
+        print(gen_results)
+        stop
+
+        prompts, completions = [], []
+        next_active_beams = []
         for beam, gen_result in zip(active_beams, gen_results, strict=True):
             beam.next_texts = gen_result.next_texts
             beam.stop_reasons = gen_result.stop_reasons
             beam.lookahead_texts = gen_result.lookahead_texts
             beam.completion_tokens += gen_result.completion_tokens
-            beam.current_text += gen_result.next_texts[0]
-            # beam.history.append(beam.next_texts[0])
+            beam.current_text += beam.next_texts[0]
+            beam.history.append(beam.next_texts[0])
             beam.templated_prompt = gen_result.prompt
-            # pprint.pprint(gen_result)
-            # print(f"beam.next_texts = {beam.next_texts}")
-            # print(f"beam.stop_reasons = {beam.stop_reasons}")
-            # print(f"beam.lookahead_texts = {beam.lookahead_texts}")
-            # print(f"beam.lookahead_texts = {beam.lookahead_texts}")
-            # stop
-            
+
             if (
                 beam.stop_reasons[0] == "EOS"
                 or beam.stop_reasons[0] == "length"
@@ -209,39 +197,37 @@ def select_diverse_search(batch_of_questions, config, llm_vllm, llm_tf, llm_toke
             ):
                 beam.completed = True
                 completed_beams.append(beam)
-                # continue
-        
-        # Filter out comleted beams 
+
+            prompts.append(beam.prompt)
+            completions.append([beam.current_text])
+
         active_beams = [b for b in active_beams if not b.completed]
-        # print(len(active_beams))
+        # print(active_beams)
 
         # Early stopping if all beams are completed
         if len(active_beams) == 0:
-            print("break")
             break
-        
-        # Extract completion's embeddings and other info
-        batch_embeds = [[] for _ in range(len(batch_of_questions))]
-        batch_log_probs = [[] for _ in range(len(batch_of_questions))]
-        batch_ppl = [[] for _ in range(len(batch_of_questions))]
-        batch_beams = [[] for _ in range(len(batch_of_questions))]
+
+        # # get completion's embeddings
+        completions_embeds = np.zeros((len(active_beams), 2048))
+        completions_log_probs = np.zeros(len(active_beams))
+        completions_ppl = np.zeros(len(active_beams))
     
         for b_idx, beam in enumerate(active_beams):
             with torch.no_grad():
                 # get beam.current_text which include previous all steps upto now
                 gen_prompt = beam.templated_prompt + beam.next_texts[0]
-                # print(gen_prompt)
-                # stop
                 inputs = llm_tokenizer(gen_prompt, return_tensors="pt").to(llm_tf.device)
                 outputs = llm_tf(**inputs, output_hidden_states=True)
-    
+
                 # Get last_token_embeds
                 last_hidden_state = outputs.hidden_states[-1]
                 last_token_embeds = last_hidden_state[:, -1, :].squeeze(0).detach().cpu().numpy()
                 # print(last_token_embeds.shape)
-    
+
                 # Compute otuput_log_prob
                 # Prepare labels: shift input_ids to the right by one
+                # print(inputs)
                 labels = inputs['input_ids'][:, 1:]   
                 shifted_logits = outputs.logits[:, :-1, :]
                 loss_fct = CrossEntropyLoss(reduction='sum')
@@ -249,70 +235,90 @@ def select_diverse_search(batch_of_questions, config, llm_vllm, llm_tf, llm_toke
                 completion_ppl = np.exp(completion_log_prob/len(labels))
                 # print(sent_ppl)
                 # print(loss)
-    
+
+                # Approach 
+                # log_probs = F.log_softmax(shifted_logits, dim=-1)
+                # token_log_probs = log_probs.gather(2, labels.unsqueeze(-1)).squeeze(-1)
+                # completion_log_prob = token_log_probs.sum()
+                # print(completion_log_prob)
+
                 # normalize the embeds
                 if config.normalize_embeds:
                     norm = np.linalg.norm(last_token_embeds)
                     last_token_embeds /= norm
                     # print(np.linalg.norm(last_token_embeds))
-    
-                batch_embeds[beam.q_idx].append(last_token_embeds)
-                batch_log_probs[beam.q_idx].append(completion_log_prob)
-                batch_ppl[beam.q_idx].append(completion_ppl)
-                batch_beams[beam.q_idx].append(beam)
-    
-        # pprint.pprint(len(batch_completions_embeds))
-        # pprint.pprint(len(batch_completions_log_probs))
-        # pprint.pprint(len(batch_completions_ppl))
-        # print(len(batch_beams))
-        # print(len(batch_beams[0]))
-        # total_time = time.time() - start_time
-        # print(f"it takes {total_time:0.4f}s")
 
-        # Use _select_diverse to diversify embeddings 
-        
-        # for q_idx in range(len(batch_of_questions)):
+                completions_embeds[b_idx] = last_token_embeds
+                completions_log_probs[b_idx] = completion_log_prob
+                completions_ppl[b_idx] = completion_ppl
+
+        # print(completions_embeds)
+        # print(completions_log_probs)
+        # print(completions_ppl)
+
+        # get completion's embeddings
+
+        V = config.lam*np.eye(2048)
+        K = int(config.n / config.beam_width)
+        if len(active_beams) <= K:
+            continue 
             
-        #     if len(batch_beams[q_idx]) <= K:
-        #         continue 
-    
-        #     selected_idxes = _select_diverse(
-        #         batch_embeds[q_idx], batch_log_probs[q_idx], batch_ppl[q_idx], K, V)
-    
-        #     # print(selected_idxes)
-            
-        #     for idx, beam in enumerate(batch_beams[q_idx]):
-        #         if idx not in selected_idxes:
-        #             beam.pruned = True 
+        selected_idxes = _select_diverse(
+            completions_embeds, completions_log_probs, completions_ppl, K, V)
+        # print(len(completions_embeds))
+        # print(selected_idxes)
 
-        
-        tasks = [(q_idx, batch_beams[q_idx], batch_embeds[q_idx],
-                  batch_log_probs[q_idx], batch_ppl[q_idx], K, V) for q_idx in range(len(batch_of_questions))]
-        # tasks = [(q_idx, config) for q_idx in range(len(batch_of_questions))]
+        for idx, beam in enumerate(active_beams):
+            if idx not in selected_idxes:
+                beam.pruned = True
 
-        with mp.Pool() as pool:
-            pool_results = pool.starmap(process_select_diverse, tasks)
+    # # Filter completed beams for those with top config.n scores
+    # if config.sort_completed:
+    #     completed_beams = sorted(
+    #         completed_beams,
+    #         key=lambda b: aggregate_scores(b.all_scores, config.agg_strategy),
+    #         reverse=True,
+    #     )[: config.n]
+    # else:
+    #     completed_beams = completed_beams[: config.n]
 
-        for q_idx, selected_idxes in pool_results:
-            if selected_idxes is not None:
-                for idx, beam in enumerate(batch_beams[q_idx]):
-                    if idx not in selected_idxes:
-                        beam.pruned = True 
-        total_time = time.time() - start_time
-        # print(f"it takes {total_time:0.4f}s")
-                
+    if len(completed_beams) != config.n:
+        # If we don't have enough completed_beams, duplicate until we reach config.n
+        repeats = (config.n // len(completed_beams)) + 1
+        # print(
+        #     f"Extending completed_beams with {repeats} repetitions to reach size {config.n}"
+        # )
+        extended_completed_beams = [
+            copy.deepcopy(b) for b in (completed_beams * repeats)[: config.n]
+        ]
+        completed_beams = extended_completed_beams
 
-    # Collect the completions from beams
+    return completed_beams
+
+def select_diverse_search(batch_of_questions, config: Config, llm: LLM, llm_tf, llm_tokenizer):
+
+    # Collect the completions from responses
     completions = [[] for _ in range(len(batch_of_questions))]
     completion_ntokens = [[] for _ in range(len(batch_of_questions))]
-    
-    for beam in completed_beams:
-        completions[beam.q_idx].append(beam.current_text)
-        completion_ntokens[beam.q_idx].append(beam.current_text)
 
+    for q_idx, question in enumerate(batch_of_questions):
+        # print(f"question {q_idx}")
+        beam_results = _select_diverse_search([question], config, llm, llm_tf, llm_tokenizer)
+        for b_idx, beam in enumerate(beam_results):
+            # print(beam.current_text)
+            completions[q_idx].append(beam.current_text)
+            completion_ntokens[q_idx].append(beam.completion_tokens)
+
+    # print(completions)
+    # print(completion_ntokens)
+    # stop
     results = defaultdict(list)
     results["completions"] = completions
     results["completion_ntokens"] = completion_ntokens
     
+    # print(results)
     return results
 
+# # beam_results = _select_diverse_search(batch_of_questions, config, llm, llm_tf, tokenizer)
+# beam_results = select_diverse_search(batch_of_questions, config, llm, llm_transformer, tokenizer)
+# print(beam_results)
