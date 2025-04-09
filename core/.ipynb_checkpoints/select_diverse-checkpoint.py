@@ -8,7 +8,6 @@ import multiprocessing as mp
 
 from dataclasses import dataclass
 
-
 import torch
 from torch.nn import CrossEntropyLoss
 import torch.nn.functional as F
@@ -56,13 +55,14 @@ def _select_diverse(X_embeds, X_lprobs, X_ppl, K, V):
             if (np.abs(max_val - arm_val) <= tol) and (arm_idx not in A_idxes)
         ]
 
-        best_idx = max(candidate_idxes, key=lambda i: X_ppl[i])
+        best_idx = max(candidate_idxes, key=lambda i: X_lprobs[i])
         # print(arm_vals)
         # print(X_lprobs)
         # print(candidate_idxes)
         # print(best_idx)
         
         best_embeds = X_embeds[best_idx]
+        best_embeds = best_embeds.reshape(-1, 1)
         # print(best_embeds.shape)
 
         # update V

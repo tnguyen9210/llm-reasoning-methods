@@ -86,7 +86,7 @@ def main():
     config.sort_completed = False
     
     # diverse_select params
-    config.lam = 10
+    config.lam = 100
     config.normalize_embeds = True
     
     level = '4'

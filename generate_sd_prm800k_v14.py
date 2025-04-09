@@ -80,7 +80,7 @@ def main():
     config = Config()
     config.agg_strategy = 'last'
     config.n = 8
-    config.beam_width = 2
+    config.beam_width = 4
     config.lookahead = 0
     config.num_iterations = 2
     config.sort_completed = False
@@ -118,12 +118,12 @@ def main():
         pass 
     
     for trial_idx in range(num_trials):
+        # best_of_n(batch_of_questions, config, llm_vllm, random_seeds[trial_idx])
         np.random.seed(100000+trial_idx)
         random.seed(100000+trial_idx)
         torch.manual_seed(100000+trial_idx)
         torch.cuda.manual_seed(100000+trial_idx)
         
-        # best_of_n(batch_of_questions, config, llm_vllm, random_seeds[trial_idx])
         results = search_algo(batch_of_questions, config, llm_vllm, llm_tf, tokenizer)
         with open(result_dir, 'a', encoding = 'utf-8') as fout:
             json.dump(results, fout)

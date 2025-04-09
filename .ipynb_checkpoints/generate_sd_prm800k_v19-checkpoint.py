@@ -82,7 +82,7 @@ def main():
     config.n = 8
     config.beam_width = 2
     config.lookahead = 0
-    config.num_iterations = 2
+    config.num_iterations = 10
     config.sort_completed = False
     
     # diverse_select params

@@ -12,8 +12,9 @@ from transformers import AutoModelForCausalLM, AutoTokenizer
 from vllm import LLM, SamplingParams, PoolingParams
 
 from sal.config import Config
+from core.reward_models import RLHFFlow
 
-from core import select_diverse
+from core import beam_search
 from utils.load_data import load_data_prm800k
 
 
@@ -40,6 +41,8 @@ def main():
         print(GPUS)
     else:
         print("CUDA is not available.")
+
+    prm = RLHFFlow(model_path=prm_tokenizer_dir, device_map='cuda:1')
     
     # baseline: gpu_memory_utilization=0.2
     # use the standard model 
@@ -63,11 +66,11 @@ def main():
     #     dtype = "float16",
     #     seed = 123)
 
-    tokenizer = AutoTokenizer.from_pretrained(llm_tokenizer_dir)
-    llm_tf = AutoModelForCausalLM.from_pretrained(llm_tokenizer_dir).to("cuda:1")
-    # model_regular.generation_config.pad_token_id = tokenizer.eos_token_id
-    gc.collect();torch.cuda.empty_cache();
-    print('#--- memory:', torch.cuda.memory_allocated(0)/(1024**3))
+    
+
+    # gc.collect();torch.cuda.empty_cache();
+    # print('#--- memory:', torch.cuda.memory_allocated(0)/(1024**3))
+    # print('#--- memory:', torch.cuda.memory_allocated(1)/(1024**3))
 
     #  load data 
     data_by_levels = load_data_prm800k(data_dir)
@@ -82,16 +85,12 @@ def main():
     config.n = 8
     config.beam_width = 2
     config.lookahead = 0
-    config.num_iterations = 2
+    config.num_iterations = 40
     config.sort_completed = False
-    
-    # diverse_select params
-    config.lam = 10
-    config.normalize_embeds = True
     
     level = '4'
     num_questions = len(data_by_levels[level])
-    # num_questions = 20
+    # num_questions = 128
     num_trials = 20
     print(f"num_questions = {num_questions}")
     print(f"num_trials = {num_trials}")
@@ -100,7 +99,7 @@ def main():
     batch_of_questions = [data_by_levels[level][q_idx]['problem'] for q_idx in range(num_questions)]
 
     # select search algo
-    search_name = 'select_diverse'
+    search_name = 'beam_search'
     algo_type = 1
     if search_name == 'best_of_n':
         if algo_type == 1:
@@ -109,22 +108,17 @@ def main():
             search_algo = best_of_n.best_of_n_v12
     elif search_name == "select_diverse":
         search_algo = select_diverse.select_diverse_search
+    elif search_name == "beam_search":
+        search_algo = beam_search.beam_search
     print(search_algo)
 
     # run search_algo and save results
-    result_dir = f"results/generate_sd_prm800k_level{level}_n{config.n}_bw{config.beam_width}_depth{config.num_iterations}_lam{config.lam}_{config.normalize_embeds}_v11.jsonl"
+    result_dir = f"results/generate_beam_prm800k_level{level}_n{config.n}_bw{config.beam_width}_depth{config.num_iterations}_v11.jsonl"
+    # print(result_dir)
     start_time = time.time()
-    with open(result_dir, 'w', encoding = 'utf-8') as fout:
-        pass 
-    
     for trial_idx in range(num_trials):
-        np.random.seed(100000+trial_idx)
-        random.seed(100000+trial_idx)
-        torch.manual_seed(100000+trial_idx)
-        torch.cuda.manual_seed(100000+trial_idx)
-        
         # best_of_n(batch_of_questions, config, llm_vllm, random_seeds[trial_idx])
-        results = search_algo(batch_of_questions, config, llm_vllm, llm_tf, tokenizer)
+        results = search_algo(batch_of_questions, config, llm_vllm, prm)
         with open(result_dir, 'a', encoding = 'utf-8') as fout:
             json.dump(results, fout)
             fout.write('\n')

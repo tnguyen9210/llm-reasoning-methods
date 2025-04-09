@@ -5,6 +5,7 @@ import pprint
 
 from collections import defaultdict
 import random
+import numpy as np 
 
 import torch 
 import torch.distributed as dist
@@ -13,7 +14,7 @@ from vllm import LLM, SamplingParams, PoolingParams
 
 from sal.config import Config
 
-from core import select_diverse
+from core import select_diverse_v21
 from utils.load_data import load_data_prm800k
 
 
@@ -80,7 +81,7 @@ def main():
     config = Config()
     config.agg_strategy = 'last'
     config.n = 8
-    config.beam_width = 2
+    config.beam_width = 4
     config.lookahead = 0
     config.num_iterations = 2
     config.sort_completed = False
@@ -91,7 +92,7 @@ def main():
     
     level = '4'
     num_questions = len(data_by_levels[level])
-    # num_questions = 20
+    # num_questions = 2
     num_trials = 20
     print(f"num_questions = {num_questions}")
     print(f"num_trials = {num_trials}")
@@ -108,14 +109,13 @@ def main():
         else:
             search_algo = best_of_n.best_of_n_v12
     elif search_name == "select_diverse":
-        search_algo = select_diverse.select_diverse_search
+        search_algo = select_diverse_v21.select_diverse_search
     print(search_algo)
 
     # run search_algo and save results
-    result_dir = f"results/generate_sd_prm800k_level{level}_n{config.n}_bw{config.beam_width}_depth{config.num_iterations}_lam{config.lam}_{config.normalize_embeds}_v11.jsonl"
+    result_dir = f"results/generate_sd_prm800k_level{level}_n{config.n}_bw{config.beam_width}_depth{config.num_iterations}_lam{config.lam}_{config.normalize_embeds}_v21.jsonl"
+    print(result_dir)
     start_time = time.time()
-    with open(result_dir, 'w', encoding = 'utf-8') as fout:
-        pass 
     
     for trial_idx in range(num_trials):
         np.random.seed(100000+trial_idx)
