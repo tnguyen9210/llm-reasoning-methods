@@ -32,7 +32,8 @@ def main():
     llm_tokenizer_dir = base_dir + "/Llama-3.2-1B-Instruct"
     prm_tokenizer_dir = base_dir + "/Llama3.1-8B-PRM-Deepseek-Data"
 
-    os.environ["CUDA_VISIBLE_DEVICES"]="0,1,2,3"
+    os.environ["CUDA_VISIBLE_DEVICES"] = "0,1,2,3"
+    os.environ["TOKENIZERS_PARALLELISM"] = "false"
     
     if torch.cuda.is_available():
         GPUS = os.environ.get('CUDA_VISIBLE_DEVICES', "0").split(',')
@@ -81,7 +82,7 @@ def main():
     config.n = 8
     config.beam_width = 2
     config.lookahead = 0
-    config.num_iterations = 1
+    config.num_iterations = 2
     config.sort_completed = False
     
     # diverse_select params
@@ -90,9 +91,10 @@ def main():
     
     level = '4'
     num_questions = len(data_by_levels[level])
-    # num_questions = 2
-    num_trials = 1
+    # num_questions = 20
+    num_trials = 20
     print(f"num_questions = {num_questions}")
+    print(f"num_trials = {num_trials}")
     
     # get batch of questions
     batch_of_questions = [data_by_levels[level][q_idx]['problem'] for q_idx in range(num_questions)]
@@ -110,23 +112,31 @@ def main():
     print(search_algo)
 
     # run search_algo and save results
-    result_dir = f"results/generate_sd_prm800k_level{level}_n{config.n}_bw{config.beam_width}_depth{config.num_iterations}_lam{config.lam}_v11.jsonl"
+    result_dir = f"results/generate_sd_prm800k_level{level}_n{config.n}_bw{config.beam_width}_depth{config.num_iterations}_lam{config.lam}_{config.normalize_embeds}_v11.jsonl"
     start_time = time.time()
     with open(result_dir, 'w', encoding = 'utf-8') as fout:
-        for trial_idx in range(num_trials):
-            # best_of_n(batch_of_questions, config, llm_vllm, random_seeds[trial_idx])
-            results = search_algo(batch_of_questions, config, llm_vllm, llm_tf, tokenizer)
+        pass 
+    
+    for trial_idx in range(num_trials):
+        np.random.seed(100000+trial_idx)
+        random.seed(100000+trial_idx)
+        torch.manual_seed(100000+trial_idx)
+        torch.cuda.manual_seed(100000+trial_idx)
+        
+        # best_of_n(batch_of_questions, config, llm_vllm, random_seeds[trial_idx])
+        results = search_algo(batch_of_questions, config, llm_vllm, llm_tf, tokenizer)
+        with open(result_dir, 'a', encoding = 'utf-8') as fout:
             json.dump(results, fout)
             fout.write('\n')
-        
-            # compute the time
-            if trial_idx % 1 == 0:
-                total_time = time.time() - start_time
-                time_per_trial = total_time/(trial_idx+1)
-                time_per_question = time_per_trial/num_questions
-                print(f"trial {trial_idx}")
-                print(f"it takes {time_per_question:0.4f}s per question")
-                print(f"it takes {time_per_trial:0.4f}s per trial")
+    
+        # compute the time
+        if trial_idx % 1 == 0:
+            total_time = time.time() - start_time
+            time_per_trial = total_time/(trial_idx+1)
+            time_per_question = time_per_trial/num_questions
+            print(f"trial {trial_idx}")
+            print(f"it takes {time_per_question:0.4f}s per question")
+            print(f"it takes {time_per_trial:0.4f}s per trial")
     
     total_time = time.time() - start_time
     print(f"it takes {total_time:0.4f}s in total")

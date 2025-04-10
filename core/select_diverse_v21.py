@@ -8,6 +8,7 @@ import multiprocessing as mp
 
 from dataclasses import dataclass
 
+
 import torch
 from torch.nn import CrossEntropyLoss
 import torch.nn.functional as F
@@ -62,7 +63,6 @@ def _select_diverse(X_embeds, X_lprobs, X_ppl, K, V):
         # print(best_idx)
         
         best_embeds = X_embeds[best_idx]
-        best_embeds = best_embeds.reshape(-1, 1)
         # print(best_embeds.shape)
 
         # update V
@@ -298,7 +298,7 @@ def select_diverse_search(batch_of_questions, config, llm_vllm, llm_tf, llm_toke
                 for idx, beam in enumerate(batch_beams[q_idx]):
                     if idx not in selected_idxes:
                         beam.pruned = True 
-        total_time = time.time() - start_time
+        # total_time = time.time() - start_time
         # print(f"it takes {total_time:0.4f}s")
                 
 

@@ -1,0 +1,340 @@
+
+-> q_idx = 0
+question: The set of points $(x,y,z)$ that satisfy
+\[2x = 3y = -z\]is a line.
+
+The set of points $(x,y,z)$ that satisfy
+\[6x = -y = -4z\]is another line.
+
+Find the angle between these lines, in degrees.
+
+->it = 0
+[array([112437.2261, 111892.3725, 110722.6689, 112622.1048, 112806.123 ,
+       110491.6818, 111468.6029, 112047.2703]), array([5.8873e+04, 6.6201e+04, 8.2326e+04, 6.0028e+04, 9.9999e-01,
+       8.9780e+04, 5.6537e+04, 5.6920e+04]), array([5.7719e+04, 6.4456e+04, 3.9787e+04, 5.8999e+04, 9.9999e-01,
+       9.9999e-01, 5.4474e+04, 5.6475e+04]), array([1.6075e+04, 9.9998e-01, 3.9531e+04, 1.7357e+04, 9.9998e-01,
+       9.9999e-01, 2.7054e+04, 4.5248e+04])]
+[4, 5, 1, 7]
+[-637.34784, -650.16943, -723.2266, -639.9803, -649.1261, -819.25464, -658.41064, -647.8634]
+(max, min) = (-637.35, -819.25)
+['## Step 1: Identify the direction vectors of the two lines.\n'
+ 'The direction vector of the first line is (2, 3, -1) and the direction '
+ 'vector of the second line is (6, -1, -4).\n'
+ '\n',
+ '## Step 1: Identify the direction vectors for each line.\n'
+ 'The direction vector for the first line is $\\vec{v_1} = \\langle 2, 3, -1 '
+ '\\rangle$ since these are the coefficients of $x, y, z$ in the equation $2x '
+ '= 3y = -z$. The direction vector for the second line is $\\vec{v_2} = '
+ '\\langle 6, 1, 4 \\rangle$ since these are the coefficients of $x, y, z$ in '
+ 'the equation $6x = -y = -4z$.\n'
+ '\n',
+ '## Step 1:  To find the angle between the two given lines, we first need to '
+ 'establish the direction vectors for each line.\n'
+ '## Step 2:  The direction vector for the first line is given by the '
+ 'coefficients of x, y, and z, which are \\(\\vec{v_1} = (2, 3, -1)\\).\n'
+ '## Step 3:  The direction vector for the second line is given by the '
+ 'coefficients of x, y, and z, which are \\(\\vec{v_2} = (6, -1, -4)\\).\n'
+ '## Step 4:  The angle between two vectors \\(\\vec{a}\\) and \\(\\vec{b}\\) '
+ 'can be found using the dot product formula: \\(\\vec{a} \\cdot \\vec{b} = '
+ '|\\vec{a}| |\\vec{b}| \\cos{\\theta}\\), where \\(\\theta\\) is the angle '
+ 'between the vectors.\n'
+ '## Step 5:  We can find the magnitude (length) of each vector using the '
+ 'formula \\(|\\vec{v}| = \\sqrt{x^2 + y^2 + z^2}\\).\n'
+ '## Step 6:  For \\(\\vec{v_1}\\), \\(|\\vec{v_1}| = \\sqrt{2^2 + 3^2 + '
+ '(-1)^2} = \\sqrt{4 + 9 + 1} = \\sqrt{14}\\).\n'
+ '## Step 7:  For \\(\\vec{v_2}\\), \\(|\\vec{v_2}| = \\sqrt{6^2 + (-1)^2 + '
+ '(-4)^2} = \\sqrt{36 + 1 + 16} = \\sqrt{53}\\).\n'
+ '## Step 8:  The dot product of \\(\\vec{v_1}\\) and \\(\\vec{v_2}\\) is '
+ 'given by \\((2, 3, -1) \\cdot (6, -1, -4) = 2(6) + 3(-1) + (-1)(-4) = 12 - 3 '
+ '+ 4 = 13\\).\n'
+ '## Step 9:  To find the angle \\(\\theta\\), we use the formula '
+ '\\(\\cos{\\theta} = \\frac{\\vec{a} \\cdot \\vec{b}}{|\\vec{a}| '
+ '|\\vec{b}|}\\).\n'
+ '## Step 10:  Substituting the known values, we get \\(\\cos{\\theta} = '
+ '\\frac{13}{\\sqrt{14} \\cdot \\sqrt{53}}\\).\n'
+ '## Step 11:  Simplifying the denominator, \\(\\sqrt{14} \\cdot \\sqrt{53} = '
+ '\\sqrt{14 \\cdot 53} = \\sqrt{742}\\).\n'
+ '## Step 12:  Therefore, \\(\\cos{\\theta} = \\frac{13}{\\sqrt{742}}\\).\n'
+ '## Step 13:  To find the angle \\(\\theta\\), we take the inverse cosine '
+ '(arccos) of both sides: \\(\\theta = '
+ '\\arccos{\\left(\\frac{13}{\\sqrt{742}}\\right)}\\).\n'
+ '## Step 14:  Calculating the arccos gives us the angle in radians, which we '
+ 'can then convert to degrees for the final answer.\n'
+ "## Step 15:  Let's calculate \\(\\theta = "
+ '\\arccos{\\left(\\frac{13}{\\sqrt{742}}\\right)}\\) to find the angle in '
+ 'radians, and then convert it to degrees.\n'
+ '\n',
+ '## Step 1: Identify the direction vectors of the two lines.\n'
+ 'The direction vector of the first line is <2, 3, -1> and the direction '
+ 'vector of the second line is <6, -1, -4>.\n'
+ '\n',
+ '## Step 1: Express x, y, and z in terms of a single variable using the first '
+ 'equation\n'
+ 'From the first equation $2x = 3y = -z$, we can express $x$ as $x = '
+ '\\frac{3y}{2} = \\frac{-z}{2}$.\n'
+ '\n',
+ '## Step 1:  The first step is to understand the given problem and find the '
+ 'direction vectors of the two lines. \n'
+ '## Step 2:  We start with the equation $2x = 3y = -z$, which can be '
+ 'represented in vector form as $\\vec{r} = \\vec{r_0} + t\\vec{u}$, where '
+ '$\\vec{r_0} = \\langle 0, 0, 0 \\rangle$ is the initial point, and $\\vec{u} '
+ '= \\langle 2, 3, -1 \\rangle$ is the direction vector of the line.\n'
+ '## Step 3:  Next, we consider the equation $6x = -y = -4z$, represented in '
+ 'vector form as $\\vec{r} = \\vec{r_0} + t\\vec{v}$, where $\\vec{r_0} = '
+ '\\langle 0, 0, 0 \\rangle$ is the initial point, and $\\vec{v} = \\langle 6, '
+ '1, -4 \\rangle$ is the direction vector of the second line.\n'
+ '## Step 4:  To find the angle between the two lines, we use the dot product '
+ 'formula, which is $\\vec{u} \\cdot \\vec{v} = |\\vec{u}| |\\vec{v}| \\cos '
+ '\\theta$, where $|\\vec{u}|$ and $|\\vec{v}|$ are the magnitudes of the '
+ 'vectors $\\vec{u}$ and $\\vec{v}$, and $\\theta$ is the angle between them.\n'
+ '## Step 5:  Substituting the given values, we get $\\cos \\theta = '
+ '\\frac{\\vec{u} \\cdot \\vec{v}}{|\\vec{u}| |\\vec{v}|} = \\frac{12 + '
+ '3}{\\sqrt{2^2 + 3^2 + (-1)^2} \\sqrt{6^2 + 1^2 + (-4)^2}}$.\n'
+ '## Step 6:  Solving this equation will give us the cosine of the angle '
+ 'between the two lines. Then, we can use the inverse cosine function to find '
+ 'the angle itself.\n'
+ '## Step 7:  After simplifying the expression, we find that $\\cos \\theta = '
+ '\\frac{15}{\\sqrt{28} \\sqrt{170}}$.\n'
+ '## Step 8:  Now, we can use the inverse cosine function to find the angle '
+ '$\\theta$ in radians, and then convert it to degrees to obtain the final '
+ 'answer.\n'
+ '## Step 9:  Upon calculation, we get $\\theta = \\cos^{-1} \\left( '
+ '\\frac{15}{\\sqrt{28} \\sqrt{170}} \\right)$.\n'
+ '## Step 10:  This leads to the angle between the lines in radians, from '
+ 'which we can convert it to degrees using the conversion formula '
+ '$\\theta_{\\text{degrees}} = \\frac{180^\\circ}{\\pi} '
+ '\\theta_{\\text{radians}}$.\n'
+ '## Step 11:  After performing the calculations, we find that '
+ '$\\theta_{\\text{degrees}} = \\boxed{26.7^\\circ}$.\n'
+ '## Step 12:  Therefore, the angle between the two lines is '
+ '$\\boxed{26.7^\\circ}$.\n'
+ '\n',
+ '## Step 1: Identify the direction vectors of the two lines\n'
+ 'To find the angle between the two lines, we first need to identify their '
+ 'direction vectors. For the first line with direction vector \\(\\vec{d}_1 = '
+ '\\langle 2, 3, -1 \\rangle\\), the direction vector of the second line with '
+ 'direction vector \\(\\vec{d}_2 = \\langle 6, 1, 4 \\rangle\\) can be derived '
+ 'from the coefficients of \\(x\\), \\(y\\), and \\(z\\) in the two given '
+ 'equations.\n'
+ '\n',
+ '## Step 1: To find the angle between the lines, we first need to determine '
+ 'the direction vectors of the lines.\n'
+ 'For the first line, the direction vector is given by (2, 3, -1) since these '
+ 'are the coefficients of x, y, and z in the equation 2x = 3y = -z.\n'
+ '\n']
+
+->it = 1
+[array([108942.7799, 108934.8065, 108639.0856, 109940.8444, 107625.2636,
+       108294.3821]), array([6.4102e+04, 6.4628e+04, 3.7062e+04, 9.9999e-01, 5.7270e+04,
+       5.4816e+04]), array([1.9008e+02, 9.9998e-01, 2.8426e+04, 9.9998e-01, 3.3463e+04,
+       3.3356e+04]), array([1.8920e+02, 9.9997e-01, 2.6525e+04, 9.9998e-01, 9.9997e-01,
+       1.7655e+04])]
+[3, 1, 4, 2]
+[-654.1075, -653.148, -668.65765, -657.9918, -658.76355, -661.4312]
+(max, min) = (-653.15, -668.66)
+['## Step 1: Identify the direction vectors for each line.\n'
+ 'The direction vector for the first line is $\\vec{v_1} = \\langle 2, 3, -1 '
+ '\\rangle$ since these are the coefficients of $x, y, z$ in the equation $2x '
+ '= 3y = -z$. The direction vector for the second line is $\\vec{v_2} = '
+ '\\langle 6, 1, 4 \\rangle$ since these are the coefficients of $x, y, z$ in '
+ 'the equation $6x = -y = -4z$.\n'
+ '\n'
+ '## Step 2: Calculate the dot product of the two direction vectors.\n'
+ 'The dot product $\\vec{v_1} \\cdot \\vec{v_2} = (2)(6) + (3)(1) + (-1)(4) = '
+ '12 + 3 - 4 = 11$.\n'
+ '\n',
+ '## Step 1: Identify the direction vectors for each line.\n'
+ 'The direction vector for the first line is $\\vec{v_1} = \\langle 2, 3, -1 '
+ '\\rangle$ since these are the coefficients of $x, y, z$ in the equation $2x '
+ '= 3y = -z$. The direction vector for the second line is $\\vec{v_2} = '
+ '\\langle 6, 1, 4 \\rangle$ since these are the coefficients of $x, y, z$ in '
+ 'the equation $6x = -y = -4z$.\n'
+ '\n'
+ '## Step 2: Calculate the dot product of the direction vectors.\n'
+ 'The dot product $\\vec{v_1} \\cdot \\vec{v_2} = (2)(6) + (3)(1) + (-1)(4) = '
+ '12 + 3 - 4 = 11$.\n'
+ '\n',
+ '## Step 1: Express x, y, and z in terms of a single variable using the first '
+ 'equation\n'
+ 'From the first equation $2x = 3y = -z$, we can express $x$ as $x = '
+ '\\frac{3y}{2} = \\frac{-z}{2}$.\n'
+ '\n'
+ '## Step 2: Substitute the expression for x from step 1 into the second '
+ 'equation to express y in terms of z\n'
+ 'We have $6\\left(\\frac{3y}{2}\\right) = -y$, which simplifies to $9y = '
+ '-2y$. Thus, $y = -\\frac{9}{11}z$.\n'
+ '\n',
+ '## Step 1: Express x, y, and z in terms of a single variable using the first '
+ 'equation\n'
+ 'From the first equation $2x = 3y = -z$, we can express $x$ as $x = '
+ '\\frac{3y}{2} = \\frac{-z}{2}$.\n'
+ '\n'
+ '## Step 2: Express x, y, and z in terms of a single variable using the '
+ 'second equation\n'
+ 'From the second equation $6x = -y = -4z$, we can express $x$ as $x = '
+ '-\\frac{y}{6} = \\frac{4z}{6} = \\frac{2z}{3}$.\n'
+ '\n',
+ '## Step 1: To find the angle between the lines, we first need to determine '
+ 'the direction vectors of the lines.\n'
+ 'For the first line, the direction vector is given by (2, 3, -1) since these '
+ 'are the coefficients of x, y, and z in the equation 2x = 3y = -z.\n'
+ '\n'
+ '## Step 2: Similarly, for the second line, the direction vector is (6, -1, '
+ '-4) as these are the coefficients of x, y, and z in the equation 6x = -y = '
+ '-4z.\n'
+ 'Now we have the direction vectors of both lines.\n'
+ '\n',
+ '## Step 1: To find the angle between the lines, we first need to determine '
+ 'the direction vectors of the lines.\n'
+ 'For the first line, the direction vector is given by (2, 3, -1) since these '
+ 'are the coefficients of x, y, and z in the equation 2x = 3y = -z.\n'
+ '\n'
+ '## Step 2: The direction vector for the second line can be obtained from the '
+ 'equation 6x = -y = -4z.\n'
+ 'The direction vector for this line is given by (6, -1, -4).\n'
+ '\n']
+
+-> q_idx = 1
+question: Below is the graph of $y = a \sin (bx + c) + d$ for some positive constants $a,$ $b,$ $c,$ and $d.$  Find the smallest possible value of $c.$
+
+[asy]import TrigMacros;
+
+size(400);
+
+real f(real x)
+{
+	return 2*sin(3*x + pi) + 1;
+}
+
+draw(graph(f,-3*pi,3*pi,n=700,join=operator ..),red);
+trig_axes(-3*pi,3*pi,-4,4,pi/2,1);
+layer();
+rm_trig_labels(-5,5, 2);
+
+label("$1$", (0,1), E);
+label("$2$", (0,2), E);
+label("$3$", (0,3), E);
+label("$-1$", (0,-1), E);
+label("$-2$", (0,-2), E);
+label("$-3$", (0,-3), E);
+[/asy]
+
+->it = 0
+[array([111174.5231, 105776.9164, 111819.8778, 110570.0802, 107404.4457,
+       104657.6517, 111563.4127, 105949.2969]), array([1.7979e+04, 7.3593e+04, 9.9999e-01, 1.8178e+04, 7.6904e+04,
+       6.3831e+04, 3.6180e+03, 7.3894e+04]), array([1.7938e+04, 9.2961e+03, 9.9999e-01, 1.8097e+04, 9.9999e-01,
+       1.9438e+04, 3.5019e+03, 1.2459e+04]), array([1.7917e+04, 6.4297e+03, 9.9999e-01, 1.8017e+04, 9.9996e-01,
+       9.9995e-01, 3.3985e+03, 9.7514e+03])]
+[2, 4, 5, 3]
+[-1305.0594, -1156.7142, -1293.1849, -1273.6742, -1142.9266, -1144.951, -1332.027, -1144.2441]
+(max, min) = (-1142.93, -1332.03)
+['## Step 1:  To find the smallest possible value of $c$ in the given function '
+ '$y = a \\sin (bx + c) + d$, we first need to understand the general form of '
+ 'the sine function and how its phase shift affects the graph.\n'
+ '## Step 2:  The sine function $y = \\sin x$ has a period of $2\\pi$, and its '
+ 'graph is symmetric with respect to the origin. When we have the function $y '
+ '= a \\sin (bx + c)$, the graph is shifted horizontally by an amount '
+ 'represented by $-c$.\n'
+ '## Step 3:  This means that as $x$ increases by a certain amount, $y$ will '
+ 'increase by the same amount multiple times, but in each cycle, the graph '
+ 'will be shifted to the left by $c$ units.\n'
+ '## Step 4:  Given the graph of the function $y = 2 \\sin (3x + \\pi) + 1$, '
+ 'the function has a period of $\\frac{2\\pi}{3}$, and its graph is shifted '
+ '$\\pi$ units to the left compared to the graph of $y = \\sin x$.\n'
+ '## Step 5:  In the equation $y = 2 \\sin (3x + \\pi) + 1$, the term inside '
+ 'the sine function, $3x + \\pi$, represents the phase shift.\n'
+ '## Step 6:  Since we want to find the smallest possible value of $c$, we '
+ 'need to consider the conditions for the graph to be symmetric about the '
+ 'origin.\n'
+ '## Step 7:  The phase shift $-c$ in the graph of $y = a \\sin (bx + c) + d$ '
+ 'should be equal to $\\pi$ for the graph to be symmetric about the origin.\n'
+ '## Step 8:  So, we have $-c = \\pi$, and solving for $c$, we get $c = '
+ '-\\pi$.\n'
+ '## Step 9:  Therefore, the smallest possible value of $c$ is '
+ '$\\boxed{-\\pi}$.\n'
+ '\n',
+ '## Step 1\n'
+ 'The function given is $y = a \\sin (bx + c) + d$ where $a$, $b$, $c$, and '
+ '$d$ are positive constants. The graph of the function consists of a sine '
+ 'curve with amplitude $|a| = 2$ and period $\\frac{2\\pi}{b}$.\n'
+ '\n',
+ '## Step 1:  The problem presents a graph of the sine function represented by '
+ 'the equation $y = a \\sin (bx + c) + d.$\n'
+ '## Step 2:  Given that the graph is a sine function, we know that the '
+ 'smallest value that $y$ can take is $-d,$ and the largest value is $d.$\n'
+ '## Step 3:  The graph provides a starting point with the value of $d,$ which '
+ 'is $1.$\n'
+ '## Step 4:  Now, to find the smallest possible value of $c,$ we need to '
+ 'determine the phase shift required for the graph to start at the value of $y '
+ '= 1.$\n'
+ '## Step 5:  The graph oscillates at a frequency of $3,$ and it is centered '
+ 'at $-\\frac{\\pi}{2},$ which implies that the period of the function is '
+ '$2\\pi.$\n'
+ '## Step 6:  We use the formula for the period of a sine function, which is '
+ '$\\frac{2\\pi}{|b|},$ to find the value of $b.$\n'
+ '## Step 7:  Therefore, $b = \\frac{2\\pi}{|3|} = \\frac{2\\pi}{3},$ and we '
+ 'have the equation $y = a \\sin \\left( \\frac{2\\pi x}{3} + \\frac{\\pi}{2} '
+ '\\right) + 1.$\n'
+ '## Step 8:  To shift the graph to start at the value of $y = 1,$ we need to '
+ 'adjust the phase shift, which is represented by the value of $c.$\n'
+ '## Step 9:  In this case, the phase shift is $\\frac{\\pi}{2}.$\n'
+ '## Step 10:  Therefore, the smallest possible value of $c$ is '
+ '$\\frac{\\pi}{2}.$\n'
+ '\n',
+ '## Step 1:  First, we need to understand the given graph and identify its '
+ 'key characteristics.\n'
+ '## Step 2:  The graph is a sinusoidal curve of the form $y = a \\sin (bx + '
+ 'c) + d$ and is enclosed within the interval $-3\\pi$ to $3\\pi.$\n'
+ '## Step 3:  Since the graph completes one full cycle within this interval, '
+ 'the period of the graph is $\\frac{2\\pi}{3}.$\n'
+ "## Step 4:  The graph's amplitude is 2, as it oscillates between 1 and 3.\n"
+ "## Step 5:  We're looking for the smallest possible value of $c,$ which is "
+ 'the phase shift of the sinusoidal function.\n'
+ '## Step 6:  In order to find the smallest possible value of $c,$ we can use '
+ 'the following property: $c$ is the angle to the left or right of the center '
+ 'line of the graph, where the center line is the mean of the maximum and '
+ 'minimum values.\n'
+ '## Step 7:  Using this property, we find that the smallest possible value of '
+ '$c$ is the angle to the left of the center line, which is '
+ '$\\frac{-\\pi}{3}.$\n'
+ '## Step 8:  Therefore, the smallest possible value of $c$ is '
+ '$\\boxed{-\\frac{\\pi}{3}}.$\n'
+ '\n',
+ '## Step 1\n'
+ 'To find the smallest possible value of $c$ in the equation $y = a \\sin (bx '
+ '+ c) + d$, we need to consider the properties of the sine function. The sine '
+ 'function has a period of $2\\pi$, and its maximum value is $1$.\n'
+ '\n',
+ '## Step 1\n'
+ 'The graph indicates a sine function that is shifted to the left by '
+ '$\\frac{\\pi}{3}$ units.\n'
+ '\n',
+ '## Step 1:  The given problem involves a trigonometric function in the form '
+ '$y = a \\sin (bx + c) + d.$\n'
+ '## Step 2:  To find the smallest possible value of $c,$ we need to analyze '
+ 'the graph of the function and identify its key characteristics.\n'
+ '## Step 3:  The graph of $y = \\sin (bx + c)$ has a general form of $\\sin '
+ '(x + c),$ where $c$ can influence the phase shift of the graph.\n'
+ '## Step 4:  The graph provided in the problem represents $y = \\sin (bx + c) '
+ '+ d.$\n'
+ '## Step 5:  We can observe that the graph oscillates between the values of '
+ '$1$ and $3$.\n'
+ '## Step 6:  To find the smallest possible value of $c,$ we need to consider '
+ "how the phase shift affects the graph's position and amplitude.\n"
+ "## Step 7:  The graph's amplitude is given by the absolute difference "
+ 'between the maximum and minimum values, i.e., $3 - 1 = 2.$ This means that '
+ 'the graph oscillates between $1$ and $3$ units above the x-axis.\n'
+ '## Step 8:  For the graph to be symmetric about the x-axis, the phase shift '
+ '($c$) must be such that it aligns the maximum and minimum points with the '
+ 'x-axis.\n'
+ '## Step 9:  The graphs shown have their minimum points shifted to the right '
+ 'by the value of $c$ that makes the phase shift equal to $\\frac{3}{2},$ or '
+ '$\\frac{2\\pi}{3}.$\n'
+ '## Step 10:  Therefore, the smallest possible value of $c$ that achieves '
+ 'this symmetry is $\\frac{2\\pi}{3}.$\n'
+ '\n',
+ '## Step 1\n'
+ 'The problem provides a graph of the function $y = a \\sin (bx + c) + d$ and '
+ 'asks for the smallest possible value of $c.$ To solve this problem, we need '
+ 'to analyze the graph of the function.\n'
+ '\n']
