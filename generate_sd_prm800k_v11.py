@@ -5,6 +5,7 @@ import pprint
 
 from collections import defaultdict
 import random
+import numpy as np
 
 import torch 
 import torch.distributed as dist
@@ -40,6 +41,23 @@ def main():
         print(GPUS)
     else:
         print("CUDA is not available.")
+
+    # general params
+    config = Config()
+    config.agg_strategy = 'last'
+    config.n = 8
+    config.beam_width = 4
+    config.lookahead = 0
+    config.num_iterations = 40
+    config.sort_completed = False
+    config.filter_duplicates = True
+    config.seed = 0
+    
+    # diverse_select params
+    config.lam = 10
+    config.normalize_embeds = True
+
+    config.version = "v11"
     
     # baseline: gpu_memory_utilization=0.2
     # use the standard model 
@@ -51,17 +69,7 @@ def main():
         # enable_chunked_prefill=False, # and enable_chunked_prefill
         max_model_len = 5000,
         dtype = "float16",
-        seed = 123)
-    
-    # # use the gguf quantized model 
-    # llm_regular = LLM(
-    #     model = llm_dir,
-    #     tokenizer = llm_tokenizer_dir,
-    #     tensor_parallel_size=1,
-    #     gpu_memory_utilization = 0.2,  # Utilize 50% of GPU memory
-    #     max_model_len = 5000,
-    #     dtype = "float16",
-    #     seed = 123)
+        seed = config.seed)
 
     tokenizer = AutoTokenizer.from_pretrained(llm_tokenizer_dir)
     llm_tf = AutoModelForCausalLM.from_pretrained(llm_tokenizer_dir).to("cuda:1")
@@ -71,28 +79,11 @@ def main():
 
     #  load data 
     data_by_levels = load_data_prm800k(data_dir)
-
-    # load random_seeds     
-    # random_seeds = np.loadtxt("random_seeds.txt").astype("int64")
-    # random_seeds = [int(seed) for seed in random_seeds]
-
-    # general params
-    config = Config()
-    config.agg_strategy = 'last'
-    config.n = 8
-    config.beam_width = 2
-    config.lookahead = 0
-    config.num_iterations = 2
-    config.sort_completed = False
     
-    # diverse_select params
-    config.lam = 10
-    config.normalize_embeds = True
-    
-    level = '4'
+    level = 4
     num_questions = len(data_by_levels[level])
     # num_questions = 20
-    num_trials = 20
+    num_trials = 5
     print(f"num_questions = {num_questions}")
     print(f"num_trials = {num_trials}")
     
@@ -112,11 +103,14 @@ def main():
     print(search_algo)
 
     # run search_algo and save results
-    result_dir = f"results/generate_sd_prm800k_level{level}_n{config.n}_bw{config.beam_width}_depth{config.num_iterations}_lam{config.lam}_{config.normalize_embeds}_v11.jsonl"
-    start_time = time.time()
+    config_name = f"sd--n-{config.n}--bw-{config.beam_width}--d-{config.num_iterations}--lam-{config.lam}--{config.normalize_embeds}--filtdup-{config.filter_duplicates}--level-{level}--{config.version}"
+    result_dir = f"results/generate_{config_name}.jsonl"
+    print(result_dir)
+    
     with open(result_dir, 'w', encoding = 'utf-8') as fout:
         pass 
-    
+        
+    start_time = time.time()
     for trial_idx in range(num_trials):
         np.random.seed(100000+trial_idx)
         random.seed(100000+trial_idx)

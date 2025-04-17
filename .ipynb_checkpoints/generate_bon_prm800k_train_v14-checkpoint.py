@@ -50,7 +50,7 @@ def main():
         # enable_chunked_prefill=False, # and enable_chunked_prefill
         max_model_len = 5000,
         dtype = "float16",
-        seed = 123)
+        seed = 0)
     
     # # use the gguf quantized model 
     # llm_regular = LLM(
@@ -72,12 +72,12 @@ def main():
 
     # general params
     config = Config()
-    config.n = 16
+    config.n = 256
     
-    level = '4'
+    level = 4
     num_questions = len(data_by_levels[level])
     # num_questions = 20
-    num_trials = 20
+    num_trials = 2
     print(f"num_questions = {num_questions}")
     
     # get batch of questions
@@ -92,8 +92,9 @@ def main():
         else:
             search_algo = best_of_n.best_of_n_v12
     print(search_algo)
-
+    
     # run search_algo and save results
+    config_name = f"bon--n-{config.n}--level-{level}--{config.version}"
     result_dir = f"results/generate_bon_prm800k_train_level{level}_n{config.n}_v11.jsonl"
     start_time = time.time()
     with open(result_dir, 'w', encoding = 'utf-8') as fout:

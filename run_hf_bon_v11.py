@@ -1,5 +1,9 @@
 
-import os 
+import os
+import copy
+
+from datasets import Dataset, load_dataset
+
 import torch
 import torch.distributed as dist
 
@@ -13,6 +17,8 @@ from sal.utils.score import score
 
 # from sal.models.reward_models import load_prm
 from core.reward_models import RLHFFlow
+
+from utils.load_data import load_data_prm800k_hf
 
 from datasets import Dataset, load_dataset
 
@@ -36,7 +42,7 @@ def main():
     base_dir = '/groups/kjun/tnn/datasets/'
     
     # dataset path
-    data_dir = base_dir + "/math500"
+    data_dir = base_dir + "/prm800k/math_splits"
     
     # llm and prm path
     llm_dir = base_dir + "/Llama-3.2-1B-Instruct-GGUF/Llama-3.2-1B-Instruct.Q4_K_M.gguf"
@@ -58,31 +64,38 @@ def main():
     parser = H4ArgumentParser(Config)
     config = parser.parse()
     # config.approach = "best_of_n"
-    config.n = 8
+    config.n = 16
     config.search_batch_size = 25 
-    config.sort_completed = True
-    config.filter_duplicates = True 
+    # config.sort_completed = True
+    # config.filter_duplicates = True 
+    config.dataset_split = 'test'
     config.seed = 0
+    config.version = "v01"
+    # config.dataset_start = 0
+    # config.dataset_end  = 200
 
     approach_fn = APPROACHES[config.approach]
 
     level = 4
     
     dataset_id = "tnguyen9210/LLM-Reasoning-Math-500"
-    revision = f"bon--n-{config.n}--level-{level}--v11"
+    config_name = f"bon--n-{config.n}--level-{level}--{config.dataset_split}--{config.version}"
     if config.dataset_start is not None and config.dataset_end is not None:
-        revision = f"{self.revision}--chunk-{config.dataset_start}_{config.dataset_end}"
+        config_name = f"{config_name}--chunk-{config.dataset_start}_{config.dataset_end}"
 
     #  load data 
     # data_by_levels = load_data_prm800k(data_dir)
-    dataset = load_dataset(config.dataset_name, split=config.dataset_split, cache_dir=data_dir)
+    # dataset = load_dataset(config.dataset_name, split=config.dataset_split, cache_dir=data_dir)
+    dataset = load_data_prm800k_hf(data_dir, split=config.dataset_split)
     if level != "all":
         dataset = dataset.filter(lambda example: example['level'] == level)
+        
     if config.dataset_start is not None and config.dataset_end is not None:
         dataset = dataset.select(range(config.dataset_start, config.dataset_end))
+    
     print(f"{level}: {len(dataset)}")
     print(f"approach = {config.approach}")
-    print(f"revision = {revision}")
+    print(f"config_name = {config_name}")
     
     # load llm and prm
     num_gpus = torch.cuda.device_count()
@@ -99,30 +112,30 @@ def main():
         seed = config.seed)
     # prm = load_prm(config)
 
-    prm = RLHFFlow(model_path=prm_tokenizer_dir, device_map='cuda:1')
+    prm = RLHFFlow(model_path=prm_tokenizer_dir, device_map='cuda:1')    
 
-    
-    dataset = dataset.map(
-        approach_fn,
-        batched=True,
-        batch_size=config.search_batch_size,
-        fn_kwargs={"config": config, "llm": llm_vllm, "prm": prm},
-        desc="Running search",
-        load_from_cache_file=False,
-    )
+    num_trials = 5
 
-    dataset = score(dataset, config)
+    for trial_idx in range(num_trials):
+        torch.manual_seed(100000+trial_idx)
+        torch.cuda.manual_seed(100000+trial_idx)
 
-    # config.push_to_hub = True
-    # config.hub_dataset_id = dataset_id
-    # config.revision = revision
-    
-    dataset.push_to_hub(dataset_id, config_name=revision, split='test')
+        _dataset = copy.deepcopy(dataset)
+        _dataset = _dataset.map(
+            approach_fn,
+            batched=True,
+            batch_size=config.search_batch_size,
+            fn_kwargs={"config": config, "llm": llm_vllm, "prm": prm},
+            desc="Running search",
+            load_from_cache_file=False,
+        )
 
-    dataset.to_json(f"results/{revision}.jsonl")
-    
-    # save_dataset(dataset, config)
-    # logger.info("Done 🔥!")
+        _dataset = score(_dataset, config)
+
+        # _dataset.push_to_hub(dataset_id, config_name=f"{config_name}--trial-{trial_idx}")
+        _dataset.to_json(f"results/{config_name}--trial-{trial_idx}.jsonl")
+
+        del(_dataset)
     dist.destroy_process_group()
 
 if __name__ == "__main__":

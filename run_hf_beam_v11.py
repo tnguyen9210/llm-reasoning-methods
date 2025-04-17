@@ -1,4 +1,6 @@
 
+import copy 
+
 import os 
 import torch
 import torch.distributed as dist
@@ -58,26 +60,37 @@ def main():
     parser = H4ArgumentParser(Config)
     config = parser.parse()
     config.approach = "beam_search"
-    config.n = 4
+    config.n = 8
+    config.beam_width = 4
+    config.lookahead = 1
+    config.num_iterations = 40
     config.search_batch_size = 1 
-    # config.sort_completed = True
+    config.sort_completed = False
     config.filter_duplicates = True 
     config.seed = 0
+    config.version = "v01"
+    # config.dataset_start = None
+    # config.dataset_end  = None
 
     approach_fn = APPROACHES[config.approach]
 
-    level = 2
+    level = 4
     
     dataset_id = "tnguyen9210/LLM-Reasoning-Math-500"
-    revision = f"beam-n{config.n}-level{level}-v11"
-
+    config_name = f"beam--n-{config.n}--d-{config.num_iterations}--bw-{config.beam_width}--lh-{config.lookahead}--dup-{config.filter_duplicates}--limit--False--level-{level}--{config.version}"
+    if config.dataset_start is not None and config.dataset_end is not None:
+        config_name = f"{config_name}--chunk-{config.dataset_start}_{config.dataset_end}"
+        
     #  load data 
     # data_by_levels = load_data_prm800k(data_dir)
     dataset = load_dataset(config.dataset_name, split=config.dataset_split, cache_dir=data_dir)
-    dataset = dataset.filter(lambda example: example['level'] == level)
+    if level != "all":
+        dataset = dataset.filter(lambda example: example['level'] == level)
+    if config.dataset_start is not None and config.dataset_end is not None:
+        dataset = dataset.select(range(config.dataset_start, config.dataset_end))
     print(f"{level}: {len(dataset)}")
     print(f"approach = {config.approach}")
-    print(f"revision = {revision}")
+    print(f"config_name = {config_name}")
     
     # load llm and prm
     num_gpus = torch.cuda.device_count()
@@ -96,22 +109,26 @@ def main():
 
     prm = RLHFFlow(model_path=prm_tokenizer_dir, device_map='cuda:1')
 
+    num_trials = 5
     
-    dataset = dataset.map(
-        approach_fn,
-        batched=True,
-        batch_size=config.search_batch_size,
-        fn_kwargs={"config": config, "llm": llm_vllm, "prm": prm},
-        desc="Running search",
-        load_from_cache_file=False,
-    )
+    for trial_idx in range(num_trials):
+        torch.manual_seed(100000+trial_idx)
+        torch.cuda.manual_seed(100000+trial_idx)
 
-    dataset = score(dataset, config)
-    
+        _dataset = copy.deepcopy(dataset)
+        _dataset = _dataset.map(
+            approach_fn,
+            batched=True,
+            batch_size=config.search_batch_size,
+            fn_kwargs={"config": config, "llm": llm_vllm, "prm": prm},
+            desc="Running search",
+            load_from_cache_file=False,
+        )
 
-    dataset.push_to_hub(dataset_id, config_name=revision)
+        _dataset = score(_dataset, config)
 
-    dataset.to_json(f"results/{revision}.jsonl")
+        # _dataset.push_to_hub(dataset_id, config_name=f"{config_name}--trial-{trial_idx}")
+        _dataset.to_json(f"results/{config_name}--trial-{trial_idx}.jsonl")
     
     # save_dataset(dataset, config)
     # logger.info("Done 🔥!")
