@@ -83,12 +83,12 @@ def main():
     config.n = 8
     config.beam_width = 2
     config.lookahead = 0
-    config.num_iterations = 10
+    config.num_iterations = 2
     config.sort_completed = False
     
     # diverse_select params
     config.lam = 10
-    config.normalize_embeds = True
+    config.normalize_embeds = False
     
     level = '4'
     num_questions = len(data_by_levels[level])

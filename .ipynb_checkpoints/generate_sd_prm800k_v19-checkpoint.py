@@ -5,6 +5,7 @@ import pprint
 
 from collections import defaultdict
 import random
+import numpy as np
 
 import torch 
 import torch.distributed as dist
@@ -113,6 +114,7 @@ def main():
 
     # run search_algo and save results
     result_dir = f"results/generate_sd_prm800k_level{level}_n{config.n}_bw{config.beam_width}_depth{config.num_iterations}_lam{config.lam}_{config.normalize_embeds}_v11.jsonl"
+    print(result_dir)
     start_time = time.time()
     with open(result_dir, 'w', encoding = 'utf-8') as fout:
         pass 

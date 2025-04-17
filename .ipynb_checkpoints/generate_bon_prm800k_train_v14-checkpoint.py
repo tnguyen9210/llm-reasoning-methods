@@ -5,7 +5,6 @@ import pprint
 
 from collections import defaultdict
 import random
-import numpy as np
 
 import torch 
 import torch.distributed as dist
@@ -14,8 +13,8 @@ from vllm import LLM, SamplingParams, PoolingParams
 
 from sal.config import Config
 
-from core import select_diverse
-from utils.load_data import load_data_prm800k
+from core import best_of_n
+from utils.load_data import *
 
 
 def main():
@@ -33,8 +32,7 @@ def main():
     llm_tokenizer_dir = base_dir + "/Llama-3.2-1B-Instruct"
     prm_tokenizer_dir = base_dir + "/Llama3.1-8B-PRM-Deepseek-Data"
 
-    os.environ["CUDA_VISIBLE_DEVICES"] = "0,1,2,3"
-    os.environ["TOKENIZERS_PARALLELISM"] = "false"
+    os.environ["CUDA_VISIBLE_DEVICES"]="0,1,2,3"
     
     if torch.cuda.is_available():
         GPUS = os.environ.get('CUDA_VISIBLE_DEVICES', "0").split(',')
@@ -63,15 +61,10 @@ def main():
     #     max_model_len = 5000,
     #     dtype = "float16",
     #     seed = 123)
-
-    tokenizer = AutoTokenizer.from_pretrained(llm_tokenizer_dir)
-    llm_tf = AutoModelForCausalLM.from_pretrained(llm_tokenizer_dir).to("cuda:1")
-    # model_regular.generation_config.pad_token_id = tokenizer.eos_token_id
-    gc.collect();torch.cuda.empty_cache();
-    print('#--- memory:', torch.cuda.memory_allocated(0)/(1024**3))
+    
 
     #  load data 
-    data_by_levels = load_data_prm800k(data_dir)
+    data_by_levels = load_train_data_prm800k(data_dir)
 
     # load random_seeds     
     # random_seeds = np.loadtxt("random_seeds.txt").astype("int64")
@@ -79,66 +72,45 @@ def main():
 
     # general params
     config = Config()
-    config.agg_strategy = 'last'
-    config.n = 8
-    config.beam_width = 2
-    config.lookahead = 0
-    config.num_iterations = 10
-    config.sort_completed = False
-    
-    # diverse_select params
-    config.lam = 10
-    config.normalize_embeds = True
+    config.n = 16
     
     level = '4'
     num_questions = len(data_by_levels[level])
     # num_questions = 20
     num_trials = 20
     print(f"num_questions = {num_questions}")
-    print(f"num_trials = {num_trials}")
     
     # get batch of questions
     batch_of_questions = [data_by_levels[level][q_idx]['problem'] for q_idx in range(num_questions)]
 
     # select search algo
-    search_name = 'select_diverse'
+    search_name = 'best_of_n'
     algo_type = 1
     if search_name == 'best_of_n':
         if algo_type == 1:
             search_algo = best_of_n.best_of_n_v11
         else:
             search_algo = best_of_n.best_of_n_v12
-    elif search_name == "select_diverse":
-        search_algo = select_diverse.select_diverse_search
     print(search_algo)
 
     # run search_algo and save results
-    result_dir = f"results/generate_sd_prm800k_level{level}_n{config.n}_bw{config.beam_width}_depth{config.num_iterations}_lam{config.lam}_{config.normalize_embeds}_v11.jsonl"
-    print(result_dir)
+    result_dir = f"results/generate_bon_prm800k_train_level{level}_n{config.n}_v11.jsonl"
     start_time = time.time()
     with open(result_dir, 'w', encoding = 'utf-8') as fout:
-        pass 
-    
-    for trial_idx in range(num_trials):
-        np.random.seed(100000+trial_idx)
-        random.seed(100000+trial_idx)
-        torch.manual_seed(100000+trial_idx)
-        torch.cuda.manual_seed(100000+trial_idx)
-        
-        # best_of_n(batch_of_questions, config, llm_vllm, random_seeds[trial_idx])
-        results = search_algo(batch_of_questions, config, llm_vllm, llm_tf, tokenizer)
-        with open(result_dir, 'a', encoding = 'utf-8') as fout:
+        for trial_idx in range(num_trials):
+            # best_of_n(batch_of_questions, config, llm_vllm, random_seeds[trial_idx])
+            results = search_algo(batch_of_questions, config, llm_vllm, 10000+trial_idx)
             json.dump(results, fout)
             fout.write('\n')
-    
-        # compute the time
-        if trial_idx % 1 == 0:
-            total_time = time.time() - start_time
-            time_per_trial = total_time/(trial_idx+1)
-            time_per_question = time_per_trial/num_questions
-            print(f"trial {trial_idx}")
-            print(f"it takes {time_per_question:0.4f}s per question")
-            print(f"it takes {time_per_trial:0.4f}s per trial")
+        
+            # compute the time
+            if trial_idx % 1 == 0:
+                total_time = time.time() - start_time
+                time_per_trial = total_time/(trial_idx+1)
+                time_per_question = time_per_trial/num_questions
+                print(f"trial {trial_idx}")
+                print(f"it takes {time_per_question:0.4f}s per question")
+                print(f"it takes {time_per_trial:0.4f}s per trial")
     
     total_time = time.time() - start_time
     print(f"it takes {total_time:0.4f}s in total")
