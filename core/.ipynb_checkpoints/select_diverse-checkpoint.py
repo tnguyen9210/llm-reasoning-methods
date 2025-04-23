@@ -301,18 +301,28 @@ def select_diverse_search(batch_of_questions, config, llm_vllm, llm_tf, llm_toke
         total_time = time.time() - start_time
         # print(f"it takes {total_time:0.4f}s")
                 
-
+    # Filter duplicate active beams
+    if config.filter_duplicates:
+        # Create a dictionary to filter duplicates and retain order
+        unique_beam_dict = {}
+        for i, b in enumerate(completed_beams):
+            if b.current_text not in unique_beam_dict:
+                unique_beam_dict[b.current_text] = (
+                    i  # Map the unique text to its index
+                )
+        completed_beams = [completed_beams[i] for i in unique_beam_dict.values()]
+            
     # Collect the completions from beams
     completions = [[] for _ in range(len(batch_of_questions))]
-    completion_ntokens = [[] for _ in range(len(batch_of_questions))]
+    # completion_ntokens = [[] for _ in range(len(batch_of_questions))]
     
     for beam in completed_beams:
         completions[beam.q_idx].append(beam.current_text)
-        completion_ntokens[beam.q_idx].append(beam.current_text)
+        # completion_ntokens[beam.q_idx].append(beam.current_text)
 
     results = defaultdict(list)
     results["completions"] = completions
-    results["completion_ntokens"] = completion_ntokens
+    # results["completion_ntokens"] = completion_ntokens
     
     return results
 

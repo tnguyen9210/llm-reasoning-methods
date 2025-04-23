@@ -1,0 +1,122 @@
+num_questions = 2
+
+-> question idx = 0
+The set of points $(x,y,z)$ that satisfy
+\[2x = 3y = -z\]is a line.
+
+The set of points $(x,y,z)$ that satisfy
+\[6x = -y = -4z\]is another line.
+
+Find the angle between these lines, in degrees.
+actual answer = 90^\circ
+
+ -> completion idx = 0
+completion answer = 64.04
+completion_log_probs = [-646.3187 -664.826  -679.482  -686.1777 -696.1884 -700.6152 -707.6687
+ -731.0852 -741.6089]
+completion_ppls = [2.0294e-281 1.8610e-289 8.0301e-296 9.9271e-299 4.4590e-303 5.3296e-305
+ 4.6067e-308 3.1169e-318 8.3991e-323]
+completion_ntokens = [ 74  55 115 114 100  47  30  51  13], total = 599
+## Step 1: To find the angle between the two lines, we first need to determine the direction vectors of each line.
+The direction vector of the first line is given by the coefficients of x, y, and z in the equation 2x = 3y = -z. This can be represented as (2, 3, -1).
+
+## Step 2: Similarly, the direction vector of the second line is given by the coefficients of x, y, and z in the equation 6x = -y = -4z. This can be represented as (6, -1, -4).
+
+## Step 3: We can calculate the dot product of the two direction vectors using the formula (a1, b1, c1) . (a2, b2, c2) = a1*a2 + b1*b2 + c1*c2. Substituting the values, we get (2, 3, -1) . (6, -1, -4) = 2*6 + 3*(-1) + (-1)*(-4) = 12 - 3 + 4 = 13.
+
+## Step 4: To find the magnitude of each direction vector, we use the formula sqrt(a^2 + b^2 + c^2). For the first direction vector, the magnitude is sqrt(2^2 + 3^2 + (-1)^2) = sqrt(4 + 9 + 1) = sqrt(14). For the second direction vector, the magnitude is sqrt(6^2 + (-1)^2 + (-4)^2) = sqrt(36 + 1 + 16) = sqrt(53).
+
+## Step 5: Now, we can use the formula for finding the angle between two vectors: cos(θ) = (a · b) / (|a| |b|), where θ is the angle between the vectors, a and b are the direction vectors, and |a| and |b| are the magnitudes of the vectors. Substituting the calculated values, we get cos(θ) = 13 / (sqrt(14) * sqrt(53)).
+
+## Step 6: To find the angle θ, we take the inverse cosine (arccos) of both sides. This gives us θ = arccos(13 / (sqrt(14) * sqrt(53))).
+
+## Step 7: Simplifying the expression inside the arccos, we get θ = arccos(13 / sqrt(742)).
+
+## Step 8: Now we calculate the arccos: arccos(13 / sqrt(742)) ≈ arccos(13 / 26.92) ≈ arccos(0.483) ≈ 64.04°
+
+The final answer is: $\boxed{64.04}$
+
+ -> completion idx = 1
+completion answer = 48.23
+completion_log_probs = [-646.3187 -664.826  -678.0975 -685.2695 -689.4984 -696.4014 -700.3063
+ -700.9261 -702.8893 -709.0497 -713.4336 -717.4699 -723.7598 -725.222
+ -736.879  -755.6553 -766.1562 -780.9893 -787.4972 -795.8904 -806.1201]
+completion_ppls = [2.0294e-281 1.8610e-289 3.2063e-295 2.4616e-298 3.5865e-300 3.6035e-303
+ 7.2581e-305 3.9054e-305 5.4832e-306 1.1578e-308 1.4445e-310 2.5514e-312
+ 4.7329e-315 1.0966e-315 9.4959e-321 0.0000e+000 0.0000e+000 0.0000e+000
+ 0.0000e+000 0.0000e+000 0.0000e+000]
+completion_ntokens = [74 55 75 67 48 76 65 65 49 42 42 32 34 29 29 36 28 27 37 17 13], total = 940
+## Step 1: To find the angle between the two lines, we first need to determine the direction vectors of each line.
+The direction vector of the first line is given by the coefficients of x, y, and z in the equation 2x = 3y = -z. This can be represented as (2, 3, -1).
+
+## Step 2: Similarly, the direction vector of the second line is given by the coefficients of x, y, and z in the equation 6x = -y = -4z. This can be represented as (6, -1, -4).
+
+## Step 3: Now, we can use the formula for finding the angle between two vectors: $\cos{\theta} = \frac{\vec{a} \cdot \vec{b}}{|\vec{a}| |\vec{b}|}$, where $\vec{a}$ and $\vec{b}$ are the direction vectors of the two lines.
+
+## Step 4: Substituting the direction vectors into the formula, we get $\cos{\theta} = \frac{(2, 3, -1) \cdot (6, -1, -4)}{(2, 3, -1) \cdot (6, -1, -4)}$.
+
+## Step 5: Evaluating the dot product, we have $\cos{\theta} = \frac{12 - 3 + 4}{12 + 3 + 4} = \frac{13}{19}$.
+
+## Step 6: Next, we need to find the magnitudes of the direction vectors. The magnitude of a vector $\vec{a} = (a_1, a_2, a_3)$ is given by $|\vec{a}| = \sqrt{a_1^2 + a_2^2 + a_3^2}$.
+
+## Step 7: For the direction vector (2, 3, -1), the magnitude is $|\vec{a}| = \sqrt{2^2 + 3^2 + (-1)^2} = \sqrt{4 + 9 + 1} = \sqrt{14}$.
+
+## Step 8: For the direction vector (6, -1, -4), the magnitude is $|\vec{b}| = \sqrt{6^2 + (-1)^2 + (-4)^2} = \sqrt{36 + 1 + 16} = \sqrt{53}$.
+
+## Step 9: Now, we can substitute these values into the formula for $\cos{\theta}$: $\cos{\theta} = \frac{\frac{13}{19}}{\sqrt{14} \sqrt{53}}$.
+
+## Step 10: Simplifying, we get $\cos{\theta} = \frac{13}{19} \cdot \frac{1}{\sqrt{14} \sqrt{53}}$.
+
+## Step 11: Further simplifying, we have $\cos{\theta} = \frac{13}{19} \cdot \frac{1}{\sqrt{14 \cdot 53}}$.
+
+## Step 12: $\cos{\theta} = \frac{13}{19} \cdot \frac{1}{\sqrt{742}}$.
+
+## Step 13: $\cos{\theta} = \frac{13}{19} \cdot \frac{\sqrt{742}}{\sqrt{742}}$.
+
+## Step 14: $\cos{\theta} = \frac{13\sqrt{742}}{19\sqrt{742}}$.
+
+## Step 15: The square roots can be canceled out, leaving $\cos{\theta} = \frac{13}{19}$.
+
+## Step 16: Since this is a unit vector, the angle between the two lines is $\theta = \cos^{-1}(\frac{13}{19})$.
+
+## Step 17: Calculating $\cos^{-1}(\frac{13}{19})$ gives us the angle in radians.
+
+## Step 18: $\cos^{-1}(\frac{13}{19})$ is approximately 0.842068.
+
+## Step 19: Converting this angle from radians to degrees, we have $\theta \approx 0.842068 \cdot \frac{180}{\pi}$.
+
+## Step 20: $\theta \approx 48.23$ degrees.
+
+The final answer is: $\boxed{48.23}$
+
+ -> completion idx = 2
+completion answer = 46.57
+completion_log_probs = [-646.3187 -672.9904 -683.487  -699.5311 -716.1077 -727.5823 -755.3626
+ -784.1871 -787.5131]
+completion_ppls = [2.0294e-281 5.2967e-293 1.4634e-297 1.5759e-304 9.9624e-312 1.0352e-316
+ 0.0000e+000 0.0000e+000 0.0000e+000]
+completion_ntokens = [ 74  58  98  73 135  99  78  79  13], total = 707
+## Step 1: To find the angle between the two lines, we first need to determine the direction vectors of each line.
+The direction vector of the first line is given by the coefficients of x, y, and z in the equation 2x = 3y = -z. This can be represented as (2, 3, -1).
+
+## Step 2: Similarly, the direction vector of the second line can be found from the coefficients of x, y, and z in the equation 6x = -y = -4z.
+This direction vector can be represented as (6, -1, -4).
+
+## Step 3: The angle between two vectors can be found using the dot product formula: $\mathbf{u} \cdot \mathbf{v} = |\mathbf{u}| |\mathbf{v}| \cos \theta$, where $\theta$ is the angle between the vectors.
+Let $\mathbf{u} = (2, 3, -1)$ and $\mathbf{v} = (6, -1, -4)$.
+
+## Step 4: Compute the dot product of vectors $\mathbf{u}$ and $\mathbf{v}$: $\mathbf{u} \cdot \mathbf{v} = (2)(6) + (3)(-1) + (-1)(-4) = 12 - 3 + 4 = 13$.
+
+## Step 5: The magnitudes of vectors $\mathbf{u}$ and $\mathbf{v}$ are calculated as follows:
+Magnitude of $\mathbf{u}$, $|\mathbf{u}| = \sqrt{2^2 + 3^2 + (-1)^2} = \sqrt{4 + 9 + 1} = \sqrt{14}$,
+Magnitude of $\mathbf{v}$, $|\mathbf{v}| = \sqrt{6^2 + (-1)^2 + (-4)^2} = \sqrt{36 + 1 + 16} = \sqrt{53}$.
+
+## Step 6: Now, we can use the dot product formula to solve for $\theta$: $\cos \theta = \frac{\mathbf{u} \cdot \mathbf{v}}{|\mathbf{u}| |\mathbf{v}|} = \frac{13}{\sqrt{14} \sqrt{53}} = \frac{13}{\sqrt{14 \cdot 53}} = \frac{13}{\sqrt{742}}$.
+
+## Step 7: To find $\theta$, we take the inverse cosine (arccos) of both sides: $\theta = \arccos \left( \frac{13}{\sqrt{742}} \right)$. We will use a calculator to find $\arccos \left( \frac{13}{\sqrt{742}} \right)$. 
+
+## Step 8: Using a calculator to find $\theta$, we get $\theta \approx \arccos \left( \frac{13}{\sqrt{742}} \right) \approx \arccos(0.6865) \approx 46.5676^\circ$. Rounded to two decimal places, $\theta \approx 46.57^\circ$.
+
+The final answer is: $\boxed{46.57}$
+
+ -> completion idx = 3

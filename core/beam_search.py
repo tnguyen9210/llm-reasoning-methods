@@ -135,7 +135,6 @@ def _beam_search(batch_of_questions, config, llm, prm):
 
         scores = prm.score(prompts, completions)
         
-
         agg_scores = [
             [aggregate_scores(s, config.agg_strategy) for s in score]
             for score in scores
