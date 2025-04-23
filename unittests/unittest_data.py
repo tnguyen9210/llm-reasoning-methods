@@ -9,9 +9,11 @@ from sal.utils.score import score
 
 def main():
     parser = H4ArgumentParser(Config)
+    print(parser)
     config = parser.parse()
     print(config)
-    print(parser)
+
+    dataset = get_dataset(config)
 
 
 if __name__ == "__main__":
