@@ -1,0 +1,17 @@
+['0']
+INFO 05-16 11:06:24 __init__.py:207] Automatically detected platform cuda.
+WARNING 05-16 11:06:25 config.py:2448] Casting torch.bfloat16 to torch.float16.
+INFO 05-16 11:06:41 config.py:549] This model supports multiple tasks: {'reward', 'generate', 'score', 'classify', 'embed'}. Defaulting to 'generate'.
+INFO 05-16 11:06:41 llm_engine.py:234] Initializing a V0 LLM engine (v0.7.3) with config: model='/groups/kjun/tnn/datasets//Llama-3.2-1B-Instruct', speculative_config=None, tokenizer='/groups/kjun/tnn/datasets//Llama-3.2-1B-Instruct', skip_tokenizer_init=False, tokenizer_mode=auto, revision=None, override_neuron_config=None, tokenizer_revision=None, trust_remote_code=False, dtype=torch.float16, max_seq_len=5000, download_dir=None, load_format=LoadFormat.AUTO, tensor_parallel_size=1, pipeline_parallel_size=1, disable_custom_all_reduce=False, quantization=None, enforce_eager=False, kv_cache_dtype=auto,  device_config=cuda, decoding_config=DecodingConfig(guided_decoding_backend='xgrammar'), observability_config=ObservabilityConfig(otlp_traces_endpoint=None, collect_model_forward_time=False, collect_model_execute_time=False), seed=0, served_model_name=/groups/kjun/tnn/datasets//Llama-3.2-1B-Instruct, num_scheduler_steps=1, multi_step_stream_outputs=True, enable_prefix_caching=False, chunked_prefill_enabled=False, use_async_output_proc=True, disable_mm_preprocessor_cache=False, mm_processor_kwargs=None, pooler_config=None, compilation_config={"splitting_ops":[],"compile_sizes":[],"cudagraph_capture_sizes":[256,248,240,232,224,216,208,200,192,184,176,168,160,152,144,136,128,120,112,104,96,88,80,72,64,56,48,40,32,24,16,8,4,2,1],"max_capture_size":256}, use_cached_outputs=False, 
+INFO 05-16 11:06:43 cuda.py:178] Cannot use FlashAttention-2 backend for Volta and Turing GPUs.
+INFO 05-16 11:06:43 cuda.py:226] Using XFormers backend.
+INFO 05-16 11:06:44 model_runner.py:1110] Starting to load model /groups/kjun/tnn/datasets//Llama-3.2-1B-Instruct...
+INFO 05-16 11:06:46 model_runner.py:1115] Loading model weights took 2.3185 GB
+INFO 05-16 11:06:46 worker.py:267] Memory profiling takes 0.46 seconds
+INFO 05-16 11:06:46 worker.py:267] the current vLLM instance can use total_gpu_memory (31.73GiB) x gpu_memory_utilization (0.70) = 22.21GiB
+INFO 05-16 11:06:46 worker.py:267] model weights take 2.32GiB; non_torch_memory takes 0.09GiB; PyTorch activation peak memory takes 1.19GiB; the rest of the memory reserved for KV Cache is 18.62GiB.
+INFO 05-16 11:06:47 executor_base.py:111] # cuda blocks: 38125, # CPU blocks: 8192
+INFO 05-16 11:06:47 executor_base.py:116] Maximum concurrency for 5000 tokens per request: 122.00x
+INFO 05-16 11:06:48 model_runner.py:1434] Capturing cudagraphs for decoding. This may lead to unexpected consequences if the model is not static. To run the model in eager mode, set 'enforce_eager=True' or use '--enforce-eager' in the CLI. If out-of-memory error occurs during cudagraph capture, consider decreasing `gpu_memory_utilization` or switching to eager mode. You can also reduce the `max_num_seqs` as needed to decrease memory usage.
+INFO 05-16 11:07:02 model_runner.py:1562] Graph capturing finished in 14 secs, took 0.13 GiB
+INFO 05-16 11:07:02 llm_engine.py:436] init engine (profile, create kv cache, warmup model) took 16.45 seconds

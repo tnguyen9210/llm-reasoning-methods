@@ -1,0 +1,84 @@
+/var/spool/slurm/d/job12894434/slurm_script: line 18: Usage:
+# Best-of-N on the MATH-500 dataset
+
+sbatch recipes/launch_array.slurm recipes/Llama-3.2-1B-Instruct/best_of_n.yaml \
+    --hub_dataset_id=<YOUR_ORG>/Llama-3.2-1B-Instruct-bon-completions
+: No such file or directory
++ micromamba activate py311
++ __mamba_wrap activate py311
++ local cmd=activate
++ case "${cmd}" in
++ __mamba_xctivate activate py311
++ local ask_mamba
+++ PS1='(py311) '
+++ __mamba_exe shell activate py311 --shell bash
+++ /opt/ohpc/pub/apps/micromamba/2.0.2-2/bin/micromamba shell activate py311 --shell bash
++ ask_mamba='. "/home/u20/tnguyen9210/micromamba/envs/py311/etc/conda/deactivate.d/libxml2_deactivate.sh"
+. "/home/u20/tnguyen9210/micromamba/envs/py311/etc/conda/deactivate.d/libglib_deactivate.sh"
+PS1='\''(py311) '\''
+export PATH='\''/home/u20/tnguyen9210/micromamba/envs/py311/bin:/opt/ohpc/pub/mpi/libfabric/1.18.0/bin:/opt/ohpc/pub/mpi/ucx-ohpc/1.17.0/bin:/opt/ohpc/pub/libs/hwloc/bin:/opt/ohpc/pub/mpi/openmpi5-gnu13/5.0.5/bin:/opt/ohpc/pub/compiler/gcc/13.2.0/bin:/opt/ohpc/pub/utils/prun/2.2:/opt/ohpc/pub/utils/autotools/bin:/opt/ohpc/pub/bin:/home/u20/tnguyen9210/micromamba/condabin:/opt/TurboVNC/bin:/usr/local/bin:/usr/bin:/usr/local/sbin:/usr/sbin:/home/u20/tnguyen9210/.local/bin:/home/u20/tnguyen9210/bin'\''
+export CONDA_SHLVL='\''1'\''
+export CONDA_PROMPT_MODIFIER='\''(py311) '\''
+. "/home/u20/tnguyen9210/micromamba/envs/py311/etc/conda/activate.d/libglib_activate.sh"
+. "/home/u20/tnguyen9210/micromamba/envs/py311/etc/conda/activate.d/libxml2_activate.sh"'
++ eval '. "/home/u20/tnguyen9210/micromamba/envs/py311/etc/conda/deactivate.d/libxml2_deactivate.sh"
+. "/home/u20/tnguyen9210/micromamba/envs/py311/etc/conda/deactivate.d/libglib_deactivate.sh"
+PS1='\''(py311) '\''
+export PATH='\''/home/u20/tnguyen9210/micromamba/envs/py311/bin:/opt/ohpc/pub/mpi/libfabric/1.18.0/bin:/opt/ohpc/pub/mpi/ucx-ohpc/1.17.0/bin:/opt/ohpc/pub/libs/hwloc/bin:/opt/ohpc/pub/mpi/openmpi5-gnu13/5.0.5/bin:/opt/ohpc/pub/compiler/gcc/13.2.0/bin:/opt/ohpc/pub/utils/prun/2.2:/opt/ohpc/pub/utils/autotools/bin:/opt/ohpc/pub/bin:/home/u20/tnguyen9210/micromamba/condabin:/opt/TurboVNC/bin:/usr/local/bin:/usr/bin:/usr/local/sbin:/usr/sbin:/home/u20/tnguyen9210/.local/bin:/home/u20/tnguyen9210/bin'\''
+export CONDA_SHLVL='\''1'\''
+export CONDA_PROMPT_MODIFIER='\''(py311) '\''
+. "/home/u20/tnguyen9210/micromamba/envs/py311/etc/conda/activate.d/libglib_activate.sh"
+. "/home/u20/tnguyen9210/micromamba/envs/py311/etc/conda/activate.d/libxml2_activate.sh"'
+++ . /home/u20/tnguyen9210/micromamba/envs/py311/etc/conda/deactivate.d/libxml2_deactivate.sh
++++ test -n ''
++++ unset XML_CATALOG_FILES
++++ unset xml_catalog_files_libxml2
+++ . /home/u20/tnguyen9210/micromamba/envs/py311/etc/conda/deactivate.d/libglib_deactivate.sh
++++ export GSETTINGS_SCHEMA_DIR=
++++ GSETTINGS_SCHEMA_DIR=
++++ unset GSETTINGS_SCHEMA_DIR_CONDA_BACKUP
++++ '[' -z ']'
++++ unset GSETTINGS_SCHEMA_DIR
+++ PS1='(py311) '
+++ export PATH=/home/u20/tnguyen9210/micromamba/envs/py311/bin:/opt/ohpc/pub/mpi/libfabric/1.18.0/bin:/opt/ohpc/pub/mpi/ucx-ohpc/1.17.0/bin:/opt/ohpc/pub/libs/hwloc/bin:/opt/ohpc/pub/mpi/openmpi5-gnu13/5.0.5/bin:/opt/ohpc/pub/compiler/gcc/13.2.0/bin:/opt/ohpc/pub/utils/prun/2.2:/opt/ohpc/pub/utils/autotools/bin:/opt/ohpc/pub/bin:/home/u20/tnguyen9210/micromamba/condabin:/opt/TurboVNC/bin:/usr/local/bin:/usr/bin:/usr/local/sbin:/usr/sbin:/home/u20/tnguyen9210/.local/bin:/home/u20/tnguyen9210/bin
+++ PATH=/home/u20/tnguyen9210/micromamba/envs/py311/bin:/opt/ohpc/pub/mpi/libfabric/1.18.0/bin:/opt/ohpc/pub/mpi/ucx-ohpc/1.17.0/bin:/opt/ohpc/pub/libs/hwloc/bin:/opt/ohpc/pub/mpi/openmpi5-gnu13/5.0.5/bin:/opt/ohpc/pub/compiler/gcc/13.2.0/bin:/opt/ohpc/pub/utils/prun/2.2:/opt/ohpc/pub/utils/autotools/bin:/opt/ohpc/pub/bin:/home/u20/tnguyen9210/micromamba/condabin:/opt/TurboVNC/bin:/usr/local/bin:/usr/bin:/usr/local/sbin:/usr/sbin:/home/u20/tnguyen9210/.local/bin:/home/u20/tnguyen9210/bin
+++ export CONDA_SHLVL=1
+++ CONDA_SHLVL=1
+++ export 'CONDA_PROMPT_MODIFIER=(py311) '
+++ CONDA_PROMPT_MODIFIER='(py311) '
+++ . /home/u20/tnguyen9210/micromamba/envs/py311/etc/conda/activate.d/libglib_activate.sh
++++ export GSETTINGS_SCHEMA_DIR_CONDA_BACKUP=
++++ GSETTINGS_SCHEMA_DIR_CONDA_BACKUP=
++++ export GSETTINGS_SCHEMA_DIR=/home/u20/tnguyen9210/micromamba/envs/py311/share/glib-2.0/schemas
++++ GSETTINGS_SCHEMA_DIR=/home/u20/tnguyen9210/micromamba/envs/py311/share/glib-2.0/schemas
+++ . /home/u20/tnguyen9210/micromamba/envs/py311/etc/conda/activate.d/libxml2_activate.sh
++++ test -n ''
++++ xml_catalog_files_libxml2=
++++ XML_CATALOG_FILES=
++++ conda_catalog_files=
++++ ifs_libxml2=' 	
+'
++++ IFS=' '
++++ rem=/home/u20/tnguyen9210/micromamba/envs/py311
++++ for pre in ${rem}
++++ test '' = /home/u20/tnguyen9210/micromamba/envs/py311
++++ conda_catalog_files=/home/u20/tnguyen9210/micromamba/envs/py311
++++ rem=
++++ IFS=' 	
+'
++++ conda_catalog_files='file:///home/u20/tnguyen9210/micromamba/envs/py311/etc/xml/catalog file:///etc/xml/catalog'
++++ export 'XML_CATALOG_FILES=file:///home/u20/tnguyen9210/micromamba/envs/py311/etc/xml/catalog file:///etc/xml/catalog'
++++ XML_CATALOG_FILES='file:///home/u20/tnguyen9210/micromamba/envs/py311/etc/xml/catalog file:///etc/xml/catalog'
++++ unset conda_catalog_files ifs_libxml2 rem
++ __mamba_hashr
++ '[' -n '' ']'
++ '[' -n '' ']'
++ hash -r
++ python generate_sdp_prm800k_v19.py
+Loading safetensors checkpoint shards:   0% Completed | 0/1 [00:00<?, ?it/s]
+Loading safetensors checkpoint shards: 100% Completed | 1/1 [00:01<00:00,  1.30s/it]
+Loading safetensors checkpoint shards: 100% Completed | 1/1 [00:01<00:00,  1.30s/it]
+
+Capturing CUDA graph shapes:   0%|          | 0/35 [00:00<?, ?it/s]Capturing CUDA graph shapes:   3%|▎         | 1/35 [00:00<00:14,  2.29it/s]Capturing CUDA graph shapes:   6%|▌         | 2/35 [00:00<00:13,  2.40it/s]Capturing CUDA graph shapes:   9%|▊         | 3/35 [00:01<00:13,  2.44it/s]Capturing CUDA graph shapes:  11%|█▏        | 4/35 [00:01<00:12,  2.46it/s]Capturing CUDA graph shapes:  14%|█▍        | 5/35 [00:02<00:12,  2.46it/s]Capturing CUDA graph shapes:  17%|█▋        | 6/35 [00:02<00:11,  2.47it/s]Capturing CUDA graph shapes:  20%|██        | 7/35 [00:02<00:11,  2.48it/s]Capturing CUDA graph shapes:  23%|██▎       | 8/35 [00:03<00:10,  2.48it/s]Capturing CUDA graph shapes:  26%|██▌       | 9/35 [00:03<00:10,  2.49it/s]Capturing CUDA graph shapes:  29%|██▊       | 10/35 [00:04<00:10,  2.49it/s]Capturing CUDA graph shapes:  31%|███▏      | 11/35 [00:04<00:09,  2.45it/s]Capturing CUDA graph shapes:  34%|███▍      | 12/35 [00:04<00:09,  2.47it/s]Capturing CUDA graph shapes:  37%|███▋      | 13/35 [00:05<00:08,  2.48it/s]Capturing CUDA graph shapes:  40%|████      | 14/35 [00:05<00:08,  2.49it/s]Capturing CUDA graph shapes:  43%|████▎     | 15/35 [00:06<00:08,  2.50it/s]Capturing CUDA graph shapes:  46%|████▌     | 16/35 [00:06<00:07,  2.50it/s]Capturing CUDA graph shapes:  49%|████▊     | 17/35 [00:06<00:07,  2.51it/s]Capturing CUDA graph shapes:  51%|█████▏    | 18/35 [00:07<00:06,  2.52it/s]Capturing CUDA graph shapes:  54%|█████▍    | 19/35 [00:07<00:06,  2.52it/s]Capturing CUDA graph shapes:  57%|█████▋    | 20/35 [00:08<00:05,  2.52it/s]Capturing CUDA graph shapes:  60%|██████    | 21/35 [00:08<00:05,  2.52it/s]Capturing CUDA graph shapes:  63%|██████▎   | 22/35 [00:08<00:05,  2.51it/s]Capturing CUDA graph shapes:  66%|██████▌   | 23/35 [00:09<00:04,  2.49it/s]Capturing CUDA graph shapes:  69%|██████▊   | 24/35 [00:09<00:04,  2.50it/s]Capturing CUDA graph shapes:  71%|███████▏  | 25/35 [00:10<00:03,  2.51it/s]Capturing CUDA graph shapes:  74%|███████▍  | 26/35 [00:10<00:03,  2.52it/s]Capturing CUDA graph shapes:  77%|███████▋  | 27/35 [00:10<00:03,  2.53it/s]Capturing CUDA graph shapes:  80%|████████  | 28/35 [00:11<00:02,  2.53it/s]Capturing CUDA graph shapes:  83%|████████▎ | 29/35 [00:11<00:02,  2.54it/s]Capturing CUDA graph shapes:  86%|████████▌ | 30/35 [00:12<00:01,  2.55it/s]Capturing CUDA graph shapes:  89%|████████▊ | 31/35 [00:12<00:01,  2.50it/s]Capturing CUDA graph shapes:  91%|█████████▏| 32/35 [00:12<00:01,  2.51it/s]Capturing CUDA graph shapes:  94%|█████████▍| 33/35 [00:13<00:00,  2.52it/s]Capturing CUDA graph shapes:  97%|█████████▋| 34/35 [00:13<00:00,  2.48it/s]Capturing CUDA graph shapes: 100%|██████████| 35/35 [00:14<00:00,  2.50it/s]Capturing CUDA graph shapes: 100%|██████████| 35/35 [00:14<00:00,  2.50it/s]
+Loading checkpoint shards:   0%|          | 0/4 [00:00<?, ?it/s]Loading checkpoint shards:  25%|██▌       | 1/4 [00:02<00:08,  2.99s/it]Loading checkpoint shards:  50%|█████     | 2/4 [00:05<00:05,  2.94s/it]Loading checkpoint shards:  75%|███████▌  | 3/4 [00:08<00:02,  2.88s/it]Loading checkpoint shards: 100%|██████████| 4/4 [00:09<00:00,  2.10s/it]Loading checkpoint shards: 100%|██████████| 4/4 [00:09<00:00,  2.40s/it]
+May 08 05:06:22.729783 1852303 slurmstepd   0x14673d379640: error: *** JOB 12894434 ON r5u31n1 CANCELLED AT 2025-05-08T05:06:22 ***

@@ -1,0 +1,123 @@
+/var/spool/slurm/d/job12894693/slurm_script: line 18: Usage:
+# Best-of-N on the MATH-500 dataset
+
+sbatch recipes/launch_array.slurm recipes/Llama-3.2-1B-Instruct/best_of_n.yaml \
+    --hub_dataset_id=<YOUR_ORG>/Llama-3.2-1B-Instruct-bon-completions
+: No such file or directory
++ micromamba activate py311
++ __mamba_wrap activate py311
++ local cmd=activate
++ case "${cmd}" in
++ __mamba_xctivate activate py311
++ local ask_mamba
+++ PS1='(py311) '
+++ __mamba_exe shell activate py311 --shell bash
+++ /opt/ohpc/pub/apps/micromamba/2.0.2-2/bin/micromamba shell activate py311 --shell bash
++ ask_mamba='. "/home/u20/tnguyen9210/micromamba/envs/py311/etc/conda/deactivate.d/libxml2_deactivate.sh"
+. "/home/u20/tnguyen9210/micromamba/envs/py311/etc/conda/deactivate.d/libglib_deactivate.sh"
+PS1='\''(py311) '\''
+export PATH='\''/home/u20/tnguyen9210/micromamba/envs/py311/bin:/opt/ohpc/pub/mpi/libfabric/1.18.0/bin:/opt/ohpc/pub/mpi/ucx-ohpc/1.17.0/bin:/opt/ohpc/pub/libs/hwloc/bin:/opt/ohpc/pub/mpi/openmpi5-gnu13/5.0.5/bin:/opt/ohpc/pub/compiler/gcc/13.2.0/bin:/opt/ohpc/pub/utils/prun/2.2:/opt/ohpc/pub/utils/autotools/bin:/opt/ohpc/pub/bin:/home/u20/tnguyen9210/micromamba/condabin:/opt/TurboVNC/bin:/usr/local/bin:/usr/bin:/usr/local/sbin:/usr/sbin:/home/u20/tnguyen9210/.local/bin:/home/u20/tnguyen9210/bin'\''
+export CONDA_SHLVL='\''1'\''
+export CONDA_PROMPT_MODIFIER='\''(py311) '\''
+. "/home/u20/tnguyen9210/micromamba/envs/py311/etc/conda/activate.d/libglib_activate.sh"
+. "/home/u20/tnguyen9210/micromamba/envs/py311/etc/conda/activate.d/libxml2_activate.sh"'
++ eval '. "/home/u20/tnguyen9210/micromamba/envs/py311/etc/conda/deactivate.d/libxml2_deactivate.sh"
+. "/home/u20/tnguyen9210/micromamba/envs/py311/etc/conda/deactivate.d/libglib_deactivate.sh"
+PS1='\''(py311) '\''
+export PATH='\''/home/u20/tnguyen9210/micromamba/envs/py311/bin:/opt/ohpc/pub/mpi/libfabric/1.18.0/bin:/opt/ohpc/pub/mpi/ucx-ohpc/1.17.0/bin:/opt/ohpc/pub/libs/hwloc/bin:/opt/ohpc/pub/mpi/openmpi5-gnu13/5.0.5/bin:/opt/ohpc/pub/compiler/gcc/13.2.0/bin:/opt/ohpc/pub/utils/prun/2.2:/opt/ohpc/pub/utils/autotools/bin:/opt/ohpc/pub/bin:/home/u20/tnguyen9210/micromamba/condabin:/opt/TurboVNC/bin:/usr/local/bin:/usr/bin:/usr/local/sbin:/usr/sbin:/home/u20/tnguyen9210/.local/bin:/home/u20/tnguyen9210/bin'\''
+export CONDA_SHLVL='\''1'\''
+export CONDA_PROMPT_MODIFIER='\''(py311) '\''
+. "/home/u20/tnguyen9210/micromamba/envs/py311/etc/conda/activate.d/libglib_activate.sh"
+. "/home/u20/tnguyen9210/micromamba/envs/py311/etc/conda/activate.d/libxml2_activate.sh"'
+++ . /home/u20/tnguyen9210/micromamba/envs/py311/etc/conda/deactivate.d/libxml2_deactivate.sh
++++ test -n ''
++++ unset XML_CATALOG_FILES
++++ unset xml_catalog_files_libxml2
+++ . /home/u20/tnguyen9210/micromamba/envs/py311/etc/conda/deactivate.d/libglib_deactivate.sh
++++ export GSETTINGS_SCHEMA_DIR=
++++ GSETTINGS_SCHEMA_DIR=
++++ unset GSETTINGS_SCHEMA_DIR_CONDA_BACKUP
++++ '[' -z ']'
++++ unset GSETTINGS_SCHEMA_DIR
+++ PS1='(py311) '
+++ export PATH=/home/u20/tnguyen9210/micromamba/envs/py311/bin:/opt/ohpc/pub/mpi/libfabric/1.18.0/bin:/opt/ohpc/pub/mpi/ucx-ohpc/1.17.0/bin:/opt/ohpc/pub/libs/hwloc/bin:/opt/ohpc/pub/mpi/openmpi5-gnu13/5.0.5/bin:/opt/ohpc/pub/compiler/gcc/13.2.0/bin:/opt/ohpc/pub/utils/prun/2.2:/opt/ohpc/pub/utils/autotools/bin:/opt/ohpc/pub/bin:/home/u20/tnguyen9210/micromamba/condabin:/opt/TurboVNC/bin:/usr/local/bin:/usr/bin:/usr/local/sbin:/usr/sbin:/home/u20/tnguyen9210/.local/bin:/home/u20/tnguyen9210/bin
+++ PATH=/home/u20/tnguyen9210/micromamba/envs/py311/bin:/opt/ohpc/pub/mpi/libfabric/1.18.0/bin:/opt/ohpc/pub/mpi/ucx-ohpc/1.17.0/bin:/opt/ohpc/pub/libs/hwloc/bin:/opt/ohpc/pub/mpi/openmpi5-gnu13/5.0.5/bin:/opt/ohpc/pub/compiler/gcc/13.2.0/bin:/opt/ohpc/pub/utils/prun/2.2:/opt/ohpc/pub/utils/autotools/bin:/opt/ohpc/pub/bin:/home/u20/tnguyen9210/micromamba/condabin:/opt/TurboVNC/bin:/usr/local/bin:/usr/bin:/usr/local/sbin:/usr/sbin:/home/u20/tnguyen9210/.local/bin:/home/u20/tnguyen9210/bin
+++ export CONDA_SHLVL=1
+++ CONDA_SHLVL=1
+++ export 'CONDA_PROMPT_MODIFIER=(py311) '
+++ CONDA_PROMPT_MODIFIER='(py311) '
+++ . /home/u20/tnguyen9210/micromamba/envs/py311/etc/conda/activate.d/libglib_activate.sh
++++ export GSETTINGS_SCHEMA_DIR_CONDA_BACKUP=
++++ GSETTINGS_SCHEMA_DIR_CONDA_BACKUP=
++++ export GSETTINGS_SCHEMA_DIR=/home/u20/tnguyen9210/micromamba/envs/py311/share/glib-2.0/schemas
++++ GSETTINGS_SCHEMA_DIR=/home/u20/tnguyen9210/micromamba/envs/py311/share/glib-2.0/schemas
+++ . /home/u20/tnguyen9210/micromamba/envs/py311/etc/conda/activate.d/libxml2_activate.sh
++++ test -n ''
++++ xml_catalog_files_libxml2=
++++ XML_CATALOG_FILES=
++++ conda_catalog_files=
++++ ifs_libxml2=' 	
+'
++++ IFS=' '
++++ rem=/home/u20/tnguyen9210/micromamba/envs/py311
++++ for pre in ${rem}
++++ test '' = /home/u20/tnguyen9210/micromamba/envs/py311
++++ conda_catalog_files=/home/u20/tnguyen9210/micromamba/envs/py311
++++ rem=
++++ IFS=' 	
+'
++++ conda_catalog_files='file:///home/u20/tnguyen9210/micromamba/envs/py311/etc/xml/catalog file:///etc/xml/catalog'
++++ export 'XML_CATALOG_FILES=file:///home/u20/tnguyen9210/micromamba/envs/py311/etc/xml/catalog file:///etc/xml/catalog'
++++ XML_CATALOG_FILES='file:///home/u20/tnguyen9210/micromamba/envs/py311/etc/xml/catalog file:///etc/xml/catalog'
++++ unset conda_catalog_files ifs_libxml2 rem
++ __mamba_hashr
++ '[' -n '' ']'
++ '[' -n '' ']'
++ hash -r
++ python generate_sdp_prm800k_v29.py
+Loading safetensors checkpoint shards:   0% Completed | 0/1 [00:00<?, ?it/s]
+Loading safetensors checkpoint shards: 100% Completed | 1/1 [00:01<00:00,  1.26s/it]
+Loading safetensors checkpoint shards: 100% Completed | 1/1 [00:01<00:00,  1.26s/it]
+
+[rank0]: Traceback (most recent call last):
+[rank0]:   File "/home/u20/tnguyen9210/tnn1/LLMs/llm-reasoning-methods/generate_sdp_prm800k_v29.py", line 141, in <module>
+[rank0]:     main()
+[rank0]:   File "/home/u20/tnguyen9210/tnn1/LLMs/llm-reasoning-methods/generate_sdp_prm800k_v29.py", line 73, in main
+[rank0]:     llm_vllm = LLM(
+[rank0]:                ^^^^
+[rank0]:   File "/home/u20/tnguyen9210/micromamba/envs/py311/lib/python3.11/site-packages/vllm/utils.py", line 1022, in inner
+[rank0]:     return fn(*args, **kwargs)
+[rank0]:            ^^^^^^^^^^^^^^^^^^^
+[rank0]:   File "/home/u20/tnguyen9210/micromamba/envs/py311/lib/python3.11/site-packages/vllm/entrypoints/llm.py", line 242, in __init__
+[rank0]:     self.llm_engine = self.engine_class.from_engine_args(
+[rank0]:                       ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+[rank0]:   File "/home/u20/tnguyen9210/micromamba/envs/py311/lib/python3.11/site-packages/vllm/engine/llm_engine.py", line 489, in from_engine_args
+[rank0]:     engine = cls(
+[rank0]:              ^^^^
+[rank0]:   File "/home/u20/tnguyen9210/micromamba/envs/py311/lib/python3.11/site-packages/vllm/engine/llm_engine.py", line 276, in __init__
+[rank0]:     self._initialize_kv_caches()
+[rank0]:   File "/home/u20/tnguyen9210/micromamba/envs/py311/lib/python3.11/site-packages/vllm/engine/llm_engine.py", line 434, in _initialize_kv_caches
+[rank0]:     self.model_executor.initialize_cache(num_gpu_blocks, num_cpu_blocks)
+[rank0]:   File "/home/u20/tnguyen9210/micromamba/envs/py311/lib/python3.11/site-packages/vllm/executor/executor_base.py", line 122, in initialize_cache
+[rank0]:     self.collective_rpc("initialize_cache",
+[rank0]:   File "/home/u20/tnguyen9210/micromamba/envs/py311/lib/python3.11/site-packages/vllm/executor/uniproc_executor.py", line 56, in collective_rpc
+[rank0]:     answer = run_method(self.driver_worker, method, args, kwargs)
+[rank0]:              ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+[rank0]:   File "/home/u20/tnguyen9210/micromamba/envs/py311/lib/python3.11/site-packages/vllm/utils.py", line 2196, in run_method
+[rank0]:     return func(*args, **kwargs)
+[rank0]:            ^^^^^^^^^^^^^^^^^^^^^
+[rank0]:   File "/home/u20/tnguyen9210/micromamba/envs/py311/lib/python3.11/site-packages/vllm/worker/worker.py", line 306, in initialize_cache
+[rank0]:     self._init_cache_engine()
+[rank0]:   File "/home/u20/tnguyen9210/micromamba/envs/py311/lib/python3.11/site-packages/vllm/worker/worker.py", line 311, in _init_cache_engine
+[rank0]:     self.cache_engine = [
+[rank0]:                         ^
+[rank0]:   File "/home/u20/tnguyen9210/micromamba/envs/py311/lib/python3.11/site-packages/vllm/worker/worker.py", line 312, in <listcomp>
+[rank0]:     CacheEngine(self.cache_config, self.model_config,
+[rank0]:   File "/home/u20/tnguyen9210/micromamba/envs/py311/lib/python3.11/site-packages/vllm/worker/cache_engine.py", line 69, in __init__
+[rank0]:     self.gpu_cache = self._allocate_kv_cache(
+[rank0]:                      ^^^^^^^^^^^^^^^^^^^^^^^^
+[rank0]:   File "/home/u20/tnguyen9210/micromamba/envs/py311/lib/python3.11/site-packages/vllm/worker/cache_engine.py", line 103, in _allocate_kv_cache
+[rank0]:     layer_kv_cache = torch.zeros(alloc_shape,
+[rank0]:                      ^^^^^^^^^^^^^^^^^^^^^^^^
+[rank0]: torch.OutOfMemoryError: CUDA out of memory. Tried to allocate 1.16 GiB. GPU 0 has a total capacity of 31.73 GiB of which 1.12 GiB is free. Process 601450 has 23.22 GiB memory in use. Including non-PyTorch memory, this process has 7.38 GiB memory in use. Of the allocated memory 6.98 GiB is allocated by PyTorch, and 9.71 MiB is reserved by PyTorch but unallocated. If reserved but unallocated memory is large try setting PYTORCH_CUDA_ALLOC_CONF=expandable_segments:True to avoid fragmentation.  See documentation for Memory Management  (https://pytorch.org/docs/stable/notes/cuda.html#environment-variables)
+[rank0]:[W507 23:43:59.181393599 ProcessGroupNCCL.cpp:1250] Warning: WARNING: process group has NOT been destroyed before we destruct ProcessGroupNCCL. On normal program exit, the application should call destroy_process_group to ensure that any pending NCCL operations have finished in this process. In rare cases this process can exit before this point and block the progress of another member of the process group. This constraint has always been present,  but this warning has only been added since PyTorch 2.4 (function operator())

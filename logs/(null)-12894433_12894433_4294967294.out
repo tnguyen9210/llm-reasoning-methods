@@ -1,0 +1,3 @@
+['0', '1', '2', '3']
+INFO 05-07 21:43:52 __init__.py:207] Automatically detected platform cuda.
+WARNING 05-07 21:43:52 config.py:2448] Casting torch.bfloat16 to torch.float16.
