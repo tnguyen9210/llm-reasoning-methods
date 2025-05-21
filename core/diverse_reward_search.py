@@ -1,5 +1,6 @@
 '''
-add coeffient for prm scores
+If candidates have the same diversity scores than choose the one with the smallest negative loglikelihood.
+Update the _diverse_select function to combine PRM and diversity scores, each weighted by its respective coefficient.
 '''
 
 from collections import defaultdict
@@ -59,8 +60,8 @@ def _diverse_select(K, V, q_embeds, q_nll, q_ppl, q_scores, ds_alpha, ds_beta):
             if (np.abs(max_val - arm_val) <= tol) and (arm_idx not in A_idxes)
         ]
 
-        best_idx = min(candidate_idxes, key=lambda i: q_nll[i])
-        # best_idx = min(candidate_idxes, key=lambda i: q_ppl[i])
+        # best_idx = min(candidate_idxes, key=lambda i: q_nll[i])
+        best_idx = min(candidate_idxes, key=lambda i: q_ppl[i])
         # print(q_vals)
         # print(q_nll)
         # print(candidate_idxes)
@@ -349,7 +350,7 @@ def diverse_search(batch_of_questions, config, llm_vllm, llm_tf, llm_tokenizer, 
 
         active_beams = next_active_beams
         
-        total_time = time.time() - start_time
+        # total_time = time.time() - start_time
         # print(f"it takes {total_time:0.4f}s")
                 
     # Filter duplicate active beams

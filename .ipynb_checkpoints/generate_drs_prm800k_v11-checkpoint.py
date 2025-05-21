@@ -66,7 +66,7 @@ def main():
 
     config.ds_beta = 0
     config.ds_alpha = 1.0
-    config.use_ppl = False
+    config.use_ppl = True
 
     config.version = "v11"
     
@@ -116,7 +116,7 @@ def main():
     print(config_name)
             
     start_time = time.time()
-    for trial_idx in range(num_trials):
+    for trial_idx in range(3,num_trials):
         np.random.seed(100000+trial_idx)
         random.seed(100000+trial_idx)
         torch.manual_seed(100000+trial_idx)

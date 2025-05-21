@@ -94,7 +94,7 @@ def process_select_diverse(q_idx, q_active_beams, q_embeds, q_log_probs, q_ppl, 
     return (q_idx, selected_idxes)
     # return (q_idx, selected_idxes) 
 
-def select_diverse_search(batch_of_questions, config, llm_vllm, llm_tf, llm_tokenizer):
+def diverse_search(batch_of_questions, config, llm_vllm, llm_tf, llm_tokenizer):
     sampling_params = SamplingParams(
         temperature=config.temperature,
         max_tokens=config.max_tokens,
@@ -131,9 +131,9 @@ def select_diverse_search(batch_of_questions, config, llm_vllm, llm_tf, llm_toke
             ) 
 
 
-    # for i in tqdm(range(config.num_iterations), desc="Beam search iterations"):
+    # for i in tqdm(range(config.num_depths), desc="Beam search iterations"):
     start_time = time.time()
-    for it in range(config.num_iterations):
+    for it in range(config.num_depths):
         # print(f"\n-> {it}")
         if it == 0:
             active_beams = beams
@@ -148,6 +148,11 @@ def select_diverse_search(batch_of_questions, config, llm_vllm, llm_tf, llm_toke
                     extended_beams.append(copy.deepcopy(beam))
 
             active_beams = extended_beams
+
+        # print(f"initial: len = {len(active_beams)}")
+        # for b_idx, b in enumerate(active_beams):
+        #     print(f"b_idx = {b_idx}")
+        #     print(b.current_text)
         
         # print(len(active_beams))
         convs = [
@@ -171,7 +176,7 @@ def select_diverse_search(batch_of_questions, config, llm_vllm, llm_tf, llm_toke
         )
 
         # # Last iteration, generate to EOS
-        # if it == config.num_iterations - 1:
+        # if it == config.num_depths - 1:
         #     sampling_params = SamplingParams(
         #         temperature=config.temperature,
         #         max_tokens=config.max_tokens,
@@ -179,7 +184,7 @@ def select_diverse_search(batch_of_questions, config, llm_vllm, llm_tf, llm_toke
         #         n=1,
         #     )
 
-        lookahead = 0 if it == config.num_iterations - 1 else config.lookahead
+        lookahead = 0 if it == config.num_depths - 1 else config.lookahead
         gen_results = generate_k_steps(
             templated_convs, lookahead, llm_vllm, sampling_params, 1
         )
@@ -210,17 +215,27 @@ def select_diverse_search(batch_of_questions, config, llm_vllm, llm_tf, llm_toke
                 beam.completed = True
                 completed_beams.append(beam)
                 # continue
+
+        # print(f"\n-> after generation: len = {len(active_beams)}")
+        # for b_idx, b in enumerate(active_beams):
+        #     print(f"b_idx = {b_idx}")
+        #     print(b.current_text)
         
         # Filter out comleted beams 
         active_beams = [b for b in active_beams if not b.completed]
         # print(len(active_beams))
 
+        # print(f"\n-> after filtered completions: len = {len(active_beams)}")
+        # for b_idx, b in enumerate(active_beams):
+        #     print(f"b_idx = {b_idx}")
+        #     print(b.current_text)
+        
         # Early stopping if all beams are completed
         if len(active_beams) == 0:
             print("break")
             break
 
-        if it == config.num_iterations - 1:
+        if it == config.num_depths - 1:
             break
         
         # Extract completion's embeddings and other info
@@ -249,7 +264,8 @@ def select_diverse_search(batch_of_questions, config, llm_vllm, llm_tf, llm_toke
                 shifted_logits = outputs.logits[:, :-1, :]
                 loss_fct = CrossEntropyLoss(reduction='sum')
                 completion_log_prob = -loss_fct(shifted_logits.view(-1, shifted_logits.size(-1)), labels.view(-1)).detach().cpu().numpy()
-                completion_ppl = np.exp(completion_log_prob/len(labels))
+                outputs_ntokens = labels.numel()
+                completion_ppl = np.exp(-completion_log_prob/outputs_ntokens)
                 # print(sent_ppl)
                 # print(loss)
     
@@ -263,7 +279,9 @@ def select_diverse_search(batch_of_questions, config, llm_vllm, llm_tf, llm_toke
                 batch_log_probs[beam.q_idx].append(completion_log_prob)
                 batch_ppl[beam.q_idx].append(completion_ppl)
                 batch_beams[beam.q_idx].append(beam)
-    
+
+        print(batch_log_probs)
+        print(batch_ppl)
         # pprint.pprint(len(batch_completions_embeds))
         # pprint.pprint(len(batch_completions_log_probs))
         # pprint.pprint(len(batch_completions_ppl))
@@ -292,16 +310,21 @@ def select_diverse_search(batch_of_questions, config, llm_vllm, llm_tf, llm_toke
         tasks = [(q_idx, batch_beams[q_idx], batch_embeds[q_idx],
                   batch_log_probs[q_idx], batch_ppl[q_idx], K, V) for q_idx in range(len(batch_of_questions))]
         # tasks = [(q_idx, config) for q_idx in range(len(batch_of_questions))]
-
+    
         with mp.Pool() as pool:
             pool_results = pool.starmap(process_select_diverse, tasks)
+
+        # pool_results = []
+        # for task in tasks:
+        #     pool_results.append(process_select_diverse(*task))
 
         for q_idx, selected_idxes in pool_results:
             if selected_idxes is not None:
                 for idx, beam in enumerate(batch_beams[q_idx]):
                     if idx not in selected_idxes:
                         beam.pruned = True 
-        total_time = time.time() - start_time
+                        
+        # total_time = time.time() - start_time
         # print(f"it takes {total_time:0.4f}s")
                 
     # Filter duplicate active beams

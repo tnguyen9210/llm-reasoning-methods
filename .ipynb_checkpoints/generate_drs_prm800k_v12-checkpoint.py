@@ -65,7 +65,7 @@ def main():
     config.normalize_embeds = True
 
     config.ds_beta = 1.0
-    config.ds_alpha = 0
+    config.ds_alpha = 10
     config.use_ppl = True
 
     config.version = "v11"
@@ -99,7 +99,7 @@ def main():
     level = 4
     num_questions = len(data_by_levels[level])
     # num_questions = 50
-    num_trials = 3
+    num_trials = 5
     print(f"num_questions = {num_questions}")
     print(f"num_trials = {num_trials}")
     
@@ -116,7 +116,7 @@ def main():
     print(config_name)
             
     start_time = time.time()
-    for trial_idx in range(num_trials):
+    for trial_idx in range(3,num_trials):
         np.random.seed(100000+trial_idx)
         random.seed(100000+trial_idx)
         torch.manual_seed(100000+trial_idx)

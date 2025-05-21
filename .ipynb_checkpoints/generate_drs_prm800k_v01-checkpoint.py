@@ -14,7 +14,7 @@ from vllm import LLM, SamplingParams, PoolingParams
 
 from sal.config import Config
 
-from core import diverse_reward_search
+from core import diverse_reward_search_v01
 from core.reward_models import RLHFFlow
 
 from utils.load_data import load_data_prm800k
@@ -22,7 +22,7 @@ from utils.load_data import load_data_prm800k
 
 APPROACHES = {
     # "bon": best_of_n.best_of_n_v11,
-    "diverse_reward_search": diverse_reward_search.diverse_search
+    "diverse_reward_search": diverse_reward_search_v01.diverse_search
 }
 
 def main():
@@ -64,11 +64,11 @@ def main():
     config.lam = 10
     config.normalize_embeds = True
 
-    config.ds_beta = 1.0
-    config.ds_alpha = 10
-    config.use_ppl = True
+    config.ds_beta = 0
+    config.ds_alpha = 1.0
+    config.use_ppl = False
 
-    config.version = "v11"
+    config.version = "v01"
     
     # baseline: gpu_memory_utilization=0.2
     # use the standard model 
@@ -99,7 +99,7 @@ def main():
     level = 4
     num_questions = len(data_by_levels[level])
     # num_questions = 50
-    num_trials = 3
+    num_trials = 5
     print(f"num_questions = {num_questions}")
     print(f"num_trials = {num_trials}")
     

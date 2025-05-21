@@ -21,5 +21,5 @@ source ~/.bashrc
 set -x -e
 micromamba activate py311
 
-python generate_bob_prm800k_v11.py
+python generate_bob_prm800k_v01.py
 
