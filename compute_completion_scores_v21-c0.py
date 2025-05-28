@@ -106,7 +106,7 @@ def main():
     else:
         print("CUDA is not available.")
 
-    prm = RLHFFlow(model_path=prm_tokenizer_dir, device_map='cuda:3')
+    prm = RLHFFlow(model_path=prm_tokenizer_dir, device_map='cuda:0')
 
     # general params
     config = Config()

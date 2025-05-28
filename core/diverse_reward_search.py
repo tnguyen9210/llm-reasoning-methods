@@ -50,10 +50,14 @@ def _diverse_select(K, V, q_embeds, q_nll, q_ppl, q_scores, ds_alpha, ds_beta):
     A_embeds = []
     tol = 0.0001
     for it in range(K):
-        _V_inv = np.linalg.inv(_V)
+        _V_inv = np.linalg.inv(_V)   # 
+
+        #
         q_diversity = np.einsum('ij,jk,ik->i', q_embeds, _V_inv, q_embeds)
         q_vals = ds_beta*q_scores + ds_alpha*q_diversity
+        
         max_val = np.max([val for idx, val in enumerate(q_vals) if idx not in A_idxes])
+        
         # candidate_idxes = np.where(np.abs(q_vals-max_val) < tol)[0]
         candidate_idxes = [
             arm_idx for arm_idx, arm_val in enumerate(q_vals)
@@ -100,17 +104,18 @@ def process_diverse_select(K, V, q_idx, q_active_beams, q_embeds, q_log_probs, q
     return (q_idx, selected_idxes)
     # return (q_idx, selected_idxes) 
 
+
 def diverse_search(batch_of_questions, config, llm_vllm, llm_tf, llm_tokenizer, prm):
     # print("diverse_search")
     loss_fct = nn.CrossEntropyLoss(reduction='sum')
     
     sampling_params = SamplingParams(
-        temperature=config.temperature,
-        max_tokens=config.max_tokens,
-        top_p=config.top_p,
-        stop=["\n\n"],
+        temperature=config.temperature,          # temperature = 0.8 (default)
+        max_tokens=config.max_tokens,            # 2048
+        top_p=config.top_p,                      # uniformly sample according tokens probability
+        stop=["\n\n"],                           # stopping condition at double newlines
         include_stop_str_in_output=True,
-        n=1,
+        n=1,                                     # number of outputs generated for each prompt
     )
 
     V = config.lam*np.eye(2048)
@@ -190,13 +195,13 @@ def diverse_search(batch_of_questions, config, llm_vllm, llm_tf, llm_tokenizer, 
 
         # Collecct gen_results into beams
         for beam, gen_result in zip(active_beams, gen_results, strict=True):
-            beam.next_texts = gen_result.next_texts
-            beam.stop_reasons = gen_result.stop_reasons
-            beam.lookahead_texts = gen_result.lookahead_texts
-            beam.completion_tokens += gen_result.completion_tokens
-            beam.current_text += gen_result.next_texts[0]
+            beam.next_texts = gen_result.next_texts                     # next generated steps
+            beam.stop_reasons = gen_result.stop_reasons                 # stop reason means whether current step reaches final answer
+            beam.lookahead_texts = gen_result.lookahead_texts           # n/a
+            beam.completion_tokens += gen_result.completion_tokens      # n/a
+            beam.current_text += gen_result.next_texts[0]               # cummulative steps so far 
             # beam.history.append(beam.next_texts[0])
-            beam.templated_prompt = gen_result.prompt
+            beam.templated_prompt = gen_result.prompt                   # templated prompt 
             # pprint.pprint(gen_result)
             # print(f"beam.next_texts = {beam.next_texts}")
             # print(f"beam.stop_reasons = {beam.stop_reasons}")
@@ -207,10 +212,10 @@ def diverse_search(batch_of_questions, config, llm_vllm, llm_tf, llm_tokenizer, 
             if (
                 beam.stop_reasons[0] == "EOS"
                 or beam.stop_reasons[0] == "length"
-                or beam.next_texts[0] == ""
+                or beam.next_texts[0] == ""                            # condition that current step reaches final answer
             ):
                 beam.completed = True
-                completed_beams.append(beam)
+                completed_beams.append(beam)                           # completed_beams contains final completed trajs
                 # continue
 
         # print(f"\n-> after generation: len = {len(active_beams)}")
@@ -260,7 +265,7 @@ def diverse_search(batch_of_questions, config, llm_vllm, llm_tf, llm_tokenizer, 
 
         all_scores = prm.score(all_prompts, all_completions, batch_size=4)
         all_agg_scores = [
-            [aggregate_scores(s, config.agg_strategy) for s in score]
+            [aggregate_scores(s, config.agg_strategy) for s in score]      # choose the score for the last step
             for score in all_scores
         ]
         
@@ -301,6 +306,7 @@ def diverse_search(batch_of_questions, config, llm_vllm, llm_tf, llm_tokenizer, 
                 # Get last_token_embeds
                 last_hidden_state = outputs.hidden_states[-1]
                 last_token_embeds = last_hidden_state[0,-1]
+                nn_net
                 # print(last_hidden_state.shape)
                 # print(last_token_embeds.shape)
                 # last_token_embeds = last_hidden_state[:, -1, :].squeeze(0).detach().cpu().numpy()

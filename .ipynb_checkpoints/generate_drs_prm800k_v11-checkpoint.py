@@ -34,8 +34,8 @@ def main():
     data_dir = base_dir + "/prm800k/math_splits"
     
     # llm and prm path
-    llm_dir = base_dir + "/Llama-3.2-1B-Instruct-GGUF/Llama-3.2-1B-Instruct.Q4_K_M.gguf"
-    prm_dir = base_dir + "/Llama3.1-8B-PRM-Deepseek-Data-GGUF/Llama3.1-8B-PRM-Deepseek-Data.Q4_K_M.gguf"
+    # llm_dir = base_dir + "/Llama-3.2-1B-Instruct-GGUF/Llama-3.2-1B-Instruct.Q4_K_M.gguf"
+    # prm_dir = base_dir + "/Llama3.1-8B-PRM-Deepseek-Data-GGUF/Llama3.1-8B-PRM-Deepseek-Data.Q4_K_M.gguf"
     
     llm_tokenizer_dir = base_dir + "/Llama-3.2-1B-Instruct"
     prm_tokenizer_dir = base_dir + "/Llama3.1-8B-PRM-Deepseek-Data"
@@ -52,21 +52,21 @@ def main():
     # general params
     config = Config()
     config.agg_strategy = 'last'
-    config.n = 8
-    config.beam_width = 4
-    config.lookahead = 0
-    config.num_depths = 40
-    config.sort_completed = False
-    config.filter_duplicates = True
+    config.n = 8                      # number of budgets to be generated per depth
+    config.beam_width = 4             # number of nodes left after selection
+    config.lookahead = 0              # don't use it for now
+    config.num_depths = 40            # max depths, after reaching max_depth then terminate search 
+    config.sort_completed = False      
+    config.filter_duplicates = True   # remove any duplicates in the last list of trajs
     config.seed = 0
     
     # diverse_select params
-    config.lam = 10
-    config.normalize_embeds = True
+    config.lam = 10                   # we set V = lam*I
+    config.normalize_embeds = True    # whether to noramlize embeds
 
-    config.ds_beta = 0
-    config.ds_alpha = 1.0
-    config.use_ppl = True
+    config.ds_beta = 1.0                # coefs for prm scores
+    config.ds_alpha = 100.0             # coefs for diversity scores, combined_score = prm*beta + diversity*alpha
+    config.use_ppl = False             # perplexity of a trajectory so far 
 
     config.version = "v11"
     
@@ -75,7 +75,7 @@ def main():
     llm_vllm = LLM(
         model = llm_tokenizer_dir,
         tensor_parallel_size=1,
-        gpu_memory_utilization = 0.7,  # Utilize 50% of GPU memory
+        gpu_memory_utilization = 0.2,  # Utilize 50% of GPU memory
         # enable_prefix_caching=True,  # V100 doesn't support enable_prefix_caching 
         # enable_chunked_prefill=False, # and enable_chunked_prefill
         max_model_len = 5000,
@@ -83,7 +83,7 @@ def main():
         seed = config.seed)
 
     tokenizer = AutoTokenizer.from_pretrained(llm_tokenizer_dir)
-    llm_tf = AutoModelForCausalLM.from_pretrained(llm_tokenizer_dir).to("cuda:1")
+    llm_tf = AutoModelForCausalLM.from_pretrained(llm_tokenizer_dir).to("cuda:0")
     tokenizer.pad_token = tokenizer.eos_token
     tokenizer.padding_side = 'right'
     llm_tf.eval()
@@ -91,19 +91,19 @@ def main():
     gc.collect();torch.cuda.empty_cache();
     print('#--- memory:', torch.cuda.memory_allocated(0)/(1024**3))
 
-    prm = RLHFFlow(model_path=prm_tokenizer_dir, device_map='cuda:2')
+    prm = RLHFFlow(model_path=prm_tokenizer_dir, device_map='cuda:0')
 
     #  load data 
     data_by_levels = load_data_prm800k(data_dir)
     
-    level = 4
-    num_questions = len(data_by_levels[level])
-    # num_questions = 50
+    level = 4                                   # level of difficulty of questions
+    num_questions = len(data_by_levels[level])  # level 4 has 128 questions
+    # num_questions = 2
     num_trials = 5
     print(f"num_questions = {num_questions}")
     print(f"num_trials = {num_trials}")
     
-    # get batch of questions
+    # get batch of questions ['q1', 'q2', ...]
     batch_of_questions = [data_by_levels[level][q_idx]['problem'] for q_idx in range(num_questions)]
 
     # select search algo
@@ -116,7 +116,7 @@ def main():
     print(config_name)
             
     start_time = time.time()
-    for trial_idx in range(3,num_trials):
+    for trial_idx in range(3,5):
         np.random.seed(100000+trial_idx)
         random.seed(100000+trial_idx)
         torch.manual_seed(100000+trial_idx)
