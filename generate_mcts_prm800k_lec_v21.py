@@ -28,7 +28,7 @@ from utils.load_data import load_data_prm800k
 def main():
     
     # base_dir
-    base_dir = '/groups/kjun/tnn/datasets/'
+    base_dir = '/home/kjun/tnn1/04_LLMs/01_datasets'
     
     # dataset path
     data_dir = base_dir + "/prm800k/math_splits"

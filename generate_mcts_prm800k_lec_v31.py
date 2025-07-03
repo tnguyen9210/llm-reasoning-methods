@@ -1,3 +1,7 @@
+'''
+MCTS with diversity scores, update V at depth level
+Add llm_vllm_embeds to extract the last hidden embeds
+'''
 import os, psutil, gc
 import time 
 import json
@@ -14,7 +18,7 @@ from vllm import LLM, SamplingParams, PoolingParams
 
 from sal.config import Config
 
-from core import mcts_search_v21
+from core import mcts_search_v31
 from core.reward_models import RLHFFlow
 
 from utils.load_data import load_data_prm800k
@@ -28,7 +32,7 @@ from utils.load_data import load_data_prm800k
 def main():
     
     # base_dir
-    base_dir = '/groups/kjun/tnn/datasets/'
+    base_dir = '/home/kjun/tnn1/04_LLMs/01_datasets'
     
     # dataset path
     data_dir = base_dir + "/prm800k/math_splits"
@@ -68,12 +72,12 @@ def main():
     config.lam = 10 
     config.normalize_embeds = True
 
-    config.cpuct = 2
+    config.cpuct = 0
     config.ds_beta = 1.0
     config.ds_alpha = 100.0
     config.use_ppl = True
 
-    config.version = "v21"
+    config.version = "v31"
     
     # baseline: gpu_memory_utilization=0.2
     # use the standard model 
@@ -140,14 +144,14 @@ def main():
     print(config_name)
             
     start_time = time.time()
-    for trial_idx in range(3,5):
+    for trial_idx in range(0,2):
         np.random.seed(100000+trial_idx)
         random.seed(100000+trial_idx)
         torch.manual_seed(100000+trial_idx)
         torch.cuda.manual_seed(100000+trial_idx)
         
         # best_of_n(batch_of_questions, config, llm_vllm, random_seeds[trial_idx])
-        results = mcts_search_v21._search(batch_of_questions, config, llm_vllm, llm_vllm_embeds, prm)
+        results = mcts_search_v31._search(batch_of_questions, config, llm_vllm, llm_vllm_embeds, prm)
         with open(f"results/generate_{config_name}--trial-{trial_idx}.jsonl", 'w', encoding = 'utf-8') as fout:
             json.dump(results, fout)
             fout.write('\n')
