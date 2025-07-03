@@ -91,7 +91,7 @@ def main():
     
     llm_vllm = LLM(
         model=llm_dir, 
-        tensor_parallel_size=1, 
+        tensor_parallel_size=2, 
         # trust_remote_code=True,
         swap_space=16,
         max_model_len=5000,
@@ -104,7 +104,7 @@ def main():
 
     llm_vllm_embeds = LLM(
         model=llm_dir, 
-        tensor_parallel_size=1, 
+        tensor_parallel_size=2, 
         # trust_remote_code=True,
         task="embed",
         swap_space=16,
