@@ -306,7 +306,6 @@ def diverse_search(batch_of_questions, config, llm_vllm, llm_tf, llm_tokenizer, 
                 # Get last_token_embeds
                 last_hidden_state = outputs.hidden_states[-1]
                 last_token_embeds = last_hidden_state[0,-1]
-                nn_net
                 # print(last_hidden_state.shape)
                 # print(last_token_embeds.shape)
                 # last_token_embeds = last_hidden_state[:, -1, :].squeeze(0).detach().cpu().numpy()

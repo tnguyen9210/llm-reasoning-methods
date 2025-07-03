@@ -21,5 +21,5 @@ source ~/.bashrc
 set -x -e
 micromamba activate py311
 
-python generate_drs_prm800k_v12.py
+python generate_drs_prm800k_v12.py --d 
 

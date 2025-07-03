@@ -75,7 +75,7 @@ def main():
     llm_vllm = LLM(
         model = llm_tokenizer_dir,
         tensor_parallel_size=1,
-        gpu_memory_utilization = 0.7,  # Utilize 50% of GPU memory
+        gpu_memory_utilization = 0.2,  # Utilize 50% of GPU memory
         # enable_prefix_caching=True,  # V100 doesn't support enable_prefix_caching 
         # enable_chunked_prefill=False, # and enable_chunked_prefill
         max_model_len = 5000,

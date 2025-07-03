@@ -5,7 +5,7 @@
 #SBATCH --nodes=1
 #SBATCH --ntasks=44
 #SBATCH --mem-per-cpu=5gb
-#SBATCH --gres=gpu:volta:1              # Number of GPUs (per node)
+#SBATCH --gres=gpu:volta:2              # Number of GPUs (per node)
 #SBATCH --output=logs/%x-%j_%A_%a.out   # Standard output (%A is replaced by job ID, %a by task ID)
 #SBATCH --error=logs/%x-%j_%A_%a.err    # Standard error
 #SBATCH --time=24:00:00                  # Time limit hrs:min:sec
@@ -21,5 +21,5 @@ source ~/.bashrc
 set -x -e
 micromamba activate py311
 
-python generate_bob_prm800k_v01.py
+python generate_mcts_prm800k_v32.py --d 
 

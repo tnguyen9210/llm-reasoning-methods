@@ -14,16 +14,16 @@ from vllm import LLM, SamplingParams, PoolingParams
 
 from sal.config import Config
 
-from core import diverse_reward_search
-from core.reward_models import RLHFFlow
+from cores import mcts_search
+from cores.reward_models import RLHFFlow
 
-from utils.load_data import load_data_prm800k
+from cores.load_data import load_data_prm800k
 
 
-APPROACHES = {
-    # "bon": best_of_n.best_of_n_v11,
-    "diverse_reward_search": diverse_reward_search.diverse_search
-}
+# APPROACHES = {
+#     # "bon": best_of_n.best_of_n_v11,
+#     "diverse_reward_search": diverse_reward_search.diverse_search
+# }
 
 def main():
     
@@ -52,21 +52,16 @@ def main():
     # general params
     config = Config()
     config.agg_strategy = 'last'
+    config.num_phases = 2
     config.n = 8                      # number of budgets to be generated per depth
     config.beam_width = 4             # number of nodes left after selection
     config.lookahead = 0              # don't use it for now
-    config.num_depths = 40            # max depths, after reaching max_depth then terminate search 
+    config.max_depths = 40            # max depths, after reaching max_depth then terminate search 
     config.sort_completed = False      
     config.filter_duplicates = True   # remove any duplicates in the last list of trajs
     config.seed = 0
-    
-    # diverse_select params
-    config.lam = 10                   # we set V = lam*I
-    config.normalize_embeds = True    # whether to noramlize embeds
 
-    config.ds_beta = 1.0                # coefs for prm scores
-    config.ds_alpha = 100.0             # coefs for diversity scores, combined_score = prm*beta + diversity*alpha
-    config.use_ppl = False             # perplexity of a trajectory so far 
+    config.cpuct = 2
 
     config.version = "v11"
     
@@ -82,16 +77,7 @@ def main():
         dtype = "float16",
         seed = config.seed)
 
-    tokenizer = AutoTokenizer.from_pretrained(llm_tokenizer_dir)
-    llm_tf = AutoModelForCausalLM.from_pretrained(llm_tokenizer_dir).to("cuda:0")
-    tokenizer.pad_token = tokenizer.eos_token
-    tokenizer.padding_side = 'right'
-    llm_tf.eval()
-    # model_regular.generation_config.pad_token_id = tokenizer.eos_token_id
-    gc.collect();torch.cuda.empty_cache();
-    print('#--- memory:', torch.cuda.memory_allocated(0)/(1024**3))
-
-    prm = RLHFFlow(model_path=prm_tokenizer_dir, device_map='cuda:0')
+    prm = RLHFFlow(model_path=prm_tokenizer_dir, device_map='cuda:1')
 
     #  load data 
     data_by_levels = load_data_prm800k(data_dir)
@@ -106,24 +92,24 @@ def main():
     # get batch of questions ['q1', 'q2', ...]
     batch_of_questions = [data_by_levels[level][q_idx]['problem'] for q_idx in range(num_questions)]
 
-    # select search algo
-    search_name = 'diverse_reward_search'
-    search_algo = APPROACHES[search_name]
-    print(search_algo)
+    # # select search algo
+    # search_name = 'diverse_reward_search'
+    # search_algo = APPROACHES[search_name]
+    # print(search_algo)
 
     # run search_algo and save results
-    config_name = f"sdp--n-{config.n}--bw-{config.beam_width}--d-{config.num_depths}--lam-{config.lam}--{config.normalize_embeds}--dalpha-{config.ds_alpha}--dbeta-{config.ds_beta}--ppl-{config.use_ppl}--level-{level}--{config.version}"
+    config_name = f"mcts--n-{config.n}--d-{config.max_depths}--nphases-{config.num_phases}--cpuct-{config.cpuct}--level-{level}--{config.version}"
     print(config_name)
             
     start_time = time.time()
-    for trial_idx in range(3,5):
+    for trial_idx in range(0,2):
         np.random.seed(100000+trial_idx)
         random.seed(100000+trial_idx)
         torch.manual_seed(100000+trial_idx)
         torch.cuda.manual_seed(100000+trial_idx)
         
         # best_of_n(batch_of_questions, config, llm_vllm, random_seeds[trial_idx])
-        results = search_algo(batch_of_questions, config, llm_vllm, llm_tf, tokenizer, prm)
+        results = mcts_search._search(batch_of_questions, config, llm_vllm, prm)
         with open(f"results/generate_{config_name}--trial-{trial_idx}.jsonl", 'w', encoding = 'utf-8') as fout:
             json.dump(results, fout)
             fout.write('\n')
