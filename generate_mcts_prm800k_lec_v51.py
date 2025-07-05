@@ -10,6 +10,8 @@ import numpy as np
 import torch 
 import torch.distributed as dist
 from transformers import AutoModelForCausalLM, AutoTokenizer
+
+os.environ["VLLM_USE_V1"] = "0"
 from vllm import LLM, SamplingParams, PoolingParams
 
 from sal.config import Config

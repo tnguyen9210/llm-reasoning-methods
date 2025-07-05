@@ -28,7 +28,7 @@ from sal.models.reward_models import PRM
 from sal.utils.score import aggregate_scores
 from sal.search.utils import build_conv, generate_k_steps, last
 
-# from core.llms import rm_generate
+# from cores.llms import rm_generate
 
 
 import logging

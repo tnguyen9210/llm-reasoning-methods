@@ -1,3 +1,7 @@
+'''
+MCTS with diversity scores, update V at depth level
+Add llm_vllm_embeds to extract the last hidden embeds
+'''
 import os, psutil, gc
 import time 
 import json
@@ -14,7 +18,7 @@ from vllm import LLM, SamplingParams, PoolingParams
 
 from sal.config import Config
 
-from core import mcts_search_v61
+from core import mcts_search_v31
 from core.reward_models import RLHFFlow
 
 from utils.load_data import load_data_prm800k
@@ -70,10 +74,10 @@ def main():
 
     config.cpuct = 0
     config.ds_beta = 1.0
-    config.ds_alpha = 10.0
+    config.ds_alpha = 100.0
     config.use_ppl = True
 
-    config.version = "v61"
+    config.version = "v31"
     
     # baseline: gpu_memory_utilization=0.2
     # use the standard model 
@@ -147,7 +151,7 @@ def main():
         torch.cuda.manual_seed(100000+trial_idx)
         
         # best_of_n(batch_of_questions, config, llm_vllm, random_seeds[trial_idx])
-        results = mcts_search_v61._search(batch_of_questions, config, llm_vllm, llm_vllm_embeds, prm)
+        results = mcts_search_v31._search(batch_of_questions, config, llm_vllm, llm_vllm_embeds, prm)
         with open(f"results/generate_{config_name}--trial-{trial_idx}.jsonl", 'w', encoding = 'utf-8') as fout:
             json.dump(results, fout)
             fout.write('\n')
