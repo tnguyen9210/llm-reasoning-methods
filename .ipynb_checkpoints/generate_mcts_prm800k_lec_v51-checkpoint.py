@@ -14,10 +14,10 @@ from vllm import LLM, SamplingParams, PoolingParams
 
 from sal.config import Config
 
-from cores import mcts_search_v51
-from cores.reward_models import RLHFFlow
+from core import mcts_search_v51
+from core.reward_models import RLHFFlow
 
-from cores.load_data import load_data_prm800k
+from utils.load_data import load_data_prm800k
 
 
 # APPROACHES = {
