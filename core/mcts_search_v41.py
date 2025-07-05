@@ -1,6 +1,7 @@
 '''
 MCTS with diversity scores, update V globally
 Add llm_vllm_embeds to extract the last hidden embeds
+Update V both when selection from the root and from the leaf
 '''
 
 import os
@@ -283,8 +284,8 @@ class MCTS(BS):
             1, self.V, children_embeds, children_puct_values, 
             self.config.ds_alpha, self.config.ds_beta, q_nll=None, q_ppl=np.zeros(len(node.children))) 
 
-        if not from_root:
-            self.V = copy.deepcopy(new_V)
+        # if not from_root:
+        self.V = copy.deepcopy(new_V)
         
         # logging.fatal(f"A_idxes = {A_idxes}")
         # logging.fatal(f"V = {self.V[:2,:2]}") 
@@ -310,7 +311,7 @@ class MCTS(BS):
             next_node = self.select_child(node, from_root)      # To encourage exploration, select from non-terminal children 
             if next_node is None:
                 node.is_terminal = True 
-            node  = next_node
+            node = next_node
             
         # logging.info(f"selected_node = {node}")
         return None if (node is None or node.is_terminal) else node

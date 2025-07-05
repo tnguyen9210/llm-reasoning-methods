@@ -1,5 +1,5 @@
 '''
-MCTS with diversity scores, update V globally
+MCTS with diversity scores, update V individually
 Add llm_vllm_embeds to extract the last hidden embeds
 '''
 
@@ -94,6 +94,7 @@ class BaseNode(BaseModel):
     is_completed: bool = False 
     # reward: Optional[float] = None
     # value: Optional[float] = 0
+    V_ind: Optional[Any] = None
 
     tag: str = "0"
     consecutive_errors: int = 0 
@@ -146,7 +147,7 @@ class MCTSNode(BaseNode):
         if not self.parent: return 0
         q_value = self.q_value() if self.visit_count() > 0 else 0
 
-        logging.fatal(cpuct)
+        # logging.fatal(cpuct)
         
         if cpuct == 0:
             return q_value
@@ -207,19 +208,19 @@ class BS(BaseTree):
     # final_answer_nodes: List[Type[BaseNode]] = [] 
     completed_nodes: List[Type[BaseNode]] = [] 
     candidate_nodes: List[Type[BaseNode]] = [] 
-    V: Optional[Any] = None
+    # V: Optional[Any] = None
 
     def __init__(self, **kwargs) -> None:
         super().__init__(**kwargs)
 
         self.candidate_nodes.append(self.current_node)
-        self.V = self.config.lam*np.eye(2048)
+        # self.V = self.config.lam*np.eye(2048)
         # self.current_top_num = self.config.step_beam_width
 
 
     def create_node(self, parent: Optional[Type[BaseNode]] = None) -> Type[BaseNode]:
         return BaseNode(
-            parent=parent
+            parent=parent, V_ind=V_ind
         )
 
 class MCTS(BS):
@@ -227,8 +228,9 @@ class MCTS(BS):
     search_node: Type[BaseNode] = None
     
     def create_node(self, parent = None):
+        V_ind = self.config.lam*np.eye(2048)
         return MCTSNode(
-            parent=parent
+            parent=parent, V_ind=V_ind
         )
 
 
@@ -277,21 +279,27 @@ class MCTS(BS):
             return None
             
         # logging.fatal(f"nchildren = {len(children_puct_values)}")
-        logging.fatal(f"V = {self.V[:2,:2]}") 
+        # logging.fatal(f"V = {self.V[:2,:2]}") 
         
         A_idxes, new_V = _diverse_select(
-            1, self.V, children_embeds, children_puct_values, 
+            1, node.V_ind, children_embeds, children_puct_values, 
             self.config.ds_alpha, self.config.ds_beta, q_nll=None, q_ppl=np.zeros(len(node.children))) 
 
-        if not from_root:
-            self.V = copy.deepcopy(new_V)
+        # if not from_root:
+        # self.V = copy.deepcopy(new_V)
+        selected_node = _children[A_idxes[0]] if _children else None
+        
+        if selected_node:
+            selected_embeds = selected_node.embeds
+            node.V_ind = node.V_ind + np.matmul(selected_embeds, selected_embeds.T)
         
         # logging.fatal(f"A_idxes = {A_idxes}")
         # logging.fatal(f"V = {self.V[:2,:2]}") 
         # logging.fatal(f"selected_node")
         # logging.fatal(_children[A_idxes[0]])
-        
-        return _children[A_idxes[0]] if _children else None 
+        # print(selected_node)
+        return selected_node
+        # return _children[A_idxes[0]] if _children else None 
 
     
     def selection(self, from_root=False):
@@ -316,15 +324,18 @@ class MCTS(BS):
         return None if (node is None or node.is_terminal) else node
 
     def generate_next_step(self, llm_outputs, llm_embeds):
-        logging.error(f"\n-> generate_next_step")
+        logging.fatal(f"\n-> generate_next_step")
         self.candidate_nodes = []
 
         self.expand_node(self.current_nodes[0], llm_outputs, llm_embeds)
-        # logging.fatal(f"current_node")
-        # logging.fatal(self.current_nodes[0])
+        logging.fatal(f"current_node")
+        logging.fatal(self.current_nodes[0])
     
         for child_node in self.current_nodes[0].children:
-            if child_node not in self.candidate_nodes and child_node.visit_count() < 1:
+            logging.fatal(f"child_node = {child_node}")
+            logging.fatal(f"candidate_nodes = {len(self.candidate_nodes)}")
+            if child_node.visit_count() < 1:
+                # if child_node not in self.candidate_nodes: 
                 self.candidate_nodes.append(child_node)
 
         logging.warn(f"candidate_nodes")

@@ -53,7 +53,7 @@ def _diverse_select(K, V, q_embeds, q_nll, q_ppl, q_scores, ds_alpha, ds_beta):
         _V_inv = np.linalg.inv(_V)   # 
 
         #
-        q_diversity = np.einsum('ij,jk,ik->i', q_embeds, _V_inv, q_embeds)
+        q_diversity = np.sqrt(np.einsum('ij,jk,ik->i', q_embeds, _V_inv, q_embeds))
         q_vals = ds_beta*q_scores + ds_alpha*q_diversity
         
         max_val = np.max([val for idx, val in enumerate(q_vals) if idx not in A_idxes])

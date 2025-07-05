@@ -1,6 +1,8 @@
 '''
 MCTS with diversity scores, update V globally
 Add llm_vllm_embeds to extract the last hidden embeds
+When selection from the leaf use uct. when selection from the root use combination of uct and diversity
+Update V both when selection from the root and from the leaf
 '''
 
 import os
@@ -261,37 +263,61 @@ class MCTS(BS):
 
     def select_child(self, node, from_root=False):
         
-        children_puct_values = [] 
-        children_embeds = []
-        _children = []
-        for child_node in node.children:
-            if child_node.is_terminal:
-                continue
-                
-            puct_value = child_node.puct(cpuct=self.config.cpuct)
-            children_puct_values.append(puct_value)
-            children_embeds.append(child_node.embeds)
-            _children.append(child_node)
-
-        if len(children_puct_values) == 0:
-            return None
-            
-        # logging.fatal(f"nchildren = {len(children_puct_values)}")
-        logging.fatal(f"V = {self.V[:2,:2]}") 
-        
-        A_idxes, new_V = _diverse_select(
-            1, self.V, children_embeds, children_puct_values, 
-            self.config.ds_alpha, self.config.ds_beta, q_nll=None, q_ppl=np.zeros(len(node.children))) 
-
         if not from_root:
+
+            best_value = -float("inf")
+            best_childs = []
+            for child_node in node.children:
+                if child_node.is_terminal:
+                    continue
+
+                puct_value = child_node.puct(cpuct=self.config.cpuct_leaf)
+                if puct_value == best_value:
+                    best_childs.append(child_node)
+                elif puct_value > best_value:
+                    best_value = puct_value
+                    best_childs = [child_node]
+
+            if len(best_childs) == 0:
+                return None
+                
+            selected_node = random.sample(best_childs, 1)[0]
+            selected_embeds = selected_node.embeds
+            self.V = self.V + np.matmul(selected_embeds, selected_embeds.T)
+
+        else:
+            children_puct_values = [] 
+            children_embeds = []
+            _children = []
+            for child_node in node.children:
+                if child_node.is_terminal:
+                    continue
+                    
+                puct_value = child_node.puct(cpuct=self.config.cpuct_root)
+                children_puct_values.append(puct_value)
+                children_embeds.append(child_node.embeds)
+                _children.append(child_node)
+    
+            if len(children_puct_values) == 0:
+                return None
+                
+            # logging.fatal(f"nchildren = {len(children_puct_values)}")
+            logging.fatal(f"V = {self.V[:2,:2]}")
+
+            A_idxes, new_V = _diverse_select(
+                1, self.V, children_embeds, children_puct_values, 
+                self.config.ds_alpha, self.config.ds_beta, q_nll=None, q_ppl=np.zeros(len(node.children))) 
+
             self.V = copy.deepcopy(new_V)
+
+            selected_node = _children[A_idxes[0]] if _children else None
         
         # logging.fatal(f"A_idxes = {A_idxes}")
         # logging.fatal(f"V = {self.V[:2,:2]}") 
         # logging.fatal(f"selected_node")
         # logging.fatal(_children[A_idxes[0]])
-        
-        return _children[A_idxes[0]] if _children else None 
+        # return _children[A_idxes[0]] if _children else None 
+        return selected_node
 
     
     def selection(self, from_root=False):
@@ -310,7 +336,7 @@ class MCTS(BS):
             next_node = self.select_child(node, from_root)      # To encourage exploration, select from non-terminal children 
             if next_node is None:
                 node.is_terminal = True 
-            node  = next_node
+            node = next_node
             
         # logging.info(f"selected_node = {node}")
         return None if (node is None or node.is_terminal) else node
