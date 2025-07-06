@@ -106,7 +106,7 @@ def main():
     else:
         print("CUDA is not available.")
 
-    prm = RLHFFlow(model_path=prm_tokenizer_dir, device_map='cuda:1')
+    prm = RLHFFlow(model_path=prm_tokenizer_dir, device_map='cuda:2')
 
     # general params
     config = Config()
@@ -125,7 +125,7 @@ def main():
         dataset = dataset.select(range(config.dataset_start, config.dataset_end))
     
     # run search_algo and save results
-    config_name = f"mcts--n-8--d-40--nphases-2--cpuct-2--level-4--v11--trial-4"
+    config_name = f"mcts--n-8--d-40--nb-5--lam-10--dalpha-10.0--dbeta-1.0--cpuct-0-2--ppl-True--normalize-True--level-4--v51--trial-1"
     print(f"config_name = {config_name}")
     
     compute_completion_scores(config_name, dataset, prm, num_trials=1, config=config)
