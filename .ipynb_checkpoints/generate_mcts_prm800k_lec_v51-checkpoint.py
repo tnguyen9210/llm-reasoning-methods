@@ -74,7 +74,7 @@ def main():
     config.cpuct_root = 0
     config.cpuct_leaf = 2
     config.ds_beta = 1.0
-    config.ds_alpha = 0.1
+    config.ds_alpha = 100
     config.use_ppl = True
 
     config.version = "v51"
