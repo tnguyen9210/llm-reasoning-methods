@@ -45,13 +45,15 @@ def main():
     # general params
     config = Config()
     config.agg_strategy = 'last'
-    config.n = 8
+    config.bs = 8
     config.beam_width = 0
     config.lookahead = 0
-    config.num_depths = 40
+    config.max_depths = 40
     config.sort_completed = False
     config.filter_duplicates = True
     config.seed = 0
+    config.num_batches = 5
+    config.n = config.bs*config.num_batches
     
     # diverse_select params
     config.lam = 10
@@ -77,7 +79,7 @@ def main():
     level = 4
     num_questions = len(data_by_levels[level])
     # num_questions = 2
-    num_trials = 5
+    num_trials = 2
     print(f"num_questions = {num_questions}")
     print(f"num_trials = {num_trials}")
     
@@ -99,8 +101,16 @@ def main():
     print(search_algo)
 
     # run search_algo and save results
-    config_name = f"bob--n-{config.n}--d-{config.num_iterations}--level-{level}--{config.version}"
+    config_name = f"bob--{config.version}--n-{config.n}--d-{config.max_depths}--level-{level}"
     print(config_name)
+    result_dir = f"results/{config_name}"
+    try:
+        os.mkdir(result_dir)
+        print(f"Directory '{result_dir}' created successfully.")
+    except FileExistsError:
+        print(f"Directory '{result_dir}' already exists.")
+    except OSError as e:
+        print(f"Error creating directory: {e}")
             
     start_time = time.time()
     for trial_idx in range(num_trials):
@@ -111,7 +121,7 @@ def main():
         
         # best_of_n(batch_of_questions, config, llm_vllm, random_seeds[trial_idx])
         results = search_algo(batch_of_questions, config, llm_vllm)
-        with open(f"results/generate_{config_name}--trial-{trial_idx}.jsonl", 'w', encoding = 'utf-8') as fout:
+        with open(f"results/{config_name}/generate_{config_name}--trial-{trial_idx}.jsonl", 'w', encoding = 'utf-8') as fout:
             json.dump(results, fout)
             fout.write('\n')
     

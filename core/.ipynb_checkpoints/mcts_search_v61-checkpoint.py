@@ -288,10 +288,10 @@ class MCTS(BS):
         # if not from_root:
         # self.V = copy.deepcopy(new_V)
         selected_node = _children[A_idxes[0]] if _children else None
-        
-        if selected_node:
-            selected_embeds = selected_node.embeds
-            node.V_ind = node.V_ind + np.matmul(selected_embeds, selected_embeds.T)
+        node.V_ind = copy.deepcopy(new_V)
+        # if selected_node:
+        #     selected_embeds = selected_node.embeds
+        #     node.V_ind = node.V_ind + np.matmul(selected_embeds, selected_embeds.T)
         
         # logging.fatal(f"A_idxes = {A_idxes}")
         # logging.fatal(f"V = {self.V[:2,:2]}") 

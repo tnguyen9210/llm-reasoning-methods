@@ -14,10 +14,10 @@ from vllm import LLM, SamplingParams, PoolingParams
 
 from sal.config import Config
 
-from cores import mcts_search_v61
-from cores.reward_models import RLHFFlow
+from core import mcts_search_v61
+from core.reward_models import RLHFFlow
 
-from cores.load_data import load_data_prm800k
+from utils.load_data import load_data_prm800k
 
 
 # APPROACHES = {
@@ -63,7 +63,8 @@ def main():
 
     # mcts parameter
     config.num_phases = 100
-    config.batch_budget = config.max_depths 
+    config.num_batches = 1
+    config.batch_budget = config.num_batches*config.max_depths  
     
     config.lam = 10 
     config.normalize_embeds = True
@@ -77,6 +78,7 @@ def main():
     
     # baseline: gpu_memory_utilization=0.2
     # use the standard model 
+    llm_total_gpu = 0.8
     llm_gpu_memory_utilization = 0.5
     # llm_vllm = LLM(
     #     model = llm_dir,
@@ -95,7 +97,7 @@ def main():
         swap_space=16,
         max_model_len=5000,
         gpu_memory_utilization=llm_gpu_memory_utilization,
-        # enforce_eager=True,
+        enforce_eager=True,
         distributed_executor_backend=None,
         dtype="float16",
         seed=config.seed,
@@ -108,8 +110,8 @@ def main():
         task="embed",
         swap_space=16,
         max_model_len=5000,
-        gpu_memory_utilization=0.98-llm_gpu_memory_utilization,
-        # enforce_eager=True,
+        gpu_memory_utilization=llm_total_gpu-llm_gpu_memory_utilization,
+        enforce_eager=True,
         distributed_executor_backend=None,
         dtype="float16",
         seed=0,
@@ -136,11 +138,19 @@ def main():
     # print(search_algo)
 
     # run search_algo and save results
-    config_name = f"mcts--n-{config.n}--d-{config.max_depths}--lam-{config.lam}--dalpha-{config.ds_alpha}--dbeta-{config.ds_beta}--cpuct-{config.cpuct}--ppl-{config.use_ppl}--normalize-{config.normalize_embeds}--level-{level}--{config.version}"
+    config_name = f"mcts--{config.version}--n-{config.n}--d-{config.max_depths}--nb-{config.num_batches}--lam-{config.lam}--dalpha-{config.ds_alpha}--dbeta-{config.ds_beta}--cpuct-{config.cpuct}--ppl-{config.use_ppl}--normalize-{config.normalize_embeds}--level-{level}"
     print(config_name)
+    result_dir = f"results/{config_name}"
+    try:
+        os.mkdir(result_dir)
+        print(f"Directory '{result_dir}' created successfully.")
+    except FileExistsError:
+        print(f"Directory '{result_dir}' already exists.")
+    except OSError as e:
+        print(f"Error creating directory: {e}")
             
     start_time = time.time()
-    for trial_idx in range(1,5):
+    for trial_idx in range(1,2):
         np.random.seed(100000+trial_idx)
         random.seed(100000+trial_idx)
         torch.manual_seed(100000+trial_idx)
@@ -148,7 +158,7 @@ def main():
         
         # best_of_n(batch_of_questions, config, llm_vllm, random_seeds[trial_idx])
         results = mcts_search_v61._search(batch_of_questions, config, llm_vllm, llm_vllm_embeds, prm)
-        with open(f"results/generate_{config_name}--trial-{trial_idx}.jsonl", 'w', encoding = 'utf-8') as fout:
+        with open(f"results/{config_name}/generate_{config_name}--trial-{trial_idx}.jsonl", 'w', encoding = 'utf-8') as fout:
             json.dump(results, fout)
             fout.write('\n')
     

@@ -73,9 +73,9 @@ def best_of_batch(batch_of_questions, config, llm_vllm):
             ) 
 
     active_beams = beams
-    # for i in tqdm(range(config.num_iterations), desc="Beam search iterations"):
+    # for i in tqdm(range(config.max_depths), desc="Beam search iterations"):
     start_time = time.time()
-    for it in range(config.num_iterations):
+    for it in range(config.max_depths):
         # print(f"\n-> {it}")
         
         # print(len(active_beams))
@@ -100,7 +100,7 @@ def best_of_batch(batch_of_questions, config, llm_vllm):
         )
 
         # Last iteration, generate to EOS
-        if it == config.num_iterations - 1:
+        if it == config.max_depths - 1:
             sampling_params = SamplingParams(
                 temperature=config.temperature,
                 max_tokens=config.max_tokens,
@@ -108,7 +108,7 @@ def best_of_batch(batch_of_questions, config, llm_vllm):
                 n=1,
             )
 
-        lookahead = 0 if it == config.num_iterations - 1 else config.lookahead
+        lookahead = 0 if it == config.max_depths - 1 else config.lookahead
         gen_results = generate_k_steps(
             templated_convs, lookahead, llm_vllm, sampling_params, 1
         )

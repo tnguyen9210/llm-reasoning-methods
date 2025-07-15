@@ -1,5 +1,5 @@
 '''
-MCTS with diversity scores, update V globally
+MCTS Vglobal2
 Add llm_vllm_embeds to extract the last hidden embeds
 When selection from the leaf use uct. when selection from the root use combination of uct and diversity
 Update V both when selection from the root and from the leaf
@@ -161,7 +161,7 @@ class MCTSNode(BaseNode):
         return q_value + u_value
 
     def __repr__(self):
-        return f"MCTSNode(state={self.state}, is_terminal={self.is_terminal})"
+        return f"MCTSNode(state={self.state}, is_terminal={self.is_terminal}, nvisits={self.__visit_count})"
 
 
 class BaseTree(BaseModel):
@@ -262,9 +262,11 @@ class MCTS(BS):
         current_node.children.append(new_node)
 
     def select_child(self, node, from_root=False):
+        logging.critical(f"select_child")
+        logging.critical(f"{node.children}")
         
         if not from_root:
-
+            
             best_value = -float("inf")
             best_childs = []
             for child_node in node.children:

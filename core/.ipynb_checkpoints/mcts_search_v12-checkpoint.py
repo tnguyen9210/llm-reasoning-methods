@@ -1,3 +1,7 @@
+'''
+MCTS implementation from the rStar-Math's repo
+'''
+
 # from __future__ import annotations
 
 import os

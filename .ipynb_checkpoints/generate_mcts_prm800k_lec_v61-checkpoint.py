@@ -142,7 +142,7 @@ def main():
     print(config_name)
             
     start_time = time.time()
-    for trial_idx in range(1,5):
+    for trial_idx in range(1,2):
         np.random.seed(100000+trial_idx)
         random.seed(100000+trial_idx)
         torch.manual_seed(100000+trial_idx)
