@@ -254,7 +254,7 @@ class MCTS(BS):
             new_node.is_terminal = True
             self.completed_nodes.append(new_node)
             
-        if not new_node.is_terminal and new_node.depth > self.config.max_depths:
+        if not new_node.is_terminal and new_node.depth >= self.config.max_depths:
             new_node.is_terminal = True
 
         current_node.children.append(new_node)

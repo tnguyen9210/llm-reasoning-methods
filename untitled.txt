@@ -1,1 +1,52 @@
-MCTSNode(state={'text': '## Step 1: Identify the direction vectors of the lines\nTo find the angle between the two lines, we first need to identify their direction vectors. These can be obtained from the coefficients of x, y, and z in the given equations.\n\nFor the first line, 2x = 3y = -z, the direction vector is (2, 3, -1).\n\nFor the second line, 6x = -y = -4z, the direction vector is (6, -1, -4).\n\n'
+36
+q_idx = 11
+37
+q_idx = 11
+38
+q_idx = 11
+38
+q_idx = 11
+36
+q_idx = 34
+38
+q_idx = 63
+39
+q_idx = 63
+38
+q_idx = 97
+38
+q_idx = 98
+40
+q_idx = 98
+40
+q_idx = 98
+38
+q_idx = 11
+40
+q_idx = 11
+36
+q_idx = 28
+36
+q_idx = 28
+37
+q_idx = 28
+38
+q_idx = 59
+39
+q_idx = 60
+36
+q_idx = 78
+39
+q_idx = 78
+40
+q_idx = 78
+39
+q_idx = 79
+40
+q_idx = 79
+40
+q_idx = 79
+36
+q_idx = 86
+40
+q_idx = 98

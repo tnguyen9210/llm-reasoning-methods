@@ -99,7 +99,7 @@ def main():
     else:
         print("CUDA is not available.")
 
-    prm = RLHFFlow(model_path=prm_tokenizer_dir, device_map='cuda:0')
+    prm = RLHFFlow(model_path=prm_tokenizer_dir, device_map='cuda:3')
 
     # general params
     config = Config()
@@ -119,8 +119,7 @@ def main():
     
     # run search_algo and save results
     config_name = f"mcts--v51--n-8--d-40--lam-10--dalpha-10.0--dbeta-1.0--cpuct-0-2--ppl-True--normalize-True--level-4"
-    # config_name = f"mcts--v51--n-8--d-40--nb-5--lam-10--dalpha-0.1--dbeta-1.0--cpuct-0-2--ppl-True--normalize-True--level-4"
-    config_name = f"mcts--v51--n-8--d-40--nb-10--lam-10--dalpha-10.0--dbeta-1.0--cpuct-0-2--ppl-True--normalize-True--level-4"
+    config_name = f"mcts--v17--n-4--d-40--nb-2--cpuct-1--level-4"
     print(f"config_name = {config_name}--trial-{trial_idx}")
     
     extract_trajectory_answers(config_name, dataset, prm, trial_idx, config=config)

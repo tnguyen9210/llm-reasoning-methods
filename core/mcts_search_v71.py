@@ -3,7 +3,6 @@ MCTS Vglobal2
 Add llm_vllm_embeds to extract the last hidden embeds
 When selection from the leaf use uct. when selection from the root use combination of uct and diversity
 Update V both when selection from the root and from the leaf
-When selection from the leaf set alpha=0
 '''
 
 import os
@@ -35,7 +34,7 @@ from sal.search.utils import build_conv, generate_k_steps, last
 
 
 import logging
-logging.basicConfig(format='%(message)s', level=logging.CRITICAL)
+logging.basicConfig(format='%(message)s', level=logging.CRITICAL+1)
 # logging.basicConfig(format='%(message)s', level=logging.FATAL)
 # logging.disable(logging.CRITICAL)
 # logging.basicConfig(level=logging.error)
@@ -266,7 +265,7 @@ class MCTS(BS):
         logging.critical(f"select_child")
         logging.critical(f"{node.children}")
         
-        if not from_root:
+        if not from_root or node.depth >= 3:
             
             best_value = -float("inf")
             best_childs = []
