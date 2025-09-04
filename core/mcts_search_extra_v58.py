@@ -97,6 +97,8 @@ class BaseNode(BaseModel):
     parent: Optional[Any] = None
     children: List[Any] = []
     depth: int = 0
+    phase: int = 0
+    batch_cnt: int = 0
     is_terminal: bool = False
     is_completed: bool = False 
     # reward: Optional[float] = None
@@ -218,7 +220,7 @@ class BS(BaseTree):
         super().__init__(**kwargs)
 
         self.candidate_nodes.append(self.current_node)
-        self.V = self.config.lam*np.eye(2048)
+        self.V = self.config.lam*np.eye(4096)
         # self.current_top_num = self.config.step_beam_width
 
 
@@ -237,18 +239,20 @@ class MCTS(BS):
         )
 
 
-    def expand_node(self, current_node, llm_outputs, llm_embeds):
+    def expand_node(self, current_node, llm_outputs, llm_embeds, phase, batch_cnt):
         for output, embeds in zip(llm_outputs, llm_embeds):
-            self.create_child(current_node, output, embeds)
+            self.create_child(current_node, output, embeds, phase, batch_cnt)
 
 
-    def create_child(self, current_node, output, embeds):
+    def create_child(self, current_node, output, embeds, phase, batch_cnt):
         new_node = self.create_node(parent=current_node)
         parent_child_count = len(current_node.children)
         # logging.fatal(f"num_children = {parent_child_count}")
         new_node.tag = f"{current_node.tag}.{parent_child_count + 1}"
         new_node.depth = current_node.depth + 1
-        new_node.embeds = embeds
+        new_node.embeds = embeds[-1]
+        new_node.phase = phase
+        new_node.batch_cnt = batch_cnt
 
         new_node.state["text"] = current_node.state["text"] + output.next_texts[0]
         if (output.stop_reasons[0] == "EOS"
@@ -349,24 +353,6 @@ class MCTS(BS):
         # logging.info(f"selected_node = {node}")
         return None if (node is None or node.is_terminal) else node
 
-    def generate_next_step(self, llm_outputs, llm_embeds):
-        logging.error(f"\n-> generate_next_step")
-        self.candidate_nodes = []
-
-        self.expand_node(self.current_nodes[0], llm_outputs, llm_embeds)
-        # logging.fatal(f"current_node")
-        # logging.fatal(self.current_nodes[0])
-    
-        for child_node in self.current_nodes[0].children:
-            if child_node not in self.candidate_nodes and child_node.visit_count() < 1:
-                self.candidate_nodes.append(child_node)
-
-        logging.warn(f"candidate_nodes")
-        for node in self.candidate_nodes:
-            logging.warn("")
-            logging.warn(node.state['text'])
-            logging.warn(node.is_terminal)
-            logging.warn(node.is_completed)
 
     def select_next_step(self, candidate_scores=None, from_root=False):
         logging.error(f"\n-> select_next_step")
@@ -405,7 +391,27 @@ class MCTS(BS):
         if selected_node is not None:
             self.current_nodes.append(selected_node)
 
-def mcts_search(question, agent, config, llm_vllm, llm_vllm_embeds, prm):
+    def generate_next_step(self, llm_outputs, llm_embeds, phase, batch_cnt):
+        logging.error(f"\n-> generate_next_step")
+        self.candidate_nodes = []
+
+        self.expand_node(self.current_nodes[0], llm_outputs, llm_embeds, phase, batch_cnt)
+        # logging.fatal(f"current_node")
+        # logging.fatal(self.current_nodes[0])
+    
+        for child_node in self.current_nodes[0].children:
+            if child_node not in self.candidate_nodes and child_node.visit_count() < 1:
+                self.candidate_nodes.append(child_node)
+
+        logging.warn(f"candidate_nodes")
+        for node in self.candidate_nodes:
+            logging.warn("")
+            logging.warn(node.state['text'])
+            logging.warn(node.is_terminal)
+            logging.warn(node.is_completed)
+            
+
+def mcts_search(question, agent, config, llm_vllm, prm):
 
     tokenizer = llm_vllm.get_tokenizer()
     if config.custom_chat_template is not None:
@@ -425,12 +431,15 @@ def mcts_search(question, agent, config, llm_vllm, llm_vllm_embeds, prm):
     batch_cnt = 0
     should_terminate = False
     do_terminate = False
-    
+
+    ndepths_arr = []
     for p in range(config.num_phases):
+        logging.fatal(f"\n-> p = {p}")
+
+        cur_depth = 0
         if do_terminate:
             break
             
-        logging.fatal(f"\n-> p = {p}")
         agent.select_next_step(from_root=True)
 
         for d in range(config.max_depths):
@@ -439,6 +448,8 @@ def mcts_search(question, agent, config, llm_vllm, llm_vllm_embeds, prm):
 
             # if current branch reaches a terminal node, continue 
             if len(agent.current_nodes) == 0:
+                if cur_depth > 0:
+                    ndepths_arr.append(cur_depth)
                 if should_terminate:
                     do_terminate = True
                 else:
@@ -453,6 +464,9 @@ def mcts_search(question, agent, config, llm_vllm, llm_vllm_embeds, prm):
             logging.error(f"current_partial_solution = {current_partial_solution}")
             current_convs = [build_conv(question, current_partial_solution, config.system_prompt)]
 
+            cur_depth = current_node.depth + 1
+            batch_cnt += 1
+
             # add_generation_prompt = agent.current_nodes[0].depth == 0
             # continue_final_message = agent.current_nodes[0].depth > 0
         
@@ -462,6 +476,7 @@ def mcts_search(question, agent, config, llm_vllm, llm_vllm_embeds, prm):
                 continue_final_message=current_node.depth > 0,
                 # add_generation_prompt=True,
                 # continue_final_message=False,
+                date_string=config.date_string,
                 tokenize=False,
             )
             current_templated_convs = current_templated_convs*config.n
@@ -486,45 +501,21 @@ def mcts_search(question, agent, config, llm_vllm, llm_vllm_embeds, prm):
                     
             llm_outputs = [llm_outputs[idx] for idx in llm_outputs_unique.values()]
             
-            llm_embeds = []
+            candidate_prompts = []
+            candidate_completions = []
             for cidx, output in enumerate(llm_outputs):
                 cand_text = output.next_texts[0]
                 cand_partial_solution = current_partial_solution + cand_text
                 
-                logging.fatal(f"cand_idx {cidx}")
-                # logging.fatal(cand_partial_solution)
-                cand_convs = [build_conv(question, cand_partial_solution, config.system_prompt)]
-                cand_templated_convs = tokenizer.apply_chat_template(
-                    cand_convs,
-                    add_generation_prompt=False,
-                    continue_final_message=True,
-                    tokenize=False,
-                )
-                logging.fatal(cand_templated_convs[0]) 
-
-                outputs = llm_vllm_embeds.encode(cand_templated_convs, use_tqdm=False)
-                outputs_embeds = outputs[0].outputs.data
-
-                if config.normalize_embeds:
-                    outputs_embeds = F.normalize(outputs_embeds, p=2, dim=-1)
-                    
-                llm_embeds.append(outputs_embeds.detach().cpu().numpy())
-                # logging.fatal(outputs)
-                # logging.fatal(outputs_embeds) 
-
-            agent.generate_next_step(llm_outputs, llm_embeds)
-            
-    
-            # apply prm and assign candidate steps with prm scores -> prm_outputs
-            candidate_prompts = []
-            candidate_completions = []
-            for cidx, node in enumerate(agent.candidate_nodes):
                 # logging.fatal(f"cand_idx {cidx}")
-                # logging.fatal(node.state["text"])
+                # logging.fatal(cand_partial_solution)
+
                 candidate_prompts.append(question)
-                candidate_completions.append([node.state["text"]])
-            
-            candidate_scores = prm.score(candidate_prompts, candidate_completions, batch_size=4)
+                candidate_completions.append([cand_partial_solution])
+
+            # logging.fatal(candidate_prompts)
+            # logging.fatal(candidate_completions)
+            candidate_scores, candidate_embeds = prm.score(candidate_prompts, candidate_completions, batch_size=4)
             candidate_scores = [
                 [aggregate_scores(s, config.agg_strategy) for s in score]
                 for score in candidate_scores
@@ -532,15 +523,19 @@ def mcts_search(question, agent, config, llm_vllm, llm_vllm_embeds, prm):
             # logging.error(prm_convs)
             # candidate_scores = rm_generate(prm_model, prm_v_head, prm_convs, prm_tokenizer)
             logging.error(f"candidate_scores = {candidate_scores}")
+            # logging.fatal(candidate_embeds)
             
+            agent.generate_next_step(llm_outputs, candidate_embeds, p, batch_cnt)
             agent.select_next_step(candidate_scores)
+            logging.error(f"candidate_scores = {candidate_scores}")
 
-            batch_cnt += 1
+            logging.fatal(f"batch_cnt = {batch_cnt}")
             if batch_cnt >= config.batch_budget:
                 break 
 
-        
         if batch_cnt >= config.batch_budget:
+            if cur_depth > 0:
+                ndepths_arr.append(cur_depth)
             break
         
 
@@ -549,19 +544,44 @@ def mcts_search(question, agent, config, llm_vllm, llm_vllm_embeds, prm):
         if node.state["text"] not in unique_completion_dict:
             unique_completion_dict[node.state["text"]] = (idx)
             
-    completions = [agent.completed_nodes[i].state["text"] for i in unique_completion_dict.values()]
+    # completions = [agent.completed_nodes[i].state["text"] for i in unique_completion_dict.values()]
+    completions = []
+    c_depths = []
+    c_phases = []
+    c_batch_cnts = []
+    for i in unique_completion_dict.values():
+        node = agent.completed_nodes[i]
+        completions.append(node.state["text"])
+        c_depths.append(node.depth)
+        c_phases.append(node.phase)
+        c_batch_cnts.append(node.batch_cnt)
         
-    return completions
+    return completions, c_depths, c_phases, c_batch_cnts, p, ndepths_arr
 
-def _search(batch_of_questions, config, llm_vllm, llm_vllm_embeds, prm):
+def _search(batch_of_questions, config, llm_vllm, prm):
 
     all_completions = [[] for _ in range(len(batch_of_questions))]
+    all_c_depths = [[] for _ in range(len(batch_of_questions))]
+    all_c_phases = [[] for _ in range(len(batch_of_questions))]
+    all_c_batch_cnts = [[] for _ in range(len(batch_of_questions))]
+    all_last_phases = [[] for _ in range(len(batch_of_questions))]
+    all_ndepths_arr = [[] for _ in range(len(batch_of_questions))]
     for q_idx, question in enumerate(batch_of_questions):
         agent = MCTS(config=config, question=question)
-        completions = mcts_search(question, agent, config, llm_vllm, llm_vllm_embeds, prm)
+        completions, c_depths, c_phases, c_batch_cnts, last_phase, ndepths_arr = mcts_search(question, agent, config, llm_vllm, prm)
         all_completions[q_idx] = completions
+        all_c_depths[q_idx] = c_depths
+        all_c_phases[q_idx] = c_phases
+        all_c_batch_cnts[q_idx] = c_batch_cnts
+        all_last_phases[q_idx] = last_phase
+        all_ndepths_arr[q_idx] = ndepths_arr
                                           
     results = defaultdict(list)
     results["completions"] = all_completions
+    results["c_depths"] = all_c_depths
+    results["c_phases"] = all_c_phases
+    results["c_batch_cnts"] = all_c_batch_cnts
+    results["last_phases"] = all_last_phases
+    results["ndepths_arr"] = all_ndepths_arr
 
     return results

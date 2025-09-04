@@ -234,18 +234,19 @@ class MCTS(BS):
         )
 
 
-    def expand_node(self, current_node, llm_outputs, llm_embeds):
+    def expand_node(self, current_node, llm_outputs, llm_embeds, phase):
         for output, embeds in zip(llm_outputs, llm_embeds):
-            self.create_child(current_node, output, embeds)
+            self.create_child(current_node, output, embeds, phase)
 
 
-    def create_child(self, current_node, output, embeds):
+    def create_child(self, current_node, output, embeds, phase):
         new_node = self.create_node(parent=current_node)
         parent_child_count = len(current_node.children)
         # logging.fatal(f"num_children = {parent_child_count}")
         new_node.tag = f"{current_node.tag}.{parent_child_count + 1}"
         new_node.depth = current_node.depth + 1
         new_node.embeds = embeds
+        new_node.phase = phase
 
         new_node.state["text"] = current_node.state["text"] + output.next_texts[0]
         if (output.stop_reasons[0] == "EOS"

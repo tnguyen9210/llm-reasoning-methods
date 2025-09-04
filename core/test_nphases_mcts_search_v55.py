@@ -37,7 +37,7 @@ from sal.search.utils import build_conv, generate_k_steps, last
 
 
 import logging
-logging.basicConfig(format='%(message)s', level=logging.FATAL+1)
+logging.basicConfig(format='%(message)s', level=logging.FATAL)
 # logging.disable(logging.fatal)
 # logging.basicConfig(level=logging.error)
 
@@ -98,6 +98,7 @@ class BaseNode(BaseModel):
     parent: Optional[Any] = None
     children: List[Any] = []
     depth: int = 0
+    phase: int = 0
     is_terminal: bool = False
     is_completed: bool = False 
     # reward: Optional[float] = None
@@ -240,18 +241,19 @@ class MCTS(BS):
         )
 
 
-    def expand_node(self, current_node, llm_outputs, llm_embeds):
+    def expand_node(self, current_node, llm_outputs, llm_embeds, phase):
         for output, embeds in zip(llm_outputs, llm_embeds):
-            self.create_child(current_node, output, embeds)
+            self.create_child(current_node, output, embeds, phase)
 
 
-    def create_child(self, current_node, output, embeds):
+    def create_child(self, current_node, output, embeds, phase):
         new_node = self.create_node(parent=current_node)
         parent_child_count = len(current_node.children)
         # logging.fatal(f"num_children = {parent_child_count}")
         new_node.tag = f"{current_node.tag}.{parent_child_count + 1}"
         new_node.depth = current_node.depth + 1
         new_node.embeds = embeds
+        new_node.phase = phase
 
         new_node.state["text"] = current_node.state["text"] + output.next_texts[0]
         if (output.stop_reasons[0] == "EOS"
@@ -352,11 +354,11 @@ class MCTS(BS):
         # logging.info(f"selected_node = {node}")
         return None if (node is None or node.is_terminal) else node
 
-    def generate_next_step(self, llm_outputs, llm_embeds):
+    def generate_next_step(self, llm_outputs, llm_embeds, phase):
         logging.error(f"\n-> generate_next_step")
         self.candidate_nodes = []
 
-        self.expand_node(self.current_nodes[0], llm_outputs, llm_embeds)
+        self.expand_node(self.current_nodes[0], llm_outputs, llm_embeds, phase)
         # logging.fatal(f"current_node")
         # logging.fatal(self.current_nodes[0])
     
@@ -431,10 +433,11 @@ def mcts_search(question, agent, config, llm_vllm, llm_vllm_embeds, prm):
 
     ndepths_arr = [] 
     for p in range(config.num_phases):
+        cur_depth = 0
+        logging.fatal(f"\n-> p = {p}")
         if do_terminate:
             break
-            
-        logging.fatal(f"\n-> p = {p}")
+        
         agent.select_next_step(from_root=True)
 
         for d in range(config.max_depths):
@@ -443,7 +446,8 @@ def mcts_search(question, agent, config, llm_vllm, llm_vllm_embeds, prm):
 
             # if current branch reaches a terminal node, continue 
             if len(agent.current_nodes) == 0:
-                ndepths_arr.append(d)
+                if cur_depth > 0:
+                    ndepths_arr.append(cur_depth)
                 if should_terminate:
                     do_terminate = True
                 else:
@@ -458,20 +462,21 @@ def mcts_search(question, agent, config, llm_vllm, llm_vllm_embeds, prm):
             logging.error(f"current_partial_solution = {current_partial_solution}")
             current_convs = [build_conv(question, current_partial_solution, config.system_prompt)]
 
+            cur_depth = current_node.depth + 1
             # add_generation_prompt = agent.current_nodes[0].depth == 0
             # continue_final_message = agent.current_nodes[0].depth > 0
-        
+            
             current_templated_convs = tokenizer.apply_chat_template(
                 current_convs,
                 add_generation_prompt=current_node.depth == 0,
                 continue_final_message=current_node.depth > 0,
                 # add_generation_prompt=True,
                 # continue_final_message=False,
+                date_string=config.date_string,
                 tokenize=False,
             )
             current_templated_convs = current_templated_convs*config.n
-            # logging.error(current_templated_convs[0])
-
+            # logging.fatal(current_templated_convs[0])
             # llm_outputs = llm_vllm.generate(current_templated_convs, sampling_params, use_tqdm=False)
             # logging.fatal("llm_outputs")
             # logging.fatal(llm_outputs)
@@ -496,16 +501,17 @@ def mcts_search(question, agent, config, llm_vllm, llm_vllm_embeds, prm):
                 cand_text = output.next_texts[0]
                 cand_partial_solution = current_partial_solution + cand_text
                 
-                logging.fatal(f"cand_idx {cidx}")
+                # logging.fatal(f"cand_idx {cidx}")
                 # logging.fatal(cand_partial_solution)
                 cand_convs = [build_conv(question, cand_partial_solution, config.system_prompt)]
                 cand_templated_convs = tokenizer.apply_chat_template(
                     cand_convs,
                     add_generation_prompt=False,
                     continue_final_message=True,
+                    date_string=config.date_string,
                     tokenize=False,
                 )
-                logging.fatal(cand_templated_convs[0]) 
+                # logging.fatal(cand_templated_convs[0]) 
 
                 outputs = llm_vllm_embeds.encode(cand_templated_convs, use_tqdm=False)
                 outputs_embeds = outputs[0].outputs.data
@@ -517,7 +523,7 @@ def mcts_search(question, agent, config, llm_vllm, llm_vllm_embeds, prm):
                 # logging.fatal(outputs)
                 # logging.fatal(outputs_embeds) 
 
-            agent.generate_next_step(llm_outputs, llm_embeds)
+            agent.generate_next_step(llm_outputs, llm_embeds, p)
             
     
             # apply prm and assign candidate steps with prm scores -> prm_outputs
@@ -540,12 +546,17 @@ def mcts_search(question, agent, config, llm_vllm, llm_vllm_embeds, prm):
             
             agent.select_next_step(candidate_scores)
 
+            # stop 
+            
             batch_cnt += 1
+            logging.fatal(f"batch_cnt = {batch_cnt}")
             if batch_cnt >= config.batch_budget:
                 break 
 
-        
         if batch_cnt >= config.batch_budget:
+            if cur_depth > 0:
+                ndepths_arr.append(cur_depth)
+            logging.fatal(f"run out of budget")
             break
 
     print(f"nphases = {p}")
@@ -557,10 +568,18 @@ def mcts_search(question, agent, config, llm_vllm, llm_vllm_embeds, prm):
     for idx, node in enumerate(agent.completed_nodes):
         if node.state["text"] not in unique_completion_dict:
             unique_completion_dict[node.state["text"]] = (idx)
-            
-    completions = [agent.completed_nodes[i].state["text"] for i in unique_completion_dict.values()]
+
+    completions = []
+    c_depths = []
+    c_phases = []
+    for i in unique_completion_dict.values():
+        node = agent.completed_nodes[i]
+        completions.append(node.state["text"])
+        c_depths.append(node.depth)
+        c_phases.append(node.phase)
+    # completions = [agent.completed_nodes[i].state["text"] for i in unique_completion_dict.values()]
         
-    return completions, p, ndepths_mean
+    return completions, c_depths, c_phases, p, ndepths_mean
 
 def _search(batch_of_questions, config, llm_vllm, llm_vllm_embeds, prm):
 

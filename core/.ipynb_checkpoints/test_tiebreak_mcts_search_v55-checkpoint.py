@@ -6,7 +6,6 @@ Update V both when selection from the root and from the leaf.
 Remove duplicated nodes.
 A node is a terminal if its depth is equal max_depths.
 Loop over node selection.
-Tie-breaking with uniform sampling.
 '''
 
 import os
@@ -49,7 +48,7 @@ def _diverse_select(K, V, q_embeds, q_scores, ds_alpha, ds_beta, q_nll=None, q_p
     A_idxes = []
     A_embeds = []
     tol = 0.0001
-    
+    tiebreak_cnt = 0
     for it in range(K):
         _V_inv = np.linalg.inv(_V)   # 
 
@@ -65,9 +64,11 @@ def _diverse_select(K, V, q_embeds, q_scores, ds_alpha, ds_beta, q_nll=None, q_p
             if (np.abs(max_val - arm_val) <= tol) and (arm_idx not in A_idxes)
         ]
 
+        if len(candidate_idxes) >= 2:
+            tiebreak_cnt += 1
+
         # best_idx = min(candidate_idxes, key=lambda i: q_nll[i])
-        # best_idx = min(candidate_idxes, key=lambda i: q_ppl[i])
-        best_idx = random.sample(candidate_idxes, 1)[0]
+        best_idx = min(candidate_idxes, key=lambda i: q_ppl[i])
         # print(q_vals)
         # print(q_nll)
         # print(candidate_idxes)
@@ -88,7 +89,7 @@ def _diverse_select(K, V, q_embeds, q_scores, ds_alpha, ds_beta, q_nll=None, q_p
         # print(max_idx)
         # print(A_idxes)
 
-    return A_idxes, _V
+    return A_idxes, _V, tiebreak_cnt
 
 
 class BaseNode(BaseModel):
@@ -230,6 +231,8 @@ class BS(BaseTree):
 class MCTS(BS):
 
     search_node: Type[BaseNode] = None
+    total_cnt: int = 0
+    tiebreak_cnt: int = 0
     
     def create_node(self, parent = None):
         return MCTSNode(
@@ -311,10 +314,14 @@ class MCTS(BS):
             # logging.fatal(f"nchildren = {len(children_puct_values)}")
             # logging.fatal(f"V = {self.V[:2,:2]}")
 
-            A_idxes, new_V = _diverse_select(
+            A_idxes, new_V, tie_cnt = _diverse_select(
                 1, self.V, children_embeds, children_puct_values, 
                 self.config.ds_alpha, self.config.ds_beta, q_nll=None, q_ppl=np.zeros(len(node.children))) 
 
+            self.total_cnt += 1
+            if tie_cnt > 0:
+                self.tiebreak_cnt += 1
+            
             self.V = copy.deepcopy(new_V)
 
             selected_node = _children[A_idxes[0]] if _children else None
@@ -543,7 +550,8 @@ def mcts_search(question, agent, config, llm_vllm, llm_vllm_embeds, prm):
         if batch_cnt >= config.batch_budget:
             break
         
-
+    print(f"tiebreak cnt = {agent.tiebreak_cnt}/{agent.total_cnt} = {agent.tiebreak_cnt/agent.total_cnt:0.4f}")
+    
     unique_completion_dict = {}
     for idx, node in enumerate(agent.completed_nodes):
         if node.state["text"] not in unique_completion_dict:

@@ -21,6 +21,8 @@ from sal.models.skywork_o1_prm.prm_model import SkyworkPRMModel
 CANDIDATE_TOKENS = [648, 387]
 STEP_TAG_ID = 12902
 
+import logging
+logging.basicConfig(format='%(message)s', level=logging.FATAL)
 
 class PRM:
     def __init__(self, model_path, device_map, **model_kwargs):
@@ -174,6 +176,8 @@ class RLHFFlow(PRM):
                 scores = logits.softmax(dim=-1)[
                     :, :, 0
                 ]  # 0 means the prob of + (1 mean -)
+                # logging.fatal(logits.shape)
+                # logging.fatal(scores.shape)
 
                 for i in range(len(convs_batch)):
                     # We slice on the N-1 token since the model is trained to predict the Nth one ("+" in this case)
@@ -182,6 +186,7 @@ class RLHFFlow(PRM):
                     ].tolist()
                     output_scores.append(step_scores_flat)
 
+        # logging.fatal(len(output_scores))
         # reshape the output scores to match the input
         reshaped_output_scores = []
         counter = 0
@@ -282,11 +287,13 @@ class RLHFFlow2(PRM):
             all_scores.append(all_step_scores)
         return all_scores
 
+
     def _score_batched(
         self, questions: list[str], outputs: list[list[str]], batch_size: int = 2
     ):
         # The RLHFlow models are trained to predict the "+" or "-" tokens in a dialogue, but since these are not unique
         # we need to introduce a dummy special token here for masking.
+        # logging.fatal(f"prm_score_batched")
 
         special_tok_id = self.tokenizer("ки", return_tensors="pt").input_ids[0, 1]
         # We construct two parallel dialogues, one with a "+" token per assistant turn, the other with the dummy token "ки" for masking
@@ -312,11 +319,17 @@ class RLHFFlow2(PRM):
                 conversations.append(conversation)
                 conversations2.append(conversation2)
 
+        # logging.fatal(len(conversations))
+        # logging.fatal(len(conversations2))
+        
         output_scores = []
+        output_embeds = []
         device = self.model.device
         for i in range(0, len(conversations), batch_size):
+            # logging.fatal(i)
             convs_batch = conversations[i : i + batch_size]
             convs2_batch = conversations2[i : i + batch_size]
+            logging.fatal(len(convs_batch))
             inputs_batch = self.tokenizer.apply_chat_template(
                 convs_batch, padding=True, return_tensors="pt"
             ).to(device)
@@ -325,29 +338,47 @@ class RLHFFlow2(PRM):
             ).to(device)
             assert inputs_batch.shape == inputs2_batch.shape
             with torch.no_grad():
-                logits = self.model(inputs_batch).logits[:, :, self.candidate_tokens]
-                scores = logits[
+                llm_outputs = self.model(inputs_batch, output_hidden_states=True)
+                logits = llm_outputs.logits[:, :, self.candidate_tokens]
+                # logits = self.model(inputs_batch).logits[:, :, self.candidate_tokens]
+                scores = logits.softmax(dim=-1)[
                     :, :, 0
                 ]  # 0 means the prob of + (1 mean -)
+                last_hidden_states = llm_outputs.hidden_states[-1]
+                # logging.fatal(logits.shape)
+                # logging.fatal(scores.shape)
 
-                for i in range(len(convs_batch)):
+                for j in range(len(convs_batch)):
                     # We slice on the N-1 token since the model is trained to predict the Nth one ("+" in this case)
-                    step_scores_flat = scores[i, :-1][
-                        inputs2_batch[i, 1:] == special_tok_id
+                    step_scores_flat = scores[j, :-1][
+                        inputs2_batch[j, 1:] == special_tok_id
                     ].tolist()
+                    last_token_embeds = last_hidden_states[j, :-1, :][
+                        inputs2_batch[j, 1:] == special_tok_id
+                    ]
+                    # logging.fatal(last_token_embeds.shape)
                     output_scores.append(step_scores_flat)
+                    output_embeds.append(last_token_embeds[-1].detach().cpu().numpy())
+        
 
+        # logging.fatal(len(output_scores))
+        # logging.fatal(len(outputs))
         # reshape the output scores to match the input
         reshaped_output_scores = []
+        reshaped_output_embeds = []
         counter = 0
         for question, answers in zip(questions, outputs):
             scores = []
+            embeds = []
             for answer in answers:
                 scores.append(output_scores[counter])
+                embeds.append(output_embeds[counter])
                 counter += 1
             reshaped_output_scores.append(scores)
+            reshaped_output_embeds.append(embeds)
 
-        return reshaped_output_scores
+        # logging.fatal(reshaped_output_embeds)
+        return reshaped_output_scores, reshaped_output_embeds
 
 
 class SkyworkO1(PRM):

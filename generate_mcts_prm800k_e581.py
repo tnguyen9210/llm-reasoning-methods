@@ -18,8 +18,8 @@ from vllm import LLM, SamplingParams, PoolingParams
 
 from sal.config import Config
 
-from core import mcts_search_v81
-from core.reward_models import RLHFFlow
+from core import mcts_search_extra_v58
+from core.reward_models import RLHFFlow2
 
 from utils.load_data import load_data_prm800k
 
@@ -57,29 +57,30 @@ def main():
     config = Config()
     config.agg_strategy = 'last'
     
-    config.n = 8                      # number of budgets to be generated per depth
+    config.n = 4                      # number of budgets to be generated per depth
     config.beam_width = 4             # number of nodes left after selection
     config.lookahead = 0              # don't use it for now
     config.max_depths = 40            # max depths, after reaching max_depth then terminate search 
     config.sort_completed = False      
     config.filter_duplicates = True   # remove any duplicates in the last list of trajs
+    config.date_string = "Aug 1 2025"
     config.seed = 0
 
     # mcts parameter
-    config.num_phases = 100000
-    config.num_batches = 5
+    config.num_batches = 2
     config.batch_budget = config.num_batches*config.max_depths 
+    config.num_phases = config.batch_budget
     
     config.lam = 10 
     config.normalize_embeds = True
 
     config.cpuct_root = 0
     config.cpuct_leaf = 0
-    config.ds_beta = 1.0
-    config.ds_alpha = 0.1
+    config.ds_beta = 0.0
+    config.ds_alpha = 1.0
     config.use_ppl = True
 
-    config.version = "v81"
+    config.version = "e58"
     
     # baseline: gpu_memory_utilization=0.2
     # use the standard model 
@@ -107,29 +108,15 @@ def main():
         dtype="float16",
         seed=config.seed,
     )
-
-    llm_vllm_embeds = LLM(
-        model=llm_dir, 
-        tensor_parallel_size=1, 
-        # trust_remote_code=True,
-        task="embed",
-        swap_space=16,
-        max_model_len=5000,
-        gpu_memory_utilization=llm_total_gpu-llm_gpu_memory_utilization,
-        enforce_eager=True,
-        distributed_executor_backend=None,
-        dtype="float16",
-        seed=0,
-    )
     
-    prm = RLHFFlow(model_path=prm_dir, device_map='cuda:0')
+    prm = RLHFFlow2(model_path=prm_dir, device_map='cuda:0')
 
     #  load data 
     data_by_levels = load_data_prm800k(data_dir)
     
-    level = 4                                   # level of difficulty of questions
+    level = 3                                   # level of difficulty of questions
     num_questions = len(data_by_levels[level])  # level 4 has 128 questions
-    # num_questions = 10
+    # num_questions = 2
     num_trials = 5
     print(f"num_questions = {num_questions}")
     print(f"num_trials = {num_trials}")
@@ -162,7 +149,7 @@ def main():
         torch.cuda.manual_seed(100000+trial_idx)
         
         # best_of_n(batch_of_questions, config, llm_vllm, random_seeds[trial_idx])
-        results = mcts_search_v81._search(batch_of_questions, config, llm_vllm, llm_vllm_embeds, prm)
+        results = mcts_search_extra_v58._search(batch_of_questions, config, llm_vllm, prm)
         with open(f"results/{config_name}/generate_{config_name}--trial-{trial_idx}.jsonl", 'w', encoding = 'utf-8') as fout:
             json.dump(results, fout)
             fout.write('\n')

@@ -213,9 +213,14 @@ class MCTS(BS):
                 best_value = puct_value
                 best_childs = [child]
 
+        if len(best_childs) == 0:
+            return None
+            
+        selected_node = random.sample(best_childs, 1)[0]
+        
         #return random.choice(best_childs) if best_childs else None
-        return best_childs[0] if best_childs else None
-
+        # return best_childs[0] if best_childs else None
+        return selected_node
     
     def selection(self, from_root=False):
         logging.error(f"\n-> selection")
