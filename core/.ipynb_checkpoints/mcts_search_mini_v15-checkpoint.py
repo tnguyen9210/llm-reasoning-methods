@@ -146,11 +146,6 @@ class MCTSNode(BaseNode):
         if not self.parent: return 0
         q_value = self.q_value() if self.visit_count() > 0 else 0
 
-        # logging.fatal(cpuct)
-        
-        if cpuct == 0:
-            return q_value
-
         # logging.fatal(f"visit_count = {self.parent.visit_count()}, {self.visit_count()}")
         if self.parent.visit_count() == 0 or self.visit_count() == 0:
             u_value = 0
@@ -253,15 +248,6 @@ class MCTS(BS):
             new_node.is_terminal = True 
             self.completed_nodes.append(new_node)
             
-        # new_node.state["text"] = current_node.state["text"] + output.next_texts[0]
-        # if (output.stop_reasons[0] == "EOS"
-        #     or output.stop_reasons[0] == "length"
-        #         or output.next_texts[0] == ""
-        # ):
-        #     new_node.is_completed = True
-        #     new_node.is_terminal = True
-        #     self.completed_nodes.append(new_node)
-            
         if not new_node.is_terminal and new_node.depth >= self.config.max_depths:
             new_node.is_terminal = True
 
@@ -287,19 +273,24 @@ class MCTS(BS):
                 best_value = puct_value
                 best_childs = [child_node]
 
-            logging.fatal(f"{child_node.tag}, {child_node.q_value():0.4f}, {puct_value:0.4f}, {child_node.is_terminal}")
+            # logging.fatal(f"{child_node.tag}, {child_node.q_value():0.2f}, {puct_value-child_node.q_value():0.2f}, {puct_value:0.2f}, {} terminal={ {child_node.is_terminal}")
+            logging.fatal(f"{child_node.tag}")
+            logging.fatal(f"   q-value = {child_node.q_value():0.4f}")
+            logging.fatal(f"   u-value = {puct_value-child_node.q_value():0.4f}")
+            logging.fatal(f"   puct = {puct_value:0.4f}")
+            logging.fatal(f"   nvisit = {child_node.visit_count():0.2f}")
+            logging.fatal(f"   parent.nvisit = {node.visit_count():0.2f}")
+            logging.fatal(f"   is_terminal = {child_node.is_terminal}")
+            
 
         if len(best_childs) == 0:
             return None
             
-        # selected_node = random.sample(best_childs, 1)[0]
-        selected_node = best_childs[0]
-        # selected_embeds = selected_node.embeds
+        selected_node = random.sample(best_childs, 1)[0]
+        # selected_node = best_childs[0]
             
         logging.fatal(f"selected_child = {selected_node.tag}")
-        # logging.fatal(selected_node.tag)
-        # logging.fatal(_children[A_idxes[0]])
-        # return _children[A_idxes[0]] if _children else None 
+
         return selected_node
 
     
@@ -317,7 +308,6 @@ class MCTS(BS):
             return None 
 
         while node.has_children() and not node.is_terminal:
-        # if node.has_children() and not node.is_terminal:
             next_node = self.select_child(node, from_root)      # To encourage exploration, select from non-terminal children 
             if next_node is None:
                 node.is_terminal = True 
@@ -326,25 +316,6 @@ class MCTS(BS):
             
         # logging.info(f"selected_node = {node}")
         return None if (node is None or node.is_terminal) else node
-
-    def generate_next_step(self, llm_outputs):
-        logging.error(f"\n-> generate_next_step")
-        self.candidate_nodes = []
-
-        self.expand_node(self.current_nodes[0], llm_outputs)
-        # logging.fatal(f"current_node")
-        # logging.fatal(self.current_nodes[0])
-    
-        for child_node in self.current_nodes[0].children:
-            if child_node not in self.candidate_nodes and child_node.visit_count() < 1:
-                self.candidate_nodes.append(child_node)
-
-        logging.warn(f"candidate_nodes")
-        for node in self.candidate_nodes:
-            logging.warn("")
-            logging.warn(node.state['text'])
-            logging.warn(node.is_terminal)
-            logging.warn(node.is_completed)
 
     def select_next_step(self, candidate_scores=None, from_root=False):
         logging.error(f"\n-> select_next_step")
@@ -371,17 +342,38 @@ class MCTS(BS):
                     candidate_node.update(score[0])
 
         selected_node = self.selection(from_root=from_root)
-        logging.fatal(f"selected_node")
+        # logging.fatal(f"selected_node")
         if selected_node is None:
-            logging.fatal("None")
+            logging.fatal(f"selected_node: None")
         else:
-            logging.fatal(selected_node.tag)
+            logging.fatal(f"selected_node = {selected_node.tag}")
             logging.warn(selected_node.state['text'])
             logging.warn(selected_node.is_terminal)
             logging.warn(selected_node.is_completed)
             
         if selected_node is not None:
             self.current_nodes.append(selected_node)
+            
+    def generate_next_step(self, llm_outputs):
+        logging.error(f"\n-> generate_next_step")
+        self.candidate_nodes = []
+
+        self.expand_node(self.current_nodes[0], llm_outputs)
+        # logging.fatal(f"current_node")
+        # logging.fatal(self.current_nodes[0])
+    
+        for child_node in self.current_nodes[0].children:
+            if child_node not in self.candidate_nodes and child_node.visit_count() < 1:
+                self.candidate_nodes.append(child_node)
+
+        logging.warn(f"candidate_nodes")
+        for node in self.candidate_nodes:
+            logging.warn("")
+            logging.warn(node.state['text'])
+            logging.warn(node.is_terminal)
+            logging.warn(node.is_completed)
+
+    
 
 def mcts_search(question, agent, config, tree_dict):
     # print(config.max_depths)
@@ -401,22 +393,40 @@ def mcts_search(question, agent, config, tree_dict):
     )
 
     batch_cnt = 0
-    for p in range(config.num_phases):
-        # print(f"phase = {p}")
-        # logging.fatal(f"\n-> p = {p}")
-        agent.select_next_step(from_root=True)
+    should_terminate = False
+    do_terminate = False
 
+    ndepths_arr = []
+    for p in range(config.num_phases):
+        logging.fatal(f"\n-> p = {p}")
+    
+        cur_depth = 0
+        if do_terminate:
+            break
+
+        agent.select_next_step(from_root=True)
+        
         for d in range(config.max_depths):
-            logging.fatal(f"\n-> d = {d}")
+            # logging.fatal(f"\n-> it = {d}")
             # promt and get llm_outputs
 
             # if current branch reaches a terminal node, continue 
             if len(agent.current_nodes) == 0:
+                if should_terminate:
+                    do_terminate = True
+                else:
+                    should_terminate = True
                 break
+
+            should_terminate = False
             
             # partial_solution = agent.collect_partial_solution(agent.current_nodes[0])
             current_node = agent.current_nodes[0]
             current_tag = current_node.tag
+
+            logging.fatal(f"\n-> d = {current_node.depth}")
+            cur_depth = current_node.depth + 1
+            batch_cnt += 1
             
             llm_outputs = []
             llm_embeds = []
@@ -427,7 +437,7 @@ def mcts_search(question, agent, config, tree_dict):
                     # llm_embeds.append(tree_dict[i_tag]['embeds'])
                         
             agent.generate_next_step(llm_outputs)
-    
+
             # # apply prm and assign candidate steps with prm scores -> prm_outputs    
             candidate_scores = []
             for _, node in enumerate(agent.candidate_nodes):
@@ -440,14 +450,15 @@ def mcts_search(question, agent, config, tree_dict):
             
             agent.select_next_step(candidate_scores)
 
-            batch_cnt += 1
-            logging.fatal(f"\n-> bcnt {batch_cnt}")
+            logging.fatal(f"bcnt used {batch_cnt}")
             if batch_cnt >= config.batch_budget:
                 logging.fatal("batch_budget ran out!")
                 break 
 
         
         if batch_cnt >= config.batch_budget:
+            if cur_depth > 0:
+                ndepths_arr.append(cur_depth)
             break
 
     tree_dict = defaultdict()

@@ -1,0 +1,263 @@
+ncomps = 5
+nvisits = [[5], [1, 4, 3, 1], [4, 1, 1, 1, 3], [1, 1, 4, 1, 1, 1, 2, 2]]
+total_nphases = 4
+c_nphases = [0, 0, 0, 1, 2] | 0.6 (±0.4)
+c_ndepths = [4, 4, 5, 4, 5] | 4.4 (±0.2)
+
+
+-> p = 0
+selected_node = 0
+
+-> d = 0
+0.1
+   q-value = 0.9980
+   u-value = 0.0000
+   puct = 0.9980
+   nvisit = 1.00
+   parent.nvisit = 0.00
+   is_terminal = False
+0.2
+   q-value = 0.9985
+   u-value = 0.0000
+   puct = 0.9985
+   nvisit = 1.00
+   parent.nvisit = 0.00
+   is_terminal = False
+0.3
+   q-value = 0.9985
+   u-value = 0.0000
+   puct = 0.9985
+   nvisit = 1.00
+   parent.nvisit = 0.00
+   is_terminal = False
+0.4
+   q-value = 0.9937
+   u-value = 0.0000
+   puct = 0.9937
+   nvisit = 1.00
+   parent.nvisit = 0.00
+   is_terminal = False
+selected_child = 0.2
+selected_node = 0.2
+step_cnt = 1
+
+-> d = 1
+0.2.1
+   q-value = 0.9912
+   u-value = 0.0000
+   puct = 0.9912
+   nvisit = 1.00
+   parent.nvisit = 1.00
+   is_terminal = False
+0.2.2
+   q-value = 0.9863
+   u-value = 0.0000
+   puct = 0.9863
+   nvisit = 1.00
+   parent.nvisit = 1.00
+   is_terminal = False
+0.2.3
+   q-value = 0.9893
+   u-value = 0.0000
+   puct = 0.9893
+   nvisit = 1.00
+   parent.nvisit = 1.00
+   is_terminal = False
+0.2.4
+   q-value = 0.9893
+   u-value = 0.0000
+   puct = 0.9893
+   nvisit = 1.00
+   parent.nvisit = 1.00
+   is_terminal = False
+selected_child = 0.2.1
+selected_node = 0.2.1
+step_cnt = 2
+
+-> d = 2
+0.2.1.1
+   q-value = 0.9844
+   u-value = 0.0000
+   puct = 0.9844
+   nvisit = 1.00
+   parent.nvisit = 1.00
+   is_terminal = False
+0.2.1.2
+   q-value = 0.9834
+   u-value = 0.0000
+   puct = 0.9834
+   nvisit = 1.00
+   parent.nvisit = 1.00
+   is_terminal = False
+0.2.1.3
+   q-value = 0.9966
+   u-value = 0.0000
+   puct = 0.9966
+   nvisit = 1.00
+   parent.nvisit = 1.00
+   is_terminal = False
+0.2.1.4
+   q-value = 0.9683
+   u-value = 0.0000
+   puct = 0.9683
+   nvisit = 1.00
+   parent.nvisit = 1.00
+   is_terminal = False
+selected_child = 0.2.1.3
+selected_node = 0.2.1.3
+step_cnt = 3
+
+-> d = 3
+0.2.1.3.3
+   q-value = 0.9951
+   u-value = 2.0963
+   puct = 3.0914
+   nvisit = 1.00
+   parent.nvisit = 3.00
+   is_terminal = False
+selected_child = 0.2.1.3.3
+selected_node = 0.2.1.3.3
+step_cnt = 4
+
+-> d = 4
+selected_node = None
+step_cnt = 5
+
+-> p = 1
+vals = [1.29273044 1.29070788 1.30082494 1.2880252 ]
+beta*q_values = [0.99804688 0.99951172 0.99853516 0.99365234]
+alpha*q_diversity = [0.29468357 0.29119616 0.30228978 0.29437285]
+candidate_idxes = [3]
+best_idx = 3
+selected_child = 0.3
+selected_node = 0.3
+
+-> d = 1
+0.3.1
+   q-value = 0.9922
+   u-value = 0.0000
+   puct = 0.9922
+   nvisit = 1.00
+   parent.nvisit = 1.00
+   is_terminal = False
+selected_child = 0.3.1
+selected_node = 0.3.1
+step_cnt = 6
+
+-> d = 2
+0.3.1.1
+   q-value = 0.9746
+   u-value = 0.0000
+   puct = 0.9746
+   nvisit = 1.00
+   parent.nvisit = 1.00
+   is_terminal = False
+0.3.1.2
+   q-value = 0.9741
+   u-value = 0.0000
+   puct = 0.9741
+   nvisit = 1.00
+   parent.nvisit = 1.00
+   is_terminal = False
+0.3.1.3
+   q-value = 0.9927
+   u-value = 0.0000
+   puct = 0.9927
+   nvisit = 1.00
+   parent.nvisit = 1.00
+   is_terminal = False
+0.3.1.4
+   q-value = 0.9722
+   u-value = 0.0000
+   puct = 0.9722
+   nvisit = 1.00
+   parent.nvisit = 1.00
+   is_terminal = False
+selected_child = 0.3.1.3
+selected_node = 0.3.1.3
+step_cnt = 7
+
+-> d = 3
+selected_node = None
+step_cnt = 8
+
+-> p = 2
+vals = [1.2792893  1.27974536 1.28377974 1.27564741]
+beta*q_values = [0.99804688 0.99951172 0.99926758 0.99365234]
+alpha*q_diversity = [0.28124242 0.28023364 0.28451217 0.28199507]
+candidate_idxes = [3]
+best_idx = 3
+selected_child = 0.3
+vals = [1.27047287]
+beta*q_values = [0.99609375]
+alpha*q_diversity = [0.27437912]
+candidate_idxes = [1]
+best_idx = 1
+selected_child = 0.3.1
+vals = [1.25253864 1.25252997 1.25306503]
+beta*q_values = [0.97460938 0.97412109 0.97216797]
+alpha*q_diversity = [0.27792927 0.27840887 0.28089706]
+candidate_idxes = [3]
+best_idx = 3
+selected_child = 0.3.1.4
+selected_node = 0.3.1.4
+
+-> d = 3
+0.3.1.4.1
+   q-value = 0.9707
+   u-value = 0.0000
+   puct = 0.9707
+   nvisit = 1.00
+   parent.nvisit = 1.00
+   is_terminal = False
+0.3.1.4.2
+   q-value = 0.9922
+   u-value = 0.0000
+   puct = 0.9922
+   nvisit = 1.00
+   parent.nvisit = 1.00
+   is_terminal = False
+0.3.1.4.3
+   q-value = 0.9893
+   u-value = 0.0000
+   puct = 0.9893
+   nvisit = 1.00
+   parent.nvisit = 1.00
+   is_terminal = False
+0.3.1.4.4
+   q-value = 0.9878
+   u-value = 0.0000
+   puct = 0.9878
+   nvisit = 1.00
+   parent.nvisit = 1.00
+   is_terminal = False
+selected_child = 0.3.1.4.2
+selected_node = 0.3.1.4.2
+step_cnt = 9
+
+-> d = 4
+selected_node = None
+step_cnt = 10
+
+-> p = 3
+vals = [1.26644426 1.26929001 1.26791706 1.26320937]
+beta*q_values = [0.99804688 0.99951172 0.99951172 0.99365234]
+alpha*q_diversity = [0.26839738 0.26977829 0.26840534 0.26955703]
+candidate_idxes = [2]
+best_idx = 2
+selected_child = 0.2
+vals = [1.26243481 1.25126355 1.25377325 1.25570218]
+beta*q_values = [0.99768066 0.98632812 0.98925781 0.98925781]
+alpha*q_diversity = [0.26475415 0.26493543 0.26451544 0.26644437]
+candidate_idxes = [1]
+best_idx = 1
+selected_child = 0.2.1
+vals = [1.24422167 1.25509264 1.25871408 1.24783908]
+beta*q_values = [0.984375   0.98339844 0.99902344 0.96826172]
+alpha*q_diversity = [0.25984667 0.27169421 0.25969065 0.27957736]
+candidate_idxes = [3]
+best_idx = 3
+selected_child = 0.2.1.3
+selected_node = None
+
+-> p = 4

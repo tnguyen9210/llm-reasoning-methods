@@ -1,3 +1,4 @@
+
 import os, psutil, gc
 import time 
 import json
@@ -20,7 +21,7 @@ from core.reward_models import RLHFFlow
 from utils.load_data import load_data_prm800k_hf
 
 
-def extract_trajectory_answers(config_name, dataset, prm, trial_idx, config):
+def extract_trajectory_answers(result_dir, config_name, dataset, prm, trial_idx, config):
 
     # get batch of questions
     batch_of_questions = [data['problem'] for data in dataset]
@@ -28,41 +29,32 @@ def extract_trajectory_answers(config_name, dataset, prm, trial_idx, config):
     print(f"num_questions = {num_questions}")
 
     start_time = time.time()    
-    with open(f"results/{config_name}/generate_{config_name}--trial-{trial_idx}.jsonl", 'r', encoding = 'utf-8') as fin:
+    with open(f"{result_dir}/generate_{config_name}--trial-{trial_idx}.jsonl", 'r', encoding = 'utf-8') as fin:
         for line in fin:
 
             trial_data = json.loads(line)
             # print(len(trial_data["completions"][0]))
             # stop
-            
+
+            batch_csteps = [trial_data["c_step_cnts"][q_idx] for q_idx in range(num_questions)]
             batch_completions = [trial_data["completions"][q_idx] for q_idx in range(num_questions)]
             print(f"{len(batch_completions)}")
             print(f"len = {len(batch_completions[0])}")
             
             batch_scores = prm.score(batch_of_questions, batch_completions, batch_size=4)
-            # # print(batch_of_questions)
-            # batch_scores = []
-            # for q_idx in range(len(batch_of_questions)):
-            #     # print(f"q_idx: {q_idx} - {len(completions[q_idx])}")
-            #     # print([batch_of_questions[q_idx]])
-            #     # print([completions[q_idx]])
-            #     scores = prm.score([batch_of_questions[q_idx]], [completions[q_idx]])
-            #     batch_scores += scores
-            #     # print(batch_scores)
-            #     # gc.collect();torch.cuda.empty_cache();
-            #     # print('#--- memory:', torch.cuda.memory_allocated(2)/(1024**3))
             print(len(batch_scores))
             print(len(batch_scores[0]))
             
             _dataset = dataset.add_column("completions", batch_completions)
             _dataset = _dataset.add_column("scores", batch_scores)
+            _dataset = _dataset.add_column("csteps", batch_csteps)
             print(_dataset)
     
             _dataset = score(_dataset, config)
     
             # _dataset.push_to_hub(dataset_id, config_name=f"{config_name}--trial-{trial_idx}", split='test')
             # _dataset.to_json(f"results/{config_name}--trial-{trial_idx}.jsonl")
-            _dataset.to_json(f"results/{config_name}/{config_name}--trial-{trial_idx}.jsonl")
+            _dataset.to_json(f"{result_dir}/{config_name}--trial-{trial_idx}.jsonl")
             
             # # compute the time
             # total_time = time.time() - start_time
@@ -99,30 +91,30 @@ def main():
     else:
         print("CUDA is not available.")
 
-    prm = RLHFFlow(model_path=prm_tokenizer_dir, device_map='cuda:0')
+    prm = RLHFFlow(model_path=prm_tokenizer_dir, device_map='cuda:2')
 
     # general params
     config = Config()
-    config.agg_strategy = 'last'
     config.n = 8
+    config.agg_strategy = 'last'
     config.dataset_start = None
     config.dataset_end = None
     
-    level = 5
+    level = 3
     trial_idx = 1
     
     #  load data 
-    dataset = load_data_prm800k_hf(data_dir, split=config.dataset_split)
+    dataset = load_data_prm800k_hf(data_dir, split='test')
     dataset = dataset.filter(lambda example: example['level'] == level)
     if config.dataset_start is not None and config.dataset_end is not None:
         dataset = dataset.select(range(config.dataset_start, config.dataset_end))
     
     # run search_algo and save results
-    config_name = f"mcts--v51--n-8--d-40--lam-10--dalpha-10.0--dbeta-1.0--cpuct-0-2--ppl-True--normalize-True--level-4"
-    config_name = f"mcts--e57--n-4--d-40--nb-2--lam-10--dalpha-10.0--dbeta-1.0--cpuct-0-0--ppl-True--normalize-True--level-3"
+    config_name = f"mcts--level-3--h73--n-4--d-20--b-80--lam-0.01--dalpha-1000.0--dbeta-1.0--ppl-True--normalize-True"
+    result_dir = f"results/mcts--level-{level}/{config_name}"
     print(f"config_name = {config_name}--trial-{trial_idx}")
     
-    extract_trajectory_answers(config_name, dataset, prm, trial_idx, config=config)
+    extract_trajectory_answers(result_dir, config_name, dataset, prm, trial_idx, config=config)
     
     # dist.destroy_process_group()
 

@@ -423,11 +423,11 @@ class MCTS(BS):
         if node is None:
             return None 
 
-        while node.has_children() and not node.is_terminal:
+        if node.has_children() or node.is_terminal:
             next_node = self.select_child(node, from_root)      # To encourage exploration, select from non-terminal children 
             if next_node is None:
                 node.is_terminal = True 
-                break
+                
             node = next_node
             
         # logging.info(f"selected_node = {node}")

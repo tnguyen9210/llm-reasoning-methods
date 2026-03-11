@@ -1,0 +1,2386 @@
+ncomps = 21
+nvisits = [[21], [2, 5, 8, 10], [1, 4, 1, 2, 1, 4, 5, 1, 1, 4, 1, 7, 1], [2, 1, 1, 3, 1, 2, 1, 1, 1, 1, 3, 2, 1, 1, 4, 2, 1, 4, 1, 1, 1, 3, 5, 1]]
+total_nphases = 12
+c_nphases = [0, 1, 2, 3, 3, 3, 4, 5, 6, 6, 6, 7, 8, 8, 9, 10, 11, 12, 12, 12, 12] | 6.7 (±0.8)
+c_ndepths = [8, 2, 7, 7, 8, 9, 7, 9, 7, 9, 10, 5, 8, 9, 9, 6, 8, 6, 7, 12, 15] | 8.0 (±0.6)
+
+
+
+-> p = 0
+selected_node = 0
+
+-> d = 0
+0.1
+   q-value = 0.6514
+   u-value = 0.0000
+   puct = 0.6514
+   nvisit = 1.00
+   parent.nvisit = 0.00
+   is_terminal = False
+0.2
+   q-value = 0.9175
+   u-value = 0.0000
+   puct = 0.9175
+   nvisit = 1.00
+   parent.nvisit = 0.00
+   is_terminal = False
+0.3
+   q-value = 0.7881
+   u-value = 0.0000
+   puct = 0.7881
+   nvisit = 1.00
+   parent.nvisit = 0.00
+   is_terminal = False
+0.4
+   q-value = 0.1824
+   u-value = 0.0000
+   puct = 0.1824
+   nvisit = 1.00
+   parent.nvisit = 0.00
+   is_terminal = False
+selected_child = 0.2
+selected_node = 0.2
+step_cnt = 1
+
+-> d = 1
+0.2.1
+   q-value = 0.9561
+   u-value = 0.0000
+   puct = 0.9561
+   nvisit = 1.00
+   parent.nvisit = 1.00
+   is_terminal = False
+0.2.2
+   q-value = 0.8989
+   u-value = 0.0000
+   puct = 0.8989
+   nvisit = 1.00
+   parent.nvisit = 1.00
+   is_terminal = False
+0.2.3
+   q-value = 0.7798
+   u-value = 0.0000
+   puct = 0.7798
+   nvisit = 1.00
+   parent.nvisit = 1.00
+   is_terminal = False
+0.2.4
+   q-value = 0.8989
+   u-value = 0.0000
+   puct = 0.8989
+   nvisit = 1.00
+   parent.nvisit = 1.00
+   is_terminal = False
+selected_child = 0.2.1
+selected_node = 0.2.1
+step_cnt = 2
+
+-> d = 2
+0.2.1.1
+   q-value = 0.9111
+   u-value = 0.0000
+   puct = 0.9111
+   nvisit = 1.00
+   parent.nvisit = 1.00
+   is_terminal = False
+0.2.1.2
+   q-value = 0.8809
+   u-value = 0.0000
+   puct = 0.8809
+   nvisit = 1.00
+   parent.nvisit = 1.00
+   is_terminal = False
+0.2.1.3
+   q-value = 0.6001
+   u-value = 0.0000
+   puct = 0.6001
+   nvisit = 1.00
+   parent.nvisit = 1.00
+   is_terminal = False
+0.2.1.4
+   q-value = 0.8726
+   u-value = 0.0000
+   puct = 0.8726
+   nvisit = 1.00
+   parent.nvisit = 1.00
+   is_terminal = False
+selected_child = 0.2.1.1
+selected_node = 0.2.1.1
+step_cnt = 3
+
+-> d = 3
+0.2.1.1.1
+   q-value = 0.7578
+   u-value = 0.0000
+   puct = 0.7578
+   nvisit = 1.00
+   parent.nvisit = 1.00
+   is_terminal = False
+0.2.1.1.2
+   q-value = 0.7744
+   u-value = 0.0000
+   puct = 0.7744
+   nvisit = 1.00
+   parent.nvisit = 1.00
+   is_terminal = False
+0.2.1.1.3
+   q-value = 0.3008
+   u-value = 0.0000
+   puct = 0.3008
+   nvisit = 1.00
+   parent.nvisit = 1.00
+   is_terminal = False
+0.2.1.1.4
+   q-value = 0.3811
+   u-value = 0.0000
+   puct = 0.3811
+   nvisit = 1.00
+   parent.nvisit = 1.00
+   is_terminal = False
+selected_child = 0.2.1.1.2
+selected_node = 0.2.1.1.2
+step_cnt = 4
+
+-> d = 4
+0.2.1.1.2.1
+   q-value = 0.7310
+   u-value = 0.0000
+   puct = 0.7310
+   nvisit = 1.00
+   parent.nvisit = 1.00
+   is_terminal = False
+0.2.1.1.2.2
+   q-value = 0.5078
+   u-value = 0.0000
+   puct = 0.5078
+   nvisit = 1.00
+   parent.nvisit = 1.00
+   is_terminal = False
+0.2.1.1.2.3
+   q-value = 0.7373
+   u-value = 0.0000
+   puct = 0.7373
+   nvisit = 1.00
+   parent.nvisit = 1.00
+   is_terminal = False
+0.2.1.1.2.4
+   q-value = 0.7827
+   u-value = 0.0000
+   puct = 0.7827
+   nvisit = 1.00
+   parent.nvisit = 1.00
+   is_terminal = False
+selected_child = 0.2.1.1.2.4
+selected_node = 0.2.1.1.2.4
+step_cnt = 5
+
+-> d = 5
+0.2.1.1.2.4.1
+   q-value = 0.4883
+   u-value = 0.0000
+   puct = 0.4883
+   nvisit = 1.00
+   parent.nvisit = 1.00
+   is_terminal = False
+0.2.1.1.2.4.2
+   q-value = 0.8198
+   u-value = 0.0000
+   puct = 0.8198
+   nvisit = 1.00
+   parent.nvisit = 1.00
+   is_terminal = False
+0.2.1.1.2.4.3
+   q-value = 0.6040
+   u-value = 0.0000
+   puct = 0.6040
+   nvisit = 1.00
+   parent.nvisit = 1.00
+   is_terminal = False
+0.2.1.1.2.4.4
+   q-value = 0.5889
+   u-value = 0.0000
+   puct = 0.5889
+   nvisit = 1.00
+   parent.nvisit = 1.00
+   is_terminal = False
+selected_child = 0.2.1.1.2.4.2
+selected_node = 0.2.1.1.2.4.2
+step_cnt = 6
+
+-> d = 6
+0.2.1.1.2.4.2.1
+   q-value = 0.9663
+   u-value = 0.0000
+   puct = 0.9663
+   nvisit = 1.00
+   parent.nvisit = 1.00
+   is_terminal = False
+0.2.1.1.2.4.2.2
+   q-value = 0.9634
+   u-value = 0.0000
+   puct = 0.9634
+   nvisit = 1.00
+   parent.nvisit = 1.00
+   is_terminal = False
+0.2.1.1.2.4.2.3
+   q-value = 0.9619
+   u-value = 0.0000
+   puct = 0.9619
+   nvisit = 1.00
+   parent.nvisit = 1.00
+   is_terminal = False
+0.2.1.1.2.4.2.4
+   q-value = 0.9639
+   u-value = 0.0000
+   puct = 0.9639
+   nvisit = 1.00
+   parent.nvisit = 1.00
+   is_terminal = False
+selected_child = 0.2.1.1.2.4.2.1
+selected_node = 0.2.1.1.2.4.2.1
+step_cnt = 7
+
+-> d = 7
+selected_node = None
+step_cnt = 8
+
+-> p = 1
+vals = [294.57636762 277.50321781 283.87778904 281.84985594]
+beta*q_values = [0.65136719 0.95825195 0.78808594 0.18237305]
+alpha*q_diversity = [293.92500043 276.54496586 283.08970311 281.66748289]
+candidate_idxes = [1]
+best_idx = 1
+selected_child = 0.1
+selected_node = 0.1
+
+-> d = 1
+selected_node = None
+step_cnt = 9
+
+-> p = 2
+vals = [276.46752648 282.16267355 280.23528179]
+beta*q_values = [0.95825195 0.78808594 0.18237305]
+alpha*q_diversity = [275.50927453 281.37458761 280.05290875]
+candidate_idxes = [2]
+best_idx = 2
+selected_child = 0.3
+selected_node = 0.3
+
+-> d = 1
+0.3.1
+   q-value = 0.9282
+   u-value = 0.0000
+   puct = 0.9282
+   nvisit = 1.00
+   parent.nvisit = 1.00
+   is_terminal = False
+0.3.2
+   q-value = 0.8032
+   u-value = 0.0000
+   puct = 0.8032
+   nvisit = 1.00
+   parent.nvisit = 1.00
+   is_terminal = False
+0.3.3
+   q-value = 0.8154
+   u-value = 0.0000
+   puct = 0.8154
+   nvisit = 1.00
+   parent.nvisit = 1.00
+   is_terminal = False
+0.3.4
+   q-value = 0.8311
+   u-value = 0.0000
+   puct = 0.8311
+   nvisit = 1.00
+   parent.nvisit = 1.00
+   is_terminal = False
+selected_child = 0.3.1
+selected_node = 0.3.1
+step_cnt = 10
+
+-> d = 2
+0.3.1.1
+   q-value = 0.9282
+   u-value = 0.0000
+   puct = 0.9282
+   nvisit = 1.00
+   parent.nvisit = 1.00
+   is_terminal = False
+0.3.1.2
+   q-value = 0.9282
+   u-value = 0.0000
+   puct = 0.9282
+   nvisit = 1.00
+   parent.nvisit = 1.00
+   is_terminal = False
+0.3.1.3
+   q-value = 0.9219
+   u-value = 0.0000
+   puct = 0.9219
+   nvisit = 1.00
+   parent.nvisit = 1.00
+   is_terminal = False
+0.3.1.4
+   q-value = 0.9292
+   u-value = 0.0000
+   puct = 0.9292
+   nvisit = 1.00
+   parent.nvisit = 1.00
+   is_terminal = False
+selected_child = 0.3.1.4
+selected_node = 0.3.1.4
+step_cnt = 11
+
+-> d = 3
+0.3.1.4.1
+   q-value = 0.9058
+   u-value = 0.0000
+   puct = 0.9058
+   nvisit = 1.00
+   parent.nvisit = 1.00
+   is_terminal = False
+0.3.1.4.2
+   q-value = 0.7153
+   u-value = 0.0000
+   puct = 0.7153
+   nvisit = 1.00
+   parent.nvisit = 1.00
+   is_terminal = False
+0.3.1.4.3
+   q-value = 0.9209
+   u-value = 0.0000
+   puct = 0.9209
+   nvisit = 1.00
+   parent.nvisit = 1.00
+   is_terminal = False
+0.3.1.4.4
+   q-value = 0.9219
+   u-value = 0.0000
+   puct = 0.9219
+   nvisit = 1.00
+   parent.nvisit = 1.00
+   is_terminal = False
+selected_child = 0.3.1.4.4
+selected_node = 0.3.1.4.4
+step_cnt = 12
+
+-> d = 4
+0.3.1.4.4.1
+   q-value = 0.7490
+   u-value = 0.0000
+   puct = 0.7490
+   nvisit = 1.00
+   parent.nvisit = 1.00
+   is_terminal = False
+0.3.1.4.4.2
+   q-value = 0.8105
+   u-value = 0.0000
+   puct = 0.8105
+   nvisit = 1.00
+   parent.nvisit = 1.00
+   is_terminal = False
+0.3.1.4.4.3
+   q-value = 0.8823
+   u-value = 0.0000
+   puct = 0.8823
+   nvisit = 1.00
+   parent.nvisit = 1.00
+   is_terminal = False
+0.3.1.4.4.4
+   q-value = 0.7549
+   u-value = 0.0000
+   puct = 0.7549
+   nvisit = 1.00
+   parent.nvisit = 1.00
+   is_terminal = False
+selected_child = 0.3.1.4.4.3
+selected_node = 0.3.1.4.4.3
+step_cnt = 13
+
+-> d = 5
+0.3.1.4.4.3.1
+   q-value = 0.9399
+   u-value = 0.0000
+   puct = 0.9399
+   nvisit = 1.00
+   parent.nvisit = 1.00
+   is_terminal = False
+0.3.1.4.4.3.2
+   q-value = 0.9604
+   u-value = 0.0000
+   puct = 0.9604
+   nvisit = 1.00
+   parent.nvisit = 1.00
+   is_terminal = False
+0.3.1.4.4.3.3
+   q-value = 0.9712
+   u-value = 0.0000
+   puct = 0.9712
+   nvisit = 1.00
+   parent.nvisit = 1.00
+   is_terminal = False
+selected_child = 0.3.1.4.4.3.3
+selected_node = 0.3.1.4.4.3.3
+step_cnt = 14
+
+-> d = 6
+selected_node = None
+step_cnt = 15
+
+-> p = 3
+vals = [257.57846603 259.12118479 265.52667115]
+beta*q_values = [0.95825195 0.89355469 0.18237305]
+alpha*q_diversity = [256.62021408 258.2276301  265.3442981 ]
+candidate_idxes = [3]
+best_idx = 3
+selected_child = 0.4
+selected_node = 0.4
+
+-> d = 1
+0.4.1
+   q-value = 0.6582
+   u-value = 0.0000
+   puct = 0.6582
+   nvisit = 1.00
+   parent.nvisit = 1.00
+   is_terminal = False
+0.4.2
+   q-value = 0.4263
+   u-value = 0.0000
+   puct = 0.4263
+   nvisit = 1.00
+   parent.nvisit = 1.00
+   is_terminal = False
+0.4.3
+   q-value = 0.3960
+   u-value = 0.0000
+   puct = 0.3960
+   nvisit = 1.00
+   parent.nvisit = 1.00
+   is_terminal = False
+0.4.4
+   q-value = 0.3923
+   u-value = 0.0000
+   puct = 0.3923
+   nvisit = 1.00
+   parent.nvisit = 1.00
+   is_terminal = False
+selected_child = 0.4.1
+selected_node = 0.4.1
+step_cnt = 16
+
+-> d = 2
+0.4.1.1
+   q-value = 0.5889
+   u-value = 0.0000
+   puct = 0.5889
+   nvisit = 1.00
+   parent.nvisit = 1.00
+   is_terminal = False
+0.4.1.2
+   q-value = 0.6440
+   u-value = 0.0000
+   puct = 0.6440
+   nvisit = 1.00
+   parent.nvisit = 1.00
+   is_terminal = False
+0.4.1.3
+   q-value = 0.6187
+   u-value = 0.0000
+   puct = 0.6187
+   nvisit = 1.00
+   parent.nvisit = 1.00
+   is_terminal = False
+0.4.1.4
+   q-value = 0.1896
+   u-value = 0.0000
+   puct = 0.1896
+   nvisit = 1.00
+   parent.nvisit = 1.00
+   is_terminal = False
+selected_child = 0.4.1.2
+selected_node = 0.4.1.2
+step_cnt = 17
+
+-> d = 3
+0.4.1.2.1
+   q-value = 0.4036
+   u-value = 0.0000
+   puct = 0.4036
+   nvisit = 1.00
+   parent.nvisit = 1.00
+   is_terminal = False
+0.4.1.2.2
+   q-value = 0.7090
+   u-value = 0.0000
+   puct = 0.7090
+   nvisit = 1.00
+   parent.nvisit = 1.00
+   is_terminal = False
+0.4.1.2.3
+   q-value = 0.3416
+   u-value = 0.0000
+   puct = 0.3416
+   nvisit = 1.00
+   parent.nvisit = 1.00
+   is_terminal = False
+0.4.1.2.4
+   q-value = 0.7852
+   u-value = 0.0000
+   puct = 0.7852
+   nvisit = 1.00
+   parent.nvisit = 1.00
+   is_terminal = False
+selected_child = 0.4.1.2.4
+selected_node = 0.4.1.2.4
+step_cnt = 18
+
+-> d = 4
+0.4.1.2.4.1
+   q-value = 0.8613
+   u-value = 0.0000
+   puct = 0.8613
+   nvisit = 1.00
+   parent.nvisit = 1.00
+   is_terminal = False
+0.4.1.2.4.2
+   q-value = 0.8032
+   u-value = 0.0000
+   puct = 0.8032
+   nvisit = 1.00
+   parent.nvisit = 1.00
+   is_terminal = False
+0.4.1.2.4.3
+   q-value = 0.7983
+   u-value = 0.0000
+   puct = 0.7983
+   nvisit = 1.00
+   parent.nvisit = 1.00
+   is_terminal = False
+0.4.1.2.4.4
+   q-value = 0.8032
+   u-value = 0.0000
+   puct = 0.8032
+   nvisit = 1.00
+   parent.nvisit = 1.00
+   is_terminal = False
+selected_child = 0.4.1.2.4.1
+selected_node = 0.4.1.2.4.1
+step_cnt = 19
+
+-> d = 5
+0.4.1.2.4.1.1
+   q-value = 0.8931
+   u-value = 0.0000
+   puct = 0.8931
+   nvisit = 1.00
+   parent.nvisit = 1.00
+   is_terminal = False
+0.4.1.2.4.1.2
+   q-value = 0.8916
+   u-value = 0.0000
+   puct = 0.8916
+   nvisit = 1.00
+   parent.nvisit = 1.00
+   is_terminal = False
+0.4.1.2.4.1.3
+   q-value = 0.9434
+   u-value = 0.0000
+   puct = 0.9434
+   nvisit = 1.00
+   parent.nvisit = 1.00
+   is_terminal = False
+0.4.1.2.4.1.4
+   q-value = 0.8438
+   u-value = 0.0000
+   puct = 0.8438
+   nvisit = 1.00
+   parent.nvisit = 1.00
+   is_terminal = False
+selected_child = 0.4.1.2.4.1.3
+selected_node = 0.4.1.2.4.1.3
+step_cnt = 20
+
+-> d = 6
+0.4.1.2.4.1.3.2
+   q-value = 0.7339
+   u-value = 1.6651
+   puct = 2.3990
+   nvisit = 1.00
+   parent.nvisit = 2.00
+   is_terminal = False
+selected_child = 0.4.1.2.4.1.3.2
+selected_node = 0.4.1.2.4.1.3.2
+step_cnt = 21
+
+-> d = 7
+0.4.1.2.4.1.3.2.1
+   q-value = 0.8501
+   u-value = 1.6651
+   puct = 2.5152
+   nvisit = 1.00
+   parent.nvisit = 2.00
+   is_terminal = False
+0.4.1.2.4.1.3.2.3
+   q-value = 0.8652
+   u-value = 1.6651
+   puct = 2.5303
+   nvisit = 1.00
+   parent.nvisit = 2.00
+   is_terminal = False
+0.4.1.2.4.1.3.2.4
+   q-value = 0.9346
+   u-value = 1.6651
+   puct = 2.5997
+   nvisit = 1.00
+   parent.nvisit = 2.00
+   is_terminal = False
+selected_child = 0.4.1.2.4.1.3.2.4
+selected_node = 0.4.1.2.4.1.3.2.4
+step_cnt = 22
+
+-> d = 8
+selected_node = None
+step_cnt = 23
+
+-> p = 4
+vals = [246.46445748 245.40965174 235.63774647]
+beta*q_values = [0.95825195 0.89355469 0.78607178]
+alpha*q_diversity = [245.50620553 244.51609705 234.85167469]
+candidate_idxes = [1]
+best_idx = 1
+selected_child = 0.2
+vals = [238.19611853 236.94754605 236.4230445  232.93033108]
+beta*q_values = [0.97753906 0.89892578 0.77978516 0.89892578]
+alpha*q_diversity = [237.21857946 236.04862027 235.64325934 232.0314053 ]
+candidate_idxes = [1]
+best_idx = 1
+selected_child = 0.2.1
+vals = [232.91539534 231.6809595  224.8032074  237.60661017]
+beta*q_values = [0.95507812 0.88085938 0.60009766 0.87255859]
+alpha*q_diversity = [231.96031722 230.80010012 224.20310975 236.73405158]
+candidate_idxes = [4]
+best_idx = 4
+selected_child = 0.2.1.4
+selected_node = 0.2.1.4
+
+-> d = 3
+0.2.1.4.1
+   q-value = 0.8081
+   u-value = 0.0000
+   puct = 0.8081
+   nvisit = 1.00
+   parent.nvisit = 1.00
+   is_terminal = False
+0.2.1.4.2
+   q-value = 0.1688
+   u-value = 0.0000
+   puct = 0.1688
+   nvisit = 1.00
+   parent.nvisit = 1.00
+   is_terminal = False
+0.2.1.4.3
+   q-value = 0.8901
+   u-value = 0.0000
+   puct = 0.8901
+   nvisit = 1.00
+   parent.nvisit = 1.00
+   is_terminal = False
+0.2.1.4.4
+   q-value = 0.8931
+   u-value = 0.0000
+   puct = 0.8931
+   nvisit = 1.00
+   parent.nvisit = 1.00
+   is_terminal = False
+selected_child = 0.2.1.4.4
+selected_node = 0.2.1.4.4
+step_cnt = 24
+
+-> d = 4
+0.2.1.4.4.1
+   q-value = 0.9126
+   u-value = 0.0000
+   puct = 0.9126
+   nvisit = 1.00
+   parent.nvisit = 1.00
+   is_terminal = False
+0.2.1.4.4.2
+   q-value = 0.9097
+   u-value = 0.0000
+   puct = 0.9097
+   nvisit = 1.00
+   parent.nvisit = 1.00
+   is_terminal = False
+0.2.1.4.4.3
+   q-value = 0.9150
+   u-value = 0.0000
+   puct = 0.9150
+   nvisit = 1.00
+   parent.nvisit = 1.00
+   is_terminal = False
+0.2.1.4.4.4
+   q-value = 0.8965
+   u-value = 0.0000
+   puct = 0.8965
+   nvisit = 1.00
+   parent.nvisit = 1.00
+   is_terminal = False
+selected_child = 0.2.1.4.4.3
+selected_node = 0.2.1.4.4.3
+step_cnt = 25
+
+-> d = 5
+0.2.1.4.4.3.1
+   q-value = 0.9702
+   u-value = 0.0000
+   puct = 0.9702
+   nvisit = 1.00
+   parent.nvisit = 1.00
+   is_terminal = False
+0.2.1.4.4.3.2
+   q-value = 0.9722
+   u-value = 0.0000
+   puct = 0.9722
+   nvisit = 1.00
+   parent.nvisit = 1.00
+   is_terminal = False
+0.2.1.4.4.3.3
+   q-value = 0.9712
+   u-value = 0.0000
+   puct = 0.9712
+   nvisit = 1.00
+   parent.nvisit = 1.00
+   is_terminal = False
+0.2.1.4.4.3.4
+   q-value = 0.8633
+   u-value = 0.0000
+   puct = 0.8633
+   nvisit = 1.00
+   parent.nvisit = 1.00
+   is_terminal = False
+selected_child = 0.2.1.4.4.3.2
+selected_node = 0.2.1.4.4.3.2
+step_cnt = 26
+
+-> d = 6
+selected_node = None
+step_cnt = 27
+
+-> p = 5
+vals = [232.03618767 237.58207317 228.98984219]
+beta*q_values = [0.97200521 0.89355469 0.78607178]
+alpha*q_diversity = [231.06418247 236.68851848 228.20377041]
+candidate_idxes = [2]
+best_idx = 2
+selected_child = 0.3
+vals = [233.00191759 232.12271581 217.41973869 221.20756833]
+beta*q_values = [0.96362305 0.80322266 0.81542969 0.83105469]
+alpha*q_diversity = [232.03829454 231.31949315 216.604309   220.37651364]
+candidate_idxes = [1]
+best_idx = 1
+selected_child = 0.3.1
+vals = [218.72798514 223.44714825 224.34847855 223.91475085]
+beta*q_values = [0.92822266 0.92822266 0.921875   0.96411133]
+alpha*q_diversity = [217.79976248 222.51892559 223.42660355 222.95063952]
+candidate_idxes = [3]
+best_idx = 3
+selected_child = 0.3.1.3
+selected_node = 0.3.1.3
+
+-> d = 3
+0.3.1.3.1
+   q-value = 0.9126
+   u-value = 0.0000
+   puct = 0.9126
+   nvisit = 1.00
+   parent.nvisit = 1.00
+   is_terminal = False
+0.3.1.3.2
+   q-value = 0.8267
+   u-value = 0.0000
+   puct = 0.8267
+   nvisit = 1.00
+   parent.nvisit = 1.00
+   is_terminal = False
+0.3.1.3.3
+   q-value = 0.6001
+   u-value = 0.0000
+   puct = 0.6001
+   nvisit = 1.00
+   parent.nvisit = 1.00
+   is_terminal = False
+0.3.1.3.4
+   q-value = 0.8613
+   u-value = 0.0000
+   puct = 0.8613
+   nvisit = 1.00
+   parent.nvisit = 1.00
+   is_terminal = False
+selected_child = 0.3.1.3.1
+selected_node = 0.3.1.3.1
+step_cnt = 28
+
+-> d = 4
+0.3.1.3.1.1
+   q-value = 0.7280
+   u-value = 0.0000
+   puct = 0.7280
+   nvisit = 1.00
+   parent.nvisit = 1.00
+   is_terminal = False
+0.3.1.3.1.2
+   q-value = 0.8501
+   u-value = 0.0000
+   puct = 0.8501
+   nvisit = 1.00
+   parent.nvisit = 1.00
+   is_terminal = False
+0.3.1.3.1.3
+   q-value = 0.8672
+   u-value = 0.0000
+   puct = 0.8672
+   nvisit = 1.00
+   parent.nvisit = 1.00
+   is_terminal = False
+0.3.1.3.1.4
+   q-value = 0.8823
+   u-value = 0.0000
+   puct = 0.8823
+   nvisit = 1.00
+   parent.nvisit = 1.00
+   is_terminal = False
+selected_child = 0.3.1.3.1.4
+selected_node = 0.3.1.3.1.4
+step_cnt = 29
+
+-> d = 5
+0.3.1.3.1.4.1
+   q-value = 0.8154
+   u-value = 0.0000
+   puct = 0.8154
+   nvisit = 1.00
+   parent.nvisit = 1.00
+   is_terminal = False
+0.3.1.3.1.4.2
+   q-value = 0.7852
+   u-value = 0.0000
+   puct = 0.7852
+   nvisit = 1.00
+   parent.nvisit = 1.00
+   is_terminal = False
+0.3.1.3.1.4.3
+   q-value = 0.8267
+   u-value = 0.0000
+   puct = 0.8267
+   nvisit = 1.00
+   parent.nvisit = 1.00
+   is_terminal = False
+0.3.1.3.1.4.4
+   q-value = 0.7690
+   u-value = 0.0000
+   puct = 0.7690
+   nvisit = 1.00
+   parent.nvisit = 1.00
+   is_terminal = False
+selected_child = 0.3.1.3.1.4.3
+selected_node = 0.3.1.3.1.4.3
+step_cnt = 30
+
+-> d = 6
+0.3.1.3.1.4.3.1
+   q-value = 0.8857
+   u-value = 0.0000
+   puct = 0.8857
+   nvisit = 1.00
+   parent.nvisit = 1.00
+   is_terminal = False
+0.3.1.3.1.4.3.2
+   q-value = 0.9185
+   u-value = 0.0000
+   puct = 0.9185
+   nvisit = 1.00
+   parent.nvisit = 1.00
+   is_terminal = False
+0.3.1.3.1.4.3.3
+   q-value = 0.8823
+   u-value = 0.0000
+   puct = 0.8823
+   nvisit = 1.00
+   parent.nvisit = 1.00
+   is_terminal = False
+0.3.1.3.1.4.3.4
+   q-value = 0.9209
+   u-value = 0.0000
+   puct = 0.9209
+   nvisit = 1.00
+   parent.nvisit = 1.00
+   is_terminal = False
+selected_child = 0.3.1.3.1.4.3.4
+selected_node = 0.3.1.3.1.4.3.4
+step_cnt = 31
+
+-> d = 7
+0.3.1.3.1.4.3.4.1
+   q-value = 0.9712
+   u-value = 0.0000
+   puct = 0.9712
+   nvisit = 1.00
+   parent.nvisit = 1.00
+   is_terminal = False
+0.3.1.3.1.4.3.4.2
+   q-value = 0.9741
+   u-value = 0.0000
+   puct = 0.9741
+   nvisit = 1.00
+   parent.nvisit = 1.00
+   is_terminal = False
+0.3.1.3.1.4.3.4.3
+   q-value = 0.9795
+   u-value = 0.0000
+   puct = 0.9795
+   nvisit = 1.00
+   parent.nvisit = 1.00
+   is_terminal = False
+selected_child = 0.3.1.3.1.4.3.4.3
+selected_node = 0.3.1.3.1.4.3.4.3
+step_cnt = 32
+
+-> d = 8
+selected_node = None
+step_cnt = 33
+
+-> p = 6
+vals = [223.88005549 225.38649559 224.02735316]
+beta*q_values = [0.97200521 0.92871094 0.78607178]
+alpha*q_diversity = [222.90805028 224.45778465 223.24128138]
+candidate_idxes = [2]
+best_idx = 2
+selected_child = 0.3
+vals = [218.83743797 220.93411851 206.49226869 209.7280524 ]
+beta*q_values = [0.97542318 0.80322266 0.81542969 0.83105469]
+alpha*q_diversity = [217.86201479 220.13089586 205.676839   208.89699771]
+candidate_idxes = [2]
+best_idx = 2
+selected_child = 0.3.2
+selected_node = 0.3.2
+
+-> d = 2
+0.3.2.1
+   q-value = 0.9019
+   u-value = 0.0000
+   puct = 0.9019
+   nvisit = 1.00
+   parent.nvisit = 1.00
+   is_terminal = False
+0.3.2.2
+   q-value = 0.8823
+   u-value = 0.0000
+   puct = 0.8823
+   nvisit = 1.00
+   parent.nvisit = 1.00
+   is_terminal = False
+0.3.2.3
+   q-value = 0.9229
+   u-value = 0.0000
+   puct = 0.9229
+   nvisit = 1.00
+   parent.nvisit = 1.00
+   is_terminal = False
+0.3.2.4
+   q-value = 0.9185
+   u-value = 0.0000
+   puct = 0.9185
+   nvisit = 1.00
+   parent.nvisit = 1.00
+   is_terminal = False
+selected_child = 0.3.2.3
+selected_node = 0.3.2.3
+step_cnt = 34
+
+-> d = 3
+0.3.2.3.1
+   q-value = 0.8726
+   u-value = 0.0000
+   puct = 0.8726
+   nvisit = 1.00
+   parent.nvisit = 1.00
+   is_terminal = False
+0.3.2.3.2
+   q-value = 0.8774
+   u-value = 0.0000
+   puct = 0.8774
+   nvisit = 1.00
+   parent.nvisit = 1.00
+   is_terminal = False
+0.3.2.3.3
+   q-value = 0.8374
+   u-value = 0.0000
+   puct = 0.8374
+   nvisit = 1.00
+   parent.nvisit = 1.00
+   is_terminal = False
+0.3.2.3.4
+   q-value = 0.6860
+   u-value = 0.0000
+   puct = 0.6860
+   nvisit = 1.00
+   parent.nvisit = 1.00
+   is_terminal = False
+selected_child = 0.3.2.3.2
+selected_node = 0.3.2.3.2
+step_cnt = 35
+
+-> d = 4
+0.3.2.3.2.1
+   q-value = 0.8501
+   u-value = 0.0000
+   puct = 0.8501
+   nvisit = 1.00
+   parent.nvisit = 1.00
+   is_terminal = False
+0.3.2.3.2.2
+   q-value = 0.8633
+   u-value = 0.0000
+   puct = 0.8633
+   nvisit = 1.00
+   parent.nvisit = 1.00
+   is_terminal = False
+0.3.2.3.2.3
+   q-value = 0.7905
+   u-value = 0.0000
+   puct = 0.7905
+   nvisit = 1.00
+   parent.nvisit = 1.00
+   is_terminal = False
+0.3.2.3.2.4
+   q-value = 0.5889
+   u-value = 0.0000
+   puct = 0.5889
+   nvisit = 1.00
+   parent.nvisit = 1.00
+   is_terminal = False
+selected_child = 0.3.2.3.2.2
+selected_node = 0.3.2.3.2.2
+step_cnt = 36
+
+-> d = 5
+0.3.2.3.2.2.1
+   q-value = 0.7432
+   u-value = 0.0000
+   puct = 0.7432
+   nvisit = 1.00
+   parent.nvisit = 1.00
+   is_terminal = False
+0.3.2.3.2.2.2
+   q-value = 0.9097
+   u-value = 0.0000
+   puct = 0.9097
+   nvisit = 1.00
+   parent.nvisit = 1.00
+   is_terminal = False
+0.3.2.3.2.2.3
+   q-value = 0.7402
+   u-value = 0.0000
+   puct = 0.7402
+   nvisit = 1.00
+   parent.nvisit = 1.00
+   is_terminal = False
+0.3.2.3.2.2.4
+   q-value = 0.8501
+   u-value = 0.0000
+   puct = 0.8501
+   nvisit = 1.00
+   parent.nvisit = 1.00
+   is_terminal = False
+selected_child = 0.3.2.3.2.2.2
+selected_node = 0.3.2.3.2.2.2
+step_cnt = 37
+
+-> d = 6
+0.3.2.3.2.2.2.1
+   q-value = 0.9160
+   u-value = 1.6651
+   puct = 2.5811
+   nvisit = 1.00
+   parent.nvisit = 2.00
+   is_terminal = False
+selected_child = 0.3.2.3.2.2.2.1
+selected_node = 0.3.2.3.2.2.2.1
+step_cnt = 38
+
+-> d = 7
+0.3.2.3.2.2.2.1.1
+   q-value = 0.9600
+   u-value = 0.0000
+   puct = 0.9600
+   nvisit = 1.00
+   parent.nvisit = 1.00
+   is_terminal = False
+0.3.2.3.2.2.2.1.2
+   q-value = 0.9585
+   u-value = 0.0000
+   puct = 0.9585
+   nvisit = 1.00
+   parent.nvisit = 1.00
+   is_terminal = False
+0.3.2.3.2.2.2.1.3
+   q-value = 0.9697
+   u-value = 0.0000
+   puct = 0.9697
+   nvisit = 1.00
+   parent.nvisit = 1.00
+   is_terminal = False
+selected_child = 0.3.2.3.2.2.2.1.3
+selected_node = 0.3.2.3.2.2.2.1.3
+step_cnt = 39
+
+-> d = 8
+0.3.2.3.2.2.2.1.3.1
+   q-value = 0.9644
+   u-value = 1.6651
+   puct = 2.6295
+   nvisit = 1.00
+   parent.nvisit = 2.00
+   is_terminal = False
+selected_child = 0.3.2.3.2.2.2.1.3.1
+selected_node = 0.3.2.3.2.2.2.1.3.1
+step_cnt = 40
+
+-> d = 9
+selected_node = None
+step_cnt = 41
+
+-> p = 7
+vals = [218.27476892 215.44869839 216.480039  ]
+beta*q_values = [0.97200521 0.96240234 0.78607178]
+alpha*q_diversity = [217.30276372 214.48629605 215.69396722]
+candidate_idxes = [1]
+best_idx = 1
+selected_child = 0.2
+vals = [207.25213227 208.26915333 208.29764611 203.53399508]
+beta*q_values = [0.98486328 0.89892578 0.77978516 0.89892578]
+alpha*q_diversity = [206.26726899 207.37022755 207.51786095 202.6350693 ]
+candidate_idxes = [3]
+best_idx = 3
+selected_child = 0.2.3
+selected_node = 0.2.3
+
+-> d = 2
+0.2.3.1
+   q-value = 0.7373
+   u-value = 0.0000
+   puct = 0.7373
+   nvisit = 1.00
+   parent.nvisit = 1.00
+   is_terminal = False
+0.2.3.2
+   q-value = 0.8975
+   u-value = 0.0000
+   puct = 0.8975
+   nvisit = 1.00
+   parent.nvisit = 1.00
+   is_terminal = False
+0.2.3.3
+   q-value = 0.7217
+   u-value = 0.0000
+   puct = 0.7217
+   nvisit = 1.00
+   parent.nvisit = 1.00
+   is_terminal = False
+0.2.3.4
+   q-value = 0.7661
+   u-value = 0.0000
+   puct = 0.7661
+   nvisit = 1.00
+   parent.nvisit = 1.00
+   is_terminal = False
+selected_child = 0.2.3.2
+selected_node = 0.2.3.2
+step_cnt = 42
+
+-> d = 3
+0.2.3.2.1
+   q-value = 0.8872
+   u-value = 0.0000
+   puct = 0.8872
+   nvisit = 1.00
+   parent.nvisit = 1.00
+   is_terminal = False
+0.2.3.2.2
+   q-value = 0.7930
+   u-value = 0.0000
+   puct = 0.7930
+   nvisit = 1.00
+   parent.nvisit = 1.00
+   is_terminal = False
+0.2.3.2.3
+   q-value = 0.5659
+   u-value = 0.0000
+   puct = 0.5659
+   nvisit = 1.00
+   parent.nvisit = 1.00
+   is_terminal = False
+0.2.3.2.4
+   q-value = 0.8311
+   u-value = 0.0000
+   puct = 0.8311
+   nvisit = 1.00
+   parent.nvisit = 1.00
+   is_terminal = False
+selected_child = 0.2.3.2.1
+selected_node = 0.2.3.2.1
+step_cnt = 43
+
+-> d = 4
+selected_node = None
+step_cnt = 44
+
+-> p = 8
+vals = [211.0216518  212.52389252 214.276661  ]
+beta*q_values = [0.97705078 0.96240234 0.78607178]
+alpha*q_diversity = [210.04460101 211.56149017 213.49058922]
+candidate_idxes = [3]
+best_idx = 3
+selected_child = 0.4
+vals = [193.06188038 197.79622141 202.61387572 195.43427894]
+beta*q_values = [0.9050293  0.42626953 0.39599609 0.39233398]
+alpha*q_diversity = [192.15685109 197.36995188 202.21787963 195.04194496]
+candidate_idxes = [3]
+best_idx = 3
+selected_child = 0.4.3
+selected_node = 0.4.3
+
+-> d = 2
+0.4.3.1
+   q-value = 0.4417
+   u-value = 0.0000
+   puct = 0.4417
+   nvisit = 1.00
+   parent.nvisit = 1.00
+   is_terminal = False
+0.4.3.2
+   q-value = 0.7026
+   u-value = 0.0000
+   puct = 0.7026
+   nvisit = 1.00
+   parent.nvisit = 1.00
+   is_terminal = False
+0.4.3.3
+   q-value = 0.3416
+   u-value = 0.0000
+   puct = 0.3416
+   nvisit = 1.00
+   parent.nvisit = 1.00
+   is_terminal = False
+0.4.3.4
+   q-value = 0.6621
+   u-value = 0.0000
+   puct = 0.6621
+   nvisit = 1.00
+   parent.nvisit = 1.00
+   is_terminal = False
+selected_child = 0.4.3.2
+selected_node = 0.4.3.2
+step_cnt = 45
+
+-> d = 3
+0.4.3.2.1
+   q-value = 0.6260
+   u-value = 0.0000
+   puct = 0.6260
+   nvisit = 1.00
+   parent.nvisit = 1.00
+   is_terminal = False
+0.4.3.2.2
+   q-value = 0.3523
+   u-value = 0.0000
+   puct = 0.3523
+   nvisit = 1.00
+   parent.nvisit = 1.00
+   is_terminal = False
+0.4.3.2.3
+   q-value = 0.5000
+   u-value = 0.0000
+   puct = 0.5000
+   nvisit = 1.00
+   parent.nvisit = 1.00
+   is_terminal = False
+0.4.3.2.4
+   q-value = 0.5000
+   u-value = 0.0000
+   puct = 0.5000
+   nvisit = 1.00
+   parent.nvisit = 1.00
+   is_terminal = False
+selected_child = 0.4.3.2.1
+selected_node = 0.4.3.2.1
+step_cnt = 46
+
+-> d = 4
+0.4.3.2.1.1
+   q-value = 0.6152
+   u-value = 0.0000
+   puct = 0.6152
+   nvisit = 1.00
+   parent.nvisit = 1.00
+   is_terminal = False
+0.4.3.2.1.2
+   q-value = 0.6152
+   u-value = 0.0000
+   puct = 0.6152
+   nvisit = 1.00
+   parent.nvisit = 1.00
+   is_terminal = False
+0.4.3.2.1.3
+   q-value = 0.7280
+   u-value = 0.0000
+   puct = 0.7280
+   nvisit = 1.00
+   parent.nvisit = 1.00
+   is_terminal = False
+0.4.3.2.1.4
+   q-value = 0.2480
+   u-value = 0.0000
+   puct = 0.2480
+   nvisit = 1.00
+   parent.nvisit = 1.00
+   is_terminal = False
+selected_child = 0.4.3.2.1.3
+selected_node = 0.4.3.2.1.3
+step_cnt = 47
+
+-> d = 5
+0.4.3.2.1.3.1
+   q-value = 0.3594
+   u-value = 0.0000
+   puct = 0.3594
+   nvisit = 1.00
+   parent.nvisit = 1.00
+   is_terminal = False
+0.4.3.2.1.3.2
+   q-value = 0.7930
+   u-value = 0.0000
+   puct = 0.7930
+   nvisit = 1.00
+   parent.nvisit = 1.00
+   is_terminal = False
+0.4.3.2.1.3.3
+   q-value = 0.1779
+   u-value = 0.0000
+   puct = 0.1779
+   nvisit = 1.00
+   parent.nvisit = 1.00
+   is_terminal = False
+0.4.3.2.1.3.4
+   q-value = 0.5195
+   u-value = 0.0000
+   puct = 0.5195
+   nvisit = 1.00
+   parent.nvisit = 1.00
+   is_terminal = False
+selected_child = 0.4.3.2.1.3.2
+selected_node = 0.4.3.2.1.3.2
+step_cnt = 48
+
+-> d = 6
+0.4.3.2.1.3.2.1
+   q-value = 0.6895
+   u-value = 0.0000
+   puct = 0.6895
+   nvisit = 1.00
+   parent.nvisit = 1.00
+   is_terminal = False
+0.4.3.2.1.3.2.2
+   q-value = 0.8374
+   u-value = 0.0000
+   puct = 0.8374
+   nvisit = 1.00
+   parent.nvisit = 1.00
+   is_terminal = False
+0.4.3.2.1.3.2.3
+   q-value = 0.7637
+   u-value = 0.0000
+   puct = 0.7637
+   nvisit = 1.00
+   parent.nvisit = 1.00
+   is_terminal = False
+0.4.3.2.1.3.2.4
+   q-value = 0.8726
+   u-value = 0.0000
+   puct = 0.8726
+   nvisit = 1.00
+   parent.nvisit = 1.00
+   is_terminal = False
+selected_child = 0.4.3.2.1.3.2.4
+selected_node = 0.4.3.2.1.3.2.4
+step_cnt = 49
+
+-> d = 7
+0.4.3.2.1.3.2.4.1
+   q-value = 0.8560
+   u-value = 1.6651
+   puct = 2.5211
+   nvisit = 1.00
+   parent.nvisit = 2.00
+   is_terminal = False
+0.4.3.2.1.3.2.4.3
+   q-value = 0.8901
+   u-value = 1.6651
+   puct = 2.5552
+   nvisit = 1.00
+   parent.nvisit = 2.00
+   is_terminal = False
+selected_child = 0.4.3.2.1.3.2.4.3
+selected_node = 0.4.3.2.1.3.2.4.3
+step_cnt = 50
+
+-> d = 8
+selected_node = None
+step_cnt = 51
+
+-> p = 9
+vals = [208.40253893 210.08099247 201.38150628]
+beta*q_values = [0.97705078 0.96240234 0.85323079]
+alpha*q_diversity = [207.42548815 209.11859012 200.52827548]
+candidate_idxes = [2]
+best_idx = 2
+selected_child = 0.3
+vals = [205.57278353 203.58814134 187.61522902 191.49107146]
+beta*q_values = [0.97542318 0.94787598 0.81542969 0.83105469]
+alpha*q_diversity = [204.59736035 202.64026536 186.79979934 190.66001678]
+candidate_idxes = [1]
+best_idx = 1
+selected_child = 0.3.1
+vals = [187.22084825 192.72349867 193.83530906 193.42499407]
+beta*q_values = [0.92822266 0.92822266 0.96044922 0.96411133]
+alpha*q_diversity = [186.29262559 191.79527602 192.87485984 192.46088275]
+candidate_idxes = [3]
+best_idx = 3
+selected_child = 0.3.1.3
+vals = [198.14832949 183.13112797 190.26025636 191.98440835]
+beta*q_values = [0.95581055 0.82666016 0.60009766 0.86132812]
+alpha*q_diversity = [197.19251894 182.30446781 189.6601587  191.12308022]
+candidate_idxes = [1]
+best_idx = 1
+selected_child = 0.3.1.3.1
+vals = [202.96543226 189.64550462 188.52932284 187.69169106]
+beta*q_values = [0.72802734 0.85009766 0.8671875  0.94067383]
+alpha*q_diversity = [202.23740492 188.79540696 187.66213534 186.75101723]
+candidate_idxes = [1]
+best_idx = 1
+selected_child = 0.3.1.3.1.1
+selected_node = 0.3.1.3.1.1
+
+-> d = 5
+0.3.1.3.1.1.1
+   q-value = 0.4377
+   u-value = 0.0000
+   puct = 0.4377
+   nvisit = 1.00
+   parent.nvisit = 1.00
+   is_terminal = False
+0.3.1.3.1.1.2
+   q-value = 0.7959
+   u-value = 0.0000
+   puct = 0.7959
+   nvisit = 1.00
+   parent.nvisit = 1.00
+   is_terminal = False
+0.3.1.3.1.1.3
+   q-value = 0.6958
+   u-value = 0.0000
+   puct = 0.6958
+   nvisit = 1.00
+   parent.nvisit = 1.00
+   is_terminal = False
+0.3.1.3.1.1.4
+   q-value = 0.3486
+   u-value = 0.0000
+   puct = 0.3486
+   nvisit = 1.00
+   parent.nvisit = 1.00
+   is_terminal = False
+selected_child = 0.3.1.3.1.1.2
+selected_node = 0.3.1.3.1.1.2
+step_cnt = 52
+
+-> d = 6
+0.3.1.3.1.1.2.1
+   q-value = 0.6479
+   u-value = 0.0000
+   puct = 0.6479
+   nvisit = 1.00
+   parent.nvisit = 1.00
+   is_terminal = False
+0.3.1.3.1.1.2.2
+   q-value = 0.7217
+   u-value = 0.0000
+   puct = 0.7217
+   nvisit = 1.00
+   parent.nvisit = 1.00
+   is_terminal = False
+0.3.1.3.1.1.2.3
+   q-value = 0.6372
+   u-value = 0.0000
+   puct = 0.6372
+   nvisit = 1.00
+   parent.nvisit = 1.00
+   is_terminal = False
+0.3.1.3.1.1.2.4
+   q-value = 0.7280
+   u-value = 0.0000
+   puct = 0.7280
+   nvisit = 1.00
+   parent.nvisit = 1.00
+   is_terminal = False
+selected_child = 0.3.1.3.1.1.2.4
+selected_node = 0.3.1.3.1.1.2.4
+step_cnt = 53
+
+-> d = 7
+0.3.1.3.1.1.2.4.1
+   q-value = 0.9111
+   u-value = 0.0000
+   puct = 0.9111
+   nvisit = 1.00
+   parent.nvisit = 1.00
+   is_terminal = False
+0.3.1.3.1.1.2.4.2
+   q-value = 0.6792
+   u-value = 0.0000
+   puct = 0.6792
+   nvisit = 1.00
+   parent.nvisit = 1.00
+   is_terminal = False
+0.3.1.3.1.1.2.4.3
+   q-value = 0.6548
+   u-value = 0.0000
+   puct = 0.6548
+   nvisit = 1.00
+   parent.nvisit = 1.00
+   is_terminal = False
+0.3.1.3.1.1.2.4.4
+   q-value = 0.8457
+   u-value = 0.0000
+   puct = 0.8457
+   nvisit = 1.00
+   parent.nvisit = 1.00
+   is_terminal = False
+selected_child = 0.3.1.3.1.1.2.4.1
+selected_node = 0.3.1.3.1.1.2.4.1
+step_cnt = 54
+
+-> d = 8
+selected_node = None
+step_cnt = 55
+
+-> p = 10
+vals = [205.41507273 203.49819052 199.96290661]
+beta*q_values = [0.97705078 0.96700614 0.85323079]
+alpha*q_diversity = [204.43802195 202.53118439 199.10967582]
+candidate_idxes = [1]
+best_idx = 1
+selected_child = 0.2
+vals = [196.18445607 195.75970379 194.44790268 190.00936832]
+beta*q_values = [0.98486328 0.89892578 0.88598633 0.89892578]
+alpha*q_diversity = [195.19959278 194.86077801 193.56191635 189.11044254]
+candidate_idxes = [1]
+best_idx = 1
+selected_child = 0.2.1
+vals = [197.58545658 192.99560635 185.36100079 202.03883349]
+beta*q_values = [0.95507812 0.88085938 0.60009766 0.93603516]
+alpha*q_diversity = [196.63037845 192.11474697 184.76090314 201.10279834]
+candidate_idxes = [4]
+best_idx = 4
+selected_child = 0.2.1.4
+vals = [207.46539137 193.48753494 204.61262146 199.35507072]
+beta*q_values = [0.80810547 0.16882324 0.89013672 0.94628906]
+alpha*q_diversity = [206.6572859  193.31871169 203.72248475 198.40878166]
+candidate_idxes = [1]
+best_idx = 1
+selected_child = 0.2.1.4.1
+selected_node = 0.2.1.4.1
+
+-> d = 4
+0.2.1.4.1.1
+   q-value = 0.9097
+   u-value = 0.0000
+   puct = 0.9097
+   nvisit = 1.00
+   parent.nvisit = 1.00
+   is_terminal = False
+0.2.1.4.1.2
+   q-value = 0.9546
+   u-value = 0.0000
+   puct = 0.9546
+   nvisit = 1.00
+   parent.nvisit = 1.00
+   is_terminal = False
+0.2.1.4.1.3
+   q-value = 0.9194
+   u-value = 0.0000
+   puct = 0.9194
+   nvisit = 1.00
+   parent.nvisit = 1.00
+   is_terminal = False
+0.2.1.4.1.4
+   q-value = 0.8599
+   u-value = 0.0000
+   puct = 0.8599
+   nvisit = 1.00
+   parent.nvisit = 1.00
+   is_terminal = False
+selected_child = 0.2.1.4.1.2
+selected_node = 0.2.1.4.1.2
+step_cnt = 56
+
+-> d = 5
+selected_node = None
+step_cnt = 57
+
+-> p = 11
+vals = [198.92012251 201.65475274 198.56395027]
+beta*q_values = [0.98095703 0.96700614 0.85323079]
+alpha*q_diversity = [197.93916548 200.6877466  197.71071948]
+candidate_idxes = [2]
+best_idx = 2
+selected_child = 0.3
+vals = [194.93522796 196.35996025 180.585357   184.25865763]
+beta*q_values = [0.98022461 0.94787598 0.81542969 0.83105469]
+alpha*q_diversity = [193.95500335 195.41208427 179.76992731 183.42760294]
+candidate_idxes = [2]
+best_idx = 2
+selected_child = 0.3.2
+vals = [192.3217294  186.96576461 183.79972848 202.91735356]
+beta*q_values = [0.90185547 0.88232422 0.9777832  0.91845703]
+alpha*q_diversity = [191.41987393 186.08344039 182.82194527 201.99889652]
+candidate_idxes = [4]
+best_idx = 4
+selected_child = 0.3.2.4
+selected_node = 0.3.2.4
+
+-> d = 3
+0.3.2.4.1
+   q-value = 0.9316
+   u-value = 0.0000
+   puct = 0.9316
+   nvisit = 1.00
+   parent.nvisit = 1.00
+   is_terminal = False
+0.3.2.4.2
+   q-value = 0.6958
+   u-value = 0.0000
+   puct = 0.6958
+   nvisit = 1.00
+   parent.nvisit = 1.00
+   is_terminal = False
+0.3.2.4.3
+   q-value = 0.8901
+   u-value = 0.0000
+   puct = 0.8901
+   nvisit = 1.00
+   parent.nvisit = 1.00
+   is_terminal = False
+0.3.2.4.4
+   q-value = 0.8335
+   u-value = 0.0000
+   puct = 0.8335
+   nvisit = 1.00
+   parent.nvisit = 1.00
+   is_terminal = False
+selected_child = 0.3.2.4.1
+selected_node = 0.3.2.4.1
+step_cnt = 58
+
+-> d = 4
+0.3.2.4.1.1
+   q-value = 0.8242
+   u-value = 0.0000
+   puct = 0.8242
+   nvisit = 1.00
+   parent.nvisit = 1.00
+   is_terminal = False
+0.3.2.4.1.2
+   q-value = 0.9097
+   u-value = 0.0000
+   puct = 0.9097
+   nvisit = 1.00
+   parent.nvisit = 1.00
+   is_terminal = False
+0.3.2.4.1.3
+   q-value = 0.7881
+   u-value = 0.0000
+   puct = 0.7881
+   nvisit = 1.00
+   parent.nvisit = 1.00
+   is_terminal = False
+0.3.2.4.1.4
+   q-value = 0.7798
+   u-value = 0.0000
+   puct = 0.7798
+   nvisit = 1.00
+   parent.nvisit = 1.00
+   is_terminal = False
+selected_child = 0.3.2.4.1.2
+selected_node = 0.3.2.4.1.2
+step_cnt = 59
+
+-> d = 5
+0.3.2.4.1.2.1
+   q-value = 0.6860
+   u-value = 0.0000
+   puct = 0.6860
+   nvisit = 1.00
+   parent.nvisit = 1.00
+   is_terminal = False
+0.3.2.4.1.2.2
+   q-value = 0.8438
+   u-value = 0.0000
+   puct = 0.8438
+   nvisit = 1.00
+   parent.nvisit = 1.00
+   is_terminal = False
+0.3.2.4.1.2.3
+   q-value = 0.8267
+   u-value = 0.0000
+   puct = 0.8267
+   nvisit = 1.00
+   parent.nvisit = 1.00
+   is_terminal = False
+0.3.2.4.1.2.4
+   q-value = 0.6826
+   u-value = 0.0000
+   puct = 0.6826
+   nvisit = 1.00
+   parent.nvisit = 1.00
+   is_terminal = False
+selected_child = 0.3.2.4.1.2.2
+selected_node = 0.3.2.4.1.2.2
+step_cnt = 60
+
+-> d = 6
+0.3.2.4.1.2.2.1
+   q-value = 0.9722
+   u-value = 0.0000
+   puct = 0.9722
+   nvisit = 1.00
+   parent.nvisit = 1.00
+   is_terminal = False
+0.3.2.4.1.2.2.2
+   q-value = 0.9692
+   u-value = 0.0000
+   puct = 0.9692
+   nvisit = 1.00
+   parent.nvisit = 1.00
+   is_terminal = False
+0.3.2.4.1.2.2.3
+   q-value = 0.9761
+   u-value = 0.0000
+   puct = 0.9761
+   nvisit = 1.00
+   parent.nvisit = 1.00
+   is_terminal = False
+0.3.2.4.1.2.2.4
+   q-value = 0.9727
+   u-value = 0.0000
+   puct = 0.9727
+   nvisit = 1.00
+   parent.nvisit = 1.00
+   is_terminal = False
+selected_child = 0.3.2.4.1.2.2.3
+selected_node = 0.3.2.4.1.2.2.3
+step_cnt = 61
+
+-> d = 7
+selected_node = None
+step_cnt = 62
+
+-> p = 12
+vals = [196.51391936 196.1749247  197.4264452 ]
+beta*q_values = [0.98095703 0.9710083  0.85323079]
+alpha*q_diversity = [195.53296233 195.2039164  196.57321441]
+candidate_idxes = [3]
+best_idx = 3
+selected_child = 0.4
+vals = [173.71280585 180.29988835 183.45704674 176.41830434]
+beta*q_values = [0.9050293  0.42626953 0.79036458 0.39233398]
+alpha*q_diversity = [172.80777655 179.87361881 182.66668216 176.02597035]
+candidate_idxes = [3]
+best_idx = 3
+selected_child = 0.4.3
+vals = [177.32664742 178.92863631 183.22873449 173.95340386]
+beta*q_values = [0.44165039 0.89257812 0.34155273 0.66210938]
+alpha*q_diversity = [176.88499702 178.03605819 182.88718175 173.29129449]
+candidate_idxes = [3]
+best_idx = 3
+selected_child = 0.4.3.3
+selected_node = 0.4.3.3
+
+-> d = 3
+0.4.3.3.1
+   q-value = 0.3811
+   u-value = 0.0000
+   puct = 0.3811
+   nvisit = 1.00
+   parent.nvisit = 1.00
+   is_terminal = False
+0.4.3.3.2
+   q-value = 0.3523
+   u-value = 0.0000
+   puct = 0.3523
+   nvisit = 1.00
+   parent.nvisit = 1.00
+   is_terminal = False
+0.4.3.3.3
+   q-value = 0.2659
+   u-value = 0.0000
+   puct = 0.2659
+   nvisit = 1.00
+   parent.nvisit = 1.00
+   is_terminal = False
+0.4.3.3.4
+   q-value = 0.4187
+   u-value = 0.0000
+   puct = 0.4187
+   nvisit = 1.00
+   parent.nvisit = 1.00
+   is_terminal = False
+selected_child = 0.4.3.3.4
+selected_node = 0.4.3.3.4
+step_cnt = 63
+
+-> d = 4
+0.4.3.3.4.1
+   q-value = 0.4844
+   u-value = 0.0000
+   puct = 0.4844
+   nvisit = 1.00
+   parent.nvisit = 1.00
+   is_terminal = False
+0.4.3.3.4.2
+   q-value = 0.2751
+   u-value = 0.0000
+   puct = 0.2751
+   nvisit = 1.00
+   parent.nvisit = 1.00
+   is_terminal = False
+0.4.3.3.4.3
+   q-value = 0.4417
+   u-value = 0.0000
+   puct = 0.4417
+   nvisit = 1.00
+   parent.nvisit = 1.00
+   is_terminal = False
+0.4.3.3.4.4
+   q-value = 0.2690
+   u-value = 0.0000
+   puct = 0.2690
+   nvisit = 1.00
+   parent.nvisit = 1.00
+   is_terminal = False
+selected_child = 0.4.3.3.4.1
+selected_node = 0.4.3.3.4.1
+step_cnt = 64
+
+-> d = 5
+0.4.3.3.4.1.1
+   q-value = 0.4417
+   u-value = 1.6651
+   puct = 2.1068
+   nvisit = 1.00
+   parent.nvisit = 2.00
+   is_terminal = False
+0.4.3.3.4.1.2
+   q-value = 0.5850
+   u-value = 1.6651
+   puct = 2.2501
+   nvisit = 1.00
+   parent.nvisit = 2.00
+   is_terminal = False
+0.4.3.3.4.1.3
+   q-value = 0.4805
+   u-value = 1.6651
+   puct = 2.1456
+   nvisit = 1.00
+   parent.nvisit = 2.00
+   is_terminal = False
+selected_child = 0.4.3.3.4.1.2
+selected_node = 0.4.3.3.4.1.2
+step_cnt = 65
+
+-> d = 6
+0.4.3.3.4.1.2.1
+   q-value = 0.5737
+   u-value = 1.6651
+   puct = 2.2388
+   nvisit = 1.00
+   parent.nvisit = 2.00
+   is_terminal = False
+0.4.3.3.4.1.2.3
+   q-value = 0.6406
+   u-value = 1.6651
+   puct = 2.3057
+   nvisit = 1.00
+   parent.nvisit = 2.00
+   is_terminal = False
+0.4.3.3.4.1.2.4
+   q-value = 0.6226
+   u-value = 1.6651
+   puct = 2.2877
+   nvisit = 1.00
+   parent.nvisit = 2.00
+   is_terminal = False
+selected_child = 0.4.3.3.4.1.2.3
+selected_node = 0.4.3.3.4.1.2.3
+step_cnt = 66
+
+-> d = 7
+0.4.3.3.4.1.2.3.1
+   q-value = 0.6333
+   u-value = 0.0000
+   puct = 0.6333
+   nvisit = 1.00
+   parent.nvisit = 1.00
+   is_terminal = False
+0.4.3.3.4.1.2.3.2
+   q-value = 0.5776
+   u-value = 0.0000
+   puct = 0.5776
+   nvisit = 1.00
+   parent.nvisit = 1.00
+   is_terminal = False
+0.4.3.3.4.1.2.3.3
+   q-value = 0.6187
+   u-value = 0.0000
+   puct = 0.6187
+   nvisit = 1.00
+   parent.nvisit = 1.00
+   is_terminal = False
+0.4.3.3.4.1.2.3.4
+   q-value = 0.5850
+   u-value = 0.0000
+   puct = 0.5850
+   nvisit = 1.00
+   parent.nvisit = 1.00
+   is_terminal = False
+selected_child = 0.4.3.3.4.1.2.3.1
+selected_node = 0.4.3.3.4.1.2.3.1
+step_cnt = 67
+
+-> d = 8
+0.4.3.3.4.1.2.3.1.1
+   q-value = 0.6113
+   u-value = 0.0000
+   puct = 0.6113
+   nvisit = 1.00
+   parent.nvisit = 1.00
+   is_terminal = False
+0.4.3.3.4.1.2.3.1.2
+   q-value = 0.5737
+   u-value = 0.0000
+   puct = 0.5737
+   nvisit = 1.00
+   parent.nvisit = 1.00
+   is_terminal = False
+0.4.3.3.4.1.2.3.1.3
+   q-value = 0.5352
+   u-value = 0.0000
+   puct = 0.5352
+   nvisit = 1.00
+   parent.nvisit = 1.00
+   is_terminal = False
+0.4.3.3.4.1.2.3.1.4
+   q-value = 0.6074
+   u-value = 0.0000
+   puct = 0.6074
+   nvisit = 1.00
+   parent.nvisit = 1.00
+   is_terminal = False
+selected_child = 0.4.3.3.4.1.2.3.1.1
+selected_node = 0.4.3.3.4.1.2.3.1.1
+step_cnt = 68
+
+-> d = 9
+0.4.3.3.4.1.2.3.1.1.1
+   q-value = 0.5352
+   u-value = 0.0000
+   puct = 0.5352
+   nvisit = 1.00
+   parent.nvisit = 1.00
+   is_terminal = False
+0.4.3.3.4.1.2.3.1.1.2
+   q-value = 0.5850
+   u-value = 0.0000
+   puct = 0.5850
+   nvisit = 1.00
+   parent.nvisit = 1.00
+   is_terminal = False
+0.4.3.3.4.1.2.3.1.1.3
+   q-value = 0.4456
+   u-value = 0.0000
+   puct = 0.4456
+   nvisit = 1.00
+   parent.nvisit = 1.00
+   is_terminal = False
+0.4.3.3.4.1.2.3.1.1.4
+   q-value = 0.5776
+   u-value = 0.0000
+   puct = 0.5776
+   nvisit = 1.00
+   parent.nvisit = 1.00
+   is_terminal = False
+selected_child = 0.4.3.3.4.1.2.3.1.1.2
+selected_node = 0.4.3.3.4.1.2.3.1.1.2
+step_cnt = 69
+
+-> d = 10
+0.4.3.3.4.1.2.3.1.1.2.1
+   q-value = 0.5234
+   u-value = 0.0000
+   puct = 0.5234
+   nvisit = 1.00
+   parent.nvisit = 1.00
+   is_terminal = False
+0.4.3.3.4.1.2.3.1.1.2.2
+   q-value = 0.4961
+   u-value = 0.0000
+   puct = 0.4961
+   nvisit = 1.00
+   parent.nvisit = 1.00
+   is_terminal = False
+0.4.3.3.4.1.2.3.1.1.2.3
+   q-value = 0.5234
+   u-value = 0.0000
+   puct = 0.5234
+   nvisit = 1.00
+   parent.nvisit = 1.00
+   is_terminal = False
+0.4.3.3.4.1.2.3.1.1.2.4
+   q-value = 0.4570
+   u-value = 0.0000
+   puct = 0.4570
+   nvisit = 1.00
+   parent.nvisit = 1.00
+   is_terminal = False
+selected_child = 0.4.3.3.4.1.2.3.1.1.2.3
+selected_node = 0.4.3.3.4.1.2.3.1.1.2.3
+step_cnt = 70
+
+-> d = 11
+0.4.3.3.4.1.2.3.1.1.2.3.1
+   q-value = 0.6226
+   u-value = 1.6651
+   puct = 2.2877
+   nvisit = 1.00
+   parent.nvisit = 2.00
+   is_terminal = False
+0.4.3.3.4.1.2.3.1.1.2.3.3
+   q-value = 0.5815
+   u-value = 1.6651
+   puct = 2.2467
+   nvisit = 1.00
+   parent.nvisit = 2.00
+   is_terminal = False
+0.4.3.3.4.1.2.3.1.1.2.3.4
+   q-value = 0.5962
+   u-value = 1.6651
+   puct = 2.2613
+   nvisit = 1.00
+   parent.nvisit = 2.00
+   is_terminal = False
+selected_child = 0.4.3.3.4.1.2.3.1.1.2.3.1
+selected_node = 0.4.3.3.4.1.2.3.1.1.2.3.1
+step_cnt = 71
+
+-> d = 12
+0.4.3.3.4.1.2.3.1.1.2.3.1.1
+   q-value = 0.5352
+   u-value = 0.0000
+   puct = 0.5352
+   nvisit = 1.00
+   parent.nvisit = 1.00
+   is_terminal = False
+0.4.3.3.4.1.2.3.1.1.2.3.1.2
+   q-value = 0.4922
+   u-value = 0.0000
+   puct = 0.4922
+   nvisit = 1.00
+   parent.nvisit = 1.00
+   is_terminal = False
+0.4.3.3.4.1.2.3.1.1.2.3.1.3
+   q-value = 0.5581
+   u-value = 0.0000
+   puct = 0.5581
+   nvisit = 1.00
+   parent.nvisit = 1.00
+   is_terminal = False
+0.4.3.3.4.1.2.3.1.1.2.3.1.4
+   q-value = 0.5659
+   u-value = 0.0000
+   puct = 0.5659
+   nvisit = 1.00
+   parent.nvisit = 1.00
+   is_terminal = False
+selected_child = 0.4.3.3.4.1.2.3.1.1.2.3.1.4
+selected_node = 0.4.3.3.4.1.2.3.1.1.2.3.1.4
+step_cnt = 72
+
+-> d = 13
+0.4.3.3.4.1.2.3.1.1.2.3.1.4.1
+   q-value = 0.5469
+   u-value = 0.0000
+   puct = 0.5469
+   nvisit = 1.00
+   parent.nvisit = 1.00
+   is_terminal = False
+0.4.3.3.4.1.2.3.1.1.2.3.1.4.2
+   q-value = 0.5962
+   u-value = 0.0000
+   puct = 0.5962
+   nvisit = 1.00
+   parent.nvisit = 1.00
+   is_terminal = False
+0.4.3.3.4.1.2.3.1.1.2.3.1.4.3
+   q-value = 0.5039
+   u-value = 0.0000
+   puct = 0.5039
+   nvisit = 1.00
+   parent.nvisit = 1.00
+   is_terminal = False
+0.4.3.3.4.1.2.3.1.1.2.3.1.4.4
+   q-value = 0.4883
+   u-value = 0.0000
+   puct = 0.4883
+   nvisit = 1.00
+   parent.nvisit = 1.00
+   is_terminal = False
+selected_child = 0.4.3.3.4.1.2.3.1.1.2.3.1.4.2
+selected_node = 0.4.3.3.4.1.2.3.1.1.2.3.1.4.2
+step_cnt = 73
+
+-> d = 14
+0.4.3.3.4.1.2.3.1.1.2.3.1.4.2.1
+   q-value = 0.6187
+   u-value = 1.6651
+   puct = 2.2838
+   nvisit = 1.00
+   parent.nvisit = 2.00
+   is_terminal = False
+0.4.3.3.4.1.2.3.1.1.2.3.1.4.2.3
+   q-value = 0.6226
+   u-value = 1.6651
+   puct = 2.2877
+   nvisit = 1.00
+   parent.nvisit = 2.00
+   is_terminal = False
+0.4.3.3.4.1.2.3.1.1.2.3.1.4.2.4
+   q-value = 0.6074
+   u-value = 1.6651
+   puct = 2.2725
+   nvisit = 1.00
+   parent.nvisit = 2.00
+   is_terminal = False
+selected_child = 0.4.3.3.4.1.2.3.1.1.2.3.1.4.2.3
+selected_node = 0.4.3.3.4.1.2.3.1.1.2.3.1.4.2.3
+step_cnt = 74
+
+-> d = 15
+0.4.3.3.4.1.2.3.1.1.2.3.1.4.2.3.1
+   q-value = 0.6514
+   u-value = 0.0000
+   puct = 0.6514
+   nvisit = 1.00
+   parent.nvisit = 1.00
+   is_terminal = False
+0.4.3.3.4.1.2.3.1.1.2.3.1.4.2.3.2
+   q-value = 0.4844
+   u-value = 0.0000
+   puct = 0.4844
+   nvisit = 1.00
+   parent.nvisit = 1.00
+   is_terminal = False
+0.4.3.3.4.1.2.3.1.1.2.3.1.4.2.3.3
+   q-value = 0.5117
+   u-value = 0.0000
+   puct = 0.5117
+   nvisit = 1.00
+   parent.nvisit = 1.00
+   is_terminal = False
+0.4.3.3.4.1.2.3.1.1.2.3.1.4.2.3.4
+   q-value = 0.6548
+   u-value = 0.0000
+   puct = 0.6548
+   nvisit = 1.00
+   parent.nvisit = 1.00
+   is_terminal = False
+selected_child = 0.4.3.3.4.1.2.3.1.1.2.3.1.4.2.3.4
+selected_node = 0.4.3.3.4.1.2.3.1.1.2.3.1.4.2.3.4
+step_cnt = 75
+
+-> d = 16
+0.4.3.3.4.1.2.3.1.1.2.3.1.4.2.3.4.1
+   q-value = 0.5508
+   u-value = 0.0000
+   puct = 0.5508
+   nvisit = 1.00
+   parent.nvisit = 1.00
+   is_terminal = False
+0.4.3.3.4.1.2.3.1.1.2.3.1.4.2.3.4.2
+   q-value = 0.5469
+   u-value = 0.0000
+   puct = 0.5469
+   nvisit = 1.00
+   parent.nvisit = 1.00
+   is_terminal = False
+0.4.3.3.4.1.2.3.1.1.2.3.1.4.2.3.4.3
+   q-value = 0.4648
+   u-value = 0.0000
+   puct = 0.4648
+   nvisit = 1.00
+   parent.nvisit = 1.00
+   is_terminal = False
+0.4.3.3.4.1.2.3.1.1.2.3.1.4.2.3.4.4
+   q-value = 0.5195
+   u-value = 0.0000
+   puct = 0.5195
+   nvisit = 1.00
+   parent.nvisit = 1.00
+   is_terminal = False
+selected_child = 0.4.3.3.4.1.2.3.1.1.2.3.1.4.2.3.4.1
+selected_node = 0.4.3.3.4.1.2.3.1.1.2.3.1.4.2.3.4.1
+step_cnt = 76
+
+-> d = 17
+0.4.3.3.4.1.2.3.1.1.2.3.1.4.2.3.4.1.1
+   q-value = 0.5776
+   u-value = 0.0000
+   puct = 0.5776
+   nvisit = 1.00
+   parent.nvisit = 1.00
+   is_terminal = False
+0.4.3.3.4.1.2.3.1.1.2.3.1.4.2.3.4.1.2
+   q-value = 0.5698
+   u-value = 0.0000
+   puct = 0.5698
+   nvisit = 1.00
+   parent.nvisit = 1.00
+   is_terminal = False
+0.4.3.3.4.1.2.3.1.1.2.3.1.4.2.3.4.1.3
+   q-value = 0.5620
+   u-value = 0.0000
+   puct = 0.5620
+   nvisit = 1.00
+   parent.nvisit = 1.00
+   is_terminal = False
+0.4.3.3.4.1.2.3.1.1.2.3.1.4.2.3.4.1.4
+   q-value = 0.5698
+   u-value = 0.0000
+   puct = 0.5698
+   nvisit = 1.00
+   parent.nvisit = 1.00
+   is_terminal = False
+selected_child = 0.4.3.3.4.1.2.3.1.1.2.3.1.4.2.3.4.1.1
+selected_node = 0.4.3.3.4.1.2.3.1.1.2.3.1.4.2.3.4.1.1
+step_cnt = 77
+
+-> d = 18
+0.4.3.3.4.1.2.3.1.1.2.3.1.4.2.3.4.1.1.1
+   q-value = 0.5156
+   u-value = 0.0000
+   puct = 0.5156
+   nvisit = 1.00
+   parent.nvisit = 1.00
+   is_terminal = False
+0.4.3.3.4.1.2.3.1.1.2.3.1.4.2.3.4.1.1.2
+   q-value = 0.5195
+   u-value = 0.0000
+   puct = 0.5195
+   nvisit = 1.00
+   parent.nvisit = 1.00
+   is_terminal = False
+0.4.3.3.4.1.2.3.1.1.2.3.1.4.2.3.4.1.1.3
+   q-value = 0.4922
+   u-value = 0.0000
+   puct = 0.4922
+   nvisit = 1.00
+   parent.nvisit = 1.00
+   is_terminal = False
+0.4.3.3.4.1.2.3.1.1.2.3.1.4.2.3.4.1.1.4
+   q-value = 0.5430
+   u-value = 0.0000
+   puct = 0.5430
+   nvisit = 1.00
+   parent.nvisit = 1.00
+   is_terminal = False
+selected_child = 0.4.3.3.4.1.2.3.1.1.2.3.1.4.2.3.4.1.1.4
+selected_node = 0.4.3.3.4.1.2.3.1.1.2.3.1.4.2.3.4.1.1.4
+step_cnt = 78
+
+-> d = 19
+0.4.3.3.4.1.2.3.1.1.2.3.1.4.2.3.4.1.1.4.1
+   q-value = 0.5889
+   u-value = 0.0000
+   puct = 0.5889
+   nvisit = 1.00
+   parent.nvisit = 1.00
+   is_terminal = False
+0.4.3.3.4.1.2.3.1.1.2.3.1.4.2.3.4.1.1.4.2
+   q-value = 0.3452
+   u-value = 0.0000
+   puct = 0.3452
+   nvisit = 1.00
+   parent.nvisit = 1.00
+   is_terminal = False
+0.4.3.3.4.1.2.3.1.1.2.3.1.4.2.3.4.1.1.4.3
+   q-value = 0.5117
+   u-value = 0.0000
+   puct = 0.5117
+   nvisit = 1.00
+   parent.nvisit = 1.00
+   is_terminal = False
+0.4.3.3.4.1.2.3.1.1.2.3.1.4.2.3.4.1.1.4.4
+   q-value = 0.4961
+   u-value = 0.0000
+   puct = 0.4961
+   nvisit = 1.00
+   parent.nvisit = 1.00
+   is_terminal = False
+selected_child = 0.4.3.3.4.1.2.3.1.1.2.3.1.4.2.3.4.1.1.4.1
+selected_node = 0.4.3.3.4.1.2.3.1.1.2.3.1.4.2.3.4.1.1.4.1
+step_cnt = 79
+
+-> d = 20
+0.4.3.3.4.1.2.3.1.1.2.3.1.4.2.3.4.1.1.4.1.1
+   q-value = 0.4036
+   u-value = 0.0000
+   puct = 0.4036
+   nvisit = 1.00
+   parent.nvisit = 1.00
+   is_terminal = False
+0.4.3.3.4.1.2.3.1.1.2.3.1.4.2.3.4.1.1.4.1.2
+   q-value = 0.4495
+   u-value = 0.0000
+   puct = 0.4495
+   nvisit = 1.00
+   parent.nvisit = 1.00
+   is_terminal = False
+0.4.3.3.4.1.2.3.1.1.2.3.1.4.2.3.4.1.1.4.1.3
+   q-value = 0.4609
+   u-value = 0.0000
+   puct = 0.4609
+   nvisit = 1.00
+   parent.nvisit = 1.00
+   is_terminal = False
+0.4.3.3.4.1.2.3.1.1.2.3.1.4.2.3.4.1.1.4.1.4
+   q-value = 0.4377
+   u-value = 0.0000
+   puct = 0.4377
+   nvisit = 1.00
+   parent.nvisit = 1.00
+   is_terminal = False
+selected_child = 0.4.3.3.4.1.2.3.1.1.2.3.1.4.2.3.4.1.1.4.1.3
+selected_node = 0.4.3.3.4.1.2.3.1.1.2.3.1.4.2.3.4.1.1.4.1.3
+step_cnt = 80
+run out of budget!
