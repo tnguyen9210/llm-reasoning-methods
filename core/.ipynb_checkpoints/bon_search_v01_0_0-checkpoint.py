@@ -44,14 +44,10 @@ def _search(batch_of_questions, config, trial_idx, llm_vllm):
         temperature=config.temperature,
         max_tokens=config.max_tokens,
         top_p=config.top_p,
-        n=config.bs,  # generate n outputs
-        best_of=config.bs,
-        # stop=[
-        #     "\n\n"
-        # ],  # we consider that a step in the problem is indicated by a double newline
-        # include_stop_str_in_output=True,
-        # seed=random_seed,
-    )        
+        n=config.bs,  # generate bs outputs
+    )
+
+    
 
     # Generate responses 
     responses = llm_vllm.generate(

@@ -159,6 +159,7 @@ def add_completions_to_dataset_tree(result_dir, config_name, dataset, prm, trial
 
     # get batch of questions
     batch_of_questions = [data['problem'] for data in dataset]
+    # batch_of_questions = [dataset[idx]['problem'] for idx in range(num_questions)]
     num_questions = len(batch_of_questions)
     print(f"num_questions = {num_questions}")
 

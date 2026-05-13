@@ -451,12 +451,16 @@ def mcts_search(question, agent, config, llm_vllm, llm_vllm_embeds, prm):
                     )
                     # logging.fatal(cand_templated_convs[0]) 
     
-                    outputs = llm_vllm_embeds.encode(cand_templated_convs, use_tqdm=False)
-                    all_token_embeds = output.outputs
-                    outputs_embeds = outputs[0].outputs.data
+                    outputs = llm_vllm_embeds.encode(
+                        cand_templated_convs, pooling_task="token_embed", use_tqdm=False)
+
+                    all_tokens_embeds = outputs[0].outputs.data
+                    if config.embeds_strategy == 'last':
+                        outputs_embeds = all_tokens_embeds[-1]
+                    elif config.embeds_strategy == 'avg':
+                        outputs_embeds = all_tokens_embeds.mean(dim=0)
     
                     if config.embeds_normalizing:
-                        
                         outputs_embeds = F.normalize(outputs_embeds, p=2, dim=-1)
 
                     outputs_embeds = outputs_embeds.detach().cpu().numpy()

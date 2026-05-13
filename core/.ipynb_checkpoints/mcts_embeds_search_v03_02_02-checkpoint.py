@@ -13,7 +13,8 @@ v03_02
     Add option to do mean-centering
 v03_02_01: 
     Apply Morrison-Sherman update for inversed covariance
-
+v03_02_02: 
+    Compute the average of tokens' embeds instead of taking the last token's embeds
 '''
 
 import os
@@ -450,11 +451,16 @@ def mcts_search(question, agent, config, llm_vllm, llm_vllm_embeds, prm):
                     )
                     # logging.fatal(cand_templated_convs[0]) 
     
-                    outputs = llm_vllm_embeds.encode(cand_templated_convs, use_tqdm=False)
-                    outputs_embeds = outputs[0].outputs.data
+                    outputs = llm_vllm_embeds.encode(
+                        cand_templated_convs, pooling_task="token_embed", use_tqdm=False)
+
+                    all_tokens_embeds = outputs[0].outputs.data
+                    if config.embeds_strategy == 'last':
+                        outputs_embeds = all_tokens_embeds[-1]
+                    elif config.embeds_strategy == 'avg':
+                        outputs_embeds = all_tokens_embeds.mean(dim=0)
     
                     if config.embeds_normalizing:
-                        
                         outputs_embeds = F.normalize(outputs_embeds, p=2, dim=-1)
 
                     outputs_embeds = outputs_embeds.detach().cpu().numpy()

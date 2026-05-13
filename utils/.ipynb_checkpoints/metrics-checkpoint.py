@@ -188,7 +188,7 @@ def compute_stats_correctness_curve_budget(result_dir, config_name, num_trials, 
     
     for trial_idx in range(num_trials):
         # load data
-        dataset_res = load_dataset("json", data_files = f"{result_dir}/{config_name}--trial-{trial_idx}.jsonl", split='train')
+        dataset_res = load_dataset("json", data_files = f"{result_dir}/{config_name}--trial-{trial_idx:03d}.jsonl", split='train')
         
         peak1b_correctness, peak1b_idxes = compute_correctness_curve_budget(dataset_res, step_budget)
 
@@ -288,11 +288,12 @@ def evaluate_correctness(dataset, timeout=2):
 
         pass1b_nphases[q_idx] = data["last_phase"]
         pass1b_ndepths[q_idx] = np.mean(data["tdepths"])
-            
+
+    # print(pass1b_lengths)
     return passn_correctness, pass1b_correctness, naive1b_correctness, weighted1b_correctness, maj1b_correctness, pass1b_ncomps, pass1b_lengths, \
         pass1b_nphases, pass1b_ndepths
 
-def compute_stats_completions(result_dir, config_name, num_trials):
+def compute_stats_basics(result_dir, config_name, num_trials):
     all_passn_correctness = []
     all_pass1b_correctness = []
     all_naive1b_correctness = []
@@ -341,28 +342,112 @@ def compute_stats_completions(result_dir, config_name, num_trials):
     np.savetxt(f"{result_dir}/maj1b_{config_name}.txt", all_maj1b_correctness)
     
     # passn_correctness_mean = np.mean(all_passn_correctness)
-    pass1b_correctness_mean = np.mean(all_pass1b_correctness)
-    naive1b_correctness_mean = np.mean(all_naive1b_correctness)
-    weighted1b_correctness_mean = np.mean(all_weighted1b_correctness)
-    maj1b_correctness_mean = np.mean(all_maj1b_correctness)
+    pass1b_correctness_mean = np.nanmean(all_pass1b_correctness)
+    naive1b_correctness_mean = np.nanmean(all_naive1b_correctness)
+    weighted1b_correctness_mean = np.nanmean(all_weighted1b_correctness)
+    maj1b_correctness_mean = np.nanmean(all_maj1b_correctness)
 
     nsamples = len(all_pass1b_correctness)
     # passn_correctness_std = np.std(all_passn_correctness, ddof=1)/np.sqrt(num_trials*num_questions)  
-    pass1b_correctness_std = np.std(all_pass1b_correctness, ddof=1)
-    pass1b_correctness_std = np.std(all_pass1b_correctness, ddof=1)/np.sqrt(nsamples)
-    naive1b_correctness_std = np.std(all_naive1b_correctness, ddof=1)/np.sqrt(nsamples)
-    weighted1b_correctness_std = np.std(all_weighted1b_correctness, ddof=1)/np.sqrt(nsamples)
-    maj1b_correctness_std = np.std(all_maj1b_correctness, ddof=1)/np.sqrt(nsamples)
+    pass1b_correctness_std = np.nanstd(all_pass1b_correctness, ddof=1)
+    pass1b_correctness_std = np.nanstd(all_pass1b_correctness, ddof=1)/np.sqrt(nsamples)
+    naive1b_correctness_std = np.nanstd(all_naive1b_correctness, ddof=1)/np.sqrt(nsamples)
+    weighted1b_correctness_std = np.nanstd(all_weighted1b_correctness, ddof=1)/np.sqrt(nsamples)
+    maj1b_correctness_std = np.nanstd(all_maj1b_correctness, ddof=1)/np.sqrt(nsamples)
 
-    pass1b_ncomps_mean = np.mean(all_pass1b_ncomps)
-    pass1b_lengths_mean = np.mean(all_pass1b_lengths)
-    pass1b_ncomps_std = np.std(all_pass1b_ncomps, ddof=1)/np.sqrt(nsamples)
-    pass1b_lengths_std = np.std(all_pass1b_lengths, ddof=1)/np.sqrt(nsamples)
+    pass1b_ncomps_mean = np.nanmean(all_pass1b_ncomps)
+    pass1b_lengths_mean = np.nanmean(all_pass1b_lengths)
+    pass1b_ncomps_std = np.nanstd(all_pass1b_ncomps, ddof=1)/np.sqrt(nsamples)
+    pass1b_lengths_std = np.nanstd(all_pass1b_lengths, ddof=1)/np.sqrt(nsamples)
 
-    pass1b_nphases_mean = np.mean(all_pass1b_nphases)
-    pass1b_ndepths_mean = np.mean(all_pass1b_ndepths)
-    pass1b_nphases_std = np.std(all_pass1b_nphases, ddof=1)/np.sqrt(nsamples)
-    pass1b_ndepths_std = np.std(all_pass1b_ndepths, ddof=1)/np.sqrt(nsamples)
+    pass1b_nphases_mean = np.nanmean(all_pass1b_nphases)
+    pass1b_ndepths_mean = np.nanmean(all_pass1b_ndepths)
+    pass1b_nphases_std = np.nanstd(all_pass1b_nphases, ddof=1)/np.sqrt(nsamples)
+    pass1b_ndepths_std = np.nanstd(all_pass1b_ndepths, ddof=1)/np.sqrt(nsamples)
+
+    print(
+        f"{pass1b_correctness_mean:0.4f} (\u00B1{pass1b_correctness_std:0.4f}), "
+        f"{naive1b_correctness_mean:0.4f} (\u00B1{naive1b_correctness_std:0.4f}),"
+        f"{weighted1b_correctness_mean:0.4f} (\u00B1{weighted1b_correctness_std:0.4f}), "
+        f"{maj1b_correctness_mean:0.4f} (\u00B1{maj1b_correctness_std:0.4f}), "
+        f"{pass1b_ncomps_mean:0.1f}    (\u00B1{pass1b_ncomps_std:0.1f}), "
+        f"{pass1b_lengths_mean:0.1f}    (\u00B1{pass1b_lengths_std:0.1f}), "
+        f"{pass1b_nphases_mean:0.1f}    (\u00B1{pass1b_nphases_std:0.1f}), "
+        f"{pass1b_ndepths_mean:0.1f}    (\u00B1{pass1b_ndepths_std:0.1f})"
+    )
+
+
+def compute_stats_samples2correct(result_dir, config_name, num_trials):
+    all_passn_correctness = []
+    all_pass1b_correctness = []
+    all_naive1b_correctness = []
+    all_weighted1b_correctness = []
+    all_maj1b_correctness = []
+    
+    all_pass1b_ncomps = []
+    all_pass1b_lengths = []
+    all_pass1b_nphases = []
+    all_pass1b_ndepths = []
+    
+    for trial_idx in range(num_trials):
+        # load data
+        dataset_res = load_dataset("json", data_files = f"{result_dir}/{config_name}--trial-{trial_idx:03d}.jsonl", split='train')
+        
+        passn_correctness, pass1b_correctness, naive1b_correctness, weighted1b_correctness, maj1b_correctness, \
+            pass1b_ncomps, pass1b_lengths, pass1b_nphases, pass1b_ndepths = evaluate_correctness(dataset_res)
+    
+        # all_passn_correctness.append(passn_correctness)
+        all_pass1b_correctness.append(pass1b_correctness)
+        all_naive1b_correctness.append(naive1b_correctness)
+        all_weighted1b_correctness.append(weighted1b_correctness)
+        all_maj1b_correctness.append(maj1b_correctness)
+    
+        all_pass1b_ncomps.append(pass1b_ncomps)
+        all_pass1b_lengths.append(pass1b_lengths)
+        all_pass1b_nphases.append(pass1b_ncomps)
+        all_pass1b_ndepths.append(pass1b_lengths)
+
+    # all_passn_correctness = np.concatenate(all_passn_correctness)
+    all_pass1b_correctness = np.concatenate(all_pass1b_correctness)
+    all_naive1b_correctness = np.concatenate(all_naive1b_correctness)
+    all_weighted1b_correctness = np.concatenate(all_weighted1b_correctness)
+    all_maj1b_correctness = np.concatenate(all_maj1b_correctness)
+    
+    all_pass1b_ncomps = np.concatenate(all_pass1b_ncomps)
+    all_pass1b_lengths = np.concatenate(all_pass1b_lengths)
+    all_pass1b_nphases = np.concatenate(all_pass1b_nphases)
+    all_pass1b_ndepths = np.concatenate(all_pass1b_ndepths)
+    
+    # print(len(all_pass1b_correctness))
+    # np.savetxt(f"{result_dir}/passn_{config_name}.txt", all_passn_correctness)
+    np.savetxt(f"{result_dir}/pass1b_{config_name}.txt", all_pass1b_correctness)
+    np.savetxt(f"{result_dir}/naive1b_{config_name}.txt", all_naive1b_correctness)
+    np.savetxt(f"{result_dir}/weighted1b_{config_name}.txt", all_weighted1b_correctness)
+    np.savetxt(f"{result_dir}/maj1b_{config_name}.txt", all_maj1b_correctness)
+    
+    # passn_correctness_mean = np.mean(all_passn_correctness)
+    pass1b_correctness_mean = np.nanmean(all_pass1b_correctness)
+    naive1b_correctness_mean = np.nanmean(all_naive1b_correctness)
+    weighted1b_correctness_mean = np.nanmean(all_weighted1b_correctness)
+    maj1b_correctness_mean = np.nanmean(all_maj1b_correctness)
+
+    nsamples = len(all_pass1b_correctness)
+    # passn_correctness_std = np.std(all_passn_correctness, ddof=1)/np.sqrt(num_trials*num_questions)  
+    pass1b_correctness_std = np.nanstd(all_pass1b_correctness, ddof=1)
+    pass1b_correctness_std = np.nanstd(all_pass1b_correctness, ddof=1)/np.sqrt(nsamples)
+    naive1b_correctness_std = np.nanstd(all_naive1b_correctness, ddof=1)/np.sqrt(nsamples)
+    weighted1b_correctness_std = np.nanstd(all_weighted1b_correctness, ddof=1)/np.sqrt(nsamples)
+    maj1b_correctness_std = np.nanstd(all_maj1b_correctness, ddof=1)/np.sqrt(nsamples)
+
+    pass1b_ncomps_mean = np.nanmean(all_pass1b_ncomps)
+    pass1b_lengths_mean = np.nanmean(all_pass1b_lengths)
+    pass1b_ncomps_std = np.nanstd(all_pass1b_ncomps, ddof=1)/np.sqrt(nsamples)
+    pass1b_lengths_std = np.nanstd(all_pass1b_lengths, ddof=1)/np.sqrt(nsamples)
+
+    pass1b_nphases_mean = np.nanmean(all_pass1b_nphases)
+    pass1b_ndepths_mean = np.nanmean(all_pass1b_ndepths)
+    pass1b_nphases_std = np.nanstd(all_pass1b_nphases, ddof=1)/np.sqrt(nsamples)
+    pass1b_ndepths_std = np.nanstd(all_pass1b_ndepths, ddof=1)/np.sqrt(nsamples)
 
     print(
         f"{pass1b_correctness_mean:0.4f} (\u00B1{pass1b_correctness_std:0.4f}), "

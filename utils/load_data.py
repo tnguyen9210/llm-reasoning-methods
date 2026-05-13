@@ -4,12 +4,12 @@ import pprint
 
 from collections import defaultdict
 
-from datasets import Dataset, load_dataset
+from datasets import Dataset, load_dataset, load_from_disk
 
 
-def load_data_prm800k(data_dir, split='test'):
+def load_data_prm800k(ds_dir, split='test'):
     data_by_levels = defaultdict(list)
-    with open(f"{data_dir}/{split}.jsonl", 'r', encoding='utf-8') as fin:
+    with open(f"{ds_dir}/{split}.jsonl", 'r', encoding='utf-8') as fin:
         for line in fin:
             if line.strip():
                 data = json.loads(line)
@@ -29,10 +29,26 @@ def load_data_prm800k(data_dir, split='test'):
     return data_by_levels
 
 
-def load_data_prm800k_hf(data_dir, level=9, q_idx=None, split='test'):
-    dataset = load_dataset("json", data_files = f"{data_dir}/{split}.jsonl", split='train')
+def load_data_prm800k_hf(ds_dir, level=9, q_idx=None, split='test'):
+    dataset = load_dataset("json", data_files = f"{ds_dir}/{split}.jsonl", split='train')
     if level != 9:
         dataset = dataset.filter(lambda example: example['level'] == level)
     if q_idx is not None:
         dataset = dataset.select([q_idx])
     return dataset
+
+def load_data_hf(ds_dir,  ds_split='test', level=9, q_idx=None):
+    dataset = load_dataset("json", data_files = f"{ds_dir}/{ds_split}.jsonl", split='train')
+    if level != 9:
+        dataset = dataset.filter(lambda example: example['level'] == level)
+    if q_idx is not None:
+        dataset = dataset.select([q_idx])
+    return dataset
+
+# def load_data_aime2025_hf(ds_dir):
+#     dataset = load_dataset("json", data_files = f"{ds_dir}/{split}.jsonl", split='train')
+#     return dataset
+
+# def load_data_aime2025_hf(ds_dir):
+#     dataset = load_dataset("json", data_files = f"{ds_dir}/{split}.jsonl", split='train')
+#     return dataset

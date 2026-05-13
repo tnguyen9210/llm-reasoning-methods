@@ -82,7 +82,7 @@ def main():
 
     config.version = "h72"
 
-    level = 3                                   # level of difficulty of questions
+    level = 4                                   # level of difficulty of questions
     
     # baseline: gpu_memory_utilization=0.2
     # use the standard model 
@@ -115,7 +115,8 @@ def main():
         model=llm_dir, 
         tensor_parallel_size=1, 
         # trust_remote_code=True,
-        task="embed",
+        # task="embed",
+        running="pooling"
         swap_space=16,
         max_model_len=5000,
         gpu_memory_utilization=llm_total_gpu-llm_gpu_memory_utilization,

@@ -2,12 +2,15 @@
 Modified the code to use a single GPU
 '''
 
-import os, psutil, gc
+import os
+os.environ["VLLM_CONFIGURE_LOGGING"] = "0"
+import logging
+logging.basicConfig(format='%(message)s', level=logging.FATAL+1)
+
 import time 
 import json
 import pprint
 
-from collections import defaultdict
 import random
 import numpy as np
 
@@ -18,19 +21,20 @@ from vllm import LLM, SamplingParams, PoolingParams
 
 from sal.config import Config
 
-from core import mcts_embeds_search_v03_02_00
+from core import mcts_embeds_search_v03_02_02
 from core.reward_models import RLHFFlow
 
 from utils.load_data import load_data_prm800k_hf
 from utils.utils import add_completions_to_dataset_tree
 
+
 algo_dict = {
-    "mcts_embeds": mcts_embeds_search_v03_02_00
+    "mcts_embeds": mcts_embeds_search_v03_02_02
 }
 
 def main():
 
-    algo_version = "v03_02_00"
+    algo_version = "v03_02_02"
     algo_name = "mcts_embeds"
     algo = algo_dict[algo_name]
     
@@ -50,12 +54,6 @@ def main():
     # os.environ["CUDA_VISIBLE_DEVICES"] = "0,1,2,3"
     os.environ["TOKENIZERS_PARALLELISM"] = "false"
     
-    if torch.cuda.is_available():
-        GPUS = os.environ.get('CUDA_VISIBLE_DEVICES', "0").split(',')
-        print(GPUS)
-    else:
-        print("CUDA is not available.")
-
     # general params
     config = Config()
     config.agg_strategy = 'last'
@@ -63,21 +61,22 @@ def main():
     config.n = 4                      # number of budgets to be generated per depth
     config.beam_width = 4             # number of nodes left after selection
     config.lookahead = 0              # don't use it for now
-    config.max_depths = 10            # max depths, after reaching max_depth then terminate search 
+    config.max_depths = 20            # max depths, after reaching max_depth then terminate search 
     config.sort_completed = False      
     config.filter_duplicates = True   # remove any duplicates in the last list of trajs
     config.date_string = "Aug 1 2025"
     config.seed = 0
 
     # mcts parameter
-    config.num_batches = 16
+    config.num_batches = 4
     config.step_budget = config.num_batches*config.max_depths 
     config.num_phases = 1000
     
     config.lam = 0.01 
     config.use_ppl = True
     config.embeds_normalizing = True
-    config.embeds_centering = True
+    config.embeds_strategy = 'avg'
+    config.embeds_centering = False
     config.embeds_mean_dir = "embeds_mean_bon--level-4--v01_0_0--bs-256"
 
     config.ds_beta = 1.0
@@ -88,8 +87,8 @@ def main():
     
     # baseline: gpu_memory_utilization=0.2
     # use the standard model 
-    llm_total_gpu = 0.4
-    llm_gpu_memory_utilization = 0.2
+    llm_total_gpu = 0.2
+    llm_gpu_memory_utilization = 0.1
 
     llm_vllm = LLM(
         model=llm_dir, 
@@ -100,6 +99,7 @@ def main():
         gpu_memory_utilization=llm_gpu_memory_utilization,
         enforce_eager=True,
         distributed_executor_backend=None,
+        disable_log_stats=True,
         dtype="float16",
         seed=config.seed,
     )
@@ -108,12 +108,14 @@ def main():
         model=llm_dir, 
         tensor_parallel_size=1, 
         # trust_remote_code=True,
-        task="embed",
+        # task="embed",
+        runner="pooling",
         swap_space=16,
         max_model_len=5000,
         gpu_memory_utilization=llm_total_gpu-llm_gpu_memory_utilization,
         enforce_eager=True,
         distributed_executor_backend=None,
+        disable_log_stats=True,
         dtype="float16",
         seed=config.seed,
     )
@@ -142,7 +144,7 @@ def main():
         print(config.embeds_mean.shape)
 
     # run search_algo and save results
-    config_name = f"mcts_embeds--level-{level}--{config.version}--n-{config.n}--d-{config.max_depths}--b-{config.step_budget:03d}--lam-{config.lam}--dalpha-{config.ds_alpha}--dbeta-{config.ds_beta}--ppl-{config.use_ppl}--normalize-{config.embeds_normalizing}--mcenter-{config.embeds_centering}"
+    config_name = f"mcts_embeds--level-{level}--{config.version}--n-{config.n}--d-{config.max_depths}--b-{config.step_budget:03d}--lam-{config.lam}--dalpha-{config.ds_alpha}--dbeta-{config.ds_beta}--ppl-{config.use_ppl}--estrat-{config.embeds_strategy}--enorm-{config.embeds_normalizing}--ecenter-{config.embeds_centering}"
     print(config_name)
     result_dir = f"results/mcts_embeds--level-{level}/{config_name}"
     try:
@@ -155,7 +157,7 @@ def main():
         stop
             
     start_time1 = time.time()
-    for trial_idx in [0,2,4]:
+    for trial_idx in [2]:
         print(f"trial {trial_idx}")
         start_time = time.time()
         
@@ -175,13 +177,13 @@ def main():
             print(f"it takes {time_per_question:0.4f}s per question")
             print(f"it takes {time_per_trial/3600:0.2f}h per trial")
 
-        add_completions_to_dataset_tree(result_dir, config_name, dataset, prm, trial_idx, config)
+        # add_completions_to_dataset_tree(result_dir, config_name, dataset, prm, trial_idx, config)
             
     
     total_time = time.time() - start_time1
-    print(f"it takes {total_time/3600:0.2f}s in total")
+    print(f"it takes {total_time/3600:0.2f}h in total")
     
-    dist.destroy_process_group()
+    # dist.destroy_process_group()
 
 if __name__ == "__main__":
     main()

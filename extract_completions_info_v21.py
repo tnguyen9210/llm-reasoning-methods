@@ -72,7 +72,7 @@ def main():
     llm_tokenizer_dir = base_dir + "/Llama-3.2-1B-Instruct"
     prm_tokenizer_dir = base_dir + "/Llama3.1-8B-PRM-Deepseek-Data"
     
-    level = 5
+    level = 4
     trial_idx = 0
     
     #  load data 
