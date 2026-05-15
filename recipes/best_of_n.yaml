@@ -5,5 +5,5 @@ n: 4
 search_batch_size: 25
 sort_completed: true
 filter_duplicates: true
-# num_samples: 10         # REMOVE THIS LINE TO RUN ON THE WHOLE DATASET
+num_samples: 10         # REMOVE THIS LINE TO RUN ON THE WHOLE DATASET
 seed: 0
