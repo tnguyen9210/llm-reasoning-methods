@@ -1,2 +1,9 @@
 results
 results2
+
+# Python bytecode
+__pycache__/
+*.py[cod]
+
+# Jupyter checkpoints
+.ipynb_checkpoints/
