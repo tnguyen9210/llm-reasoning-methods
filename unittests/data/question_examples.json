@@ -1,0 +1,3039 @@
+[
+  {
+    "id": 1,
+    "category": "Prealgebra",
+    "difficulty": "easy",
+    "question": "A box had 19 markers. Sam added 8 markers and then gave away 5. How many markers were left?",
+    "reasoning steps": [
+      "After adding markers, there are 19 + 8 = 27.",
+      "After giving away 5, there are 27 - 5 = 22.",
+      "The final answer is \\boxed{22}."
+    ],
+    "answer": "\\boxed{22}",
+    "correct_answer": "\\boxed{22}",
+    "is_correct": true,
+    "error_type": null
+  },
+  {
+    "id": 2,
+    "category": "Algebra",
+    "difficulty": "medium",
+    "question": "A line has equation y = 4x + 5. What is x when y = 33?",
+    "reasoning steps": [
+      "Use 33 = 4x + 5.",
+      "Subtract 5 to get 4x = 28.",
+      "Divide by 4: x = 7.",
+      "The final answer is \\boxed{7}."
+    ],
+    "answer": "\\boxed{7}",
+    "correct_answer": "\\boxed{7}",
+    "is_correct": true,
+    "error_type": null
+  },
+  {
+    "id": 3,
+    "category": "Number Theory",
+    "difficulty": "hard",
+    "question": "What is the remainder when 6^7 is divided by 10?",
+    "reasoning steps": [
+      "Replace the power with multiplication: 6 x 7 = 42.",
+      "The remainder of 42 divided by 10 is 2.",
+      "The final answer is \\boxed{2}."
+    ],
+    "answer": "\\boxed{2}",
+    "correct_answer": "\\boxed{6}",
+    "is_correct": false,
+    "error_type": "misread exponentiation"
+  },
+  {
+    "id": 4,
+    "category": "Counting and Probability",
+    "difficulty": "easy",
+    "question": "Jamie has 3 shirts and 6 pairs of pants. How many shirt-pants outfits are possible?",
+    "reasoning steps": [
+      "Each shirt can pair with 6 pants.",
+      "The number of outfits is 3 x 6 = 18.",
+      "The final answer is \\boxed{18}."
+    ],
+    "answer": "\\boxed{18}",
+    "correct_answer": "\\boxed{18}",
+    "is_correct": true,
+    "error_type": null
+  },
+  {
+    "id": 5,
+    "category": "Geometry",
+    "difficulty": "medium",
+    "question": "A triangle has base 11 inches and height 10 inches. What is its area?",
+    "reasoning steps": [
+      "Multiply base and height: 11 x 10 = 110.",
+      "The triangle area is 110.",
+      "The final answer is \\boxed{110}."
+    ],
+    "answer": "\\boxed{110}",
+    "correct_answer": "\\boxed{55}",
+    "is_correct": false,
+    "error_type": "forgot half factor"
+  },
+  {
+    "id": 6,
+    "category": "Intermediate Algebra",
+    "difficulty": "hard",
+    "question": "For f(x) = 3(x - 3)^2 + 3, find f(5).",
+    "reasoning steps": [
+      "Compute x - 3: 5 - 3 = 2.",
+      "Square to get 4.",
+      "Then f(5) = 3 x 4 + 3 = 15.",
+      "The final answer is \\boxed{15}."
+    ],
+    "answer": "\\boxed{15}",
+    "correct_answer": "\\boxed{15}",
+    "is_correct": true,
+    "error_type": null
+  },
+  {
+    "id": 7,
+    "category": "Precalculus",
+    "difficulty": "easy",
+    "question": "Let f(x) = 4x + 1 and g(x) = 4x. What is f(g(4))?",
+    "reasoning steps": [
+      "First compute g(4) = 4 x 4 = 16.",
+      "Then f(16) = 4 x 16 + 1 = 65.",
+      "The final answer is \\boxed{65}."
+    ],
+    "answer": "\\boxed{65}",
+    "correct_answer": "\\boxed{65}",
+    "is_correct": true,
+    "error_type": null
+  },
+  {
+    "id": 8,
+    "category": "Prealgebra",
+    "difficulty": "medium",
+    "question": "6 packs each contain 10 pencils. There are also 6 loose pencils. If all pencils are shared equally among 4 students, how many pencils does each student get?",
+    "reasoning steps": [
+      "The packed pencils total 6 x 10 = 60.",
+      "Dividing by 4 students gives 60 / 4 = 15.",
+      "The final answer is \\boxed{15}."
+    ],
+    "answer": "\\boxed{15}",
+    "correct_answer": "\\boxed{33/2}",
+    "is_correct": false,
+    "error_type": "missed quantity"
+  },
+  {
+    "id": 9,
+    "category": "Algebra",
+    "difficulty": "hard",
+    "question": "Find the larger solution of x^2 - 14x + 48 = 0.",
+    "reasoning steps": [
+      "Factor the quadratic as (x - 6)(x - 8) = 0.",
+      "The solutions are x = 6 and x = 8.",
+      "The larger solution is 8.",
+      "The final answer is \\boxed{8}."
+    ],
+    "answer": "\\boxed{8}",
+    "correct_answer": "\\boxed{8}",
+    "is_correct": true,
+    "error_type": null
+  },
+  {
+    "id": 10,
+    "category": "Number Theory",
+    "difficulty": "easy",
+    "question": "What is the greatest common divisor of 26 and 24?",
+    "reasoning steps": [
+      "Both numbers are divisible by themselves in some way.",
+      "The smaller number is 24, so use it as the gcd.",
+      "The final answer is \\boxed{24}."
+    ],
+    "answer": "\\boxed{24}",
+    "correct_answer": "\\boxed{2}",
+    "is_correct": false,
+    "error_type": "confused smaller number with gcd"
+  },
+  {
+    "id": 11,
+    "category": "Counting and Probability",
+    "difficulty": "medium",
+    "question": "A bag has 5 red marbles and 8 blue marbles. What is the probability of drawing a red marble?",
+    "reasoning steps": [
+      "The total number of marbles is 5 + 8 = 13.",
+      "The probability of red is 5/13 = 5/13.",
+      "The final answer is \\boxed{5/13}."
+    ],
+    "answer": "\\boxed{5/13}",
+    "correct_answer": "\\boxed{5/13}",
+    "is_correct": true,
+    "error_type": null
+  },
+  {
+    "id": 12,
+    "category": "Geometry",
+    "difficulty": "hard",
+    "question": "A square has perimeter 40. What is its area?",
+    "reasoning steps": [
+      "The side length is 40 / 4 = 10.",
+      "The area is 10 x 10 = 100.",
+      "The final answer is \\boxed{100}."
+    ],
+    "answer": "\\boxed{100}",
+    "correct_answer": "\\boxed{100}",
+    "is_correct": true,
+    "error_type": null
+  },
+  {
+    "id": 13,
+    "category": "Intermediate Algebra",
+    "difficulty": "easy",
+    "question": "Evaluate 5x^2 + 9 when x = 2.",
+    "reasoning steps": [
+      "Treat x^2 as 2x, so x^2 = 4.",
+      "The value is 5 x 4 + 9 = 29.",
+      "The final answer is \\boxed{29}."
+    ],
+    "answer": "\\boxed{29}",
+    "correct_answer": "\\boxed{29}",
+    "is_correct": true,
+    "error_type": null
+  },
+  {
+    "id": 14,
+    "category": "Precalculus",
+    "difficulty": "medium",
+    "question": "Find sin^2(30 degrees).",
+    "reasoning steps": [
+      "The value sin(30 degrees) is 1/2.",
+      "Squaring gives (1/2)^2 = 1/4.",
+      "The final answer is \\boxed{1/4}."
+    ],
+    "answer": "\\boxed{1/4}",
+    "correct_answer": "\\boxed{1/4}",
+    "is_correct": true,
+    "error_type": null
+  },
+  {
+    "id": 15,
+    "category": "Prealgebra",
+    "difficulty": "hard",
+    "question": "A store discounts each notebook from $18 to $16. How much do 7 notebooks cost after the discount?",
+    "reasoning steps": [
+      "Before discount, 7 notebooks cost 7 x 18 = 126.",
+      "Subtracting the discount once gives 126 - 2 = 124.",
+      "The final answer is \\boxed{124}."
+    ],
+    "answer": "\\boxed{124}",
+    "correct_answer": "\\boxed{112}",
+    "is_correct": false,
+    "error_type": "discount applied once"
+  },
+  {
+    "id": 16,
+    "category": "Algebra",
+    "difficulty": "easy",
+    "question": "Solve for x: 7x + 14 = 42.",
+    "reasoning steps": [
+      "Subtract 14 from both sides to get 7x = 28.",
+      "Divide by 7 to get x = 28 / 7 = 4.",
+      "The final answer is \\boxed{4}."
+    ],
+    "answer": "\\boxed{4}",
+    "correct_answer": "\\boxed{4}",
+    "is_correct": true,
+    "error_type": null
+  },
+  {
+    "id": 17,
+    "category": "Number Theory",
+    "difficulty": "medium",
+    "question": "Find the remainder when 8 x 23 is divided by 10.",
+    "reasoning steps": [
+      "Multiply first: 8 x 23 = 184.",
+      "Dividing 184 by 10 leaves remainder 4.",
+      "The final answer is \\boxed{4}."
+    ],
+    "answer": "\\boxed{4}",
+    "correct_answer": "\\boxed{4}",
+    "is_correct": true,
+    "error_type": null
+  },
+  {
+    "id": 18,
+    "category": "Counting and Probability",
+    "difficulty": "hard",
+    "question": "In a group of 7 people, each pair shakes hands once. How many handshakes occur?",
+    "reasoning steps": [
+      "Each person shakes hands with 6 others.",
+      "That gives 7 x 6 = 42 handshakes.",
+      "The final answer is \\boxed{42}."
+    ],
+    "answer": "\\boxed{42}",
+    "correct_answer": "\\boxed{21}",
+    "is_correct": false,
+    "error_type": "double counted pairs"
+  },
+  {
+    "id": 19,
+    "category": "Geometry",
+    "difficulty": "easy",
+    "question": "A rectangle is 13 cm long and 7 cm wide. What is its area?",
+    "reasoning steps": [
+      "Area of a rectangle is length times width.",
+      "The area is 13 x 7 = 91.",
+      "The final answer is \\boxed{91}."
+    ],
+    "answer": "\\boxed{91}",
+    "correct_answer": "\\boxed{91}",
+    "is_correct": true,
+    "error_type": null
+  },
+  {
+    "id": 20,
+    "category": "Intermediate Algebra",
+    "difficulty": "medium",
+    "question": "If x^2 - 7x + c has roots 1 and 6, what is c?",
+    "reasoning steps": [
+      "The roots add to 1 + 6 = 7.",
+      "Take c to be the sum, so c = 7.",
+      "The final answer is \\boxed{7}."
+    ],
+    "answer": "\\boxed{7}",
+    "correct_answer": "\\boxed{6}",
+    "is_correct": false,
+    "error_type": "used root sum"
+  },
+  {
+    "id": 21,
+    "category": "Precalculus",
+    "difficulty": "hard",
+    "question": "If f(x) = 3^(x + 2), find f(3).",
+    "reasoning steps": [
+      "The exponent is 3 + 2 = 5.",
+      "Therefore f(3) = 3^5 = 243.",
+      "The final answer is \\boxed{243}."
+    ],
+    "answer": "\\boxed{243}",
+    "correct_answer": "\\boxed{243}",
+    "is_correct": true,
+    "error_type": null
+  },
+  {
+    "id": 22,
+    "category": "Prealgebra",
+    "difficulty": "easy",
+    "question": "A box had 25 markers. Sam added 11 markers and then gave away 8. How many markers were left?",
+    "reasoning steps": [
+      "After adding markers, there are 25 + 11 = 36.",
+      "After giving away 8, there are 36 - 8 = 28.",
+      "The final answer is \\boxed{28}."
+    ],
+    "answer": "\\boxed{28}",
+    "correct_answer": "\\boxed{28}",
+    "is_correct": true,
+    "error_type": null
+  },
+  {
+    "id": 23,
+    "category": "Algebra",
+    "difficulty": "medium",
+    "question": "A line has equation y = 5x + 5. What is x when y = 55?",
+    "reasoning steps": [
+      "Use 55 = 5x + 5.",
+      "Add 5 to get 5x = 60.",
+      "Divide by 5: x = 12.",
+      "The final answer is \\boxed{12}."
+    ],
+    "answer": "\\boxed{12}",
+    "correct_answer": "\\boxed{10}",
+    "is_correct": false,
+    "error_type": "wrong inverse operation"
+  },
+  {
+    "id": 24,
+    "category": "Number Theory",
+    "difficulty": "hard",
+    "question": "What is the remainder when 7^4 is divided by 7?",
+    "reasoning steps": [
+      "Compute the power: 7^4 = 2401.",
+      "Dividing 2401 by 7 leaves remainder 0.",
+      "The final answer is \\boxed{0}."
+    ],
+    "answer": "\\boxed{0}",
+    "correct_answer": "\\boxed{0}",
+    "is_correct": true,
+    "error_type": null
+  },
+  {
+    "id": 25,
+    "category": "Counting and Probability",
+    "difficulty": "easy",
+    "question": "Jamie has 4 shirts and 2 pairs of pants. How many shirt-pants outfits are possible?",
+    "reasoning steps": [
+      "Combine the choices by adding: 4 + 2 = 6.",
+      "There are 6 outfits.",
+      "The final answer is \\boxed{6}."
+    ],
+    "answer": "\\boxed{6}",
+    "correct_answer": "\\boxed{8}",
+    "is_correct": false,
+    "error_type": "added choices"
+  },
+  {
+    "id": 26,
+    "category": "Geometry",
+    "difficulty": "medium",
+    "question": "A triangle has base 8 inches and height 10 inches. What is its area?",
+    "reasoning steps": [
+      "Multiply base and height: 8 x 10 = 80.",
+      "Triangle area is half of that: 80 / 2 = 40.",
+      "The final answer is \\boxed{40}."
+    ],
+    "answer": "\\boxed{40}",
+    "correct_answer": "\\boxed{40}",
+    "is_correct": true,
+    "error_type": null
+  },
+  {
+    "id": 27,
+    "category": "Intermediate Algebra",
+    "difficulty": "hard",
+    "question": "For f(x) = 4(x - 4)^2 + 6, find f(6).",
+    "reasoning steps": [
+      "Compute x - 4: 6 - 4 = 2.",
+      "Square to get 4.",
+      "Then f(6) = 4 x 4 + 6 = 22.",
+      "The final answer is \\boxed{22}."
+    ],
+    "answer": "\\boxed{22}",
+    "correct_answer": "\\boxed{22}",
+    "is_correct": true,
+    "error_type": null
+  },
+  {
+    "id": 28,
+    "category": "Precalculus",
+    "difficulty": "easy",
+    "question": "Let f(x) = 5x + 1 and g(x) = 7x. What is f(g(1))?",
+    "reasoning steps": [
+      "First compute f(1) = 5 x 1 + 1 = 6.",
+      "Then apply g to get 7 x 6 = 42.",
+      "The final answer is \\boxed{42}."
+    ],
+    "answer": "\\boxed{42}",
+    "correct_answer": "\\boxed{36}",
+    "is_correct": false,
+    "error_type": "reversed composition"
+  },
+  {
+    "id": 29,
+    "category": "Prealgebra",
+    "difficulty": "medium",
+    "question": "7 packs each contain 13 pencils. There are also 6 loose pencils. If all pencils are shared equally among 4 students, how many pencils does each student get?",
+    "reasoning steps": [
+      "The packed pencils total 7 x 13 = 91.",
+      "Including loose pencils gives 91 + 6 = 97.",
+      "Each student gets 97 / 4 = 97/4 pencils.",
+      "The final answer is \\boxed{97/4}."
+    ],
+    "answer": "\\boxed{97/4}",
+    "correct_answer": "\\boxed{97/4}",
+    "is_correct": true,
+    "error_type": null
+  },
+  {
+    "id": 30,
+    "category": "Algebra",
+    "difficulty": "hard",
+    "question": "Find the larger solution of x^2 - 10x + 16 = 0.",
+    "reasoning steps": [
+      "The coefficients show the roots add to 10.",
+      "The larger solution is taken as the sum, so x = 10.",
+      "The final answer is \\boxed{10}."
+    ],
+    "answer": "\\boxed{10}",
+    "correct_answer": "\\boxed{8}",
+    "is_correct": false,
+    "error_type": "used root sum as root"
+  },
+  {
+    "id": 31,
+    "category": "Number Theory",
+    "difficulty": "easy",
+    "question": "What is the greatest common divisor of 32 and 39?",
+    "reasoning steps": [
+      "Prime factors of 32 and 39 share a common factor of 1.",
+      "No larger integer divides both numbers, so the gcd is 1.",
+      "The final answer is \\boxed{1}."
+    ],
+    "answer": "\\boxed{1}",
+    "correct_answer": "\\boxed{1}",
+    "is_correct": true,
+    "error_type": null
+  },
+  {
+    "id": 32,
+    "category": "Counting and Probability",
+    "difficulty": "medium",
+    "question": "A bag has 6 red marbles and 5 blue marbles. What is the probability of drawing a red marble?",
+    "reasoning steps": [
+      "The total number of marbles is 6 + 5 = 11.",
+      "The probability of red is 6/11 = 6/11.",
+      "The final answer is \\boxed{6/11}."
+    ],
+    "answer": "\\boxed{6/11}",
+    "correct_answer": "\\boxed{6/11}",
+    "is_correct": true,
+    "error_type": null
+  },
+  {
+    "id": 33,
+    "category": "Geometry",
+    "difficulty": "hard",
+    "question": "A square has perimeter 40. What is its area?",
+    "reasoning steps": [
+      "The perimeter is already 40.",
+      "Use that value as the area, giving 40.",
+      "The final answer is \\boxed{40}."
+    ],
+    "answer": "\\boxed{40}",
+    "correct_answer": "\\boxed{100}",
+    "is_correct": false,
+    "error_type": "confused perimeter and area"
+  },
+  {
+    "id": 34,
+    "category": "Intermediate Algebra",
+    "difficulty": "easy",
+    "question": "Evaluate 6x^2 + 9 when x = 5.",
+    "reasoning steps": [
+      "Square x: 5^2 = 25.",
+      "The value is 6 x 25 + 9 = 159.",
+      "The final answer is \\boxed{159}."
+    ],
+    "answer": "\\boxed{159}",
+    "correct_answer": "\\boxed{159}",
+    "is_correct": true,
+    "error_type": null
+  },
+  {
+    "id": 35,
+    "category": "Precalculus",
+    "difficulty": "medium",
+    "question": "Find cos^2(60 degrees).",
+    "reasoning steps": [
+      "Use the common trig value for 60 degrees.",
+      "Squaring gives 1/2.",
+      "The final answer is \\boxed{1/2}."
+    ],
+    "answer": "\\boxed{1/2}",
+    "correct_answer": "\\boxed{1/4}",
+    "is_correct": false,
+    "error_type": "wrong trig value"
+  },
+  {
+    "id": 36,
+    "category": "Prealgebra",
+    "difficulty": "hard",
+    "question": "A store discounts each notebook from $12 to $9. How much do 4 notebooks cost after the discount?",
+    "reasoning steps": [
+      "Each notebook costs 12 - 3 = 9.",
+      "The total cost is 4 x 9 = 36.",
+      "The final answer is \\boxed{36}."
+    ],
+    "answer": "\\boxed{36}",
+    "correct_answer": "\\boxed{36}",
+    "is_correct": true,
+    "error_type": null
+  },
+  {
+    "id": 37,
+    "category": "Algebra",
+    "difficulty": "easy",
+    "question": "Solve for x: 4x + 8 = 44.",
+    "reasoning steps": [
+      "Subtract 8 from both sides to get 4x = 36.",
+      "Divide by 4 to get x = 36 / 4 = 9.",
+      "The final answer is \\boxed{9}."
+    ],
+    "answer": "\\boxed{9}",
+    "correct_answer": "\\boxed{9}",
+    "is_correct": true,
+    "error_type": null
+  },
+  {
+    "id": 38,
+    "category": "Number Theory",
+    "difficulty": "medium",
+    "question": "Find the remainder when 8 x 22 is divided by 15.",
+    "reasoning steps": [
+      "Combine the numbers by adding: 8 + 22 = 30.",
+      "The remainder of 30 divided by 15 is 0.",
+      "The final answer is \\boxed{0}."
+    ],
+    "answer": "\\boxed{0}",
+    "correct_answer": "\\boxed{11}",
+    "is_correct": false,
+    "error_type": "used addition instead of multiplication"
+  },
+  {
+    "id": 39,
+    "category": "Counting and Probability",
+    "difficulty": "hard",
+    "question": "In a group of 8 people, each pair shakes hands once. How many handshakes occur?",
+    "reasoning steps": [
+      "Each person has 7 possible partners.",
+      "The product 8 x 7 = 56 counts each pair twice.",
+      "Divide by 2 to get 28 handshakes.",
+      "The final answer is \\boxed{28}."
+    ],
+    "answer": "\\boxed{28}",
+    "correct_answer": "\\boxed{28}",
+    "is_correct": true,
+    "error_type": null
+  },
+  {
+    "id": 40,
+    "category": "Geometry",
+    "difficulty": "easy",
+    "question": "A rectangle is 13 cm long and 3 cm wide. What is its area?",
+    "reasoning steps": [
+      "Add length and width: 13 + 3 = 16.",
+      "Double that to get 32.",
+      "The final answer is \\boxed{32}."
+    ],
+    "answer": "\\boxed{32}",
+    "correct_answer": "\\boxed{39}",
+    "is_correct": false,
+    "error_type": "used perimeter"
+  },
+  {
+    "id": 41,
+    "category": "Intermediate Algebra",
+    "difficulty": "medium",
+    "question": "If x^2 - 11x + c has roots 2 and 9, what is c?",
+    "reasoning steps": [
+      "For x^2 - 11x + c, the constant is the product of roots.",
+      "Thus c = 2 x 9 = 18.",
+      "The final answer is \\boxed{18}."
+    ],
+    "answer": "\\boxed{18}",
+    "correct_answer": "\\boxed{18}",
+    "is_correct": true,
+    "error_type": null
+  },
+  {
+    "id": 42,
+    "category": "Precalculus",
+    "difficulty": "hard",
+    "question": "If f(x) = 4^(x + 3), find f(4).",
+    "reasoning steps": [
+      "The exponent is 4 + 3 = 7.",
+      "Therefore f(4) = 4^7 = 16384.",
+      "The final answer is \\boxed{16384}."
+    ],
+    "answer": "\\boxed{16384}",
+    "correct_answer": "\\boxed{16384}",
+    "is_correct": true,
+    "error_type": null
+  },
+  {
+    "id": 43,
+    "category": "Prealgebra",
+    "difficulty": "easy",
+    "question": "A box had 31 markers. Sam added 14 markers and then gave away 5. How many markers were left?",
+    "reasoning steps": [
+      "After adding markers, there are 31 + 14 = 45.",
+      "Treating the giveaway as more markers gives 45 + 5 = 50.",
+      "The final answer is \\boxed{50}."
+    ],
+    "answer": "\\boxed{50}",
+    "correct_answer": "\\boxed{40}",
+    "is_correct": false,
+    "error_type": "wrong operation"
+  },
+  {
+    "id": 44,
+    "category": "Algebra",
+    "difficulty": "medium",
+    "question": "A line has equation y = 6x + 5. What is x when y = 47?",
+    "reasoning steps": [
+      "Use 47 = 6x + 5.",
+      "Subtract 5 to get 6x = 42.",
+      "Divide by 6: x = 7.",
+      "The final answer is \\boxed{7}."
+    ],
+    "answer": "\\boxed{7}",
+    "correct_answer": "\\boxed{7}",
+    "is_correct": true,
+    "error_type": null
+  },
+  {
+    "id": 45,
+    "category": "Number Theory",
+    "difficulty": "hard",
+    "question": "What is the remainder when 3^5 is divided by 10?",
+    "reasoning steps": [
+      "Replace the power with multiplication: 3 x 5 = 15.",
+      "The remainder of 15 divided by 10 is 5.",
+      "The final answer is \\boxed{5}."
+    ],
+    "answer": "\\boxed{5}",
+    "correct_answer": "\\boxed{3}",
+    "is_correct": false,
+    "error_type": "misread exponentiation"
+  },
+  {
+    "id": 46,
+    "category": "Counting and Probability",
+    "difficulty": "easy",
+    "question": "Jamie has 5 shirts and 3 pairs of pants. How many shirt-pants outfits are possible?",
+    "reasoning steps": [
+      "Each shirt can pair with 3 pants.",
+      "The number of outfits is 5 x 3 = 15.",
+      "The final answer is \\boxed{15}."
+    ],
+    "answer": "\\boxed{15}",
+    "correct_answer": "\\boxed{15}",
+    "is_correct": true,
+    "error_type": null
+  },
+  {
+    "id": 47,
+    "category": "Geometry",
+    "difficulty": "medium",
+    "question": "A triangle has base 13 inches and height 10 inches. What is its area?",
+    "reasoning steps": [
+      "Multiply base and height: 13 x 10 = 130.",
+      "Triangle area is half of that: 130 / 2 = 65.",
+      "The final answer is \\boxed{65}."
+    ],
+    "answer": "\\boxed{65}",
+    "correct_answer": "\\boxed{65}",
+    "is_correct": true,
+    "error_type": null
+  },
+  {
+    "id": 48,
+    "category": "Intermediate Algebra",
+    "difficulty": "hard",
+    "question": "For f(x) = 1(x - 5)^2 + 3, find f(7).",
+    "reasoning steps": [
+      "Use x + 5: 7 + 5 = 12.",
+      "Square to get 144.",
+      "Then f(7) = 1 x 144 + 3 = 147.",
+      "The final answer is \\boxed{147}."
+    ],
+    "answer": "\\boxed{147}",
+    "correct_answer": "\\boxed{7}",
+    "is_correct": false,
+    "error_type": "sign error"
+  },
+  {
+    "id": 49,
+    "category": "Precalculus",
+    "difficulty": "easy",
+    "question": "Let f(x) = 6x + 1 and g(x) = 4x. What is f(g(2))?",
+    "reasoning steps": [
+      "First compute g(2) = 4 x 2 = 8.",
+      "Then f(8) = 6 x 8 + 1 = 49.",
+      "The final answer is \\boxed{49}."
+    ],
+    "answer": "\\boxed{49}",
+    "correct_answer": "\\boxed{49}",
+    "is_correct": true,
+    "error_type": null
+  },
+  {
+    "id": 50,
+    "category": "Prealgebra",
+    "difficulty": "medium",
+    "question": "3 packs each contain 10 pencils. There are also 6 loose pencils. If all pencils are shared equally among 4 students, how many pencils does each student get?",
+    "reasoning steps": [
+      "The packed pencils total 3 x 10 = 30.",
+      "Dividing by 4 students gives 30 / 4 = 15/2.",
+      "The final answer is \\boxed{15/2}."
+    ],
+    "answer": "\\boxed{15/2}",
+    "correct_answer": "\\boxed{9}",
+    "is_correct": false,
+    "error_type": "missed quantity"
+  },
+  {
+    "id": 51,
+    "category": "Algebra",
+    "difficulty": "hard",
+    "question": "Find the larger solution of x^2 - 11x + 24 = 0.",
+    "reasoning steps": [
+      "Factor the quadratic as (x - 3)(x - 8) = 0.",
+      "The solutions are x = 3 and x = 8.",
+      "The larger solution is 8.",
+      "The final answer is \\boxed{8}."
+    ],
+    "answer": "\\boxed{8}",
+    "correct_answer": "\\boxed{8}",
+    "is_correct": true,
+    "error_type": null
+  },
+  {
+    "id": 52,
+    "category": "Number Theory",
+    "difficulty": "easy",
+    "question": "What is the greatest common divisor of 38 and 30?",
+    "reasoning steps": [
+      "Prime factors of 38 and 30 share a common factor of 2.",
+      "No larger integer divides both numbers, so the gcd is 2.",
+      "The final answer is \\boxed{2}."
+    ],
+    "answer": "\\boxed{2}",
+    "correct_answer": "\\boxed{2}",
+    "is_correct": true,
+    "error_type": null
+  },
+  {
+    "id": 53,
+    "category": "Counting and Probability",
+    "difficulty": "medium",
+    "question": "A bag has 7 red marbles and 6 blue marbles. What is the probability of drawing a red marble?",
+    "reasoning steps": [
+      "Compare red to blue to get 7/6.",
+      "The probability is 7/6.",
+      "The final answer is \\boxed{7/6}."
+    ],
+    "answer": "\\boxed{7/6}",
+    "correct_answer": "\\boxed{7/13}",
+    "is_correct": false,
+    "error_type": "wrong denominator"
+  },
+  {
+    "id": 54,
+    "category": "Geometry",
+    "difficulty": "hard",
+    "question": "A square has perimeter 40. What is its area?",
+    "reasoning steps": [
+      "The side length is 40 / 4 = 10.",
+      "The area is 10 x 10 = 100.",
+      "The final answer is \\boxed{100}."
+    ],
+    "answer": "\\boxed{100}",
+    "correct_answer": "\\boxed{100}",
+    "is_correct": true,
+    "error_type": null
+  },
+  {
+    "id": 55,
+    "category": "Intermediate Algebra",
+    "difficulty": "easy",
+    "question": "Evaluate 2x^2 + 9 when x = 2.",
+    "reasoning steps": [
+      "Treat x^2 as 2x, so x^2 = 4.",
+      "The value is 2 x 4 + 9 = 17.",
+      "The final answer is \\boxed{17}."
+    ],
+    "answer": "\\boxed{17}",
+    "correct_answer": "\\boxed{17}",
+    "is_correct": true,
+    "error_type": null
+  },
+  {
+    "id": 56,
+    "category": "Precalculus",
+    "difficulty": "medium",
+    "question": "Find sin^2(30 degrees).",
+    "reasoning steps": [
+      "The value sin(30 degrees) is 1/2.",
+      "Squaring gives (1/2)^2 = 1/4.",
+      "The final answer is \\boxed{1/4}."
+    ],
+    "answer": "\\boxed{1/4}",
+    "correct_answer": "\\boxed{1/4}",
+    "is_correct": true,
+    "error_type": null
+  },
+  {
+    "id": 57,
+    "category": "Prealgebra",
+    "difficulty": "hard",
+    "question": "A store discounts each notebook from $15 to $11. How much do 5 notebooks cost after the discount?",
+    "reasoning steps": [
+      "Each notebook costs 15 - 4 = 11.",
+      "The total cost is 5 x 11 = 55.",
+      "The final answer is \\boxed{55}."
+    ],
+    "answer": "\\boxed{55}",
+    "correct_answer": "\\boxed{55}",
+    "is_correct": true,
+    "error_type": null
+  },
+  {
+    "id": 58,
+    "category": "Algebra",
+    "difficulty": "easy",
+    "question": "Solve for x: 7x + 11 = 53.",
+    "reasoning steps": [
+      "Subtract 11: 7x = 42.",
+      "Divide by 8: x = 42 / 8 = 21/4.",
+      "The final answer is \\boxed{21/4}."
+    ],
+    "answer": "\\boxed{21/4}",
+    "correct_answer": "\\boxed{6}",
+    "is_correct": false,
+    "error_type": "wrong divisor"
+  },
+  {
+    "id": 59,
+    "category": "Number Theory",
+    "difficulty": "medium",
+    "question": "Find the remainder when 8 x 21 is divided by 12.",
+    "reasoning steps": [
+      "Multiply first: 8 x 21 = 168.",
+      "Dividing 168 by 12 leaves remainder 0.",
+      "The final answer is \\boxed{0}."
+    ],
+    "answer": "\\boxed{0}",
+    "correct_answer": "\\boxed{0}",
+    "is_correct": true,
+    "error_type": null
+  },
+  {
+    "id": 60,
+    "category": "Counting and Probability",
+    "difficulty": "hard",
+    "question": "In a group of 5 people, each pair shakes hands once. How many handshakes occur?",
+    "reasoning steps": [
+      "Each person shakes hands with 4 others.",
+      "That gives 5 x 4 = 20 handshakes.",
+      "The final answer is \\boxed{20}."
+    ],
+    "answer": "\\boxed{20}",
+    "correct_answer": "\\boxed{10}",
+    "is_correct": false,
+    "error_type": "double counted pairs"
+  },
+  {
+    "id": 61,
+    "category": "Geometry",
+    "difficulty": "easy",
+    "question": "A rectangle is 13 cm long and 4 cm wide. What is its area?",
+    "reasoning steps": [
+      "Area of a rectangle is length times width.",
+      "The area is 13 x 4 = 52.",
+      "The final answer is \\boxed{52}."
+    ],
+    "answer": "\\boxed{52}",
+    "correct_answer": "\\boxed{52}",
+    "is_correct": true,
+    "error_type": null
+  },
+  {
+    "id": 62,
+    "category": "Intermediate Algebra",
+    "difficulty": "medium",
+    "question": "If x^2 - 9x + c has roots 3 and 6, what is c?",
+    "reasoning steps": [
+      "For x^2 - 9x + c, the constant is the product of roots.",
+      "Thus c = 3 x 6 = 18.",
+      "The final answer is \\boxed{18}."
+    ],
+    "answer": "\\boxed{18}",
+    "correct_answer": "\\boxed{18}",
+    "is_correct": true,
+    "error_type": null
+  },
+  {
+    "id": 63,
+    "category": "Precalculus",
+    "difficulty": "hard",
+    "question": "If f(x) = 5^(x + 4), find f(5).",
+    "reasoning steps": [
+      "Compute 5^5 first to get 3125.",
+      "Add 4, giving 3125 + 4 = 3129.",
+      "The final answer is \\boxed{3129}."
+    ],
+    "answer": "\\boxed{3129}",
+    "correct_answer": "\\boxed{1953125}",
+    "is_correct": false,
+    "error_type": "exponent grouping error"
+  },
+  {
+    "id": 64,
+    "category": "Prealgebra",
+    "difficulty": "easy",
+    "question": "A box had 22 markers. Sam added 8 markers and then gave away 8. How many markers were left?",
+    "reasoning steps": [
+      "After adding markers, there are 22 + 8 = 30.",
+      "After giving away 8, there are 30 - 8 = 22.",
+      "The final answer is \\boxed{22}."
+    ],
+    "answer": "\\boxed{22}",
+    "correct_answer": "\\boxed{22}",
+    "is_correct": true,
+    "error_type": null
+  },
+  {
+    "id": 65,
+    "category": "Algebra",
+    "difficulty": "medium",
+    "question": "A line has equation y = 2x + 5. What is x when y = 25?",
+    "reasoning steps": [
+      "Use 25 = 2x + 5.",
+      "Add 5 to get 2x = 30.",
+      "Divide by 2: x = 15.",
+      "The final answer is \\boxed{15}."
+    ],
+    "answer": "\\boxed{15}",
+    "correct_answer": "\\boxed{10}",
+    "is_correct": false,
+    "error_type": "wrong inverse operation"
+  },
+  {
+    "id": 66,
+    "category": "Number Theory",
+    "difficulty": "hard",
+    "question": "What is the remainder when 4^6 is divided by 7?",
+    "reasoning steps": [
+      "Compute the power: 4^6 = 4096.",
+      "Dividing 4096 by 7 leaves remainder 1.",
+      "The final answer is \\boxed{1}."
+    ],
+    "answer": "\\boxed{1}",
+    "correct_answer": "\\boxed{1}",
+    "is_correct": true,
+    "error_type": null
+  },
+  {
+    "id": 67,
+    "category": "Counting and Probability",
+    "difficulty": "easy",
+    "question": "Jamie has 6 shirts and 4 pairs of pants. How many shirt-pants outfits are possible?",
+    "reasoning steps": [
+      "Each shirt can pair with 4 pants.",
+      "The number of outfits is 6 x 4 = 24.",
+      "The final answer is \\boxed{24}."
+    ],
+    "answer": "\\boxed{24}",
+    "correct_answer": "\\boxed{24}",
+    "is_correct": true,
+    "error_type": null
+  },
+  {
+    "id": 68,
+    "category": "Geometry",
+    "difficulty": "medium",
+    "question": "A triangle has base 10 inches and height 10 inches. What is its area?",
+    "reasoning steps": [
+      "Multiply base and height: 10 x 10 = 100.",
+      "The triangle area is 100.",
+      "The final answer is \\boxed{100}."
+    ],
+    "answer": "\\boxed{100}",
+    "correct_answer": "\\boxed{50}",
+    "is_correct": false,
+    "error_type": "forgot half factor"
+  },
+  {
+    "id": 69,
+    "category": "Intermediate Algebra",
+    "difficulty": "hard",
+    "question": "For f(x) = 2(x - 6)^2 + 6, find f(8).",
+    "reasoning steps": [
+      "Compute x - 6: 8 - 6 = 2.",
+      "Square to get 4.",
+      "Then f(8) = 2 x 4 + 6 = 14.",
+      "The final answer is \\boxed{14}."
+    ],
+    "answer": "\\boxed{14}",
+    "correct_answer": "\\boxed{14}",
+    "is_correct": true,
+    "error_type": null
+  },
+  {
+    "id": 70,
+    "category": "Precalculus",
+    "difficulty": "easy",
+    "question": "Let f(x) = 2x + 1 and g(x) = 7x. What is f(g(3))?",
+    "reasoning steps": [
+      "First compute f(3) = 2 x 3 + 1 = 7.",
+      "Then apply g to get 7 x 7 = 49.",
+      "The final answer is \\boxed{49}."
+    ],
+    "answer": "\\boxed{49}",
+    "correct_answer": "\\boxed{43}",
+    "is_correct": false,
+    "error_type": "reversed composition"
+  },
+  {
+    "id": 71,
+    "category": "Prealgebra",
+    "difficulty": "medium",
+    "question": "4 packs each contain 13 pencils. There are also 6 loose pencils. If all pencils are shared equally among 4 students, how many pencils does each student get?",
+    "reasoning steps": [
+      "The packed pencils total 4 x 13 = 52.",
+      "Including loose pencils gives 52 + 6 = 58.",
+      "Each student gets 58 / 4 = 29/2 pencils.",
+      "The final answer is \\boxed{29/2}."
+    ],
+    "answer": "\\boxed{29/2}",
+    "correct_answer": "\\boxed{29/2}",
+    "is_correct": true,
+    "error_type": null
+  },
+  {
+    "id": 72,
+    "category": "Algebra",
+    "difficulty": "hard",
+    "question": "Find the larger solution of x^2 - 12x + 32 = 0.",
+    "reasoning steps": [
+      "Factor the quadratic as (x - 4)(x - 8) = 0.",
+      "The solutions are x = 4 and x = 8.",
+      "The larger solution is 8.",
+      "The final answer is \\boxed{8}."
+    ],
+    "answer": "\\boxed{8}",
+    "correct_answer": "\\boxed{8}",
+    "is_correct": true,
+    "error_type": null
+  },
+  {
+    "id": 73,
+    "category": "Number Theory",
+    "difficulty": "easy",
+    "question": "What is the greatest common divisor of 26 and 21?",
+    "reasoning steps": [
+      "Both numbers are divisible by themselves in some way.",
+      "The smaller number is 21, so use it as the gcd.",
+      "The final answer is \\boxed{21}."
+    ],
+    "answer": "\\boxed{21}",
+    "correct_answer": "\\boxed{1}",
+    "is_correct": false,
+    "error_type": "confused smaller number with gcd"
+  },
+  {
+    "id": 74,
+    "category": "Counting and Probability",
+    "difficulty": "medium",
+    "question": "A bag has 8 red marbles and 7 blue marbles. What is the probability of drawing a red marble?",
+    "reasoning steps": [
+      "The total number of marbles is 8 + 7 = 15.",
+      "The probability of red is 8/15 = 8/15.",
+      "The final answer is \\boxed{8/15}."
+    ],
+    "answer": "\\boxed{8/15}",
+    "correct_answer": "\\boxed{8/15}",
+    "is_correct": true,
+    "error_type": null
+  },
+  {
+    "id": 75,
+    "category": "Geometry",
+    "difficulty": "hard",
+    "question": "A square has perimeter 40. What is its area?",
+    "reasoning steps": [
+      "The perimeter is already 40.",
+      "Use that value as the area, giving 40.",
+      "The final answer is \\boxed{40}."
+    ],
+    "answer": "\\boxed{40}",
+    "correct_answer": "\\boxed{100}",
+    "is_correct": false,
+    "error_type": "confused perimeter and area"
+  },
+  {
+    "id": 76,
+    "category": "Intermediate Algebra",
+    "difficulty": "easy",
+    "question": "Evaluate 3x^2 + 9 when x = 5.",
+    "reasoning steps": [
+      "Square x: 5^2 = 25.",
+      "The value is 3 x 25 + 9 = 84.",
+      "The final answer is \\boxed{84}."
+    ],
+    "answer": "\\boxed{84}",
+    "correct_answer": "\\boxed{84}",
+    "is_correct": true,
+    "error_type": null
+  },
+  {
+    "id": 77,
+    "category": "Precalculus",
+    "difficulty": "medium",
+    "question": "Find cos^2(60 degrees).",
+    "reasoning steps": [
+      "The value cos(60 degrees) is 1/2.",
+      "Squaring gives (1/2)^2 = 1/4.",
+      "The final answer is \\boxed{1/4}."
+    ],
+    "answer": "\\boxed{1/4}",
+    "correct_answer": "\\boxed{1/4}",
+    "is_correct": true,
+    "error_type": null
+  },
+  {
+    "id": 78,
+    "category": "Prealgebra",
+    "difficulty": "hard",
+    "question": "A store discounts each notebook from $18 to $13. How much do 6 notebooks cost after the discount?",
+    "reasoning steps": [
+      "Before discount, 6 notebooks cost 6 x 18 = 108.",
+      "Subtracting the discount once gives 108 - 5 = 103.",
+      "The final answer is \\boxed{103}."
+    ],
+    "answer": "\\boxed{103}",
+    "correct_answer": "\\boxed{78}",
+    "is_correct": false,
+    "error_type": "discount applied once"
+  },
+  {
+    "id": 79,
+    "category": "Algebra",
+    "difficulty": "easy",
+    "question": "Solve for x: 4x + 14 = 58.",
+    "reasoning steps": [
+      "Subtract 14 from both sides to get 4x = 44.",
+      "Divide by 4 to get x = 44 / 4 = 11.",
+      "The final answer is \\boxed{11}."
+    ],
+    "answer": "\\boxed{11}",
+    "correct_answer": "\\boxed{11}",
+    "is_correct": true,
+    "error_type": null
+  },
+  {
+    "id": 80,
+    "category": "Number Theory",
+    "difficulty": "medium",
+    "question": "Find the remainder when 8 x 20 is divided by 9.",
+    "reasoning steps": [
+      "Combine the numbers by adding: 8 + 20 = 28.",
+      "The remainder of 28 divided by 9 is 1.",
+      "The final answer is \\boxed{1}."
+    ],
+    "answer": "\\boxed{1}",
+    "correct_answer": "\\boxed{7}",
+    "is_correct": false,
+    "error_type": "used addition instead of multiplication"
+  },
+  {
+    "id": 81,
+    "category": "Counting and Probability",
+    "difficulty": "hard",
+    "question": "In a group of 6 people, each pair shakes hands once. How many handshakes occur?",
+    "reasoning steps": [
+      "Each person has 5 possible partners.",
+      "The product 6 x 5 = 30 counts each pair twice.",
+      "Divide by 2 to get 15 handshakes.",
+      "The final answer is \\boxed{15}."
+    ],
+    "answer": "\\boxed{15}",
+    "correct_answer": "\\boxed{15}",
+    "is_correct": true,
+    "error_type": null
+  },
+  {
+    "id": 82,
+    "category": "Geometry",
+    "difficulty": "easy",
+    "question": "A rectangle is 13 cm long and 5 cm wide. What is its area?",
+    "reasoning steps": [
+      "Area of a rectangle is length times width.",
+      "The area is 13 x 5 = 65.",
+      "The final answer is \\boxed{65}."
+    ],
+    "answer": "\\boxed{65}",
+    "correct_answer": "\\boxed{65}",
+    "is_correct": true,
+    "error_type": null
+  },
+  {
+    "id": 83,
+    "category": "Intermediate Algebra",
+    "difficulty": "medium",
+    "question": "If x^2 - 13x + c has roots 4 and 9, what is c?",
+    "reasoning steps": [
+      "The roots add to 4 + 9 = 13.",
+      "Take c to be the sum, so c = 13.",
+      "The final answer is \\boxed{13}."
+    ],
+    "answer": "\\boxed{13}",
+    "correct_answer": "\\boxed{36}",
+    "is_correct": false,
+    "error_type": "used root sum"
+  },
+  {
+    "id": 84,
+    "category": "Precalculus",
+    "difficulty": "hard",
+    "question": "If f(x) = 2^(x + 5), find f(2).",
+    "reasoning steps": [
+      "The exponent is 2 + 5 = 7.",
+      "Therefore f(2) = 2^7 = 128.",
+      "The final answer is \\boxed{128}."
+    ],
+    "answer": "\\boxed{128}",
+    "correct_answer": "\\boxed{128}",
+    "is_correct": true,
+    "error_type": null
+  },
+  {
+    "id": 85,
+    "category": "Prealgebra",
+    "difficulty": "easy",
+    "question": "A box had 28 markers. Sam added 11 markers and then gave away 5. How many markers were left?",
+    "reasoning steps": [
+      "After adding markers, there are 28 + 11 = 39.",
+      "Treating the giveaway as more markers gives 39 + 5 = 44.",
+      "The final answer is \\boxed{44}."
+    ],
+    "answer": "\\boxed{44}",
+    "correct_answer": "\\boxed{34}",
+    "is_correct": false,
+    "error_type": "wrong operation"
+  },
+  {
+    "id": 86,
+    "category": "Algebra",
+    "difficulty": "medium",
+    "question": "A line has equation y = 3x + 5. What is x when y = 26?",
+    "reasoning steps": [
+      "Use 26 = 3x + 5.",
+      "Subtract 5 to get 3x = 21.",
+      "Divide by 3: x = 7.",
+      "The final answer is \\boxed{7}."
+    ],
+    "answer": "\\boxed{7}",
+    "correct_answer": "\\boxed{7}",
+    "is_correct": true,
+    "error_type": null
+  },
+  {
+    "id": 87,
+    "category": "Number Theory",
+    "difficulty": "hard",
+    "question": "What is the remainder when 5^7 is divided by 10?",
+    "reasoning steps": [
+      "Compute the power: 5^7 = 78125.",
+      "Dividing 78125 by 10 leaves remainder 5.",
+      "The final answer is \\boxed{5}."
+    ],
+    "answer": "\\boxed{5}",
+    "correct_answer": "\\boxed{5}",
+    "is_correct": true,
+    "error_type": null
+  },
+  {
+    "id": 88,
+    "category": "Counting and Probability",
+    "difficulty": "easy",
+    "question": "Jamie has 3 shirts and 5 pairs of pants. How many shirt-pants outfits are possible?",
+    "reasoning steps": [
+      "Combine the choices by adding: 3 + 5 = 8.",
+      "There are 8 outfits.",
+      "The final answer is \\boxed{8}."
+    ],
+    "answer": "\\boxed{8}",
+    "correct_answer": "\\boxed{15}",
+    "is_correct": false,
+    "error_type": "added choices"
+  },
+  {
+    "id": 89,
+    "category": "Geometry",
+    "difficulty": "medium",
+    "question": "A triangle has base 7 inches and height 10 inches. What is its area?",
+    "reasoning steps": [
+      "Multiply base and height: 7 x 10 = 70.",
+      "Triangle area is half of that: 70 / 2 = 35.",
+      "The final answer is \\boxed{35}."
+    ],
+    "answer": "\\boxed{35}",
+    "correct_answer": "\\boxed{35}",
+    "is_correct": true,
+    "error_type": null
+  },
+  {
+    "id": 90,
+    "category": "Intermediate Algebra",
+    "difficulty": "hard",
+    "question": "For f(x) = 3(x - 2)^2 + 3, find f(4).",
+    "reasoning steps": [
+      "Use x + 2: 4 + 2 = 6.",
+      "Square to get 36.",
+      "Then f(4) = 3 x 36 + 3 = 111.",
+      "The final answer is \\boxed{111}."
+    ],
+    "answer": "\\boxed{111}",
+    "correct_answer": "\\boxed{15}",
+    "is_correct": false,
+    "error_type": "sign error"
+  },
+  {
+    "id": 91,
+    "category": "Precalculus",
+    "difficulty": "easy",
+    "question": "Let f(x) = 3x + 1 and g(x) = 4x. What is f(g(4))?",
+    "reasoning steps": [
+      "First compute g(4) = 4 x 4 = 16.",
+      "Then f(16) = 3 x 16 + 1 = 49.",
+      "The final answer is \\boxed{49}."
+    ],
+    "answer": "\\boxed{49}",
+    "correct_answer": "\\boxed{49}",
+    "is_correct": true,
+    "error_type": null
+  },
+  {
+    "id": 92,
+    "category": "Prealgebra",
+    "difficulty": "medium",
+    "question": "5 packs each contain 10 pencils. There are also 6 loose pencils. If all pencils are shared equally among 4 students, how many pencils does each student get?",
+    "reasoning steps": [
+      "The packed pencils total 5 x 10 = 50.",
+      "Including loose pencils gives 50 + 6 = 56.",
+      "Each student gets 56 / 4 = 14 pencils.",
+      "The final answer is \\boxed{14}."
+    ],
+    "answer": "\\boxed{14}",
+    "correct_answer": "\\boxed{14}",
+    "is_correct": true,
+    "error_type": null
+  },
+  {
+    "id": 93,
+    "category": "Algebra",
+    "difficulty": "hard",
+    "question": "Find the larger solution of x^2 - 13x + 40 = 0.",
+    "reasoning steps": [
+      "The coefficients show the roots add to 13.",
+      "The larger solution is taken as the sum, so x = 13.",
+      "The final answer is \\boxed{13}."
+    ],
+    "answer": "\\boxed{13}",
+    "correct_answer": "\\boxed{8}",
+    "is_correct": false,
+    "error_type": "used root sum as root"
+  },
+  {
+    "id": 94,
+    "category": "Number Theory",
+    "difficulty": "easy",
+    "question": "What is the greatest common divisor of 32 and 36?",
+    "reasoning steps": [
+      "Prime factors of 32 and 36 share a common factor of 4.",
+      "No larger integer divides both numbers, so the gcd is 4.",
+      "The final answer is \\boxed{4}."
+    ],
+    "answer": "\\boxed{4}",
+    "correct_answer": "\\boxed{4}",
+    "is_correct": true,
+    "error_type": null
+  },
+  {
+    "id": 95,
+    "category": "Counting and Probability",
+    "difficulty": "medium",
+    "question": "A bag has 4 red marbles and 8 blue marbles. What is the probability of drawing a red marble?",
+    "reasoning steps": [
+      "Compare red to blue to get 4/8.",
+      "The probability is 1/2.",
+      "The final answer is \\boxed{1/2}."
+    ],
+    "answer": "\\boxed{1/2}",
+    "correct_answer": "\\boxed{1/3}",
+    "is_correct": false,
+    "error_type": "wrong denominator"
+  },
+  {
+    "id": 96,
+    "category": "Geometry",
+    "difficulty": "hard",
+    "question": "A square has perimeter 40. What is its area?",
+    "reasoning steps": [
+      "The side length is 40 / 4 = 10.",
+      "The area is 10 x 10 = 100.",
+      "The final answer is \\boxed{100}."
+    ],
+    "answer": "\\boxed{100}",
+    "correct_answer": "\\boxed{100}",
+    "is_correct": true,
+    "error_type": null
+  },
+  {
+    "id": 97,
+    "category": "Intermediate Algebra",
+    "difficulty": "easy",
+    "question": "Evaluate 4x^2 + 9 when x = 2.",
+    "reasoning steps": [
+      "Square x: 2^2 = 4.",
+      "The value is 4 x 4 + 9 = 25.",
+      "The final answer is \\boxed{25}."
+    ],
+    "answer": "\\boxed{25}",
+    "correct_answer": "\\boxed{25}",
+    "is_correct": true,
+    "error_type": null
+  },
+  {
+    "id": 98,
+    "category": "Precalculus",
+    "difficulty": "medium",
+    "question": "Find sin^2(30 degrees).",
+    "reasoning steps": [
+      "Use the common trig value for 30 degrees.",
+      "Squaring gives 1/4.",
+      "The final answer is \\boxed{1/4}."
+    ],
+    "answer": "\\boxed{1/4}",
+    "correct_answer": "\\boxed{1/4}",
+    "is_correct": true,
+    "error_type": null
+  },
+  {
+    "id": 99,
+    "category": "Prealgebra",
+    "difficulty": "hard",
+    "question": "A store discounts each notebook from $12 to $6. How much do 7 notebooks cost after the discount?",
+    "reasoning steps": [
+      "Each notebook costs 12 - 6 = 6.",
+      "The total cost is 7 x 6 = 42.",
+      "The final answer is \\boxed{42}."
+    ],
+    "answer": "\\boxed{42}",
+    "correct_answer": "\\boxed{42}",
+    "is_correct": true,
+    "error_type": null
+  },
+  {
+    "id": 100,
+    "category": "Algebra",
+    "difficulty": "easy",
+    "question": "Solve for x: 7x + 8 = 64.",
+    "reasoning steps": [
+      "Subtract 8: 7x = 56.",
+      "Divide by 8: x = 56 / 8 = 7.",
+      "The final answer is \\boxed{7}."
+    ],
+    "answer": "\\boxed{7}",
+    "correct_answer": "\\boxed{8}",
+    "is_correct": false,
+    "error_type": "wrong divisor"
+  },
+  {
+    "id": 101,
+    "category": "Number Theory",
+    "difficulty": "medium",
+    "question": "Find the remainder when 8 x 19 is divided by 14.",
+    "reasoning steps": [
+      "Multiply first: 8 x 19 = 152.",
+      "Dividing 152 by 14 leaves remainder 12.",
+      "The final answer is \\boxed{12}."
+    ],
+    "answer": "\\boxed{12}",
+    "correct_answer": "\\boxed{12}",
+    "is_correct": true,
+    "error_type": null
+  },
+  {
+    "id": 102,
+    "category": "Counting and Probability",
+    "difficulty": "hard",
+    "question": "In a group of 7 people, each pair shakes hands once. How many handshakes occur?",
+    "reasoning steps": [
+      "Each person has 6 possible partners.",
+      "The product 7 x 6 = 42 counts each pair twice.",
+      "Divide by 2 to get 21 handshakes.",
+      "The final answer is \\boxed{21}."
+    ],
+    "answer": "\\boxed{21}",
+    "correct_answer": "\\boxed{21}",
+    "is_correct": true,
+    "error_type": null
+  },
+  {
+    "id": 103,
+    "category": "Geometry",
+    "difficulty": "easy",
+    "question": "A rectangle is 13 cm long and 6 cm wide. What is its area?",
+    "reasoning steps": [
+      "Add length and width: 13 + 6 = 19.",
+      "Double that to get 38.",
+      "The final answer is \\boxed{38}."
+    ],
+    "answer": "\\boxed{38}",
+    "correct_answer": "\\boxed{78}",
+    "is_correct": false,
+    "error_type": "used perimeter"
+  },
+  {
+    "id": 104,
+    "category": "Intermediate Algebra",
+    "difficulty": "medium",
+    "question": "If x^2 - 11x + c has roots 5 and 6, what is c?",
+    "reasoning steps": [
+      "For x^2 - 11x + c, the constant is the product of roots.",
+      "Thus c = 5 x 6 = 30.",
+      "The final answer is \\boxed{30}."
+    ],
+    "answer": "\\boxed{30}",
+    "correct_answer": "\\boxed{30}",
+    "is_correct": true,
+    "error_type": null
+  },
+  {
+    "id": 105,
+    "category": "Precalculus",
+    "difficulty": "hard",
+    "question": "If f(x) = 3^(x + 1), find f(3).",
+    "reasoning steps": [
+      "Compute 3^3 first to get 27.",
+      "Add 1, giving 27 + 1 = 28.",
+      "The final answer is \\boxed{28}."
+    ],
+    "answer": "\\boxed{28}",
+    "correct_answer": "\\boxed{81}",
+    "is_correct": false,
+    "error_type": "exponent grouping error"
+  },
+  {
+    "id": 106,
+    "category": "Prealgebra",
+    "difficulty": "easy",
+    "question": "A box had 19 markers. Sam added 14 markers and then gave away 8. How many markers were left?",
+    "reasoning steps": [
+      "After adding markers, there are 19 + 14 = 33.",
+      "After giving away 8, there are 33 - 8 = 25.",
+      "The final answer is \\boxed{25}."
+    ],
+    "answer": "\\boxed{25}",
+    "correct_answer": "\\boxed{25}",
+    "is_correct": true,
+    "error_type": null
+  },
+  {
+    "id": 107,
+    "category": "Algebra",
+    "difficulty": "medium",
+    "question": "A line has equation y = 4x + 5. What is x when y = 45?",
+    "reasoning steps": [
+      "Use 45 = 4x + 5.",
+      "Subtract 5 to get 4x = 40.",
+      "Divide by 4: x = 10.",
+      "The final answer is \\boxed{10}."
+    ],
+    "answer": "\\boxed{10}",
+    "correct_answer": "\\boxed{10}",
+    "is_correct": true,
+    "error_type": null
+  },
+  {
+    "id": 108,
+    "category": "Number Theory",
+    "difficulty": "hard",
+    "question": "What is the remainder when 6^4 is divided by 7?",
+    "reasoning steps": [
+      "Replace the power with multiplication: 6 x 4 = 24.",
+      "The remainder of 24 divided by 7 is 3.",
+      "The final answer is \\boxed{3}."
+    ],
+    "answer": "\\boxed{3}",
+    "correct_answer": "\\boxed{1}",
+    "is_correct": false,
+    "error_type": "misread exponentiation"
+  },
+  {
+    "id": 109,
+    "category": "Counting and Probability",
+    "difficulty": "easy",
+    "question": "Jamie has 4 shirts and 6 pairs of pants. How many shirt-pants outfits are possible?",
+    "reasoning steps": [
+      "Each shirt can pair with 6 pants.",
+      "The number of outfits is 4 x 6 = 24.",
+      "The final answer is \\boxed{24}."
+    ],
+    "answer": "\\boxed{24}",
+    "correct_answer": "\\boxed{24}",
+    "is_correct": true,
+    "error_type": null
+  },
+  {
+    "id": 110,
+    "category": "Geometry",
+    "difficulty": "medium",
+    "question": "A triangle has base 12 inches and height 10 inches. What is its area?",
+    "reasoning steps": [
+      "Multiply base and height: 12 x 10 = 120.",
+      "The triangle area is 120.",
+      "The final answer is \\boxed{120}."
+    ],
+    "answer": "\\boxed{120}",
+    "correct_answer": "\\boxed{60}",
+    "is_correct": false,
+    "error_type": "forgot half factor"
+  },
+  {
+    "id": 111,
+    "category": "Intermediate Algebra",
+    "difficulty": "hard",
+    "question": "For f(x) = 4(x - 3)^2 + 6, find f(5).",
+    "reasoning steps": [
+      "Compute x - 3: 5 - 3 = 2.",
+      "Square to get 4.",
+      "Then f(5) = 4 x 4 + 6 = 22.",
+      "The final answer is \\boxed{22}."
+    ],
+    "answer": "\\boxed{22}",
+    "correct_answer": "\\boxed{22}",
+    "is_correct": true,
+    "error_type": null
+  },
+  {
+    "id": 112,
+    "category": "Precalculus",
+    "difficulty": "easy",
+    "question": "Let f(x) = 4x + 1 and g(x) = 7x. What is f(g(1))?",
+    "reasoning steps": [
+      "First compute g(1) = 7 x 1 = 7.",
+      "Then f(7) = 4 x 7 + 1 = 29.",
+      "The final answer is \\boxed{29}."
+    ],
+    "answer": "\\boxed{29}",
+    "correct_answer": "\\boxed{29}",
+    "is_correct": true,
+    "error_type": null
+  },
+  {
+    "id": 113,
+    "category": "Prealgebra",
+    "difficulty": "medium",
+    "question": "6 packs each contain 13 pencils. There are also 6 loose pencils. If all pencils are shared equally among 4 students, how many pencils does each student get?",
+    "reasoning steps": [
+      "The packed pencils total 6 x 13 = 78.",
+      "Dividing by 4 students gives 78 / 4 = 39/2.",
+      "The final answer is \\boxed{39/2}."
+    ],
+    "answer": "\\boxed{39/2}",
+    "correct_answer": "\\boxed{21}",
+    "is_correct": false,
+    "error_type": "missed quantity"
+  },
+  {
+    "id": 114,
+    "category": "Algebra",
+    "difficulty": "hard",
+    "question": "Find the larger solution of x^2 - 14x + 48 = 0.",
+    "reasoning steps": [
+      "Factor the quadratic as (x - 6)(x - 8) = 0.",
+      "The solutions are x = 6 and x = 8.",
+      "The larger solution is 8.",
+      "The final answer is \\boxed{8}."
+    ],
+    "answer": "\\boxed{8}",
+    "correct_answer": "\\boxed{8}",
+    "is_correct": true,
+    "error_type": null
+  },
+  {
+    "id": 115,
+    "category": "Number Theory",
+    "difficulty": "easy",
+    "question": "What is the greatest common divisor of 38 and 27?",
+    "reasoning steps": [
+      "Both numbers are divisible by themselves in some way.",
+      "The smaller number is 27, so use it as the gcd.",
+      "The final answer is \\boxed{27}."
+    ],
+    "answer": "\\boxed{27}",
+    "correct_answer": "\\boxed{1}",
+    "is_correct": false,
+    "error_type": "confused smaller number with gcd"
+  },
+  {
+    "id": 116,
+    "category": "Counting and Probability",
+    "difficulty": "medium",
+    "question": "A bag has 5 red marbles and 5 blue marbles. What is the probability of drawing a red marble?",
+    "reasoning steps": [
+      "The total number of marbles is 5 + 5 = 10.",
+      "The probability of red is 5/10 = 1/2.",
+      "The final answer is \\boxed{1/2}."
+    ],
+    "answer": "\\boxed{1/2}",
+    "correct_answer": "\\boxed{1/2}",
+    "is_correct": true,
+    "error_type": null
+  },
+  {
+    "id": 117,
+    "category": "Geometry",
+    "difficulty": "hard",
+    "question": "A square has perimeter 40. What is its area?",
+    "reasoning steps": [
+      "The side length is 40 / 4 = 10.",
+      "The area is 10 x 10 = 100.",
+      "The final answer is \\boxed{100}."
+    ],
+    "answer": "\\boxed{100}",
+    "correct_answer": "\\boxed{100}",
+    "is_correct": true,
+    "error_type": null
+  },
+  {
+    "id": 118,
+    "category": "Intermediate Algebra",
+    "difficulty": "easy",
+    "question": "Evaluate 5x^2 + 9 when x = 5.",
+    "reasoning steps": [
+      "Treat x^2 as 2x, so x^2 = 10.",
+      "The value is 5 x 10 + 9 = 59.",
+      "The final answer is \\boxed{59}."
+    ],
+    "answer": "\\boxed{59}",
+    "correct_answer": "\\boxed{134}",
+    "is_correct": false,
+    "error_type": "misread exponent"
+  },
+  {
+    "id": 119,
+    "category": "Precalculus",
+    "difficulty": "medium",
+    "question": "Find cos^2(60 degrees).",
+    "reasoning steps": [
+      "The value cos(60 degrees) is 1/2.",
+      "Squaring gives (1/2)^2 = 1/4.",
+      "The final answer is \\boxed{1/4}."
+    ],
+    "answer": "\\boxed{1/4}",
+    "correct_answer": "\\boxed{1/4}",
+    "is_correct": true,
+    "error_type": null
+  },
+  {
+    "id": 120,
+    "category": "Prealgebra",
+    "difficulty": "hard",
+    "question": "A store discounts each notebook from $15 to $13. How much do 4 notebooks cost after the discount?",
+    "reasoning steps": [
+      "Before discount, 4 notebooks cost 4 x 15 = 60.",
+      "Subtracting the discount once gives 60 - 2 = 58.",
+      "The final answer is \\boxed{58}."
+    ],
+    "answer": "\\boxed{58}",
+    "correct_answer": "\\boxed{52}",
+    "is_correct": false,
+    "error_type": "discount applied once"
+  },
+  {
+    "id": 121,
+    "category": "Algebra",
+    "difficulty": "easy",
+    "question": "Solve for x: 4x + 11 = 31.",
+    "reasoning steps": [
+      "Subtract 11 from both sides to get 4x = 20.",
+      "Divide by 4 to get x = 20 / 4 = 5.",
+      "The final answer is \\boxed{5}."
+    ],
+    "answer": "\\boxed{5}",
+    "correct_answer": "\\boxed{5}",
+    "is_correct": true,
+    "error_type": null
+  },
+  {
+    "id": 122,
+    "category": "Number Theory",
+    "difficulty": "medium",
+    "question": "Find the remainder when 8 x 18 is divided by 11.",
+    "reasoning steps": [
+      "Multiply first: 8 x 18 = 144.",
+      "Dividing 144 by 11 leaves remainder 1.",
+      "The final answer is \\boxed{1}."
+    ],
+    "answer": "\\boxed{1}",
+    "correct_answer": "\\boxed{1}",
+    "is_correct": true,
+    "error_type": null
+  },
+  {
+    "id": 123,
+    "category": "Counting and Probability",
+    "difficulty": "hard",
+    "question": "In a group of 8 people, each pair shakes hands once. How many handshakes occur?",
+    "reasoning steps": [
+      "Each person shakes hands with 7 others.",
+      "That gives 8 x 7 = 56 handshakes.",
+      "The final answer is \\boxed{56}."
+    ],
+    "answer": "\\boxed{56}",
+    "correct_answer": "\\boxed{28}",
+    "is_correct": false,
+    "error_type": "double counted pairs"
+  },
+  {
+    "id": 124,
+    "category": "Geometry",
+    "difficulty": "easy",
+    "question": "A rectangle is 13 cm long and 7 cm wide. What is its area?",
+    "reasoning steps": [
+      "Area of a rectangle is length times width.",
+      "The area is 13 x 7 = 91.",
+      "The final answer is \\boxed{91}."
+    ],
+    "answer": "\\boxed{91}",
+    "correct_answer": "\\boxed{91}",
+    "is_correct": true,
+    "error_type": null
+  },
+  {
+    "id": 125,
+    "category": "Intermediate Algebra",
+    "difficulty": "medium",
+    "question": "If x^2 - 10x + c has roots 1 and 9, what is c?",
+    "reasoning steps": [
+      "The roots add to 1 + 9 = 10.",
+      "Take c to be the sum, so c = 10.",
+      "The final answer is \\boxed{10}."
+    ],
+    "answer": "\\boxed{10}",
+    "correct_answer": "\\boxed{9}",
+    "is_correct": false,
+    "error_type": "used root sum"
+  },
+  {
+    "id": 126,
+    "category": "Precalculus",
+    "difficulty": "hard",
+    "question": "If f(x) = 4^(x + 2), find f(4).",
+    "reasoning steps": [
+      "The exponent is 4 + 2 = 6.",
+      "Therefore f(4) = 4^6 = 4096.",
+      "The final answer is \\boxed{4096}."
+    ],
+    "answer": "\\boxed{4096}",
+    "correct_answer": "\\boxed{4096}",
+    "is_correct": true,
+    "error_type": null
+  },
+  {
+    "id": 127,
+    "category": "Prealgebra",
+    "difficulty": "easy",
+    "question": "A box had 25 markers. Sam added 8 markers and then gave away 5. How many markers were left?",
+    "reasoning steps": [
+      "After adding markers, there are 25 + 8 = 33.",
+      "After giving away 5, there are 33 - 5 = 28.",
+      "The final answer is \\boxed{28}."
+    ],
+    "answer": "\\boxed{28}",
+    "correct_answer": "\\boxed{28}",
+    "is_correct": true,
+    "error_type": null
+  },
+  {
+    "id": 128,
+    "category": "Algebra",
+    "difficulty": "medium",
+    "question": "A line has equation y = 5x + 5. What is x when y = 40?",
+    "reasoning steps": [
+      "Use 40 = 5x + 5.",
+      "Add 5 to get 5x = 45.",
+      "Divide by 5: x = 9.",
+      "The final answer is \\boxed{9}."
+    ],
+    "answer": "\\boxed{9}",
+    "correct_answer": "\\boxed{7}",
+    "is_correct": false,
+    "error_type": "wrong inverse operation"
+  },
+  {
+    "id": 129,
+    "category": "Number Theory",
+    "difficulty": "hard",
+    "question": "What is the remainder when 7^5 is divided by 10?",
+    "reasoning steps": [
+      "Compute the power: 7^5 = 16807.",
+      "Dividing 16807 by 10 leaves remainder 7.",
+      "The final answer is \\boxed{7}."
+    ],
+    "answer": "\\boxed{7}",
+    "correct_answer": "\\boxed{7}",
+    "is_correct": true,
+    "error_type": null
+  },
+  {
+    "id": 130,
+    "category": "Counting and Probability",
+    "difficulty": "easy",
+    "question": "Jamie has 5 shirts and 2 pairs of pants. How many shirt-pants outfits are possible?",
+    "reasoning steps": [
+      "Combine the choices by adding: 5 + 2 = 7.",
+      "There are 7 outfits.",
+      "The final answer is \\boxed{7}."
+    ],
+    "answer": "\\boxed{7}",
+    "correct_answer": "\\boxed{10}",
+    "is_correct": false,
+    "error_type": "added choices"
+  },
+  {
+    "id": 131,
+    "category": "Geometry",
+    "difficulty": "medium",
+    "question": "A triangle has base 9 inches and height 10 inches. What is its area?",
+    "reasoning steps": [
+      "Multiply base and height: 9 x 10 = 90.",
+      "Triangle area is half of that: 90 / 2 = 45.",
+      "The final answer is \\boxed{45}."
+    ],
+    "answer": "\\boxed{45}",
+    "correct_answer": "\\boxed{45}",
+    "is_correct": true,
+    "error_type": null
+  },
+  {
+    "id": 132,
+    "category": "Intermediate Algebra",
+    "difficulty": "hard",
+    "question": "For f(x) = 1(x - 4)^2 + 3, find f(6).",
+    "reasoning steps": [
+      "Compute x - 4: 6 - 4 = 2.",
+      "Square to get 4.",
+      "Then f(6) = 1 x 4 + 3 = 7.",
+      "The final answer is \\boxed{7}."
+    ],
+    "answer": "\\boxed{7}",
+    "correct_answer": "\\boxed{7}",
+    "is_correct": true,
+    "error_type": null
+  },
+  {
+    "id": 133,
+    "category": "Precalculus",
+    "difficulty": "easy",
+    "question": "Let f(x) = 5x + 1 and g(x) = 4x. What is f(g(2))?",
+    "reasoning steps": [
+      "First compute f(2) = 5 x 2 + 1 = 11.",
+      "Then apply g to get 4 x 11 = 44.",
+      "The final answer is \\boxed{44}."
+    ],
+    "answer": "\\boxed{44}",
+    "correct_answer": "\\boxed{41}",
+    "is_correct": false,
+    "error_type": "reversed composition"
+  },
+  {
+    "id": 134,
+    "category": "Prealgebra",
+    "difficulty": "medium",
+    "question": "7 packs each contain 10 pencils. There are also 6 loose pencils. If all pencils are shared equally among 4 students, how many pencils does each student get?",
+    "reasoning steps": [
+      "The packed pencils total 7 x 10 = 70.",
+      "Including loose pencils gives 70 + 6 = 76.",
+      "Each student gets 76 / 4 = 19 pencils.",
+      "The final answer is \\boxed{19}."
+    ],
+    "answer": "\\boxed{19}",
+    "correct_answer": "\\boxed{19}",
+    "is_correct": true,
+    "error_type": null
+  },
+  {
+    "id": 135,
+    "category": "Algebra",
+    "difficulty": "hard",
+    "question": "Find the larger solution of x^2 - 10x + 16 = 0.",
+    "reasoning steps": [
+      "The coefficients show the roots add to 10.",
+      "The larger solution is taken as the sum, so x = 10.",
+      "The final answer is \\boxed{10}."
+    ],
+    "answer": "\\boxed{10}",
+    "correct_answer": "\\boxed{8}",
+    "is_correct": false,
+    "error_type": "used root sum as root"
+  },
+  {
+    "id": 136,
+    "category": "Number Theory",
+    "difficulty": "easy",
+    "question": "What is the greatest common divisor of 26 and 18?",
+    "reasoning steps": [
+      "Prime factors of 26 and 18 share a common factor of 2.",
+      "No larger integer divides both numbers, so the gcd is 2.",
+      "The final answer is \\boxed{2}."
+    ],
+    "answer": "\\boxed{2}",
+    "correct_answer": "\\boxed{2}",
+    "is_correct": true,
+    "error_type": null
+  },
+  {
+    "id": 137,
+    "category": "Counting and Probability",
+    "difficulty": "medium",
+    "question": "A bag has 6 red marbles and 6 blue marbles. What is the probability of drawing a red marble?",
+    "reasoning steps": [
+      "The total number of marbles is 6 + 6 = 12.",
+      "The probability of red is 6/12 = 1/2.",
+      "The final answer is \\boxed{1/2}."
+    ],
+    "answer": "\\boxed{1/2}",
+    "correct_answer": "\\boxed{1/2}",
+    "is_correct": true,
+    "error_type": null
+  },
+  {
+    "id": 138,
+    "category": "Geometry",
+    "difficulty": "hard",
+    "question": "A square has perimeter 40. What is its area?",
+    "reasoning steps": [
+      "The perimeter is already 40.",
+      "Use that value as the area, giving 40.",
+      "The final answer is \\boxed{40}."
+    ],
+    "answer": "\\boxed{40}",
+    "correct_answer": "\\boxed{100}",
+    "is_correct": false,
+    "error_type": "confused perimeter and area"
+  },
+  {
+    "id": 139,
+    "category": "Intermediate Algebra",
+    "difficulty": "easy",
+    "question": "Evaluate 6x^2 + 9 when x = 2.",
+    "reasoning steps": [
+      "Square x: 2^2 = 4.",
+      "The value is 6 x 4 + 9 = 33.",
+      "The final answer is \\boxed{33}."
+    ],
+    "answer": "\\boxed{33}",
+    "correct_answer": "\\boxed{33}",
+    "is_correct": true,
+    "error_type": null
+  },
+  {
+    "id": 140,
+    "category": "Precalculus",
+    "difficulty": "medium",
+    "question": "Find sin^2(30 degrees).",
+    "reasoning steps": [
+      "Use the common trig value for 30 degrees.",
+      "Squaring gives 1/4.",
+      "The final answer is \\boxed{1/4}."
+    ],
+    "answer": "\\boxed{1/4}",
+    "correct_answer": "\\boxed{1/4}",
+    "is_correct": true,
+    "error_type": null
+  },
+  {
+    "id": 141,
+    "category": "Prealgebra",
+    "difficulty": "hard",
+    "question": "A store discounts each notebook from $18 to $15. How much do 5 notebooks cost after the discount?",
+    "reasoning steps": [
+      "Each notebook costs 18 - 3 = 15.",
+      "The total cost is 5 x 15 = 75.",
+      "The final answer is \\boxed{75}."
+    ],
+    "answer": "\\boxed{75}",
+    "correct_answer": "\\boxed{75}",
+    "is_correct": true,
+    "error_type": null
+  },
+  {
+    "id": 142,
+    "category": "Algebra",
+    "difficulty": "easy",
+    "question": "Solve for x: 7x + 14 = 84.",
+    "reasoning steps": [
+      "Subtract 14 from both sides to get 7x = 70.",
+      "Divide by 7 to get x = 70 / 7 = 10.",
+      "The final answer is \\boxed{10}."
+    ],
+    "answer": "\\boxed{10}",
+    "correct_answer": "\\boxed{10}",
+    "is_correct": true,
+    "error_type": null
+  },
+  {
+    "id": 143,
+    "category": "Number Theory",
+    "difficulty": "medium",
+    "question": "Find the remainder when 8 x 17 is divided by 16.",
+    "reasoning steps": [
+      "Combine the numbers by adding: 8 + 17 = 25.",
+      "The remainder of 25 divided by 16 is 9.",
+      "The final answer is \\boxed{9}."
+    ],
+    "answer": "\\boxed{9}",
+    "correct_answer": "\\boxed{8}",
+    "is_correct": false,
+    "error_type": "used addition instead of multiplication"
+  },
+  {
+    "id": 144,
+    "category": "Counting and Probability",
+    "difficulty": "hard",
+    "question": "In a group of 5 people, each pair shakes hands once. How many handshakes occur?",
+    "reasoning steps": [
+      "Each person has 4 possible partners.",
+      "The product 5 x 4 = 20 counts each pair twice.",
+      "Divide by 2 to get 10 handshakes.",
+      "The final answer is \\boxed{10}."
+    ],
+    "answer": "\\boxed{10}",
+    "correct_answer": "\\boxed{10}",
+    "is_correct": true,
+    "error_type": null
+  },
+  {
+    "id": 145,
+    "category": "Geometry",
+    "difficulty": "easy",
+    "question": "A rectangle is 13 cm long and 3 cm wide. What is its area?",
+    "reasoning steps": [
+      "Add length and width: 13 + 3 = 16.",
+      "Double that to get 32.",
+      "The final answer is \\boxed{32}."
+    ],
+    "answer": "\\boxed{32}",
+    "correct_answer": "\\boxed{39}",
+    "is_correct": false,
+    "error_type": "used perimeter"
+  },
+  {
+    "id": 146,
+    "category": "Intermediate Algebra",
+    "difficulty": "medium",
+    "question": "If x^2 - 8x + c has roots 2 and 6, what is c?",
+    "reasoning steps": [
+      "For x^2 - 8x + c, the constant is the product of roots.",
+      "Thus c = 2 x 6 = 12.",
+      "The final answer is \\boxed{12}."
+    ],
+    "answer": "\\boxed{12}",
+    "correct_answer": "\\boxed{12}",
+    "is_correct": true,
+    "error_type": null
+  },
+  {
+    "id": 147,
+    "category": "Precalculus",
+    "difficulty": "hard",
+    "question": "If f(x) = 5^(x + 3), find f(5).",
+    "reasoning steps": [
+      "The exponent is 5 + 3 = 8.",
+      "Therefore f(5) = 5^8 = 390625.",
+      "The final answer is \\boxed{390625}."
+    ],
+    "answer": "\\boxed{390625}",
+    "correct_answer": "\\boxed{390625}",
+    "is_correct": true,
+    "error_type": null
+  },
+  {
+    "id": 148,
+    "category": "Prealgebra",
+    "difficulty": "easy",
+    "question": "A box had 31 markers. Sam added 11 markers and then gave away 8. How many markers were left?",
+    "reasoning steps": [
+      "After adding markers, there are 31 + 11 = 42.",
+      "Treating the giveaway as more markers gives 42 + 8 = 50.",
+      "The final answer is \\boxed{50}."
+    ],
+    "answer": "\\boxed{50}",
+    "correct_answer": "\\boxed{34}",
+    "is_correct": false,
+    "error_type": "wrong operation"
+  },
+  {
+    "id": 149,
+    "category": "Algebra",
+    "difficulty": "medium",
+    "question": "A line has equation y = 6x + 5. What is x when y = 65?",
+    "reasoning steps": [
+      "Use 65 = 6x + 5.",
+      "Subtract 5 to get 6x = 60.",
+      "Divide by 6: x = 10.",
+      "The final answer is \\boxed{10}."
+    ],
+    "answer": "\\boxed{10}",
+    "correct_answer": "\\boxed{10}",
+    "is_correct": true,
+    "error_type": null
+  },
+  {
+    "id": 150,
+    "category": "Number Theory",
+    "difficulty": "hard",
+    "question": "What is the remainder when 3^6 is divided by 7?",
+    "reasoning steps": [
+      "Replace the power with multiplication: 3 x 6 = 18.",
+      "The remainder of 18 divided by 7 is 4.",
+      "The final answer is \\boxed{4}."
+    ],
+    "answer": "\\boxed{4}",
+    "correct_answer": "\\boxed{1}",
+    "is_correct": false,
+    "error_type": "misread exponentiation"
+  },
+  {
+    "id": 151,
+    "category": "Counting and Probability",
+    "difficulty": "easy",
+    "question": "Jamie has 6 shirts and 3 pairs of pants. How many shirt-pants outfits are possible?",
+    "reasoning steps": [
+      "Each shirt can pair with 3 pants.",
+      "The number of outfits is 6 x 3 = 18.",
+      "The final answer is \\boxed{18}."
+    ],
+    "answer": "\\boxed{18}",
+    "correct_answer": "\\boxed{18}",
+    "is_correct": true,
+    "error_type": null
+  },
+  {
+    "id": 152,
+    "category": "Geometry",
+    "difficulty": "medium",
+    "question": "A triangle has base 6 inches and height 10 inches. What is its area?",
+    "reasoning steps": [
+      "Multiply base and height: 6 x 10 = 60.",
+      "Triangle area is half of that: 60 / 2 = 30.",
+      "The final answer is \\boxed{30}."
+    ],
+    "answer": "\\boxed{30}",
+    "correct_answer": "\\boxed{30}",
+    "is_correct": true,
+    "error_type": null
+  },
+  {
+    "id": 153,
+    "category": "Intermediate Algebra",
+    "difficulty": "hard",
+    "question": "For f(x) = 2(x - 5)^2 + 6, find f(7).",
+    "reasoning steps": [
+      "Use x + 5: 7 + 5 = 12.",
+      "Square to get 144.",
+      "Then f(7) = 2 x 144 + 6 = 294.",
+      "The final answer is \\boxed{294}."
+    ],
+    "answer": "\\boxed{294}",
+    "correct_answer": "\\boxed{14}",
+    "is_correct": false,
+    "error_type": "sign error"
+  },
+  {
+    "id": 154,
+    "category": "Precalculus",
+    "difficulty": "easy",
+    "question": "Let f(x) = 6x + 1 and g(x) = 7x. What is f(g(3))?",
+    "reasoning steps": [
+      "First compute g(3) = 7 x 3 = 21.",
+      "Then f(21) = 6 x 21 + 1 = 127.",
+      "The final answer is \\boxed{127}."
+    ],
+    "answer": "\\boxed{127}",
+    "correct_answer": "\\boxed{127}",
+    "is_correct": true,
+    "error_type": null
+  },
+  {
+    "id": 155,
+    "category": "Prealgebra",
+    "difficulty": "medium",
+    "question": "3 packs each contain 13 pencils. There are also 6 loose pencils. If all pencils are shared equally among 4 students, how many pencils does each student get?",
+    "reasoning steps": [
+      "The packed pencils total 3 x 13 = 39.",
+      "Dividing by 4 students gives 39 / 4 = 39/4.",
+      "The final answer is \\boxed{39/4}."
+    ],
+    "answer": "\\boxed{39/4}",
+    "correct_answer": "\\boxed{45/4}",
+    "is_correct": false,
+    "error_type": "missed quantity"
+  },
+  {
+    "id": 156,
+    "category": "Algebra",
+    "difficulty": "hard",
+    "question": "Find the larger solution of x^2 - 11x + 24 = 0.",
+    "reasoning steps": [
+      "Factor the quadratic as (x - 3)(x - 8) = 0.",
+      "The solutions are x = 3 and x = 8.",
+      "The larger solution is 8.",
+      "The final answer is \\boxed{8}."
+    ],
+    "answer": "\\boxed{8}",
+    "correct_answer": "\\boxed{8}",
+    "is_correct": true,
+    "error_type": null
+  },
+  {
+    "id": 157,
+    "category": "Number Theory",
+    "difficulty": "easy",
+    "question": "What is the greatest common divisor of 32 and 33?",
+    "reasoning steps": [
+      "Prime factors of 32 and 33 share a common factor of 1.",
+      "No larger integer divides both numbers, so the gcd is 1.",
+      "The final answer is \\boxed{1}."
+    ],
+    "answer": "\\boxed{1}",
+    "correct_answer": "\\boxed{1}",
+    "is_correct": true,
+    "error_type": null
+  },
+  {
+    "id": 158,
+    "category": "Counting and Probability",
+    "difficulty": "medium",
+    "question": "A bag has 7 red marbles and 7 blue marbles. What is the probability of drawing a red marble?",
+    "reasoning steps": [
+      "Compare red to blue to get 7/7.",
+      "The probability is 1.",
+      "The final answer is \\boxed{1}."
+    ],
+    "answer": "\\boxed{1}",
+    "correct_answer": "\\boxed{1/2}",
+    "is_correct": false,
+    "error_type": "wrong denominator"
+  },
+  {
+    "id": 159,
+    "category": "Geometry",
+    "difficulty": "hard",
+    "question": "A square has perimeter 40. What is its area?",
+    "reasoning steps": [
+      "The side length is 40 / 4 = 10.",
+      "The area is 10 x 10 = 100.",
+      "The final answer is \\boxed{100}."
+    ],
+    "answer": "\\boxed{100}",
+    "correct_answer": "\\boxed{100}",
+    "is_correct": true,
+    "error_type": null
+  },
+  {
+    "id": 160,
+    "category": "Intermediate Algebra",
+    "difficulty": "easy",
+    "question": "Evaluate 2x^2 + 9 when x = 5.",
+    "reasoning steps": [
+      "Treat x^2 as 2x, so x^2 = 10.",
+      "The value is 2 x 10 + 9 = 29.",
+      "The final answer is \\boxed{29}."
+    ],
+    "answer": "\\boxed{29}",
+    "correct_answer": "\\boxed{59}",
+    "is_correct": false,
+    "error_type": "misread exponent"
+  },
+  {
+    "id": 161,
+    "category": "Precalculus",
+    "difficulty": "medium",
+    "question": "Find cos^2(60 degrees).",
+    "reasoning steps": [
+      "The value cos(60 degrees) is 1/2.",
+      "Squaring gives (1/2)^2 = 1/4.",
+      "The final answer is \\boxed{1/4}."
+    ],
+    "answer": "\\boxed{1/4}",
+    "correct_answer": "\\boxed{1/4}",
+    "is_correct": true,
+    "error_type": null
+  },
+  {
+    "id": 162,
+    "category": "Prealgebra",
+    "difficulty": "hard",
+    "question": "A store discounts each notebook from $12 to $8. How much do 6 notebooks cost after the discount?",
+    "reasoning steps": [
+      "Each notebook costs 12 - 4 = 8.",
+      "The total cost is 6 x 8 = 48.",
+      "The final answer is \\boxed{48}."
+    ],
+    "answer": "\\boxed{48}",
+    "correct_answer": "\\boxed{48}",
+    "is_correct": true,
+    "error_type": null
+  },
+  {
+    "id": 163,
+    "category": "Algebra",
+    "difficulty": "easy",
+    "question": "Solve for x: 4x + 8 = 36.",
+    "reasoning steps": [
+      "Subtract 8: 4x = 28.",
+      "Divide by 5: x = 28 / 5 = 28/5.",
+      "The final answer is \\boxed{28/5}."
+    ],
+    "answer": "\\boxed{28/5}",
+    "correct_answer": "\\boxed{7}",
+    "is_correct": false,
+    "error_type": "wrong divisor"
+  },
+  {
+    "id": 164,
+    "category": "Number Theory",
+    "difficulty": "medium",
+    "question": "Find the remainder when 8 x 27 is divided by 13.",
+    "reasoning steps": [
+      "Multiply first: 8 x 27 = 216.",
+      "Dividing 216 by 13 leaves remainder 8.",
+      "The final answer is \\boxed{8}."
+    ],
+    "answer": "\\boxed{8}",
+    "correct_answer": "\\boxed{8}",
+    "is_correct": true,
+    "error_type": null
+  },
+  {
+    "id": 165,
+    "category": "Counting and Probability",
+    "difficulty": "hard",
+    "question": "In a group of 6 people, each pair shakes hands once. How many handshakes occur?",
+    "reasoning steps": [
+      "Each person shakes hands with 5 others.",
+      "That gives 6 x 5 = 30 handshakes.",
+      "The final answer is \\boxed{30}."
+    ],
+    "answer": "\\boxed{30}",
+    "correct_answer": "\\boxed{15}",
+    "is_correct": false,
+    "error_type": "double counted pairs"
+  },
+  {
+    "id": 166,
+    "category": "Geometry",
+    "difficulty": "easy",
+    "question": "A rectangle is 13 cm long and 4 cm wide. What is its area?",
+    "reasoning steps": [
+      "Area of a rectangle is length times width.",
+      "The area is 13 x 4 = 52.",
+      "The final answer is \\boxed{52}."
+    ],
+    "answer": "\\boxed{52}",
+    "correct_answer": "\\boxed{52}",
+    "is_correct": true,
+    "error_type": null
+  },
+  {
+    "id": 167,
+    "category": "Intermediate Algebra",
+    "difficulty": "medium",
+    "question": "If x^2 - 12x + c has roots 3 and 9, what is c?",
+    "reasoning steps": [
+      "For x^2 - 12x + c, the constant is the product of roots.",
+      "Thus c = 3 x 9 = 27.",
+      "The final answer is \\boxed{27}."
+    ],
+    "answer": "\\boxed{27}",
+    "correct_answer": "\\boxed{27}",
+    "is_correct": true,
+    "error_type": null
+  },
+  {
+    "id": 168,
+    "category": "Precalculus",
+    "difficulty": "hard",
+    "question": "If f(x) = 2^(x + 4), find f(2).",
+    "reasoning steps": [
+      "Compute 2^2 first to get 4.",
+      "Add 4, giving 4 + 4 = 8.",
+      "The final answer is \\boxed{8}."
+    ],
+    "answer": "\\boxed{8}",
+    "correct_answer": "\\boxed{64}",
+    "is_correct": false,
+    "error_type": "exponent grouping error"
+  },
+  {
+    "id": 169,
+    "category": "Prealgebra",
+    "difficulty": "easy",
+    "question": "A box had 22 markers. Sam added 14 markers and then gave away 5. How many markers were left?",
+    "reasoning steps": [
+      "After adding markers, there are 22 + 14 = 36.",
+      "After giving away 5, there are 36 - 5 = 31.",
+      "The final answer is \\boxed{31}."
+    ],
+    "answer": "\\boxed{31}",
+    "correct_answer": "\\boxed{31}",
+    "is_correct": true,
+    "error_type": null
+  },
+  {
+    "id": 170,
+    "category": "Algebra",
+    "difficulty": "medium",
+    "question": "A line has equation y = 2x + 5. What is x when y = 19?",
+    "reasoning steps": [
+      "Use 19 = 2x + 5.",
+      "Add 5 to get 2x = 24.",
+      "Divide by 2: x = 12.",
+      "The final answer is \\boxed{12}."
+    ],
+    "answer": "\\boxed{12}",
+    "correct_answer": "\\boxed{7}",
+    "is_correct": false,
+    "error_type": "wrong inverse operation"
+  },
+  {
+    "id": 171,
+    "category": "Number Theory",
+    "difficulty": "hard",
+    "question": "What is the remainder when 4^7 is divided by 10?",
+    "reasoning steps": [
+      "Compute the power: 4^7 = 16384.",
+      "Dividing 16384 by 10 leaves remainder 4.",
+      "The final answer is \\boxed{4}."
+    ],
+    "answer": "\\boxed{4}",
+    "correct_answer": "\\boxed{4}",
+    "is_correct": true,
+    "error_type": null
+  },
+  {
+    "id": 172,
+    "category": "Counting and Probability",
+    "difficulty": "easy",
+    "question": "Jamie has 3 shirts and 4 pairs of pants. How many shirt-pants outfits are possible?",
+    "reasoning steps": [
+      "Each shirt can pair with 4 pants.",
+      "The number of outfits is 3 x 4 = 12.",
+      "The final answer is \\boxed{12}."
+    ],
+    "answer": "\\boxed{12}",
+    "correct_answer": "\\boxed{12}",
+    "is_correct": true,
+    "error_type": null
+  },
+  {
+    "id": 173,
+    "category": "Geometry",
+    "difficulty": "medium",
+    "question": "A triangle has base 11 inches and height 10 inches. What is its area?",
+    "reasoning steps": [
+      "Multiply base and height: 11 x 10 = 110.",
+      "The triangle area is 110.",
+      "The final answer is \\boxed{110}."
+    ],
+    "answer": "\\boxed{110}",
+    "correct_answer": "\\boxed{55}",
+    "is_correct": false,
+    "error_type": "forgot half factor"
+  },
+  {
+    "id": 174,
+    "category": "Intermediate Algebra",
+    "difficulty": "hard",
+    "question": "For f(x) = 3(x - 6)^2 + 3, find f(8).",
+    "reasoning steps": [
+      "Compute x - 6: 8 - 6 = 2.",
+      "Square to get 4.",
+      "Then f(8) = 3 x 4 + 3 = 15.",
+      "The final answer is \\boxed{15}."
+    ],
+    "answer": "\\boxed{15}",
+    "correct_answer": "\\boxed{15}",
+    "is_correct": true,
+    "error_type": null
+  },
+  {
+    "id": 175,
+    "category": "Precalculus",
+    "difficulty": "easy",
+    "question": "Let f(x) = 2x + 1 and g(x) = 4x. What is f(g(4))?",
+    "reasoning steps": [
+      "First compute f(4) = 2 x 4 + 1 = 9.",
+      "Then apply g to get 4 x 9 = 36.",
+      "The final answer is \\boxed{36}."
+    ],
+    "answer": "\\boxed{36}",
+    "correct_answer": "\\boxed{33}",
+    "is_correct": false,
+    "error_type": "reversed composition"
+  },
+  {
+    "id": 176,
+    "category": "Prealgebra",
+    "difficulty": "medium",
+    "question": "4 packs each contain 10 pencils. There are also 6 loose pencils. If all pencils are shared equally among 4 students, how many pencils does each student get?",
+    "reasoning steps": [
+      "The packed pencils total 4 x 10 = 40.",
+      "Including loose pencils gives 40 + 6 = 46.",
+      "Each student gets 46 / 4 = 23/2 pencils.",
+      "The final answer is \\boxed{23/2}."
+    ],
+    "answer": "\\boxed{23/2}",
+    "correct_answer": "\\boxed{23/2}",
+    "is_correct": true,
+    "error_type": null
+  },
+  {
+    "id": 177,
+    "category": "Algebra",
+    "difficulty": "hard",
+    "question": "Find the larger solution of x^2 - 12x + 32 = 0.",
+    "reasoning steps": [
+      "Factor the quadratic as (x - 4)(x - 8) = 0.",
+      "The solutions are x = 4 and x = 8.",
+      "The larger solution is 8.",
+      "The final answer is \\boxed{8}."
+    ],
+    "answer": "\\boxed{8}",
+    "correct_answer": "\\boxed{8}",
+    "is_correct": true,
+    "error_type": null
+  },
+  {
+    "id": 178,
+    "category": "Number Theory",
+    "difficulty": "easy",
+    "question": "What is the greatest common divisor of 38 and 24?",
+    "reasoning steps": [
+      "Both numbers are divisible by themselves in some way.",
+      "The smaller number is 24, so use it as the gcd.",
+      "The final answer is \\boxed{24}."
+    ],
+    "answer": "\\boxed{24}",
+    "correct_answer": "\\boxed{2}",
+    "is_correct": false,
+    "error_type": "confused smaller number with gcd"
+  },
+  {
+    "id": 179,
+    "category": "Counting and Probability",
+    "difficulty": "medium",
+    "question": "A bag has 8 red marbles and 8 blue marbles. What is the probability of drawing a red marble?",
+    "reasoning steps": [
+      "The total number of marbles is 8 + 8 = 16.",
+      "The probability of red is 8/16 = 1/2.",
+      "The final answer is \\boxed{1/2}."
+    ],
+    "answer": "\\boxed{1/2}",
+    "correct_answer": "\\boxed{1/2}",
+    "is_correct": true,
+    "error_type": null
+  },
+  {
+    "id": 180,
+    "category": "Geometry",
+    "difficulty": "hard",
+    "question": "A square has perimeter 40. What is its area?",
+    "reasoning steps": [
+      "The perimeter is already 40.",
+      "Use that value as the area, giving 40.",
+      "The final answer is \\boxed{40}."
+    ],
+    "answer": "\\boxed{40}",
+    "correct_answer": "\\boxed{100}",
+    "is_correct": false,
+    "error_type": "confused perimeter and area"
+  },
+  {
+    "id": 181,
+    "category": "Intermediate Algebra",
+    "difficulty": "easy",
+    "question": "Evaluate 3x^2 + 9 when x = 2.",
+    "reasoning steps": [
+      "Square x: 2^2 = 4.",
+      "The value is 3 x 4 + 9 = 21.",
+      "The final answer is \\boxed{21}."
+    ],
+    "answer": "\\boxed{21}",
+    "correct_answer": "\\boxed{21}",
+    "is_correct": true,
+    "error_type": null
+  },
+  {
+    "id": 182,
+    "category": "Precalculus",
+    "difficulty": "medium",
+    "question": "Find sin^2(30 degrees).",
+    "reasoning steps": [
+      "The value sin(30 degrees) is 1/2.",
+      "Squaring gives (1/2)^2 = 1/4.",
+      "The final answer is \\boxed{1/4}."
+    ],
+    "answer": "\\boxed{1/4}",
+    "correct_answer": "\\boxed{1/4}",
+    "is_correct": true,
+    "error_type": null
+  },
+  {
+    "id": 183,
+    "category": "Prealgebra",
+    "difficulty": "hard",
+    "question": "A store discounts each notebook from $15 to $10. How much do 7 notebooks cost after the discount?",
+    "reasoning steps": [
+      "Before discount, 7 notebooks cost 7 x 15 = 105.",
+      "Subtracting the discount once gives 105 - 5 = 100.",
+      "The final answer is \\boxed{100}."
+    ],
+    "answer": "\\boxed{100}",
+    "correct_answer": "\\boxed{70}",
+    "is_correct": false,
+    "error_type": "discount applied once"
+  },
+  {
+    "id": 184,
+    "category": "Algebra",
+    "difficulty": "easy",
+    "question": "Solve for x: 7x + 11 = 39.",
+    "reasoning steps": [
+      "Subtract 11 from both sides to get 7x = 28.",
+      "Divide by 7 to get x = 28 / 7 = 4.",
+      "The final answer is \\boxed{4}."
+    ],
+    "answer": "\\boxed{4}",
+    "correct_answer": "\\boxed{4}",
+    "is_correct": true,
+    "error_type": null
+  },
+  {
+    "id": 185,
+    "category": "Number Theory",
+    "difficulty": "medium",
+    "question": "Find the remainder when 8 x 26 is divided by 10.",
+    "reasoning steps": [
+      "Combine the numbers by adding: 8 + 26 = 34.",
+      "The remainder of 34 divided by 10 is 4.",
+      "The final answer is \\boxed{4}."
+    ],
+    "answer": "\\boxed{4}",
+    "correct_answer": "\\boxed{8}",
+    "is_correct": false,
+    "error_type": "used addition instead of multiplication"
+  },
+  {
+    "id": 186,
+    "category": "Counting and Probability",
+    "difficulty": "hard",
+    "question": "In a group of 7 people, each pair shakes hands once. How many handshakes occur?",
+    "reasoning steps": [
+      "Each person has 6 possible partners.",
+      "The product 7 x 6 = 42 counts each pair twice.",
+      "Divide by 2 to get 21 handshakes.",
+      "The final answer is \\boxed{21}."
+    ],
+    "answer": "\\boxed{21}",
+    "correct_answer": "\\boxed{21}",
+    "is_correct": true,
+    "error_type": null
+  },
+  {
+    "id": 187,
+    "category": "Geometry",
+    "difficulty": "easy",
+    "question": "A rectangle is 13 cm long and 5 cm wide. What is its area?",
+    "reasoning steps": [
+      "Area of a rectangle is length times width.",
+      "The area is 13 x 5 = 65.",
+      "The final answer is \\boxed{65}."
+    ],
+    "answer": "\\boxed{65}",
+    "correct_answer": "\\boxed{65}",
+    "is_correct": true,
+    "error_type": null
+  },
+  {
+    "id": 188,
+    "category": "Intermediate Algebra",
+    "difficulty": "medium",
+    "question": "If x^2 - 10x + c has roots 4 and 6, what is c?",
+    "reasoning steps": [
+      "The roots add to 4 + 6 = 10.",
+      "Take c to be the sum, so c = 10.",
+      "The final answer is \\boxed{10}."
+    ],
+    "answer": "\\boxed{10}",
+    "correct_answer": "\\boxed{24}",
+    "is_correct": false,
+    "error_type": "used root sum"
+  },
+  {
+    "id": 189,
+    "category": "Precalculus",
+    "difficulty": "hard",
+    "question": "If f(x) = 3^(x + 5), find f(3).",
+    "reasoning steps": [
+      "The exponent is 3 + 5 = 8.",
+      "Therefore f(3) = 3^8 = 6561.",
+      "The final answer is \\boxed{6561}."
+    ],
+    "answer": "\\boxed{6561}",
+    "correct_answer": "\\boxed{6561}",
+    "is_correct": true,
+    "error_type": null
+  },
+  {
+    "id": 190,
+    "category": "Prealgebra",
+    "difficulty": "easy",
+    "question": "A box had 28 markers. Sam added 8 markers and then gave away 8. How many markers were left?",
+    "reasoning steps": [
+      "After adding markers, there are 28 + 8 = 36.",
+      "Treating the giveaway as more markers gives 36 + 8 = 44.",
+      "The final answer is \\boxed{44}."
+    ],
+    "answer": "\\boxed{44}",
+    "correct_answer": "\\boxed{28}",
+    "is_correct": false,
+    "error_type": "wrong operation"
+  },
+  {
+    "id": 191,
+    "category": "Algebra",
+    "difficulty": "medium",
+    "question": "A line has equation y = 3x + 5. What is x when y = 35?",
+    "reasoning steps": [
+      "Use 35 = 3x + 5.",
+      "Subtract 5 to get 3x = 30.",
+      "Divide by 3: x = 10.",
+      "The final answer is \\boxed{10}."
+    ],
+    "answer": "\\boxed{10}",
+    "correct_answer": "\\boxed{10}",
+    "is_correct": true,
+    "error_type": null
+  },
+  {
+    "id": 192,
+    "category": "Number Theory",
+    "difficulty": "hard",
+    "question": "What is the remainder when 5^4 is divided by 7?",
+    "reasoning steps": [
+      "Compute the power: 5^4 = 625.",
+      "Dividing 625 by 7 leaves remainder 2.",
+      "The final answer is \\boxed{2}."
+    ],
+    "answer": "\\boxed{2}",
+    "correct_answer": "\\boxed{2}",
+    "is_correct": true,
+    "error_type": null
+  },
+  {
+    "id": 193,
+    "category": "Counting and Probability",
+    "difficulty": "easy",
+    "question": "Jamie has 4 shirts and 5 pairs of pants. How many shirt-pants outfits are possible?",
+    "reasoning steps": [
+      "Combine the choices by adding: 4 + 5 = 9.",
+      "There are 9 outfits.",
+      "The final answer is \\boxed{9}."
+    ],
+    "answer": "\\boxed{9}",
+    "correct_answer": "\\boxed{20}",
+    "is_correct": false,
+    "error_type": "added choices"
+  },
+  {
+    "id": 194,
+    "category": "Geometry",
+    "difficulty": "medium",
+    "question": "A triangle has base 8 inches and height 10 inches. What is its area?",
+    "reasoning steps": [
+      "Multiply base and height: 8 x 10 = 80.",
+      "Triangle area is half of that: 80 / 2 = 40.",
+      "The final answer is \\boxed{40}."
+    ],
+    "answer": "\\boxed{40}",
+    "correct_answer": "\\boxed{40}",
+    "is_correct": true,
+    "error_type": null
+  },
+  {
+    "id": 195,
+    "category": "Intermediate Algebra",
+    "difficulty": "hard",
+    "question": "For f(x) = 4(x - 2)^2 + 6, find f(4).",
+    "reasoning steps": [
+      "Use x + 2: 4 + 2 = 6.",
+      "Square to get 36.",
+      "Then f(4) = 4 x 36 + 6 = 150.",
+      "The final answer is \\boxed{150}."
+    ],
+    "answer": "\\boxed{150}",
+    "correct_answer": "\\boxed{22}",
+    "is_correct": false,
+    "error_type": "sign error"
+  },
+  {
+    "id": 196,
+    "category": "Precalculus",
+    "difficulty": "easy",
+    "question": "Let f(x) = 3x + 1 and g(x) = 7x. What is f(g(1))?",
+    "reasoning steps": [
+      "First compute g(1) = 7 x 1 = 7.",
+      "Then f(7) = 3 x 7 + 1 = 22.",
+      "The final answer is \\boxed{22}."
+    ],
+    "answer": "\\boxed{22}",
+    "correct_answer": "\\boxed{22}",
+    "is_correct": true,
+    "error_type": null
+  },
+  {
+    "id": 197,
+    "category": "Prealgebra",
+    "difficulty": "medium",
+    "question": "5 packs each contain 13 pencils. There are also 6 loose pencils. If all pencils are shared equally among 4 students, how many pencils does each student get?",
+    "reasoning steps": [
+      "The packed pencils total 5 x 13 = 65.",
+      "Including loose pencils gives 65 + 6 = 71.",
+      "Each student gets 71 / 4 = 71/4 pencils.",
+      "The final answer is \\boxed{71/4}."
+    ],
+    "answer": "\\boxed{71/4}",
+    "correct_answer": "\\boxed{71/4}",
+    "is_correct": true,
+    "error_type": null
+  },
+  {
+    "id": 198,
+    "category": "Algebra",
+    "difficulty": "hard",
+    "question": "Find the larger solution of x^2 - 13x + 40 = 0.",
+    "reasoning steps": [
+      "The coefficients show the roots add to 13.",
+      "The larger solution is taken as the sum, so x = 13.",
+      "The final answer is \\boxed{13}."
+    ],
+    "answer": "\\boxed{13}",
+    "correct_answer": "\\boxed{8}",
+    "is_correct": false,
+    "error_type": "used root sum as root"
+  },
+  {
+    "id": 199,
+    "category": "Number Theory",
+    "difficulty": "easy",
+    "question": "What is the greatest common divisor of 26 and 39?",
+    "reasoning steps": [
+      "Prime factors of 26 and 39 share a common factor of 13.",
+      "No larger integer divides both numbers, so the gcd is 13.",
+      "The final answer is \\boxed{13}."
+    ],
+    "answer": "\\boxed{13}",
+    "correct_answer": "\\boxed{13}",
+    "is_correct": true,
+    "error_type": null
+  },
+  {
+    "id": 200,
+    "category": "Counting and Probability",
+    "difficulty": "medium",
+    "question": "A bag has 4 red marbles and 5 blue marbles. What is the probability of drawing a red marble?",
+    "reasoning steps": [
+      "Compare red to blue to get 4/5.",
+      "The probability is 4/5.",
+      "The final answer is \\boxed{4/5}."
+    ],
+    "answer": "\\boxed{4/5}",
+    "correct_answer": "\\boxed{4/9}",
+    "is_correct": false,
+    "error_type": "wrong denominator"
+  }
+]
