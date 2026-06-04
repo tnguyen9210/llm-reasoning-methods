@@ -1,11 +1,13 @@
 '''
-A script to generating best-of-n (BoN) completions on the math/prm800k dataset 
-using the vLLM library. It contains a Config object for managing experimental paramters. 
-It runs multiple trials of generations, and saves the resulting completions to jsonl files 
-for downstream analaysis
+Generate best-of-n (BoN) completions for PRM800K/MATH problems
+with vLLM.
 
-v0101: base
-    use wandb to track experiments
+This script loads the PRM800K MATH test split, filters by problem
+level, runs multiple BoN generation trials with a configured vLLM
+model, logs timing metrics to Weights & Biases, and writes each
+trial's completions to JSONL files for downstream analysis.
+
+v0101: base BoN generation script with wandb experiment tracking.
 '''
 
 
@@ -14,25 +16,16 @@ os.environ["VLLM_CONFIGURE_LOGGING"] = "0"
 import logging
 logging.basicConfig(format='%(message)s', level=logging.FATAL+1)
 
-import time 
+import time
 import json
-import pprint
 
-import random
-import numpy as np
-
-import torch 
-import torch.distributed as dist
-from transformers import AutoModelForCausalLM, AutoTokenizer
-from vllm import LLM, SamplingParams, PoolingParams
+import torch
+from vllm import LLM
 
 from sal.config import Config
 
 from core import bon_search_v01_0_0
-from core.reward_models import RLHFFlow
-
 from utils.load_data import load_data_hf
-# from utils.utils import add_completions_to_dataset_simple
 
 import wandb
 
@@ -41,128 +34,98 @@ algo_dict = {
 }
 
 
-def main():
+def _make_result_dir(path: str) -> None:
+    try:
+        os.makedirs(path)
+        print(f"Directory '{path}' created successfully.")
+    except FileExistsError:
+        print(f"Directory '{path}' already exists.")
+    except OSError as e:
+        raise OSError(f"Error creating directory: {e}") from e
 
+
+def main():
     algo_version = "v01_0_0"
     algo_name = "bon"
     algo = algo_dict[algo_name]
-    
-    # base_dir
+
     base_dir = '/groups/chichengz/tnn/datasets/'
-    
-    # dataset path
-    ds_name = "prm800k"
+    ds_name  = "prm800k"
     ds_split = "test"
-    ds_dir = base_dir + "/prm800k/math_splits"
-    
-    # llm and prm path
-    # llm_dir = base_dir + "/Llama-3.2-1B-Instruct-GGUF/Llama-3.2-1B-Instruct.Q4_K_M.gguf"
-    # prm_dir = base_dir + "/Llama3.1-8B-PRM-Deepseek-Data-GGUF/Llama3.1-8B-PRM-Deepseek-Data.Q4_K_M.gguf"
-    
-    llm_dir = base_dir + "/Llama-3.2-1B-Instruct"
-    prm_dir = base_dir + "/Llama3.1-8B-PRM-Deepseek-Data"
+    ds_dir   = os.path.join(base_dir, "prm800k/math_splits")
+    llm_dir  = os.path.join(base_dir, "Llama-3.2-1B-Instruct")
 
-    # os.environ["CUDA_VISIBLE_DEVICES"] = "0,1,2,3"
     os.environ["TOKENIZERS_PARALLELISM"] = "false"
-    
-    if torch.cuda.is_available():
-        GPUS = os.environ.get('CUDA_VISIBLE_DEVICES', "0").split(',')
-        print(GPUS)
-    else:
-        print("CUDA is not available.")
 
-    # general params
+    if not torch.cuda.is_available():
+        raise RuntimeError("CUDA is not available.")
+
     config = Config()
-    config.agg_strategy = 'last'
-    config.temperature = 0.8 
-    config.max_tokens = 2048
-    
-    config.bs = 256
-    config.filter_duplicates = True 
-    config.date_string = "Aug 1 2025"
-    config.seed = 0
+    config.agg_strategy     = 'last'
+    config.temperature      = 0.8
+    config.max_tokens       = 2048
+    config.bs               = 256
+    config.filter_duplicates = True
+    config.date_string      = "Aug 1 2025"
+    config.seed             = 0
+    config.version          = algo_version
 
-    config.version = algo_version
-    
-    # baseline: gpu_memory_utilization=0.2
-    # use the standard model 
-    llm_total_gpu = 0.4
-    llm_gpu_memory_utilization = 0.7
     llm_vllm = LLM(
-        model=llm_dir, 
-        tensor_parallel_size=1, 
-        # trust_remote_code=True,
+        model=llm_dir,
+        tensor_parallel_size=1,
         swap_space=16,
         max_model_len=5000,
-        gpu_memory_utilization=llm_gpu_memory_utilization,
+        gpu_memory_utilization=0.7,
         enforce_eager=True,
         distributed_executor_backend=None,
         dtype="float16",
         seed=config.seed,
     )
 
-    # prm = RLHFFlow(model_path=prm_dir, device_map='cuda:0')
-
-    # load data
-    level = 4
+    level      = 4
     num_trials = 4
-    print(f"num_trials = {num_trials}")
-    
-    dataset = load_data_hf(ds_dir, ds_split=ds_split, level=level)
+    dataset    = load_data_hf(ds_dir, ds_split=ds_split, level=level)
+    batch_of_questions = [q['problem'] for q in dataset]
+    num_questions = len(batch_of_questions)
+    print(f"num_questions = {num_questions}, num_trials = {num_trials}")
 
-    num_questions = len(dataset)
-    # num_questions = 2
-    print(f"num_questions = {num_questions}")
-    
-    # get batch of questions
-    batch_of_questions = [dataset[q_idx]['problem'] for q_idx in range(num_questions)]
-
-    # run search_algo and save results
-    config_name = f"bon--level-{level}--{config.version}--bs-{config.bs}--temp-{config.temperature}"
+    config_name = (
+        f"bon--level-{level}--{config.version}"
+        f"--bs-{config.bs}--temp-{config.temperature}"
+    )
     print(config_name)
     result_dir = f"results/{ds_name}/bon--level-{level}/{config_name}"
-    try:
-        os.makedirs(result_dir)
-        print(f"Directory '{result_dir}' created successfully.")
-    except FileExistsError:
-        print(f"Directory '{result_dir}' already exists.")
-    except OSError as e:
-        print(f"Error creating directory: {e}")
-        stop
+    _make_result_dir(result_dir)
 
-    run = wandb.init(
-        project='MCTSDiv',
-        config=
+    wandb.init(
+        project="MCTSDiv",
+        name=config_name,
+        config=vars(config),
+    )
 
-    start_time1 = time.time()
+    total_start = time.time()
     for trial_idx in range(num_trials):
+        trial_start = time.time()
         print(f"trial {trial_idx}")
-        # start_time = time.time()
-        # np.random.seed(100000+trial_idx)
-        # random.seed(100000+trial_idx)
-        # torch.manual_seed(100000+trial_idx)
-        # torch.cuda.manual_seed(100000+trial_idx)
-        
+
         results = algo._search(batch_of_questions, config, trial_idx, llm_vllm)
-        with open(f"{result_dir}/generate_{config_name}--trial-{trial_idx:03d}.jsonl", 'w', encoding = 'utf-8') as fout:
+        out_path = f"{result_dir}/generate_{config_name}--trial-{trial_idx:03d}.jsonl"
+        with open(out_path, 'w', encoding='utf-8') as fout:
             json.dump(results, fout)
             fout.write('\n')
-    
-        # compute the time
-        if trial_idx % 1 == 0:
-            total_time = time.time() - start_time1
-            time_per_trial = total_time/(trial_idx+1)
-            time_per_question = time_per_trial/num_questions
-            # print(f"trial {trial_idx}")
-            print(f"it takes {time_per_question:0.4f}s per question")
-            print(f"it takes {time_per_trial:0.4f}s per trial")
 
-        # add_completions_to_dataset(result_dir, config_name, dataset, prm, trial_idx, config)
-    
-    total_time = time.time() - start_time1
-    print(f"it takes {total_time:0.4f}s in total")
-    
-    dist.destroy_process_group()
+        elapsed = time.time() - trial_start
+        print(f"it takes {elapsed / num_questions:0.4f}s per question")
+        print(f"it takes {elapsed / 3600:0.2f}h per trial")
+        wandb.log({
+            "trial": trial_idx,
+            "time_per_question": elapsed / num_questions,
+            "time_per_trial_hr": elapsed / 3600,
+        })
+
+    print(f"it takes {time.time() - total_start:0.4f}s in total")
+    wandb.finish()
+
 
 if __name__ == "__main__":
     main()
