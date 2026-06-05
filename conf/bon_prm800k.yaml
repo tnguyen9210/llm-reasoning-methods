@@ -6,6 +6,7 @@ llm_dir: ${base_dir}/Llama3.2-1B-Instruct
 # dataset
 ds_name: prm800k
 ds_split: test
+question_field: problem
 level: 4
 
 # experiment
@@ -19,7 +20,7 @@ bs: 256
 filter_duplicates: true
 agg_strategy: last
 temperature: 0.8
-max_tokens: 2048
+max_tokens: null
 seed: 0
 date_string: "Aug 1 2025"
 
