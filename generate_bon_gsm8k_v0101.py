@@ -106,10 +106,9 @@ def main(cfg: DictConfig):
             print(f"it takes {time_per_question:0.4f}s per question")
             print(f"it takes {time_per_trial:0.4f}s per trial")
             wandb.log({
-                "trial": trial_idx,
-                "time_per_question": time_per_question,
+                "time_per_question_s": time_per_question,
                 "time_per_trial_hr": time_per_trial / 3600,
-            })
+            }, step=trial_idx)
 
     total_time = time.time() - start_time1
     print(f"it takes {total_time:0.4f}s in total")
