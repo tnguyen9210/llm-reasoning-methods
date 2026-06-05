@@ -8,8 +8,9 @@ import json
 
 import torch
 import hydra
-from omegaconf import DictConfig
+from omegaconf import DictConfig, OmegaConf
 from vllm import LLM
+import wandb
 
 from sal.config import Config
 from core import bon_search_v01_0_0
@@ -87,6 +88,12 @@ def main(cfg: DictConfig):
     )
     _make_result_dir(result_dir)
 
+    wandb.init(
+        project="llm-reasoning",
+        name=config_name,
+        config=OmegaConf.to_container(cfg, resolve=True),
+    )
+
     total_start = time.time()
     for trial_idx in range(num_trials):
         trial_start = time.time()
@@ -106,8 +113,14 @@ def main(cfg: DictConfig):
         elapsed = time.time() - trial_start
         print(f"it takes {elapsed / num_questions:0.4f}s per question")
         print(f"it takes {elapsed / 3600:0.2f}h per trial")
+        wandb.log({
+            "trial": trial_idx,
+            "time_per_question": elapsed / num_questions,
+            "time_per_trial_hr": elapsed / 3600,
+        })
 
     print(f"it takes {time.time() - total_start:0.4f}s in total")
+    wandb.finish()
 
 
 if __name__ == "__main__":

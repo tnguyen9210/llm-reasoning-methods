@@ -8,8 +8,9 @@ import json
 
 import torch
 import hydra
-from omegaconf import DictConfig
+from omegaconf import DictConfig, OmegaConf
 from vllm import LLM
+import wandb
 
 from sal.config import Config
 from core import bon_search_v01_0_0
@@ -78,6 +79,12 @@ def main(cfg: DictConfig):
     except OSError as e:
         raise OSError(f"Error creating directory: {e}") from e
 
+    wandb.init(
+        project="llm-reasoning",
+        name=config_name,
+        config=OmegaConf.to_container(cfg, resolve=True),
+    )
+
     start_time1 = time.time()
     for trial_idx in range(num_trials):
         print(f"trial {trial_idx}")
@@ -98,9 +105,15 @@ def main(cfg: DictConfig):
             time_per_question = time_per_trial / num_questions
             print(f"it takes {time_per_question:0.4f}s per question")
             print(f"it takes {time_per_trial:0.4f}s per trial")
+            wandb.log({
+                "trial": trial_idx,
+                "time_per_question": time_per_question,
+                "time_per_trial_hr": time_per_trial / 3600,
+            })
 
     total_time = time.time() - start_time1
     print(f"it takes {total_time:0.4f}s in total")
+    wandb.finish()
 
 
 if __name__ == "__main__":
