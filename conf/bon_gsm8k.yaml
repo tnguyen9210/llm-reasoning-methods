@@ -1,0 +1,23 @@
+# paths
+base_dir: /groups/chichengz/tnn/datasets
+data_dir: ${base_dir}/gsm8k
+llm_dir: ${base_dir}/Llama-3.2-1B-Instruct
+
+# experiment
+algo: bon
+algo_version: v01_0_0
+num_trials: 4
+
+# search params
+bs: 256
+filter_duplicates: true
+agg_strategy: last
+seed: 0
+date_string: "Aug 1 2025"
+
+# vllm
+gpu_memory_utilization: 0.7
+tensor_parallel_size: 1
+swap_space: 16
+max_model_len: 5000
+dtype: float16
