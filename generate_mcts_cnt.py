@@ -34,10 +34,11 @@ def _make_result_dir(path: str) -> None:
 
 def _build_config_name(cfg: DictConfig) -> str:
     level_str = f"--level-{cfg.level}" if cfg.level is not None else ""
+    step_budget = cfg.num_batches * cfg.max_depths
     return (
         f"mcts_cnt{level_str}"
         f"--n-{cfg.n}--d-{cfg.max_depths}"
-        f"--b-{cfg.step_budget:03d}"
+        f"--b-{step_budget:03d}"
         f"--cpuct-{cfg.cpuct}"
     )
 
@@ -70,8 +71,6 @@ def main(cfg: DictConfig):
     config.step_budget       = cfg.num_batches * cfg.max_depths
     config.cpuct             = cfg.cpuct
     config.negative_reward   = cfg.negative_reward
-
-    config.custom_chat_template = None
 
     llm_vllm = LLM(
         model=cfg.llm_dir,

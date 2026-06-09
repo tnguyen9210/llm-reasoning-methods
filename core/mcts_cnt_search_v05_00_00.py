@@ -256,7 +256,10 @@ def _generate_candidates(
     current_text = current_node.state["text"]
     logging.error(f"current_text = {current_text}")
 
-    current_convs = [build_conv(question, current_text, config.system_prompt)]
+    # Strip the step terminator before templating — apply_chat_template's
+    # rindex search fails when the assistant content ends with "\n\n".
+    current_text_clean = current_text.removesuffix("\n\n")
+    current_convs = [build_conv(question, current_text_clean, config.system_prompt)]
     current_templated = tokenizer.apply_chat_template(
         current_convs,
         add_generation_prompt=current_node.depth == 0,

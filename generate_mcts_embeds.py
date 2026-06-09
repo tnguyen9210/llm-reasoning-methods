@@ -35,10 +35,11 @@ def _make_result_dir(path: str) -> None:
 
 def _build_config_name(cfg: DictConfig) -> str:
     level_str = f"--level-{cfg.level}" if cfg.level is not None else ""
+    step_budget = cfg.num_batches * cfg.max_depths
     return (
         f"mcts_embeds{level_str}"
         f"--n-{cfg.n}--d-{cfg.max_depths}"
-        f"--b-{cfg.step_budget:03d}"
+        f"--b-{step_budget:03d}"
         f"--lam-{cfg.lam}"
         f"--dalpha-{cfg.ds_alpha}--dbeta-{cfg.ds_beta}"
         f"--estrat-{cfg.embeds_strategy}"
@@ -91,8 +92,6 @@ def main(cfg: DictConfig):
     config.cov_update        = cfg.cov_update
     config.revisit_policy    = cfg.revisit_policy
     config.prm_batch_size    = cfg.prm_batch_size
-
-    config.custom_chat_template = None
 
     llm_vllm = LLM(
         model=cfg.llm_dir,
