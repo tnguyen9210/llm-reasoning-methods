@@ -1,0 +1,57 @@
+# paths
+base_dir: /groups/chichengz/tnn/datasets
+ds_dir: ${base_dir}/prm800k/math_splits
+llm_dir: ${base_dir}/Llama-3.2-1B-Instruct
+prm_dir: ${base_dir}/Llama3.1-8B-PRM-Deepseek-Data
+
+# dataset
+ds_name: prm800k
+ds_split: test
+question_field: problem
+level: 4
+
+# experiment
+algo: mcts_embeds
+num_trials: 4
+num_questions: -1  # -1 = use full dataset
+
+# search params
+n: 4                    # candidates generated per expansion
+beam_width: 4
+lookahead: 0
+max_depths: 20
+sort_completed: false
+filter_duplicates: true
+agg_strategy: last
+temperature: 0.8
+max_tokens: 2048
+top_p: 1.0
+seed: 0
+date_string: "Aug 1 2025"
+
+# mcts params
+num_phases: 1000
+num_batches: 4          # step_budget = num_batches * max_depths
+lam: 0.01
+ds_alpha: 100.0
+ds_beta: 1.0
+negative_reward: 0
+
+# embedding params
+embeds_strategy: last   # "last" | "avg"
+embeds_scope: full      # "full" | "response"
+embeds_normalize: true
+embeds_center: false
+embeds_mean_dir: ""     # required path prefix if embeds_center=true
+embeds_dim: 2048
+cov_update: exact       # "exact" | "sherman_morrison"
+revisit_policy: reuse   # "reuse" | "regenerate"
+prm_batch_size: 4
+
+# vllm
+tensor_parallel_size: 1
+swap_space: 16
+max_model_len: 5000
+llm_gpu_memory_utilization: 0.1
+embeds_gpu_memory_utilization: 0.1
+dtype: float16
