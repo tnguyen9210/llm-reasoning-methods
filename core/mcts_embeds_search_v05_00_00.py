@@ -27,7 +27,7 @@ Algorithm sketch
           via vLLM, dedupe by text, pool the per-token embeddings of
           each candidate, score them with the PRM, and add them as
           children. This is the only operation that charges against
-          `step_budget`.
+          `gen_budget`.
         - Select one child:
             * On the first visit after expansion, pick the highest
               q-value child (random tie-break).
@@ -225,7 +225,7 @@ class BaseNode:
     tag: str = "0"                # dotted lineage, e.g. "0.1.2"
     depth: int = 0
     phase: int = 0                # which `num_phases` outer loop made this
-    step_cnt: int = 0             # step_budget value at creation time
+    gen_cnt: int = 0             # gen_budget value at creation time
     is_terminal: bool = False     # EOS / max-depth / empty completion
     is_completed: bool = False    # specifically: ended via EOS / length
 
@@ -334,7 +334,7 @@ class MCTS(BaseTree):
 
     def create_child(
         self, current_node, candidate_info, candidate_embeds,
-        candidate_score, phase, step_cnt,
+        candidate_score, phase, gen_cnt,
     ):
         """Append a single child to `current_node`. Marks terminal if
         the underlying vLLM generation hit EOS / length, OR if this
@@ -348,7 +348,7 @@ class MCTS(BaseTree):
         new_node.depth = current_node.depth + 1
         new_node.embeds = candidate_embeds
         new_node.phase = phase
-        new_node.step_cnt = step_cnt
+        new_node.gen_cnt = gen_cnt
 
         new_node.state["text"] = (
             current_node.state["text"] + candidate_info.next_texts[0]
@@ -369,11 +369,11 @@ class MCTS(BaseTree):
         current_node.children.append(new_node)
 
     def expand_node(
-        self, current_node, infos, embeds, scores, phase, step_cnt,
+        self, current_node, infos, embeds, scores, phase, gen_cnt,
     ):
         """Append one child per (info, embedding, score) tuple."""
         for info, emb, score in zip(infos, embeds, scores):
-            self.create_child(current_node, info, emb, score, phase, step_cnt)
+            self.create_child(current_node, info, emb, score, phase, gen_cnt)
 
     # ----- Selection ------------------------------------------------- #
 
@@ -588,7 +588,7 @@ def mcts_search(question, agent, config, llm_vllm, llm_vllm_embeds, prm):
     or until it hits a terminal node.
 
     Budget: only expansions (not selections) charge against
-    `config.step_budget`. With `revisit_policy="reuse"` a node is
+    `config.gen_budget`. With `revisit_policy="reuse"` a node is
     expanded exactly once per phase. With `revisit_policy="regenerate"`
     a node is re-expanded every time we revisit it, which lets the
     tree grow children at hot nodes but also burns through the
@@ -612,7 +612,7 @@ def mcts_search(question, agent, config, llm_vllm, llm_vllm_embeds, prm):
     )
     revisit_policy = getattr(config, "revisit_policy", "reuse")
 
-    step_cnt = 0
+    gen_cnt = 0
     p = 0
     d = 0
     ndepths_arr: List[int] = []
@@ -636,23 +636,23 @@ def mcts_search(question, agent, config, llm_vllm, llm_vllm_embeds, prm):
                 or revisit_policy == "regenerate"
             )
             if should_expand:
-                step_cnt += 1
+                gen_cnt += 1
                 infos, embeds, scores = _generate_candidates(
                     question, current_node, d, p, config,
                     tokenizer, llm_vllm, llm_vllm_embeds, prm,
                     response_start_idx, sampling_params,
                 )
                 agent.expand_node(
-                    current_node, infos, embeds, scores, p, step_cnt
+                    current_node, infos, embeds, scores, p, gen_cnt
                 )
 
             current_node = agent.select_child(current_node)
-            logging.fatal(f"step_cnt = {step_cnt}")
-            if step_cnt >= config.step_budget:
+            logging.fatal(f"gen_cnt = {gen_cnt}")
+            if gen_cnt >= config.gen_budget:
                 break
 
         ndepths_arr.append(d)
-        if step_cnt >= config.step_budget:
+        if gen_cnt >= config.gen_budget:
             logging.fatal("run out of budget!")
             break
 
@@ -666,20 +666,20 @@ def mcts_search(question, agent, config, llm_vllm, llm_vllm_embeds, prm):
     completions: List[str] = []
     c_depths: List[int] = []
     c_phases: List[int] = []
-    c_step_cnts: List[int] = []
+    c_gen_cnts: List[int] = []
     for i in seen.values():
         node = agent.completed_nodes[i]
         completions.append(node.state["text"])
         c_depths.append(node.depth)
         c_phases.append(node.phase)
-        c_step_cnts.append(node.step_cnt)
+        c_gen_cnts.append(node.gen_cnt)
 
     # The trailing `0` is `cnt_max_depth` — kept for callers that
     # unpack the 8-tuple. It used to be tracked by `MCTS` but was
     # removed when nothing read it.
     return (
-        completions, c_depths, c_phases, c_step_cnts,
-        step_cnt, p, ndepths_arr, 0,
+        completions, c_depths, c_phases, c_gen_cnts,
+        gen_cnt, p, ndepths_arr, 0,
     )
 
 
@@ -702,8 +702,8 @@ def _search(
     all_completions = [[] for _ in range(n)]
     all_c_depths = [[] for _ in range(n)]
     all_c_phases = [[] for _ in range(n)]
-    all_c_step_cnts = [[] for _ in range(n)]
-    all_step_cnts = [[] for _ in range(n)]
+    all_c_gen_cnts = [[] for _ in range(n)]
+    all_gen_cnts = [[] for _ in range(n)]
     all_last_phases = [[] for _ in range(n)]
     all_ndepths_arr = [[] for _ in range(n)]
     all_cnt_max_depth = [[] for _ in range(n)]
@@ -717,8 +717,8 @@ def _search(
 
         agent = MCTS(config=config, question=question)
         (
-            completions, c_depths, c_phases, c_step_cnts,
-            step_cnt, last_phase, ndepths_arr, cnt_max_depth,
+            completions, c_depths, c_phases, c_gen_cnts,
+            gen_cnt, last_phase, ndepths_arr, cnt_max_depth,
         ) = mcts_search(
             question, agent, config, llm_vllm, llm_vllm_embeds, prm
         )
@@ -726,8 +726,8 @@ def _search(
         all_completions[q_idx] = completions
         all_c_depths[q_idx] = c_depths
         all_c_phases[q_idx] = c_phases
-        all_c_step_cnts[q_idx] = c_step_cnts
-        all_step_cnts[q_idx] = step_cnt
+        all_c_gen_cnts[q_idx] = c_gen_cnts
+        all_gen_cnts[q_idx] = gen_cnt
         all_last_phases[q_idx] = last_phase
         all_ndepths_arr[q_idx] = ndepths_arr
         all_cnt_max_depth[q_idx] = cnt_max_depth
@@ -736,8 +736,8 @@ def _search(
     results["completions"] = all_completions
     results["c_depths"] = all_c_depths
     results["c_phases"] = all_c_phases
-    results["c_step_cnts"] = all_c_step_cnts
-    results["step_cnts"] = all_step_cnts
+    results["c_gen_cnts"] = all_c_gen_cnts
+    results["gen_cnts"] = all_gen_cnts
     results["last_phases"] = all_last_phases
     results["ndepths_arr"] = all_ndepths_arr
     results["cnt_max_depth"] = all_cnt_max_depth

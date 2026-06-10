@@ -2,11 +2,11 @@ import os
 os.environ["VLLM_CONFIGURE_LOGGING"] = "0"
 import logging
 logging.basicConfig(format='%(message)s', level=logging.FATAL + 1)
+logging.disable(logging.CRITICAL)
 
 import time
 import json
 
-import numpy as np
 import torch
 import hydra
 from omegaconf import DictConfig, OmegaConf
@@ -14,12 +14,12 @@ from vllm import LLM
 import wandb
 
 from sal.config import Config
-from core import mcts_embeds_search_v05_00_00
+from core import mcts_bl_cnt_search_v02_00_00
 from core.reward_models import RLHFFlow
 from utils.load_data import load_data_hf
 
 algo_dict = {
-    "mcts_embeds": mcts_embeds_search_v05_00_00,
+    "mcts_bl_cnt_v02": mcts_bl_cnt_search_v02_00_00,
 }
 
 
@@ -37,21 +37,16 @@ def _build_config_name(cfg: DictConfig) -> str:
     level_str = f"--level-{cfg.level}" if cfg.level is not None else ""
     gen_budget = cfg.num_batches * cfg.max_depths
     return (
-        f"mcts_embeds{level_str}"
+        f"mcts_bl_cnt_v02{level_str}"
         f"--n-{cfg.n}--d-{cfg.max_depths}"
         f"--b-{gen_budget:03d}"
-        f"--lam-{cfg.lam}"
-        f"--dalpha-{cfg.ds_alpha}--dbeta-{cfg.ds_beta}"
-        f"--estrat-{cfg.embeds_strategy}"
-        f"--escope-{cfg.embeds_scope}"
-        f"--enorm-{cfg.embeds_normalize}"
-        f"--ecenter-{cfg.embeds_center}"
+        f"--beta-{cfg.kube_beta}--alpha-{cfg.kube_alpha}"
     )
 
 
 @hydra.main(
     config_path="conf",
-    config_name="mcts_embeds_prm800k",
+    config_name="mcts_bl_cnt_v02_prm800k",
     version_base=None,
 )
 def main(cfg: DictConfig):
@@ -67,50 +62,24 @@ def main(cfg: DictConfig):
     config.agg_strategy      = cfg.agg_strategy
     config.temperature       = cfg.temperature
     config.n                 = cfg.n
-    config.bs                = cfg.n          # embeds search uses config.bs
-    config.beam_width        = cfg.beam_width
     config.lookahead         = cfg.lookahead
     config.max_depths        = cfg.max_depths
-    config.sort_completed    = cfg.sort_completed
     config.filter_duplicates = cfg.filter_duplicates
     config.date_string       = cfg.date_string
     config.seed              = cfg.seed
 
-    config.bsum_phases       = cfg.num_phases
-    config.gen_budget       = cfg.num_batches * cfg.max_depths
-    config.lam               = cfg.lam
-    config.ds_alpha          = cfg.ds_alpha
-    config.ds_beta           = cfg.ds_beta
-    config.bsegative_reward  = cfg.negative_reward
-
-    config.embeds_strategy   = cfg.embeds_strategy
-    config.embeds_scope      = cfg.embeds_scope
-    config.embeds_normalize  = cfg.embeds_normalize
-    config.embeds_center     = cfg.embeds_center
-    config.embeds_mean       = None
-    config.embeds_dim        = cfg.embeds_dim
-    config.cov_update        = cfg.cov_update
-    config.revisit_policy    = cfg.revisit_policy
-    config.prm_batch_size    = cfg.prm_batch_size
+    config.num_phases        = cfg.num_phases
+    config.gen_budget        = cfg.num_batches * cfg.max_depths
+    config.negative_reward   = cfg.negative_reward
+    config.kube_beta         = cfg.kube_beta
+    config.kube_alpha        = cfg.kube_alpha
 
     llm_vllm = LLM(
         model=cfg.llm_dir,
         tensor_parallel_size=cfg.tensor_parallel_size,
         swap_space=cfg.swap_space,
         max_model_len=cfg.max_model_len,
-        gpu_memory_utilization=cfg.llm_gpu_memory_utilization,
-        enforce_eager=True,
-        distributed_executor_backend=None,
-        dtype=cfg.dtype,
-        seed=cfg.seed,
-    )
-
-    llm_vllm_embeds = LLM(
-        model=cfg.llm_dir,
-        tensor_parallel_size=cfg.tensor_parallel_size,
-        runner="pooling",
-        max_model_len=cfg.max_model_len,
-        gpu_memory_utilization=cfg.embeds_gpu_memory_utilization,
+        gpu_memory_utilization=cfg.gpu_memory_utilization,
         enforce_eager=True,
         distributed_executor_backend=None,
         dtype=cfg.dtype,
@@ -130,11 +99,7 @@ def main(cfg: DictConfig):
     num_questions = len(batch_of_questions)
     num_trials = cfg.num_trials
     print(f"num_questions = {num_questions}, num_trials = {num_trials}")
-
-    if cfg.embeds_center:
-        mean_path = f"{root_dir}/results/{cfg.embeds_mean_dir}.npy"
-        config.embeds_mean = np.load(mean_path).flatten()
-        print(f"embeds_mean.shape = {config.embeds_mean.shape}")
+    print(f"node_name = {cfg.node_name}")
 
     config_name = _build_config_name(cfg)
     print(config_name)
@@ -143,7 +108,7 @@ def main(cfg: DictConfig):
 
     wandb.init(
         project="llm-reasoning",
-        name=config_name,
+        name=f"{config_name}--node-{cfg.node_name}",
         config=OmegaConf.to_container(cfg, resolve=True),
     )
 
@@ -153,8 +118,7 @@ def main(cfg: DictConfig):
         print(f"trial {trial_idx}")
 
         results = algo._search(
-            batch_of_questions, config, trial_idx,
-            llm_vllm, llm_vllm_embeds, prm,
+            batch_of_questions, config, trial_idx, llm_vllm, prm,
         )
         out_path = (
             f"{result_dir}/generate_{config_name}"

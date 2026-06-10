@@ -478,7 +478,7 @@ def mcts_search(question, agent, config, llm_vllm, llm_vllm_embeds, prm):
                     # # print(tokenizer.decode(response_inputs["input_ids"][:5]))
     
                     outputs = llm_vllm_embeds.encode(
-                        cand_templated_convs, pooling_task="token_embed", use_tqdm=False)
+                        cand_templated_convs, use_tqdm=False)
 
                     full_tokens_embeds = outputs[0].outputs.data
                     response_tokens_embeds = full_tokens_embeds[response_start_idx:,:]

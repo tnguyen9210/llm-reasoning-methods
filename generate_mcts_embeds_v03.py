@@ -14,12 +14,12 @@ from vllm import LLM
 import wandb
 
 from sal.config import Config
-from core import mcts_embeds_search_v05_00_00
+from core import mcts_embeds_search_v03_02_00
 from core.reward_models import RLHFFlow
 from utils.load_data import load_data_hf
 
 algo_dict = {
-    "mcts_embeds": mcts_embeds_search_v05_00_00,
+    "mcts_embeds": mcts_embeds_search_v03_02_00,
 }
 
 
@@ -35,23 +35,22 @@ def _make_result_dir(path: str) -> None:
 
 def _build_config_name(cfg: DictConfig) -> str:
     level_str = f"--level-{cfg.level}" if cfg.level is not None else ""
-    gen_budget = cfg.num_batches * cfg.max_depths
+    step_budget = cfg.num_batches * cfg.max_depths
     return (
         f"mcts_embeds{level_str}"
         f"--n-{cfg.n}--d-{cfg.max_depths}"
-        f"--b-{gen_budget:03d}"
+        f"--b-{step_budget:03d}"
         f"--lam-{cfg.lam}"
         f"--dalpha-{cfg.ds_alpha}--dbeta-{cfg.ds_beta}"
         f"--estrat-{cfg.embeds_strategy}"
-        f"--escope-{cfg.embeds_scope}"
-        f"--enorm-{cfg.embeds_normalize}"
-        f"--ecenter-{cfg.embeds_center}"
+        f"--enorm-{cfg.embeds_normalizing}"
+        f"--ecenter-{cfg.embeds_centering}"
     )
 
 
 @hydra.main(
     config_path="conf",
-    config_name="mcts_embeds_prm800k",
+    config_name="mcts_embeds_v03_prm800k",
     version_base=None,
 )
 def main(cfg: DictConfig):
@@ -67,38 +66,34 @@ def main(cfg: DictConfig):
     config.agg_strategy      = cfg.agg_strategy
     config.temperature       = cfg.temperature
     config.n                 = cfg.n
-    config.bs                = cfg.n          # embeds search uses config.bs
-    config.beam_width        = cfg.beam_width
     config.lookahead         = cfg.lookahead
     config.max_depths        = cfg.max_depths
-    config.sort_completed    = cfg.sort_completed
-    config.filter_duplicates = cfg.filter_duplicates
     config.date_string       = cfg.date_string
     config.seed              = cfg.seed
 
-    config.bsum_phases       = cfg.num_phases
-    config.gen_budget       = cfg.num_batches * cfg.max_depths
+    config.num_phases        = cfg.num_phases
+    config.step_budget       = cfg.num_batches * cfg.max_depths
+    config.negative_reward   = cfg.negative_reward
+
     config.lam               = cfg.lam
     config.ds_alpha          = cfg.ds_alpha
     config.ds_beta           = cfg.ds_beta
-    config.bsegative_reward  = cfg.negative_reward
-
     config.embeds_strategy   = cfg.embeds_strategy
-    config.embeds_scope      = cfg.embeds_scope
-    config.embeds_normalize  = cfg.embeds_normalize
-    config.embeds_center     = cfg.embeds_center
-    config.embeds_mean       = None
-    config.embeds_dim        = cfg.embeds_dim
-    config.cov_update        = cfg.cov_update
-    config.revisit_policy    = cfg.revisit_policy
-    config.prm_batch_size    = cfg.prm_batch_size
+    config.embeds_normalizing = cfg.embeds_normalizing
+    config.embeds_centering  = cfg.embeds_centering
+    config.embeds_mean_dir   = cfg.embeds_mean_dir
+
+    if cfg.embeds_centering:
+        config.embeds_mean = np.load(
+            f"results/{cfg.embeds_mean_dir}.npy"
+        ).flatten()
 
     llm_vllm = LLM(
         model=cfg.llm_dir,
         tensor_parallel_size=cfg.tensor_parallel_size,
         swap_space=cfg.swap_space,
         max_model_len=cfg.max_model_len,
-        gpu_memory_utilization=cfg.llm_gpu_memory_utilization,
+        gpu_memory_utilization=cfg.gpu_memory_utilization,
         enforce_eager=True,
         distributed_executor_backend=None,
         dtype=cfg.dtype,
@@ -107,8 +102,8 @@ def main(cfg: DictConfig):
 
     llm_vllm_embeds = LLM(
         model=cfg.llm_dir,
+        task="embedding",
         tensor_parallel_size=cfg.tensor_parallel_size,
-        runner="pooling",
         max_model_len=cfg.max_model_len,
         gpu_memory_utilization=cfg.embeds_gpu_memory_utilization,
         enforce_eager=True,
@@ -130,11 +125,6 @@ def main(cfg: DictConfig):
     num_questions = len(batch_of_questions)
     num_trials = cfg.num_trials
     print(f"num_questions = {num_questions}, num_trials = {num_trials}")
-
-    if cfg.embeds_center:
-        mean_path = f"{root_dir}/results/{cfg.embeds_mean_dir}.npy"
-        config.embeds_mean = np.load(mean_path).flatten()
-        print(f"embeds_mean.shape = {config.embeds_mean.shape}")
 
     config_name = _build_config_name(cfg)
     print(config_name)

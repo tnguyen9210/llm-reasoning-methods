@@ -29,7 +29,7 @@ date_string: "Aug 1 2025"
 
 # mcts params
 num_phases: 1000
-num_batches: 4          # step_budget = num_batches * max_depths
+num_batches: 4          # gen_budget = num_batches * max_depths
 cpuct: 2.0
 negative_reward: 0
 

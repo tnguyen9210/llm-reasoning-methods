@@ -446,7 +446,8 @@ def mcts_search(question, agent, config, llm_vllm, llm_vllm_embeds, prm):
                     # logging.fatal(cand_templated_convs[0]) 
     
                     outputs = llm_vllm_embeds.encode(cand_templated_convs, use_tqdm=False)
-                    outputs_embeds = outputs[0].outputs.data
+                    outputs_embeds = torch.tensor(
+                        outputs[0].outputs.embedding)
     
                     if config.embeds_normalizing:
                         

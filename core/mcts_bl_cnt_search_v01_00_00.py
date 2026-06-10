@@ -1,24 +1,35 @@
 """
-MCTS with PUCT selection (count-based, no embeddings).
+Budget-Limited MCTS with best-first leaf selection (count-based, no embeddings).
 
-One canonical implementation; replaces v03_01_00 (identical
-algorithm). Variant behavior is selected via config flags.
+Key difference from mcts_cnt_search_v05_00_00: instead of phase-based
+root-to-leaf walks, maintains an explicit `leaf_nodes` frontier and
+selects globally across all current leaves each iteration.
 
-Algorithm sketch
-    For each of `num_phases` phases:
-      Walk from the root down to a terminal node. At each step:
-        - If `current_node` has no children, generate `config.n`
-          next-step continuations via vLLM, dedupe by text, score
-          with the PRM, and add as children. Charges gen_budget.
-        - Select one child by PUCT:
-              q_value + cpuct * sqrt(log(parent_visits) / visits)
-          Uniform random tie-break.
-      Backprop the terminal node's q-value to the root.
+Algorithm
+    Initialize completion_list = [], leaf_nodes = [root], gen_cnt = 0
+    While gen_cnt < gen_budget:
+        selected_node = argmax_{x in leaf_nodes} puct(x)
+        Remove selected_node from leaf_nodes
+        If selected_node.is_terminal:
+            Backprop: update_recursive(selected_node.q_value(), root)
+        Else:
+            Expand: generate n next-step continuations, dedupe,
+                    score with PRM, attach as children
+            gen_cnt += 1
+            For each child:
+                child.update(prm_score)
+                if completed (EOS/length): mark terminal,
+                    add to completion_list
+                if not completed and depth >= max_depth:
+                    mark terminal, score = negative_reward
+            Add non-terminal children to leaf_nodes
+
+Selection criterion:
+    PUCT: q_value(x) + cpuct * sqrt(log(parent.visit_count) / visit_count)
+    q_value = value_sum / visit_count  (running mean, same as v05)
 
 History
-    v03_01_00  baseline (rStar-Math-derived).
-    v05_00_00  reorganized to match mcts_embeds_search_v05_00_00
-               structure; no behavior changes.
+    v01_00_00  initial budget-limited best-first MCTS.
 """
 
 import random
@@ -62,7 +73,7 @@ class BaseNode:
     tag: str = "0"              # dotted lineage, e.g. "0.1.2"
     depth: int = 0
     phase: int = 0              # which `num_phases` outer loop made this
-    gen_cnt: int = 0           # gen_budget value at creation time
+    gen_cnt: int = 0            # gen_budget value at creation time
     is_terminal: bool = False   # EOS / max-depth / empty completion
     is_completed: bool = False  # specifically: ended via EOS / length
 
@@ -132,9 +143,6 @@ class BaseTree(BaseModel):
     def __init__(self, **kwargs) -> None:
         super().__init__(**kwargs)
         self.root = self.create_root()
-        # Seed root with one update so visit_count >= 1 from the start;
-        # prevents the visit_count==1 PUCT special case from triggering
-        # on the wrong iteration.
         self.root.update(0)
 
     def create_root(self):
@@ -231,6 +239,33 @@ class MCTS(BaseTree):
         logging.fatal(f"selected_child = {selected_node.tag}")
         return selected_node
 
+    def select_child_from_list(self, nodes: List[Any]):
+        """Pick the node with highest PUCT from an arbitrary list,
+        uniform random tie-break. Same logic as `select_child` but
+        operates on the BL-MCTS global leaf frontier.
+        """
+        best_value = -float("inf")
+        best_nodes: List[Any] = []
+
+        for node in nodes:
+            puct_value = node.puct(cpuct=self.config.cpuct)
+            if puct_value == best_value:
+                best_nodes.append(node)
+            elif puct_value > best_value:
+                best_value = puct_value
+                best_nodes = [node]
+
+            logging.fatal(f"{node.tag}")
+            logging.fatal(f"   q-value = {node.q_value():0.4f}")
+            logging.fatal(f"   u-value = {puct_value - node.q_value():0.4f}")
+            logging.fatal(f"   puct = {puct_value:0.4f}")
+            logging.fatal(f"   nvisit = {node.visit_count():0.2f}")
+            logging.fatal(f"   is_terminal = {node.is_terminal}")
+
+        selected_node = random.choice(best_nodes)
+        logging.fatal(f"selected_leaf = {selected_node.tag}")
+        return selected_node
+
     # ----- Backprop -------------------------------------------------- #
 
     def backprop(self, node):
@@ -239,7 +274,7 @@ class MCTS(BaseTree):
 
 
 # --------------------------------------------------------------------- #
-# Main search loop                                                      #
+# Candidate generation                                                  #
 # --------------------------------------------------------------------- #
 
 def _generate_candidates(
@@ -301,12 +336,17 @@ def _generate_candidates(
     return candidate_infos, candidate_scores
 
 
-def mcts_search(question, agent, config, llm_vllm, prm):
-    """Run MCTS on a single `question`.
+# --------------------------------------------------------------------- #
+# Main search loop                                                      #
+# --------------------------------------------------------------------- #
 
-    Outer loop: `config.num_phases` independent descents from the root.
-    Each descent goes up to `config.max_depths` levels deep or until
-    it hits a terminal node. Only expansions charge `gen_budget`.
+def mcts_search(question, agent, config, llm_vllm, prm):
+    """Run budget-limited best-first MCTS on a single `question`.
+
+    Outer loop: `config.num_phases` iterations (safety cap).
+    Each iteration selects one leaf globally by PUCT and either
+    backprops (if terminal) or expands (otherwise).
+    Only expansions charge gen_cnt.
     """
     tokenizer = llm_vllm.get_tokenizer()
     if config.custom_chat_template is not None:
@@ -323,34 +363,42 @@ def mcts_search(question, agent, config, llm_vllm, prm):
 
     gen_cnt = 0
     p = 0
-    d = 0
     ndepths_arr: List[int] = []
+    leaf_nodes: List[Any] = [agent.root]
+
     for p in range(config.num_phases):
         logging.fatal(f"\n-> p = {p}")
-        current_node = agent.root
 
-        for d in range(config.max_depths + 1):
-            logging.fatal(f"\n-> d = {d}")
+        if not leaf_nodes:
+            logging.fatal("leaf_nodes is empty — stopping.")
+            break
 
-            if current_node.is_terminal:
-                logging.fatal(f"current_node.is_terminal = True")
-                agent.backprop(current_node)
-                break
+        # Select leaf with highest PUCT across the entire frontier.
+        selected = agent.select_child_from_list(leaf_nodes)
+        leaf_nodes.remove(selected)
 
-            if not current_node.has_children():
-                gen_cnt += 1
-                infos, scores = _generate_candidates(
-                    question, current_node, d, config,
-                    tokenizer, llm_vllm, prm, sampling_params,
-                )
-                agent.expand_node(current_node, infos, scores, p, gen_cnt)
+        logging.fatal(
+            f"selected = {selected.tag}  "
+            f"puct={selected.puct(config.cpuct):.4f}  "
+            f"q={selected.q_value():.4f}  "
+            f"nvisit={selected.visit_count()}"
+        )
 
-            current_node = agent.select_child(current_node)
-            logging.fatal(f"gen_cnt = {gen_cnt}")
-            if gen_cnt >= config.gen_budget:
-                break
+        if selected.is_terminal:
+            logging.fatal(f"selected.is_terminal = True")
+            agent.backprop(selected)
+            ndepths_arr.append(selected.depth)
+        else:
+            gen_cnt += 1
+            infos, scores = _generate_candidates(
+                question, selected, selected.depth, config,
+                tokenizer, llm_vllm, prm, sampling_params,
+            )
+            agent.expand_node(selected, infos, scores, p, gen_cnt)
+            for child in selected.children:
+                leaf_nodes.append(child)
 
-        ndepths_arr.append(d)
+        logging.fatal(f"gen_cnt = {gen_cnt}")
         if gen_cnt >= config.gen_budget:
             logging.fatal("run out of budget!")
             break
@@ -378,7 +426,7 @@ def mcts_search(question, agent, config, llm_vllm, prm):
 
 
 def _search(batch_of_questions, config, trial_idx, llm_vllm, prm):
-    """Run `mcts_search` on each question in the batch sequentially.
+    """Run `mcts_search` on each question sequentially.
 
     Per-question deterministic seed: 100_000 + trial_idx.
     Returns a defaultdict of per-question lists aligned to `q_idx`.
