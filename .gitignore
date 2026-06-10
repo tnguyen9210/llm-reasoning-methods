@@ -14,3 +14,4 @@ wandb/
 # Hydra outputs
 outputs/
 multirun/
+llm-reasoning-methods.code-workspace

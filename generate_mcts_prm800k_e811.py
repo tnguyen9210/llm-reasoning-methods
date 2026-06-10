@@ -39,7 +39,7 @@ def main():
     algo = algo_dict[algo_name]
     
     # base_dir
-    base_dir = '/groups/kjun/tnn/datasets/'
+    base_dir = '/groups/chichengz/tnn/datasets/'
     
     # dataset path
     data_dir = base_dir + "/prm800k/math_splits"
