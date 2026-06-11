@@ -37,18 +37,12 @@ Algorithm sketch
         - Update V += x x^T with the chosen child's embedding.
       Backprop the terminal node's q-value to the root.
 
-History (also serves as a changelog for older flag names):
-    v03_01_00 baseline.
-    v03_02_00 +mean-centering (config.embeds_centering, config.embeds_mean).
-    v03_02_01 docstring claimed Sherman-Morrison update; not implemented.
-    v03_02_02 last vs avg pooling (config.embeds_strategy).
-    v03_02_03 response-only token scope.
-    v04_01_00 docstring claimed regenerate-on-revisit; not implemented.
+Old flag names are not aliased — they were renamed intentionally
+(`embeds_normalizing` -> `embeds_normalize`, `embeds_centering` ->
+`embeds_center`). Update old configs at the call site rather than
+papering over with shims.
 
-Old flag names still recognized via aliases? No — they were renamed
-intentionally (`embeds_normalizing` -> `embeds_normalize`,
-`embeds_centering` -> `embeds_center`). Update old configs at the call
-site rather than papering over with shims.
+Variant lineage: docs/algorithms.md.
 """
 
 import copy

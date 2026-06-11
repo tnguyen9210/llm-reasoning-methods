@@ -33,9 +33,7 @@ KUBE selection (relaxed/fractional variant):
     Fractional relaxation: select the single arm with highest
     density = (mu_hat_i + beta * f_a(...)) / (d_max - d_i).
 
-History
-    v01_00_00  initial budget-limited best-first MCTS (PUCT selection).
-    v02_00_00  replace PUCT with KUBE density-based leaf selection.
+Variant lineage: docs/algorithms.md.
 """
 
 import random

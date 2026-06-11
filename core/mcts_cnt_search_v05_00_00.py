@@ -16,10 +16,7 @@ Algorithm sketch
           Uniform random tie-break.
       Backprop the terminal node's q-value to the root.
 
-History
-    v03_01_00  baseline (rStar-Math-derived).
-    v05_00_00  reorganized to match mcts_embeds_search_v05_00_00
-               structure; no behavior changes.
+Variant lineage: docs/algorithms.md.
 """
 
 import random

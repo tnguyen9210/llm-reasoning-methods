@@ -5,6 +5,9 @@ Key difference from mcts_cnt_search_v05_00_00: instead of phase-based
 root-to-leaf walks, maintains an explicit `leaf_nodes` frontier and
 selects globally across all current leaves each iteration.
 
+Sibling variant: mcts_bl_cnt_search_v02_00_00.py replaces PUCT with
+KUBE density-based leaf selection. Both are active.
+
 Algorithm
     Initialize completion_list = [], leaf_nodes = [root], gen_cnt = 0
     While gen_cnt < gen_budget:
@@ -28,8 +31,7 @@ Selection criterion:
     PUCT: q_value(x) + cpuct * sqrt(log(parent.visit_count) / visit_count)
     q_value = value_sum / visit_count  (running mean, same as v05)
 
-History
-    v01_00_00  initial budget-limited best-first MCTS.
+Variant lineage: docs/algorithms.md.
 """
 
 import random
