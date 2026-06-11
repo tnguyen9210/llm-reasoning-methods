@@ -41,5 +41,5 @@ kube_alpha: 0.5
 tensor_parallel_size: 1
 swap_space: 16
 max_model_len: 5000
-gpu_memory_utilization: 0.25
+gpu_memory_utilization: 0.2
 dtype: float16

@@ -349,7 +349,7 @@ def _generate_candidates(
         candidate_questions.append(question)
 
     candidate_scores = prm.score(
-        candidate_questions, candidate_texts, batch_size=4
+        candidate_questions, candidate_texts, batch_size=1
     )
     candidate_scores = [
         aggregate_scores(scores[0], config.agg_strategy)

@@ -166,10 +166,10 @@ class RLHFFlow(PRM):
             convs2_batch = conversations2[i : i + batch_size]
             inputs_batch = self.tokenizer.apply_chat_template(
                 convs_batch, padding=True, return_tensors="pt"
-            ).to(device)
+            )["input_ids"].to(device)
             inputs2_batch = self.tokenizer.apply_chat_template(
                 convs2_batch, padding=True, return_tensors="pt"
-            ).to(device)
+            )["input_ids"].to(device)
             assert inputs_batch.shape == inputs2_batch.shape
             with torch.no_grad():
                 logits = self.model(inputs_batch).logits[:, :, self.candidate_tokens]
@@ -332,10 +332,10 @@ class RLHFFlow2(PRM):
             logging.fatal(len(convs_batch))
             inputs_batch = self.tokenizer.apply_chat_template(
                 convs_batch, padding=True, return_tensors="pt"
-            ).to(device)
+            )["input_ids"].to(device)
             inputs2_batch = self.tokenizer.apply_chat_template(
                 convs2_batch, padding=True, return_tensors="pt"
-            ).to(device)
+            )["input_ids"].to(device)
             assert inputs_batch.shape == inputs2_batch.shape
             with torch.no_grad():
                 llm_outputs = self.model(inputs_batch, output_hidden_states=True)
