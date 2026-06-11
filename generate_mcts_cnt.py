@@ -34,11 +34,10 @@ def _make_result_dir(path: str) -> None:
 
 def _build_config_name(cfg: DictConfig) -> str:
     level_str = f"--level-{cfg.level}" if cfg.level is not None else ""
-    gen_budget = cfg.num_batches * cfg.max_depths
     return (
         f"mcts_cnt{level_str}"
-        f"--n-{cfg.n}--d-{cfg.max_depths}"
-        f"--b-{gen_budget:03d}"
+        f"--bs-{cfg.batch_size}--d-{cfg.max_depth}"
+        f"--b-{cfg.gen_budget:03d}"
         f"--cpuct-{cfg.cpuct}"
     )
 
@@ -60,17 +59,21 @@ def main(cfg: DictConfig):
     config = Config()
     config.agg_strategy      = cfg.agg_strategy
     config.temperature       = cfg.temperature
-    config.n                 = cfg.n
-    config.lookahead         = cfg.lookahead
-    config.max_depths        = cfg.max_depths
     config.filter_duplicates = cfg.filter_duplicates
     config.date_string       = cfg.date_string
     config.seed              = cfg.seed
 
+    # General search parameters
+    config.gen_budget        = cfg.gen_budget
+    config.batch_size        = cfg.batch_size
+    config.max_depth         = cfg.max_depth
     config.num_phases        = cfg.num_phases
-    config.gen_budget       = cfg.num_batches * cfg.max_depths
-    config.cpuct             = cfg.cpuct
+    config.lookahead         = cfg.lookahead
     config.negative_reward   = cfg.negative_reward
+    
+    # Cnt-MCTS parameters
+    config.cpuct             = cfg.cpuct
+    
 
     llm_vllm = LLM(
         model=cfg.llm_dir,

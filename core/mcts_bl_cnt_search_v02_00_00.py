@@ -29,7 +29,7 @@ KUBE selection (relaxed/fractional variant):
         max  sum_i m_i * (mu_hat_i + beta * f_a((d_max - d_i) / d_max))
         s.t. sum_i m_i * (d_max - d_i) <= B
     where f_a(z) = 1 - z^alpha, B = remaining gen_budget,
-    d_max = config.max_depths, d_i = node depth.
+    d_max = config.max_depth, d_i = node depth.
     Fractional relaxation: select the single arm with highest
     density = (mu_hat_i + beta * f_a(...)) / (d_max - d_i).
 
@@ -200,7 +200,7 @@ class MCTS(BaseTree):
             new_node.is_terminal = True
             self.completed_nodes.append(new_node)
 
-        if not new_node.is_terminal and new_node.depth >= self.config.max_depths:
+        if not new_node.is_terminal and new_node.depth >= self.config.max_depth:
             new_node.is_terminal = True
             candidate_score = self.config.negative_reward
             self.cnt_node_max_depth += 1
@@ -256,7 +256,7 @@ class MCTS(BaseTree):
                   cost_i = d_max - d_i  (shallower nodes cost more)
         Tie-break: uniform random among co-maximal nodes.
         """
-        d_max = self.config.max_depths
+        d_max = self.config.max_depth
         beta = self.config.kube_beta
         alpha = self.config.kube_alpha
 
@@ -309,7 +309,7 @@ def _generate_candidates(
     `current_node`. Returns (candidate_infos, candidate_scores).
 
     Two model calls per invocation:
-      1. `generate_k_steps` produces `config.n` continuations.
+      1. `generate_k_steps` produces `config.batch_size` continuations.
       2. `prm.score` scores each unique candidate text.
     """
     current_text = current_node.state["text"]
@@ -326,9 +326,9 @@ def _generate_candidates(
         date_string=config.date_string,
         tokenize=False,
     )
-    current_templated = current_templated * config.n
+    current_templated = current_templated * config.batch_size
 
-    lookahead = 0 if d == config.max_depths - 1 else config.lookahead
+    lookahead = 0 if d == config.max_depth - 1 else config.lookahead
     llm_outputs = generate_k_steps(
         current_templated, lookahead, llm_vllm, sampling_params, 1
     )
@@ -349,7 +349,7 @@ def _generate_candidates(
         candidate_questions.append(question)
 
     candidate_scores = prm.score(
-        candidate_questions, candidate_texts, batch_size=1
+        candidate_questions, candidate_texts, batch_size=4
     )
     candidate_scores = [
         aggregate_scores(scores[0], config.agg_strategy)

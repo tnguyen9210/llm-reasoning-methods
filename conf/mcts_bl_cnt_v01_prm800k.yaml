@@ -1,3 +1,13 @@
+defaults:
+  - _self_
+  - override hydra/job_logging: disabled
+  - override hydra/hydra_logging: disabled
+
+hydra:
+  output_subdir: null
+  run:
+    dir: .
+
 # paths
 base_dir: /groups/chichengz/tnn/datasets
 ds_dir: ${base_dir}/prm800k/math_splits
@@ -11,14 +21,15 @@ question_field: problem
 level: 4
 
 # experiment
-algo: mcts_bl_cnt
+algo: mcts_bl_cnt_v01
 num_trials: 4
 num_questions: -1  # -1 = use full dataset
+node_name: ""
 
 # search params
-n: 4                    # candidates generated per expansion
+batch_size: 4           # candidates generated per expansion
 lookahead: 0
-max_depths: 20
+max_depth: 20
 filter_duplicates: true
 agg_strategy: last
 temperature: 0.8
@@ -29,7 +40,7 @@ date_string: "Aug 1 2025"
 
 # mcts params
 num_phases: 1000
-num_batches: 4          # gen_budget = num_batches * max_depths
+gen_budget: 80          # total generations across the full run
 cpuct: 2.0
 negative_reward: 0
 

@@ -1,7 +1,9 @@
 import os
 os.environ["VLLM_CONFIGURE_LOGGING"] = "0"
+os.environ["PYTORCH_CUDA_ALLOC_CONF"] = "expandable_segments:True"
 import logging
 logging.basicConfig(format='%(message)s', level=logging.FATAL + 1)
+logging.disable(logging.CRITICAL)
 
 import time
 import json
@@ -18,7 +20,7 @@ from core.reward_models import RLHFFlow
 from utils.load_data import load_data_hf
 
 algo_dict = {
-    "mcts_bl_cnt": mcts_bl_cnt_search_v01_00_00,
+    "mcts_bl_cnt_v01": mcts_bl_cnt_search_v01_00_00,
 }
 
 
@@ -34,18 +36,17 @@ def _make_result_dir(path: str) -> None:
 
 def _build_config_name(cfg: DictConfig) -> str:
     level_str = f"--level-{cfg.level}" if cfg.level is not None else ""
-    gen_budget = cfg.num_batches * cfg.max_depths
     return (
-        f"mcts_bl_cnt{level_str}"
-        f"--n-{cfg.n}--d-{cfg.max_depths}"
-        f"--b-{gen_budget:03d}"
+        f"mcts_bl_cnt_v01{level_str}"
+        f"--bs-{cfg.batch_size}--d-{cfg.max_depth}"
+        f"--b-{cfg.gen_budget:03d}"
         f"--cpuct-{cfg.cpuct}"
     )
 
 
 @hydra.main(
     config_path="conf",
-    config_name="mcts_bl_cnt_prm800k",
+    config_name="mcts_bl_cnt_v01_prm800k",
     version_base=None,
 )
 def main(cfg: DictConfig):
@@ -60,17 +61,20 @@ def main(cfg: DictConfig):
     config = Config()
     config.agg_strategy      = cfg.agg_strategy
     config.temperature       = cfg.temperature
-    config.n                 = cfg.n
-    config.lookahead         = cfg.lookahead
-    config.max_depths        = cfg.max_depths
     config.filter_duplicates = cfg.filter_duplicates
     config.date_string       = cfg.date_string
     config.seed              = cfg.seed
 
+    # General search parameters
+    config.gen_budget        = cfg.gen_budget
+    config.batch_size        = cfg.batch_size
+    config.max_depth         = cfg.max_depth
     config.num_phases        = cfg.num_phases
-    config.gen_budget        = cfg.num_batches * cfg.max_depths
-    config.cpuct             = cfg.cpuct
+    config.lookahead         = cfg.lookahead
     config.negative_reward   = cfg.negative_reward
+
+    # BL-MCTS parameters
+    config.cpuct             = cfg.cpuct
 
     llm_vllm = LLM(
         model=cfg.llm_dir,
@@ -97,6 +101,7 @@ def main(cfg: DictConfig):
     num_questions = len(batch_of_questions)
     num_trials = cfg.num_trials
     print(f"num_questions = {num_questions}, num_trials = {num_trials}")
+    print(f"node_name = {cfg.node_name}")
 
     config_name = _build_config_name(cfg)
     print(config_name)
@@ -105,7 +110,7 @@ def main(cfg: DictConfig):
 
     wandb.init(
         project="llm-reasoning",
-        name=config_name,
+        name=f"{config_name}--node-{cfg.node_name}",
         config=OmegaConf.to_container(cfg, resolve=True),
     )
 

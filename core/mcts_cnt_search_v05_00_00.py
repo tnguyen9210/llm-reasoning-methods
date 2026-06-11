@@ -7,9 +7,10 @@ algorithm). Variant behavior is selected via config flags.
 Algorithm sketch
     For each of `num_phases` phases:
       Walk from the root down to a terminal node. At each step:
-        - If `current_node` has no children, generate `config.n`
-          next-step continuations via vLLM, dedupe by text, score
-          with the PRM, and add as children. Charges gen_budget.
+        - If `current_node` has no children, generate
+          `config.batch_size` next-step continuations via vLLM,
+          dedupe by text, score with the PRM, and add as children.
+          Charges gen_budget.
         - Select one child by PUCT:
               q_value + cpuct * sqrt(log(parent_visits) / visits)
           Uniform random tie-break.
@@ -186,7 +187,7 @@ class MCTS(BaseTree):
             new_node.is_terminal = True
             self.completed_nodes.append(new_node)
 
-        if not new_node.is_terminal and new_node.depth >= self.config.max_depths:
+        if not new_node.is_terminal and new_node.depth >= self.config.max_depth:
             new_node.is_terminal = True
             candidate_score = self.config.negative_reward
             self.cnt_node_max_depth += 1
@@ -250,7 +251,7 @@ def _generate_candidates(
     `current_node`. Returns (candidate_infos, candidate_scores).
 
     Two model calls per invocation:
-      1. `generate_k_steps` produces `config.n` continuations.
+      1. `generate_k_steps` produces `config.batch_size` continuations.
       2. `prm.score` scores each unique candidate text.
     """
     current_text = current_node.state["text"]
@@ -267,9 +268,9 @@ def _generate_candidates(
         date_string=config.date_string,
         tokenize=False,
     )
-    current_templated = current_templated * config.n
+    current_templated = current_templated * config.batch_size
 
-    lookahead = 0 if d == config.max_depths - 1 else config.lookahead
+    lookahead = 0 if d == config.max_depth - 1 else config.lookahead
     llm_outputs = generate_k_steps(
         current_templated, lookahead, llm_vllm, sampling_params, 1
     )
@@ -305,7 +306,7 @@ def mcts_search(question, agent, config, llm_vllm, prm):
     """Run MCTS on a single `question`.
 
     Outer loop: `config.num_phases` independent descents from the root.
-    Each descent goes up to `config.max_depths` levels deep or until
+    Each descent goes up to `config.max_depth` levels deep or until
     it hits a terminal node. Only expansions charge `gen_budget`.
     """
     tokenizer = llm_vllm.get_tokenizer()
@@ -329,7 +330,7 @@ def mcts_search(question, agent, config, llm_vllm, prm):
         logging.fatal(f"\n-> p = {p}")
         current_node = agent.root
 
-        for d in range(config.max_depths + 1):
+        for d in range(config.max_depth + 1):
             logging.fatal(f"\n-> d = {d}")
 
             if current_node.is_terminal:
