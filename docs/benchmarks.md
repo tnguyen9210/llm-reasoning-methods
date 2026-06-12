@@ -2,7 +2,7 @@
 
 ## Inference speed: HF Transformers vs vLLM
 
-**Notebook:** `unittests/benchmark_simple_generation_speed_v1.ipynb`  
+**Notebook:** `unittests/benchmark_speed_simple_generation_v1.ipynb`  
 **Date:** 2026-06-12  
 **Hardware:** Tesla V100S-PCIE-32GB  
 **Env:** py311 (vllm 0.18.1, torch 2.10.0+cu126)  
