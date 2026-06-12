@@ -1,7 +1,9 @@
 import os
 os.environ["VLLM_CONFIGURE_LOGGING"] = "0"
+os.environ["PYTORCH_CUDA_ALLOC_CONF"] = "expandable_segments:True"
 import logging
 logging.basicConfig(format='%(message)s', level=logging.FATAL + 1)
+logging.disable(logging.CRITICAL)
 
 import time
 import json

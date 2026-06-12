@@ -4,6 +4,22 @@ Append-only log of cross-cutting design choices: decisions that span
 multiple files, where git history shows *what* changed but not *why*.
 Newest first. One `##` section per decision.
 
+## 2026-06-11 — py311 env is canonical; old-env results are invalid
+
+**Context:** the 2026-06-11 finding in
+[findings.md](findings.md) — the old stack (vLLM 0.6.4 /
+transformers 4.45.2 / torch 2.5.1) silently dropped the trailing
+step separator from continuation prompts, producing ~80% abandoned
+trajectories (now guarded in code by strip-and-reappend), and
+returned incompatible tokenizer outputs in PRM scoring.
+**Decision:** all experiments run in the py311 environment. Results
+generated under the old stack (early CNT-MCTS and BL-MCTS runs) are
+not comparable and must be re-run before drawing conclusions.
+**Why:** outputs differ in content, not just performance; mixing
+stacks would corrupt any cross-run comparison. The code guard fixes
+the known separator issue, but other version-sensitive behaviors may
+remain — one canonical stack removes the variable entirely.
+
 ## 2026-06-11 — Lineage lives in docs, not in module docstrings
 
 **Context:** core files carried `History` blocks recording how each

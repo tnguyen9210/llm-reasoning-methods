@@ -254,8 +254,11 @@ def _generate_candidates(
     current_text = current_node.state["text"]
     logging.error(f"current_text = {current_text}")
 
-    # Strip the step terminator before templating — apply_chat_template's
-    # rindex search fails when the assistant content ends with "\n\n".
+    # Strip the step terminator before templating, then re-append it to
+    # the templated string: some templates / transformers versions trim
+    # or crash on trailing "\n\n" inside apply_chat_template, but the
+    # model must see the separator to continue with a next step instead
+    # of emitting EOS (docs/findings.md, 2026-06-11).
     current_text_clean = current_text.removesuffix("\n\n")
     current_convs = [build_conv(question, current_text_clean, config.system_prompt)]
     current_templated = tokenizer.apply_chat_template(
@@ -265,6 +268,8 @@ def _generate_candidates(
         date_string=config.date_string,
         tokenize=False,
     )
+    if current_text.endswith("\n\n"):
+        current_templated = [t + "\n\n" for t in current_templated]
     current_templated = current_templated * config.batch_size
 
     lookahead = 0 if d == config.max_depth - 1 else config.lookahead

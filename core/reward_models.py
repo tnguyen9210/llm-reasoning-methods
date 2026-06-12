@@ -165,10 +165,10 @@ class RLHFFlow(PRM):
             convs_batch = conversations[i : i + batch_size]
             convs2_batch = conversations2[i : i + batch_size]
             inputs_batch = self.tokenizer.apply_chat_template(
-                convs_batch, padding=True, return_tensors="pt"
+                convs_batch, padding=True, return_dict=True, return_tensors="pt"
             )["input_ids"].to(device)
             inputs2_batch = self.tokenizer.apply_chat_template(
-                convs2_batch, padding=True, return_tensors="pt"
+                convs2_batch, padding=True, return_dict=True, return_tensors="pt"
             )["input_ids"].to(device)
             assert inputs_batch.shape == inputs2_batch.shape
             with torch.no_grad():
@@ -331,10 +331,10 @@ class RLHFFlow2(PRM):
             convs2_batch = conversations2[i : i + batch_size]
             logging.fatal(len(convs_batch))
             inputs_batch = self.tokenizer.apply_chat_template(
-                convs_batch, padding=True, return_tensors="pt"
+                convs_batch, padding=True, return_dict=True, return_tensors="pt"
             )["input_ids"].to(device)
             inputs2_batch = self.tokenizer.apply_chat_template(
-                convs2_batch, padding=True, return_tensors="pt"
+                convs2_batch, padding=True, return_dict=True, return_tensors="pt"
             )["input_ids"].to(device)
             assert inputs_batch.shape == inputs2_batch.shape
             with torch.no_grad():
