@@ -106,5 +106,6 @@ construction, independent of the transformers version.
 change, not just exit codes — a run can succeed while silently
 producing garbage. Tools: `unittests/check_trajectory_completeness.py`
 (results-level) and
-`unittests/test_chat_template_continuation_v1.ipynb` (tokenizer-only
-env gate, runs in seconds).
+`unittests/test_step_separator_affect_generation.ipynb`
+(tokenizer-only env gate, runs in seconds; optional GPU check for the
+model behavior itself).
