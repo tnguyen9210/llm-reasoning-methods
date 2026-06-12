@@ -1,8 +1,7 @@
 # unittests/
 
 Notebooks and scripts for smoke tests, unit tests, benchmarks, and
-result inspection. GPU column: Y = requires GPU, N = CPU-only,
-M = module definition (GPU needed to use).
+result inspection. GPU column: Y = requires GPU, N = CPU-only.
 
 ## Tests
 
@@ -40,6 +39,6 @@ M = module definition (GPU needed to use).
 
 ## Modules
 
-| File | Description |
-|------|-------------|
-| `rlhflow_prm.py` | `RLHFlowPRM` wrapper class with `score()` entry point for per-step and batched PRM scoring |
+| File | Description | GPU |
+|------|-------------|-----|
+| `rlhflow_prm.py` | `RLHFlowPRM` wrapper class with `score()` entry point for per-step and batched PRM scoring | Y |
