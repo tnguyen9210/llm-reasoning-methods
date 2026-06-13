@@ -71,3 +71,34 @@ verifying against avg token counts per BoN run.
 
 BoN is benchmarked under vLLM only — no HF Transformers
 counterpart; see [decisions.md](decisions.md) 2026-06-12.
+
+## GPU memory: generative models (HF Transformers)
+
+**Notebook:** `unittests/benchmark_llm_mem_sizes_v1.ipynb`  
+**Date:** 2026-06-12  
+**Hardware:** Tesla V100S-PCIE-32GB  
+**Env:** py311 (transformers 4.57.6, gptqmodel 5.7.0)  
+**Config:** HF Transformers loads only (vLLM section disabled).
+Driver-level memory via `torch.cuda.mem_get_info`, so numbers
+include the CUDA context (~0.5 GB). fp16 via
+`from_pretrained(dtype="float16")`; int4 via `GPTQModel.load`.
+The fp32 column is from an earlier run where no `dtype` was
+passed (`from_pretrained` defaults to fp32) — kept for reference.
+
+| Model                | fp32 (GB) | fp16 (GB) | int4 (GB) |
+|----------------------|-----------|-----------|-----------|
+| Llama3.2-1B-Instruct |     —     |    2.80   |     —     |
+| Llama3.2-3B-Instruct |   12.47   |    6.47   |    2.57   |
+| Qwen2.5-3B-Instruct  |   14.30   |    8.41   |    4.63   |
+| Qwen2.5-7B-Instruct  |   31.43   |   16.86   |    7.83   |
+
+int4 = GPTQ checkpoint (`-GPTQ` / `-GPTQ-Int4`). fp32 not
+re-measured for the 1B model. All values include the ~0.5 GB
+CUDA context.
+
+**Takeaway:** fp16 roughly halves fp32, as expected; GPTQ-int4
+roughly halves fp16 again (~3–5× below fp32). For the
+fit-7B-LLM+PRM-on-32GB question (M4), Qwen2.5-7B is 16.9 GB at
+fp16 — leaving ~15 GB for a PRM — or 7.8 GB at int4, leaving
+~24 GB. fp32 at 31.4 GB barely fits the LLM alone, so it is not
+a viable baseline on this 32 GB card.

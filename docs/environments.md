@@ -56,8 +56,10 @@ Leftover pip resolver complaints in `py311` after the downgrade —
 harmless for the core generate/score pipeline (smoke-tested), but
 relevant if these packages are used:
 
-- `gptqmodel 7.0.0` requires `transformers>=5.4` — GPTQ loading via
-  gptqmodel may break under transformers 4.57.6.
+- `gptqmodel` is pinned to 5.7.0 (with `kernels==0.12.0`): versions
+  ≥5.8 require `transformers>=5.2`, incompatible with vllm's
+  `transformers<5` cap. 7.0.0 crashed at import under 4.57.6;
+  resolved 2026-06-12, see `findings.md`.
 - `xformers 0.0.30` was built against `torch==2.7.0`.
 - `trl 0.9.6` requires `numpy<2`.
 - `datasets 4.8.5` wants `fsspec<=2026.2.0` (installed: 2026.4.0).

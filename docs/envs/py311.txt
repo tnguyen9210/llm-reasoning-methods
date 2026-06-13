@@ -89,7 +89,7 @@ GitPython==3.1.46
 google-api-core==2.25.0
 google-auth==2.40.2
 googleapis-common-protos==1.75.0
-GPTQModel==7.0.0
+GPTQModel==5.7.0
 grpcio==1.81.1
 grpcio-reflection==1.71.2
 gym==0.26.2
@@ -144,6 +144,7 @@ jupyterlab_pygments @ file:///home/conda/feedstock_root/build_artifacts/jupyterl
 jupyterlab_server @ file:///home/conda/feedstock_root/build_artifacts/jupyterlab_server_1733599573484/work
 jupyterlab_widgets @ file:///home/conda/feedstock_root/build_artifacts/jupyterlab_widgets_1733428046021/work
 kaldi-native-fbank==1.22.3
+kernels==0.12.0
 kiwisolver @ file:///home/conda/feedstock_root/build_artifacts/kiwisolver_1725459263097/work
 lark==1.2.2
 latex2sympy2==1.9.1
