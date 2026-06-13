@@ -33,6 +33,7 @@ result inspection. GPU column: Y = requires GPU, N = CPU-only.
 
 | File | What it examines | GPU |
 |------|-----------------|-----|
+| `examine_chat_templates_v1.ipynb` | Chat template and system-prompt format per LLM; native vs. pipeline `custom_chat_template`; whether the `\n\n` step separator survives templating | N |
 | `examine_completions_log_probs_v1.ipynb` | Per-step log-probabilities and perplexities of generated completions | Y |
 | `examine_completions_prm_scores_v1.ipynb` | PRM scores across completion steps; correctness correlation | Y |
 | `qwen_prm_toy_example.ipynb` | Toy example: load and score with Qwen2.5-Math-PRM-7B | Y |

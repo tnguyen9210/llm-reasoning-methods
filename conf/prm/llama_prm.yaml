@@ -1,0 +1,5 @@
+# @package prm
+# Process reward model group → binds onto PRMConfig.
+name: Llama3.1-8B-PRM-Deepseek-Data
+prm_dir: ${base_dir}/Llama3.1-8B-PRM-Deepseek-Data
+device_map: cuda:0

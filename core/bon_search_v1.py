@@ -6,7 +6,7 @@ import numpy as np
 import torch
 
 from vllm import SamplingParams
-from sal.search.utils import build_conv
+from utils.configs import build_conv
 
 
 def _set_seeds(random_seed):

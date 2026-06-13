@@ -8,7 +8,7 @@ Algorithm sketch
     For each of `num_phases` phases:
       Walk from the root down to a terminal node. At each step:
         - If `current_node` has no children, generate
-          `config.batch_size` next-step continuations via vLLM,
+          `config.search.batch_size` next-step continuations via vLLM,
           dedupe by text, score with the PRM, and add as children.
           Charges gen_budget.
         - Select one child by PUCT:
@@ -184,9 +184,9 @@ class MCTS(BaseTree):
             new_node.is_terminal = True
             self.completed_nodes.append(new_node)
 
-        if not new_node.is_terminal and new_node.depth >= self.config.max_depth:
+        if not new_node.is_terminal and new_node.depth >= self.config.search.max_depth:
             new_node.is_terminal = True
-            candidate_score = self.config.negative_reward
+            candidate_score = self.config.search.negative_reward
             self.cnt_node_max_depth += 1
 
         new_node.update(candidate_score)
@@ -208,7 +208,7 @@ class MCTS(BaseTree):
         best_childs: List[Any] = []
 
         for child_node in node.children:
-            puct_value = child_node.puct(cpuct=self.config.cpuct)
+            puct_value = child_node.puct(cpuct=self.config.search.cpuct)
             if puct_value == best_value:
                 best_childs.append(child_node)
             elif puct_value > best_value:
@@ -248,7 +248,7 @@ def _generate_candidates(
     `current_node`. Returns (candidate_infos, candidate_scores).
 
     Two model calls per invocation:
-      1. `generate_k_steps` produces `config.batch_size` continuations.
+      1. `generate_k_steps` produces `config.search.batch_size` continuations.
       2. `prm.score` scores each unique candidate text.
     """
     current_text = current_node.state["text"]
@@ -260,19 +260,21 @@ def _generate_candidates(
     # model must see the separator to continue with a next step instead
     # of emitting EOS (docs/findings.md, 2026-06-11).
     current_text_clean = current_text.removesuffix("\n\n")
-    current_convs = [build_conv(question, current_text_clean, config.system_prompt)]
+    current_convs = [build_conv(question, current_text_clean, config.gen.system_prompt)]
     current_templated = tokenizer.apply_chat_template(
         current_convs,
         add_generation_prompt=current_node.depth == 0,
         continue_final_message=current_node.depth > 0,
-        date_string=config.date_string,
+        date_string=config.gen.date_string,
         tokenize=False,
     )
     if current_text.endswith("\n\n"):
         current_templated = [t + "\n\n" for t in current_templated]
-    current_templated = current_templated * config.batch_size
+    current_templated = current_templated * config.search.batch_size
 
-    lookahead = 0 if d == config.max_depth - 1 else config.lookahead
+    lookahead = (
+        0 if d == config.search.max_depth - 1 else config.search.lookahead
+    )
     llm_outputs = generate_k_steps(
         current_templated, lookahead, llm_vllm, sampling_params, 1
     )
@@ -296,7 +298,7 @@ def _generate_candidates(
         candidate_questions, candidate_texts, batch_size=4
     )
     candidate_scores = [
-        aggregate_scores(scores[0], config.agg_strategy)
+        aggregate_scores(scores[0], config.gen.agg_strategy)
         for scores in candidate_scores
     ]
     logging.error(f"candidate_scores = {candidate_scores}")
@@ -307,18 +309,18 @@ def _generate_candidates(
 def mcts_search(question, agent, config, llm_vllm, prm):
     """Run MCTS on a single `question`.
 
-    Outer loop: `config.num_phases` independent descents from the root.
-    Each descent goes up to `config.max_depth` levels deep or until
+    Outer loop: `config.search.num_phases` independent descents from the
+    root. Each descent goes up to `config.search.max_depth` levels deep or until
     it hits a terminal node. Only expansions charge `gen_budget`.
     """
     tokenizer = llm_vllm.get_tokenizer()
-    if config.custom_chat_template is not None:
-        tokenizer.chat_template = config.custom_chat_template
+    if config.gen.custom_chat_template is not None:
+        tokenizer.chat_template = config.gen.custom_chat_template
 
     sampling_params = SamplingParams(
-        temperature=config.temperature,
-        max_tokens=config.max_tokens,
-        top_p=config.top_p,
+        temperature=config.gen.temperature,
+        max_tokens=config.gen.max_tokens,
+        top_p=config.gen.top_p,
         stop=["\n\n"],
         include_stop_str_in_output=True,
         n=1,
@@ -328,11 +330,11 @@ def mcts_search(question, agent, config, llm_vllm, prm):
     p = 0
     d = 0
     ndepths_arr: List[int] = []
-    for p in range(config.num_phases):
+    for p in range(config.search.num_phases):
         logging.fatal(f"\n-> p = {p}")
         current_node = agent.root
 
-        for d in range(config.max_depth + 1):
+        for d in range(config.search.max_depth + 1):
             logging.fatal(f"\n-> d = {d}")
 
             if current_node.is_terminal:
@@ -350,11 +352,11 @@ def mcts_search(question, agent, config, llm_vllm, prm):
 
             current_node = agent.select_child(current_node)
             logging.fatal(f"gen_cnt = {gen_cnt}")
-            if gen_cnt >= config.gen_budget:
+            if gen_cnt >= config.search.gen_budget:
                 break
 
         ndepths_arr.append(d)
-        if gen_cnt >= config.gen_budget:
+        if gen_cnt >= config.search.gen_budget:
             logging.fatal("run out of budget!")
             break
 

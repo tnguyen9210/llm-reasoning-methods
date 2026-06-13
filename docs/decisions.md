@@ -7,6 +7,34 @@ section per decision. Titles carry one or two area prefixes
 (`Area:` or `Area, Area:`) so skimming groups by eye and
 `grep '^## .*Area'` gives a per-topic view.
 
+## 2026-06-13 — Configs: adopt structured Hydra config schema
+
+**Context:** the upcoming sweep spans ~6 LLMs (Llama/Qwen/Phi ×
+3B/7B), 2 PRMs, 4–5 datasets, and several search methods — a
+combinatorial matrix where the sum of options (~17) is far below
+their product (~120). Launchers currently load a Hydra
+`DictConfig`, then hand-copy ~13 fields into a separate
+`sal.Config` (e.g. `generate_mcts_cnt.py`).
+**Decision:** define a typed, grouped config schema in
+`utils/configs.py` (`GenConfig` / `RunConfig` / `LLMConfig` /
+`PRMConfig` / `DataConfig` + base `SearchConfig` with one subclass
+per method, composed as `ExpConfig`) and bind YAML config groups
+(`conf/llm/`, `conf/data/`, `conf/search/`, …) onto it via Hydra
+structured configs. Notebooks import the same dataclasses directly
+(no Hydra). Migrate one launcher (`generate_mcts_cnt`) end-to-end
+as a pilot before propagating; an adapter keeps the existing flat
+`core/` search code working without rewriting it.
+**Why:** the matrix is past the threshold where grouped config
+(one file per option, combinations on the CLI) beats flat config
+(one near-duplicate file per combination); the hand-copy block is
+fragile (a dropped line silently keeps a wrong default). Full
+rationale — schema-vs-values, nesting benefits, the three axes,
+when Hydra is justified, the pilot discipline — in the vault guide
+`managing-experiment-config.md`.
+**Revisit if:** the experiment matrix collapses to a handful of
+combinations (then flat config is simpler), or the pilot shows the
+`core/` flat-config coupling is cheaper to rewrite than to adapt.
+
 ## 2026-06-12 — Benchmarks: no HF Transformers BoN speed benchmark
 
 **Context:** considered a Transformers-based counterpart to

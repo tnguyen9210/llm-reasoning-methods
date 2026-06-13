@@ -1,0 +1,7 @@
+# @package data
+# Dataset group → binds onto DataConfig.
+name: prm800k
+ds_dir: ${base_dir}/prm800k/math_splits
+ds_split: test
+question_field: problem
+level: 4

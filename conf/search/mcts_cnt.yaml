@@ -1,0 +1,11 @@
+# @package search
+# Search-method group → binds onto MCTSCntConfig.
+# Each method carries only its own hyperparameters.
+method: mcts_cnt
+batch_size: 4           # candidates generated per expansion
+lookahead: 0
+max_depth: 20
+negative_reward: 0
+num_phases: 1000
+gen_budget: 80          # total generations across the full run
+cpuct: 2.0
