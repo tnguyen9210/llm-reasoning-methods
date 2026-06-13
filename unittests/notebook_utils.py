@@ -8,23 +8,15 @@ import torch
 from vllm import LLM, SamplingParams
 
 
-def gpu_mem_used_gb(device=0, flush=False):
+def gpu_mem_used_gb(device=0):
     """Driver-level used GPU memory in GB.
 
-    Reports what the CUDA driver sees — includes both PyTorch
-    allocator pool and vLLM allocs. Useful for before/after
-    comparisons when loading or deleting models.
-
-    Args:
-        device: CUDA device index.
-        flush:  If True, run gc.collect() + empty_cache() first to
-                evict unreferenced tensors before measuring.
-                Use flush=True when measuring clean model-weight
-                footprint; leave False when measuring mid-run state.
+    Runs gc.collect() + empty_cache() before measuring to evict
+    unreferenced tensors. Reports what the CUDA driver sees —
+    includes both PyTorch allocator pool and vLLM allocs.
     """
-    if flush:
-        gc.collect()
-        torch.cuda.empty_cache()
+    gc.collect()
+    torch.cuda.empty_cache()
     free, total = torch.cuda.mem_get_info(device)
     return (total - free) / (1024**3)
 
