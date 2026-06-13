@@ -3,7 +3,9 @@
 Append-only log of decisions git history can't show: cross-cutting
 design choices that span multiple files, and deliberate omissions —
 things chosen *not* to be built, and why. Newest first. One `##`
-section per decision.
+section per decision. Titles carry one or two area prefixes
+(`Area:` or `Area, Area:`) so skimming groups by eye and
+`grep '^## .*Area'` gives a per-topic view.
 
 ## 2026-06-12 — Benchmarks: no HF Transformers BoN speed benchmark
 
@@ -20,7 +22,7 @@ and change no decision — vLLM is the search backend either way.
 **Revisit if:** an experiment requires an HF-only pipeline, or HF
 Transformers gains continuous batching.
 
-## 2026-06-11 — py311 env is canonical; old-env results are invalid
+## 2026-06-11 — Env, Experiments: py311 env is canonical; old-env results are invalid
 
 **Context:** the 2026-06-11 finding in
 [findings.md](findings.md) — the old stack (vLLM 0.6.4 /
@@ -36,7 +38,7 @@ stacks would corrupt any cross-run comparison. The code guard fixes
 the known separator issue, but other version-sensitive behaviors may
 remain — one canonical stack removes the variable entirely.
 
-## 2026-06-11 — Lineage lives in docs, not in module docstrings
+## 2026-06-11 — Docs: lineage lives in docs, not in module docstrings
 
 **Context:** core files carried `History` blocks recording how each
 version evolved. A `.py` file should document the *current*
@@ -50,7 +52,7 @@ and rot; but with multiple versions coexisting as files, the
 *relationship between live variants* still needs documenting — that is
 current-state information and stays in the docstring.
 
-## 2026-06-11 — Hydra run outputs disabled
+## 2026-06-11 — Configs: Hydra run outputs disabled
 
 **Context:** every Hydra invocation created timestamped `outputs/` /
 `multirun/` directories with config snapshots and logs.
@@ -60,7 +62,7 @@ current-state information and stays in the docstring.
 to `results/`. The Hydra dirs were pure clutter and were gitignored
 anyway.
 
-## 2026-06-11 — `gen_budget` is set directly; `num_batches` dropped
+## 2026-06-11 — Configs: `gen_budget` is set directly; `num_batches` dropped
 
 **Context:** configs exposed `num_batches`, and launchers computed
 `gen_budget = num_batches * max_depths`. The derived quantity, not the
@@ -73,7 +75,7 @@ to keep comparisons with MCTS fair.
 per-depth factorization was an artifact of the BoB framing; setting the
 total directly makes sweeps and cross-algorithm comparisons explicit.
 
-## 2026-06-11 — BoN keeps `n`; MCTS uses `batch_size`; SAL untouched
+## 2026-06-11 — Naming, Configs: BoN keeps `n`; MCTS uses `batch_size`; SAL untouched
 
 **Context:** three distinct things were called a batch size: SAL's
 `Config.n`, the number of MCTS expansion candidates, and the PRM
