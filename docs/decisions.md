@@ -1,8 +1,24 @@
 # Design decisions
 
-Append-only log of cross-cutting design choices: decisions that span
-multiple files, where git history shows *what* changed but not *why*.
-Newest first. One `##` section per decision.
+Append-only log of decisions git history can't show: cross-cutting
+design choices that span multiple files, and deliberate omissions —
+things chosen *not* to be built, and why. Newest first. One `##`
+section per decision.
+
+## 2026-06-12 — Benchmarks: no HF Transformers BoN speed benchmark
+
+**Context:** considered a Transformers-based counterpart to
+`unittests/benchmark_speed_bon_models_v1.ipynb` to compare Best-of-N
+generation speed across backends.
+**Decision:** benchmark BoN speed under vLLM only; no separate HF
+Transformers BoN benchmark.
+**Why:** the simple-generation benchmark
+([benchmarks.md](benchmarks.md), 2026-06-12) already shows vLLM
+~4.3× faster than HF eager on two models. BoN is generation-bound,
+so at n=32 the gap only widens; the benchmark would cost GPU-hours
+and change no decision — vLLM is the search backend either way.
+**Revisit if:** an experiment requires an HF-only pipeline, or HF
+Transformers gains continuous batching.
 
 ## 2026-06-11 — py311 env is canonical; old-env results are invalid
 

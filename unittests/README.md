@@ -25,7 +25,7 @@ result inspection. GPU column: Y = requires GPU, N = CPU-only.
 | `benchmark_speed_simple_generation_v1.ipynb` | Inference latency and throughput: HF Transformers vs vLLM at various memory utilization settings | Y |
 | `benchmark_speed_bon_models_v1.ipynb` | BoN search speed across models (Llama 3.2 1B/3B, Qwen 2.5 3B/7B) | Y |
 | `benchmark_speed_bon_quant_v1.ipynb` | BoN search speed across quantization levels (fp16 vs GPTQ-int4) | Y |
-| `benchmark_bon_variants_v1.ipynb` | BoN generation: native n-sampling vs prompt-duplication | Y |
+| `benchmark_speed_bon_variants_v1.ipynb` | BoN generation: native n-sampling vs prompt-duplication | Y |
 | `benchmark_llm_mem_sizes_v1.ipynb` | GPU memory usage of generative models with HF Transformers and vLLM | Y |
 | `benchmark_prm_mem_sizes_v1.ipynb` | GPU memory usage of PRMs with HF Transformers | Y |
 
@@ -42,4 +42,4 @@ result inspection. GPU column: Y = requires GPU, N = CPU-only.
 | File | Description | GPU |
 |------|-------------|-----|
 | `rlhflow_prm.py` | `RLHFlowPRM` wrapper class with `score()` entry point for per-step and batched PRM scoring | Y |
-| `utils.py` | Shared helpers: `gpu_mem_used_gb` (driver-level GPU memory) and `measure_inference` (timed HF/vLLM generation) | Y |
+| `notebook_utils.py` | Shared helpers: `gpu_mem_used_gb` (driver-level GPU memory) and `measure_inference` (timed HF/vLLM generation) | Y |
