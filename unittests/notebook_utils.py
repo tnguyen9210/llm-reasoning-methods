@@ -1,18 +1,30 @@
 """Shared helpers for benchmark notebooks."""
 
+import gc
+import os
 import time
 
 import torch
-from vllm import SamplingParams
+from vllm import LLM, SamplingParams
 
 
-def gpu_mem_used_gb(device=0):
+def gpu_mem_used_gb(device=0, flush=False):
     """Driver-level used GPU memory in GB.
 
     Reports what the CUDA driver sees — includes both PyTorch
     allocator pool and vLLM allocs. Useful for before/after
     comparisons when loading or deleting models.
+
+    Args:
+        device: CUDA device index.
+        flush:  If True, run gc.collect() + empty_cache() first to
+                evict unreferenced tensors before measuring.
+                Use flush=True when measuring clean model-weight
+                footprint; leave False when measuring mid-run state.
     """
+    if flush:
+        gc.collect()
+        torch.cuda.empty_cache()
     free, total = torch.cuda.mem_get_info(device)
     return (total - free) / (1024**3)
 
@@ -103,3 +115,122 @@ def measure_inference(
     throughput = total_tokens / total_time
     avg_tokens = total_tokens / num_runs
     return latency, throughput, avg_tokens, text
+
+
+def benchmark_bon_speed_llm_model(
+    llm_dir,
+    config,
+    prompts,
+    num_trials,
+    gpu_memory_utilization,
+    warmup=1,
+):
+    """Load llm_dir under vLLM, warm up, time num_trials BoN runs,
+    then tear down. Returns (model_name, trial_times).
+
+    Args:
+        llm_dir:                 Path to the model checkpoint.
+        config:                  sal.Config with generation params.
+        prompts:                 List of prompt strings.
+        num_trials:              Number of timed runs.
+        gpu_memory_utilization:  vLLM gpu_memory_utilization setting.
+        warmup:                  Untimed warmup runs before timing.
+    """
+    from core import bon_search_v1
+
+    model_name = os.path.basename(llm_dir.rstrip("/"))
+    print(f"\n=== {model_name} ===")
+
+    llm = LLM(
+        model=llm_dir,
+        tensor_parallel_size=1,
+        max_model_len=5000,
+        gpu_memory_utilization=gpu_memory_utilization,
+        enforce_eager=True,
+        distributed_executor_backend=None,
+        dtype="float16",
+        seed=config.seed,
+    )
+    gc.collect()
+    torch.cuda.empty_cache()
+    print(f"  GPU memory used: {gpu_mem_used_gb():.2f} GB")
+
+    for w in range(warmup):
+        bon_search_v1.best_of_n_v1(prompts, config, llm, 10_000 + w)
+
+    times = []
+    for trial_idx in range(num_trials):
+        start = time.perf_counter()
+        bon_search_v1.best_of_n_v1(prompts, config, llm, trial_idx)
+        elapsed = time.perf_counter() - start
+        times.append(elapsed)
+        print(
+            f"  trial {trial_idx}: {elapsed:>7.2f}s total, "
+            f"{elapsed / len(prompts):.4f}s/question"
+        )
+
+    del llm
+    gc.collect()
+    torch.cuda.empty_cache()
+    return model_name, times
+
+
+def benchmark_bon_speed_llm_quant(
+    qcfg,
+    config,
+    prompts,
+    num_trials,
+    gpu_memory_utilization,
+    warmup=1,
+):
+    """Load a quantization config under vLLM, warm up, time num_trials
+    BoN runs, then tear down. Returns (name, gpu_mem_gb, trial_times).
+
+    Args:
+        qcfg:                    Dict with keys name, model_dir,
+                                 quantization, load_format, dtype.
+        config:                  sal.Config with generation params.
+        prompts:                 List of prompt strings.
+        num_trials:              Number of timed runs.
+        gpu_memory_utilization:  vLLM gpu_memory_utilization setting.
+        warmup:                  Untimed warmup runs before timing.
+    """
+    from core import bon_search_v1
+
+    print(f"\n=== {qcfg['name']} ===")
+
+    llm = LLM(
+        model=qcfg["model_dir"],
+        tensor_parallel_size=1,
+        max_model_len=5000,
+        gpu_memory_utilization=gpu_memory_utilization,
+        enforce_eager=True,
+        distributed_executor_backend=None,
+        dtype=qcfg["dtype"],
+        quantization=qcfg["quantization"],
+        load_format=qcfg["load_format"],
+        seed=config.seed,
+    )
+    gc.collect()
+    torch.cuda.empty_cache()
+    gpu_mem = gpu_mem_used_gb()
+    print(f"  GPU memory used: {gpu_mem:.2f} GB")
+
+    for w in range(warmup):
+        bon_search_v1.best_of_n_v1(prompts, config, llm, 10_000 + w)
+
+    times = []
+    for trial_idx in range(num_trials):
+        start = time.perf_counter()
+        bon_search_v1.best_of_n_v1(prompts, config, llm, trial_idx)
+        elapsed = time.perf_counter() - start
+        times.append(elapsed)
+        print(
+            f"  trial {trial_idx}: {elapsed:>7.2f}s total, "
+            f"{elapsed / len(prompts):.4f}s/question"
+        )
+
+    del llm
+    gc.collect()
+    torch.cuda.empty_cache()
+    return qcfg["name"], gpu_mem, times

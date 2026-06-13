@@ -42,4 +42,4 @@ result inspection. GPU column: Y = requires GPU, N = CPU-only.
 | File | Description | GPU |
 |------|-------------|-----|
 | `rlhflow_prm.py` | `RLHFlowPRM` wrapper class with `score()` entry point for per-step and batched PRM scoring | Y |
-| `notebook_utils.py` | Shared helpers: `gpu_mem_used_gb` (driver-level GPU memory) and `measure_inference` (timed HF/vLLM generation) | Y |
+| `notebook_utils.py` | Shared helpers: `gpu_mem_used_gb` (driver-level GPU memory, optional flush), `measure_inference` (timed HF/vLLM generation), `benchmark_bon_speed_llm_model` (vLLM BoN speed by model), `benchmark_bon_speed_llm_quant` (vLLM BoN speed by quantization config) | Y |

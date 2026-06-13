@@ -102,3 +102,29 @@ fit-7B-LLM+PRM-on-32GB question (M4), Qwen2.5-7B is 16.9 GB at
 fp16 — leaving ~15 GB for a PRM — or 7.8 GB at int4, leaving
 ~24 GB. fp32 at 31.4 GB barely fits the LLM alone, so it is not
 a viable baseline on this 32 GB card.
+
+## GPU memory: process reward models (HF Transformers)
+
+**Notebook:** `unittests/benchmark_prm_mem_sizes_v1.ipynb`  
+**Date:** 2026-06-12  
+**Hardware:** Tesla V100S-PCIE-32GB  
+**Env:** py311 (transformers 4.57.6)  
+**Config:** HF Transformers, `AutoModel` (reward head, not causal
+LM head). Driver-level memory via `torch.cuda.mem_get_info`;
+includes ~0.5 GB CUDA context. fp16 via
+`from_pretrained(dtype="float16")`. V100 (sm_70) does not support
+bf16; some checkpoints are published in bf16 but load correctly
+in fp16.
+
+| Model                         | fp16 (GB) |
+|-------------------------------|-----------|
+| Qwen2.5-Math-PRM-7B           |   13.87   |
+| Llama3.1-8B-PRM-Deepseek-Data |   14.56   |
+
+**Takeaway:** Both PRMs are ~14 GB at fp16, close to the LLM
+footprint despite similar parameter counts — the Llama-based PRM
+(8B) is slightly larger than the Qwen one (7B). For the
+fit-LLM+PRM-on-32GB question (M4): fp16 LLM + fp16 PRM sums to
+30.7 GB (Qwen2.5-7B + Qwen2.5-Math-PRM-7B), leaving ~1.3 GB
+for KV cache — extremely tight. int4 LLM + fp16 PRM gives
+21.7 GB, leaving ~10 GB for KV cache — a workable margin.
