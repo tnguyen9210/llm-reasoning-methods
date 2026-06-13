@@ -72,6 +72,40 @@ verifying against avg token counts per BoN run.
 BoN is benchmarked under vLLM only — no HF Transformers
 counterpart; see [decisions.md](decisions.md) 2026-06-12.
 
+## Best-of-N search speed across quantization levels
+
+**Notebook:** `unittests/benchmark_speed_bon_quant_v1.ipynb`  
+**Date:** 2026-06-12  
+**Hardware:** Tesla V100S-PCIE-32GB  
+**Env:** py311 (vllm 0.18.1, torch 2.10.0+cu126)  
+**Config:** BoN n=256, 5 MATH level-4 questions, 2 trials +
+1 warmup, temperature=0.8, max_tokens=2048, vLLM gmu=0.5,
+enforce_eager. int4 = GPTQ checkpoint.
+
+| Config           | GPU (GB) | Mean s/trial | Std   | s/question |
+|------------------|----------|--------------|-------|------------|
+| llama-3b fp16    |  16.53   |    297.55    |  8.00 |   59.51    |
+| llama-3b gptq    |  16.63   |    368.36    |  2.75 |   73.67    |
+| qwen-3b fp16     |  16.61   |    610.16    | 14.94 |  122.03    |
+| qwen-3b gptq-int4|  16.55   |    595.16    |  1.43 |  119.03    |
+| qwen-7b fp16     |  16.12   |   1184.41    | 43.85 |  236.88    |
+| qwen-7b gptq-int4|  16.12   |    468.76    |  2.97 |   93.75    |
+
+GPU column is the vLLM process footprint at gmu=0.5, not the
+model-weight size — it is roughly constant because the budget
+is set by `gpu_memory_utilization`, not the checkpoint.
+
+**Takeaway:** GPTQ-int4's speed effect is non-monotonic in model
+size. At 3B it does not pay off — llama-3b GPTQ is ~1.24× *slower*
+than fp16, and qwen-3b int4 is within noise of fp16 — because the
+dequantization overhead is not repaid at that scale. At 7B it wins
+decisively: qwen-7b int4 is ~2.5× *faster* than fp16, where reduced
+memory-bandwidth pressure dominates. So int4 is a speed win only at
+7B; at 3B it buys VRAM headroom (see the GPU-memory table) at a
+small-to-zero speed cost. Caveat: small sample (5 questions, 2
+trials) and a different n than the across-models sweep (n=256 vs
+n=32), so s/question is not comparable across the two tables.
+
 ## GPU memory: generative models (HF Transformers)
 
 **Notebook:** `unittests/benchmark_llm_mem_sizes_v1.ipynb`  
