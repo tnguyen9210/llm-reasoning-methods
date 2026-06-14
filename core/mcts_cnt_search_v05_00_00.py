@@ -314,8 +314,11 @@ def mcts_search(question, agent, config, llm_vllm, prm):
     it hits a terminal node. Only expansions charge `gen_budget`.
     """
     tokenizer = llm_vllm.get_tokenizer()
-    if config.gen.custom_chat_template is not None:
-        tokenizer.chat_template = config.gen.custom_chat_template
+    # Use the model's NATIVE chat template (do not override with
+    # config.custom_chat_template): native gives each model its own
+    # in-distribution format. The trailing "\n\n" step separator is
+    # preserved by the strip-and-reappend in _generate_candidates,
+    # not by the template. See docs/decisions.md 2026-06-13.
 
     sampling_params = SamplingParams(
         temperature=config.gen.temperature,

@@ -7,6 +7,38 @@ section per decision. Titles carry one or two area prefixes
 (`Area:` or `Area, Area:`) so skimming groups by eye and
 `grep '^## .*Area'` gives a per-topic view.
 
+## 2026-06-13 — Prompting: use native chat templates, not one custom template
+
+**Context:** the search code applied a single hardcoded Llama-3.1
+`custom_chat_template` to *every* model. The
+`examine_chat_templates_v1` notebook
+([findings](findings.md) and the vault note `llm-chat-templates`)
+showed why it was added — Llama's *native* template silently trims
+the trailing `\n\n` step separator — but also that it forces Llama
+format onto Qwen (overriding `<|im_start|>`) and drops Llama's BOS.
+**Decision:** stop overriding the template. Use each model's
+**native** chat template, and keep the separator with the existing
+strip-and-reappend (`removesuffix("\n\n")` before
+`apply_chat_template`, re-append after). Drop the
+`tokenizer.chat_template = config.custom_chat_template` override in
+the search code (done first in `mcts_cnt_search_v05_00_00`; other
+search files migrate one at a time). `custom_chat_template` stays
+in the config as a vendored asset but is no longer applied.
+**Why:** the custom template's only real job was preserving the
+separator, and strip-and-reappend already does that
+(`apply_chat_template` is the one place the separator is lost;
+re-appending after it is correct by construction). Native templates
+give each model its own in-distribution format, which removes a
+**confound**: a single forced template could penalize one family
+(e.g. Qwen getting Llama format) and contaminate cross-model
+comparisons. Verified that strip-and-reappend on native templates
+produces a valid prompt ending in `\n\n` for both Llama and Qwen,
+with no `continue_final_message` crash.
+**Revisit if:** a model's native template can't be made to preserve
+the separator even with strip-and-reappend, or the backlogged M2
+template A/B (`llm-prm-deep-dive`) shows native is *worse* than the
+custom template for some model.
+
 ## 2026-06-13 — Configs: adopt structured Hydra config schema
 
 **Context:** the upcoming sweep spans ~6 LLMs (Llama/Qwen/Phi ×
