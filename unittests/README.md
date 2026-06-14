@@ -37,7 +37,6 @@ result inspection. GPU column: Y = requires GPU, N = CPU-only.
 | `examine_prm_scores_llama_v1.ipynb` | Inspect Llama3.1-8B-PRM-Deepseek-Data per-step scores (marker-token approach) on flamingo + correct/wrong examples | Y |
 | `examine_prm_scores_qwen_v1.ipynb` | Inspect Qwen2.5-Math-PRM-7B per-step scores (`<extra_0>` separators, fp16 for V100) on flamingo + correct/wrong examples | Y |
 | `examine_prm_scores_rlhflow_v1.ipynb` | Inspect the `RLHFlowPRM` wrapper's per-step scores: single-step and batched paths | Y |
-| `qwen_prm_toy_example.ipynb` | Toy example: load and score with Qwen2.5-Math-PRM-7B | Y |
 
 ## Modules
 
