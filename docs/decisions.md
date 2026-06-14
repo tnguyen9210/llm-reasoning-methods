@@ -11,7 +11,7 @@ section per decision. Titles carry one or two area prefixes
 
 **Context:** the search code applied a single hardcoded Llama-3.1
 `custom_chat_template` to *every* model. The
-`examine_chat_templates_v1` notebook
+`examine_llm_chat_templates_v1` notebook
 ([findings](findings.md) and the vault note `llm-chat-templates`)
 showed why it was added — Llama's *native* template silently trims
 the trailing `\n\n` step separator — but also that it forces Llama
