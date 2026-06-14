@@ -14,9 +14,6 @@ result inspection. GPU column: Y = requires GPU, N = CPU-only.
 | `test_transformers_batched_prompt_scoring_v1.ipynb` | Log-probability computation and last-token embeddings under padding with HF Transformers | Y |
 | `test_vllm_batched_generation_v1.ipynb` | Batched generation with vLLM (continuous batching) | Y |
 | `test_vllm_batched_prompt_scoring_v1.ipynb` | Batched prompt log-probability scoring with vLLM | Y |
-| `test_prm_llama_scoring_v1.ipynb` | Smoke test for Llama3.1-8B-PRM-Deepseek-Data: inline per-step scoring via the marker-token approach | Y |
-| `test_prm_qwen_scoring_v1.ipynb` | Smoke test for Qwen2.5-Math-PRM-7B: per-step scoring via `<extra_0>` separator tokens (fp16 for V100) | Y |
-| `test_prm_rlhflow_scoring_v1.ipynb` | Smoke test for the `RLHFlowPRM` wrapper: single-step and batched paths on the flamingo toy example | Y |
 
 ## Benchmarks
 
@@ -37,6 +34,9 @@ result inspection. GPU column: Y = requires GPU, N = CPU-only.
 | `examine_llm_system_prompt_v1.ipynb` | System-prompt format and behavior per LLM (currently the shared `GenConfig.system_prompt`) | N |
 | `examine_completions_log_probs_v1.ipynb` | Per-step log-probabilities and perplexities of generated completions | Y |
 | `examine_completions_prm_scores_v1.ipynb` | PRM scores across completion steps; correctness correlation | Y |
+| `examine_prm_scores_llama_v1.ipynb` | Inspect Llama3.1-8B-PRM-Deepseek-Data per-step scores (marker-token approach) on flamingo + correct/wrong examples | Y |
+| `examine_prm_scores_qwen_v1.ipynb` | Inspect Qwen2.5-Math-PRM-7B per-step scores (`<extra_0>` separators, fp16 for V100) on flamingo + correct/wrong examples | Y |
+| `examine_prm_scores_rlhflow_v1.ipynb` | Inspect the `RLHFlowPRM` wrapper's per-step scores: single-step and batched paths | Y |
 | `qwen_prm_toy_example.ipynb` | Toy example: load and score with Qwen2.5-Math-PRM-7B | Y |
 
 ## Modules
