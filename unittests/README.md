@@ -14,9 +14,9 @@ result inspection. GPU column: Y = requires GPU, N = CPU-only.
 | `test_transformers_batched_prompt_scoring_v1.ipynb` | Log-probability computation and last-token embeddings under padding with HF Transformers | Y |
 | `test_vllm_batched_generation_v1.ipynb` | Batched generation with vLLM (continuous batching) | Y |
 | `test_vllm_batched_prompt_scoring_v1.ipynb` | Batched prompt log-probability scoring with vLLM | Y |
-| `test_llama_prm_scoring_v1.ipynb` | Smoke test for Llama3.1-8B-PRM-Deepseek-Data scoring via RLHFlow approach | Y |
-| `test_qwen_prm_scoring_v1.ipynb` | Smoke test for Qwen2.5-Math-PRM-7B scoring | Y |
-| `test_rlhflow_prm_scoring_v1.ipynb` | Smoke test for the `RLHFlowPRM` wrapper class | Y |
+| `test_prm_llama_scoring_v1.ipynb` | Smoke test for Llama3.1-8B-PRM-Deepseek-Data: inline per-step scoring via the marker-token approach | Y |
+| `test_prm_qwen_scoring_v1.ipynb` | Smoke test for Qwen2.5-Math-PRM-7B: per-step scoring via `<extra_0>` separator tokens (fp16 for V100) | Y |
+| `test_prm_rlhflow_scoring_v1.ipynb` | Smoke test for the `RLHFlowPRM` wrapper: single-step and batched paths on the flamingo toy example | Y |
 
 ## Benchmarks
 

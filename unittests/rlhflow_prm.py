@@ -16,7 +16,7 @@ class RLHFlowPRM:
         self,
         model_path,
         device_map="cuda:0",
-        torch_dtype=torch.bfloat16,
+        torch_dtype=torch.float16,
         **model_kwargs,
     ):
         self.model_path = model_path
@@ -125,10 +125,6 @@ class RLHFlowPRM:
                     marker_chat_text = tokenizer.apply_chat_template(
                         marker_conversation, tokenize=False,
                     )
-                    print(f"\n-> Q{q_idx} A{a_idx} step {step_idx}:")
-                    print(f"Chat text:\n{chat_text}\n")
-                    print(f"Marker chat text:\n{marker_chat_text}\n")
-
                     input_ids = tokenizer.encode(
                         chat_text, return_tensors="pt",
                         add_special_tokens=False,
