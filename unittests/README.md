@@ -34,13 +34,14 @@ result inspection. GPU column: Y = requires GPU, N = CPU-only.
 | `examine_llm_system_prompt_v1.ipynb` | System-prompt format and behavior per LLM (currently the shared `GenConfig.system_prompt`) | N |
 | `examine_completions_log_probs_v1.ipynb` | Per-step log-probabilities and perplexities of generated completions | Y |
 | `examine_completions_prm_scores_v1.ipynb` | PRM scores across completion steps; correctness correlation | Y |
-| `examine_prm_scores_llama_v1.ipynb` | Inspect Llama3.1-8B-PRM-Deepseek-Data per-step scores (marker-token approach) on flamingo + correct/wrong examples | Y |
-| `examine_prm_scores_qwen_v1.ipynb` | Inspect Qwen2.5-Math-PRM-7B per-step scores (`<extra_0>` separators, fp16 for V100) on flamingo + correct/wrong examples | Y |
-| `examine_prm_scores_rlhflow_v1.ipynb` | Inspect the `RLHFlowPRM` wrapper's per-step scores: single-step and batched paths | Y |
+| `examine_prm_scores_rlhflow_v1.ipynb` | Inspect Llama3.1-8B-PRM-Deepseek-Data per-step scores inline (marker-token approach) on flamingo + correct/wrong examples | Y |
+| `examine_prm_scores_qwen_v1.ipynb` | Inspect Qwen2.5-Math-PRM-7B per-step scores inline (`<extra_0>` separators, fp16 for V100) on flamingo + correct/wrong examples | Y |
+| `examine_prm_scores_rlhflowprm_v1.ipynb` | Inspect `RLHFlowPRM` wrapper: single-question and batched (two questions, mixed answer counts) calls | Y |
+| `examine_prm_scores_qwenprm_v1.ipynb` | Inspect `QwenPRM` wrapper: single-question and batched (two questions, mixed answer counts) calls | Y |
 
 ## Modules
 
 | File | Description | GPU |
 |------|-------------|-----|
-| `rlhflow_prm.py` | `RLHFlowPRM` wrapper class with `score()` entry point for per-step and batched PRM scoring | Y |
+| `reward_models.py` | `PRM` base class + `QwenPRM` and `RLHFlowPRM` wrappers; `score(questions, answers, batch_size)` → `[question][answer][step]` rewards | Y |
 | `notebook_utils.py` | Shared helpers: `gpu_mem_used_gb` (driver-level GPU memory, always flushes), `measure_inference` (timed HF/vLLM generation), `benchmark_bon_speed_llm_model` (vLLM BoN speed by model), `benchmark_bon_speed_llm_quant` (vLLM BoN speed by quantization config) | Y |
