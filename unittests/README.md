@@ -31,13 +31,15 @@ result inspection. GPU column: Y = requires GPU, N = CPU-only.
 | File | What it examines | GPU |
 |------|-----------------|-----|
 | `examine_llm_chat_templates_v1.ipynb` | Chat-template rendering per LLM: native vs. former custom `custom_chat_template`; whether the `\n\n` step separator survives templating; BOS | N |
-| `examine_llm_system_prompt_v1.ipynb` | System-prompt format and behavior per LLM (currently the shared `GenConfig.system_prompt`) | N |
+| `examine_llm_sys_prompt_v1.ipynb` | System-prompt format and behavior per LLM (currently the shared `GenConfig.system_prompt`) | N |
 | `examine_completions_log_probs_v1.ipynb` | Per-step log-probabilities and perplexities of generated completions | Y |
 | `examine_completions_prm_scores_v1.ipynb` | PRM scores across completion steps; correctness correlation | Y |
 | `examine_prm_scores_rlhflow_v1.ipynb` | Inspect Llama3.1-8B-PRM-Deepseek-Data per-step scores inline (marker-token approach) on flamingo + correct/wrong examples | Y |
 | `examine_prm_scores_qwen_v1.ipynb` | Inspect Qwen2.5-Math-PRM-7B per-step scores inline (`<extra_0>` separators, fp16 for V100) on flamingo + correct/wrong examples | Y |
 | `examine_prm_scores_rlhflowprm_v1.ipynb` | Inspect `RLHFlowPRM` wrapper: single-question and batched (two questions, mixed answer counts) calls | Y |
 | `examine_prm_scores_qwenprm_v1.ipynb` | Inspect `QwenPRM` wrapper: single-question and batched (two questions, mixed answer counts) calls | Y |
+| `examine_prm_sys_prompt_qwen_v1.ipynb` | Qwen2.5-Math-PRM-7B: effect of system prompt on per-step scores (qwen_sys_prompt / short / custom_sys_prompt / empty) | Y |
+| `examine_prm_sys_prompt_rlhflow_v1.ipynb` | RLHFlow Llama3.1-8B-PRM: effect of adding a system message on per-step scores (empty / qwen_sys_prompt / short / custom_sys_prompt) | Y |
 
 ## Modules
 
