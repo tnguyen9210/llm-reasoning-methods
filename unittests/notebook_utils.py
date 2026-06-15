@@ -1,4 +1,4 @@
-"""Shared helpers for benchmark notebooks."""
+"""Shared helpers for benchmark and examine notebooks."""
 
 import gc
 import os
@@ -6,6 +6,18 @@ import time
 
 import torch
 from vllm import LLM, SamplingParams
+
+
+def print_step_scores(steps: list[str], scores: list[float]) -> None:
+    """Print per-step P(correct) scores with a truncated step preview.
+
+    Truncates each step to 60 chars so long flamingo-style steps
+    don't flood the output.
+    """
+    for idx, (step, score) in enumerate(zip(steps, scores), start=1):
+        preview = step if len(step) <= 60 else step[:60] + "..."
+        print(f"Step {idx}: P(correct) = {score:.4f}")
+        print(preview)
 
 
 def gpu_mem_used_gb(device=0):
