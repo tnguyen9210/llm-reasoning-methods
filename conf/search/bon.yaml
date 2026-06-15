@@ -1,0 +1,13 @@
+# @package search
+# Search-method group → binds onto BoNConfig.
+# The bon_schema node (registered in the launcher under group
+# "search") supplies the typed dataclass; values below override it.
+# Best-of-N samples n completions per question in one expansion;
+# depth/lookahead are unused for this method.
+defaults:
+  - bon_schema
+  - _self_
+
+method: bon
+n: 256                  # completions sampled per question
+filter_duplicates: true

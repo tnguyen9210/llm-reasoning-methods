@@ -1,32 +1,33 @@
-# paths
+defaults:
+  - exp_schema           # the ExpConfig dataclass (structured config)
+  - llm: llama_1b
+  - data: prm800k
+  - search: bon
+  - _self_
+  - override hydra/job_logging: disabled
+  - override hydra/hydra_logging: disabled
+
+hydra:
+  output_subdir: null
+  run:
+    dir: .
+
+# base path interpolated by the group files (${base_dir}/...)
 base_dir: /groups/chichengz/tnn/datasets
-ds_dir: ${base_dir}/prm800k/math_splits
-llm_dir: ${base_dir}/Llama3.2-1B-Instruct
 
-# dataset
-ds_name: prm800k
-ds_split: test
-question_field: problem
-level: 4
-
-# experiment
 algo: bon
-algo_version: v01_0_0
-num_trials: 4
-num_questions: -1  # -1 = use full dataset
 
-# search params
-bs: 256
-filter_duplicates: true
-agg_strategy: last
-temperature: 0.8
-max_tokens: null
-seed: 0
-date_string: "Aug 1 2025"
+# generation params (group: gen) — only overrides vs GenConfig defaults
+gen:
+  temperature: 0.8
+  max_tokens: 2048
+  top_p: 1.0
+  seed: 0
+  agg_strategy: last
+  filter_duplicates: true
+  date_string: "Aug 1 2025"
 
-# vllm
-gpu_memory_utilization: 0.7
-tensor_parallel_size: 1
-swap_space: 16
-max_model_len: 5000
-dtype: float16
+# run-level params (group: run)
+run:
+  num_trials: 4
+  num_questions: -1      # -1 = use full dataset

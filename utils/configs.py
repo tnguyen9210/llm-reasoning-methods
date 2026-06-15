@@ -125,6 +125,15 @@ class MCTSCntConfig(SearchConfig):
 
 
 @dataclass
+class BoNConfig(SearchConfig):
+    """Best-of-N search params. n completions sampled per question
+    in a single expansion (no tree), so depth/lookahead are unused."""
+    method: str = "bon"
+    n: int = 256                  # completions sampled per question
+    filter_duplicates: bool = True
+
+
+@dataclass
 class RunConfig:
     """Run-level / hardware params not tied to a model or method."""
     num_trials: int = 4
@@ -143,7 +152,10 @@ class ExpConfig:
     llm: LLMConfig = field(default_factory=LLMConfig)
     prm: PRMConfig = field(default_factory=PRMConfig)
     data: DataConfig = field(default_factory=DataConfig)
-    search: SearchConfig = field(default_factory=MCTSCntConfig)
+    # Base type so any method's subclass can bind here; the concrete
+    # schema is selected per-run via the conf/search/ group (each
+    # launcher registers its subclass under the "search" group).
+    search: SearchConfig = field(default_factory=SearchConfig)
     run: RunConfig = field(default_factory=RunConfig)
     algo: str = "mcts_cnt"
     # Run-wide base path; group files interpolate ${base_dir}/...
@@ -159,15 +171,25 @@ class ExpConfig:
 
 
 def config_name(cfg) -> str:
-    """Self-describing run name; matches the old _build_config_name
-    in generate_mcts_cnt.py. Works on ExpConfig or its DictConfig."""
+    """Self-describing run name. Dispatches on the search method so
+    each algo emits its own knobs. Works on ExpConfig or its
+    DictConfig (struct mode exposes only declared data fields)."""
     level_str = (
         f"--level-{cfg.data.level}"
         if cfg.data.level is not None else ""
     )
-    return (
-        f"mcts_cnt{level_str}"
-        f"--bs-{cfg.search.batch_size}--d-{cfg.search.max_depth}"
-        f"--b-{cfg.search.gen_budget:03d}"
-        f"--cpuct-{cfg.search.cpuct}"
-    )
+    method = cfg.search.method
+    if method == "mcts_cnt":
+        return (
+            f"mcts_cnt{level_str}"
+            f"--bs-{cfg.search.batch_size}--d-{cfg.search.max_depth}"
+            f"--b-{cfg.search.gen_budget:03d}"
+            f"--cpuct-{cfg.search.cpuct}"
+        )
+    if method == "bon":
+        return (
+            f"bon{level_str}"
+            f"--n-{cfg.search.n}--temp-{cfg.gen.temperature}"
+            f"--mtoks-{cfg.gen.max_tokens}"
+        )
+    raise ValueError(f"Unknown search method: {method!r}")

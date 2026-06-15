@@ -1,24 +1,36 @@
 import os
 os.environ["VLLM_CONFIGURE_LOGGING"] = "0"
+os.environ["PYTORCH_CUDA_ALLOC_CONF"] = "expandable_segments:True"
 import logging
-logging.basicConfig(format='%(message)s', level=logging.FATAL+1)
+logging.basicConfig(format='%(message)s', level=logging.FATAL + 1)
+logging.disable(logging.CRITICAL)
 
 import time
 import json
 
 import torch
 import hydra
-from omegaconf import DictConfig, OmegaConf
+from hydra.core.config_store import ConfigStore
+from omegaconf import OmegaConf
 from vllm import LLM
 import wandb
 
-from sal.config import Config
 from core import bon_search_v01_0_0
+from utils.configs import ExpConfig, BoNConfig, config_name
 from utils.load_data import load_data_hf
 
 algo_dict = {
     "bon": bon_search_v01_0_0,
 }
+
+# Register the structured schemas so the YAML binds onto typed,
+# validated dataclasses instead of a plain DictConfig. The search
+# subclass is registered under the "search" group; conf/search/bon
+# selects it (ExpConfig.search is the base type, so the concrete
+# schema must come from the group).
+cs = ConfigStore.instance()
+cs.store(name="exp_schema", node=ExpConfig)
+cs.store(group="search", name="bon_schema", node=BoNConfig)
 
 
 def _make_result_dir(path: str) -> None:
@@ -31,24 +43,12 @@ def _make_result_dir(path: str) -> None:
         raise OSError(f"Error creating directory: {e}") from e
 
 
-def _build_config_name(cfg: DictConfig) -> str:
-    level_str = f"--level-{cfg.level}" if cfg.level is not None else ""
-    mtoks_str = (
-        f"--mtoks-{cfg.max_tokens}" if cfg.max_tokens is not None else ""
-    )
-    return (
-        f"bon--{cfg.ds_name}{level_str}"
-        f"--{cfg.algo_version}--bs-{cfg.bs}"
-        f"--temp-{cfg.temperature}{mtoks_str}"
-    )
-
-
 @hydra.main(
     config_path="conf",
     config_name="bon_prm800k",
     version_base=None,
 )
-def main(cfg: DictConfig):
+def main(cfg: ExpConfig):
     root_dir = hydra.utils.get_original_cwd()
     algo = algo_dict[cfg.algo]
 
@@ -57,49 +57,37 @@ def main(cfg: DictConfig):
     if not torch.cuda.is_available():
         raise RuntimeError("CUDA is not available.")
 
-    config = Config()
-    config.agg_strategy      = cfg.agg_strategy
-    config.temperature       = cfg.temperature
-    config.bs                = cfg.bs
-    config.filter_duplicates = cfg.filter_duplicates
-    config.date_string       = cfg.date_string
-    config.seed              = cfg.seed
-    config.version           = cfg.algo_version
-    if cfg.max_tokens is not None:
-        config.max_tokens = cfg.max_tokens
-
     llm_vllm = LLM(
-        model=cfg.llm_dir,
-        tensor_parallel_size=cfg.tensor_parallel_size,
-        swap_space=cfg.swap_space,
-        max_model_len=cfg.max_model_len,
-        gpu_memory_utilization=cfg.gpu_memory_utilization,
+        model=cfg.llm.llm_dir,
+        tensor_parallel_size=cfg.llm.tensor_parallel_size,
+        max_model_len=cfg.llm.max_model_len,
+        gpu_memory_utilization=cfg.llm.gpu_memory_utilization,
         enforce_eager=True,
         distributed_executor_backend=None,
-        dtype=cfg.dtype,
-        seed=cfg.seed,
+        dtype=cfg.llm.dtype,
+        seed=cfg.gen.seed,
     )
 
-    load_kwargs = {"ds_split": cfg.ds_split}
-    if cfg.level is not None:
-        load_kwargs["level"] = cfg.level
-    dataset = load_data_hf(cfg.ds_dir, **load_kwargs)
+    load_kwargs = {"ds_split": cfg.data.ds_split}
+    if cfg.data.level is not None:
+        load_kwargs["level"] = cfg.data.level
+    dataset = load_data_hf(cfg.data.ds_dir, **load_kwargs)
 
-    batch_of_questions = [q[cfg.question_field] for q in dataset]
-    if cfg.num_questions > 0:
-        batch_of_questions = batch_of_questions[:cfg.num_questions]
+    batch_of_questions = [q[cfg.data.question_field] for q in dataset]
+    if cfg.run.num_questions > 0:
+        batch_of_questions = batch_of_questions[:cfg.run.num_questions]
     num_questions = len(batch_of_questions)
-    num_trials = cfg.num_trials
+    num_trials = cfg.run.num_trials
     print(f"num_questions = {num_questions}, num_trials = {num_trials}")
 
-    config_name = _build_config_name(cfg)
-    print(config_name)
-    result_dir = f"{root_dir}/results/{cfg.ds_name}/{config_name}"
+    run_name = config_name(cfg)
+    print(run_name)
+    result_dir = f"{root_dir}/results/{cfg.data.name}/{run_name}"
     _make_result_dir(result_dir)
 
     wandb.init(
         project="llm-reasoning",
-        name=config_name,
+        name=run_name,
         config=OmegaConf.to_container(cfg, resolve=True),
     )
 
@@ -109,10 +97,10 @@ def main(cfg: DictConfig):
         print(f"trial {trial_idx}")
 
         results = algo._search(
-            batch_of_questions, config, trial_idx, llm_vllm
+            batch_of_questions, cfg, trial_idx, llm_vllm,
         )
         out_path = (
-            f"{result_dir}/generate_{config_name}"
+            f"{result_dir}/generate_{run_name}"
             f"--trial-{trial_idx:03d}.jsonl"
         )
         with open(out_path, 'w', encoding='utf-8') as fout:

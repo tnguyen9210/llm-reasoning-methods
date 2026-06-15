@@ -17,17 +17,21 @@ import wandb
 
 from core import mcts_cnt_search_v05_00_00
 from core.reward_models import RLHFFlow
-from utils.configs import ExpConfig, config_name
+from utils.configs import ExpConfig, MCTSCntConfig, config_name
 from utils.load_data import load_data_hf
 
 algo_dict = {
     "mcts_cnt": mcts_cnt_search_v05_00_00,
 }
 
-# Register the structured schema so the YAML binds onto ExpConfig
-# (typed, validated) instead of a plain DictConfig.
+# Register the structured schemas so the YAML binds onto typed,
+# validated dataclasses instead of a plain DictConfig. The search
+# subclass is registered under the "search" group; conf/search/
+# mcts_cnt selects it (ExpConfig.search is the base type, so the
+# concrete schema must come from the group).
 cs = ConfigStore.instance()
 cs.store(name="exp_schema", node=ExpConfig)
+cs.store(group="search", name="mcts_cnt_schema", node=MCTSCntConfig)
 
 
 def _make_result_dir(path: str) -> None:

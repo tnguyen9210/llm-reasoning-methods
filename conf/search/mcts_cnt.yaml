@@ -1,6 +1,12 @@
 # @package search
 # Search-method group → binds onto MCTSCntConfig.
+# The mcts_cnt_schema node (registered in the launcher under group
+# "search") supplies the typed dataclass; values below override it.
 # Each method carries only its own hyperparameters.
+defaults:
+  - mcts_cnt_schema
+  - _self_
+
 method: mcts_cnt
 batch_size: 4           # candidates generated per expansion
 lookahead: 0
