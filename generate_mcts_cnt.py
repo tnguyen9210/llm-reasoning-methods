@@ -17,6 +17,7 @@ import wandb
 
 from core import mcts_cnt_search_v05_00_00
 from core.reward_models import RLHFlowPRM
+from core.scoring import build_scored_dataset
 from utils.configs import ExpConfig, MCTSCntConfig, config_name, level_dir
 from utils.load_data import load_data_hf
 
@@ -112,6 +113,20 @@ def main(cfg: ExpConfig):
         with open(out_path, 'w', encoding='utf-8') as fout:
             json.dump(results, fout)
             fout.write('\n')
+
+        # Post-process: score completions and write the per-question
+        # HF dataset. Wrapped so a scoring failure never discards the
+        # raw results already written above; re-runnable separately
+        # via score_completions.py.
+        try:
+            build_scored_dataset(
+                results, dataset, prm, result_dir, run_name,
+                trial_idx, agg_strategy=cfg.gen.agg_strategy,
+                n=0, batch_size=cfg.search.batch_size,
+            )
+        except Exception as e:
+            print(f"scoring failed for trial {trial_idx}: {e!r}")
+            print("raw results saved; re-run score_completions.py")
 
         elapsed = time.time() - trial_start
         print(f"it takes {elapsed / num_questions:0.4f}s per question")
