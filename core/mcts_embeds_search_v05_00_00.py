@@ -532,9 +532,10 @@ def _generate_candidates(
         seen.setdefault(output.next_texts[0], idx)
     candidate_infos = [llm_outputs[idx] for idx in seen.values()]
 
-    # Embed + score each unique candidate.
-    candidate_questions: List[str] = []
-    candidate_texts: List[List[str]] = []
+    # Embed + score each unique candidate. All candidates branch off
+    # the same question, so candidate_texts is the flat answer list
+    # for that one question (scored as [question], [candidate_texts]).
+    candidate_texts: List[str] = []
     candidate_embeds: List[Any] = []
     for output in candidate_infos:
         cand_text = current_text + output.next_texts[0]
@@ -557,17 +558,17 @@ def _generate_candidates(
             outputs[0].outputs.data, config, response_start_idx
         )
         candidate_embeds.append(emb)
-        candidate_texts.append([cand_text_clean])
-        candidate_questions.append(question)
+        candidate_texts.append(cand_text_clean)
 
     candidate_scores = prm.score(
-        candidate_questions, candidate_texts, batch_size=2,
+        [question], [candidate_texts], batch_size=2,
     )
-    # PRM returns per-step scores; aggregate into a single scalar via
-    # the configured strategy (e.g. "last", "min", "mean").
+    # score returns [question][answer][step]; one question here, so
+    # candidate_scores[0] is a list of candidates, each a per-step
+    # score list. Aggregate each candidate's step list to a scalar.
     candidate_scores = [
-        aggregate_scores(scores[0], config.agg_strategy)
-        for scores in candidate_scores
+        aggregate_scores(cand_scores, config.agg_strategy)
+        for cand_scores in candidate_scores[0]
     ]
     logging.error(f"candidate_scores = {candidate_scores}")
 

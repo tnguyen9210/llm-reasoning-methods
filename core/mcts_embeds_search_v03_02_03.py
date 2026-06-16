@@ -448,8 +448,7 @@ def mcts_search(question, agent, config, llm_vllm, llm_vllm_embeds, prm):
                         
                 candidate_infos = [llm_outputs[idx] for idx in llm_outputs_unique.values()]
 
-                # evaluation 
-                candidate_questions = []
+                # evaluation
                 candidate_texts = []
                 candidate_embeds = []
                 for cidx, output in enumerate(candidate_infos):
@@ -498,16 +497,16 @@ def mcts_search(question, agent, config, llm_vllm, llm_vllm_embeds, prm):
                         outputs_embeds -= config.embeds_mean
                         
                     candidate_embeds.append(outputs_embeds)
-                    candidate_texts.append([cand_text_cleaned])
-                    candidate_questions.append(question)
+                    candidate_texts.append(cand_text_cleaned)
 
-                print(len(candidate_questions))
                 print(len(candidate_texts))
                 print(candidate_texts[0])
-                candidate_scores = prm.score(candidate_questions, candidate_texts, batch_size=2)
+                # One question, many candidate answers:
+                # score([question], [[cand_1, cand_2, ...]]).
+                candidate_scores = prm.score([question], [candidate_texts], batch_size=2)
                 candidate_scores = [
-                    aggregate_scores(scores[0], config.agg_strategy)
-                    for scores in candidate_scores
+                    aggregate_scores(cand_scores, config.agg_strategy)
+                    for cand_scores in candidate_scores[0]
                 ]
                 logging.error(f"candidate_scores = {candidate_scores}")
     

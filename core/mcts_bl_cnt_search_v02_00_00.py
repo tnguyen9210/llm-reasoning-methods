@@ -344,19 +344,22 @@ def _generate_candidates(
         seen.setdefault(output.next_texts[0], idx)
     candidate_infos = [llm_outputs[idx] for idx in seen.values()]
 
-    candidate_questions: List[str] = []
-    candidate_texts: List[List[str]] = []
-    for output in candidate_infos:
-        cand_text = current_text + output.next_texts[0]
-        candidate_texts.append([cand_text])
-        candidate_questions.append(question)
-
+    # All candidates branch off the same question, so pass one
+    # question with its full list of candidate answers:
+    # questions = [question], answers = [[cand_1, cand_2, ...]].
+    cand_texts = [
+        current_text + output.next_texts[0]
+        for output in candidate_infos
+    ]
     candidate_scores = prm.score(
-        candidate_questions, candidate_texts, batch_size=4
+        [question], [cand_texts], batch_size=4
     )
+    # score returns [question][answer][step]; one question here, so
+    # candidate_scores[0] is a list of candidates, each a per-step
+    # score list. Aggregate each candidate's step list to a scalar.
     candidate_scores = [
-        aggregate_scores(scores[0], config.agg_strategy)
-        for scores in candidate_scores
+        aggregate_scores(cand_scores, config.agg_strategy)
+        for cand_scores in candidate_scores[0]
     ]
     logging.error(f"candidate_scores = {candidate_scores}")
 
