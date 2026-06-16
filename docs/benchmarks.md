@@ -47,27 +47,37 @@ model size.
 ## Best-of-N search speed across models
 
 **Notebook:** `unittests/benchmark_speed_bon_models_v1.ipynb`  
-**Date:** 2026-06-12  
+**Date:** 2026-06-12 (Math models re-run 2026-06-16)  
 **Hardware:** Tesla V100S-PCIE-32GB  
 **Env:** py311 (vllm 0.18.1, torch 2.10.0+cu126)  
-**Config:** BoN n=32, 10 MATH level-4 questions, 2 trials +
-1 warmup, temperature=0.8, max_tokens=2048, vLLM gmu=0.7,
-fp16, enforce_eager
+**Config:** BoN n=32, 10 MATH level-4 questions, temperature=0.8,
+max_tokens=2048, vLLM gmu=0.7, fp16, enforce_eager.
+2 trials + 1 warmup for the original run; the 2026-06-16 Math run
+used 1 trial + 1 warmup (so its std is 0).
 
-| Model                | Mean s/trial | Std  | s/question |
-|----------------------|--------------|------|------------|
-| Llama3.2-1B-Instruct |     38.36    | 0.51 |    3.84    |
-| Llama3.2-3B-Instruct |     95.09    | 3.50 |    9.51    |
-| Qwen2.5-3B-Instruct  |    160.24    | 5.13 |   16.02    |
-| Qwen2.5-7B-Instruct  |    115.84    | 4.09 |   11.58    |
+| Model                      | Mean s/trial | Std  | s/question | trials |
+|----------------------------|--------------|------|------------|--------|
+| Llama3.2-1B-Instruct       |     38.32    | —    |    3.83    |   1    |
+| Llama3.2-3B-Instruct       |    105.07    | —    |   10.51    |   1    |
+| Qwen2.5-Math-1.5B-Instruct |    121.34    | —    |   12.13    |   1    |
+| Qwen2.5-Math-7B-Instruct   |    238.74    | —    |   23.87    |   1    |
 
-**Takeaway:** BoN time does not track parameter count:
-Qwen2.5-3B is the slowest of the four, ~1.4× slower than
-the 7B from the same family. Within the Llama family time
-does grow with size (3B is ~2.5× slower than 1B). This
-suggests per-model completion length (tokens sampled
-before EOS) dominates over per-token cost — worth
-verifying against avg token counts per BoN run.
+Earlier 2-trial run (general Qwen, now superseded for the Qwen
+rows): Llama-1B=3.84, Llama-3B=9.51, Qwen2.5-3B=16.02,
+Qwen2.5-7B=11.58 s/q.
+
+**Takeaway:** BoN time still does not track parameter count, and
+the Math models are markedly slower per question than the general
+Qwen models at matched size — Math-7B is 23.9 s/q, ~2× the old
+general Qwen-7B (11.6 s/q), and Math-1.5B (12.1) is near the old
+general 3B (16.0). The most likely cause is **completion length**:
+the Math-Instruct models generate longer chains-of-thought (more
+tokens before EOS), and per-token cost is secondary — consistent
+with the within-family Llama growth (3B ~2.7× the 1B here). Worth
+confirming against avg token counts per BoN run. Caveat: the Math
+rows are single-trial (no std), and max_model_len differs from the
+original run (4096 for Math vs 5000), so treat the Math-vs-general
+gap as indicative, not precise.
 
 BoN is benchmarked under vLLM only — no HF Transformers
 counterpart; see [decisions.md](decisions.md) 2026-06-12.
