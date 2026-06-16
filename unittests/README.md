@@ -31,6 +31,8 @@ result inspection. GPU column: Y = requires GPU, N = CPU-only.
 | File | What it examines | GPU |
 |------|-----------------|-----|
 | `examine_llm_chat_templates_v1.ipynb` | Chat-template rendering per LLM: native vs. former custom `custom_chat_template`; whether the `\n\n` step separator survives templating; BOS | N |
+| `examine_llm_generation_templates_llama_v1.ipynb` | How chat-template choice (native vs. custom) affects what Llama 3B *generates* under vLLM, in fresh-from-question vs. continue-from-step settings | Y |
+| `examine_llm_generation_templates_qwen_v1.ipynb` | How chat-template choice (native vs. custom) affects what Qwen 3B *generates* under vLLM, in fresh-from-question vs. continue-from-step settings | Y |
 | `examine_llm_sys_prompt_v1.ipynb` | System-prompt format and behavior per LLM (currently the shared `GenConfig.system_prompt`) | N |
 | `examine_completions_log_probs_v1.ipynb` | Per-step log-probabilities and perplexities of generated completions | Y |
 | `examine_completions_prm_scores_v1.ipynb` | PRM scores across completion steps; correctness correlation | Y |
