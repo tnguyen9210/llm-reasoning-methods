@@ -15,7 +15,7 @@ from vllm import LLM, SamplingParams, PoolingParams
 
 from sal.config import Config
 from sal.utils.score import score, aggregate_scores
-from core.reward_models import RLHFFlow
+from core.reward_models import RLHFlowPRM
 
 from datasets import load_dataset
 
@@ -46,7 +46,7 @@ def main():
     else:
         print("CUDA is not available.")
 
-    prm = RLHFFlow(model_path=prm_dir, device_map='cuda:0')
+    prm = RLHFlowPRM(model_path=prm_dir, device='cuda:0')
 
     # general params
     config = Config()

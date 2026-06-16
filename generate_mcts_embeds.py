@@ -15,7 +15,7 @@ import wandb
 
 from sal.config import Config
 from core import mcts_embeds_search_v05_00_00
-from core.reward_models import RLHFFlow
+from core.reward_models import RLHFlowPRM
 from utils.load_data import load_data_hf
 
 algo_dict = {
@@ -117,7 +117,7 @@ def main(cfg: DictConfig):
         seed=cfg.seed,
     )
 
-    prm = RLHFFlow(model_path=cfg.prm_dir, device_map="cuda:0")
+    prm = RLHFlowPRM(model_path=cfg.prm_dir, device="cuda:0")
 
     load_kwargs = {"ds_split": cfg.ds_split}
     if cfg.level is not None:

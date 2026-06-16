@@ -16,7 +16,7 @@ from vllm import LLM
 import wandb
 
 from core import mcts_cnt_search_v05_00_00
-from core.reward_models import RLHFFlow
+from core.reward_models import RLHFlowPRM
 from utils.configs import ExpConfig, MCTSCntConfig, config_name, level_dir
 from utils.load_data import load_data_hf
 
@@ -69,7 +69,7 @@ def main(cfg: ExpConfig):
         seed=cfg.gen.seed,
     )
 
-    prm = RLHFFlow(model_path=cfg.prm.prm_dir, device_map=cfg.prm.device_map)
+    prm = RLHFlowPRM(model_path=cfg.prm.prm_dir, device=cfg.prm.device_map)
 
     load_kwargs = {"ds_split": cfg.data.ds_split}
     if cfg.data.level is not None:
