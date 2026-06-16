@@ -17,7 +17,7 @@ import wandb
 
 from core import mcts_cnt_search_v05_00_00
 from core.reward_models import RLHFFlow
-from utils.configs import ExpConfig, MCTSCntConfig, config_name
+from utils.configs import ExpConfig, MCTSCntConfig, config_name, level_dir
 from utils.load_data import load_data_hf
 
 algo_dict = {
@@ -85,7 +85,10 @@ def main(cfg: ExpConfig):
 
     run_name = config_name(cfg)
     print(run_name)
-    result_dir = f"{root_dir}/results/{cfg.data.name}/{run_name}"
+    result_dir = (
+        f"{root_dir}/results/{cfg.data.name}"
+        f"/{level_dir(cfg)}/{run_name}"
+    )
     _make_result_dir(result_dir)
 
     wandb.init(

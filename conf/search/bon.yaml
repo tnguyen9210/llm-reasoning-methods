@@ -9,5 +9,5 @@ defaults:
   - _self_
 
 method: bon
-n: 256                  # completions sampled per question
+n: 128                  # completions sampled per question
 filter_duplicates: true

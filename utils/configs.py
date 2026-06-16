@@ -55,6 +55,10 @@ class GenConfig:
     # Chat template related options
     system_prompt: str = system_prompt
     custom_chat_template: str = custom_chat_template
+    # When True, override the model's native template with
+    # custom_chat_template (the vendored Llama 3.1 template). When
+    # False, use whatever template the model ships with.
+    use_custom_template: bool = True
 
 
 
@@ -170,25 +174,39 @@ class ExpConfig:
 # a DictConfig (launcher) and a real ExpConfig (notebook).
 
 
-def config_name(cfg) -> str:
-    """Self-describing run name. Dispatches on the search method so
-    each algo emits its own knobs. Works on ExpConfig or its
-    DictConfig (struct mode exposes only declared data fields)."""
+def level_dir(cfg) -> str:
+    """Per-level grouping dir under results/{data.name}/, e.g.
+    'bon--level-3'. Drops the level suffix to just 'bon' when level
+    is None (whole split). The run dir is then nested inside it:
+    results/{data.name}/{level_dir}/{config_name}."""
     level_str = (
         f"--level-{cfg.data.level}"
         if cfg.data.level is not None else ""
     )
+    return f"{cfg.search.method}{level_str}"
+
+
+def config_name(cfg) -> str:
+    """Self-describing run name. Dispatches on the search method so
+    each algo emits its own knobs. The level is not encoded here —
+    it lives in the parent dir (see level_dir). Works on ExpConfig
+    or its DictConfig (struct mode exposes only declared fields)."""
     method = cfg.search.method
     if method == "mcts_cnt":
         return (
-            f"mcts_cnt{level_str}"
+            f"mcts_cnt"
             f"--bs-{cfg.search.batch_size}--d-{cfg.search.max_depth}"
             f"--b-{cfg.search.gen_budget:03d}"
             f"--cpuct-{cfg.search.cpuct}"
         )
     if method == "bon":
+        tmpl = "custom" if cfg.gen.use_custom_template else "native"
+        # Drop the redundant "-Instruct" marker for shorter dirs.
+        # Global (not just suffix) — names stay unique for the
+        # current checkpoint set since GPTQ etc. still distinguish.
+        llm_name = cfg.llm.name.replace("-Instruct", "")
         return (
-            f"bon{level_str}"
+            f"bon--{llm_name}--tmpl-{tmpl}"
             f"--n-{cfg.search.n}--temp-{cfg.gen.temperature}"
             f"--mtoks-{cfg.gen.max_tokens}"
         )
