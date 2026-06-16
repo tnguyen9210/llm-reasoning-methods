@@ -62,7 +62,7 @@ def main(cfg: ExpConfig):
         tensor_parallel_size=cfg.llm.tensor_parallel_size,
         max_model_len=cfg.llm.max_model_len,
         gpu_memory_utilization=cfg.llm.gpu_memory_utilization,
-        enforce_eager=True,
+        enforce_eager=cfg.llm.enforce_eager,
         distributed_executor_backend=None,
         dtype=cfg.llm.dtype,
         seed=cfg.gen.seed,

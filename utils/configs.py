@@ -87,6 +87,9 @@ class LLMConfig:
     tensor_parallel_size: int = 1
     max_model_len: int = 5000
     gpu_memory_utilization: float = 0.3
+    # False = capture CUDA graphs (faster throughput, slower
+    # startup, more memory). True for quick/debug runs.
+    enforce_eager: bool = False
 
 
 @dataclass
