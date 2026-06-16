@@ -109,7 +109,7 @@ n=32), so s/question is not comparable across the two tables.
 ## GPU memory: generative models (HF Transformers)
 
 **Notebook:** `unittests/benchmark_llm_mem_sizes_v1.ipynb`  
-**Date:** 2026-06-12  
+**Date:** 2026-06-12 (Math-Instruct rows added 2026-06-16)  
 **Hardware:** Tesla V100S-PCIE-32GB  
 **Env:** py311 (transformers 4.57.6, gptqmodel 5.7.0)  
 **Config:** HF Transformers loads only (vLLM section disabled).
@@ -119,23 +119,30 @@ include the CUDA context (~0.5 GB). fp16 via
 The fp32 column is from an earlier run where no `dtype` was
 passed (`from_pretrained` defaults to fp32) — kept for reference.
 
-| Model                | fp32 (GB) | fp16 (GB) | int4 (GB) |
-|----------------------|-----------|-----------|-----------|
-| Llama3.2-1B-Instruct |     —     |    2.80   |     —     |
-| Llama3.2-3B-Instruct |   12.47   |    6.47   |    2.57   |
-| Qwen2.5-3B-Instruct  |   14.30   |    8.41   |    4.63   |
-| Qwen2.5-7B-Instruct  |   31.43   |   16.86   |    7.83   |
+| Model                      | fp32 (GB) | fp16 (GB) | int4 (GB) |
+|----------------------------|-----------|-----------|-----------|
+| Llama3.2-1B-Instruct       |     —     |    2.80   |     —     |
+| Llama3.2-3B-Instruct       |   12.47   |    6.47   |    2.57   |
+| Qwen2.5-3B-Instruct        |   14.30   |    8.41   |    4.63   |
+| Qwen2.5-7B-Instruct        |   31.43   |   16.86   |    7.83   |
+| Qwen2.5-Math-1.5B-Instruct |     —     |    5.54   |     —     |
+| Qwen2.5-Math-7B-Instruct   |     —     |   16.87   |     —     |
 
 int4 = GPTQ checkpoint (`-GPTQ` / `-GPTQ-Int4`). fp32 not
-re-measured for the 1B model. All values include the ~0.5 GB
-CUDA context.
+re-measured for the 1B and Math models. All values include the
+~0.5 GB CUDA context.
 
 **Takeaway:** fp16 roughly halves fp32, as expected; GPTQ-int4
-roughly halves fp16 again (~3–5× below fp32). For the
-fit-7B-LLM+PRM-on-32GB question (M4), Qwen2.5-7B is 16.9 GB at
-fp16 — leaving ~15 GB for a PRM — or 7.8 GB at int4, leaving
-~24 GB. fp32 at 31.4 GB barely fits the LLM alone, so it is not
-a viable baseline on this 32 GB card.
+roughly halves fp16 again (~3–5× below fp32). The Math-Instruct
+variants weigh the same as their general-Qwen counterparts —
+Math-7B at 16.87 GB ≈ general 7B at 16.86 (same architecture; the
+math fine-tune doesn't change weight size). Math-1.5B is a new
+small point at 5.54 GB — smaller than general Qwen-3B (8.41)
+despite being the stronger math model. For the fit-LLM+PRM-on-32GB
+question (M4), this 1.5B math LLM + a ~14 GB fp16 PRM sums to
+~19.5 GB — far more comfortable than the 7B fp16 LLM (16.9 GB,
+~1.3 GB left after a fp16 PRM). fp32 at 31.4 GB barely fits the
+7B LLM alone, so it is not a viable baseline on this 32 GB card.
 
 ## GPU memory: process reward models (HF Transformers)
 

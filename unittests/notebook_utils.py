@@ -128,6 +128,7 @@ def benchmark_bon_speed_llm_model(
     num_trials,
     gpu_memory_utilization,
     warmup=1,
+    max_model_len=4096,
 ):
     """Load llm_dir under vLLM, warm up, time num_trials BoN runs,
     then tear down. Returns (model_name, trial_times).
@@ -139,6 +140,9 @@ def benchmark_bon_speed_llm_model(
         num_trials:              Number of timed runs.
         gpu_memory_utilization:  vLLM gpu_memory_utilization setting.
         warmup:                  Untimed warmup runs before timing.
+        max_model_len:           vLLM context cap. Default 4096 fits
+                                 every benchmarked model (Qwen2.5-Math
+                                 caps at max_position_embeddings=4096).
     """
     from core import bon_search_v1
 
@@ -148,7 +152,7 @@ def benchmark_bon_speed_llm_model(
     llm = LLM(
         model=llm_dir,
         tensor_parallel_size=1,
-        max_model_len=5000,
+        max_model_len=max_model_len,
         gpu_memory_utilization=gpu_memory_utilization,
         enforce_eager=True,
         distributed_executor_backend=None,
