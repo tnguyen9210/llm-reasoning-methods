@@ -1,4 +1,4 @@
-"""Score existing raw search completions into a HF Dataset.
+"""Prepare a scored, analysis-ready dataset from raw search output.
 
 Standalone post-processing for any search run (bon, mcts_cnt, ...).
 Reads each trial's raw generate_*.jsonl and writes the scored
@@ -17,11 +17,11 @@ result_dir resolve to the same paths. The search method is selected
 by --config-name. Examples:
 
     # mcts_cnt (its config already includes the prm group)
-    python score_completions.py --config-name mcts_cnt_prm800k \\
+    python prepare_scored_dataset.py --config-name mcts_cnt_prm800k \\
         run.num_trials=1
 
     # bon (its config has no prm group, so add one)
-    python score_completions.py --config-name bon_prm800k \\
+    python prepare_scored_dataset.py --config-name bon_prm800k \\
         +prm=llama_prm run.num_trials=1
 """
 
@@ -95,7 +95,7 @@ def main(cfg: ExpConfig):
         build_scored_dataset(
             results, dataset, prm, result_dir, run_name,
             trial_idx, agg_strategy=cfg.gen.agg_strategy,
-            n=0, batch_size=cfg.prm.score_batch_size,
+            n="gb", batch_size=cfg.prm.score_batch_size,
             num_proc=cfg.run.num_proc,
         )
 

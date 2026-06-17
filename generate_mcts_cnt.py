@@ -18,7 +18,10 @@ import wandb
 from core import mcts_cnt_search_v05_00_00
 from core.reward_models import RLHFlowPRM
 from core.scoring import build_scored_dataset
-from utils.configs import ExpConfig, MCTSCntConfig, config_name, level_dir
+from utils.configs import (
+    ExpConfig, MCTSCntConfig, config_name, level_dir,
+    save_wandb_run_id,
+)
 from utils.load_data import load_data_hf
 
 algo_dict = {
@@ -98,12 +101,15 @@ def main(cfg: ExpConfig):
         f"level-{cfg.data.level}"
         if cfg.data.level is not None else "level-all"
     )
-    wandb.init(
+    wandb_run = wandb.init(
         project="llm-reasoning",
         name=run_name,
         tags=[level_tag],
         config=OmegaConf.to_container(cfg, resolve=True),
     )
+    # Persist the run id so compute_stats can reattach and log the
+    # post-processing metrics onto this same run.
+    save_wandb_run_id(result_dir, wandb_run.id)
 
     total_start = time.time()
     for trial_idx in range(num_trials):
@@ -124,17 +130,17 @@ def main(cfg: ExpConfig):
         # Post-process: score completions and write the per-question
         # HF dataset. Wrapped so a scoring failure never discards the
         # raw results already written above; re-runnable separately
-        # via score_completions.py.
+        # via prepare_scored_dataset.py.
         try:
             build_scored_dataset(
                 results, dataset, prm, result_dir, run_name,
                 trial_idx, agg_strategy=cfg.gen.agg_strategy,
-                n=0, batch_size=cfg.prm.score_batch_size,
+                n="gb", batch_size=cfg.prm.score_batch_size,
                 num_proc=cfg.run.num_proc,
             )
         except Exception as e:
             print(f"scoring failed for trial {trial_idx}: {e!r}")
-            print("raw results saved; re-run score_completions.py")
+            print("raw results saved; re-run prepare_scored_dataset.py")
 
         elapsed = time.time() - trial_start
         print(f"it takes {elapsed / num_questions:0.4f}s per question")

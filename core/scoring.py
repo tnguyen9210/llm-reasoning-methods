@@ -9,11 +9,12 @@ Two layers:
 
 - score_dataset(): the per-row aggregation + prediction driver.
   Takes plain args (agg_strategy, n, num_proc) instead of a
-  sal.config.Config. Adds agg_scores and pred_{weighted,maj,naive}@n.
+  sal.config.Config. Adds agg_scores and pred_{weighted,maj,naive}@gb.
 - build_scored_dataset(): the orchestration that turns one search
   trial's raw results (batched per question) into a per-question
   scored Dataset and writes it to disk. Called by generate_mcts_cnt
-  after each trial, and re-runnable standalone via score_completions.
+  after each trial, and re-runnable standalone via
+  prepare_scored_dataset.
 """
 
 import math
@@ -100,8 +101,9 @@ def subsample_completions(
             "completions and agg_scores must match: got "
             f"{len(completions)} vs {len(agg_scores)}."
         )
-    # n == 0 means "use all" (the single subset this pipeline emits);
-    # completions are grouped, so a prefix is a valid sub-budget.
+    # n is the subset label "gb" (gen-budget): the single use-all
+    # subset this pipeline emits — every completion at the run's full
+    # generation budget.
     return {
         f"completions@{n}": completions,
         f"agg_scores@{n}": agg_scores,
@@ -220,14 +222,16 @@ def aggregate_scores(
 def score_dataset(
     dataset: Dataset,
     agg_strategy: str = "last",
-    n: int = 0,
+    n: str = "gb",
     num_proc: int = 1,
 ) -> Dataset:
-    """Add agg_scores and pred_{weighted,maj,naive}@n to a dataset
+    """Add agg_scores and pred_{weighted,maj,naive}@{n} to a dataset
     that already has `completions` and per-step `scores`.
 
-    Config-free port of sal.utils.score.score. Only the n=0 subset
-    (use-all) is emitted, matching the reference output files.
+    Config-free port of sal.utils.score.score. Only one subset is
+    emitted — the use-all subset, suffixed `gb` (gen-budget: every
+    completion produced at the run's full generation budget). So the
+    prediction fields are pred_weighted@gb / pred_maj@gb / pred_naive@gb.
     """
     dataset = dataset.map(
         lambda x: {
@@ -286,7 +290,7 @@ def build_scored_dataset(
     run_name: str,
     trial_idx: int,
     agg_strategy: str = "last",
-    n: int = 0,
+    n: str = "gb",
     num_proc: int = 1,
     batch_size: int = 4,
 ) -> Dataset:
@@ -298,7 +302,7 @@ def build_scored_dataset(
     split (sliced to the same questions). The output row schema is the
     dataset's base fields (problem/solution/answer/subject/level/
     unique_id) plus completions, scores, agg_scores,
-    pred_{weighted,maj,naive}@n, and whatever per-question stats the
+    pred_{weighted,maj,naive}@gb, and whatever per-question stats the
     method produced.
 
     Stats are method-agnostic: every per-question list in `results`
