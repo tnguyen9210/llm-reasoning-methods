@@ -45,11 +45,14 @@ def check_file(path: str, phrase: str, show_examples: int) -> None:
     depth_cats: dict = {}
     crlf = 0
     examples = []
+    # Per-completion finish depth: "comp_depth" (current key) or the
+    # legacy "c_depths" in older result files.
+    depths = results.get("comp_depth", results.get("c_depths"))
     for q_idx, comps in enumerate(results["completions"]):
         for c_idx, comp in enumerate(comps):
             cat = classify(comp, phrase)
             cats[cat] += 1
-            depth = results["c_depths"][q_idx][c_idx]
+            depth = depths[q_idx][c_idx]
             depth_cats.setdefault(depth, Counter())[cat] += 1
             if "\r\n" in comp:
                 crlf += 1
