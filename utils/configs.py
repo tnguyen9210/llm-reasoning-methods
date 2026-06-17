@@ -206,19 +206,19 @@ def config_name(cfg) -> str:
     it lives in the parent dir (see level_dir). Works on ExpConfig
     or its DictConfig (struct mode exposes only declared fields)."""
     method = cfg.search.method
+    tmpl = "custom" if cfg.gen.use_custom_template else "native"
+    # Drop the redundant "-Instruct" marker for shorter dirs. Global
+    # (not just suffix) — names stay unique for the current checkpoint
+    # set since GPTQ etc. still distinguish.
+    llm_name = cfg.llm.name.replace("-Instruct", "")
     if method == "mcts_cnt":
         return (
-            f"mcts_cnt"
+            f"mcts_cnt--{llm_name}--tmpl-{tmpl}"
             f"--bs-{cfg.search.batch_size}--d-{cfg.search.max_depth}"
             f"--b-{cfg.search.gen_budget:03d}"
             f"--cpuct-{cfg.search.cpuct}"
         )
     if method == "bon":
-        tmpl = "custom" if cfg.gen.use_custom_template else "native"
-        # Drop the redundant "-Instruct" marker for shorter dirs.
-        # Global (not just suffix) — names stay unique for the
-        # current checkpoint set since GPTQ etc. still distinguish.
-        llm_name = cfg.llm.name.replace("-Instruct", "")
         return (
             f"bon--{llm_name}--tmpl-{tmpl}"
             f"--n-{cfg.search.n}--temp-{cfg.gen.temperature}"
