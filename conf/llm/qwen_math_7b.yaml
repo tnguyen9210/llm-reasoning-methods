@@ -1,0 +1,15 @@
+# @package llm
+# Generative model group → binds onto LLMConfig.
+name: Qwen2.5-Math-7B-Instruct
+llm_dir: ${base_dir}/Qwen2.5-Math-7B-Instruct
+dtype: float16
+# Math-7B caps at max_position_embeddings=4096; 5000 fails vLLM's
+# context validator.
+max_model_len: 4096
+tensor_parallel_size: 1
+# WARNING: 7B fp16 weights ~17 GB + 8B PRM ~16 GB > 32 GB V100. With
+# inline scoring (mcts_cnt loads LLM + PRM together) this is likely to
+# OOM. 0.5 caps vLLM's total budget low to leave PRM room, but may be
+# too low for the weights themselves — if so, raise gmu and run
+# generation-only, then score with score_completions.py (PRM alone).
+gpu_memory_utilization: 0.5

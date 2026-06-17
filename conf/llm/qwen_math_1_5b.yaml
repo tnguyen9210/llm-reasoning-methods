@@ -9,4 +9,4 @@ max_model_len: 4096
 tensor_parallel_size: 1
 # 0.4 (~13 GB) leaves room for the 8B PRM (~16 GB) alongside the
 # vLLM engine; the 1.5B weights + KV cache fit comfortably.
-gpu_memory_utilization: 0.4
+gpu_memory_utilization: 0.3
