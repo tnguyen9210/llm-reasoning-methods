@@ -88,9 +88,16 @@ def main(cfg: ExpConfig):
     )
     _make_result_dir(result_dir)
 
+    # Tag by difficulty level so runs are filterable in W&B
+    # (level=None means the whole split -> "level-all").
+    level_tag = (
+        f"level-{cfg.data.level}"
+        if cfg.data.level is not None else "level-all"
+    )
     wandb.init(
         project="llm-reasoning",
         name=run_name,
+        tags=[level_tag],
         config=OmegaConf.to_container(cfg, resolve=True),
     )
 
