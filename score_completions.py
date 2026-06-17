@@ -95,7 +95,8 @@ def main(cfg: ExpConfig):
         build_scored_dataset(
             results, dataset, prm, result_dir, run_name,
             trial_idx, agg_strategy=cfg.gen.agg_strategy,
-            n=0, batch_size=cfg.search.batch_size,
+            n=0, batch_size=cfg.prm.score_batch_size,
+            num_proc=cfg.run.num_proc,
         )
 
 

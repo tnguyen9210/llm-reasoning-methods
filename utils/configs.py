@@ -98,6 +98,12 @@ class PRMConfig:
     name: str = "Llama3.1-8B-PRM-Deepseek-Data"
     prm_dir: str = "???"          # required; set in the YAML group
     device_map: str = "cuda:0"
+    # PRM forward-pass micro-batch for scoring. Distinct from
+    # search.batch_size (candidates per expansion) — that's a search
+    # param, this is how many (question, answer) pairs the PRM scores
+    # per forward pass. Raise to cut total passes; lower if it OOMs
+    # or completions are long (padding waste).
+    score_batch_size: int = 8
 
 
 @dataclass
@@ -145,6 +151,11 @@ class RunConfig:
     """Run-level / hardware params not tied to a model or method."""
     num_trials: int = 4
     num_questions: int = -1       # -1 = use full dataset
+    # Worker processes for the CPU scoring maps (answer parsing +
+    # sympy canonicalization) in build_scored_dataset. 1 = single
+    # process. Raise to match the cores your session actually has
+    # (check `nproc`); exceeding them just thrashes.
+    num_proc: int = 1
 
 
 @dataclass
