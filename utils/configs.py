@@ -1,6 +1,31 @@
 
+import os
 from dataclasses import dataclass, field
 from typing import Optional
+
+
+# W&B run-id sidecar: generation writes the run id into the result
+# dir so later post-processing (prepare_scored_dataset / compute_stats,
+# separate processes after the run is closed) can reattach via
+# wandb.init(id=..., resume="must") and log onto the SAME run. Kept in
+# a file rather than encoded in config_name so the dir stays uniquely
+# determined by the config (re-runs would otherwise get new paths).
+WANDB_RUN_ID_FILE = "wandb_run_id.txt"
+
+
+def save_wandb_run_id(result_dir: str, run_id: str) -> None:
+    with open(f"{result_dir}/{WANDB_RUN_ID_FILE}", "w") as fout:
+        fout.write(run_id + "\n")
+
+
+def load_wandb_run_id(result_dir: str) -> Optional[str]:
+    """Return the saved W&B run id for this result dir, or None if no
+    sidecar exists (e.g. a run generated before this was added)."""
+    path = f"{result_dir}/{WANDB_RUN_ID_FILE}"
+    if not os.path.exists(path):
+        return None
+    with open(path) as fin:
+        return fin.read().strip() or None
 
 
 # Prompt assets — vendored from sal so this project has no sal

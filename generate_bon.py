@@ -16,7 +16,9 @@ from vllm import LLM
 import wandb
 
 from core import bon_search_v01_0_0
-from utils.configs import ExpConfig, BoNConfig, config_name, level_dir
+from utils.configs import (
+    ExpConfig, BoNConfig, config_name, level_dir, save_wandb_run_id,
+)
 from utils.load_data import load_data_hf
 
 algo_dict = {
@@ -94,12 +96,15 @@ def main(cfg: ExpConfig):
         f"level-{cfg.data.level}"
         if cfg.data.level is not None else "level-all"
     )
-    wandb.init(
+    wandb_run = wandb.init(
         project="llm-reasoning",
         name=run_name,
         tags=[level_tag],
         config=OmegaConf.to_container(cfg, resolve=True),
     )
+    # Persist the run id so compute_stats can reattach and log the
+    # post-processing metrics onto this same run.
+    save_wandb_run_id(result_dir, wandb_run.id)
 
     total_start = time.time()
     for trial_idx in range(num_trials):
