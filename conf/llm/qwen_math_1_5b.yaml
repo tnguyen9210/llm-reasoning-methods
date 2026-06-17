@@ -1,0 +1,12 @@
+# @package llm
+# Generative model group → binds onto LLMConfig.
+name: Qwen2.5-Math-1.5B-Instruct
+llm_dir: ${base_dir}/Qwen2.5-Math-1.5B-Instruct
+dtype: float16
+# Math-1.5B caps at max_position_embeddings=4096; 5000 fails vLLM's
+# context validator (see the generation-template notebooks).
+max_model_len: 4096
+tensor_parallel_size: 1
+# 0.4 (~13 GB) leaves room for the 8B PRM (~16 GB) alongside the
+# vLLM engine; the 1.5B weights + KV cache fit comfortably.
+gpu_memory_utilization: 0.4
