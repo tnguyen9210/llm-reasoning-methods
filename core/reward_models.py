@@ -72,6 +72,72 @@ class PRM(ABC):
         specific position masking lives here.
         """
 
+    def _embed_batch(
+        self,
+        pairs: list[tuple[str, str]],
+        system_prompt: str,
+        layer: int = -1,
+    ) -> list["torch.Tensor"]:
+        """Per-token hidden states for one batch of (question, answer)
+        pairs, for the embedding-diversity term in semantic MCTS v02.
+
+        Returns one (seq_len, hidden_dim) tensor per pair (padding
+        trimmed), taken from hidden-state `layer` (-1 = last). Unlike
+        _score_batch, the forward pass is over the *plain* candidate
+        chat (system / user(question) / assistant(answer)) — NOT the
+        judge transcript _score_batch builds — so the pooled vector is
+        a representation of the candidate as written, in the PRM's
+        space. `system_prompt` is the generator's system prompt
+        (config.gen.system_prompt), passed in so the embedded text
+        matches v01's exactly and the v01-vs-v02 ablation stays clean
+        (same text + pooling, only the model differs).
+
+        Optional; only PRMs used as an embedding source need it. The
+        default raises so an unconfigured PRM fails loudly rather than
+        silently producing garbage embeddings.
+        """
+        raise NotImplementedError(
+            f"{type(self).__name__} does not implement _embed_batch; "
+            "it cannot be used as an embeds_source for mcts_sem v02."
+        )
+
+    def embed(
+        self,
+        questions: list[str],
+        answers: list[list[str]],
+        system_prompt: str,
+        batch_size: int = 8,
+        layer: int = -1,
+    ) -> list[list["torch.Tensor"]]:
+        """Per-candidate pooled-input hidden states, indexed
+        [question][answer]. Mirrors score()'s flatten/batch/reshape so
+        the two stay aligned; delegates the model-specific work to
+        _embed_batch. Each element is a (seq_len, hidden_dim) tensor.
+        `system_prompt` (config.gen.system_prompt) is threaded through
+        so the embedded chat matches what the generator embeds in v01.
+        """
+        pairs: list[tuple[str, str]] = []
+        answer_counts: list[int] = []
+        for question, cands in zip(questions, answers, strict=True):
+            answer_counts.append(len(cands))
+            for ans in cands:
+                pairs.append((question, ans))
+
+        flat: list["torch.Tensor"] = []
+        for i in range(0, len(pairs), batch_size):
+            flat.extend(
+                self._embed_batch(
+                    pairs[i : i + batch_size], system_prompt, layer
+                )
+            )
+
+        out: list[list["torch.Tensor"]] = []
+        cursor = 0
+        for count in answer_counts:
+            out.append(flat[cursor : cursor + count])
+            cursor += count
+        return out
+
     def score(
         self,
         questions: list[str],
@@ -296,3 +362,56 @@ class RLHFlowPRM(PRM):
             ].detach().cpu().float().tolist()
             batch_scores.append(step_scores)
         return batch_scores
+
+    def _embed_batch(
+        self,
+        pairs: list[tuple[str, str]],
+        system_prompt: str,
+        layer: int = -1,
+    ) -> list[torch.Tensor]:
+        """Last-(or `layer`-)layer hidden states over the PLAIN
+        candidate chat, for mcts_sem v02's diversity term.
+
+        Deliberately NOT the judge transcript _score_batch builds: we
+        render system / user(question) / assistant(answer) — the same
+        shape v01 embeds with the generator — so only the model differs
+        between v01 and v02. Returns one (seq_len, hidden_dim) tensor
+        per pair with right-padding trimmed; the caller pools it.
+        """
+        # Match v01's embedded text: a normal [system, user, assistant]
+        # chat (sal.build_conv shape), continuing the assistant turn so
+        # no generation prompt is appended.
+        convs = [
+            [
+                {"role": "system", "content": system_prompt},
+                {"role": "user", "content": q},
+                {"role": "assistant", "content": a},
+            ]
+            for q, a in pairs
+        ]
+        chat_texts = self.tokenizer.apply_chat_template(
+            convs, tokenize=False, add_generation_prompt=False,
+        )
+        enc = self.tokenizer(
+            chat_texts, return_tensors="pt", padding=True,
+            add_special_tokens=False,
+        ).to(self.device)
+        input_ids = enc.input_ids
+        attention_mask = enc.attention_mask
+
+        with torch.no_grad():
+            out = self.model(
+                input_ids=input_ids,
+                attention_mask=attention_mask,
+                output_hidden_states=True,
+            )
+        # hidden_states is a tuple (embeddings, layer_1, ..., layer_L);
+        # index `layer` (-1 = last). Shape: (batch, seq_len, hidden).
+        hs = out.hidden_states[layer]
+
+        # Trim right-padding per row so pooling sees only real tokens.
+        embeds: list[torch.Tensor] = []
+        for b in range(input_ids.shape[0]):
+            n = int(attention_mask[b].sum().item())
+            embeds.append(hs[b, :n].detach())
+        return embeds

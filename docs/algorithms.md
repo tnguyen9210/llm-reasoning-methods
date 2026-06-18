@@ -32,8 +32,9 @@ Empirical observations about repo behavior: [findings.md](findings.md).
 | CNT-MCTS (PUCT) | `core/mcts_cnt_search_v05_00_00.py` | `generate_mcts_cnt.py` | `conf/mcts_cnt_prm800k.yaml` |
 | BL-MCTS v01 (PUCT, best-first) | `core/mcts_bl_cnt_search_v01_00_00.py` | `generate_mcts_bl_cnt_v01.py` | `conf/mcts_bl_cnt_v01_prm800k.yaml` |
 | BL-MCTS v02 (KUBE) | `core/mcts_bl_cnt_search_v02_00_00.py` | `generate_mcts_bl_cnt_v02.py` | `conf/mcts_bl_cnt_v02_prm800k.yaml` |
-| Semantic-MCTS (embeds) | `core/mcts_embeds_search_v05_00_00.py` | `generate_mcts_embeds.py` | `conf/mcts_embeds_prm800k.yaml` |
-| Semantic-MCTS v03 (legacy launcher) | `core/mcts_embeds_search_v03_02_00.py` | `generate_mcts_embeds_v03.py` | `conf/mcts_embeds_v03_prm800k.yaml` |
+| Semantic-MCTS v01 (`mcts_sem_v01`, policy embeds) | `core/mcts_sem_search_v01_00_00.py` | `generate_mcts_sem.py` | `conf/mcts_sem_v01_prm800k.yaml` |
+| Semantic-MCTS v02 (`mcts_sem_v02`, PRM embeds) | `core/mcts_sem_search_v02_00_00.py` | `generate_mcts_sem.py` | `conf/mcts_sem_v02_prm800k.yaml` |
+| Semantic-MCTS v03 (legacy launcher, pre-rename `mcts_embeds`) | `core/mcts_embeds_search_v03_02_00.py` | `generate_mcts_embeds_v03.py` | `conf/mcts_embeds_v03_prm800k.yaml` |
 | BoN | `core/bon_search_v01_0_0.py` | `generate_bon.py` | `conf/bon_prm800k.yaml` (+ gsm8k, aime2025) |
 | BoB | `core/bob_search_v03_0_0.py` | `generate_bob_prm800k_v0101.py` | none (params hardcoded in launcher) |
 
@@ -42,7 +43,7 @@ Empirical observations about repo behavior: [findings.md](findings.md).
 ### CNT-MCTS
 - `v03_01_00` — baseline (rStar-Math-derived). Superseded; pending
   archive to `core/olds/`.
-- `v05_00_00` — reorganized to match `mcts_embeds_search_v05_00_00`
+- `v05_00_00` — reorganized to match the semantic-MCTS file
   structure; no behavior changes. Canonical.
 
 ### BL-MCTS
@@ -56,16 +57,34 @@ walks.
 Both variants are maintained in parallel for PUCT-vs-KUBE comparison.
 
 ### Semantic-MCTS
-`v05_00_00` consolidates all earlier files; variant behavior is gated
-behind config flags (defaults reproduce `v03_01_00`).
+Fresh lineage, renumbered from `v01_00_00` (was `v05_00_00` under the
+old `mcts_embeds` numbering). The two active variants differ only in
+the SOURCE of the diversity embeddings and are maintained in parallel
+for an embedding-source ablation; one launcher (`generate_mcts_sem.py`,
+`algo=mcts_sem_v01|v02`) serves both, building the second vLLM pooling
+engine only when `search.embeds_source == "policy"`.
+- `v01_00_00` — policy embeds. A second vLLM engine (`runner=
+  "pooling"`) on the generator supplies per-token hidden states.
+  Variant behavior gated behind config flags (defaults reproduce the
+  old `v03_01_00` baseline). Canonical baseline.
+- `v02_00_00` — PRM embeds (`embeds_source=prm`). Same algorithm and
+  the same `embeds_*` knobs as v01, but embeddings come from the PRM's
+  last-layer hidden states (folded into the in-loop `prm.score`
+  forward pass), so no pooling engine is loaded. *Scaffolded; the
+  embedding-source mechanism is not yet implemented — see the module
+  docstring.*
+
+Earlier `mcts_embeds_search_v03_*` / `v04_01_00` files are archived,
+untouched (not consolidated into the v01 file). The flags that supersede
+them live in v01:
 - `v03_01_00` — baseline.
 - `v03_02_00` — +mean-centering (`embeds_center`, `embeds_mean`).
 - `v03_02_01` — docstring claimed Sherman-Morrison update; not
-  implemented (now a real flag in v05: `cov_update`).
+  implemented (now a real flag: `cov_update`).
 - `v03_02_02` — last vs avg pooling (`embeds_strategy`).
 - `v03_02_03` — response-only token scope (`embeds_scope`).
 - `v04_01_00` — docstring claimed regenerate-on-revisit; not
-  implemented (now a real flag in v05: `revisit_policy`).
+  implemented (now a real flag: `revisit_policy`).
 
 ### Older exploratory files
 `core/mcts_search_extra_v*`, `core/diverse_reward_search_v*`,

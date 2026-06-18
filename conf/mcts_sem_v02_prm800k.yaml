@@ -1,0 +1,42 @@
+defaults:
+  - exp_schema           # the ExpConfig dataclass (structured config)
+  - llm: llama_1b
+  - prm: llama_prm
+  - data: prm800k
+  - search: mcts_sem_v02
+  - _self_
+  - override hydra/job_logging: disabled
+  - override hydra/hydra_logging: disabled
+
+hydra:
+  output_subdir: null
+  run:
+    dir: .
+
+# base path interpolated by the group files (${base_dir}/...)
+base_dir: /groups/chichengz/tnn/datasets
+
+algo: mcts_sem_v02
+
+# generation params (group: gen) — only overrides vs GenConfig defaults
+gen:
+  temperature: 0.8
+  max_tokens: 2048
+  top_p: 1.0
+  seed: 0
+  agg_strategy: last
+  filter_duplicates: true
+  date_string: "Aug 1 2025"
+
+# mcts_sem_v02 sources diversity embeds from the PRM, so there is NO
+# second (pooling) vLLM engine — only the generative engine + PRM. The
+# generative engine reclaims the share v01 gave to the pooling engine:
+# raised above the llama_1b group default (0.3) toward what v01 split
+# across two engines, still leaving room for the PRM.
+llm:
+  gpu_memory_utilization: 0.35
+
+# run-level params (group: run)
+run:
+  num_trials: 4
+  num_questions: -1      # -1 = use full dataset

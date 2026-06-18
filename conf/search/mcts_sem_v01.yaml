@@ -1,0 +1,43 @@
+# @package search
+# Search-method group → binds onto MCTSSemV01Config (policy embeds).
+# The mcts_sem_v01_schema node (registered in the launcher under group
+# "search") supplies the typed dataclass; values below override it.
+# Each method carries only its own hyperparameters.
+defaults:
+  - mcts_sem_v01_schema
+  - _self_
+
+method: mcts_sem_v01
+# embeds_source: policy is the schema default for v01 (second vLLM
+# pooling engine on the generator); left implicit here.
+batch_size: 4           # candidates generated per expansion
+lookahead: 0
+max_depth: 20
+negative_reward: 0
+num_phases: 1000
+gen_budget: 80          # total generations across the full run
+
+# diversity selection: q_val = ds_beta*score + ds_alpha*diversity
+lam: 0.01               # ridge: V_0 = lam * I
+ds_alpha: 100.0         # diversity weight
+ds_beta: 1.0            # q-value weight
+
+# embedding extraction
+embeds_strategy: last   # "last" | "avg"
+embeds_scope: full      # "full" | "response"
+embeds_normalize: true
+embeds_center: false
+embeds_mean_dir: ""     # results/-relative .npy prefix (if center=true)
+embeds_dim: 2048
+
+# covariance bookkeeping + expansion policy
+cov_update: exact       # "exact" | "sherman_morrison"
+revisit_policy: reuse   # "reuse" | "regenerate"
+
+# second (pooling) vLLM engine's GPU-memory share; the generative
+# engine's share is set on the llm group (lowered in the top-level
+# YAML so the two engines + PRM co-reside)
+embeds_gpu_memory_utilization: 0.1
+
+# PRM micro-batch for in-loop candidate scoring
+prm_batch_size: 4

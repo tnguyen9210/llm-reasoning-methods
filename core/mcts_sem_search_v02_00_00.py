@@ -1,20 +1,51 @@
 """
-MCTS with embedding-based diversity selection (consolidated).
+Semantic MCTS v02: embedding-based diversity selection, PRM-sourced
+embeddings.
 
-One canonical implementation; replaces the v03_01_00, v03_02_00,
-v03_02_01, v03_02_02, v03_02_03, and v04_01_00 files. Variant
-behavior is selected via config flags; defaults reproduce
-v03_01_00 (modulo the two features whose docstrings v03_02_01 /
-v04_01_00 claimed but never actually landed — both now implemented
-here and gated behind opt-in flags).
+The "mcts_sem_v02" method. Same diversity-selection algorithm as
+v01 (mcts_sem_search_v01_00_00) and the same embeds_* knobs, but the
+pooled embeddings are read from the PRM's last-layer hidden states
+instead of a second vLLM pooling engine on the policy. So the
+embedding space shifts policy -> reward-model; pooling / normalize /
+center / the covariance bonus are all identical, making v01-vs-v02 a
+clean ablation of the embedding SOURCE alone. The launcher passes
+llm_vllm_embeds=None for this variant (no pooling engine).
 
-Config flags (with defaults)
+Mechanism (vs v01). The only behavioral difference is in candidate
+expansion (_embed_candidates): where v01 calls
+llm_vllm_embeds.encode(...), v02 calls prm.embed(...) — one batched
+PRM forward pass (output_hidden_states=True) over the SAME plain
+candidate chat v01 embeds (system / user(question) / assistant(answer),
+config.gen.system_prompt), then pools the per-token hidden states with
+the SAME _extract_embeds. The PRM is the one already loaded for
+scoring, so no second model is added; the score and embed passes are
+separate (the score pass runs the judge transcript, which is a
+different sequence) but both reuse the loaded PRM. embeds_dim must be
+the PRM's hidden size (4096 for Llama3.1-8B-PRM, not the generator's
+2048) since it sizes the covariance V — set in the v02 YAML.
+
+Caveat: embeds_scope="response" is NOT yet supported for the PRM
+source (the response_start_idx is computed with the generator's
+tokenizer and doesn't apply to the PRM sequence); _embed_candidates
+raises for that combination. embeds_scope="full" is fully supported.
+
+v01 itself replaces the v03_01_00, v03_02_00, v03_02_01, v03_02_02,
+v03_02_03, and v04_01_00 files (all named mcts_embeds_search_* before
+the rename). Variant behavior is selected via config flags; defaults
+reproduce v03_01_00 (modulo the two features whose docstrings
+v03_02_01 / v04_01_00 claimed but never actually landed — both now
+implemented and gated behind opt-in flags).
+
+Config flags (read off config.search.*; see MCTSSemV02Config in
+utils/configs.py for defaults)
+    embeds_source   : "policy" | "prm"             (default: "prm")
     embeds_strategy : "last" | "avg"               (default: "last")
     embeds_scope    : "full" | "response"          (default: "full")
     embeds_normalize: bool                         (default: True)
     embeds_center   : bool                         (default: False)
     embeds_mean     : np.ndarray | None            (required if center=True)
-    embeds_dim      : int                          (default: 2048)
+    embeds_dim      : int                  (default: 2048; set 4096 for PRM)
+    prm_embeds_layer: int                          (default: -1 = last)
     cov_update      : "exact" | "sherman_morrison" (default: "exact")
     revisit_policy  : "reuse" | "regenerate"       (default: "reuse")
     prm_batch_size  : int                          (default: 4)
@@ -23,7 +54,8 @@ Algorithm sketch
     For each of `num_phases` phases:
       Walk from the root down to a terminal node. At each step:
         - If `current_node` has no children (or `revisit_policy ==
-          "regenerate"`), generate `config.bs` next-step continuations
+          "regenerate"`), generate `config.search.batch_size`
+          next-step continuations
           via vLLM, dedupe by text, pool the per-token embeddings of
           each candidate, score them with the PRM, and add them as
           children. This is the only operation that charges against
@@ -168,35 +200,117 @@ def _extract_embeds(raw, config, response_start_idx):
                    make diverse-selection scores comparable across
                    problems).
     """
+    sc = config.search
     # 1. Scope.
-    if config.embeds_scope == "response":
+    if sc.embeds_scope == "response":
         raw = raw[response_start_idx:, :]
-    elif config.embeds_scope != "full":
-        raise ValueError(f"unknown embeds_scope: {config.embeds_scope!r}")
+    elif sc.embeds_scope != "full":
+        raise ValueError(f"unknown embeds_scope: {sc.embeds_scope!r}")
 
     # 2. Pool.
-    if config.embeds_strategy == "last":
+    if sc.embeds_strategy == "last":
         pooled = raw[-1]
-    elif config.embeds_strategy == "avg":
+    elif sc.embeds_strategy == "avg":
         pooled = raw.mean(dim=0)
     else:
         raise ValueError(
-            f"unknown embeds_strategy: {config.embeds_strategy!r}"
+            f"unknown embeds_strategy: {sc.embeds_strategy!r}"
         )
 
     # 3. Normalize.
-    if config.embeds_normalize:
+    if sc.embeds_normalize:
         pooled = F.normalize(pooled, p=2, dim=-1)
 
     pooled = pooled.detach().cpu().numpy()
 
     # 4. Center.
-    if config.embeds_center:
-        if config.embeds_mean is None:
-            raise ValueError("embeds_center=True requires config.embeds_mean")
-        pooled = pooled - config.embeds_mean
+    if sc.embeds_center:
+        if sc.embeds_mean is None:
+            raise ValueError("embeds_center=True requires search.embeds_mean")
+        pooled = pooled - sc.embeds_mean
 
     return pooled
+
+
+def _embed_candidates(
+    question, candidate_texts, config, tokenizer,
+    llm_vllm_embeds, prm, response_start_idx,
+):
+    """Pool a diversity embedding for each candidate, from the source
+    selected by config.search.embeds_source.
+
+    Returns a list of pooled (dim,) vectors aligned with
+    candidate_texts. Both sources feed the SAME _extract_embeds, so
+    v01-vs-v02 differs only in which model produced the hidden states.
+
+      policy : per-candidate vLLM pooling engine on the generator
+               (the v01 path). Requires llm_vllm_embeds.
+      prm    : one batched PRM forward pass over the plain candidate
+               chat (system / user / assistant), last-layer hidden
+               states. No second engine; the PRM is already loaded.
+    """
+    sc = config.search
+    source = getattr(sc, "embeds_source", "policy")
+
+    if source == "policy":
+        if llm_vllm_embeds is None:
+            raise ValueError(
+                "embeds_source='policy' needs the pooling engine, but "
+                "llm_vllm_embeds is None. Launch with the v01 config "
+                "(it builds the pooling engine)."
+            )
+        embeds = []
+        for cand_text in candidate_texts:
+            cand_convs = [
+                build_conv(question, cand_text, config.gen.system_prompt)
+            ]
+            cand_templated = tokenizer.apply_chat_template(
+                cand_convs,
+                add_generation_prompt=False,
+                continue_final_message=True,
+                date_string=config.gen.date_string,
+                tokenize=False,
+            )
+            outputs = llm_vllm_embeds.encode(
+                cand_templated, pooling_task="token_embed", use_tqdm=False
+            )
+            embeds.append(
+                _extract_embeds(
+                    outputs[0].outputs.data, config, response_start_idx
+                )
+            )
+        return embeds
+
+    if source == "prm":
+        # response_start_idx was computed with the GENERATOR tokenizer
+        # and is invalid for the PRM's tokenizer/template. Until a
+        # PRM-side start index is wired, only "full" scope is correct.
+        if sc.embeds_scope != "full":
+            raise NotImplementedError(
+                "embeds_source='prm' currently supports embeds_scope="
+                "'full' only; 'response' needs a PRM-tokenizer start "
+                "index (the generator's response_start_idx doesn't "
+                "apply to the PRM sequence)."
+            )
+        # One batched forward pass for all candidates of this question.
+        # prm.embed returns [question][answer] -> (seq_len, dim) tensors;
+        # one question here, so [0] is the per-candidate list. The PRM
+        # builds the plain candidate chat with config.gen.system_prompt
+        # so the embedded text matches the policy path's.
+        raw_embeds = prm.embed(
+            [question], [candidate_texts],
+            system_prompt=config.gen.system_prompt,
+            batch_size=sc.prm_batch_size,
+            layer=getattr(sc, "prm_embeds_layer", -1),
+        )[0]
+        # response_start_idx is unused under "full" scope; pass it
+        # through so _extract_embeds keeps one signature.
+        return [
+            _extract_embeds(raw, config, response_start_idx)
+            for raw in raw_embeds
+        ]
+
+    raise ValueError(f"unknown embeds_source: {source!r}")
 
 
 # --------------------------------------------------------------------- #
@@ -310,7 +424,7 @@ class MCTS(BaseTree):
 
     completed_nodes: List[Type[BaseNode]] = []
     # Pydantic shape hint is purely documentation; the actual V is
-    # allocated below using `config.embeds_dim`.
+    # allocated below using `config.search.embeds_dim`.
     V: NDArray[Shape["2048, 2048"], np.float32] = None
 
     def __init__(self, **kwargs) -> None:
@@ -318,8 +432,8 @@ class MCTS(BaseTree):
         # Ridge-regularized covariance accumulator.
         # V starts as lam * I so V^-1 = (1/lam) * I; the diversity
         # term sqrt(x^T V^-1 x) is initially uniform across arms.
-        embeds_dim = getattr(self.config, "embeds_dim", 2048)
-        self.V = self.config.lam * np.eye(embeds_dim)
+        embeds_dim = self.config.search.embeds_dim
+        self.V = self.config.search.lam * np.eye(embeds_dim)
 
     def create_node(self, parent=None):
         return MCTSNode(parent=parent)
@@ -332,9 +446,9 @@ class MCTS(BaseTree):
     ):
         """Append a single child to `current_node`. Marks terminal if
         the underlying vLLM generation hit EOS / length, OR if this
-        would push depth past `config.max_depths` — in which case the
-        score is overwritten with `config.bsegative_reward` so the
-        backprop discourages re-entering this branch.
+        would push depth past `config.search.max_depth` — in which case
+        the score is overwritten with `config.search.negative_reward` so
+        the backprop discourages re-entering this branch.
         """
         new_node = self.create_node(parent=current_node)
         parent_child_count = len(current_node.children)
@@ -355,9 +469,10 @@ class MCTS(BaseTree):
             new_node.is_terminal = True
             self.completed_nodes.append(new_node)
 
-        if not new_node.is_terminal and new_node.depth >= self.config.max_depths:
+        if (not new_node.is_terminal
+                and new_node.depth >= self.config.search.max_depth):
             new_node.is_terminal = True
-            candidate_score = self.config.bsegative_reward
+            candidate_score = self.config.search.negative_reward
 
         new_node.update(candidate_score)
         current_node.children.append(new_node)
@@ -422,9 +537,9 @@ class MCTS(BaseTree):
         log_nvisit_parent = np.sqrt(np.log(1 + node.visit_count()))
         A_idxes, _ = _diverse_select(
             1, self.V, embeds, q_values,
-            self.config.ds_alpha * log_nvisit_parent,
-            self.config.ds_beta,
-            cov_update=getattr(self.config, "cov_update", "exact"),
+            self.config.search.ds_alpha * log_nvisit_parent,
+            self.config.search.ds_beta,
+            cov_update=self.config.search.cov_update,
         )
         return _children[A_idxes[0]] if _children else None
 
@@ -459,18 +574,18 @@ class MCTS(BaseTree):
 
 def _compute_response_start_idx(question, config, tokenizer) -> int:
     """Token index where the assistant response begins. Used only when
-    `config.embeds_scope == "response"` to slice off the system /
+    `config.search.embeds_scope == "response"` to slice off the system /
     user prefix tokens before pooling.
 
     Built by rendering the chat template with an empty assistant
     message and counting tokens up to the assistant turn marker.
     """
-    prefix_convs = [build_conv(question, "", config.system_prompt)]
+    prefix_convs = [build_conv(question, "", config.gen.system_prompt)]
     prefix_texts = tokenizer.apply_chat_template(
         prefix_convs,
         add_generation_prompt=True,
         continue_final_message=False,
-        date_string=config.date_string,
+        date_string=config.gen.date_string,
         tokenize=False,
     )
     prefix_inputs = tokenizer(prefix_texts)
@@ -486,7 +601,8 @@ def _generate_candidates(
     off `current_node`. Returns (candidate_infos, embeds, scores).
 
     Three vLLM calls per invocation:
-      1. `generate_k_steps` produces `config.bs` continuations.
+      1. `generate_k_steps` produces `config.search.batch_size`
+         continuations.
       2. After dedup-by-text, `llm_vllm_embeds.encode(...)` runs the
          embedding model on each unique candidate prefix.
       3. `prm.score(...)` runs the process reward model on the same
@@ -499,25 +615,29 @@ def _generate_candidates(
     # is True only on the first step (depth==0) because at depth>0 we
     # want vLLM to continue the existing assistant turn rather than
     # start a fresh one.
-    current_convs = [build_conv(question, current_text, config.system_prompt)]
+    current_convs = [
+        build_conv(question, current_text, config.gen.system_prompt)
+    ]
     current_templated = tokenizer.apply_chat_template(
         current_convs,
         add_generation_prompt=current_node.depth == 0,
         continue_final_message=current_node.depth > 0,
-        date_string=config.date_string,
+        date_string=config.gen.date_string,
         tokenize=False,
     )
-    # Replicate the same prompt config.bs times — `generate_k_steps`
-    # uses each copy as an independent sampling slot. Sampling differs
-    # across copies because SamplingParams sets n=1; the variance
-    # comes from temperature, not from n.
-    current_templated = current_templated * config.bs
+    # Replicate the same prompt config.search.batch_size times —
+    # `generate_k_steps` uses each copy as an independent sampling
+    # slot. Sampling differs across copies because SamplingParams sets
+    # n=1; the variance comes from temperature, not from n.
+    current_templated = current_templated * config.search.batch_size
 
     # `lookahead` controls how far ahead generate_k_steps peeks past
     # the "\n\n" step terminator. On the last possible depth we don't
     # look ahead (no room to continue), otherwise use the configured
     # lookahead budget.
-    lookahead = 0 if d == config.max_depths - 1 else config.lookahead
+    lookahead = (
+        0 if d == config.search.max_depth - 1 else config.search.lookahead
+    )
     llm_outputs = generate_k_steps(
         current_templated, lookahead, llm_vllm, sampling_params, 1
     )
@@ -525,49 +645,45 @@ def _generate_candidates(
     logging.error(llm_outputs)
 
     # Dedupe by next-step text, keeping the first occurrence. With
-    # temperature > 0 and config.bs > 1 we often see duplicates,
+    # temperature > 0 and config.search.batch_size > 1 we often see
+    # duplicates,
     # especially on short next-steps.
     seen: Dict[str, int] = {}
     for idx, output in enumerate(llm_outputs):
         seen.setdefault(output.next_texts[0], idx)
     candidate_infos = [llm_outputs[idx] for idx in seen.values()]
 
-    # Embed + score each unique candidate. All candidates branch off
-    # the same question, so candidate_texts is the flat answer list
-    # for that one question (scored as [question], [candidate_texts]).
+    # Collect the candidate texts. All candidates branch off the same
+    # question, so candidate_texts is the flat answer list for that one
+    # question (embedded / scored as [question], [candidate_texts]).
     candidate_texts: List[str] = []
-    candidate_embeds: List[Any] = []
     for output in candidate_infos:
         cand_text = current_text + output.next_texts[0]
         # Strip the trailing step-terminator so it doesn't bleed into
         # the embedding / score.
-        cand_text_clean = cand_text.removesuffix("\n\n")
+        candidate_texts.append(cand_text.removesuffix("\n\n"))
 
-        cand_convs = [build_conv(question, cand_text_clean, config.system_prompt)]
-        cand_templated = tokenizer.apply_chat_template(
-            cand_convs,
-            add_generation_prompt=False,
-            continue_final_message=True,
-            date_string=config.date_string,
-            tokenize=False,
-        )
-        outputs = llm_vllm_embeds.encode(
-            cand_templated, pooling_task="token_embed", use_tqdm=False
-        )
-        emb = _extract_embeds(
-            outputs[0].outputs.data, config, response_start_idx
-        )
-        candidate_embeds.append(emb)
-        candidate_texts.append(cand_text_clean)
+    # Embed each candidate. v02 differs from v01 ONLY here, by source:
+    #   policy — the second vLLM pooling engine on the generator
+    #            (identical to v01).
+    #   prm    — the PRM's last-layer hidden states over the same plain
+    #            candidate chat, one batched forward pass (no 2nd
+    #            engine). _extract_embeds pools both the same way, so
+    #            the comparison isolates the embedding model alone.
+    candidate_embeds = _embed_candidates(
+        question, candidate_texts, config, tokenizer,
+        llm_vllm_embeds, prm, response_start_idx,
+    )
 
     candidate_scores = prm.score(
-        [question], [candidate_texts], batch_size=2,
+        [question], [candidate_texts],
+        batch_size=config.search.prm_batch_size,
     )
     # score returns [question][answer][step]; one question here, so
     # candidate_scores[0] is a list of candidates, each a per-step
     # score list. Aggregate each candidate's step list to a scalar.
     candidate_scores = [
-        aggregate_scores(cand_scores, config.agg_strategy)
+        aggregate_scores(cand_scores, config.gen.agg_strategy)
         for cand_scores in candidate_scores[0]
     ]
     logging.error(f"candidate_scores = {candidate_scores}")
@@ -578,25 +694,32 @@ def _generate_candidates(
 def mcts_search(question, agent, config, llm_vllm, llm_vllm_embeds, prm):
     """Run MCTS-with-diversity on a single `question`.
 
-    Outer loop: `config.bsum_phases` independent descents from the
-    root. Each descent goes up to `config.max_depths` levels deep
-    or until it hits a terminal node.
+    Outer loop: `config.search.num_phases` independent descents from
+    the root. Each descent goes up to `config.search.max_depth` levels
+    deep or until it hits a terminal node.
 
     Budget: only expansions (not selections) charge against
-    `config.gen_budget`. With `revisit_policy="reuse"` a node is
+    `config.search.gen_budget`. With `revisit_policy="reuse"` a node is
     expanded exactly once per phase. With `revisit_policy="regenerate"`
     a node is re-expanded every time we revisit it, which lets the
     tree grow children at hot nodes but also burns through the
     budget faster.
     """
     tokenizer = llm_vllm.get_tokenizer()
-    if config.custom_chat_template is not None:
-        tokenizer.chat_template = config.custom_chat_template
+    # Template selection (mirrors generate_mcts_cnt): default is the
+    # model's NATIVE chat template — its own in-distribution format,
+    # avoiding the cross-model confound (docs/decisions.md 2026-06-13).
+    # Set gen.use_custom_template=true to override every model with the
+    # vendored Llama-3.1 template instead. The trailing "\n\n" step
+    # separator is preserved by the strip-and-reappend in
+    # _generate_candidates.
+    if config.gen.use_custom_template:
+        tokenizer.chat_template = config.gen.custom_chat_template
 
     sampling_params = SamplingParams(
-        temperature=config.temperature,
-        max_tokens=config.max_tokens,
-        top_p=config.top_p,
+        temperature=config.gen.temperature,
+        max_tokens=config.gen.max_tokens,
+        top_p=config.gen.top_p,
         stop=["\n\n"],                       # step terminator
         include_stop_str_in_output=True,
         n=1,
@@ -605,17 +728,17 @@ def mcts_search(question, agent, config, llm_vllm, llm_vllm_embeds, prm):
     response_start_idx = _compute_response_start_idx(
         question, config, tokenizer
     )
-    revisit_policy = getattr(config, "revisit_policy", "reuse")
+    revisit_policy = config.search.revisit_policy
 
     gen_cnt = 0
     p = 0
     d = 0
     ndepths_arr: List[int] = []
-    for p in range(config.bsum_phases):
+    for p in range(config.search.num_phases):
         logging.fatal(f"\n-> p = {p}")
         current_node = agent.root
 
-        for d in range(config.max_depths + 1):
+        for d in range(config.search.max_depth + 1):
             logging.fatal(f"\n-> d = {d}")
 
             if current_node.is_terminal:
@@ -643,11 +766,11 @@ def mcts_search(question, agent, config, llm_vllm, llm_vllm_embeds, prm):
 
             current_node = agent.select_child(current_node)
             logging.fatal(f"gen_cnt = {gen_cnt}")
-            if gen_cnt >= config.gen_budget:
+            if gen_cnt >= config.search.gen_budget:
                 break
 
         ndepths_arr.append(d)
-        if gen_cnt >= config.gen_budget:
+        if gen_cnt >= config.search.gen_budget:
             logging.fatal("run out of budget!")
             break
 

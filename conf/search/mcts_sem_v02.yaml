@@ -1,0 +1,48 @@
+# @package search
+# Search-method group → binds onto MCTSSemV02Config (PRM embeds).
+# The mcts_sem_v02_schema node (registered in the launcher under group
+# "search") supplies the typed dataclass; values below override it.
+# Each method carries only its own hyperparameters. Same knobs as v01
+# except the embedding SOURCE: here it's the PRM, so there's no second
+# pooling engine and no embeds_gpu_memory_utilization.
+defaults:
+  - mcts_sem_v02_schema
+  - _self_
+
+method: mcts_sem_v02
+embeds_source: prm      # PRM last-layer hidden states (no 2nd engine)
+batch_size: 4           # candidates generated per expansion
+lookahead: 0
+max_depth: 20
+negative_reward: 0
+num_phases: 1000
+gen_budget: 80          # total generations across the full run
+
+# diversity selection: q_val = ds_beta*score + ds_alpha*diversity
+lam: 0.01               # ridge: V_0 = lam * I
+ds_alpha: 100.0         # diversity weight
+ds_beta: 1.0            # q-value weight
+
+# embedding extraction
+embeds_strategy: last   # "last" | "avg"
+embeds_scope: full      # "full" | "response" ("response" unsupported
+                        #   for embeds_source=prm — see search core)
+embeds_normalize: true
+embeds_center: false
+embeds_mean_dir: ""     # results/-relative .npy prefix (if center=true)
+# PRM hidden size, NOT the generator's 2048: the PRM produces the
+# embeds here (Llama3.1-8B-PRM = 4096). Sizes the covariance V.
+embeds_dim: 4096
+prm_embeds_layer: -1    # which PRM layer to pool (-1 = last)
+
+# covariance bookkeeping + expansion policy
+cov_update: exact       # "exact" | "sherman_morrison"
+revisit_policy: reuse   # "reuse" | "regenerate"
+
+# NOTE: no embeds_gpu_memory_utilization here — v02 has no pooling
+# engine (embeds come from the PRM). The schema default is inherited
+# but unused; the generative engine's share is set on the llm group
+# in the top-level YAML.
+
+# PRM micro-batch for in-loop candidate scoring
+prm_batch_size: 4

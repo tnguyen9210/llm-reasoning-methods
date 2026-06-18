@@ -1,7 +1,7 @@
 
 import os
 from dataclasses import dataclass, field
-from typing import Optional
+from typing import Any, Optional
 
 
 # W&B run-id sidecar: generation writes the run id into the result
@@ -163,6 +163,105 @@ class MCTSCntConfig(SearchConfig):
 
 
 @dataclass
+class MCTSSemV01Config(SearchConfig):
+    """Semantic (embedding-diversity) MCTS — v01 baseline.
+
+    "Semantic" is the method label; the mechanism is hidden-state
+    embeddings, so the per-knob fields keep their embeds_* names.
+
+    Selection mixes the PRM q-value with a diversity bonus
+    sqrt(x^T V^-1 x) over the candidates' pooled hidden-state
+    embeddings; V is a ridge-regularized covariance accumulator
+    (V_0 = lam * I). Reads off cfg.search.* in
+    mcts_sem_search_v01_00_00, same as MCTSCntConfig does for cnt.
+
+    v01 sources embeds from the POLICY: a second vLLM engine in
+    pooling mode (runner="pooling") alongside the generative one.
+    v02 (MCTSSemV02Config) sources them from the PRM instead and
+    drops that engine. embeds_source selects which; the launcher
+    builds the pooling engine only when embeds_source == "policy".
+
+    The embeds-engine load knob (embeds_gpu_memory_utilization)
+    lives here, not on LLMConfig: it's a method-specific concern
+    (a second engine), not a generic model property. It is unused
+    when embeds_source != "policy".
+    """
+    method: str = "mcts_sem_v01"
+    num_phases: int = 1000
+    gen_budget: int = 80          # total generations across the run
+
+    # Where the diversity embeddings come from:
+    #   "policy" — second vLLM pooling engine on the generator
+    #              (v01 baseline; needs embeds_gpu_memory_utilization).
+    #   "prm"    — the PRM's last-layer hidden states, folded into the
+    #              in-loop prm.score forward pass (v02; no 2nd engine).
+    embeds_source: str = "policy"
+
+    # Diversity selection: q_val = ds_beta*score + ds_alpha*diversity.
+    lam: float = 0.01             # ridge: V_0 = lam * I
+    ds_alpha: float = 100.0       # diversity weight
+    ds_beta: float = 1.0          # q-value weight
+
+    # Embedding extraction (see core._extract_embeds).
+    embeds_strategy: str = "last"     # "last" | "avg"  (pooling)
+    embeds_scope: str = "full"        # "full" | "response"
+    embeds_normalize: bool = True     # L2-normalize pooled vector
+    embeds_center: bool = False       # subtract held-out mean
+    embeds_mean_dir: str = ""         # results/-relative .npy prefix
+    embeds_dim: int = 2048            # pooled embedding dimension
+
+    # Covariance bookkeeping + expansion policy.
+    cov_update: str = "exact"         # "exact" | "sherman_morrison"
+    revisit_policy: str = "reuse"     # "reuse" | "regenerate"
+
+    # Second (pooling) vLLM engine's share of GPU memory. Only used
+    # when embeds_source == "policy". The generative engine uses
+    # llm.gpu_memory_utilization; the two must sum to leave headroom
+    # for the PRM.
+    embeds_gpu_memory_utilization: float = 0.1
+
+    # PRM forward-pass micro-batch *inside* the search loop (distinct
+    # from prm.score_batch_size, which scores the final dataset). Kept
+    # small because in-loop scoring is per-candidate-set.
+    prm_batch_size: int = 4
+
+    # Populated at runtime by the launcher when embeds_center=True
+    # (np.load of the mean .npy). Not set from YAML.
+    embeds_mean: Optional[Any] = None
+
+
+@dataclass
+class MCTSSemV02Config(MCTSSemV01Config):
+    """Semantic MCTS — v02: embeddings from the PRM, not the policy.
+
+    Same diversity-selection mechanism and the same embeds_* knobs as
+    v01, but the pooled embeddings are read from the PRM's last-layer
+    hidden states (folded into the in-loop prm.score forward pass)
+    instead of a second vLLM pooling engine. So the embedding space
+    shifts policy -> reward-model; everything downstream (pooling,
+    normalize, center, the covariance bonus) is identical, which makes
+    v01-vs-v02 a clean ablation of the embedding *source* alone.
+
+    Inherits every field from v01; overrides the method label and the
+    embeds_source default, and adds prm_embeds_layer (a knob v01 can't
+    have). embeds_gpu_memory_utilization is inherited but unused here
+    (no second engine) — left in place so the two variants share one
+    schema; v02's YAML simply never sets it.
+
+    NOTE embeds_dim: the PRM's hidden size differs from the generator's
+    (e.g. Llama3.1-8B-PRM = 4096 vs Llama3.2-1B = 2048). embeds_dim
+    sizes the covariance V, so v02's YAML MUST set it to the PRM's
+    hidden size; the inherited 2048 default is wrong for the PRM.
+    """
+    method: str = "mcts_sem_v02"
+    embeds_source: str = "prm"
+
+    # Which PRM hidden-state layer to pool (-1 = last, closest to the
+    # reward head). The v02-specific knob; v01 has no analogue.
+    prm_embeds_layer: int = -1
+
+
+@dataclass
 class BoNConfig(SearchConfig):
     """Best-of-N search params. n completions sampled per question
     in a single expansion (no tree), so depth/lookahead are unused."""
@@ -251,6 +350,23 @@ def config_name(cfg) -> str:
             f"--bs-{cfg.search.batch_size}--d-{cfg.search.max_depth}"
             f"--b-{cfg.search.gen_budget:03d}"
             f"--cpuct-{cfg.search.cpuct}"
+        )
+    # mcts_sem_v01 (policy embeds) and mcts_sem_v02 (PRM embeds) share
+    # the same knob set, so one branch covers both; method is the
+    # prefix, so result dirs separate as mcts_sem_v01--... /
+    # mcts_sem_v02--... . embeds_source isn't encoded — it's implied
+    # by the version, and pinning it here would just lengthen the dir.
+    if method in ("mcts_sem_v01", "mcts_sem_v02"):
+        return (
+            f"{method}{level_str}--{llm_name}--tmpl-{tmpl}"
+            f"--bs-{cfg.search.batch_size}--d-{cfg.search.max_depth}"
+            f"--b-{cfg.search.gen_budget:03d}"
+            f"--lam-{cfg.search.lam}"
+            f"--dalpha-{cfg.search.ds_alpha}--dbeta-{cfg.search.ds_beta}"
+            f"--estrat-{cfg.search.embeds_strategy}"
+            f"--escope-{cfg.search.embeds_scope}"
+            f"--enorm-{cfg.search.embeds_normalize}"
+            f"--ecenter-{cfg.search.embeds_center}"
         )
     if method == "bon":
         return (
