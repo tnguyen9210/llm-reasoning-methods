@@ -7,6 +7,7 @@ logging.disable(logging.CRITICAL)
 
 import time
 import json
+import socket
 
 import torch
 import hydra
@@ -109,6 +110,8 @@ def main(cfg: ExpConfig):
     # Persist the run id so a restart -- and compute_stats -- can
     # reattach and log onto this same run. Idempotent on a resume.
     save_wandb_run_id(result_dir, wandb_run.id)
+
+    print(f"node = {socket.gethostname()}")
 
     # Skip trials already completed in a prior (interrupted) launch. A
     # trial's .done marker is written only after its raw results are

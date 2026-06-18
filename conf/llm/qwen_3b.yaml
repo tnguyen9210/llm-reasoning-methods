@@ -5,4 +5,4 @@ llm_dir: ${base_dir}/Qwen2.5-3B-Instruct
 dtype: float16
 tensor_parallel_size: 1
 max_model_len: 5000
-gpu_memory_utilization: 0.7
+gpu_memory_utilization: 0.3

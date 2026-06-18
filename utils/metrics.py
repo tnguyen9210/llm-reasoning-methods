@@ -24,6 +24,7 @@ Metric dict keys use underscores (pass_gb, ...) so they are safe as
 .txt filename stems; the printed summary reads them as @gb metrics.
 """
 
+import os
 import signal
 
 import numpy as np
@@ -151,17 +152,31 @@ def evaluate_correctness(dataset, timeout=2):
 
 def _load_trials(result_dir, config_name, num_trials):
     """Load + evaluate each trial, returning per-metric arrays
-    concatenated over all trials x questions."""
+    concatenated over all trials x questions. Trials whose scored
+    .jsonl is missing are skipped (and reported), so stats can be
+    computed over a partially-completed run."""
     per_trial = []
+    skipped = []
     for trial_idx in range(num_trials):
         path = (
             f"{result_dir}/{config_name}"
             f"--trial-{trial_idx:03d}.jsonl"
         )
+        if not os.path.exists(path):
+            skipped.append(trial_idx)
+            continue
         dataset_res = load_dataset(
             "json", data_files=path, split='train',
         )
         per_trial.append(evaluate_correctness(dataset_res))
+
+    if skipped:
+        print(f"missing trials, skipped: {skipped}")
+    if not per_trial:
+        raise FileNotFoundError(
+            f"no scored trials found in {result_dir} "
+            f"for {config_name} (num_trials={num_trials})"
+        )
 
     keys = per_trial[0].keys()
     return {
