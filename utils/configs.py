@@ -227,25 +227,34 @@ def level_dir(cfg) -> str:
 
 def config_name(cfg) -> str:
     """Self-describing run name. Dispatches on the search method so
-    each algo emits its own knobs. The level is not encoded here —
-    it lives in the parent dir (see level_dir). Works on ExpConfig
-    or its DictConfig (struct mode exposes only declared fields)."""
+    each algo emits its own knobs. For the prm800k dataset the level
+    is also encoded here (e.g. mcts_cnt--level-4--...), so the run
+    name is self-describing on its own; it still appears in the parent
+    dir too (see level_dir). Works on ExpConfig or its DictConfig
+    (struct mode exposes only declared fields)."""
     method = cfg.search.method
     tmpl = "custom" if cfg.gen.use_custom_template else "native"
     # Drop the redundant "-Instruct" marker for shorter dirs. Global
     # (not just suffix) — names stay unique for the current checkpoint
     # set since GPTQ etc. still distinguish.
     llm_name = cfg.llm.name.replace("-Instruct", "")
+    # prm800k only: bake the level into the run name. Other datasets
+    # keep the level in the parent dir alone.
+    level_str = (
+        f"--level-{cfg.data.level}"
+        if cfg.data.name == "prm800k" and cfg.data.level is not None
+        else ""
+    )
     if method == "mcts_cnt":
         return (
-            f"mcts_cnt--{llm_name}--tmpl-{tmpl}"
+            f"mcts_cnt{level_str}--{llm_name}--tmpl-{tmpl}"
             f"--bs-{cfg.search.batch_size}--d-{cfg.search.max_depth}"
             f"--b-{cfg.search.gen_budget:03d}"
             f"--cpuct-{cfg.search.cpuct}"
         )
     if method == "bon":
         return (
-            f"bon--{llm_name}--tmpl-{tmpl}"
+            f"bon{level_str}--{llm_name}--tmpl-{tmpl}"
             f"--n-{cfg.search.n}--temp-{cfg.gen.temperature}"
             f"--mtoks-{cfg.gen.max_tokens}"
         )
