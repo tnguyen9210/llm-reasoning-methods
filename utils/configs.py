@@ -163,6 +163,15 @@ class MCTSCntConfig(SearchConfig):
 
 
 @dataclass
+class BLMCTSCntConfig(SearchConfig):
+    """Count-based MCTS search params (baseline/v01 variant)."""
+    method: str = "mcts_bl_cnt_v01"
+    num_phases: int = 1000
+    gen_budget: int = 80          # total generations across the run
+    cpuct: float = 2.0
+
+
+@dataclass
 class MCTSSemV01Config(SearchConfig):
     """Semantic (embedding-diversity) MCTS — v01 baseline.
 
@@ -347,6 +356,13 @@ def config_name(cfg) -> str:
     if method == "mcts_cnt":
         return (
             f"mcts_cnt{level_str}--{llm_name}--tmpl-{tmpl}"
+            f"--bs-{cfg.search.batch_size}--d-{cfg.search.max_depth}"
+            f"--b-{cfg.search.gen_budget:03d}"
+            f"--cpuct-{cfg.search.cpuct}"
+        )
+    if method == "mcts_bl_cnt_v01":
+        return (
+            f"mcts_bl_cnt_v01{level_str}--{llm_name}--tmpl-{tmpl}"
             f"--bs-{cfg.search.batch_size}--d-{cfg.search.max_depth}"
             f"--b-{cfg.search.gen_budget:03d}"
             f"--cpuct-{cfg.search.cpuct}"

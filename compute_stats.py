@@ -29,8 +29,8 @@ import wandb
 
 from utils import metrics
 from utils.configs import (
-    ExpConfig, BoNConfig, MCTSCntConfig, config_name, level_dir,
-    load_wandb_run_id,
+    ExpConfig, BoNConfig, MCTSCntConfig, BLMCTSCntConfig, config_name,
+    level_dir, load_wandb_run_id,
 )
 
 from datasets.utils.logging import set_verbosity_error
@@ -40,6 +40,9 @@ cs = ConfigStore.instance()
 cs.store(name="exp_schema", node=ExpConfig)
 cs.store(group="search", name="bon_schema", node=BoNConfig)
 cs.store(group="search", name="mcts_cnt_schema", node=MCTSCntConfig)
+cs.store(
+    group="search", name="mcts_bl_cnt_v01_schema", node=BLMCTSCntConfig,
+)
 
 
 @hydra.main(
@@ -78,12 +81,17 @@ def main(cfg: ExpConfig):
     log_data = {}
     for metric, (mean, sem) in summary.items():
         log_data[f"eval/{metric}"] = mean
-        log_data[f"eval/{metric}_sem"] = sem
-    wandb.log(log_data)
-    # Also write into summary explicitly. log() lands in history and
-    # only propagates to summary on a clean live finish; on a reattach
-    # (resume="must") that propagation is unreliable, and custom-panel
-    # queries read summary -- so force it here.
+        # Separate prefix so _sem doesn't clutter the "eval" panel
+        # section in the W&B UI (sections are auto-grouped by prefix).
+        log_data[f"eval_sem/{metric}_sem"] = sem
+    # Write directly to summary, skip wandb.log/history entirely.
+    # compute_stats.py is re-runnable (e.g. once num_trials is
+    # updated), and any wandb.log call -- even with an explicit step
+    # -- collides with this run's existing step cursor (the generator
+    # already logged per-trial timing on steps 0..num_trials-1) and
+    # gets silently dropped. eval/* is a single cross-trial average,
+    # not a series, so it belongs in summary only: always overwrites,
+    # never grows into a multi-point line.
     wandb.run.summary.update(log_data)
     wandb.finish()
     print(f"logged eval metrics to W&B run {run_id}")

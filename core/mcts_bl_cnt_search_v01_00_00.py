@@ -196,9 +196,9 @@ class MCTS(BaseTree):
             new_node.is_terminal = True
             self.completed_nodes.append(new_node)
 
-        if not new_node.is_terminal and new_node.depth >= self.config.max_depth:
+        if not new_node.is_terminal and new_node.depth >= self.config.search.max_depth:
             new_node.is_terminal = True
-            candidate_score = self.config.negative_reward
+            candidate_score = self.config.search.negative_reward
             self.cnt_node_max_depth += 1
 
         new_node.update(candidate_score)
@@ -220,7 +220,7 @@ class MCTS(BaseTree):
         best_childs: List[Any] = []
 
         for child_node in node.children:
-            puct_value = child_node.puct(cpuct=self.config.cpuct)
+            puct_value = child_node.puct(cpuct=self.config.search.cpuct)
             if puct_value == best_value:
                 best_childs.append(child_node)
             elif puct_value > best_value:
@@ -250,7 +250,7 @@ class MCTS(BaseTree):
         best_nodes: List[Any] = []
 
         for node in nodes:
-            puct_value = node.puct(cpuct=self.config.cpuct)
+            puct_value = node.puct(cpuct=self.config.search.cpuct)
             if puct_value == best_value:
                 best_nodes.append(node)
             elif puct_value > best_value:
@@ -287,7 +287,8 @@ def _generate_candidates(
     `current_node`. Returns (candidate_infos, candidate_scores).
 
     Two model calls per invocation:
-      1. `generate_k_steps` produces `config.batch_size` continuations.
+      1. `generate_k_steps` produces `config.search.batch_size`
+         continuations.
       2. `prm.score` scores each unique candidate text.
     """
     current_text = current_node.state["text"]
@@ -299,19 +300,21 @@ def _generate_candidates(
     # model must see the separator to continue with a next step instead
     # of emitting EOS (docs/findings.md, 2026-06-11).
     current_text_clean = current_text.removesuffix("\n\n")
-    current_convs = [build_conv(question, current_text_clean, config.system_prompt)]
+    current_convs = [build_conv(question, current_text_clean, config.gen.system_prompt)]
     current_templated = tokenizer.apply_chat_template(
         current_convs,
         add_generation_prompt=current_node.depth == 0,
         continue_final_message=current_node.depth > 0,
-        date_string=config.date_string,
+        date_string=config.gen.date_string,
         tokenize=False,
     )
     if current_text.endswith("\n\n"):
         current_templated = [t + "\n\n" for t in current_templated]
-    current_templated = current_templated * config.batch_size
+    current_templated = current_templated * config.search.batch_size
 
-    lookahead = 0 if d == config.max_depth - 1 else config.lookahead
+    lookahead = (
+        0 if d == config.search.max_depth - 1 else config.search.lookahead
+    )
     llm_outputs = generate_k_steps(
         current_templated, lookahead, llm_vllm, sampling_params, 1
     )
@@ -338,7 +341,7 @@ def _generate_candidates(
     # candidate_scores[0] is a list of candidates, each a per-step
     # score list. Aggregate each candidate's step list to a scalar.
     candidate_scores = [
-        aggregate_scores(cand_scores, config.agg_strategy)
+        aggregate_scores(cand_scores, config.gen.agg_strategy)
         for cand_scores in candidate_scores[0]
     ]
     logging.error(f"candidate_scores = {candidate_scores}")
@@ -353,19 +356,19 @@ def _generate_candidates(
 def mcts_search(question, agent, config, llm_vllm, prm):
     """Run budget-limited best-first MCTS on a single `question`.
 
-    Outer loop: `config.num_phases` iterations (safety cap).
+    Outer loop: `config.search.num_phases` iterations (safety cap).
     Each iteration selects one leaf globally by PUCT and either
     backprops (if terminal) or expands (otherwise).
     Only expansions charge gen_cnt.
     """
     tokenizer = llm_vllm.get_tokenizer()
-    if config.custom_chat_template is not None:
-        tokenizer.chat_template = config.custom_chat_template
+    if config.gen.use_custom_template:
+        tokenizer.chat_template = config.gen.custom_chat_template
 
     sampling_params = SamplingParams(
-        temperature=config.temperature,
-        max_tokens=config.max_tokens,
-        top_p=config.top_p,
+        temperature=config.gen.temperature,
+        max_tokens=config.gen.max_tokens,
+        top_p=config.gen.top_p,
         stop=["\n\n"],
         include_stop_str_in_output=True,
         n=1,
@@ -373,10 +376,10 @@ def mcts_search(question, agent, config, llm_vllm, prm):
 
     gen_cnt = 0
     p = 0
-    ndepths_arr: List[int] = []
+    phase_depths: List[int] = []
     leaf_nodes: List[Any] = [agent.root]
 
-    for p in range(config.num_phases):
+    for p in range(config.search.num_phases):
         logging.fatal(f"\n-> p = {p}")
 
         if not leaf_nodes:
@@ -389,7 +392,7 @@ def mcts_search(question, agent, config, llm_vllm, prm):
 
         logging.fatal(
             f"selected = {selected.tag}  "
-            f"puct={selected.puct(config.cpuct):.4f}  "
+            f"puct={selected.puct(config.search.cpuct):.4f}  "
             f"q={selected.q_value():.4f}  "
             f"nvisit={selected.visit_count()}"
         )
@@ -397,7 +400,7 @@ def mcts_search(question, agent, config, llm_vllm, prm):
         if selected.is_terminal:
             logging.fatal(f"selected.is_terminal = True")
             agent.backprop(selected)
-            ndepths_arr.append(selected.depth)
+            phase_depths.append(selected.depth)
         else:
             gen_cnt += 1
             infos, scores = _generate_candidates(
@@ -409,7 +412,7 @@ def mcts_search(question, agent, config, llm_vllm, prm):
                 leaf_nodes.append(child)
 
         logging.fatal(f"gen_cnt = {gen_cnt}")
-        if gen_cnt >= config.gen_budget:
+        if gen_cnt >= config.search.gen_budget:
             logging.fatal("run out of budget!")
             break
 
@@ -419,19 +422,19 @@ def mcts_search(question, agent, config, llm_vllm, prm):
         seen.setdefault(node.state["text"], idx)
 
     completions: List[str] = []
-    c_depths: List[int] = []
-    c_phases: List[int] = []
-    c_gen_cnts: List[int] = []
+    comp_depth: List[int] = []
+    comp_phase: List[int] = []
+    comp_gen: List[int] = []
     for i in seen.values():
         node = agent.completed_nodes[i]
         completions.append(node.state["text"])
-        c_depths.append(node.depth)
-        c_phases.append(node.phase)
-        c_gen_cnts.append(node.gen_cnt)
+        comp_depth.append(node.depth)
+        comp_phase.append(node.phase)
+        comp_gen.append(node.gen_cnt)
 
     return (
-        completions, c_depths, c_phases, c_gen_cnts,
-        gen_cnt, p, ndepths_arr, agent.cnt_node_max_depth,
+        completions, comp_depth, comp_phase, comp_gen,
+        gen_cnt, p, phase_depths, agent.cnt_node_max_depth,
     )
 
 
@@ -442,14 +445,14 @@ def _search(batch_of_questions, config, trial_idx, llm_vllm, prm):
     Returns a defaultdict of per-question lists aligned to `q_idx`.
     """
     n = len(batch_of_questions)
-    all_completions = [[] for _ in range(n)]
-    all_c_depths = [[] for _ in range(n)]
-    all_c_phases = [[] for _ in range(n)]
-    all_c_gen_cnts = [[] for _ in range(n)]
-    all_gen_cnts = [[] for _ in range(n)]
-    all_last_phases = [[] for _ in range(n)]
-    all_ndepths_arr = [[] for _ in range(n)]
-    all_cnt_max_depth = [[] for _ in range(n)]
+    batch_completions = [[] for _ in range(n)]
+    batch_comp_depth = [[] for _ in range(n)]
+    batch_comp_phase = [[] for _ in range(n)]
+    batch_comp_gen = [[] for _ in range(n)]
+    batch_q_total_gens = [[] for _ in range(n)]
+    batch_q_last_phase = [[] for _ in range(n)]
+    batch_phase_depths = [[] for _ in range(n)]
+    batch_q_nodes_max_depth = [[] for _ in range(n)]
 
     for q_idx, question in enumerate(batch_of_questions):
         seed = 100_000 + trial_idx
@@ -460,26 +463,30 @@ def _search(batch_of_questions, config, trial_idx, llm_vllm, prm):
 
         agent = MCTS(config=config, question=question)
         (
-            completions, c_depths, c_phases, c_gen_cnts,
-            gen_cnt, last_phase, ndepths_arr, cnt_max_depth,
+            completions, comp_depth, comp_phase, comp_gen,
+            q_total_gens, q_last_phase, phase_depths,
+            q_nodes_max_depth,
         ) = mcts_search(question, agent, config, llm_vllm, prm)
 
-        all_completions[q_idx] = completions
-        all_c_depths[q_idx] = c_depths
-        all_c_phases[q_idx] = c_phases
-        all_c_gen_cnts[q_idx] = c_gen_cnts
-        all_gen_cnts[q_idx] = gen_cnt
-        all_last_phases[q_idx] = last_phase
-        all_ndepths_arr[q_idx] = ndepths_arr
-        all_cnt_max_depth[q_idx] = cnt_max_depth
+        batch_completions[q_idx] = completions
+        batch_comp_depth[q_idx] = comp_depth
+        batch_comp_phase[q_idx] = comp_phase
+        batch_comp_gen[q_idx] = comp_gen
+        batch_q_total_gens[q_idx] = q_total_gens
+        batch_q_last_phase[q_idx] = q_last_phase
+        batch_phase_depths[q_idx] = phase_depths
+        batch_q_nodes_max_depth[q_idx] = q_nodes_max_depth
 
+    # Output keys use scope prefixes: comp_* = per completion,
+    # q_* = per-question scalar, phase_* = per-question array
+    # over phases.
     results: Dict[str, Any] = defaultdict(list)
-    results["completions"] = all_completions
-    results["c_depths"] = all_c_depths
-    results["c_phases"] = all_c_phases
-    results["c_gen_cnts"] = all_c_gen_cnts
-    results["gen_cnts"] = all_gen_cnts
-    results["last_phases"] = all_last_phases
-    results["ndepths_arr"] = all_ndepths_arr
-    results["cnt_max_depth"] = all_cnt_max_depth
+    results["completions"] = batch_completions
+    results["comp_depth"] = batch_comp_depth
+    results["comp_phase"] = batch_comp_phase
+    results["comp_gen"] = batch_comp_gen
+    results["q_total_gens"] = batch_q_total_gens
+    results["q_last_phase"] = batch_q_last_phase
+    results["phase_depths"] = batch_phase_depths
+    results["q_nodes_max_depth"] = batch_q_nodes_max_depth
     return results
