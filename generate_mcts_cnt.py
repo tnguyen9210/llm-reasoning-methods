@@ -20,7 +20,7 @@ from core.reward_models import RLHFlowPRM
 from core.scoring import build_scored_dataset
 from utils.configs import (
     ExpConfig, MCTSCntConfig, config_name, level_dir,
-    save_wandb_run_id,
+    save_wandb_run_id, load_wandb_run_id,
 )
 from utils.load_data import load_data_hf
 
@@ -95,39 +95,76 @@ def main(cfg: ExpConfig):
     )
     _make_result_dir(result_dir)
 
-    # Tag by difficulty level so runs are filterable in W&B
-    # (level=None means the whole split -> "level-all").
-    level_tag = (
-        f"level-{cfg.data.level}"
-        if cfg.data.level is not None else "level-all"
-    )
+    # Resume onto the same run if this is a restart. load_ returns None
+    # on a fresh launch (no sidecar) -> W&B mints a new id. resume="allow"
+    # (not "must") so both first launch and restart share this one path.
+    run_id = load_wandb_run_id(result_dir)
     wandb_run = wandb.init(
         project="llm-reasoning",
         name=run_name,
-        tags=[level_tag],
         config=OmegaConf.to_container(cfg, resolve=True),
+        id=run_id,
+        resume="allow",
     )
-    # Persist the run id so compute_stats can reattach and log the
-    # post-processing metrics onto this same run.
+    # Persist the run id so a restart -- and compute_stats -- can
+    # reattach and log onto this same run. Idempotent on a resume.
     save_wandb_run_id(result_dir, wandb_run.id)
 
+    # Skip trials already completed in a prior (interrupted) launch. A
+    # trial's .done marker is written only after its raw results are
+    # dumped, so resume restarts at the first trial without one.
+    start_trial = 0
+    while start_trial < num_trials and os.path.exists(
+        f"{result_dir}/generate_{run_name}"
+        f"--trial-{start_trial:03d}.done"
+    ):
+        start_trial += 1
+    if start_trial > 0:
+        print(f"resuming: {start_trial}/{num_trials} trials already done")
+
     total_start = time.time()
-    for trial_idx in range(num_trials):
+    for trial_idx in range(start_trial, num_trials):
         trial_start = time.time()
         print(f"trial {trial_idx}")
 
         results = algo._search(
             batch_of_questions, cfg, trial_idx, llm_vllm, prm,
         )
+
+        # 1. Dump the raw results. Write to a temp path and rename so a
+        # crash mid-write never leaves a half-written .jsonl visible
+        # under the real name (os.replace is atomic on one filesystem).
         out_path = (
             f"{result_dir}/generate_{run_name}"
             f"--trial-{trial_idx:03d}.jsonl"
         )
-        with open(out_path, 'w', encoding='utf-8') as fout:
+        tmp_path = out_path + ".tmp"
+        with open(tmp_path, 'w', encoding='utf-8') as fout:
             json.dump(results, fout)
             fout.write('\n')
+        os.replace(tmp_path, out_path)
 
-        # Post-process: score completions and write the per-question
+        # 2. Log timing to W&B.
+        elapsed = time.time() - trial_start
+        print(f"it takes {elapsed / num_questions:0.4f}s per question")
+        print(f"it takes {elapsed / 3600:0.2f}h per trial")
+        wandb.log({
+            "time_per_question_s": elapsed / num_questions,
+            "time_per_trial_hr": elapsed / 3600,
+        }, step=trial_idx)
+
+        # 3. Mark the trial done. The marker's presence means
+        # "generation finished + raw results dumped" -- NOT "scored"
+        # (scoring runs below and is re-runnable separately). A future
+        # resume can skip any trial whose marker already exists.
+        done_path = (
+            f"{result_dir}/generate_{run_name}"
+            f"--trial-{trial_idx:03d}.done"
+        )
+        with open(done_path, 'w', encoding='utf-8') as fout:
+            fout.write('')
+
+        # 4. Post-process: score completions and write the per-question
         # HF dataset. Wrapped so a scoring failure never discards the
         # raw results already written above; re-runnable separately
         # via prepare_scored_dataset.py.
@@ -141,14 +178,6 @@ def main(cfg: ExpConfig):
         except Exception as e:
             print(f"scoring failed for trial {trial_idx}: {e!r}")
             print("raw results saved; re-run prepare_scored_dataset.py")
-
-        elapsed = time.time() - trial_start
-        print(f"it takes {elapsed / num_questions:0.4f}s per question")
-        print(f"it takes {elapsed / 3600:0.2f}h per trial")
-        wandb.log({
-            "time_per_question_s": elapsed / num_questions,
-            "time_per_trial_hr": elapsed / 3600,
-        }, step=trial_idx)
 
     print(f"it takes {time.time() - total_start:0.4f}s in total")
     wandb.finish()

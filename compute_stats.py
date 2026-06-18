@@ -80,6 +80,11 @@ def main(cfg: ExpConfig):
         log_data[f"eval/{metric}"] = mean
         log_data[f"eval/{metric}_sem"] = sem
     wandb.log(log_data)
+    # Also write into summary explicitly. log() lands in history and
+    # only propagates to summary on a clean live finish; on a reattach
+    # (resume="must") that propagation is unreliable, and custom-panel
+    # queries read summary -- so force it here.
+    wandb.run.summary.update(log_data)
     wandb.finish()
     print(f"logged eval metrics to W&B run {run_id}")
 
