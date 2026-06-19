@@ -92,8 +92,6 @@ from sklearn.random_projection import SparseRandomProjection
 
 from vllm import SamplingParams
 
-from sal.config import Config  # noqa: F401  re-exported for callers
-from sal.models.reward_models import PRM  # noqa: F401  re-exported
 from sal.utils.score import aggregate_scores
 from sal.search.utils import build_conv, generate_k_steps
 
@@ -202,8 +200,10 @@ def _get_sparse_projector(in_dim: int, out_dim: int, seed: int) -> np.ndarray:
 def _extract_embeds(raw, config, response_start_idx):
     """Turn per-token embeddings into a single pooled vector.
 
-    `raw` is the (seq_len, dim) tensor returned by
-    `llm_vllm_embeds.encode(..., pooling_task="token_embed")[0].outputs.data`.
+    `raw` is a (seq_len, dim) tensor of per-token hidden states. In v02
+    it comes from the PRM (`prm.embed(...)`, one row per candidate); in
+    the policy path it's `llm_vllm_embeds.encode(..., "token_embed")`.
+    Both feed this same function so the two sources pool identically.
 
     Five gated steps, in this order:
       1. scope     pick which tokens contribute (full sequence or only
@@ -456,7 +456,8 @@ class MCTS(BaseTree):
     """MCTS with embedding-based diversity selection.
 
     Inherits the root/question machinery from BaseTree and adds:
-      - V: the global covariance accumulator used by `_diverse_select`.
+      - V / V_inv: the covariance and its inverse, fed to the diversity
+        bonus; maintained per cov_update (see __init__ / select_child).
       - completed_nodes: nodes that ended via EOS or length stop.
       - the algorithm methods (`expand_node`, `select_child`,
         `backprop`).
@@ -467,14 +468,18 @@ class MCTS(BaseTree):
     own file, so it's been flattened in here.
     """
 
-    completed_nodes: List[Type[BaseNode]] = []
-    # Pydantic shape hints are purely documentation; the actual arrays
-    # are allocated below using `config.search.embeds_dim`.
+    # Pydantic field declarations; the actual values are allocated
+    # per-instance in __init__ (the shape hints are documentation, and
+    # completed_nodes must be a fresh list per question — a class-level
+    # [] default is shared state waiting to happen).
+    completed_nodes: List[Type[BaseNode]] = None
     V: NDArray[Shape["2048, 2048"], np.float32] = None
     V_inv: NDArray[Shape["2048, 2048"], np.float32] = None
 
     def __init__(self, **kwargs) -> None:
         super().__init__(**kwargs)
+        # Per-question state: a fresh completed-node list every run.
+        self.completed_nodes = []
         # Ridge-regularized covariance V = lam*I + sum u u^T. The
         # diversity term sqrt(x^T V^-1 x) needs V^-1; how it's
         # maintained across selections depends on cov_update (see
@@ -556,21 +561,29 @@ class MCTS(BaseTree):
         based on V^-1 isn't informative yet (V hasn't accumulated
         anything from these children), so a plain q-value argmax
         gives cleaner signal than mixing in noise from V.
+
+        Ties (within `tol`) are broken by uniform random sampling —
+        the same tolerance-based scheme `_diverse_select` uses, so both
+        selection paths handle near-equal values consistently (exact
+        float `==` would miss ties differing by ~1e-16 and reintroduce
+        a first-argmax bias).
         """
-        best_q = -float("inf")
-        best_childs: List[Any] = []
+        qs = [ch.q_value() for ch in node.children]
         for ch in node.children:
-            q = ch.q_value()
-            if q == best_q:
-                best_childs.append(ch)
-            elif q > best_q:
-                best_q = q
-                best_childs = [ch]
             logging.fatal(f"{ch.tag}")
             logging.fatal(f"   q-value = {ch.q_value():0.4f}")
             logging.fatal(f"   nvisit = {ch.visit_count():0.2f}")
             logging.fatal(f"   parent.nvisit = {node.visit_count():0.2f}")
             logging.fatal(f"   is_terminal = {ch.is_terminal}")
+        if not qs:
+            return None
+
+        tol = 1e-4
+        best_q = max(qs)
+        best_childs = [
+            ch for ch, q in zip(node.children, qs)
+            if abs(best_q - q) <= tol
+        ]
         return random.choice(best_childs) if best_childs else None
 
     def _select_by_diversity(self, node):
@@ -602,7 +615,7 @@ class MCTS(BaseTree):
         )
         return _children[best_idx] if _children else None
 
-    def select_child(self, node, from_root: bool = False):
+    def select_child(self, node):
         """Dispatcher: q-value-only on first visit, q + diversity on
         subsequent visits. Either way, fold the selected child's
         embedding into the covariance so future selections see it.
@@ -632,8 +645,14 @@ class MCTS(BaseTree):
             self.V_inv = 0.5 * (self.V_inv + self.V_inv.T)
         else:
             # Exact: accumulate V, recompute its inverse from scratch.
+            # solve(V, I) over inv(V): same O(d^3) cost, slightly
+            # better-conditioned (avoids explicitly forming the inverse
+            # via a less stable routine). This is the O(d^3)-per-
+            # selection baseline; sherman_morrison above is the fast path.
             self.V = self.V + u @ u.T
-            self.V_inv = np.linalg.inv(self.V)
+            self.V_inv = np.linalg.solve(
+                self.V, np.eye(self.V.shape[0])
+            )
         logging.fatal(f"selected_node = {selected_node.tag}")
         return selected_node
 
