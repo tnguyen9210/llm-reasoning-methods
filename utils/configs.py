@@ -405,6 +405,14 @@ def config_name(cfg) -> str:
         proj_str = ""
         if embeds_proj != "none":
             proj_str = f"--proj-{embeds_proj}{cfg.search.embeds_dim}"
+        # cov_update tag, always appended. It does NOT change results
+        # (sherman_morrison is machine-precision-identical to exact —
+        # docs/decisions.md 2026-06-18), so encoding it isn't required
+        # for correctness; it's here so an exact-vs-SM *comparison* run
+        # gets distinct result dirs (the resume/.done mechanism keys off
+        # config_name) rather than colliding. Abbreviated sm/exact.
+        cov = getattr(cfg.search, "cov_update", "exact")
+        cov_str = f"--cov-{'sm' if cov == 'sherman_morrison' else cov}"
         return (
             f"{method}{level_str}--{llm_name}--tmpl-{tmpl}"
             f"--bs-{cfg.search.batch_size}--d-{cfg.search.max_depth}"
@@ -415,7 +423,7 @@ def config_name(cfg) -> str:
             f"--escope-{cfg.search.embeds_scope}"
             f"--enorm-{cfg.search.embeds_normalize}"
             f"--ecenter-{cfg.search.embeds_center}"
-            f"{proj_str}"
+            f"{proj_str}{cov_str}"
         )
     if method == "bon":
         return (

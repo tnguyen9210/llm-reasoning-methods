@@ -42,7 +42,12 @@ embeds_proj: sparse     # "none" | "sparse" (JL random projection;
 prm_embeds_layer: -1    # which PRM layer to pool (-1 = last)
 
 # covariance bookkeeping + expansion policy
-cov_update: exact       # "exact" | "sherman_morrison"
+# Default is sherman_morrison: O(d^2)/selection persistent inverse
+# update vs exact's O(d^3) re-inversion, validated machine-precision-
+# identical to exact (0 selection mismatches). Set "exact" for a
+# numerical reference / cross-check (the dataclass default stays exact
+# for v01, whose SM path isn't refactored).
+cov_update: sherman_morrison   # "exact" | "sherman_morrison"
 revisit_policy: reuse   # "reuse" | "regenerate"
 
 # NOTE: no embeds_gpu_memory_utilization here — v02 has no pooling
