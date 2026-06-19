@@ -7,6 +7,41 @@ section per decision. Titles carry one or two area prefixes
 (`Area:` or `Area, Area:`) so skimming groups by eye and
 `grep '^## .*Area'` gives a per-topic view.
 
+## 2026-06-18 — Hardware, Experiments: fit 7B generator + PRM on a V100S via int4 LLM (primary) or a small PRM (fallback)
+
+**Context:** M3 (semantic exploration) needs to scale past the 1B
+generator — semantic diversity showed no gain at Llama-3.2-1B, possibly a
+capacity issue, so the method needs a 7B+ generator. The search loop
+holds the generator (vLLM) and the PRM (HF) **co-resident** on one GPU
+(it interleaves generation and per-step scoring), and the target card is
+a **V100S (32 GB, sm_70, fp16-only)**.
+**Decision:** 7B generator + **fp16 8B PRM** does NOT fit at full
+precision (see arithmetic), so two feasible paths instead, both within
+the V100S — this is NOT blocked on bigger GPUs:
+- **Primary — int4 (GPTQ) 7B generator + fp16 8B PRM.** ~7.8 + ~14.6 ≈
+  **22 GB**, leaving real KV-cache headroom, and **keeps the
+  already-validated 8B PRM** (no PRM-swap confound). Already scoped as M4
+  in `llm-prm-deep-dive`. Risk: int4 generation quality — verify it isn't
+  visibly degraded before committing.
+- **Fallback — small (~1.5B) PRM + fp16 7B generator.** Used only if int4
+  generation proves unacceptable. Requires finding + validating a small
+  PRM (none in the current survey — both surveyed PRMs are 7B/8B), gated
+  on the `examine_prm_scores_*` notebooks confirming it still scores
+  steps sanely. Open investigation in `llm-prm-deep-dive`.
+**Why:** at fp16, 7B weights (~16.9 GB measured) + 8B PRM (~14.6 GB) ≈
+**30.7 GB** before any KV cache — fits 32 GB only with ~1.3 GB to spare,
+too tight to run (per the M4 measurements in `llm-prm-benchmarks` /
+docs/benchmarks.md). Quantizing the *generator* to int4 (measured 7B-Qwen
+GPTQ = 7.83 GB) is the cheapest fix and, unlike swapping the PRM, doesn't
+change the reward model — so the M3 comparison (semantic vs. count-based)
+stays clean against the same 8B PRM. The small-PRM route also fits but
+adds a confound (the small PRM must then be used consistently across
+baseline AND method, and it may score worse, washing out the signal), so
+it's the fallback, not the default.
+**Revisit if:** int4 generation quality is unacceptable (switch to the
+small-PRM fallback), or an ≥A100-class GPU becomes available (then fp16
+7B + fp16 8B PRM fits directly and neither workaround is needed).
+
 ## 2026-06-18 — Search, Configs: online-vs-fixed centering mean is a flag, not a version
 
 **Context:** to test the fixed-mean claim above, we want to compare it
