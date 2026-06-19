@@ -77,7 +77,6 @@ papering over with shims.
 Variant lineage: docs/algorithms.md.
 """
 
-import copy
 import random
 import logging
 from collections import defaultdict
@@ -106,77 +105,49 @@ logging.basicConfig(format='%(message)s', level=logging.FATAL + 1)
 # Diversity selection                                                   #
 # --------------------------------------------------------------------- #
 
-def _diverse_select(
-    K, V, q_embeds, q_scores, ds_alpha, ds_beta, cov_update="exact",
-):
-    """Greedily pick K arms maximizing `beta*score + alpha*diversity`.
+def _diverse_select(V_inv, q_embeds, q_scores, ds_alpha, ds_beta):
+    """Pick the one arm maximizing `beta*score + alpha*diversity`.
 
     The diversity term for arm `x` is `sqrt(x^T V^-1 x)` — large when
     `x` points in a direction V has seen little of, small when V has
-    accumulated many similar vectors. After each pick, V is updated
-    by `V <- V + u u^T` so future picks within this call see less
-    diversity in the direction just chosen.
-
-    cov_update:
-      "exact"           recompute V^-1 from scratch each iteration.
-                        O(K * d^3) total. Fine for small K.
-      "sherman_morrison" maintain V^-1 incrementally via
-                            (V + uu^T)^-1
-                              = V^-1 - (V^-1 u)(V^-1 u)^T / (1 + u^T V^-1 u)
-                        Drops total cost to O(d^3) + O(K * d^2).
-                        Numerically less stable than a fresh inverse if
-                        run for many iterations; fine at K=1.
+    accumulated many similar vectors. `V_inv` is the inverse covariance
+    the caller maintains across selections (see MCTS.select_child); this
+    function is a pure decision — it neither inverts nor mutates state.
 
     Ties (within `tol`) are broken by uniform random sampling, which
     avoids the systematic bias of picking the first argmax.
+
+    (Single-arm selection: the caller always picks one child at a time.
+    A K>1 batch variant would need a sequential within-call update of
+    V_inv between picks — Sherman-Morrison, not a re-inversion — but no
+    caller needs that today.)
     """
     q_embeds = np.asarray(q_embeds)
     q_scores = np.asarray(q_scores)
     tol = 1e-4
 
-    _V = copy.deepcopy(V)
-    _V_inv = np.linalg.inv(_V) if cov_update == "sherman_morrison" else None
-    A_idxes: List[int] = []
+    # Diversity bonus per arm: sqrt(x^T V^-1 x). Implemented as a
+    # single einsum to avoid a Python-level loop over arms.
+    q_diversity = np.sqrt(
+        np.einsum('ij,jk,ik->i', q_embeds, V_inv, q_embeds)
+    )
+    q_vals = ds_beta * q_scores + ds_alpha * q_diversity
 
-    for _ in range(K):
-        if cov_update == "sherman_morrison":
-            V_inv = _V_inv
-        else:
-            V_inv = np.linalg.inv(_V)
+    # Argmax with uniform random tie-breaking (within tol).
+    max_val = q_vals.max()
+    candidates = [
+        i for i, v in enumerate(q_vals) if abs(max_val - v) <= tol
+    ]
+    best_idx = random.choice(candidates)
 
-        # Diversity bonus per arm: sqrt(x^T V^-1 x). Implemented as a
-        # single einsum to avoid a Python-level loop over arms.
-        q_diversity = np.sqrt(
-            np.einsum('ij,jk,ik->i', q_embeds, V_inv, q_embeds)
-        )
-        q_vals = ds_beta * q_scores + ds_alpha * q_diversity
+    logging.fatal(f"q_diversity = {q_diversity}")
+    logging.fatal(f"alpha*q_diversity = {ds_alpha * q_diversity}")
+    logging.fatal(f"beta*q_values = {ds_beta * q_scores}")
+    logging.fatal(f"vals = {q_vals}")
+    logging.fatal(f"candidate_idxes = {[i + 1 for i in candidates]}")
+    logging.fatal(f"best_idx = {best_idx + 1}")
 
-        # Argmax with tie-breaking. We must also exclude already-picked
-        # arms from the pool of candidates.
-        max_val = max(v for i, v in enumerate(q_vals) if i not in A_idxes)
-        candidates = [
-            i for i, v in enumerate(q_vals)
-            if abs(max_val - v) <= tol and i not in A_idxes
-        ]
-        best_idx = random.choice(candidates)
-
-        logging.fatal(f"q_diversity = {q_diversity}")
-        logging.fatal(f"alpha*q_diversity = {ds_alpha * q_diversity}")
-        logging.fatal(f"beta*q_values = {ds_beta * q_scores}")
-        logging.fatal(f"vals = {q_vals}")
-        logging.fatal(f"candidate_idxes = {[i + 1 for i in candidates]}")
-        logging.fatal(f"best_idx = {best_idx + 1}")
-
-        u = q_embeds[best_idx].reshape(-1, 1)
-        _V = _V + u @ u.T
-        if cov_update == "sherman_morrison":
-            Vu = _V_inv @ u                              # (d, 1)
-            denom = 1.0 + float(u.T @ Vu)
-            _V_inv = _V_inv - (Vu @ Vu.T) / denom
-
-        A_idxes.append(best_idx)
-
-    return A_idxes, _V
+    return best_idx
 
 
 # --------------------------------------------------------------------- #
@@ -497,17 +468,32 @@ class MCTS(BaseTree):
     """
 
     completed_nodes: List[Type[BaseNode]] = []
-    # Pydantic shape hint is purely documentation; the actual V is
-    # allocated below using `config.search.embeds_dim`.
+    # Pydantic shape hints are purely documentation; the actual arrays
+    # are allocated below using `config.search.embeds_dim`.
     V: NDArray[Shape["2048, 2048"], np.float32] = None
+    V_inv: NDArray[Shape["2048, 2048"], np.float32] = None
 
     def __init__(self, **kwargs) -> None:
         super().__init__(**kwargs)
-        # Ridge-regularized covariance accumulator.
-        # V starts as lam * I so V^-1 = (1/lam) * I; the diversity
-        # term sqrt(x^T V^-1 x) is initially uniform across arms.
+        # Ridge-regularized covariance V = lam*I + sum u u^T. The
+        # diversity term sqrt(x^T V^-1 x) needs V^-1; how it's
+        # maintained across selections depends on cov_update (see
+        # select_child):
+        #   "exact"            keep V; recompute V^-1 = inv(V) each
+        #                      selection. O(d^3) per selection.
+        #   "sherman_morrison" keep V^-1 directly and rank-1 update it
+        #                      per selection (O(d^2)); V isn't needed.
+        # Either way the start state is V_0 = lam*I, so
+        # V_0^-1 = (1/lam)*I in closed form (no inverse call), and the
+        # initial diversity term is uniform across arms.
         embeds_dim = self.config.search.embeds_dim
-        self.V = self.config.search.lam * np.eye(embeds_dim)
+        lam = self.config.search.lam
+        if self.config.search.cov_update == "sherman_morrison":
+            self.V = None
+            self.V_inv = (1.0 / lam) * np.eye(embeds_dim)
+        else:
+            self.V = lam * np.eye(embeds_dim)
+            self.V_inv = (1.0 / lam) * np.eye(embeds_dim)
 
     def create_node(self, parent=None):
         return MCTSNode(parent=parent)
@@ -609,18 +595,17 @@ class MCTS(BaseTree):
             return None
 
         log_nvisit_parent = np.sqrt(np.log(1 + node.visit_count()))
-        A_idxes, _ = _diverse_select(
-            1, self.V, embeds, q_values,
+        best_idx = _diverse_select(
+            self.V_inv, embeds, q_values,
             self.config.search.ds_alpha * log_nvisit_parent,
             self.config.search.ds_beta,
-            cov_update=self.config.search.cov_update,
         )
-        return _children[A_idxes[0]] if _children else None
+        return _children[best_idx] if _children else None
 
     def select_child(self, node, from_root: bool = False):
         """Dispatcher: q-value-only on first visit, q + diversity on
         subsequent visits. Either way, fold the selected child's
-        embedding into V so future selections see it.
+        embedding into the covariance so future selections see it.
         """
         if node.visit_count() == 1:
             selected_node = self._select_by_q_value(node)
@@ -630,8 +615,25 @@ class MCTS(BaseTree):
         if selected_node is None:
             return None
 
+        # Covariance update — UNCONDITIONAL: it runs on BOTH branches,
+        # including the first-visit q-value path that never reads V_inv.
+        # That path still commits to a child, so its direction must
+        # enter the covariance or V_inv would go stale (no longer equal
+        # inv(V)) and later diversity bonuses would be wrong. This is
+        # the one place exact and sherman_morrison differ:
         u = selected_node.embeds.reshape(-1, 1)
-        self.V = self.V + u @ u.T
+        if self.config.search.cov_update == "sherman_morrison":
+            # Persistent rank-1 inverse update (O(d^2)), then symmetrize
+            # to stop floating-point asymmetry compounding over the run.
+            #   (V + uu^T)^-1 = V^-1 - (V^-1 u)(V^-1 u)^T / (1 + u^T V^-1 u)
+            Vu = self.V_inv @ u
+            denom = 1.0 + float(u.T @ Vu)
+            self.V_inv = self.V_inv - (Vu @ Vu.T) / denom
+            self.V_inv = 0.5 * (self.V_inv + self.V_inv.T)
+        else:
+            # Exact: accumulate V, recompute its inverse from scratch.
+            self.V = self.V + u @ u.T
+            self.V_inv = np.linalg.inv(self.V)
         logging.fatal(f"selected_node = {selected_node.tag}")
         return selected_node
 
