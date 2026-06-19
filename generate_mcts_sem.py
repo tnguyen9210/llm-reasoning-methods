@@ -124,6 +124,9 @@ def main(cfg: ExpConfig):
 
     # Load the held-out embedding mean when centering is on. Stored on
     # the search config so the core's _extract_embeds can subtract it.
+    # With embeds_proj="sparse" the mean must be in the POST-projection
+    # space (built with the same fixed projection); _extract_embeds
+    # guards on the shape and raises if it's the raw-source dim instead.
     if cfg.search.embeds_center:
         mean_path = f"{root_dir}/results/{cfg.search.embeds_mean_dir}.npy"
         cfg.search.embeds_mean = np.load(mean_path).flatten()

@@ -87,9 +87,9 @@ from typing import Optional, Any, Type, Dict, List
 
 import numpy as np
 import torch
-import torch.nn.functional as F
 from numpydantic import NDArray, Shape
 from pydantic import BaseModel
+from sklearn.random_projection import SparseRandomProjection
 
 from vllm import SamplingParams
 
@@ -183,22 +183,73 @@ def _diverse_select(
 # Embedding extraction                                                  #
 # --------------------------------------------------------------------- #
 
+# Fixed seed for the sparse-projection matrix. Not a config knob: JL
+# holds w.h.p. for any seed, so the choice doesn't matter empirically;
+# it's pinned only so a resumed run rebuilds the IDENTICAL matrix (a
+# drifting map would put past/present vectors in different bases and
+# make V^-1 meaningless). Hardcoded so it can't accidentally vary.
+_PROJ_SEED = 0
+
+# Fixed sparse-projection matrices, one per (in_dim, out_dim, seed).
+# The matrix MUST stay fixed for a whole run (see _PROJ_SEED). Caching
+# here makes "one fixed matrix per (dim, seed) in the process"
+# automatic.
+_PROJECTOR_CACHE: Dict[tuple, np.ndarray] = {}
+
+
+def _get_sparse_projector(in_dim: int, out_dim: int, seed: int) -> np.ndarray:
+    """Return a fixed (in_dim, out_dim) sparse-random-projection matrix.
+
+    Built with sklearn's SparseRandomProjection (Achlioptas / JL):
+    density="auto" gives the JL-optimal sparsity 1/sqrt(in_dim). The
+    fit is data-INDEPENDENT — it reads only the input dim from the
+    dummy array to size the components — so a zeros row suffices. We
+    store the matrix densely as (in_dim, out_dim) float32 (a 4096x512
+    matmul is trivial) so a pooled (in_dim,) vector projects by
+    `pooled @ R`.
+    """
+    key = (in_dim, out_dim, seed)
+    cached = _PROJECTOR_CACHE.get(key)
+    if cached is not None:
+        return cached
+
+    proj = SparseRandomProjection(
+        n_components=out_dim, density="auto", random_state=seed
+    )
+    # fit() only needs the input dimensionality; values are unused.
+    proj.fit(np.zeros((1, in_dim), dtype=np.float32))
+    # components_ is (out_dim, in_dim), possibly sparse; densify and
+    # transpose to (in_dim, out_dim) for a right-multiply.
+    components = proj.components_
+    if hasattr(components, "toarray"):
+        components = components.toarray()
+    R = np.asarray(components, dtype=np.float32).T
+    _PROJECTOR_CACHE[key] = R
+    return R
+
+
 def _extract_embeds(raw, config, response_start_idx):
     """Turn per-token embeddings into a single pooled vector.
 
     `raw` is the (seq_len, dim) tensor returned by
     `llm_vllm_embeds.encode(..., pooling_task="token_embed")[0].outputs.data`.
 
-    Four gated steps:
+    Five gated steps, in this order:
       1. scope     pick which tokens contribute (full sequence or only
                    the assistant response).
       2. pool      reduce to (dim,): last token or mean over scope.
-      3. normalize optional L2 normalization (puts embeddings on the
-                   unit sphere; useful when the diversity term should
-                   be a function of direction only).
-      4. center    optional mean subtraction (use a held-out mean to
-                   make diverse-selection scores comparable across
-                   problems).
+      3. project   optional sparse random projection to embeds_dim
+                   (JL near-isometry; fixed matrix per run). Linear, so
+                   it composes cleanly with centering below.
+      4. center    optional mean subtraction (a held-out mean, in the
+                   POST-projection space, to remove the embeddings'
+                   shared anisotropic offset). Done before normalize:
+                   the mean must be subtracted in the linear space.
+      5. normalize optional L2 normalization (puts embeddings on the
+                   unit sphere so the diversity term reads direction,
+                   not magnitude). Non-linear, so it must come last.
+
+    Steps 3-5 run on the numpy side; pooling/scope on the torch tensor.
     """
     sc = config.search
     # 1. Scope.
@@ -217,17 +268,40 @@ def _extract_embeds(raw, config, response_start_idx):
             f"unknown embeds_strategy: {sc.embeds_strategy!r}"
         )
 
-    # 3. Normalize.
-    if sc.embeds_normalize:
-        pooled = F.normalize(pooled, p=2, dim=-1)
+    pooled = pooled.detach().cpu().float().numpy()
 
-    pooled = pooled.detach().cpu().numpy()
+    # 3. Project (optional). Shrinks the raw pooled dim to embeds_dim
+    # via a fixed JL sparse matrix; the raw dim is read off the vector.
+    embeds_proj = getattr(sc, "embeds_proj", "none")
+    if embeds_proj == "sparse":
+        R = _get_sparse_projector(
+            pooled.shape[-1], sc.embeds_dim, _PROJ_SEED
+        )
+        pooled = pooled @ R
+    elif embeds_proj != "none":
+        raise ValueError(f"unknown embeds_proj: {embeds_proj!r}")
 
-    # 4. Center.
+    # 4. Center. The held-out mean lives in the post-projection space,
+    # so its shape must match the current (projected) dim — guard so a
+    # raw-space mean can't be silently subtracted from projected vecs.
     if sc.embeds_center:
         if sc.embeds_mean is None:
             raise ValueError("embeds_center=True requires search.embeds_mean")
-        pooled = pooled - sc.embeds_mean
+        mean = np.asarray(sc.embeds_mean)
+        if mean.shape[-1] != pooled.shape[-1]:
+            raise ValueError(
+                "embeds_mean dim "
+                f"{mean.shape[-1]} != embedding dim {pooled.shape[-1]}; "
+                "when embeds_proj='sparse' the mean must be computed in "
+                "the post-projection space (same fixed projection)."
+            )
+        pooled = pooled - mean
+
+    # 5. Normalize (L2), on the numpy side so it stays after centering.
+    if sc.embeds_normalize:
+        norm = np.linalg.norm(pooled)
+        if norm > 0:
+            pooled = pooled / norm
 
     return pooled
 

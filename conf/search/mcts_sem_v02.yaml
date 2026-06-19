@@ -23,16 +23,22 @@ lam: 0.01               # ridge: V_0 = lam * I
 ds_alpha: 100.0         # diversity weight
 ds_beta: 1.0            # q-value weight
 
-# embedding extraction
+# embedding extraction. Pipeline: pool -> project -> center -> normalize.
 embeds_strategy: last   # "last" | "avg"
 embeds_scope: full      # "full" | "response" ("response" unsupported
                         #   for embeds_source=prm — see search core)
 embeds_normalize: true
 embeds_center: false
-embeds_mean_dir: ""     # results/-relative .npy prefix (if center=true)
-# PRM hidden size, NOT the generator's 2048: the PRM produces the
-# embeds here (Llama3.1-8B-PRM = 4096). Sizes the covariance V.
-embeds_dim: 4096
+embeds_mean_dir: ""     # results/-relative .npy prefix (if center=true);
+                        #   the mean must be computed POST-projection
+                        #   when proj is on
+# Post-projection dim = size of the covariance V. The raw PRM hidden
+# size (Llama3.1-8B-PRM = 4096) is read off the pooled tensor, then
+# sparse-projected down to this. (Set 4096 + embeds_proj=none to feed
+# the raw PRM embeds straight in, as before.)
+embeds_dim: 512
+embeds_proj: sparse     # "none" | "sparse" (JL random projection;
+                        #   matrix seed is fixed internally, not a knob)
 prm_embeds_layer: -1    # which PRM layer to pool (-1 = last)
 
 # covariance bookkeeping + expansion policy

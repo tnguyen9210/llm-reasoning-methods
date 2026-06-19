@@ -211,13 +211,31 @@ class MCTSSemV01Config(SearchConfig):
     ds_alpha: float = 100.0       # diversity weight
     ds_beta: float = 1.0          # q-value weight
 
-    # Embedding extraction (see core._extract_embeds).
+    # Embedding extraction (see core._extract_embeds). Pipeline order
+    # is pool -> project -> center -> normalize.
     embeds_strategy: str = "last"     # "last" | "avg"  (pooling)
     embeds_scope: str = "full"        # "full" | "response"
     embeds_normalize: bool = True     # L2-normalize pooled vector
     embeds_center: bool = False       # subtract held-out mean
     embeds_mean_dir: str = ""         # results/-relative .npy prefix
-    embeds_dim: int = 2048            # pooled embedding dimension
+    # Size of the covariance V AND the final embedding dim fed to it.
+    # With embeds_proj="sparse" this is the POST-projection dim (the
+    # raw source dim — e.g. 4096 for the PRM — is read off the pooled
+    # tensor at runtime, so it isn't configured separately).
+    embeds_dim: int = 2048
+
+    # Optional sparse random projection of the pooled embedding down to
+    # embeds_dim, applied between pool and center (see core).
+    #   "none"   — no projection (pooled dim must equal embeds_dim).
+    #   "sparse" — Johnson-Lindenstrauss SparseRandomProjection from the
+    #              raw pooled dim to embeds_dim. The matrix is fixed for
+    #              the whole run (a drifting map would make V incoherent),
+    #              built once from a fixed internal seed (see core) and
+    #              cached. The seed isn't exposed: JL holds w.h.p. for
+    #              any seed, so seed choice doesn't matter empirically;
+    #              it's pinned internally only so resumes rebuild the
+    #              same matrix.
+    embeds_proj: str = "none"         # "none" | "sparse"
 
     # Covariance bookkeeping + expansion policy.
     cov_update: str = "exact"         # "exact" | "sherman_morrison"
@@ -373,6 +391,20 @@ def config_name(cfg) -> str:
     # mcts_sem_v02--... . embeds_source isn't encoded — it's implied
     # by the version, and pinning it here would just lengthen the dir.
     if method in ("mcts_sem_v01", "mcts_sem_v02"):
+        # Projection tag, appended ONLY when projection is on, so a
+        # no-projection run keeps its prior name (and existing result
+        # dirs / W&B runs don't orphan). The target dim is encoded (it
+        # changes the produced embeddings and may be swept); embeds_dim
+        # lives here (not as an always-on field) because it only affects
+        # results under projection — with proj="none" it must equal the
+        # raw pooled dim, so it's not a free knob. The seed isn't
+        # encoded (fixed internally; doesn't vary). Distinct projected
+        # runs thus get distinct dirs, which the resume/.done mechanism
+        # relies on (docs/decisions.md 2026-06-18).
+        embeds_proj = getattr(cfg.search, "embeds_proj", "none")
+        proj_str = ""
+        if embeds_proj != "none":
+            proj_str = f"--proj-{embeds_proj}{cfg.search.embeds_dim}"
         return (
             f"{method}{level_str}--{llm_name}--tmpl-{tmpl}"
             f"--bs-{cfg.search.batch_size}--d-{cfg.search.max_depth}"
@@ -383,6 +415,7 @@ def config_name(cfg) -> str:
             f"--escope-{cfg.search.embeds_scope}"
             f"--enorm-{cfg.search.embeds_normalize}"
             f"--ecenter-{cfg.search.embeds_center}"
+            f"{proj_str}"
         )
     if method == "bon":
         return (
