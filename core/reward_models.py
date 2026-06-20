@@ -262,6 +262,94 @@ class QwenPRM(PRM):
             )
         return batch_scores
 
+    def _embed_batch(
+        self,
+        pairs: list[tuple[str, str]],
+        system_prompt: str,
+        layer: int = -1,
+    ) -> list[torch.Tensor]:
+        """Last-(or `layer`-)layer hidden states over the PLAIN
+        candidate chat, for mcts_sem v02's diversity term.
+
+        Mirrors RLHFlowPRM._embed_batch so the v01/v02 source ablation
+        stays clean: we render system / user(question) / assistant(answer)
+        — the same shape v01 embeds with the generator — and crucially
+        WITHOUT the <extra_0> separators _build_prompt inserts (those are
+        a scoring-only artifact; the embedded text must match v01's, only
+        the model differing). The inner Qwen2Model is the same backbone
+        as a causal LM, so the final-norm hook works identically (the
+        reward `score` head is bypassed — we never read its logits here).
+        Returns one (seq_len, hidden_dim) tensor per pair, padding
+        trimmed; the caller pools it. hidden_dim is 3584 here (vs 4096
+        for the Llama PRM), so v02 with proj=none needs embeds_dim=3584.
+        """
+        convs = [
+            [
+                {"role": "system", "content": system_prompt},
+                {"role": "user", "content": q},
+                {"role": "assistant", "content": a},
+            ]
+            for q, a in pairs
+        ]
+        chat_texts = self.tokenizer.apply_chat_template(
+            convs, tokenize=False, add_generation_prompt=False,
+        )
+        enc = self.tokenizer(
+            chat_texts, return_tensors="pt", padding=True,
+            add_special_tokens=False,
+        ).to(self.device)
+        input_ids = enc.input_ids
+        attention_mask = enc.attention_mask
+
+        # Same memory trick as RLHFlowPRM: for layer=-1 hook the inner
+        # model's final norm and capture only its output (verified bit-
+        # identical to hidden_states[-1] for this checkpoint), instead of
+        # output_hidden_states=True materializing all ~L layers. Hook
+        # `model.model.norm` — the top-level module is
+        # Qwen2ForProcessRewardModel (model: Qwen2Model + score: head),
+        # so the backbone's final norm is one level deeper than in a
+        # plain CausalLM but the path is the same name.
+        if layer == -1:
+            captured = {}
+
+            def _hook(module, inputs, output):
+                captured["hs"] = (
+                    output[0] if isinstance(output, tuple) else output
+                )
+
+            handle = self.model.model.norm.register_forward_hook(_hook)
+            try:
+                with torch.no_grad():
+                    self.model(
+                        input_ids=input_ids,
+                        attention_mask=attention_mask,
+                        use_cache=False,
+                    )
+            finally:
+                handle.remove()
+            hs = captured["hs"]
+        else:
+            with torch.no_grad():
+                out = self.model(
+                    input_ids=input_ids,
+                    attention_mask=attention_mask,
+                    output_hidden_states=True,
+                    use_cache=False,
+                )
+            hs = out.hidden_states[layer]
+            del out
+
+        # Trim right-padding per row so pooling sees only real tokens.
+        # Clone so the trimmed slices don't pin the full (batch, seq,
+        # hidden) tensor, then drop it and free the cached blocks.
+        embeds: list[torch.Tensor] = []
+        for b in range(input_ids.shape[0]):
+            n = int(attention_mask[b].sum().item())
+            embeds.append(hs[b, :n].detach().clone())
+        del hs
+        torch.cuda.empty_cache()
+        return embeds
+
 
 class RLHFlowPRM(PRM):
     """RLHFlow Llama3.1-8B-PRM-Deepseek-Data.
