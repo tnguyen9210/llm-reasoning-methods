@@ -1,0 +1,10 @@
+# @package llm
+# Generative model group → binds onto LLMConfig.
+name: Qwen2.5-7B-Instruct-GPTQ-Int4
+llm_dir: ${base_dir}/Qwen2.5-7B-Instruct-GPTQ-Int4
+dtype: auto
+quantization: gptq
+load_format: auto
+tensor_parallel_size: 1
+max_model_len: 5000
+gpu_memory_utilization: 0.3
