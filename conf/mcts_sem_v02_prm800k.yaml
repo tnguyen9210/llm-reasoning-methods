@@ -30,10 +30,14 @@ gen:
 
 # mcts_sem_v02 sources diversity embeds from the PRM, so there is NO
 # second (pooling) vLLM engine — only the generative engine + PRM.
-# gmu kept at 0.3 (matching the llm group defaults) to leave maximum
-# headroom for the 8B PRM co-resident on the V100S.
+# gmu is the FRACTION OF TOTAL GPU vLLM may use for weights + KV cache
+# + activations (NOT "leave room for the PRM" — the HF PRM allocates
+# separately). Too low OOMs at init: e.g. 0.2*32GB=6.4GB < 5.3GB
+# (7B-GPTQ weights) + activations/CUDA-graph/KV. 0.3 (=9.6GB on the
+# V100S) is the value mcts_cnt runs these models at; matched here so
+# v02 has the same generator budget. Raise via CLI for larger weights.
 llm:
-  gpu_memory_utilization: 0.2
+  gpu_memory_utilization: 0.3
 
 # run-level params (group: run)
 run:
