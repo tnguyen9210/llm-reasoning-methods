@@ -808,11 +808,12 @@ def mcts_search(question, agent, config, llm_vllm, llm_vllm_embeds, prm):
     # Template selection (mirrors generate_mcts_cnt): default is the
     # model's NATIVE chat template — its own in-distribution format,
     # avoiding the cross-model confound (docs/decisions.md 2026-06-13).
-    # Set gen.use_custom_template=true to override every model with the
-    # vendored Llama-3.1 template instead. The trailing "\n\n" step
+    # llm.use_custom_template defaults True (custom) for Llama; Qwen
+    # YAML groups set it False (native) — see
+    # LLMConfig.use_custom_template. The trailing "\n\n" step
     # separator is preserved by the strip-and-reappend in
     # _generate_candidates.
-    if config.gen.use_custom_template:
+    if config.llm.use_custom_template:
         tokenizer.chat_template = config.gen.custom_chat_template
 
     sampling_params = SamplingParams(

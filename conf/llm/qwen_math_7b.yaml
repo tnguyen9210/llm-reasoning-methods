@@ -13,3 +13,6 @@ tensor_parallel_size: 1
 # too low for the weights themselves — if so, raise gmu and run
 # generation-only, then score with score_completions.py (PRM alone).
 gpu_memory_utilization: 0.5
+# Custom template is vendored from Llama-3.1 and isn't trained-on for
+# Qwen — see LLMConfig.use_custom_template.
+use_custom_template: false

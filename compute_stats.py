@@ -11,7 +11,7 @@ Examples:
 
     # mcts_cnt, Llama-3B native, 1 trial
     python compute_stats.py --config-name mcts_cnt_prm800k \\
-        llm=llama_3b gen.use_custom_template=false run.num_trials=1
+        llm=llama_3b llm.use_custom_template=false run.num_trials=1
 
     # bon
     python compute_stats.py --config-name bon_prm800k run.num_trials=2

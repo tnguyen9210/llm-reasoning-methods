@@ -362,7 +362,7 @@ def mcts_search(question, agent, config, llm_vllm, prm):
     Only expansions charge gen_cnt.
     """
     tokenizer = llm_vllm.get_tokenizer()
-    if config.gen.use_custom_template:
+    if config.llm.use_custom_template:
         tokenizer.chat_template = config.gen.custom_chat_template
 
     sampling_params = SamplingParams(

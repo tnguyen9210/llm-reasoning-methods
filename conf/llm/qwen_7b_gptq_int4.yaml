@@ -8,3 +8,6 @@ load_format: auto
 tensor_parallel_size: 1
 max_model_len: 5000
 gpu_memory_utilization: 0.3
+# Custom template is vendored from Llama-3.1 and isn't trained-on for
+# Qwen — see LLMConfig.use_custom_template.
+use_custom_template: false

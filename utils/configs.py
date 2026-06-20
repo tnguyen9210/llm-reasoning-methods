@@ -121,10 +121,6 @@ class GenConfig:
     # Chat template related options
     system_prompt: str = system_prompt
     custom_chat_template: str = custom_chat_template
-    # When True, override the model's native template with
-    # custom_chat_template (the vendored Llama 3.1 template). When
-    # False, use whatever template the model ships with.
-    use_custom_template: bool = True
 
 
 
@@ -160,6 +156,16 @@ class LLMConfig:
     # llm_dir must point at the pre-quantized checkpoint when set.
     quantization: Optional[str] = None
     load_format: str = "auto"
+    # When True, override this model's native chat template with
+    # GenConfig.custom_chat_template (vendored from Llama 3.1). When
+    # False, use whatever template the model ships with. Default True
+    # (custom) for Llama; Qwen YAML groups (conf/llm/qwen_*.yaml) set
+    # this False — the vendored template is Llama-3.1-specific and
+    # isn't trained-on for Qwen (docs/decisions.md 2026-06-13; see the
+    # template-bug note in llm-reasoning-mcts-comparison-main for what
+    # happens otherwise). CLI override (llm.use_custom_template=...)
+    # always wins.
+    use_custom_template: bool = True
 
 
 @dataclass
@@ -413,7 +419,7 @@ def config_name(cfg) -> str:
     dir too (see level_dir). Works on ExpConfig or its DictConfig
     (struct mode exposes only declared fields)."""
     method = cfg.search.method
-    tmpl = "custom" if cfg.gen.use_custom_template else "native"
+    tmpl = "custom" if cfg.llm.use_custom_template else "native"
     # Drop the redundant "-Instruct" marker for shorter dirs. Global
     # (not just suffix) — names stay unique for the current checkpoint
     # set since GPTQ etc. still distinguish.

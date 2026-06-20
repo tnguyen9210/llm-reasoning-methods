@@ -24,7 +24,7 @@ def _search(batch_of_questions, config, trial_idx, llm_vllm):
     tokenizer = llm_vllm.get_tokenizer()
     # Override with the vendored Llama template only when asked;
     # otherwise keep the model's native template.
-    if config.gen.use_custom_template:
+    if config.llm.use_custom_template:
         tokenizer.chat_template = config.gen.custom_chat_template
 
     convs = [
