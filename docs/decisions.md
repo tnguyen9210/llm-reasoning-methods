@@ -7,6 +7,73 @@ section per decision. Titles carry one or two area prefixes
 (`Area:` or `Area, Area:`) so skimming groups by eye and
 `grep '^## .*Area'` gives a per-topic view.
 
+## 2026-06-19 — Architecture, Configs: PRM selection is a registry on the PRM module, not a dict per launcher
+
+**Context:** adding `QwenPRM` alongside `RLHFlowPRM` meant each launcher
+that constructs a PRM (`generate_mcts_cnt`, `generate_mcts_sem`,
+`prepare_scored_dataset`) carried its own local
+`prm_dict = {"rlhflow": RLHFlowPRM, "qwen": QwenPRM}` plus a lookup-and-
+guard block, duplicated three times.
+**Decision:** move the dict and construction logic into
+`core/reward_models.py` (the module that already owns `PRM`,
+`RLHFlowPRM`, `QwenPRM`) as `PRM_REGISTRY: dict[str, type[PRM]]` and
+`build_prm(kind, model_path, device=..., **kwargs) -> PRM`, which raises
+`ValueError` (not `KeyError`) listing valid kinds on an unknown one.
+Every launcher now calls `prm = build_prm(cfg.prm.kind, cfg.prm.prm_dir,
+device=cfg.prm.device_map)` instead of carrying its own dict.
+**Why:** the dispatch mechanism itself (a dict keyed on `cfg.prm.kind`)
+was already the right shape — the problem was that it lived in three
+places instead of one, so adding a future PRM kind meant remembering to
+update all three call sites. Colocating the registry with the classes it
+indexes is the standard fix and needed no new pattern (no decorator-based
+auto-registration, no `PRMConfig.build()` method on the dataclass): a
+decorator buys nothing for a 2–3-entry registry and hides its contents
+from a plain `grep`/`print`; a `build()` method on `PRMConfig` would
+couple `utils/configs.py` (pure config/schema, cheap to import anywhere)
+to `core/reward_models.py` (model loading + GPU code), a worse seam than
+the one removed. This mirrors the algo-method dispatch (`algo_dict` in
+each launcher, selecting the search core module) — not consolidated here
+since it isn't duplicated.
+**Revisit if:** a future PRM kind needs constructor args that don't fit
+`build_prm`'s `**kwargs` passthrough, or the registry grows large enough
+that a flat dict becomes hard to navigate (neither expected soon).
+
+## 2026-06-19 — Models, Configs: chat-template default lives on LLMConfig, set per model family
+
+**Context:** `GenConfig.use_custom_template` was a single global flag
+(default `True`), so every model — Llama or Qwen — got the vendored
+Llama-3.1 `custom_chat_template` unless a run explicitly overrode it.
+Running Qwen with this default-on custom template produced malformed,
+non-terminating output (stray `<|start_header_id|>`/`<|im_start|>`-style
+tokens leaking into the completion) because the template is
+Llama-3.1-specific and Qwen was never trained on it — this is the
+opposite confound from the one the 2026-06-13 native-template decision
+already fixed (forcing one family's format onto another). A first fix
+attempt added a `resolve_use_custom_template(cfg)` helper function to
+pick the default per family at call time; rejected per explicit feedback
+("adding a separate helper function... may make the code harder to
+track and maintain in the future" — only a few Qwen configs exist, and
+the value only needs setting once).
+**Decision:** drop `GenConfig.use_custom_template` and the resolver
+function entirely. Add `use_custom_template: bool = True` directly to
+`LLMConfig` (default custom, i.e. Llama's prior behavior unchanged), and
+set it to `False` (native) in each `conf/llm/qwen_*.yaml` group
+(`qwen_3b`, `qwen_3b_gptq_int4`, `qwen_7b_gptq_int4`, `qwen_math_1_5b`,
+`qwen_math_7b`). All template-selection read sites (`mcts_cnt`,
+`mcts_sem` v01/v02, `bon`, `mcts_bl_cnt`) and `config_name`'s `--tmpl-`
+tag now read `cfg.llm.use_custom_template` instead of
+`cfg.gen.use_custom_template`. A CLI override
+(`llm.use_custom_template=...`) still wins over the YAML default.
+**Why:** the field is per-model-family state, not a computation, so it
+belongs as static config data on the dataclass that already describes
+the model (`LLMConfig`), set once per YAML group — no resolver needed to
+"compute" a value that's actually just a default. This keeps the
+single-global-flag ergonomics (one bool, one CLI override path) while
+fixing the actual bug (Qwen no longer silently gets a foreign template).
+**Revisit if:** the per-family default needs to depend on more than
+just "which YAML group is loaded" (e.g. on dataset or task), at which
+point a real resolver would earn its complexity.
+
 ## 2026-06-18 — Hardware, Experiments: fit 7B generator + PRM on a V100S via int4 LLM (primary) or a small PRM (fallback)
 
 **Context:** M3 (semantic exploration) needs to scale past the 1B
