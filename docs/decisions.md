@@ -7,6 +7,61 @@ section per decision. Titles carry one or two area prefixes
 (`Area:` or `Area, Area:`) so skimming groups by eye and
 `grep '^## .*Area'` gives a per-topic view.
 
+## 2026-06-20 — Configs: config_name always tags projection (incl. --proj-none), reversing "append only when on"
+
+**Context:** the 2026-06-18 projection decision appended the `--proj-`
+tag to `config_name` *only when* `embeds_proj != "none"`, so that
+no-projection runs kept their pre-projection names and existing dirs /
+W&B runs didn't orphan. But the `embeds_proj × cov_update` sweep needs
+the `none` arm as a first-class cell — and with the tag suppressed, a
+`proj=none` run produced a name with *no* projection marker at all,
+which (a) doesn't read as self-describing next to its `--proj-sparse512`
+sibling, and (b) collides in spirit with the always-on `--cov-` tag
+added in the same 2026-06-18 batch (asymmetric: cov always shown, proj
+sometimes hidden).
+**Decision:** always append the projection tag, including
+`--proj-none{embeds_dim}` (e.g. `--proj-none4096`). `config_name`'s
+`proj_str` is now unconditional, mirroring `cov_str`. Both arms of a
+projection sweep thus get distinct, self-describing dirs.
+**Why:** this prioritizes self-describing sweep cells over the
+2026-06-18 goal of not-renaming-old-dirs — a deliberate reversal of
+that specific sub-choice (the *encode-every-result-affecting-knob*
+principle it served is untouched and in fact strengthened: a knob
+that's swept must be in the name, and `none` is a swept value). The
+one pre-existing untagged `proj=none` dir was an empty dead-init (only
+a `wandb_run_id.txt`, 0 trials), so it was deleted rather than renamed
+— no real data orphaned. A `NOTE` in `config_name` flags the change so
+a future untagged dir is understood, not silently re-run.
+**Caveat / open:** this is exactly the "adding/changing a knob's
+encoding orphans old dirs" friction that motivated the broader
+naming-redesign discussion (vault note
+`question-config-name-experiment-naming`,
+[[llm-reasoning-repo-reorganize-todo]] item B): identity-by-recomputed-
+name is fragile under schema evolution. This entry is a local fix; the
+structural fix (manifest + explicit `--result-dir`, or readable-prefix
++ config-hash) is still pending a decision there.
+**Revisit if:** the naming redesign lands (then proj/cov tagging gets
+subsumed by whatever scheme it picks).
+
+## 2026-06-20 — Configs: cov_update value renamed "sherman_morrison" -> "sm"
+
+**Context:** the `cov_update` knob's value was the verbose
+`"sherman_morrison"`, while the `config_name` dir tag already
+abbreviated it to `--cov-sm` via a conditional
+(`'sm' if cov == 'sherman_morrison' else cov`). So the on-disk name
+and the CLI value disagreed, and the conditional existed only to bridge
+that gap.
+**Decision:** make the config *value* itself `"sm"` everywhere — both
+`conf/search/mcts_sem_v0{1,2}.yaml`, both search cores' `==` comparisons
++ docstrings, and the dataclass default comment. `config_name`'s
+`cov_str` drops the conditional and is now plain `f"--cov-{cov}"`.
+**Why:** one spelling end-to-end (CLI override `search.cov_update=sm`,
+config value, and dir tag all match) removes the value↔name mismatch
+and the special-case bridge. The dir tag string is unchanged
+(`--cov-sm` / `--cov-exact`), so existing result dirs are NOT affected
+and don't need renaming — only the accepted CLI/YAML value changed.
+**Revisit if:** never expected — straight rename for consistency.
+
 ## 2026-06-19 — Architecture, Configs: PRM selection is a registry on the PRM module, not a dict per launcher
 
 **Context:** adding `QwenPRM` alongside `RLHFlowPRM` meant each launcher
