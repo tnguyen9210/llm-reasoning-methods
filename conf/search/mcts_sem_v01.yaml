@@ -40,4 +40,4 @@ revisit_policy: reuse   # "reuse" | "regenerate"
 embeds_gpu_memory_utilization: 0.1
 
 # PRM micro-batch for in-loop candidate scoring
-prm_batch_size: 2
+prm_batch_size: 1

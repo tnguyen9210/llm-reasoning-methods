@@ -219,7 +219,7 @@ class MCTSCntConfig(SearchConfig):
     # from prm.score_batch_size, which scores the final dataset). Kept
     # small because in-loop scoring is per-candidate-set. Mirrors
     # MCTSSemV01Config.prm_batch_size.
-    prm_batch_size: int = 2
+    prm_batch_size: int = 1
 
 
 @dataclass
@@ -310,7 +310,7 @@ class MCTSSemV01Config(SearchConfig):
     # PRM forward-pass micro-batch *inside* the search loop (distinct
     # from prm.score_batch_size, which scores the final dataset). Kept
     # small because in-loop scoring is per-candidate-set.
-    prm_batch_size: int = 2
+    prm_batch_size: int = 1
 
     # Populated at runtime by the launcher when embeds_center=True
     # (np.load of the mean .npy). Not set from YAML.
