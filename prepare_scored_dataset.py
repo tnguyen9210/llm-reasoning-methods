@@ -37,10 +37,11 @@ import torch
 import hydra
 from hydra.core.config_store import ConfigStore
 
-from core.reward_models import RLHFlowPRM
+from core.reward_models import QwenPRM, RLHFlowPRM
 from core.scoring import build_scored_dataset
 from utils.configs import (
-    ExpConfig, BoNConfig, MCTSCntConfig, config_name, level_dir,
+    ExpConfig, BoNConfig, MCTSCntConfig,
+    MCTSSemV01Config, MCTSSemV02Config, config_name, level_dir,
 )
 from utils.load_data import load_data_hf
 
@@ -50,6 +51,13 @@ cs = ConfigStore.instance()
 cs.store(name="exp_schema", node=ExpConfig)
 cs.store(group="search", name="bon_schema", node=BoNConfig)
 cs.store(group="search", name="mcts_cnt_schema", node=MCTSCntConfig)
+cs.store(group="search", name="mcts_sem_v01_schema", node=MCTSSemV01Config)
+cs.store(group="search", name="mcts_sem_v02_schema", node=MCTSSemV02Config)
+
+prm_dict = {
+    "rlhflow": RLHFlowPRM,
+    "qwen": QwenPRM,
+}
 
 
 @hydra.main(
@@ -64,9 +72,13 @@ def main(cfg: ExpConfig):
     if not torch.cuda.is_available():
         raise RuntimeError("CUDA is not available.")
 
-    prm = RLHFlowPRM(
-        model_path=cfg.prm.prm_dir, device=cfg.prm.device_map,
-    )
+    prm_cls = prm_dict.get(cfg.prm.kind)
+    if prm_cls is None:
+        raise ValueError(
+            f"Unknown prm.kind: {cfg.prm.kind!r}. "
+            f"Expected one of {sorted(prm_dict)}"
+        )
+    prm = prm_cls(model_path=cfg.prm.prm_dir, device=cfg.prm.device_map)
 
     load_kwargs = {"ds_split": cfg.data.ds_split}
     if cfg.data.level is not None:

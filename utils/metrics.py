@@ -141,11 +141,21 @@ def evaluate_correctness(dataset, timeout=2):
                 break
         out["pass_gb"][q_idx] = pass_gb_correct
 
-        # Search-cost stats (Scheme-C keys).
+        # Search-cost stats (Scheme-C keys). Older mcts_sem_v01/v02
+        # scored datasets predate this naming (pre-rename keys
+        # c_depths/last_phases/ndepths_arr); fall back to those so
+        # those runs remain readable without re-scoring.
+        depth_key = "comp_depth" if "comp_depth" in data else "c_depths"
+        phase_key = (
+            "q_last_phase" if "q_last_phase" in data else "last_phases"
+        )
+        ndepths_key = (
+            "phase_depths" if "phase_depths" in data else "ndepths_arr"
+        )
         out["ncomps"][q_idx] = len(completions)
-        out["depth"][q_idx] = np.mean(data["comp_depth"])
-        out["nphases"][q_idx] = data["q_last_phase"]
-        out["ndepths"][q_idx] = np.mean(data["phase_depths"])
+        out["depth"][q_idx] = np.mean(data[depth_key])
+        out["nphases"][q_idx] = data[phase_key]
+        out["ndepths"][q_idx] = np.mean(data[ndepths_key])
 
     return out
 

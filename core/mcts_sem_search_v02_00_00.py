@@ -945,13 +945,17 @@ def _search(
         all_ndepths_arr[q_idx] = ndepths_arr
         all_cnt_max_depth[q_idx] = cnt_max_depth
 
+    # Key names match mcts_cnt_search_v05_00_00's results dict
+    # (comp_depth/comp_gen/q_last_phase/phase_depths) so
+    # utils.metrics.evaluate_correctness reads both algorithms'
+    # scored datasets identically.
     results: Dict[str, Any] = defaultdict(list)
     results["completions"] = all_completions
-    results["c_depths"] = all_c_depths
+    results["comp_depth"] = all_c_depths
     results["c_phases"] = all_c_phases
-    results["c_gen_cnts"] = all_c_gen_cnts
+    results["comp_gen"] = all_c_gen_cnts
     results["gen_cnts"] = all_gen_cnts
-    results["last_phases"] = all_last_phases
-    results["ndepths_arr"] = all_ndepths_arr
+    results["q_last_phase"] = all_last_phases
+    results["phase_depths"] = all_ndepths_arr
     results["cnt_max_depth"] = all_cnt_max_depth
     return results
