@@ -46,7 +46,7 @@ utils/configs.py for defaults)
     embeds_mean     : np.ndarray | None            (required if center=True)
     embeds_dim      : int                  (default: 2048; set 4096 for PRM)
     prm_embeds_layer: int                          (default: -1 = last)
-    cov_update      : "exact" | "sherman_morrison" (default: "exact")
+    cov_update      : "exact" | "sm" (Sherman-Morrison) (default: "exact")
     revisit_policy  : "reuse" | "regenerate"       (default: "reuse")
     prm_batch_size  : int                          (default: 4)
 
@@ -489,14 +489,14 @@ class MCTS(BaseTree):
         # select_child):
         #   "exact"            keep V; recompute V^-1 = inv(V) each
         #                      selection. O(d^3) per selection.
-        #   "sherman_morrison" keep V^-1 directly and rank-1 update it
+        #   "sm"               keep V^-1 directly and rank-1 update it
         #                      per selection (O(d^2)); V isn't needed.
         # Either way the start state is V_0 = lam*I, so
         # V_0^-1 = (1/lam)*I in closed form (no inverse call), and the
         # initial diversity term is uniform across arms.
         embeds_dim = self.config.search.embeds_dim
         lam = self.config.search.lam
-        if self.config.search.cov_update == "sherman_morrison":
+        if self.config.search.cov_update == "sm":
             self.V = None
             self.V_inv = (1.0 / lam) * np.eye(embeds_dim)
         else:
@@ -637,9 +637,9 @@ class MCTS(BaseTree):
         # That path still commits to a child, so its direction must
         # enter the covariance or V_inv would go stale (no longer equal
         # inv(V)) and later diversity bonuses would be wrong. This is
-        # the one place exact and sherman_morrison differ:
+        # the one place exact and sm (Sherman-Morrison) differ:
         u = selected_node.embeds.reshape(-1, 1)
-        if self.config.search.cov_update == "sherman_morrison":
+        if self.config.search.cov_update == "sm":
             # Persistent rank-1 inverse update (O(d^2)), then symmetrize
             # to stop floating-point asymmetry compounding over the run.
             #   (V + uu^T)^-1 = V^-1 - (V^-1 u)(V^-1 u)^T / (1 + u^T V^-1 u)
@@ -652,7 +652,7 @@ class MCTS(BaseTree):
             # solve(V, I) over inv(V): same O(d^3) cost, slightly
             # better-conditioned (avoids explicitly forming the inverse
             # via a less stable routine). This is the O(d^3)-per-
-            # selection baseline; sherman_morrison above is the fast path.
+            # selection baseline; sm above is the fast path.
             self.V = self.V + u @ u.T
             self.V_inv = np.linalg.solve(
                 self.V, np.eye(self.V.shape[0])

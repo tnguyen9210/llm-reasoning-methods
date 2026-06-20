@@ -298,7 +298,7 @@ class MCTSSemV01Config(SearchConfig):
     embeds_proj: str = "none"         # "none" | "sparse"
 
     # Covariance bookkeeping + expansion policy.
-    cov_update: str = "exact"         # "exact" | "sherman_morrison"
+    cov_update: str = "exact"         # "exact" | "sm" (Sherman-Morrison)
     revisit_policy: str = "reuse"     # "reuse" | "regenerate"
 
     # Second (pooling) vLLM engine's share of GPU memory. Only used
@@ -453,28 +453,27 @@ def config_name(cfg) -> str:
     # mcts_sem_v02--... . embeds_source isn't encoded — it's implied
     # by the version, and pinning it here would just lengthen the dir.
     if method in ("mcts_sem_v01", "mcts_sem_v02"):
-        # Projection tag, appended ONLY when projection is on, so a
-        # no-projection run keeps its prior name (and existing result
-        # dirs / W&B runs don't orphan). The target dim is encoded (it
-        # changes the produced embeddings and may be swept); embeds_dim
-        # lives here (not as an always-on field) because it only affects
-        # results under projection — with proj="none" it must equal the
-        # raw pooled dim, so it's not a free knob. The seed isn't
-        # encoded (fixed internally; doesn't vary). Distinct projected
-        # runs thus get distinct dirs, which the resume/.done mechanism
-        # relies on (docs/decisions.md 2026-06-18).
+        # Projection tag, always appended (incl. --proj-none<dim>), so
+        # the proj=none and proj=sparse arms of a sweep get distinct
+        # dirs and read self-describing — mirrors cov_str below. The
+        # target dim is encoded (it changes the produced embeddings and
+        # may be swept); with proj="none" it must equal the raw pooled
+        # dim. The seed isn't encoded (fixed internally; doesn't vary).
+        # Distinct runs thus get distinct dirs, which the resume/.done
+        # mechanism relies on (docs/decisions.md 2026-06-18).
+        # NOTE: this changed 2026-06-20 from "append only when on" — a
+        # pre-existing proj=none dir from before this (no --proj- tag)
+        # won't be found by config_name and must be renamed to match.
         embeds_proj = getattr(cfg.search, "embeds_proj", "none")
-        proj_str = ""
-        if embeds_proj != "none":
-            proj_str = f"--proj-{embeds_proj}{cfg.search.embeds_dim}"
+        proj_str = f"--proj-{embeds_proj}{cfg.search.embeds_dim}"
         # cov_update tag, always appended. It does NOT change results
-        # (sherman_morrison is machine-precision-identical to exact —
-        # docs/decisions.md 2026-06-18), so encoding it isn't required
-        # for correctness; it's here so an exact-vs-SM *comparison* run
+        # (sm / Sherman-Morrison is machine-precision-identical to exact
+        # — docs/decisions.md 2026-06-18), so encoding it isn't required
+        # for correctness; it's here so an exact-vs-sm *comparison* run
         # gets distinct result dirs (the resume/.done mechanism keys off
-        # config_name) rather than colliding. Abbreviated sm/exact.
+        # config_name) rather than colliding.
         cov = getattr(cfg.search, "cov_update", "exact")
-        cov_str = f"--cov-{'sm' if cov == 'sherman_morrison' else cov}"
+        cov_str = f"--cov-{cov}"
         return (
             f"{method}{level_str}--{llm_name}--tmpl-{tmpl}"
             f"--bs-{cfg.search.batch_size}--d-{cfg.search.max_depth}"

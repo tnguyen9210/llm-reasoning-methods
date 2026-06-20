@@ -31,7 +31,7 @@ embeds_mean_dir: ""     # results/-relative .npy prefix (if center=true)
 embeds_dim: 2048
 
 # covariance bookkeeping + expansion policy
-cov_update: exact       # "exact" | "sherman_morrison"
+cov_update: exact       # "exact" | "sm" (Sherman-Morrison)
 revisit_policy: reuse   # "reuse" | "regenerate"
 
 # second (pooling) vLLM engine's GPU-memory share; the generative

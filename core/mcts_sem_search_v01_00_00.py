@@ -24,7 +24,7 @@ utils/configs.py for defaults)
     embeds_center   : bool                         (default: False)
     embeds_mean     : np.ndarray | None            (required if center=True)
     embeds_dim      : int                          (default: 2048)
-    cov_update      : "exact" | "sherman_morrison" (default: "exact")
+    cov_update      : "exact" | "sm" (Sherman-Morrison) (default: "exact")
     revisit_policy  : "reuse" | "regenerate"       (default: "reuse")
     prm_batch_size  : int                          (default: 4)
 
@@ -98,7 +98,7 @@ def _diverse_select(
     cov_update:
       "exact"           recompute V^-1 from scratch each iteration.
                         O(K * d^3) total. Fine for small K.
-      "sherman_morrison" maintain V^-1 incrementally via
+      "sm"               maintain V^-1 incrementally via
                             (V + uu^T)^-1
                               = V^-1 - (V^-1 u)(V^-1 u)^T / (1 + u^T V^-1 u)
                         Drops total cost to O(d^3) + O(K * d^2).
@@ -113,11 +113,11 @@ def _diverse_select(
     tol = 1e-4
 
     _V = copy.deepcopy(V)
-    _V_inv = np.linalg.inv(_V) if cov_update == "sherman_morrison" else None
+    _V_inv = np.linalg.inv(_V) if cov_update == "sm" else None
     A_idxes: List[int] = []
 
     for _ in range(K):
-        if cov_update == "sherman_morrison":
+        if cov_update == "sm":
             V_inv = _V_inv
         else:
             V_inv = np.linalg.inv(_V)
@@ -147,7 +147,7 @@ def _diverse_select(
 
         u = q_embeds[best_idx].reshape(-1, 1)
         _V = _V + u @ u.T
-        if cov_update == "sherman_morrison":
+        if cov_update == "sm":
             Vu = _V_inv @ u                              # (d, 1)
             denom = 1.0 + float(u.T @ Vu)
             _V_inv = _V_inv - (Vu @ Vu.T) / denom
