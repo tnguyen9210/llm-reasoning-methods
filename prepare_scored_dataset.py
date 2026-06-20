@@ -11,6 +11,8 @@ This is the primary scoring path for **bon** (generate_bon does not
 auto-score: BoN's large n + the 8B PRM beside the vLLM generator
 risks OOM, so scoring is deliberately decoupled here). For mcts_cnt
 it doubles as re-scoring / recovery after an inline scoring failure.
+Trials whose scored output already exists are skipped (delete that
+trial's scored .jsonl to force a re-score).
 
 Run it with the SAME config that produced the run, so run_name and
 result_dir resolve to the same paths. The search method is selected
@@ -88,6 +90,14 @@ def main(cfg: ExpConfig):
         )
         if not os.path.exists(raw_path):
             print(f"skip trial {trial_idx}: {raw_path} not found")
+            continue
+
+        scored_path = (
+            f"{result_dir}/{run_name}--trial-{trial_idx:03d}.jsonl"
+        )
+        if os.path.exists(scored_path):
+            print(f"skip trial {trial_idx}: already scored "
+                  f"(delete {scored_path} to force a re-score)")
             continue
 
         with open(raw_path, 'r', encoding='utf-8') as fin:
