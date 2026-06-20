@@ -90,6 +90,8 @@ def main(cfg: ExpConfig):
         enforce_eager=cfg.llm.enforce_eager,
         distributed_executor_backend=None,
         dtype=cfg.llm.dtype,
+        quantization=cfg.llm.quantization,
+        load_format=cfg.llm.load_format,
         seed=cfg.gen.seed,
     )
 

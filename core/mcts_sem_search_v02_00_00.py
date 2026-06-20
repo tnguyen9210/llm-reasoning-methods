@@ -475,6 +475,9 @@ class MCTS(BaseTree):
     completed_nodes: List[Type[BaseNode]] = None
     V: NDArray[Shape["2048, 2048"], np.float32] = None
     V_inv: NDArray[Shape["2048, 2048"], np.float32] = None
+    # Count of nodes that hit max_depth (mirrors mcts_cnt_search_v05's
+    # cnt_node_max_depth); incremented in create_child.
+    cnt_node_max_depth: int = 0
 
     def __init__(self, **kwargs) -> None:
         super().__init__(**kwargs)
@@ -538,6 +541,7 @@ class MCTS(BaseTree):
                 and new_node.depth >= self.config.search.max_depth):
             new_node.is_terminal = True
             candidate_score = self.config.search.negative_reward
+            self.cnt_node_max_depth += 1
 
         new_node.update(candidate_score)
         current_node.children.append(new_node)
@@ -828,7 +832,7 @@ def mcts_search(question, agent, config, llm_vllm, llm_vllm_embeds, prm):
     gen_cnt = 0
     p = 0
     d = 0
-    ndepths_arr: List[int] = []
+    phase_depths: List[int] = []
     for p in range(config.search.num_phases):
         logging.fatal(f"\n-> p = {p}")
         current_node = agent.root
@@ -864,7 +868,7 @@ def mcts_search(question, agent, config, llm_vllm, llm_vllm_embeds, prm):
             if gen_cnt >= config.search.gen_budget:
                 break
 
-        ndepths_arr.append(d)
+        phase_depths.append(d)
         if gen_cnt >= config.search.gen_budget:
             logging.fatal("run out of budget!")
             break
@@ -877,22 +881,19 @@ def mcts_search(question, agent, config, llm_vllm, llm_vllm_embeds, prm):
         seen.setdefault(node.state["text"], idx)
 
     completions: List[str] = []
-    c_depths: List[int] = []
-    c_phases: List[int] = []
-    c_gen_cnts: List[int] = []
+    comp_depth: List[int] = []
+    comp_phase: List[int] = []
+    comp_gen: List[int] = []
     for i in seen.values():
         node = agent.completed_nodes[i]
         completions.append(node.state["text"])
-        c_depths.append(node.depth)
-        c_phases.append(node.phase)
-        c_gen_cnts.append(node.gen_cnt)
+        comp_depth.append(node.depth)
+        comp_phase.append(node.phase)
+        comp_gen.append(node.gen_cnt)
 
-    # The trailing `0` is `cnt_max_depth` — kept for callers that
-    # unpack the 8-tuple. It used to be tracked by `MCTS` but was
-    # removed when nothing read it.
     return (
-        completions, c_depths, c_phases, c_gen_cnts,
-        gen_cnt, p, ndepths_arr, 0,
+        completions, comp_depth, comp_phase, comp_gen,
+        gen_cnt, p, phase_depths, agent.cnt_node_max_depth,
     )
 
 
@@ -912,14 +913,14 @@ def _search(
     same `q_idx`.
     """
     n = len(batch_of_questions)
-    all_completions = [[] for _ in range(n)]
-    all_c_depths = [[] for _ in range(n)]
-    all_c_phases = [[] for _ in range(n)]
-    all_c_gen_cnts = [[] for _ in range(n)]
-    all_gen_cnts = [[] for _ in range(n)]
-    all_last_phases = [[] for _ in range(n)]
-    all_ndepths_arr = [[] for _ in range(n)]
-    all_cnt_max_depth = [[] for _ in range(n)]
+    batch_completions = [[] for _ in range(n)]
+    batch_comp_depth = [[] for _ in range(n)]
+    batch_comp_phase = [[] for _ in range(n)]
+    batch_comp_gen = [[] for _ in range(n)]
+    batch_q_total_gens = [[] for _ in range(n)]
+    batch_q_last_phase = [[] for _ in range(n)]
+    batch_phase_depths = [[] for _ in range(n)]
+    batch_q_nodes_max_depth = [[] for _ in range(n)]
 
     for q_idx, question in enumerate(batch_of_questions):
         seed = 100_000 + trial_idx
@@ -930,32 +931,33 @@ def _search(
 
         agent = MCTS(config=config, question=question)
         (
-            completions, c_depths, c_phases, c_gen_cnts,
-            gen_cnt, last_phase, ndepths_arr, cnt_max_depth,
+            completions, comp_depth, comp_phase, comp_gen,
+            q_total_gens, q_last_phase, phase_depths,
+            q_nodes_max_depth,
         ) = mcts_search(
             question, agent, config, llm_vllm, llm_vllm_embeds, prm
         )
 
-        all_completions[q_idx] = completions
-        all_c_depths[q_idx] = c_depths
-        all_c_phases[q_idx] = c_phases
-        all_c_gen_cnts[q_idx] = c_gen_cnts
-        all_gen_cnts[q_idx] = gen_cnt
-        all_last_phases[q_idx] = last_phase
-        all_ndepths_arr[q_idx] = ndepths_arr
-        all_cnt_max_depth[q_idx] = cnt_max_depth
+        batch_completions[q_idx] = completions
+        batch_comp_depth[q_idx] = comp_depth
+        batch_comp_phase[q_idx] = comp_phase
+        batch_comp_gen[q_idx] = comp_gen
+        batch_q_total_gens[q_idx] = q_total_gens
+        batch_q_last_phase[q_idx] = q_last_phase
+        batch_phase_depths[q_idx] = phase_depths
+        batch_q_nodes_max_depth[q_idx] = q_nodes_max_depth
 
     # Key names match mcts_cnt_search_v05_00_00's results dict
-    # (comp_depth/comp_gen/q_last_phase/phase_depths) so
-    # utils.metrics.evaluate_correctness reads both algorithms'
-    # scored datasets identically.
+    # (comp_depth/comp_phase/comp_gen/q_total_gens/q_last_phase/
+    # phase_depths/q_nodes_max_depth) so utils.metrics.evaluate_
+    # correctness reads both algorithms' scored datasets identically.
     results: Dict[str, Any] = defaultdict(list)
-    results["completions"] = all_completions
-    results["comp_depth"] = all_c_depths
-    results["c_phases"] = all_c_phases
-    results["comp_gen"] = all_c_gen_cnts
-    results["gen_cnts"] = all_gen_cnts
-    results["q_last_phase"] = all_last_phases
-    results["phase_depths"] = all_ndepths_arr
-    results["cnt_max_depth"] = all_cnt_max_depth
+    results["completions"] = batch_completions
+    results["comp_depth"] = batch_comp_depth
+    results["comp_phase"] = batch_comp_phase
+    results["comp_gen"] = batch_comp_gen
+    results["q_total_gens"] = batch_q_total_gens
+    results["q_last_phase"] = batch_q_last_phase
+    results["phase_depths"] = batch_phase_depths
+    results["q_nodes_max_depth"] = batch_q_nodes_max_depth
     return results
