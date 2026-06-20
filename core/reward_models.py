@@ -399,19 +399,53 @@ class RLHFlowPRM(PRM):
         input_ids = enc.input_ids
         attention_mask = enc.attention_mask
 
-        with torch.no_grad():
-            out = self.model(
-                input_ids=input_ids,
-                attention_mask=attention_mask,
-                output_hidden_states=True,
-            )
-        # hidden_states is a tuple (embeddings, layer_1, ..., layer_L);
-        # index `layer` (-1 = last). Shape: (batch, seq_len, hidden).
-        hs = out.hidden_states[layer]
+        # Memory: output_hidden_states=True materializes ALL ~L layers'
+        # hidden states (an (L+1)-tuple) just to read one — costly for an
+        # 8B model on long sequences. For the common layer=-1 case we
+        # instead hook the final norm and capture only its output,
+        # letting every other layer's activations free as usual. We hook
+        # `model.norm` (NOT the last decoder layer): in current
+        # transformers, hidden_states[-1] is the post-final-norm tensor,
+        # so the last decoder layer's raw output differs from it (verified
+        # — they're off by the RMSNorm). Any other `layer` falls back to
+        # the full path; layer=-1 is the only value used in practice.
+        if layer == -1:
+            captured = {}
+
+            def _hook(module, inputs, output):
+                captured["hs"] = (
+                    output[0] if isinstance(output, tuple) else output
+                )
+
+            handle = self.model.model.norm.register_forward_hook(_hook)
+            try:
+                with torch.no_grad():
+                    self.model(
+                        input_ids=input_ids,
+                        attention_mask=attention_mask,
+                    )
+            finally:
+                handle.remove()
+            hs = captured["hs"]
+        else:
+            with torch.no_grad():
+                out = self.model(
+                    input_ids=input_ids,
+                    attention_mask=attention_mask,
+                    output_hidden_states=True,
+                )
+            # hidden_states is a tuple (embeddings, layer_1, ..., layer_L);
+            # index `layer`. Shape: (batch, seq_len, hidden).
+            hs = out.hidden_states[layer]
+            del out
 
         # Trim right-padding per row so pooling sees only real tokens.
+        # Clone so the trimmed slices don't pin the full (batch, seq,
+        # hidden) tensor, then drop it and free the cached blocks.
         embeds: list[torch.Tensor] = []
         for b in range(input_ids.shape[0]):
             n = int(attention_mask[b].sum().item())
-            embeds.append(hs[b, :n].detach())
+            embeds.append(hs[b, :n].detach().clone())
+        del hs
+        torch.cuda.empty_cache()
         return embeds

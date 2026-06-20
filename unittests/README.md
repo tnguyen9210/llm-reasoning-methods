@@ -48,4 +48,4 @@ result inspection. GPU column: Y = requires GPU, N = CPU-only.
 | File | Description | GPU |
 |------|-------------|-----|
 | `reward_models.py` | `PRM` base class + `QwenPRM` and `RLHFlowPRM` wrappers; `score(questions, answers, batch_size)` → `[question][answer][step]` rewards | Y |
-| `notebook_utils.py` | Shared helpers: `gpu_mem_used_gb` (driver-level GPU memory, always flushes), `measure_inference` (timed HF/vLLM generation), `benchmark_bon_speed_llm_model` (vLLM BoN speed by model), `benchmark_bon_speed_llm_quant` (vLLM BoN speed by quantization config) | Y |
+| `notebook_utils.py` | Shared helpers: `gpu_mem_used_gb` (driver-level GPU memory, always flushes), `short_model_name` (compact model label for printouts), `measure_inference` (timed HF/vLLM generation), `benchmark_bon_speed` (vLLM BoN speed for one model config — plain or quantized; used by both speed notebooks) | Y |

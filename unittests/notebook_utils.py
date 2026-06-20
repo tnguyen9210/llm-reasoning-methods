@@ -8,6 +8,52 @@ import torch
 from vllm import LLM, SamplingParams
 
 
+def short_model_name(name_or_dir: str) -> str:
+    """Compact label for a model checkpoint, for benchmark printouts.
+
+    Maps a full HF name or path (e.g.
+    '/.../Qwen2.5-Math-7B-Instruct-GPTQ-Int4') to a short label
+    matching the benchmark_speed_bon_quant style: '<family>-<size>'
+    plus a precision/quant suffix when one is encoded in the name.
+        Llama3.2-3B-Instruct            -> 'llama-3b'
+        Qwen2.5-3B-Instruct-GPTQ        -> 'qwen-3b gptq'
+        Qwen2.5-Math-7B-Instruct-GPTQ-Int4 -> 'qwen-math-7b gptq-int4'
+    Unrecognized names fall back to the lowercased basename so nothing
+    is silently dropped.
+    """
+    base = os.path.basename(name_or_dir.rstrip("/"))
+    low = base.lower()
+
+    # Family.
+    if "llama" in low:
+        family = "llama"
+    elif "qwen" in low and "math" in low:
+        family = "qwen-math"
+    elif "qwen" in low:
+        family = "qwen"
+    else:
+        return low  # unknown family: don't guess, keep it visible
+
+    # Size: first token like '3b' / '1.5b' / '70b'.
+    size = ""
+    for tok in base.replace("-", " ").split():
+        t = tok.lower()
+        if t.endswith("b") and t[:-1].replace(".", "").isdigit():
+            size = t
+            break
+
+    # Quant suffix (mirrors the quant notebook's labels).
+    if "gptq-int4" in low or "gptq_int4" in low:
+        quant = " gptq-int4"
+    elif "gptq" in low:
+        quant = " gptq"
+    else:
+        quant = ""
+
+    label = f"{family}-{size}" if size else family
+    return f"{label}{quant}"
+
+
 def print_step_scores(steps: list[str], scores: list[float]) -> None:
     """Print per-step P(correct) scores with a truncated step preview.
 
@@ -121,8 +167,8 @@ def measure_inference(
     return latency, throughput, avg_tokens, text
 
 
-def benchmark_bon_speed_llm_model(
-    llm_dir,
+def benchmark_bon_speed(
+    cfg,
     config,
     prompts,
     num_trials,
@@ -130,11 +176,27 @@ def benchmark_bon_speed_llm_model(
     warmup=1,
     max_model_len=4096,
 ):
-    """Load llm_dir under vLLM, warm up, time num_trials BoN runs,
-    then tear down. Returns (model_name, trial_times).
+    """Load one model config under vLLM, warm up, time num_trials BoN
+    runs, then tear down. Returns (name, trial_times).
+
+    Unifies the former plain-model and quantized-model benchmarks: a
+    plain fp16 model and a GPTQ variant are the same run, differing
+    only in the vLLM load kwargs, so one helper covers both.
+
+    No GPU-memory figure is reported: under vLLM that's the
+    pre-allocated gpu_memory_utilization budget, not the model's weight
+    footprint, so it's ~constant across configs and uninformative. Use
+    benchmark_llm_mem_sizes_v1 (HF Transformers) for weight memory.
 
     Args:
-        llm_dir:                 Path to the model checkpoint.
+        cfg:    Dict describing the model. Required: "model_dir".
+                Optional:
+                  "name"         label for printouts (default: derived
+                                 from model_dir via short_model_name).
+                  "quantization" vLLM quantization (e.g. "gptq"); None
+                                 / absent = unquantized.
+                  "load_format"  vLLM load_format (default "auto").
+                  "dtype"        vLLM dtype (default "float16").
         config:                  sal.Config with generation params.
         prompts:                 List of prompt strings.
         num_trials:              Number of timed runs.
@@ -146,22 +208,23 @@ def benchmark_bon_speed_llm_model(
     """
     from core import bon_search_v1
 
-    model_name = os.path.basename(llm_dir.rstrip("/"))
-    print(f"\n=== {model_name} ===")
+    name = cfg.get("name") or short_model_name(cfg["model_dir"])
+    print(f"\n=== {name} ===")
 
     llm = LLM(
-        model=llm_dir,
+        model=cfg["model_dir"],
         tensor_parallel_size=1,
         max_model_len=max_model_len,
         gpu_memory_utilization=gpu_memory_utilization,
         enforce_eager=True,
         distributed_executor_backend=None,
-        dtype="float16",
+        dtype=cfg.get("dtype", "float16"),
+        quantization=cfg.get("quantization"),
+        load_format=cfg.get("load_format", "auto"),
         seed=config.seed,
     )
     gc.collect()
     torch.cuda.empty_cache()
-    print(f"  GPU memory used: {gpu_mem_used_gb():.2f} GB")
 
     for w in range(warmup):
         bon_search_v1.best_of_n_v1(prompts, config, llm, 10_000 + w)
@@ -180,65 +243,65 @@ def benchmark_bon_speed_llm_model(
     del llm
     gc.collect()
     torch.cuda.empty_cache()
-    return model_name, times
+    return name, times
 
 
-def benchmark_bon_speed_llm_quant(
-    qcfg,
-    config,
-    prompts,
+def benchmark_prm_score_batch(
+    prm,
+    questions,
+    answers,
+    batch_sizes,
     num_trials,
-    gpu_memory_utilization,
     warmup=1,
 ):
-    """Load a quantization config under vLLM, warm up, time num_trials
-    BoN runs, then tear down. Returns (name, gpu_mem_gb, trial_times).
+    """Time prm.score over a FIXED candidate set at several batch sizes.
+
+    The same (questions, answers) grid is scored at each batch_size, so
+    the only thing varying is how many (question, answer) pairs go
+    through the PRM per forward pass — an apples-to-apples throughput
+    sweep. Also records peak GPU memory per batch size (reset before
+    each timed run via torch.cuda.reset_peak_memory_stats), which is
+    meaningful here: the PRM is an HF model whose activation footprint
+    grows with batch size (unlike a vLLM engine's fixed pre-allocation).
 
     Args:
-        qcfg:                    Dict with keys name, model_dir,
-                                 quantization, load_format, dtype.
-        config:                  sal.Config with generation params.
-        prompts:                 List of prompt strings.
-        num_trials:              Number of timed runs.
-        gpu_memory_utilization:  vLLM gpu_memory_utilization setting.
-        warmup:                  Untimed warmup runs before timing.
+        prm:          A loaded PRM (RLHFlowPRM / QwenPRM); uses .score.
+        questions:    list[str], one problem each.
+        answers:      list[list[str]] candidate answers per question
+                      (each "\\n\\n"-joined steps). n_pairs = total.
+        batch_sizes:  Iterable of score() batch_size values to sweep.
+        num_trials:   Timed score() runs per batch size.
+        warmup:       Untimed runs (per batch size) before timing.
+
+    Returns:
+        list of (batch_size, n_pairs, peak_mem_gb, trial_times).
     """
-    from core import bon_search_v1
+    n_pairs = sum(len(a) for a in answers)
+    results = []
 
-    print(f"\n=== {qcfg['name']} ===")
+    for bs in batch_sizes:
+        print(f"\n=== batch_size = {bs} ===")
 
-    llm = LLM(
-        model=qcfg["model_dir"],
-        tensor_parallel_size=1,
-        max_model_len=5000,
-        gpu_memory_utilization=gpu_memory_utilization,
-        enforce_eager=True,
-        distributed_executor_backend=None,
-        dtype=qcfg["dtype"],
-        quantization=qcfg["quantization"],
-        load_format=qcfg["load_format"],
-        seed=config.seed,
-    )
-    gc.collect()
-    torch.cuda.empty_cache()
-    gpu_mem = gpu_mem_used_gb()
-    print(f"  GPU memory used: {gpu_mem:.2f} GB")
+        for _ in range(warmup):
+            prm.score(questions, answers, batch_size=bs)
 
-    for w in range(warmup):
-        bon_search_v1.best_of_n_v1(prompts, config, llm, 10_000 + w)
+        torch.cuda.synchronize()
+        torch.cuda.reset_peak_memory_stats()
 
-    times = []
-    for trial_idx in range(num_trials):
-        start = time.perf_counter()
-        bon_search_v1.best_of_n_v1(prompts, config, llm, trial_idx)
-        elapsed = time.perf_counter() - start
-        times.append(elapsed)
-        print(
-            f"  trial {trial_idx}: {elapsed:>7.2f}s total, "
-            f"{elapsed / len(prompts):.4f}s/question"
-        )
+        times = []
+        for trial_idx in range(num_trials):
+            start = time.perf_counter()
+            prm.score(questions, answers, batch_size=bs)
+            torch.cuda.synchronize()
+            elapsed = time.perf_counter() - start
+            times.append(elapsed)
+            print(
+                f"  trial {trial_idx}: {elapsed:>7.2f}s total, "
+                f"{elapsed / n_pairs:.4f}s/pair"
+            )
 
-    del llm
-    gc.collect()
-    torch.cuda.empty_cache()
-    return qcfg["name"], gpu_mem, times
+        peak_gb = torch.cuda.max_memory_allocated() / 1024 ** 3
+        print(f"  peak GPU memory: {peak_gb:.2f} GB")
+        results.append((bs, n_pairs, peak_gb, times))
+
+    return results
