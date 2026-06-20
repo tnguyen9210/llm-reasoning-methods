@@ -7,6 +7,80 @@ section per decision. Titles carry one or two area prefixes
 (`Area:` or `Area, Area:`) so skimming groups by eye and
 `grep '^## .*Area'` gives a per-topic view.
 
+## 2026-06-20 — Reward models: QwenPRM gains _embed_batch; PRM-source embeds drop the scoring separators
+
+**Context:** mcts_sem v02 sources its diversity embeddings from the PRM
+(`prm.embed()` → `_embed_batch`). Only `RLHFlowPRM` implemented that;
+`QwenPRM` raised `NotImplementedError`, so `v02 prm=qwen_prm` failed at
+the first expansion. (QwenPRM's `_score_batch` already worked — it's
+usable for v02 *scoring* via the policy-embeds v01, and for mcts_cnt
+scoring; the gap was specifically the embeds-source role.)
+**Decision:** implement `QwenPRM._embed_batch`, mirroring
+`RLHFlowPRM._embed_batch`, with two model-specific points:
+- **Embed the PLAIN candidate chat, WITHOUT the `<extra_0>`
+  separators** that `_build_prompt` inserts for scoring. The embedded
+  text is `system / user(question) / assistant(answer)` — the same
+  shape v01 embeds with the policy — so the v01-vs-v02 source ablation
+  isolates *the model*, not the text. Separators are a reward-head
+  scoring artifact and must not leak into the embedding text.
+- **Hook `model.model.norm`** (the inner `Qwen2Model`'s final RMSNorm)
+  for the `layer=-1` fast path, same as RLHFlow. The top-level module
+  is `Qwen2ForProcessRewardModel` (`model: Qwen2Model` + `score: head`),
+  so the backbone norm is one level deeper but the dotted path is
+  identical; the `score` reward head is simply never read. Verified the
+  hook output is **bit-identical** to `hidden_states[-1]` (max abs diff
+  0.0) for this checkpoint, so the memory trick (capture one layer vs
+  materializing all 29) is exact.
+**Why:** unblocks the PRM-source ablation *across two different PRMs*
+(Llama-8B-PRM vs Qwen-Math-7B-PRM embeds), not just policy-vs-PRM. The
+no-separators choice is the crux: reusing `_build_prompt` would have
+embedded a different text than v01, silently confounding the source
+comparison with a text-format difference.
+**Caveat:** the Qwen PRM's hidden dim is **3584** (vs 4096 for the
+Llama PRM). With the default `embeds_proj=sparse` the raw dim is
+projected to 512 regardless, so nothing to set; but `embeds_proj=none`
+with the Qwen PRM requires `search.embeds_dim=3584` or the projection
+shape-guard raises. Documented in the method's docstring.
+**Revisit if:** a future PRM isn't a `*Model` + head over a standard
+backbone (then `model.model.norm` won't be the right hook and the
+embed path needs rethinking).
+
+## 2026-06-20 — Configs: mcts_sem_v02 generator gmu is 0.3 (was an OOM-causing 0.2); gmu is a total-GPU fraction, not PRM headroom
+
+**Context:** `mcts_sem_v02 llm=qwen_7b_gptq_int4` OOM'd at init while the
+*same model* ran fine under mcts_cnt. Cause: the v02 top-level YAML
+overrode `llm.gpu_memory_utilization` to **0.2**, while mcts_cnt used
+the llm-group default **0.3**. The override's own comment claimed
+"kept at 0.3" — comment and value had drifted apart.
+**Decision:** set the v02 override to `0.3`, matching mcts_cnt, and
+rewrite the comment to state what gmu actually controls.
+**Why:** vLLM's `gpu_memory_utilization` is the fraction of the
+**whole GPU** it may use for weights + KV cache + activations — it is
+NOT a "leave room for the co-resident PRM" reservation (the HF PRM
+allocates separately, outside vLLM's budget). So a *lower* gmu causes
+OOM, not avoids it: `0.2 * 32 GB (V100S) = 6.4 GB < 5.3 GB` (7B-GPTQ
+weights) + activations/CUDA-graph/KV → vLLM can't even init. `0.3` =
+9.6 GB clears it (the value mcts_cnt already ran these models at). The
+misframing ("lower gmu = more PRM headroom") was the root error.
+**Revisit if:** a larger generator needs more than 0.3*total for its
+own weights+KV (raise via `llm.gpu_memory_utilization=` on the CLI),
+or a bigger GPU changes the arithmetic.
+
+## 2026-06-20 — Configs: default prm_batch_size lowered 2 -> 1
+
+**Context:** `prm_batch_size` is the PRM forward-pass micro-batch
+*inside* the search loop (distinct from `prm.score_batch_size` for the
+final dataset). Default was 2 across `MCTSCntConfig`,
+`MCTSSemV01Config` (inherited by v02), and the two sem YAMLs.
+**Decision:** default `prm_batch_size = 1` in all four places.
+**Why:** throughput-only knob (does not change accuracy — same
+candidates scored, only batched differently), lowered to ease PRM
+memory pressure on the V100S with the larger co-resident PRMs. Result
+dirs now tag `--prmbs-1`; existing `--prmbs-2/4` runs are unaffected
+and stay comparable on the metric that matters (pass@gb).
+**Revisit if:** PRM scoring becomes the wall-clock bottleneck and
+memory allows a larger micro-batch (raise via CLI/YAML).
+
 ## 2026-06-20 — Configs: config_name always tags projection (incl. --proj-none), reversing "append only when on"
 
 **Context:** the 2026-06-18 projection decision appended the `--proj-`
