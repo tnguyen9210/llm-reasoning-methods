@@ -449,3 +449,29 @@ class RLHFlowPRM(PRM):
         del hs
         torch.cuda.empty_cache()
         return embeds
+
+
+# Registry mapping cfg.prm.kind -> wrapper class. Single source of
+# truth for "which PRM kinds exist" so launchers (generate_mcts_cnt,
+# generate_mcts_sem, prepare_scored_dataset, ...) don't each carry
+# their own copy of this dict — add a new kind here once and every
+# caller of build_prm() picks it up.
+PRM_REGISTRY: dict[str, type[PRM]] = {
+    "rlhflow": RLHFlowPRM,
+    "qwen": QwenPRM,
+}
+
+
+def build_prm(kind: str, model_path: str, device: str = "cuda:0", **kwargs) -> PRM:
+    """Construct the PRM wrapper registered under `kind`.
+
+    Raises ValueError (not KeyError) on an unknown kind, listing the
+    valid options — callers don't need their own existence check.
+    """
+    prm_cls = PRM_REGISTRY.get(kind)
+    if prm_cls is None:
+        raise ValueError(
+            f"Unknown prm.kind: {kind!r}. "
+            f"Expected one of {sorted(PRM_REGISTRY)}"
+        )
+    return prm_cls(model_path=model_path, device=device, **kwargs)

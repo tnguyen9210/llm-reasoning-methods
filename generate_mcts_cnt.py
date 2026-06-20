@@ -17,7 +17,7 @@ from vllm import LLM
 import wandb
 
 from core import mcts_cnt_search_v05_00_00
-from core.reward_models import QwenPRM, RLHFlowPRM
+from core.reward_models import build_prm
 from core.scoring import build_scored_dataset
 from utils.configs import (
     ExpConfig, MCTSCntConfig, config_name, level_dir,
@@ -28,11 +28,6 @@ from utils.load_data import load_data_hf
 
 algo_dict = {
     "mcts_cnt": mcts_cnt_search_v05_00_00,
-}
-
-prm_dict = {
-    "rlhflow": RLHFlowPRM,
-    "qwen": QwenPRM,
 }
 
 # Register the structured schemas so the YAML binds onto typed,
@@ -82,13 +77,7 @@ def main(cfg: ExpConfig):
         seed=cfg.gen.seed,
     )
 
-    prm_cls = prm_dict.get(cfg.prm.kind)
-    if prm_cls is None:
-        raise ValueError(
-            f"Unknown prm.kind: {cfg.prm.kind!r}. "
-            f"Expected one of {sorted(prm_dict)}"
-        )
-    prm = prm_cls(model_path=cfg.prm.prm_dir, device=cfg.prm.device_map)
+    prm = build_prm(cfg.prm.kind, cfg.prm.prm_dir, device=cfg.prm.device_map)
 
     load_kwargs = {"ds_split": cfg.data.ds_split}
     if cfg.data.level is not None:
