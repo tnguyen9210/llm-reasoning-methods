@@ -12,7 +12,7 @@ level: null
 # experiment
 algo: bon
 algo_version: v01_0_0
-num_trials: 4
+num_trials: 2
 num_questions: -1  # -1 = use full dataset
 
 # search params

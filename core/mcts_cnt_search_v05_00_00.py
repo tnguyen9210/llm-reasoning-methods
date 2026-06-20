@@ -295,7 +295,8 @@ def _generate_candidates(
         for output in candidate_infos
     ]
     candidate_scores = prm.score(
-        [question], [cand_texts], batch_size=4
+        [question], [cand_texts],
+        batch_size=config.search.prm_batch_size,
     )
     # score returns [question][answer][step]; one question here, so
     # candidate_scores[0] is a list of candidates, each a per-step

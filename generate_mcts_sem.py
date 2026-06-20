@@ -21,11 +21,12 @@ from core import (
     mcts_sem_search_v01_00_00,
     mcts_sem_search_v02_00_00,
 )
-from core.reward_models import RLHFlowPRM
+from core.reward_models import QwenPRM, RLHFlowPRM
 from core.scoring import build_scored_dataset
 from utils.configs import (
     ExpConfig, MCTSSemV01Config, MCTSSemV02Config, config_name,
     level_dir, save_wandb_run_id, load_wandb_run_id,
+    save_timing_state, load_timing_state,
 )
 from utils.load_data import load_data_hf
 
@@ -38,6 +39,11 @@ from utils.load_data import load_data_hf
 algo_dict = {
     "mcts_sem_v01": mcts_sem_search_v01_00_00,
     "mcts_sem_v02": mcts_sem_search_v02_00_00,
+}
+
+prm_dict = {
+    "rlhflow": RLHFlowPRM,
+    "qwen": QwenPRM,
 }
 
 # Register the structured schemas so the YAML binds onto typed,
@@ -108,7 +114,13 @@ def main(cfg: ExpConfig):
             seed=cfg.gen.seed,
         )
 
-    prm = RLHFlowPRM(model_path=cfg.prm.prm_dir, device=cfg.prm.device_map)
+    prm_cls = prm_dict.get(cfg.prm.kind)
+    if prm_cls is None:
+        raise ValueError(
+            f"Unknown prm.kind: {cfg.prm.kind!r}. "
+            f"Expected one of {sorted(prm_dict)}"
+        )
+    prm = prm_cls(model_path=cfg.prm.prm_dir, device=cfg.prm.device_map)
 
     load_kwargs = {"ds_split": cfg.data.ds_split}
     if cfg.data.level is not None:
@@ -169,6 +181,13 @@ def main(cfg: ExpConfig):
     if start_trial > 0:
         print(f"resuming: {start_trial}/{num_trials} trials already done")
 
+    # Running average of per-trial timing, logged to W&B as
+    # time_per_question_s / time_per_trial_hr. Seeded from the sidecar
+    # so a resume continues the SAME average rather than restarting it
+    # from this process's first trial (n_done/avg are (0, 0.0, 0.0) on
+    # a fresh launch, since load_timing_state has nothing to load).
+    n_done, avg_q_s, avg_trial_hr = load_timing_state(result_dir)
+
     total_start = time.time()
     for trial_idx in range(start_trial, num_trials):
         trial_start = time.time()
@@ -192,13 +211,18 @@ def main(cfg: ExpConfig):
             fout.write('\n')
         os.replace(tmp_path, out_path)
 
-        # 2. Log timing to W&B.
+        # 2. Fold this trial into the running average and log it to
+        # W&B (cumulative over all trials so far, not just this one).
         elapsed = time.time() - trial_start
-        print(f"it takes {elapsed / num_questions:0.4f}s per question")
-        print(f"it takes {elapsed / 3600:0.2f}h per trial")
+        avg_q_s = (avg_q_s * n_done + elapsed / num_questions) / (n_done + 1)
+        avg_trial_hr = (avg_trial_hr * n_done + elapsed / 3600) / (n_done + 1)
+        n_done += 1
+        save_timing_state(result_dir, n_done, avg_q_s, avg_trial_hr)
+        print(f"running avg: {avg_q_s:0.4f}s per question")
+        print(f"running avg: {avg_trial_hr:0.2f}h per trial")
         wandb.log({
-            "time_per_question_s": elapsed / num_questions,
-            "time_per_trial_hr": elapsed / 3600,
+            "time_per_question_s": avg_q_s,
+            "time_per_trial_hr": avg_trial_hr,
         }, step=trial_idx)
 
         # 3. Mark the trial done. The marker's presence means

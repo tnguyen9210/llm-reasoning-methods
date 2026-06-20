@@ -1,4 +1,5 @@
 
+import json
 import os
 from dataclasses import dataclass, field
 from typing import Any, Optional
@@ -26,6 +27,46 @@ def load_wandb_run_id(result_dir: str) -> Optional[str]:
         return None
     with open(path) as fin:
         return fin.read().strip() or None
+
+
+# Timing sidecar: the launcher logs a running average of per-trial
+# timing to W&B (time_per_question_s, time_per_trial_hr), averaged
+# over all trials completed so far. A resume restarts this process
+# with an empty in-memory average, so the running average up through
+# the last completed trial is persisted here and folded into the
+# next trial's average on resume — same rationale as the run-id
+# sidecar (separate process, needs the prior state on disk).
+TIMING_STATE_FILE = "timing_state.json"
+
+
+def save_timing_state(
+    result_dir: str,
+    n_done: int,
+    avg_time_per_question_s: float,
+    avg_time_per_trial_hr: float,
+) -> None:
+    with open(f"{result_dir}/{TIMING_STATE_FILE}", "w") as fout:
+        json.dump({
+            "n_done": n_done,
+            "avg_time_per_question_s": avg_time_per_question_s,
+            "avg_time_per_trial_hr": avg_time_per_trial_hr,
+        }, fout)
+
+
+def load_timing_state(result_dir: str) -> tuple[int, float, float]:
+    """Return (n_done, avg_time_per_question_s, avg_time_per_trial_hr)
+    saved by a prior run in this result dir, or (0, 0.0, 0.0) if no
+    sidecar exists (fresh launch, or a run from before this was
+    added)."""
+    path = f"{result_dir}/{TIMING_STATE_FILE}"
+    if not os.path.exists(path):
+        return 0, 0.0, 0.0
+    with open(path) as fin:
+        d = json.load(fin)
+    return (
+        d["n_done"], d["avg_time_per_question_s"],
+        d["avg_time_per_trial_hr"],
+    )
 
 
 # Prompt assets — vendored from sal so this project has no sal
@@ -115,11 +156,18 @@ class LLMConfig:
     # False = capture CUDA graphs (faster throughput, slower
     # startup, more memory). True for quick/debug runs.
     enforce_eager: bool = False
+    # vLLM quantization method, e.g. "gptq"; None = unquantized.
+    # llm_dir must point at the pre-quantized checkpoint when set.
+    quantization: Optional[str] = None
+    load_format: str = "auto"
 
 
 @dataclass
 class PRMConfig:
     """Process reward model group. Selected via conf/prm/."""
+    # Which PRM wrapper class to instantiate in launchers.
+    # Supported values: "rlhflow", "qwen".
+    kind: str = "rlhflow"
     name: str = "Llama3.1-8B-PRM-Deepseek-Data"
     prm_dir: str = "???"          # required; set in the YAML group
     device_map: str = "cuda:0"
@@ -160,6 +208,12 @@ class MCTSCntConfig(SearchConfig):
     num_phases: int = 1000
     gen_budget: int = 80          # total generations across the run
     cpuct: float = 2.0
+
+    # PRM forward-pass micro-batch *inside* the search loop (distinct
+    # from prm.score_batch_size, which scores the final dataset). Kept
+    # small because in-loop scoring is per-candidate-set. Mirrors
+    # MCTSSemV01Config.prm_batch_size.
+    prm_batch_size: int = 2
 
 
 @dataclass
@@ -250,7 +304,7 @@ class MCTSSemV01Config(SearchConfig):
     # PRM forward-pass micro-batch *inside* the search loop (distinct
     # from prm.score_batch_size, which scores the final dataset). Kept
     # small because in-loop scoring is per-candidate-set.
-    prm_batch_size: int = 4
+    prm_batch_size: int = 2
 
     # Populated at runtime by the launcher when embeds_center=True
     # (np.load of the mean .npy). Not set from YAML.
@@ -300,7 +354,7 @@ class BoNConfig(SearchConfig):
 @dataclass
 class RunConfig:
     """Run-level / hardware params not tied to a model or method."""
-    num_trials: int = 4
+    num_trials: int = 2
     num_questions: int = -1       # -1 = use full dataset
     # Worker processes for the CPU scoring maps (answer parsing +
     # sympy canonicalization) in build_scored_dataset. 1 = single
@@ -377,6 +431,8 @@ def config_name(cfg) -> str:
             f"--bs-{cfg.search.batch_size}--d-{cfg.search.max_depth}"
             f"--b-{cfg.search.gen_budget:03d}"
             f"--cpuct-{cfg.search.cpuct}"
+            f"--prm-{cfg.prm.kind}"
+            f"--prmbs-{cfg.search.prm_batch_size}"
         )
     if method == "mcts_bl_cnt_v01":
         return (
@@ -424,6 +480,8 @@ def config_name(cfg) -> str:
             f"--enorm-{cfg.search.embeds_normalize}"
             f"--ecenter-{cfg.search.embeds_center}"
             f"{proj_str}{cov_str}"
+            f"--prm-{cfg.prm.kind}"
+            f"--prmbs-{cfg.search.prm_batch_size}"
         )
     if method == "bon":
         return (

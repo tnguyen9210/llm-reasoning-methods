@@ -12,7 +12,7 @@ level: 4
 
 # experiment
 algo: mcts_embeds
-num_trials: 4
+num_trials: 2
 num_questions: -1  # -1 = use full dataset
 
 # search params

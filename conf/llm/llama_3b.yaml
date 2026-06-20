@@ -5,6 +5,4 @@ llm_dir: ${base_dir}/Llama3.2-3B-Instruct
 dtype: float16
 tensor_parallel_size: 1
 max_model_len: 5000
-# 0.4 (~13 GB) leaves room for the 8B PRM (~16 GB) alongside vLLM in
-# the inline-scoring path; 3B weights + KV cache fit comfortably.
 gpu_memory_utilization: 0.3

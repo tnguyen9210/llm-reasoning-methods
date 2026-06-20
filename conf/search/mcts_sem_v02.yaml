@@ -56,4 +56,4 @@ revisit_policy: reuse   # "reuse" | "regenerate"
 # in the top-level YAML.
 
 # PRM micro-batch for in-loop candidate scoring
-prm_batch_size: 4
+prm_batch_size: 2

@@ -22,7 +22,7 @@ level: 4
 
 # experiment
 algo: mcts_bl_cnt_v02
-num_trials: 4
+num_trials: 2
 num_questions: -1  # -1 = use full dataset
 node_name: ""
 

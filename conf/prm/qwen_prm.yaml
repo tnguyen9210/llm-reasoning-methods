@@ -1,7 +1,7 @@
 # @package prm
 # Process reward model group → binds onto PRMConfig.
-kind: rlhflow
-name: Llama3.1-8B-PRM-Deepseek-Data
-prm_dir: ${base_dir}/Llama3.1-8B-PRM-Deepseek-Data
+kind: qwen
+name: Qwen2.5-Math-PRM-7B
+prm_dir: ${base_dir}/Qwen2.5-Math-PRM-7B
 device_map: cuda:0
 score_batch_size: 2
