@@ -7,6 +7,66 @@ section per decision. Titles carry one or two area prefixes
 (`Area:` or `Area, Area:`) so skimming groups by eye and
 `grep '^## .*Area'` gives a per-topic view.
 
+## 2026-06-21 — Configs: result-dir naming = readable prefix + config hash; locate runs by recorded manifest, not recomputed name
+
+**Context:** `config_name(cfg)` encoded *every* result-affecting knob
+into the dir name (the 2026-06-18 "encode every knob" decision —
+correct for collision-safety). Side effect: each new knob extended the
+name format, so post-processing that *recomputed* `config_name` could
+no longer find pre-existing dirs → manual rename of old dirs, hit ~3×
+in one session. Root cause (vault note
+`question-config-name-experiment-naming`): the name did two jobs with
+opposite stability needs — *identity* (wants to change as the schema
+grows) and *addressing* (needs to stay stable). Recomputing an
+addressing key against a live schema is inherently fragile.
+**Decision:** split the two jobs.
+- **Name = readable prefix + hash.** `config_name` is now
+  `{algo}{--level-N if set}--{llm}--{prm}--d-{depth}--bs-{batch}
+  --b-{budget}--cfg-{hash8}`. The prefix is a *cosmetic* curated subset
+  for eyeball-skimming; the `cfg-{hash8}` (sha1 over the full
+  run-affecting config, cosmetic/env fields stripped) is the
+  collision-safe identity. Other knobs (cpuct, lam, proj, cov, tmpl,
+  prm_batch_size, …) leave the name and live only in the hash +
+  manifest.
+- **`level` is an optional prefix field** — shown only when
+  `data.level is not None` (omitted for a full split or a level-less
+  dataset like AIME), but in the hash *unconditionally* so a level-N
+  and a full-split run never collide regardless of display. No
+  dataset-specific logic needed; `level=None` = "absent" covers every
+  case.
+- **Record the identity once; locate by recorded fact.** Launchers
+  `write_manifest()` a `manifest.json` (config_name, config_hash,
+  config_identity, varied) into each dir at creation. Readers
+  (`compute_stats`, `prepare_scored_dataset`) locate a run via
+  `resolve_result_dir` → `find_run_dir` (match the *recorded* hash in
+  manifests), or an explicit `+result_dir=<path>` override — NOT by
+  re-deriving the name. The dir's trial-file basename comes from the
+  manifest's recorded `config_name`, so files resolve even if the name
+  format changes again.
+- **Launcher is the one allowed recompute site.** Resume (`.done`)
+  needs deterministic config→dir to decide resume-vs-fresh, so the
+  launcher recomputes `config_name`; readers never do.
+**Why:** the hash gives complete collision-safety (the 2026-06-18
+property, preserved — adding a knob changes the hash → new dir, never a
+silent collision) while the prefix keeps names short and skimmable. The
+recurring "added a knob → rename old dirs" tax disappears because
+readers match recorded manifests instead of recomputing. Full analysis
+(full-vs-diff hash trade, why diff-from-defaults is default-change-
+fragile, why "record once" is the real fix) in the vault note +
+`prompt-experiment-naming-review{,-followup}`.
+**Migration:** new runs get the short prefix+hash names; existing dirs
+keep their long-form names and are reached via `+result_dir=`
+(verified) or after `backfill_manifests.py --write` (writes a manifest
+recording the old name as `config_name`; `config_hash: null` since the
+full identity isn't recoverable from an old name — so old dirs are
+addressable by path/name, not by recomputed hash, which matches the
+agreed design). Ran the backfill over the 45 existing dirs.
+**Revisit if:** `results/` grows enough that the O(N) glob in
+`find_run_dir` is slow (add an index file), or run-affecting state
+starts living outside `cfg` (env var / code constant) — then the
+manifest is incomplete and the hash under-identifies (currently only
+the hardcoded projection seed is in this category, and it's fixed).
+
 ## 2026-06-20 — Reward models: QwenPRM gains _embed_batch; PRM-source embeds drop the scoring separators
 
 **Context:** mcts_sem v02 sources its diversity embeddings from the PRM
