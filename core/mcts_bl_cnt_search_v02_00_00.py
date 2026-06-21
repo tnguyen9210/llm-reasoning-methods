@@ -317,7 +317,8 @@ def _generate_candidates(
     # the templated string: some templates / transformers versions trim
     # or crash on trailing "\n\n" inside apply_chat_template, but the
     # model must see the separator to continue with a next step instead
-    # of emitting EOS (docs/findings.md, 2026-06-11).
+    # of emitting EOS (docs/findings/coding-findings/
+    # library-version-trajectory-completeness.md, 2026-06-11).
     current_text_clean = current_text.removesuffix("\n\n")
     current_convs = [build_conv(question, current_text_clean, config.system_prompt)]
     current_templated = tokenizer.apply_chat_template(

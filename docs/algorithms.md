@@ -4,7 +4,7 @@ Map of active search algorithm variants: which core file implements each,
 which launcher runs it, and which config drives it. Algorithm descriptions
 live in the module docstrings of the core files — this file is the index,
 not the spec. Cross-cutting design decisions: [decisions.md](decisions.md).
-Empirical observations about repo behavior: [findings.md](findings.md).
+Empirical observations about repo behavior: [findings/](findings/README.md).
 
 ## Terminology
 

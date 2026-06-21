@@ -59,7 +59,8 @@ relevant if these packages are used:
 - `gptqmodel` is pinned to 5.7.0 (with `kernels==0.12.0`): versions
   ≥5.8 require `transformers>=5.2`, incompatible with vllm's
   `transformers<5` cap. 7.0.0 crashed at import under 4.57.6;
-  resolved 2026-06-12, see `findings.md`.
+  resolved 2026-06-12, see
+  `findings/coding-findings/gptqmodel-transformers-pin.md`.
 - `xformers 0.0.30` was built against `torch==2.7.0`.
 - `trl 0.9.6` requires `numpy<2`.
 - `datasets 4.8.5` wants `fsspec<=2026.2.0` (installed: 2026.4.0).
@@ -68,6 +69,8 @@ relevant if these packages are used:
 
 Generated outputs are environment-sensitive: a step-separator lost
 during chat templating flips generation from "continue next step" to
-"emit EOS" (see `findings.md` and
-`unittests/test_step_separator_affect_generation.ipynb`, the env-gate
-notebook). Re-run that notebook after any change to either env.
+"emit EOS" (see
+`findings/coding-findings/library-version-trajectory-completeness.md`
+and `unittests/test_step_separator_affect_generation.ipynb`, the
+env-gate notebook). Re-run that notebook after any change to either
+env.

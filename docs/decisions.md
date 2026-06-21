@@ -581,7 +581,8 @@ didn't spell out; every multi-method launcher (`generate_bon`,
 **Context:** the search code applied a single hardcoded Llama-3.1
 `custom_chat_template` to *every* model. The
 `examine_llm_chat_templates_v1` notebook
-([findings](findings.md) and the vault note `llm-chat-templates`)
+([findings](findings/coding-findings/library-version-trajectory-completeness.md)
+and the vault note `llm-chat-templates`)
 showed why it was added — Llama's *native* template silently trims
 the trailing `\n\n` step separator — but also that it forces Llama
 format onto Qwen (overriding `<|im_start|>`) and drops Llama's BOS.
@@ -654,7 +655,8 @@ Transformers gains continuous batching.
 ## 2026-06-11 — Env, Experiments: py311 env is canonical; old-env results are invalid
 
 **Context:** the 2026-06-11 finding in
-[findings.md](findings.md) — the old stack (vLLM 0.6.4 /
+[findings/coding-findings/library-version-trajectory-completeness.md](findings/coding-findings/library-version-trajectory-completeness.md)
+— the old stack (vLLM 0.6.4 /
 transformers 4.45.2 / torch 2.5.1) silently dropped the trailing
 step separator from continuation prompts, producing ~80% abandoned
 trajectories (now guarded in code by strip-and-reappend), and

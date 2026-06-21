@@ -1,80 +1,6 @@
-# Findings
+# Library versions change generated output content
 
-Append-only log of empirical observations about repo behavior:
-environment sensitivity, library quirks, format gotchas — anything
-that affects how experiments are run or interpreted. Not a home for
-scientific results (algorithm comparisons belong in W&B and paper
-notes). Newest first. One `##` per finding. Decisions motivated by a
-finding go in [decisions.md](decisions.md) and reference it.
-
-## 2026-06-12 — gptqmodel is capped at 5.7.x by vllm's transformers pin
-
-**Observation:** `from gptqmodel import GPTQModel` under gptqmodel
-7.0.0 fails at import with `AttributeError:
-module 'transformers.integrations.hub_kernels' has no attribute
-'lazy_load_kernel'` — its import-time compat patch assumes the
-transformers-5.x API with no `hasattr` guard.
-
-**Why:** gptqmodel ≥5.8 requires `transformers>=5.2`, while
-vllm 0.18.1 caps `transformers<5`. The ranges don't overlap, so any
-gptqmodel ≥5.8 can never work in `py311`; pip installs it anyway if
-told to. The newest compatible release is 5.7.0
-(`transformers>=4.57.1`). Two traps when installing it:
-
-- `pip install gptqmodel==5.7.0` side-upgrades transformers to 5.x
-  (no upper cap in gptqmodel's metadata) — transformers 4.57.6,
-  huggingface_hub 0.36.2, and fsspec 2026.4.0 must be re-pinned
-  afterwards per the freeze file.
-- gptqmodel 5.7.0 pulls in `kernels`; kernels ≥0.13 requires
-  huggingface_hub ≥1.x, so `kernels==0.12.0` is the matching pin.
-
-**Implication:** `gptqmodel==5.7.0` + `kernels==0.12.0` is the
-pinned pair (recorded in `docs/envs/py311.txt`). Never
-`pip install -U gptqmodel` in this env; after any reinstall, verify
-transformers is still 4.57.6 before trusting results.
-
-## 2026-06-12 — HF model deletion does not free GPU memory
-
-**Observation:** after loading a HF Transformers model with
-`device_map="cuda:0"` and then running:
-
-```python
-del model_hf
-del tokenizer
-gc.collect()
-torch.cuda.empty_cache()
-```
-
-`torch.cuda.mem_get_info()` still reports ~6.12 GB used — roughly
-the full footprint of the model weights.
-
-**Why:** `torch.cuda.mem_get_info()` reports driver-level memory,
-which includes the PyTorch CUDA allocator's *reserved* pool.
-`empty_cache()` releases memory from the allocator back to the
-driver, but only if there are no remaining live tensors pointing
-into it. Model weights loaded via `device_map` are held by the
-model's `state_dict` tensors; deleting the Python model object
-drops the reference count but garbage collection is not guaranteed
-to run immediately. Even after `gc.collect()`, the CUDA allocator
-may retain the pool for reuse rather than returning it to the
-driver.
-
-In practice the residual is not released even when a vLLM engine
-is subsequently created. The ~6 GB sits on top of whatever vLLM
-allocates for its own budget. For example, with a 32 GB GPU and
-`gpu_memory_utilization=0.7`, the expected vLLM budget is
-~22.4 GB, but observed GPU memory after vLLM init is ~29.29 GB —
-consistent with 22.4 GB (vLLM) + 6.12 GB (unreleased HF
-residual) + ~0.75 GB (CUDA context).
-
-**Implication:** if you intend to run HF and vLLM sequentially
-in the same kernel, account for the HF residual when choosing
-`gpu_memory_utilization` — the effective budget available to vLLM
-is reduced by the amount the HF model left behind. The safe
-pattern is to restart the kernel between HF and vLLM runs if you
-need the full GPU for vLLM.
-
-## 2026-06-11 — Library versions change generated output content
+*2026-06-11*
 
 **Observation:** the same code, config, and seeds produce materially
 different trajectories under different library stacks. With
@@ -83,7 +9,7 @@ different trajectories under different library stacks. With
 torch 2.5.1) yielded 0–12.5% complete trajectories; the newer py311
 stack yielded 81–97%.
 
-### The one fact that drives everything
+## The one fact that drives everything
 
 The search builds solutions step by step, with `\n\n` between steps.
 To generate the next step, the partial solution is templated into a
@@ -104,7 +30,7 @@ Prompt B: "...The dot product is 13."       <- separator missing
 So completeness reduces entirely to: does the trailing `\n\n` survive
 into the prompt the model actually sees?
 
-### Two different things delete the separator
+## Two different things delete the separator
 
 1. **Our own code:** an explicit `removesuffix("\n\n")` before
    templating — deletes it in every environment.
@@ -115,7 +41,7 @@ into the prompt the model actually sees?
    on message content, its one difference from the stock Llama
    template.)
 
-### The 2×2 that explains the confusion
+## The 2×2 that explains the confusion
 
 | | old env (tf 4.45) | py311 (newer) |
 |---|---|---|
@@ -126,7 +52,7 @@ The three broken cells produce **byte-identical** generations —
 identical final prompts plus identical seeds, reproducible even
 across the two vLLM versions.
 
-### Why the diagnosis took three rounds
+## Why the diagnosis took three rounds
 
 1. Removed the strip, tested in the old env → no change (the library
    deletes the separator anyway) → the strip looked cosmetic.
@@ -137,7 +63,7 @@ across the two vLLM versions.
    to the old env → the strip itself is harmful; the environment only
    matters when the strip is absent.
 
-### Why the strip existed, and the fix
+## Why the strip existed, and the fix
 
 The strip was added (commit 34b7d11) to avoid a real crash: with the
 *stock* Llama template, `apply_chat_template` raises
@@ -160,7 +86,7 @@ prompt = prompt + "\n\n"             # nothing can remove it anymore
 re-appending after that call makes the prompt correct by
 construction, independent of the transformers version.
 
-### Related observations, same env
+## Related observations, same env
 
 - transformers 4.45 returns a raw tensor from
   `apply_chat_template(..., return_tensors="pt")` unless
