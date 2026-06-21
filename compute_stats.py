@@ -30,8 +30,8 @@ import wandb
 from utils import metrics
 from utils.configs import (
     ExpConfig, BoNConfig, MCTSCntConfig, BLMCTSCntConfig,
-    MCTSSemV01Config, MCTSSemV02Config, config_name,
-    level_dir, load_wandb_run_id,
+    MCTSSemV01Config, MCTSSemV02Config, resolve_result_dir,
+    load_wandb_run_id,
 )
 
 from datasets.utils.logging import set_verbosity_error
@@ -56,11 +56,12 @@ cs.store(group="search", name="mcts_sem_v02_schema", node=MCTSSemV02Config)
 def main(cfg: ExpConfig):
     root_dir = hydra.utils.get_original_cwd()
 
-    run_name = config_name(cfg)
-    result_dir = (
-        f"{root_dir}/results/{cfg.data.name}"
-        f"/{level_dir(cfg)}/{run_name}"
+    # Locate the run by its recorded identity (manifest hash), or by
+    # an explicit +result_dir=... override for old/un-backfilled dirs.
+    result_dir, run_name = resolve_result_dir(
+        root_dir, cfg, override=cfg.get("result_dir", None),
     )
+    print(f"result_dir = {result_dir}")
     print(f"config_name = {run_name}")
 
     # Summary columns:

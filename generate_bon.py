@@ -19,7 +19,7 @@ import wandb
 from core import bon_search_v01_0_0
 from utils.configs import (
     ExpConfig, BoNConfig, config_name, level_dir,
-    save_wandb_run_id, load_wandb_run_id,
+    write_manifest, save_wandb_run_id, load_wandb_run_id,
 )
 from utils.load_data import load_data_hf
 
@@ -91,6 +91,10 @@ def main(cfg: ExpConfig):
         f"/{level_dir(cfg)}/{run_name}"
     )
     _make_result_dir(result_dir)
+    # Record the full config identity so post-processing can locate
+    # this run by recorded hash (find_run_dir), not by re-deriving the
+    # name. Idempotent on a resume (atomic overwrite).
+    write_manifest(result_dir, cfg)
 
     # Resume onto the same run if this is a restart. load_ returns None
     # on a fresh launch (no sidecar) -> W&B mints a new id. resume="allow"

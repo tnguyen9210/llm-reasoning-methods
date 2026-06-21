@@ -1,4 +1,6 @@
 
+import glob
+import hashlib
 import json
 import os
 from dataclasses import dataclass, field
@@ -411,87 +413,198 @@ def level_dir(cfg) -> str:
     return f"{cfg.search.method}{level_str}"
 
 
+# --------------------------------------------------------------- #
+# Run identity: readable prefix + a hash of the full config.       #
+#                                                                  #
+# The dir name is `{readable prefix}--cfg-{hash8}`. The prefix is a #
+# curated, *cosmetic* subset of fields for eyeball-skimming; the    #
+# hash is the collision-safe identity, computed over the full       #
+# run-affecting config. This splits the two jobs the old all-knobs- #
+# in-the-name scheme conflated: identity (the hash, complete) vs.   #
+# human display (the prefix, partial) — so adding a knob no longer  #
+# changes the prefix and orphans old dirs, and the hash still       #
+# guarantees distinct configs get distinct dirs for resume/.done.   #
+#                                                                   #
+# IDENTITY RULE: the hash is RECORDED into manifest.json at run     #
+# creation; readers locate a run by matching that recorded hash     #
+# (find_run_dir), NOT by trusting a re-derived name. Only the        #
+# launcher recomputes (to decide resume-vs-fresh). Full rationale:   #
+# vault note `question-config-name-experiment-naming` /              #
+# docs/decisions.md 2026-06-21.                                      #
+# --------------------------------------------------------------- #
+
+MANIFEST_FILE = "manifest.json"
+
+# Config groups whose fields define a run's *results*. Everything in
+# these (resolved) goes into the identity hash + manifest. Cosmetic /
+# environment-only fields are stripped below.
+_HASH_GROUPS = ("search", "gen", "llm", "prm", "data")
+
+# Fields excluded from the identity hash: they don't change the
+# produced results, only how/where the job runs or reports. Keyed by
+# group. (num_trials/num_questions live in `run`, which isn't a hash
+# group at all, so they're excluded by omission.)
+_HASH_EXCLUDE = {
+    "llm": {"gpu_memory_utilization"},
+    "prm": {"device_map", "score_batch_size"},
+    "search": {"embeds_gpu_memory_utilization", "embeds_mean"},
+    "data": {"ds_dir", "question_field"},
+}
+
+
+def _resolved(cfg):
+    """cfg as a plain nested dict, interpolations resolved. Imported
+    lazily so notebooks that build dataclasses directly (no OmegaConf)
+    can still import this module."""
+    from omegaconf import OmegaConf
+    if OmegaConf.is_config(cfg):
+        return OmegaConf.to_container(cfg, resolve=True)
+    # Already a plain object (dataclass instance from a notebook).
+    from dataclasses import asdict, is_dataclass
+    return asdict(cfg) if is_dataclass(cfg) else dict(cfg)
+
+
+def config_identity(cfg) -> dict:
+    """The run-affecting config, flat-by-group, with cosmetic/env
+    fields stripped. This is exactly what config_hash hashes and what
+    write_manifest records — one definition so the two never drift."""
+    full = _resolved(cfg)
+    out: dict = {}
+    for group in _HASH_GROUPS:
+        gvals = full.get(group)
+        if not isinstance(gvals, dict):
+            continue
+        exclude = _HASH_EXCLUDE.get(group, set())
+        out[group] = {
+            k: v for k, v in gvals.items() if k not in exclude
+        }
+    return out
+
+
+def config_hash(cfg, n: int = 8) -> str:
+    """First `n` hex chars of a sha1 over config_identity. Canonical
+    JSON (sorted keys, no whitespace) so the hash is stable across
+    field-ordering and platform. RECORD this once; do not rely on
+    re-deriving it to find old runs (see find_run_dir)."""
+    blob = json.dumps(
+        config_identity(cfg), sort_keys=True, separators=(",", ":"),
+        default=str,
+    )
+    return hashlib.sha1(blob.encode("utf-8")).hexdigest()[:n]
+
+
 def config_name(cfg) -> str:
-    """Self-describing run name. Dispatches on the search method so
-    each algo emits its own knobs. For the prm800k dataset the level
-    is also encoded here (e.g. mcts_cnt--level-4--...), so the run
-    name is self-describing on its own; it still appears in the parent
-    dir too (see level_dir). Works on ExpConfig or its DictConfig
-    (struct mode exposes only declared fields)."""
-    method = cfg.search.method
-    tmpl = "custom" if cfg.llm.use_custom_template else "native"
-    # Drop the redundant "-Instruct" marker for shorter dirs. Global
-    # (not just suffix) — names stay unique for the current checkpoint
-    # set since GPTQ etc. still distinguish.
+    """Run dir name: readable prefix + `--cfg-{hash}`.
+
+    Prefix order (curated for skimming): algo, level (only when set —
+    a None level, e.g. a full split or a level-less dataset like AIME,
+    is omitted), llm, prm, depth, batch_size, budget. Everything else
+    (cpuct, lam, proj, cov, tmpl, prm_batch_size, ...) is NOT in the
+    name — it's in the hash + manifest. Works on a DictConfig
+    (launcher) or a real ExpConfig (notebook).
+    """
+    algo = cfg.search.method
+    # Drop the redundant "-Instruct" marker for shorter dirs.
     llm_name = cfg.llm.name.replace("-Instruct", "")
-    # prm800k only: bake the level into the run name. Other datasets
-    # keep the level in the parent dir alone.
+    prm_name = getattr(cfg.prm, "kind", None)
+    # level: optional, dataset-specific. Shown only when set; the hash
+    # carries it unconditionally so a level-N vs full-split run never
+    # collide regardless of whether the prefix shows it.
     level_str = (
         f"--level-{cfg.data.level}"
-        if cfg.data.name == "prm800k" and cfg.data.level is not None
-        else ""
+        if cfg.data.level is not None else ""
     )
-    if method == "mcts_cnt":
-        return (
-            f"mcts_cnt{level_str}--{llm_name}--tmpl-{tmpl}"
-            f"--bs-{cfg.search.batch_size}--d-{cfg.search.max_depth}"
-            f"--b-{cfg.search.gen_budget:03d}"
-            f"--cpuct-{cfg.search.cpuct}"
-            f"--prm-{cfg.prm.kind}"
-            f"--prmbs-{cfg.search.prm_batch_size}"
+    prm_str = f"--{prm_name}" if prm_name is not None else ""
+    return (
+        f"{algo}{level_str}--{llm_name}{prm_str}"
+        f"--d-{cfg.search.max_depth}--bs-{cfg.search.batch_size}"
+        f"--b-{cfg.search.gen_budget:03d}"
+        f"--cfg-{config_hash(cfg)}"
+    )
+
+
+def write_manifest(result_dir: str, cfg, varied=None) -> None:
+    """Record the run's identity into {result_dir}/manifest.json so it
+    can be located later by recorded fact (find_run_dir), not by
+    re-deriving the name. Atomic write (temp + rename). `varied` is an
+    optional list of the knob names this run sweeps — a display hint
+    for tables/readers, not part of identity."""
+    payload = {
+        "config_name": config_name(cfg),
+        "config_hash": config_hash(cfg),
+        "config_identity": config_identity(cfg),
+        "varied": list(varied) if varied else [],
+    }
+    path = f"{result_dir}/{MANIFEST_FILE}"
+    tmp = path + ".tmp"
+    with open(tmp, "w", encoding="utf-8") as fout:
+        json.dump(payload, fout, indent=2, default=str)
+        fout.write("\n")
+    os.replace(tmp, path)
+
+
+def find_run_dir(root_dir: str, cfg) -> Optional[str]:
+    """Locate an existing run dir for `cfg` by matching the recorded
+    identity hash in each candidate's manifest.json — NOT by trusting
+    a re-derived name. Searches results/{data.name}/{level_dir}/*/.
+    Returns the dir path, or None if no manifest matches (a fresh
+    run, or an old dir not yet backfilled with a manifest)."""
+    target = config_hash(cfg)
+    parent = f"{root_dir}/results/{cfg.data.name}/{level_dir(cfg)}"
+    for manifest_path in glob.glob(f"{parent}/*/{MANIFEST_FILE}"):
+        try:
+            with open(manifest_path, encoding="utf-8") as fin:
+                rec = json.load(fin)
+        except (OSError, json.JSONDecodeError):
+            continue
+        if rec.get("config_hash") == target:
+            return os.path.dirname(manifest_path)
+    return None
+
+
+def manifest_run_name(result_dir: str) -> Optional[str]:
+    """The `config_name` recorded in a dir's manifest, or None. This is
+    the authoritative basename for the dir's trial files
+    ({run_name}--trial-NNN.jsonl) — readers should use it rather than
+    recompute config_name, so files resolve even if config_name's
+    format later changes."""
+    path = f"{result_dir}/{MANIFEST_FILE}"
+    try:
+        with open(path, encoding="utf-8") as fin:
+            return json.load(fin).get("config_name")
+    except (OSError, json.JSONDecodeError):
+        return None
+
+
+def resolve_result_dir(root_dir: str, cfg, override=None):
+    """Locate a run's (result_dir, run_name) for a reader
+    (compute_stats / prepare_scored_dataset). Resolution order:
+
+      1. explicit `override` path (e.g. CLI +result_dir=...) — for old
+         dirs with no manifest, or any direct addressing;
+      2. find_run_dir — match cfg's recorded identity hash in a
+         manifest (the robust, record-once path);
+      3. fall back to the freshly-computed config_name path — covers a
+         brand-new run whose dir doesn't exist yet, and reproduces the
+         legacy behavior when no manifest is present.
+
+    run_name is the dir's recorded config_name when a manifest exists
+    (authoritative for the trial filenames), else the dir basename."""
+    if override is not None:
+        result_dir = (
+            override if os.path.isabs(override)
+            else f"{root_dir}/{override}"
         )
-    if method == "mcts_bl_cnt_v01":
-        return (
-            f"mcts_bl_cnt_v01{level_str}--{llm_name}--tmpl-{tmpl}"
-            f"--bs-{cfg.search.batch_size}--d-{cfg.search.max_depth}"
-            f"--b-{cfg.search.gen_budget:03d}"
-            f"--cpuct-{cfg.search.cpuct}"
-        )
-    # mcts_sem_v01 (policy embeds) and mcts_sem_v02 (PRM embeds) share
-    # the same knob set, so one branch covers both; method is the
-    # prefix, so result dirs separate as mcts_sem_v01--... /
-    # mcts_sem_v02--... . embeds_source isn't encoded — it's implied
-    # by the version, and pinning it here would just lengthen the dir.
-    if method in ("mcts_sem_v01", "mcts_sem_v02"):
-        # Projection tag, always appended (incl. --proj-none<dim>), so
-        # the proj=none and proj=sparse arms of a sweep get distinct
-        # dirs and read self-describing — mirrors cov_str below. The
-        # target dim is encoded (it changes the produced embeddings and
-        # may be swept); with proj="none" it must equal the raw pooled
-        # dim. The seed isn't encoded (fixed internally; doesn't vary).
-        # Distinct runs thus get distinct dirs, which the resume/.done
-        # mechanism relies on (docs/decisions.md 2026-06-18).
-        # NOTE: this changed 2026-06-20 from "append only when on" — a
-        # pre-existing proj=none dir from before this (no --proj- tag)
-        # won't be found by config_name and must be renamed to match.
-        embeds_proj = getattr(cfg.search, "embeds_proj", "none")
-        proj_str = f"--proj-{embeds_proj}{cfg.search.embeds_dim}"
-        # cov_update tag, always appended. It does NOT change results
-        # (sm / Sherman-Morrison is machine-precision-identical to exact
-        # — docs/decisions.md 2026-06-18), so encoding it isn't required
-        # for correctness; it's here so an exact-vs-sm *comparison* run
-        # gets distinct result dirs (the resume/.done mechanism keys off
-        # config_name) rather than colliding.
-        cov = getattr(cfg.search, "cov_update", "exact")
-        cov_str = f"--cov-{cov}"
-        return (
-            f"{method}{level_str}--{llm_name}--tmpl-{tmpl}"
-            f"--bs-{cfg.search.batch_size}--d-{cfg.search.max_depth}"
-            f"--b-{cfg.search.gen_budget:03d}"
-            f"--lam-{cfg.search.lam}"
-            f"--dalpha-{cfg.search.ds_alpha}--dbeta-{cfg.search.ds_beta}"
-            f"--estrat-{cfg.search.embeds_strategy}"
-            f"--escope-{cfg.search.embeds_scope}"
-            f"--enorm-{cfg.search.embeds_normalize}"
-            f"--ecenter-{cfg.search.embeds_center}"
-            f"{proj_str}{cov_str}"
-            f"--prm-{cfg.prm.kind}"
-            f"--prmbs-{cfg.search.prm_batch_size}"
-        )
-    if method == "bon":
-        return (
-            f"bon{level_str}--{llm_name}--tmpl-{tmpl}"
-            f"--n-{cfg.search.n}--temp-{cfg.gen.temperature}"
-            f"--mtoks-{cfg.gen.max_tokens}"
-        )
-    raise ValueError(f"Unknown search method: {method!r}")
+    else:
+        result_dir = find_run_dir(root_dir, cfg)
+        if result_dir is None:
+            # No manifest matched: fresh run, or an un-backfilled old
+            # dir. Recompute the name (legacy path).
+            result_dir = (
+                f"{root_dir}/results/{cfg.data.name}"
+                f"/{level_dir(cfg)}/{config_name(cfg)}"
+            )
+    run_name = manifest_run_name(result_dir) or os.path.basename(
+        result_dir.rstrip("/")
+    )
+    return result_dir, run_name

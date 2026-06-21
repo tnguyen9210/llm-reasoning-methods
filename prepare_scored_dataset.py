@@ -43,7 +43,7 @@ from core.reward_models import build_prm
 from core.scoring import build_scored_dataset
 from utils.configs import (
     ExpConfig, BoNConfig, MCTSCntConfig,
-    MCTSSemV01Config, MCTSSemV02Config, config_name, level_dir,
+    MCTSSemV01Config, MCTSSemV02Config, resolve_result_dir,
 )
 from utils.load_data import load_data_hf
 
@@ -76,11 +76,12 @@ def main(cfg: ExpConfig):
         load_kwargs["level"] = cfg.data.level
     dataset = load_data_hf(cfg.data.ds_dir, **load_kwargs)
 
-    run_name = config_name(cfg)
-    result_dir = (
-        f"{root_dir}/results/{cfg.data.name}"
-        f"/{level_dir(cfg)}/{run_name}"
+    # Locate the run by its recorded identity (manifest hash), or by
+    # an explicit +result_dir=... override for old/un-backfilled dirs.
+    result_dir, run_name = resolve_result_dir(
+        root_dir, cfg, override=cfg.get("result_dir", None),
     )
+    print(f"result_dir = {result_dir}")
     print(run_name)
 
     for trial_idx in range(cfg.run.num_trials):
