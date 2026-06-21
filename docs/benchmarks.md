@@ -44,77 +44,48 @@ Qwen2.5-3B result). Llama3.2-1B is roughly 2× faster than
 Qwen2.5-3B in both backends, as expected from the smaller
 model size.
 
-## Best-of-N search speed across models
-
-**Notebook:** `unittests/benchmark_speed_bon_models_v1.ipynb`  
-**Date:** 2026-06-12 (Math models re-run 2026-06-16)  
-**Hardware:** Tesla V100S-PCIE-32GB  
-**Env:** py311 (vllm 0.18.1, torch 2.10.0+cu126)  
-**Config:** BoN n=32, 10 MATH level-4 questions, temperature=0.8,
-max_tokens=2048, vLLM gmu=0.7, fp16, enforce_eager.
-2 trials + 1 warmup for the original run; the 2026-06-16 Math run
-used 1 trial + 1 warmup (so its std is 0).
-
-| Model                      | Mean s/trial | Std  | s/question | trials |
-|----------------------------|--------------|------|------------|--------|
-| Llama3.2-1B-Instruct       |     38.32    | —    |    3.83    |   1    |
-| Llama3.2-3B-Instruct       |    105.07    | —    |   10.51    |   1    |
-| Qwen2.5-Math-1.5B-Instruct |    121.34    | —    |   12.13    |   1    |
-| Qwen2.5-Math-7B-Instruct   |    238.74    | —    |   23.87    |   1    |
-
-Earlier 2-trial run (general Qwen, now superseded for the Qwen
-rows): Llama-1B=3.84, Llama-3B=9.51, Qwen2.5-3B=16.02,
-Qwen2.5-7B=11.58 s/q.
-
-**Takeaway:** BoN time still does not track parameter count, and
-the Math models are markedly slower per question than the general
-Qwen models at matched size — Math-7B is 23.9 s/q, ~2× the old
-general Qwen-7B (11.6 s/q), and Math-1.5B (12.1) is near the old
-general 3B (16.0). The most likely cause is **completion length**:
-the Math-Instruct models generate longer chains-of-thought (more
-tokens before EOS), and per-token cost is secondary — consistent
-with the within-family Llama growth (3B ~2.7× the 1B here). Worth
-confirming against avg token counts per BoN run. Caveat: the Math
-rows are single-trial (no std), and max_model_len differs from the
-original run (4096 for Math vs 5000), so treat the Math-vs-general
-gap as indicative, not precise.
-
-BoN is benchmarked under vLLM only — no HF Transformers
-counterpart; see [decisions.md](decisions.md) 2026-06-12.
-
 ## Best-of-N search speed across quantization levels
 
 **Notebook:** `unittests/benchmark_speed_bon_quant_v1.ipynb`  
-**Date:** 2026-06-12  
+**Date:** 2026-06-19  
 **Hardware:** Tesla V100S-PCIE-32GB  
 **Env:** py311 (vllm 0.18.1, torch 2.10.0+cu126)  
-**Config:** BoN n=256, 5 MATH level-4 questions, 2 trials +
-1 warmup, temperature=0.8, max_tokens=2048, vLLM gmu=0.5,
-enforce_eager. int4 = GPTQ checkpoint.
+**Config:** BoN n=32, 5 MATH level-4 questions, 2 trials +
+1 warmup, temperature=0.8, max_tokens=2048, vLLM gmu=0.3,
+enforce_eager. int4 = GPTQ checkpoint. n lowered from 256 to 32
+(and gmu from 0.5 to 0.3) to match the search's real BoN width and
+`benchmark_speed_bon_models_v1`, so the two notebooks are now
+directly comparable; qwen-7b fp16 and qwen-math-7b fp16 are
+commented out (too large to co-reside at this gmu) — their
+GPTQ-int4 variants stay. Supersedes the 2026-06-12 n=256/gmu=0.5 run.
 
-| Config           | GPU (GB) | Mean s/trial | Std   | s/question |
-|------------------|----------|--------------|-------|------------|
-| llama-3b fp16    |  16.53   |    297.55    |  8.00 |   59.51    |
-| llama-3b gptq    |  16.63   |    368.36    |  2.75 |   73.67    |
-| qwen-3b fp16     |  16.61   |    610.16    | 14.94 |  122.03    |
-| qwen-3b gptq-int4|  16.55   |    595.16    |  1.43 |  119.03    |
-| qwen-7b fp16     |  16.12   |   1184.41    | 43.85 |  236.88    |
-| qwen-7b gptq-int4|  16.12   |    468.76    |  2.97 |   93.75    |
+| Config              | GPU (GB) | Mean s/trial | Std  | s/question |
+|---------------------|----------|--------------|------|------------|
+| llama-1b fp16       |   2.80   |     21.61    | 5.85 |    4.32    |
+| llama-3b fp16       |   6.47   |     63.20    | 1.93 |   12.64    |
+| llama-3b gptq       |   2.57   |     67.87    | 2.15 |   13.57    |
+| qwen-3b fp16        |   8.41   |    122.21    | 2.70 |   24.44    |
+| qwen-3b gptq-int4   |   4.63   |    102.38    | 2.84 |   20.48    |
+| qwen-7b gptq-int4   |   7.83   |     98.09    | 5.05 |   19.62    |
+| qwen-math-1.5b fp16 |   5.54   |     71.19    | 0.32 |   14.24    |
 
-GPU column is the vLLM process footprint at gmu=0.5, not the
-model-weight size — it is roughly constant because the budget
-is set by `gpu_memory_utilization`, not the checkpoint.
+GPU column is HF Transformers model-weight footprint (from
+`unittests/benchmark_llm_mem_sizes_v1.ipynb`, see the table
+below), not the vLLM process footprint during this BoN run.
 
-**Takeaway:** GPTQ-int4's speed effect is non-monotonic in model
-size. At 3B it does not pay off — llama-3b GPTQ is ~1.24× *slower*
-than fp16, and qwen-3b int4 is within noise of fp16 — because the
-dequantization overhead is not repaid at that scale. At 7B it wins
-decisively: qwen-7b int4 is ~2.5× *faster* than fp16, where reduced
-memory-bandwidth pressure dominates. So int4 is a speed win only at
-7B; at 3B it buys VRAM headroom (see the GPU-memory table) at a
-small-to-zero speed cost. Caveat: small sample (5 questions, 2
-trials) and a different n than the across-models sweep (n=256 vs
-n=32), so s/question is not comparable across the two tables.
+**Takeaway:** At 3B, GPTQ-int4 still does not pay off — llama-3b
+GPTQ is ~1.07× *slower* than fp16, and qwen-3b int4 is now ~1.19×
+*faster* than fp16 (reversed from the old n=256/gmu=0.5 run, where
+it was within noise) — the dequantization overhead is close to a
+wash at this scale and sensitive to n/gmu. qwen-7b int4 (19.62
+s/q) lands close to qwen-3b fp16 (24.44) and qwen-3b int4 (20.48)
+despite having ~2.3× the parameters, consistent with int4 paying
+off more as model size grows. Llama-1b fp16 (4.32 s/q) and
+qwen-math-1.5b fp16 (14.24) are new low-end reference points.
+Caveat: small sample (5 questions, 2 trials), so treat s/question
+as indicative, not precise; the 7B fp16 rows are missing this run
+(commented out for VRAM headroom), so the int4-win-at-7B claim from
+the 2026-06-12 run can't be re-confirmed at this gmu.
 
 ## GPU memory: generative models (HF Transformers)
 
