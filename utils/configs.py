@@ -141,7 +141,7 @@ class GenConfig:
 # Grouped by concern: gen / llm / prm / data / search / run.
 # ExpConfig composes them.
 #
-# mcts_cnt is migrated: generate_mcts_cnt + mcts_cnt_search_v05_00_00
+# mcts_cnt is migrated: generate_mcts_cnt + mcts_cnt_search_v01_00_00
 # read this nested config directly (config.search.cpuct,
 # config.gen.temperature, ...). Other search files/launchers are
 # still on the flat sal.Config and migrate in later sessions.

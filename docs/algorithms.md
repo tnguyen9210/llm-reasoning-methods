@@ -29,22 +29,26 @@ Empirical observations about repo behavior: [findings/](findings/README.md).
 
 | Algorithm | Core file | Launcher | Config |
 |---|---|---|---|
-| CNT-MCTS (PUCT) | `core/mcts_cnt_search_v05_00_00.py` | `generate_mcts_cnt.py` | `conf/mcts_cnt_prm800k.yaml` |
+| CNT-MCTS (PUCT) | `core/mcts_cnt_search_v01_00_00.py` | `generate_mcts_cnt.py` | `conf/mcts_cnt_prm800k.yaml` |
 | BL-MCTS v01 (PUCT, best-first) | `core/mcts_bl_cnt_search_v01_00_00.py` | `generate_mcts_bl_cnt_v01.py` | `conf/mcts_bl_cnt_v01_prm800k.yaml` |
 | BL-MCTS v02 (KUBE) | `core/mcts_bl_cnt_search_v02_00_00.py` | `generate_mcts_bl_cnt_v02.py` | `conf/mcts_bl_cnt_v02_prm800k.yaml` |
 | Semantic-MCTS v01 (`mcts_sem_v01`, policy embeds) | `core/mcts_sem_search_v01_00_00.py` | `generate_mcts_sem.py` | `conf/mcts_sem_v01_prm800k.yaml` |
 | Semantic-MCTS v02 (`mcts_sem_v02`, PRM embeds) | `core/mcts_sem_search_v02_00_00.py` | `generate_mcts_sem.py` | `conf/mcts_sem_v02_prm800k.yaml` |
-| Semantic-MCTS v03 (legacy launcher, pre-rename `mcts_embeds`) | `core/mcts_embeds_search_v03_02_00.py` | `generate_mcts_embeds_v03.py` | `conf/mcts_embeds_v03_prm800k.yaml` |
 | BoN | `core/bon_search_v01_0_0.py` | `generate_bon.py` | `conf/bon_prm800k.yaml` (+ gsm8k, aime2025) |
 | BoB | `core/bob_search_v03_0_0.py` | `generate_bob_prm800k_v0101.py` | none (params hardcoded in launcher) |
+
+Archived (pre-rename `mcts_embeds` lineage and old `prm800k_*`
+launchers, superseded by the rows above): moved to
+`archive/core/`, `archive/generate/`, `archive/conf/`.
 
 ## Lineage
 
 ### CNT-MCTS
-- `v03_01_00` — baseline (rStar-Math-derived). Superseded; pending
-  archive to `core/olds/`.
-- `v05_00_00` — reorganized to match the semantic-MCTS file
-  structure; no behavior changes. Canonical.
+- `v03_01_00` — baseline (rStar-Math-derived). Superseded; archived
+  to `archive/core/`.
+- `v01_00_00` (renumbered from `v05_00_00`, which had reorganized
+  to match the semantic-MCTS file structure with no behavior
+  changes) — Canonical.
 
 ### BL-MCTS
 Budget-limited best-first MCTS: explicit `leaf_nodes` frontier with
@@ -87,6 +91,8 @@ them live in v01:
   implemented (now a real flag: `revisit_policy`).
 
 ### Older exploratory files
-`core/mcts_search_extra_v*`, `core/diverse_reward_search_v*`,
-`core/bon_search_v1.py`, `core/bob_search_v01_*` predate the current
-naming scheme; superseded or exploratory, pending archive.
+`core/bon_search_v1.py`, `core/bob_search_v01_*` predate the
+current naming scheme; superseded or exploratory, pending archive.
+`core/diverse_reward_search_v*` and `core/mcts_search_extra_v21/
+v61/v72/v73/v81.py` moved to `archive/core/` (`v71` was renamed to
+`core/mcts_search_extra.py`, kept in place).

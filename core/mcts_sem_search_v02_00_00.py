@@ -948,7 +948,7 @@ def _search(
         batch_phase_depths[q_idx] = phase_depths
         batch_q_nodes_max_depth[q_idx] = q_nodes_max_depth
 
-    # Key names match mcts_cnt_search_v05_00_00's results dict
+    # Key names match mcts_cnt_search_v01_00_00's results dict
     # (comp_depth/comp_phase/comp_gen/q_total_gens/q_last_phase/
     # phase_depths/q_nodes_max_depth) so utils.metrics.evaluate_
     # correctness reads both algorithms' scored datasets identically.

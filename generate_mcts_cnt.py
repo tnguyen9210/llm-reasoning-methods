@@ -16,7 +16,7 @@ from omegaconf import OmegaConf
 from vllm import LLM
 import wandb
 
-from core import mcts_cnt_search_v05_00_00
+from core import mcts_cnt_search_v01_00_00
 from core.reward_models import build_prm
 from core.scoring import build_scored_dataset
 from utils.configs import (
@@ -27,7 +27,7 @@ from utils.configs import (
 from utils.load_data import load_data_hf
 
 algo_dict = {
-    "mcts_cnt": mcts_cnt_search_v05_00_00,
+    "mcts_cnt": mcts_cnt_search_v01_00_00,
 }
 
 # Register the structured schemas so the YAML binds onto typed,

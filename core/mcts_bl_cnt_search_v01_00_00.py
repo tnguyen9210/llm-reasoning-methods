@@ -1,7 +1,7 @@
 """
 Budget-Limited MCTS with best-first leaf selection (count-based, no embeddings).
 
-Key difference from mcts_cnt_search_v05_00_00: instead of phase-based
+Key difference from mcts_cnt_search_v01_00_00: instead of phase-based
 root-to-leaf walks, maintains an explicit `leaf_nodes` frontier and
 selects globally across all current leaves each iteration.
 
