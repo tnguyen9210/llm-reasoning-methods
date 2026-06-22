@@ -60,32 +60,33 @@ instead of one wide sparse grid.)
   different budget or LLM into a Summary row — that breaks
   the comparison.
 
+a
+---
+
 ## Algorithm name ↔ code mapping
 > Row labels are conceptual names; `method=` is what
 > `config_name()` emits into
 > `results/<dataset>/<method>--level-N--...--b-NNN--.../`.
 
-| Concept | Code `method=` | Core module | Status in code |
+| Concept | Code `method=` | Core module | Status |
 |---|---|---|---|
-| cnt-mcts | `mcts_cnt` | `mcts_cnt_search_v05_00_00` | on `ExpConfig`, run |
-| cnt-mcts-bl | `mcts_bl_cnt_v01` | `mcts_bl_cnt_search_v01_00_00` | on `ExpConfig`, run |
-| | `mcts_bl_cnt_v02`? | `..._v02_00_00` | flat, not migrated |
-| sem-mcts (policy) | `mcts_sem_v01` | `mcts_sem_search_v01_00_00` | on `ExpConfig`, **runnable (no runs yet)** |
-| sem-mcts (PRM) | `mcts_sem_v02` | `mcts_sem_search_v02_00_00` | on `ExpConfig`, **runnable (no runs yet)** |
-| sem-mcts-bl | `mcts_sem_bl` *(pending)* | — (not built) | **not implemented** |
+| cnt-mcts | `mcts_cnt` | `mcts_cnt_search_v01_00_00` | runs logged |
+| sem-mcts (PRM) | `mcts_sem_v02` | `mcts_sem_search_v02_00_00` | runs logged |
+| sem-mcts (policy) | `mcts_sem_v01` | `mcts_sem_search_v01_00_00` | runnable, no runs yet |
+| cnt-mcts-bl | `mcts_bl_cnt_v01` | `mcts_bl_cnt_search_v01_00_00` | runs logged |
+| cnt-mcts-bl v02 | `mcts_bl_cnt_v02` | `mcts_bl_cnt_search_v02_00_00` | runnable, no runs yet |
+| sem-mcts-bl | `mcts_sem_bl` *(pending)* | — (not built) | not implemented |
 
-> **sem-mcts is now runnable** (rename + `ExpConfig` migration
-> landed 2026-06-18; launcher `generate_mcts_sem.py`, configs
-> `conf/(search/)mcts_sem_v0{1,2}*`). It splits into two
-> embedding *sources* — `v01` pools from the **policy** (2nd
-> vLLM engine), `v02` from the **PRM** — a clean source
-> ablation, same diversity algorithm. v02 also supports optional
-> sparse projection (`embeds_proj=sparse`, embeds_dim=512) and
-> `cov_update=exact|sherman_morrison`. `sem-mcts-bl` is still
-> not built (`llm-reasoning-mcts-bl-exp` backlog,
-> `mcts_bl_embeds`). Listed so the target grid is visible.
-
----
+> Every sem-mcts row elsewhere in this doc is **v02** (PRM-sourced
+> embeddings) — v01 (policy-sourced, via a 2nd vLLM pooling
+> engine) is wired up on `ExpConfig` but has no runs yet. v01 vs.
+> v02 is a clean embedding-*source* ablation on the same
+> diversity algorithm; v02 additionally supports
+> `embeds_proj=none|sparse` (sparse = JL projection to 512-dim,
+> ~2.5x faster) and `cov_update=exact|sherman_morrison`.
+> `mcts_bl_cnt_v02` has a launcher + config now (previously
+> flat/unmigrated) but hasn't been run. `sem-mcts-bl` remains
+> unbuilt (`llm-reasoning-mcts-bl-exp` backlog, `mcts_bl_embeds`).
 
 ## Summary — results per (algorithm, model, budget)
 > The cross-model / cross-algorithm comparison: one row per
@@ -101,20 +102,23 @@ instead of one wide sparse grid.)
 | algorithm | model | budget | trials | pass@gb | naive@gb | wei@gb | maj@gb |
 |---|---|---|---|---|---|---|---|
 | cnt-mcts | llama-1b | 80 | 4 | .648<br>±.042 | .492<br>±.044 | .469<br>±.044 | .414<br>±.044 |
-| cnt-mcts | llama-3b | 80 | 3 | .747<br>±.022 | .503<br>±.026 | .586<br>±.025 | .581<br>±.025 |
+| cnt-mcts | llama-3b | 80 | 4 | .744<br>±.019 | .508<br>±.022 | .586<br>±.022 | .582<br>±.022 |
 | cnt-mcts | qwen-3b | 80 | 4 | .873<br>±.015 | .689<br>±.021 | .727<br>±.020 | .715<br>±.020 |
 | cnt-mcts | qwen-math-1.5b | 80 | 2 | .879<br>±.020 | .746<br>±.027 | .770<br>±.026 | .758<br>±.027 |
+| sem-mcts (PRM) | llama-1b | 80 | 2 | .594<br>±.031 | .445<br>±.031 | .430<br>±.031 | .414<br>±.031 |
+| sem-mcts (PRM) | llama-3b | 80 | 1 ⚠ | .719<br>±.040 | .539<br>±.044 | .578<br>±.044 | .555<br>±.044 |
+| sem-mcts (PRM) | qwen-3b | 80 | 2 | .840<br>±.023 | .629<br>±.030 | .703<br>±.029 | .699<br>±.029 |
+| sem-mcts (PRM) | qwen-math-1.5b | 80 | 2 | .879<br>±.020 | .746<br>±.027 | .766<br>±.027 | .746<br>±.027 |
+| sem-mcts (policy) | — | 80 | — | *planned (no runs yet)* | — | — | — |
 | cnt-mcts-bl | llama-1b | 80 | 4 | .492<br>±.022 | .395<br>±.022 | .383<br>±.022 | .381<br>±.022 |
 | cnt-mcts-bl | qwen-math-1.5b | 80 | 3 | .654<br>±.024 | .578<br>±.025 | .573<br>±.025 | .576<br>±.026 |
-| sem-mcts (policy) | — | 80 | — | *planned* | — | — | — |
-| sem-mcts (PRM) | — | 80 | — | *planned* | — | — | — |
 | sem-mcts-bl | — | 80 | — | *not built* | — | — | — |
 
 > Winning config per row (cpuct fixed at 2.0 throughout — no
 > sweep yet, so template is the only knob currently in play;
 > see tuning tables for the full grid): cnt-mcts — llama-1b
 > **custom** (.648 > native .566, the only model with both
-> scored); llama-3b **custom** (.747 > native .732, both
+> scored); llama-3b **custom** (.744 > native .732, both
 > now scored); qwen-3b **native** (only scored);
 > qwen-math-1.5b **native** (custom is scored at .894 over 2
 > trials but template-bug — see tuning table; not a valid
@@ -135,9 +139,9 @@ instead of one wide sparse grid.)
 >   (`llm-reasoning-mcts-bl-exp-todo` M3).
 > - Within cnt, model size/family dominates template: both
 >   Qwen models hit .879 pass@gb, well above Llama
->   (.648/.747).
+>   (.648/.744).
 > - **Custom now beats native on both Llama sizes** (1B:
->   .648 > .566; 3B: .747 > .732) — but the 3B Qwen custom
+>   .648 > .566; 3B: .744 > .732) — but the 3B Qwen custom
 >   run (`mcts_cnt--level-4--Qwen2.5-Math-1.5B--tmpl-custom`)
 >   is producing malformed/leaking completions from a
 >   template bug (custom_chat_template is hardcoded to Llama
@@ -210,7 +214,7 @@ instead of one wide sparse grid.)
 
 | llm | tmpl | trials | status | pass@gb | naive@gb | wei@gb | maj@gb | hr/trial |
 |---|---|---|---|---|---|---|---|---|
-| llama-3b | **custom** | 3 | scored | **.747<br>±.022** | .503<br>±.026 | .586<br>±.025 | .581<br>±.025 | 3.99 |
+| llama-3b | **custom** | 4 | scored | **.744<br>±.019** | .508<br>±.022 | .586<br>±.022 | .582<br>±.022 | 3.99 |
 | llama-3b | native | 4 | scored | .732<br>±.020 | .520<br>±.022 | .547<br>±.022 | .529<br>±.022 | 3.98 |
 
 | llm | tmpl | trials | status | pass@gb | naive@gb | wei@gb | maj@gb | hr/trial |
@@ -238,13 +242,20 @@ instead of one wide sparse grid.)
 > .721±.023 on trials {0,1,3} only — the gap closed within
 > noise).
 >
-> **qwen-math-1.5b ⚠:** trial 1 was missing scored output;
-> scored 2026-06-21, completing the 2-trial number above (was
-> .906±.026/.781±.037/.773±.037/.773±.037 on trial 0 only,
-> within-trial ± over 128 Qs — not across-trial variance; the
-> 2-trial pass@gb lands almost exactly on the native row,
-> .894 vs .879). Leaked text from the template bug also ~3.5×'d
-> completion length → trial 1 took ~50 min to score. W&B run
+> **qwen-math-1.5b ⚠:** both trials are present and scored — no
+> missing-trial gap (unlike the qwen-3b/qwen-7b-gptq rows below,
+> where ⚠ does mean a backfilled missing trial). The ⚠ here flags
+> the template-bug corruption instead. Trial 1's scored output was
+> initially missing and got backfilled 2026-06-21, completing the
+> 2-trial number above (was .906±.026/.781±.037/.773±.037/
+> .773±.037 on trial 0 only, within-trial ± over 128 Qs — not
+> across-trial variance; the 2-trial pass@gb lands almost exactly
+> on the native row, .894 vs .879). Leaked text from the template
+> bug also ~3.5×'d completion length in trial 1, taking ~50 min to
+> score; **the `9.31*` hr/trial is the running average over both
+> trials** (`timing_state.json`: n_done=2), not trial 1 alone — one
+> bloated trial drags the 2-trial average far above native's clean
+> 3.08, so don't read it as native-vs-custom runtime. W&B run
 > `kk32i2lp`.
 >
 > **qwen-3b gptq-int4 ⚠:** both rows run at `prm_batch_size=2`
@@ -304,6 +315,102 @@ instead of one wide sparse grid.)
 > resolve it:
 > [findings/exp-findings/prm-batch-size-throughput-memory.md](findings/exp-findings/prm-batch-size-throughput-memory.md).
 
+#### rlhflow vs qwen PRM comparison
+> Isolates `prm.kind` (Llama-8B-PRM "rlhflow" vs Qwen-Math-7B-PRM
+> "qwen") — the *scoring* model, not the policy LLM. Both PRMs
+> support scoring via `PRM_REGISTRY`/`build_prm()` (decisions.md,
+> 2026-06-19); this table is the scoring-side counterpart to the
+> embeds-source ablation (sem-mcts, PRM-as-embedder, 2026-06-20).
+> **llama-1b** has both PRMs run to a scored, matched trial count
+> at `prm_bs=1`, the project default (2 trials each — see the
+> prm_batch_size sweep above for the prm_bs=4 cells, kept separate
+> since that table's axis is prm_bs, not PRM choice). **llama-3b,
+> qwen-3b, qwen-math-1.5b** now also have a scored qwen-PRM run at
+> `prm_bs=1`, 2 trials each (new `cfg-*` dirs, scored + logged
+> 2026-06-22) — note these are matched on prmbs=1 to each other but
+> NOT to their own rlhflow row, whose trial count varies (4 for
+> llama-3b, 4 for qwen-3b, 2 for qwen-math-1.5b) and whose prmbs
+> isn't pinned to 1 across the board: llama-3b's legacy
+> `tmpl-custom` dir predates the `prm_batch_size` field (mcts_cnt's
+> schema has no such knob at all — it's assumed `prmbs=4` here,
+> not recorded) — see the prm_batch_size sweep above for the
+> tracked cells. The GPTQ-int4 rows still have no qwen-PRM run
+> (rlhflow-only so far).
+>
+> **Fixed:** tmpl=custom (legacy rlhflow rows) / model-family
+> default (new qwen-PRM `cfg-*` rows), cpuct=2.0, bs-4, d-20, b=80.
+
+| llm | prm | prmbs | trials | status | pass@gb | naive@gb | wei@gb | maj@gb | hr/trial |
+|---|---|---|---|---|---|---|---|---|---|
+| llama-1b | rlhflow | 1 | 2 | scored | .617<br>±.030 | .434<br>±.031 | .461<br>±.031 | .434<br>±.031 | 2.51 |
+| llama-1b | qwen | 1 | 2 | scored | .633<br>±.030 | .531<br>±.031 | .492<br>±.031 | .449<br>±.031 | 2.35 |
+| llama-3b | rlhflow | 4 (assumed, legacy) | 4 | scored | .744<br>±.019 | .508<br>±.022 | .586<br>±.022 | .582<br>±.022 | 3.99 |
+| llama-3b | qwen | 1 | 2 | scored | .785<br>±.026 | .688<br>±.029 | .648<br>±.030 | .629<br>±.030 | 4.16 |
+| qwen-3b | rlhflow | 4 (assumed, legacy) | 4 | scored | .873<br>±.015 | .689<br>±.021 | .727<br>±.020 | .715<br>±.020 | 3.80 |
+| qwen-3b | qwen | 1 | 2 | scored | .867<br>±.021 | .758<br>±.027 | .777<br>±.026 | .766<br>±.027 | 3.82 |
+| qwen-math-1.5b | rlhflow | 4 (assumed, legacy) | 2 | scored | .879<br>±.020 | .746<br>±.027 | .770<br>±.026 | .758<br>±.027 | 3.08 |
+| qwen-math-1.5b | qwen | 1 | 2 | scored | .898<br>±.019 | .809<br>±.025 | .773<br>±.026 | .785<br>±.026 | 2.86 |
+
+> At llama-1b and llama-3b, qwen-PRM scoring edges out rlhflow on
+> pass@gb (.633 vs .617; .785 vs .744); at qwen-math-1.5b it edges
+> out too (.898 vs .879); at qwen-3b rlhflow is marginally ahead
+> (.873 vs .867). All gaps are within ~1 SEM at n=2-4 trials per
+> cell — read as "qwen-PRM is at least competitive everywhere,
+> possibly slightly ahead at smaller/non-Qwen models," not a
+> settled result. naive/wei/maj follow the same direction as
+> pass@gb at every model except qwen-math-1.5b, where qwen-PRM's
+> naive (.809) and maj (.785) lead but wei (.773) trails rlhflow's
+> wei (.770) only marginally — no metric flips the overall
+> pass@gb ranking. **Runtime:** qwen-PRM hr/trial is close to
+> rlhflow's at every model (within ±0.2hr) except llama-3b, where
+> qwen-PRM is slower (4.16 vs 3.99) — the opposite direction from
+> the sem-mcts version of this table, where qwen-PRM ran faster
+> throughout; likely just noise at n=2 trials rather than a real
+> per-PRM cost difference, since both PRMs score at the same
+> `prm_batch_size=1` here. The llama-3b/qwen-3b/qwen-math-1.5b
+> qwen-PRM rows are new `cfg-*` dirs (prmbs=1, 2 trials, generated
+> + scored + logged 2026-06-22) — distinct from the older unscored
+> `llama-3b/prm-qwen/prmbs-4` legacy dir, which still exists
+> ungenerated/unscored and is unrelated to this table now.
+>
+> W&B: llama-1b rlhflow `1c9026yj`, llama-1b qwen `8vvw5usb`;
+> llama-3b qwen `5opc7rii`; qwen-3b qwen `9kxy56vs`; qwen-math-1.5b
+> qwen `9skdu6r4`.
+
+#### enforce_eager comparison
+> Isolates `llm.enforce_eager` (vLLM's CUDA-graph toggle — `True`
+> disables CUDA graphs, `False`/default uses them) at fixed model.
+> Only llama-3b/rlhflow currently has both values run: the legacy
+> `tmpl-custom` dir (`enforce_eager=False`, the dataclass default,
+> confirmed via W&B config) and `cfg-e829c53b`
+> (`enforce_eager=True`, explicit override). No other model/PRM
+> combination has both values yet, so this is a single-row,
+> single-model comparison, not a sweep.
+>
+> **Fixed:** llama-3b, rlhflow, tmpl=custom, cpuct=2.0, bs-4, d-20,
+> b=80. **Not matched:** trial count (4 vs 2) and prm_batch_size
+> (legacy dir's PRM scoring batch size predates the
+> `search.prm_batch_size` field and isn't recorded; `cfg-e829c53b`
+> is prm_batch_size=1) — so treat this as a rough signal, not a
+> controlled ablation.
+
+| llm | prm | enforce_eager | trials | status | pass@gb | naive@gb | wei@gb | maj@gb | hr/trial |
+|---|---|---|---|---|---|---|---|---|---|
+| llama-3b | rlhflow | False (default) | 4 | scored | .744<br>±.019 | .508<br>±.022 | .586<br>±.022 | .582<br>±.022 | 3.99 |
+| llama-3b | rlhflow | True | 2 | scored | .746<br>±.027 | .504<br>±.031 | .602<br>±.031 | .594<br>±.031 | 4.65 |
+
+> pass@gb is essentially identical (.744 vs .746, well within 1
+> SEM) — `enforce_eager` looks accuracy-neutral here, as expected
+> (it only changes vLLM's execution mode, not sampling). **hr/trial
+> is notably higher with eager mode on** (4.65 vs 3.99, ~17%
+> slower) — consistent with CUDA graphs normally speeding up
+> decode; eager mode forgoes that. With only 2-3 trials and an
+> unmatched prm_batch_size, treat the runtime gap as suggestive,
+> not conclusive — a matched-trial, matched-prmbs re-run would
+> confirm it.
+>
+> W&B: llama-3b eager=False `97w1z01n`, eager=True `e5ki98he`.
+
 #### model family, size, quantization comparison
 > Cross-model, cross-precision sweep at fixed budget — isolates
 > how model family, size, and quantization trade off against
@@ -325,7 +432,7 @@ instead of one wide sparse grid.)
 | llm | trials | status | pass@gb | naive@gb | wei@gb | maj@gb | hr/trial |
 |---|---|---|---|---|---|---|---|
 | llama-1b fp16 | 4 | scored | .648<br>±.042 | .492<br>±.044 | .469<br>±.044 | .414<br>±.044 | 2.42 |
-| llama-3b fp16 | 3 | scored | .747<br>±.022 | .503<br>±.026 | .586<br>±.025 | .581<br>±.025 | 3.99 |
+| llama-3b fp16 | 4 | scored | .744<br>±.019 | .508<br>±.022 | .586<br>±.022 | .582<br>±.022 | 3.99 |
 | llama-3b gptq | 3 | scored | .721<br>±.023 | .492<br>±.026 | .537<br>±.026 | .531<br>±.026 | 2.92 |
 | qwen-3b fp16 | 4 | scored | .873<br>±.015 | .689<br>±.021 | .727<br>±.020 | .715<br>±.020 | 3.80 |
 | qwen-3b gptq-int4 | 2 | scored | .797<br>±.025 | .652<br>±.030 | .676<br>±.029 | .688<br>±.029 | 2.74 |
@@ -334,8 +441,8 @@ instead of one wide sparse grid.)
 
 > **Takeaway:** GPTQ trades a modest accuracy hit for faster
 > trials at matched budget — llama-3b gptq is ~27% faster
-> than its fp16 counterpart (2.92 vs 3.99 hr) but loses ~2.6
-> pts pass@gb (.721 vs .747); qwen-3b gptq-int4 is ~28%
+> than its fp16 counterpart (2.92 vs 3.99 hr) but loses ~2.3
+> pts pass@gb (.721 vs .744); qwen-3b gptq-int4 is ~28%
 > faster than fp16 (2.74 vs 3.80 hr) but loses ~7.6 pts (.797
 > vs .873) — a bigger accuracy cost than Llama at the same
 > size. qwen-7b gptq-int4 is the standout: .902 pass@gb,
@@ -353,14 +460,17 @@ instead of one wide sparse grid.)
 > **Runnable as of 2026-06-18** (rename + migration landed).
 > Two methods = two embedding sources: `mcts_sem_v01` (policy
 > embeds, 2nd vLLM engine) and `mcts_sem_v02` (PRM embeds, no
-> 2nd engine). knobs beyond template/cpuct: ds_alpha, ds_beta,
+> 2nd engine). knobs beyond template: ds_alpha, ds_beta,
 > lam, embeds_strategy (last/avg), embeds_normalize, and for
 > v02 embeds_proj (none/sparse, dim 512) + cov_update
 > (exact/sherman_morrison). Defaults in conf/search/mcts_sem_v0*.
 > Run v01 and v02 at matched model/level/trials vs. cnt-mcts —
-> the comparison the project exists for.
+> the comparison the project exists for. sem-mcts has no
+> `cpuct` knob (selection is q-value-only on first visit, then
+> a ds_alpha/ds_beta-weighted diversity bonus on later visits;
+> see `core/mcts_sem_search_v02_00_00.py:select_child`).
 
-#### embeds_proj × cov_update sweep (v02, cpuct=2.0)
+#### embeds_proj × cov_update sweep (v02)
 > A 2×2-per-model grid instead of two single-knob sweeps.
 > `embeds_proj`: `none` feeds the PRM's raw 4096-dim hidden
 > state into the covariance bonus; `sparse512` JL-projects it
@@ -377,36 +487,102 @@ instead of one wide sparse grid.)
 | llm | proj | cov_update | trials | status | pass@gb | hr/trial |
 |---|---|---|---|---|---|---|
 | llama-1b | none | exact | — | planned | — | — |
-| llama-1b | none | sm | — | planned | — | — |
+| llama-1b | none | sm (prmbs-2) | 2 | scored ⚠ | .6328<br>±.0302 | 12.05 |
 | llama-1b | sparse512 | exact | — | planned | — | — |
 | llama-1b | sparse512 | sm | 2 | scored | .5938<br>±.0308 | 4.27 |
-| llama-1b | sparse512 | sm (prmbs-2) | 1 | scored ⚠ | .6094<br>±.0433 | 4.38 |
 | qwen-math-1.5b | none | exact | — | planned | — | — |
-| qwen-math-1.5b | none | sm | — | planned | — | — |
+| qwen-math-1.5b | none | sm (prmbs-2) | 2 | scored ⚠ | .8789<br>±.0204 | 9.89 |
 | qwen-math-1.5b | sparse512 | exact | 2 | scored | .8711<br>±.0210 | 4.34 |
-| qwen-math-1.5b | sparse512 | sm | 2 | scored | .8633<br>±.0215 | 4.32 |
+| qwen-math-1.5b | sparse512 | sm | 2 | scored | .8789<br>±.0204 | 4.81 |
 
 > Other @gb metrics: llama-1b sparse512×sm (2 trials) — naive
 > .4453±.0311, weighted .4297±.0310, maj .4141±.0308, ncomps
 > 14.2±0.8, depth 8.7±0.2, nphases 44.5±11.0, ndepths 9.4±0.2.
-> W&B `kqn1lj13`. The prmbs-2 row (n=1, ⚠ within-trial SEM
-> only) is a separate run at a different in-loop PRM batch
-> size — kept alongside rather than merged, since
-> prm_batch_size shouldn't affect accuracy but isn't a tracked
-> column here; W&B `ttsp0a0g`.
+> W&B `kqn1lj13`. (A separate n=1 run at `prm_batch_size=2`,
+> W&B `ttsp0a0g`, was dropped from this table — prm_bs doesn't
+> affect accuracy per the prm_batch_size sweep above, and n=1
+> added no comparable signal over the n=2 row.)
 >
 > Qwen-1.5B sparse512 (exact vs sm, 2 trials each): naive
-> .7383±.0275 vs .7617±.0267; weighted .7500±.0271 (both); maj
-> .7539±.0270 vs .7422±.0274 — all within ~1 SEM, no
+> .7383±.0275 vs .7461±.0273; weighted .7500±.0271 (both); maj
+> .7539±.0270 vs .7461±.0273 — all within ~1 SEM, no
 > systematic effect from cov_update. ncomps 24.6±1.1 vs
-> 23.6±1.0, nphases 16.1±4.1 vs 14.6±3.9 — n=2 trials, SEMs
+> 23.9±1.1, nphases 16.1±4.1 vs 14.8±3.9 — n=2 trials, SEMs
 > wide, treat as preliminary. W&B `lkltpzc1` (exact) /
-> `vlri1uw0` (sm).
+> `qn3b8lg0` (sm).
+>
+> **none×sm rows ⚠ (scored 2026-06-21):** both run at
+> `prm_batch_size=2` — not directly comparable to the
+> sparse512×sm default-prmbs (prmbs-1) row on throughput.
+> llama-1b: naive .4453±.0311, weighted .4336±.0310, maj
+> .3984±.0307, ncomps 14.1±0.7, depth 8.8±0.2, nphases
+> 44.8±11.0, ndepths 9.5±0.3. W&B `f6ojjyik`. qwen-math-1.5b:
+> naive .7539±.0270, weighted .7500±.0271, maj .7422±.0274,
+> ncomps 23.5±1.1, depth 9.5±0.2, nphases 11.0±0.6, ndepths
+> 10.2±0.2. W&B `ni9v75j9`. **proj effect (none vs sparse512,
+> both sm):** llama-1b none (.6328) > sparse512 (.5938) —
+> suggestive of the JL projection costing some accuracy at this
+> model size, though prm_bs differs across the comparison so
+> it isn't fully isolated (n=2 vs n=2, but prmbs-2 vs prmbs-1).
+> qwen-math-1.5b: none (.8789) is within ~1 SEM of sparse512×sm
+> (.8789) and sparse512×exact (.8711) — no clear separation at
+> this model size. **Runtime: none is markedly slower** —
+> llama-1b 12.05 hr/trial vs sparse512's 4.27; qwen-math-1.5b
+> 9.89 vs 4.32-4.81 — roughly 1.2-2.3× slower, consistent with
+> the ~2.5× speedup `embeds_proj=sparse512` is expected to give
+> (the projection avoids working with the raw 4096-dim
+> covariance). So at this budget, sparse512 looks like the
+> better default: comparable-or-better accuracy at noticeably
+> lower cost, though the prmbs confound means a clean prmbs-1
+> `none` run would sharpen this.
+
+#### ds_alpha sweep (v02)
+> Isolates `ds_alpha`, the diversity-bonus weight in
+> `q_val = ds_beta*score + ds_alpha*diversity` (scaled by
+> `sqrt(log(1 + parent_visits))` on subsequent visits; see
+> `core/mcts_sem_search_v01_00_00.py:_select_by_diversity`).
+> `ds_alpha=0` collapses selection to pure q-value (no
+> diversity bonus at any visit count) — a useful lower-bound
+> check against cnt-mcts-style greedy selection. Default is
+> `100.0` (`utils/configs.py:MCTSSemV01Config`).
+>
+> **Fixed:** tmpl=model-family default, bs-4, d-20, b=80,
+> proj=sparse512, cov_update=sm, prm=rlhflow, ds_beta=1.0,
+> prm_batch_size=1 (llama-1b's `ds_alpha=100` cell has no
+> prmbs-1 run yet — only a legacy prmbs-4 dir, used elsewhere
+> in the doc — so it's left `planned` here to keep this row's
+> prmbs consistent).
+
+| llm | ds_alpha | trials | status | pass@gb | naive@gb | wei@gb | maj@gb | hr/trial |
+|---|---|---|---|---|---|---|---|---|
+| llama-1b | 0 | 1 | scored ⚠ | .3984<br>±.0434 | .3672<br>±.0428 | .3594<br>±.0426 | .3047<br>±.0408 | 3.42 |
+| llama-1b | 10 | 2 | scored | .6133<br>±.0305 | .4453<br>±.0311 | .4180<br>±.0309 | .3906<br>±.0306 | 4.93 |
+| llama-1b | 100 (default) | — | planned | — | — | — | — | — |
+| llama-1b | 1000 | — | planned | — | — | — | — | — |
+| qwen-math-1.5b | 0 | — | planned | — | — | — | — | — |
+| qwen-math-1.5b | 10 | 2 | scored | .8945<br>±.0192 | .7617<br>±.0267 | .7812<br>±.0259 | .7578<br>±.0268 | 4.78 |
+| qwen-math-1.5b | 100 (default) | 2 | scored | .8789<br>±.0204 | .7461<br>±.0273 | .7656<br>±.0265 | .7461<br>±.0273 | 4.81 |
+| qwen-math-1.5b | 1000 | 2 | scored | .8867<br>±.0198 | .7656<br>±.0265 | .7656<br>±.0265 | .7422<br>±.0274 | 4.86 |
+
+> **llama-1b ⚠:** `ds_alpha=0` is only 1 trial (run still in
+> progress, trial 1 not yet generated) — treat as preliminary.
+> qwen-math-1.5b's three filled cells (10/100/1000) are all
+> within ~1 SEM of each other on every metric — no clear
+> `ds_alpha` effect visible at this model size over this range,
+> though `ds_alpha=0` (pure q-value, no diversity bonus) isn't
+> in yet to check the lower-bound case. llama-1b's two filled
+> cells move more (pass .398 at 0 vs .613 at 10), but n=1 at
+> `ds_alpha=0` makes that comparison unreliable — don't read it
+> as a real effect yet.
+>
+> W&B: llama-1b ds_alpha=0 `bjz0yxrg`, ds_alpha=10 `wsvy5q72`;
+> qwen-math-1.5b ds_alpha=10 `ihxrzedi`, ds_alpha=100
+> `qn3b8lg0`, ds_alpha=1000 `kbwjqw96`.
 
 #### model family, size, quantization comparison
 > Same shape as cnt-mcts's table above, for cross-method
 > comparability — one row per model/precision, fixed
-> cpuct=2.0, bs-4, d-20, b=80, tmpl=model-family default.
+> bs-4, d-20, b=80, tmpl=model-family default.
 > method=`mcts_sem_v02` (PRM embeds), `embeds_proj=sparse512`,
 > `cov_update=sherman_morrison` (sm) — the project's default
 > path (path-identical to exact, proven, see decisions.md).
@@ -424,40 +600,97 @@ instead of one wide sparse grid.)
 | qwen-3b fp16 | 2 | scored | .8398<br>±.0230 | .6289<br>±.0303 | .7031<br>±.0286 | .6992<br>±.0287 | 5.85 |
 | qwen-3b gptq-int4 | 2 | scored | .8242<br>±.0238 | .6836<br>±.0291 | .6992<br>±.0287 | .6914<br>±.0289 | 4.93 |
 | qwen-7b gptq-int4 | 2 | scored | .9062<br>±.0183 | .7109<br>±.0284 | .7500<br>±.0271 | .7461<br>±.0273 | 5.02 |
-| qwen-math-1.5b fp16 | 2 | scored | .8633<br>±.0215 | .7617<br>±.0267 | .7500<br>±.0271 | .7422<br>±.0274 | 4.32 |
+| qwen-math-1.5b fp16 | 2 | scored | .8789<br>±.0204 | .7461<br>±.0273 | .7656<br>±.0265 | .7461<br>±.0273 | 4.81 |
 
 > **llama-3b ⚠:** only 1 trial scored — treat as preliminary,
 > not a stable estimate.
 >
 > W&B: llama-1b `kqn1lj13`, llama-3b `ctmgmcrp`, llama-3b gptq
 > `p035tdjs`, qwen-3b `hkrjgbwl`, qwen-3b gptq-int4 `ekf9b680`,
-> qwen-7b gptq-int4 `f2dhl1ja`, qwen-math-1.5b `vlri1uw0`.
+> qwen-7b gptq-int4 `f2dhl1ja`, qwen-math-1.5b `qn3b8lg0`.
+
+#### rlhflow vs qwen PRM comparison
+> Isolates `prm.kind` (Llama-8B-PRM "rlhflow" vs Qwen-Math-7B-PRM
+> "qwen") — the *scoring* model, not the policy LLM. Scoring-side
+> counterpart to the cnt-mcts table of the same name. Unlike that
+> table, all three models here (llama-1b, llama-3b, qwen-math-1.5b)
+> have a scored qwen-PRM run, since v02's `embeds_source=prm` sweep
+> already produced qwen-PRM generations at every model — scoring
+> them (`prepare_scored_dataset.py` had already run; only
+> `compute_stats.py` was missing) completed this table in one pass.
+> All rows: `embeds_proj=sparse512`, `cov_update=sm` (project
+> default path). `prm_batch_size` differs by row (llama-1b/llama-3b
+> rlhflow rows use whatever prmbs the original v02 sweep ran at;
+> every other row, including qwen-math-1.5b rlhflow as of
+> 2026-06-22, is prmbs-1) — doesn't affect accuracy per the
+> prm_batch_size sweep (cnt-mcts, above), so left as-is rather than
+> re-run. Only `pass@gb` shown for symmetry with the cnt-mcts
+> version of this table.
+>
+> **Fixed:** tmpl=model-family default, bs-4, d-20, b=80,
+> proj=sparse512, cov=sm, ds_alpha=100.0, ds_beta=1.0 (sem-mcts has
+> no `cpuct` — selection is q-value-only on first visit, then a
+> ds_alpha/ds_beta-weighted diversity bonus on later visits; see
+> `core/mcts_sem_search_v02_00_00.py:select_child`).
+
+| llm | prm | prmbs | trials | status | pass@gb | naive@gb | wei@gb | maj@gb | hr/trial |
+|---|---|---|---|---|---|---|---|---|---|
+| llama-1b | rlhflow | 4 | 2 | scored | .5938<br>±.0308 | .4453<br>±.0311 | .4297<br>±.0310 | .4141<br>±.0308 | 4.27 |
+| llama-1b | qwen | 1 | 2 | scored | .6133<br>±.0305 | .5156<br>±.0313 | .4414<br>±.0311 | .4180<br>±.0309 | 3.93 |
+| llama-3b | rlhflow | 1 | 1 | scored ⚠ | .7188<br>±.0399 | .5391<br>±.0442 | .5781<br>±.0438 | .5547<br>±.0441 | 6.60 |
+| llama-3b | qwen | 1 | 2 | scored | .7500<br>±.0271 | .6797<br>±.0292 | .6133<br>±.0305 | .5977<br>±.0307 | 5.39 |
+| qwen-math-1.5b | rlhflow | 1 | 2 | scored | .8789<br>±.0204 | .7461<br>±.0273 | .7656<br>±.0265 | .7461<br>±.0273 | 4.81 |
+| qwen-math-1.5b | qwen | 1 | 2 | scored | .8672<br>±.0213 | .7812<br>±.0259 | .7656<br>±.0265 | .7617<br>±.0267 | 3.90 |
+
+> llama-1b: qwen-PRM scoring edges out rlhflow (.6133 vs .5938).
+> llama-3b: qwen-PRM scores notably higher (.7500 vs .7188), but
+> the rlhflow row is only 1 trial (⚠) — not a stable estimate, so
+> treat this gap as suggestive rather than confirmed. qwen-math-1.5b:
+> the two PRMs are within ~1 SEM of each other (.8789 vs .8672) —
+> no real separation at this model size. Net: qwen-PRM scoring is
+> at least as good as rlhflow at every model checked so far, never
+> worse by more than noise — but n=1-2 trials per cell throughout,
+> so this is a lead to firm up with more trials, not a settled
+> result. **Runtime:** qwen-PRM is faster than rlhflow at llama-1b
+> and llama-3b (3.93 vs 4.27; 5.39 vs 6.60 hr/trial) — but those
+> rlhflow rows run at prmbs-4/1 vs qwen's prmbs-1, and prmbs is a
+> throughput knob (prm_batch_size sweep, cnt-mcts, above), so part
+> of that gap is the batch-size mismatch, not the PRM itself. At
+> qwen-math-1.5b, where both rows are now matched at prmbs-1,
+> rlhflow is actually *slower* (4.81 vs 3.90 hr/trial) — the
+> opposite direction, suggesting the earlier "qwen-PRM is faster"
+> read was largely the prmbs confound, not a real per-PRM cost
+> difference.
+>
+> W&B: llama-1b rlhflow `kqn1lj13`, llama-1b qwen `j34q0wjq`;
+> llama-3b rlhflow `ctmgmcrp`, llama-3b qwen `q4fz58mg`;
+> qwen-math-1.5b rlhflow `qn3b8lg0`, qwen-math-1.5b qwen `g1z9k6mk`.
 
 #### LLM vs PRM embeds comparison
 > v01 sources diversity embeds from the policy LLM (2nd vLLM
 > engine); v02 sources them from the PRM. One table per model,
-> at matched template/cpuct, for the head-to-head the project
+> at matched template, for the head-to-head the project
 > exists for.
 
 ##### llama-1b
-| method | tmpl | cpuct | trials | status | pass@gb |
-|---|---|---|---|---|---|
-| sem v01 (policy) | custom | 2.0 | — | *planned* | — |
-| sem v02 (PRM) | custom | 2.0 | — | *planned* | — |
+| method | tmpl | trials | status | pass@gb |
+|---|---|---|---|---|
+| sem v01 (policy) | custom | — | *planned* | — |
+| sem v02 (PRM) | custom | — | *planned* | — |
 
 > Match cnt-mcts llama-1b (custom, 4 trials) for the head-to-head.
 
 ##### llama-3b
-| method | tmpl | cpuct | trials | status | pass@gb |
-|---|---|---|---|---|---|
-| sem v01 (policy) | custom | 2.0 | — | *planned* | — |
-| sem v02 (PRM) | custom | 2.0 | — | *planned* | — |
+| method | tmpl | trials | status | pass@gb |
+|---|---|---|---|---|
+| sem v01 (policy) | custom | — | *planned* | — |
+| sem v02 (PRM) | custom | — | *planned* | — |
 
 ##### qwen-math-1.5b
-| method | tmpl | cpuct | trials | status | pass@gb |
-|---|---|---|---|---|---|
-| sem v01 (policy) | native | 2.0 | — | *planned* | — |
-| sem v02 (PRM) | native | 2.0 | — | *planned* | — |
+| method | tmpl | trials | status | pass@gb |
+|---|---|---|---|---|
+| sem v01 (policy) | native | — | *planned* | — |
+| sem v02 (PRM) | native | — | *planned* | — |
 
 > Use native (cnt-mcts Qwen-Math custom has the template bug;
 > match the clean native cnt row, 2 trials, for comparability).
