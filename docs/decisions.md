@@ -7,6 +7,62 @@ section per decision. Titles carry one or two area prefixes
 (`Area:` or `Area, Area:`) so skimming groups by eye and
 `grep '^## .*Area'` gives a per-topic view.
 
+## 2026-06-21 — Configs: don't fold timing_state.json into manifest.json
+
+**Context:** after folding `run_id` into `manifest.json` (below),
+considered going further and folding `timing_state.json` (the
+per-trial running-average sidecar written by `mcts_cnt`/`mcts_sem`)
+into the same file.
+**Decision:** keep them separate.
+**Why:** the two sidecars have incompatible write lifecycles.
+`run_id` is written exactly twice per run (before and after
+`wandb.init`) — set-once-then-frozen, safe to share a file with the
+mostly-static identity fields. `timing_state.json` is written once
+**per trial**, in the generator's hot loop
+(`save_timing_state(result_dir, n_done, avg_q_s, avg_trial_hr)` in
+[generate_mcts_cnt.py](../generate_mcts_cnt.py),
+[generate_mcts_sem.py](../generate_mcts_sem.py)). Folding it in
+would mean every trial completion does a read-modify-write of the
+*entire* manifest (identity fields included) just to bump 3 timing
+numbers, and raises write-contention risk if a `compute_stats.py`/
+`prepare_scored_dataset.py` post-process ever runs concurrently with
+a still-generating trial loop — two atomic-replace writers on the
+same file instead of two different files. Today's split keeps
+"identity, rarely written" and "per-trial telemetry, written every
+trial" on separate files, which is doing real work, not just
+incidental structure.
+**Revisit if:** the per-run file count itself becomes the
+bottleneck (e.g. very many small result dirs), or `timing_state`
+gains fields that need cross-referencing with manifest identity at
+read time.
+
+## 2026-06-21 — Experiments, Configs: fold the W&B run-id sidecar into manifest.json
+
+**Context:** the 2026-06-17 decision below added a standalone
+`wandb_run_id.txt` sidecar so post-processing could reattach to the
+same W&B run. After the result-dir naming rework (above) gave every
+run dir a `manifest.json` for identity, having a second one-line
+sidecar file just for the run id was redundant.
+**Decision:** add a `run_id` field to `manifest.json`; drop
+`wandb_run_id.txt`. `write_manifest()` now takes an optional
+`run_id` and is called twice per launch: once before `wandb.init`
+(`run_id=None`), once after (`run_id=wandb_run.id`).
+`load_wandb_run_id()` reads `manifest.json["run_id"]` first, falling
+back to the legacy `wandb_run_id.txt` for any dir not yet migrated.
+**Why:** preserves the crash-safety property the sidecar design
+depended on — `write_manifest` before `wandb.init` means a crash
+during the (network-dependent) `wandb.init()` call still leaves a
+locatable, identity-recorded dir, since `find_run_dir` matches on
+`config_hash`/`config_identity` which are written in that same first
+call. Field order inside the JSON has no effect on this — only
+*when* a complete file lands on disk matters, not the order of keys
+within it.
+**Migration:** backfilled `run_id` into all 42 existing
+`manifest.json` files from their `wandb_run_id.txt` sidecars (zero
+mismatches), then deleted all 42 now-redundant sidecar files.
+Verified `load_wandb_run_id()` still resolves correctly post-
+deletion via spot-check.
+
 ## 2026-06-21 — Configs: result-dir naming = readable prefix + config hash; locate runs by recorded manifest, not recomputed name
 
 **Context:** `config_name(cfg)` encoded *every* result-affecting knob
