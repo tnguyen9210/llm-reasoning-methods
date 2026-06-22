@@ -100,36 +100,37 @@ instead of one wide sparse grid.)
 
 | algorithm | model | budget | trials | pass@gb | naive@gb | weighted@gb | maj@gb |
 |---|---|---|---|---|---|---|---|
-| cnt-mcts | Llama-3.2-1B | 80 | 4 | .648±.042 | .492±.044 | .469±.044 | .414±.044 |
-| cnt-mcts | Llama-3.2-3B | 80 | 3 | .747±.022 | .503±.026 | .586±.025 | .581±.025 |
-| cnt-mcts | Qwen-2.5-3B | 80 | 3 | .875±.017 | .685±.024 | .737±.023 | .721±.023 |
-| cnt-mcts | Qwen-2.5-Math-1.5B | 80 | 2 | .879±.020 | .746±.027 | .770±.026 | .758±.027 |
-| cnt-mcts-bl | Llama-3.2-1B | 80 | 4 | .492±.022 | .395±.022 | .383±.022 | .381±.022 |
-| cnt-mcts-bl | Qwen-2.5-Math-1.5B | 80 | 3 | .654±.024 | .578±.025 | .573±.025 | .576±.026 |
+| cnt-mcts | llama-1b | 80 | 4 | .648±.042 | .492±.044 | .469±.044 | .414±.044 |
+| cnt-mcts | llama-3b | 80 | 3 | .747±.022 | .503±.026 | .586±.025 | .581±.025 |
+| cnt-mcts | qwen-3b | 80 | 4 | .873±.015 | .689±.021 | .727±.020 | .715±.020 |
+| cnt-mcts | qwen-math-1.5b | 80 | 2 | .879±.020 | .746±.027 | .770±.026 | .758±.027 |
+| cnt-mcts-bl | llama-1b | 80 | 4 | .492±.022 | .395±.022 | .383±.022 | .381±.022 |
+| cnt-mcts-bl | qwen-math-1.5b | 80 | 3 | .654±.024 | .578±.025 | .573±.025 | .576±.026 |
 | sem-mcts (policy) | — | 80 | — | *planned* | — | — | — |
 | sem-mcts (PRM) | — | 80 | — | *planned* | — | — | — |
 | sem-mcts-bl | — | 80 | — | *not built* | — | — | — |
 
 > Winning config per row (cpuct fixed at 2.0 throughout — no
 > sweep yet, so template is the only knob currently in play;
-> see tuning tables for the full grid): cnt-mcts — Llama-3.2-1B
+> see tuning tables for the full grid): cnt-mcts — llama-1b
 > **custom** (.648 > native .566, the only model with both
-> scored); Llama-3.2-3B **custom** (.747 > native .732, both
-> now scored); Qwen-2.5-3B **native** (only scored);
-> Qwen-2.5-Math-1.5B **native** (custom is scored at .906 but
-> template-bug, n=1 — see tuning table; not a valid winner yet).
-> cnt-mcts-bl — Llama-3.2-1B **custom**,
-> Qwen-2.5-Math-1.5B **native** (each only scored). `sem-*`
+> scored); llama-3b **custom** (.747 > native .732, both
+> now scored); qwen-3b **native** (only scored);
+> qwen-math-1.5b **native** (custom is scored at .894 over 2
+> trials but template-bug — see tuning table; not a valid
+> winner yet).
+> cnt-mcts-bl — llama-1b **custom**,
+> qwen-math-1.5b **native** (each only scored). `sem-*`
 > blocked (rename / not built).
 >
 > **What the numbers say (budget 80):**
-> - **cnt-bl loses to cnt where they overlap.** Llama-3.2-1B:
->   cnt .648 vs cnt-bl .492. Qwen-2.5-Math-1.5B: cnt .879 vs
+> - **cnt-bl loses to cnt where they overlap.** llama-1b:
+>   cnt .648 vs cnt-bl .492. qwen-math-1.5b: cnt .879 vs
 >   cnt-bl .654. The best-first frontier protocol is
 >   *underperforming* the phase-based baseline at this budget
 >   on both shared models — worth a hard look before
 >   investing more in BL.
-> - Qwen-2.5-Math-1.5B-native: cnt has 2 scored trials, cnt-bl
+> - qwen-math-1.5b-native: cnt has 2 scored trials, cnt-bl
 >   has 3 — ⚠ not a matched comparison yet
 >   (`llm-reasoning-mcts-bl-exp-todo` M3).
 > - Within cnt, model size/family dominates template: both
@@ -176,52 +177,81 @@ instead of one wide sparse grid.)
 > its own rows.
 >
 > **Fixed:** cpuct=2.0, bs-4, d-20, prm_batch_size=2.
+>
+> ⚠ **custom = template-bug on Qwen models, NOT a clean
+> custom-vs-native signal — applies to every Qwen row below
+> marked ⚠ (qwen-math-1.5b, qwen-3b gptq-int4, qwen-7b
+> gptq-int4).** These runs predate the 2026-06-19 fix and
+> force-apply the hardcoded Llama-3.1-vendored
+> `custom_chat_template` to Qwen's tokenizer regardless of
+> `llm=` — Qwen was never trained on these tokens, so
+> completions can leak raw `<|eot_id|>`-style markup after the
+> boxed answer (`llm-reasoning-mcts-exp-todo` Track 1). Llama
+> rows are unaffected (custom is Llama's native template).
+> **Fixed 2026-06-19** — `gen.use_custom_template` now defaults
+> per model family (Qwen → native, else → custom), so a fresh
+> run needs no override and won't hit this bug; each ⚠ row
+> below would need a post-fix re-run to get a clean
+> custom-vs-native number. Per-row footnotes below only cover
+> what's specific to that row (trial count, `prm_batch_size`,
+> W&B run id) — not the bug mechanism, which lives here.
 
 | llm | tmpl | trials | status | pass@gb | naive@gb | weighted@gb | maj@gb |
 |---|---|---|---|---|---|---|---|
-| Llama-3.2-1B | **custom** | 4 | scored | **.648±.042** | .492±.044 | .469±.044 | .414±.044 |
-| Llama-3.2-1B | native | 2 | scored | .566±.031 | .371±.030 | .348±.030 | .313±.029 |
-
----
+| llama-1b | **custom** | 4 | scored | **.648±.042** | .492±.044 | .469±.044 | .414±.044 |
+| llama-1b | native | 2 | scored | .566±.031 | .371±.030 | .348±.030 | .313±.029 |
 
 | llm | tmpl | trials | status | pass@gb | naive@gb | weighted@gb | maj@gb |
 |---|---|---|---|---|---|---|---|
-| Llama-3.2-3B | **custom** | 3 | scored | **.747±.022** | .503±.026 | .586±.025 | .581±.025 |
-| Llama-3.2-3B | native | 4 | scored | .732±.020 | .520±.022 | .547±.022 | .529±.022 |
-
----
+| llama-3b | **custom** | 3 | scored | **.747±.022** | .503±.026 | .586±.025 | .581±.025 |
+| llama-3b | native | 4 | scored | .732±.020 | .520±.022 | .547±.022 | .529±.022 |
 
 | llm | tmpl | trials | status | pass@gb | naive@gb | weighted@gb | maj@gb |
 |---|---|---|---|---|---|---|---|
-| Qwen-2.5-3B | native | 3 | scored | .875±.017 | .685±.024 | .737±.023 | .721±.023 |
-
-> 4 raw trials exist; trial 2's scoring never ran (raw
-> `.jsonl` present, no scored output) — row above is trials
-> {0,1,3}. Score trial 2 to get the full 4-trial number.
-
----
+| qwen-3b | native | 4 | scored | .873±.015 | .689±.021 | .727±.020 | .715±.020 |
 
 | llm | tmpl | trials | status | pass@gb | naive@gb | weighted@gb | maj@gb |
 |---|---|---|---|---|---|---|---|
-| Qwen-2.5-Math-1.5B | custom | 1 | scored ⚠ | .906±.026 | .781±.037 | .773±.037 | .773±.037 |
-| Qwen-2.5-Math-1.5B | native | 2 | scored | .879±.020 | .746±.027 | .770±.026 | .758±.027 |
+| qwen-math-1.5b | custom | 2 | scored ⚠ | .894±.019 | .742±.027 | .770±.026 | .758±.027 |
+| qwen-math-1.5b | native | 2 | scored | .879±.020 | .746±.027 | .770±.026 | .758±.027 |
 
-> ⚠ **custom = template-bug, n=1 — NOT comparable to native.**
-> This run applies the hardcoded Llama-3.1 `custom_chat_template`
-> to Qwen's tokenizer (force-override regardless of `llm=`),
-> which Qwen was never trained on — completions leak raw
-> `<|eot_id|>`-style markup after the boxed answer
-> (`llm-reasoning-mcts-exp-todo` Track 1). Accuracy isn't
-> tanked (the answer lands before the leak) but this is *not* a
-> clean custom-vs-native signal, and ± is within-trial only
-> (n=1, bootstrapped over 128 Qs), not across-trial variance.
-> The leaked text also ~3.5×'d completion length → the single
-> trial took ~50 min to score. Re-run after the per-model
-> template fix before treating custom as a real number; W&B run
-> `kk32i2lp`. **Fixed 2026-06-19** — `gen.use_custom_template`
-> now defaults per model family (Qwen → native, else → custom),
-> so a fresh run needs no override and won't hit this bug;
-> re-run to get a clean comparable custom row.
+| llm | tmpl | trials | status | pass@gb | naive@gb | weighted@gb | maj@gb |
+|---|---|---|---|---|---|---|---|
+| qwen-3b gptq-int4 | custom | 3 | scored ⚠ | .680±.024 | .578±.025 | .628±.025 | .604±.025 |
+| qwen-3b gptq-int4 | native | 2 | scored | .797±.025 | .652±.030 | .676±.029 | .688±.029 |
+
+| llm | tmpl | trials | status | pass@gb | naive@gb | weighted@gb | maj@gb |
+|---|---|---|---|---|---|---|---|
+| qwen-7b gptq-int4 | custom | 3 | scored ⚠ | .867±.017 | .760±.022 | .794±.021 | .784±.021 |
+| qwen-7b gptq-int4 | native | 2 | scored | .902±.019 | .672±.029 | .750±.027 | .754±.027 |
+
+> **qwen-3b:** trial 2 was missing scored output (raw `.jsonl`
+> present, no scored output); scored 2026-06-21, completing the
+> 4-trial number above (was .875±.017/.685±.024/.737±.023/
+> .721±.023 on trials {0,1,3} only — the gap closed within
+> noise).
+>
+> **qwen-math-1.5b ⚠:** trial 1 was missing scored output;
+> scored 2026-06-21, completing the 2-trial number above (was
+> .906±.026/.781±.037/.773±.037/.773±.037 on trial 0 only,
+> within-trial ± over 128 Qs — not across-trial variance; the
+> 2-trial pass@gb lands almost exactly on the native row,
+> .894 vs .879). Leaked text from the template bug also ~3.5×'d
+> completion length → trial 1 took ~50 min to score. W&B run
+> `kk32i2lp`.
+>
+> **qwen-3b gptq-int4 ⚠:** both rows run at `prm_batch_size=2`
+> (vs. the default 1 used by the fp16 precision-comparison
+> rows), so this custom/native pair is internally matched but
+> not directly comparable to the fp16 custom/native pair above
+> on `prm_batch_size`.
+>
+> **qwen-7b gptq-int4 ⚠:** same `prm_batch_size=2` caveat as the
+> 3B row above (native row here is still 2 trials, fp16-rows-
+> elsewhere use the default 1). Despite the template bug,
+> custom slightly trails native here (.867 vs .902) rather than
+> leading as it does for Llama — consistent with native being
+> the better default for Qwen regardless of precision.
 
 ##### prm_batch_size sweep
 > Isolates the in-loop PRM scoring micro-batch
@@ -235,7 +265,7 @@ instead of one wide sparse grid.)
 > count/path, so it's left out rather than presented as a
 > matched data point).
 >
-> **Fixed:** Llama-3.2-1B, tmpl=custom, cpuct=2.0, bs-4, d-20,
+> **Fixed:** llama-1b, tmpl=custom, cpuct=2.0, bs-4, d-20,
 > b=80.
 
 | prm | prm_bs | trials | status | pass@gb | time/trial (hr) | peak GPU mem (GB) |
@@ -277,17 +307,40 @@ instead of one wide sparse grid.)
 >
 > **Fixed:** cpuct=2.0, bs-4, d-20, b=80, tmpl=model-family
 > default (native for Qwen, custom for Llama, per the
-> 2026-06-19 per-family default fix above).
+> 2026-06-19 per-family default fix above). GPTQ rows use
+> prm_batch_size=2 (vs. the fp16 rows' default); fp16 rows
+> predate `timing_state.json`, so their time/trial is the mean
+> of `time_per_trial_hr` over all logged trials in W&B (4 for
+> llama-1b/3b and qwen-3b fp16, 2 for qwen-math-1.5b fp16) —
+> the GPTQ rows' time/trial comes from `timing_state.json`
+> instead.
 
 | llm | trials | status | pass@gb | time/trial (hr) |
 |---|---|---|---|---|
-| Llama-3.2-1B fp16 | — | planned | — | — |
-| Llama-3.2-3B fp16 | — | planned | — | — |
-| Llama-3.2-3B gptq | — | planned | — | — |
-| Qwen-2.5-3B fp16 | — | planned | — | — |
-| Qwen-2.5-3B gptq-int4 | — | planned | — | — |
-| Qwen-2.5-7B gptq-int4 | — | planned | — | — |
-| Qwen-2.5-Math-1.5B fp16 | — | planned | — | — |
+| llama-1b fp16 | 4 | scored | .648±.042 | 2.42 |
+| llama-3b fp16 | 3 | scored | .747±.022 | 3.99 |
+| llama-3b gptq | 3 | scored | .721±.023 | 2.92 |
+| qwen-3b fp16 | 4 | scored | .873±.015 | 3.80 |
+| qwen-3b gptq-int4 | 2 | scored | .797±.025 | 2.74 |
+| qwen-7b gptq-int4 | 2 | scored | .902±.019 | 3.21 |
+| qwen-math-1.5b fp16 | 2 | scored | .879±.020 | 3.08 |
+
+> **Takeaway:** GPTQ trades a modest accuracy hit for faster
+> trials at matched budget — llama-3b gptq is ~27% faster
+> than its fp16 counterpart (2.92 vs 3.99 hr) but loses ~2.6
+> pts pass@gb (.721 vs .747); qwen-3b gptq-int4 is ~28%
+> faster than fp16 (2.74 vs 3.80 hr) but loses ~7.6 pts (.797
+> vs .873) — a bigger accuracy cost than Llama at the same
+> size. qwen-7b gptq-int4 is the standout: .902 pass@gb,
+> the best score in this table, while still running faster
+> than every fp16 row except llama-1b — int4 lets the 7B model
+> run cheaper than the 3B fp16 models while beating them on
+> accuracy. Caveat: trial counts are small and uneven (2-4),
+> and the GPTQ rows additionally differ in `prm_batch_size`
+> (2, vs. fp16's default) and post-date `timing_state.json`,
+> so the fp16/GPTQ runtime comparison isn't perfectly
+> apples-to-apples — read the direction of the effect, not the
+> exact percentages.
 
 ### sem-mcts
 > **Runnable as of 2026-06-18** (rename + migration landed).
@@ -316,17 +369,17 @@ instead of one wide sparse grid.)
 
 | llm | proj | cov_update | trials | status | pass@gb | time/trial (hr) |
 |---|---|---|---|---|---|---|
-| Llama-3.2-1B | none | exact | — | planned | — | — |
-| Llama-3.2-1B | none | sm | — | planned | — | — |
-| Llama-3.2-1B | sparse512 | exact | — | planned | — | — |
-| Llama-3.2-1B | sparse512 | sm | 2 | scored | .5938±.0308 | 4.27 |
-| Llama-3.2-1B | sparse512 | sm (prmbs-2) | 1 | scored ⚠ | .6094±.0433 | 4.38 |
-| Qwen-2.5-Math-1.5B | none | exact | — | planned | — | — |
-| Qwen-2.5-Math-1.5B | none | sm | — | planned | — | — |
-| Qwen-2.5-Math-1.5B | sparse512 | exact | 2 | scored | .8711±.0210 | 4.34 |
-| Qwen-2.5-Math-1.5B | sparse512 | sm | 2 | scored | .8633±.0215 | 4.32 |
+| llama-1b | none | exact | — | planned | — | — |
+| llama-1b | none | sm | — | planned | — | — |
+| llama-1b | sparse512 | exact | — | planned | — | — |
+| llama-1b | sparse512 | sm | 2 | scored | .5938±.0308 | 4.27 |
+| llama-1b | sparse512 | sm (prmbs-2) | 1 | scored ⚠ | .6094±.0433 | 4.38 |
+| qwen-math-1.5b | none | exact | — | planned | — | — |
+| qwen-math-1.5b | none | sm | — | planned | — | — |
+| qwen-math-1.5b | sparse512 | exact | 2 | scored | .8711±.0210 | 4.34 |
+| qwen-math-1.5b | sparse512 | sm | 2 | scored | .8633±.0215 | 4.32 |
 
-> Other @gb metrics: Llama-1B sparse512×sm (2 trials) — naive
+> Other @gb metrics: llama-1b sparse512×sm (2 trials) — naive
 > .4453±.0311, weighted .4297±.0310, maj .4141±.0308, ncomps
 > 14.2±0.8, depth 8.7±0.2, nphases 44.5±11.0, ndepths 9.4±0.2.
 > W&B `kqn1lj13`. The prmbs-2 row (n=1, ⚠ within-trial SEM
@@ -343,21 +396,21 @@ instead of one wide sparse grid.)
 > wide, treat as preliminary. W&B `lkltpzc1` (exact) /
 > `vlri1uw0` (sm).
 
-##### Llama-3.2-1B
+##### llama-1b
 | method | tmpl | cpuct | trials | status | pass@gb |
 |---|---|---|---|---|---|
 | sem v01 (policy) | custom | 2.0 | — | *planned* | — |
 | sem v02 (PRM) | custom | 2.0 | — | *planned* | — |
 
-> Match cnt-mcts Llama-1B (custom, 4 trials) for the head-to-head.
+> Match cnt-mcts llama-1b (custom, 4 trials) for the head-to-head.
 
-##### Llama-3.2-3B
+##### llama-3b
 | method | tmpl | cpuct | trials | status | pass@gb |
 |---|---|---|---|---|---|
 | sem v01 (policy) | custom | 2.0 | — | *planned* | — |
 | sem v02 (PRM) | custom | 2.0 | — | *planned* | — |
 
-##### Qwen-2.5-Math-1.5B
+##### qwen-math-1.5b
 | method | tmpl | cpuct | trials | status | pass@gb |
 |---|---|---|---|---|---|
 | sem v01 (policy) | native | 2.0 | — | *planned* | — |
@@ -376,17 +429,17 @@ instead of one wide sparse grid.)
 > `llm-reasoning-mcts-bl-exp-todo` on whether to keep it,
 > replace it, or remove it.)
 
-##### Llama-3.2-1B
+##### llama-1b
 | tmpl | cpuct | trials | status | pass@gb | naive@gb | weighted@gb | maj@gb |
 |---|---|---|---|---|---|---|---|
 | custom | 2.0 | 4 | scored | .492±.022 | .395±.022 | .383±.022 | .381±.022 |
 
-##### Qwen-2.5-Math-1.5B
+##### qwen-math-1.5b
 | tmpl | cpuct | trials | status | pass@gb | naive@gb | weighted@gb | maj@gb |
 |---|---|---|---|---|---|---|---|
 | native | 2.0 | 3 | scored | .654±.024 | .578±.025 | .573±.025 | .576±.026 |
 
-> ⚠ trial-count mismatch vs. cnt-mcts for Qwen-2.5-Math-1.5B
+> ⚠ trial-count mismatch vs. cnt-mcts for qwen-math-1.5b
 > native (bl=3, cnt=2) — reconcile before the head-to-head
 > (`llm-reasoning-mcts-bl-exp-todo` M3).
 
@@ -407,7 +460,7 @@ instead of one wide sparse grid.)
 > One dated block per run/comparison: hypothesis → result →
 > follow-up. Append-only; newest at top.
 
-### 2026-06-18 — cnt-mcts / Llama-1B / custom / cpuct=2.0 / b=80
+### 2026-06-18 — cnt-mcts / llama-1b / custom / cpuct=2.0 / b=80
 - **hypothesis:** baseline reference cell for the custom
   template; expect higher solution depth than native.
 - **result:** pass@gb .648±.042, naive@gb .492±.044,
@@ -431,7 +484,7 @@ instead of one wide sparse grid.)
   to answer)
 
 ## Links & connections
-- Findings: [findings/exp-findings/prm-batch-size-throughput-memory.md](findings/exp-findings/prm-batch-size-throughput-memory.md) —
+- Findings: [findings/exp-findings/prm-batch-size-throughput-memory.md](../findings/exp-findings/prm-batch-size-throughput-memory.md) —
   prm_bs sweep throughput/memory result + why the pass@gb
   gap isn't statistically real
-- Findings index: [findings/README.md](findings/README.md)
+- Findings index: [findings/README.md](../findings/README.md)

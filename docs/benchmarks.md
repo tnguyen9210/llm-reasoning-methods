@@ -59,19 +59,24 @@ directly comparable; qwen-7b fp16 and qwen-math-7b fp16 are
 commented out (too large to co-reside at this gmu) — their
 GPTQ-int4 variants stay. Supersedes the 2026-06-12 n=256/gmu=0.5 run.
 
-| Config              | GPU (GB) | Mean s/trial | Std  | s/question |
-|---------------------|----------|--------------|------|------------|
-| llama-1b fp16       |   2.80   |     21.61    | 5.85 |    4.32    |
-| llama-3b fp16       |   6.47   |     63.20    | 1.93 |   12.64    |
-| llama-3b gptq       |   2.57   |     67.87    | 2.15 |   13.57    |
-| qwen-3b fp16        |   8.41   |    122.21    | 2.70 |   24.44    |
-| qwen-3b gptq-int4   |   4.63   |    102.38    | 2.84 |   20.48    |
-| qwen-7b gptq-int4   |   7.83   |     98.09    | 5.05 |   19.62    |
-| qwen-math-1.5b fp16 |   5.54   |     71.19    | 0.32 |   14.24    |
+| Config              | GPU (GB) | s/trial |  s/question |
+|---------------------|----------|---------|-------------|
+| llama-1b fp16       |   2.80   |  21.61  |     4.32    |
+| llama-3b fp16       |   6.47   |  63.20  |    12.64    |
+| llama-3b gptq       |   2.57   |  67.87  |    13.57    |
+| qwen-3b fp16        |   8.41   | 122.21  |    24.44    |
+| qwen-3b gptq-int4   |   4.63   | 102.38  |    20.48    |
+| qwen-7b fp16        |  16.86   |    —    |      —      |
+| qwen-7b gptq-int4   |   7.83   |  98.09  |    19.62    |
+| qwen-math-1.5b fp16 |   5.54   |  71.19  |    14.24    |
+| qwen-math-7b fp16   |  16.87   |    —    |      —      |
 
 GPU column is HF Transformers model-weight footprint (from
 `unittests/benchmark_llm_mem_sizes_v1.ipynb`, see the table
 below), not the vLLM process footprint during this BoN run.
+qwen-7b fp16 and qwen-math-7b fp16 were not speed-tested in this
+run (commented out, too large to co-reside at gmu=0.3) — memory
+only, sourced from the GPU-memory table.
 
 **Takeaway:** At 3B, GPTQ-int4 still does not pay off — llama-3b
 GPTQ is ~1.07× *slower* than fp16, and qwen-3b int4 is now ~1.19×
@@ -83,9 +88,10 @@ despite having ~2.3× the parameters, consistent with int4 paying
 off more as model size grows. Llama-1b fp16 (4.32 s/q) and
 qwen-math-1.5b fp16 (14.24) are new low-end reference points.
 Caveat: small sample (5 questions, 2 trials), so treat s/question
-as indicative, not precise; the 7B fp16 rows are missing this run
-(commented out for VRAM headroom), so the int4-win-at-7B claim from
-the 2026-06-12 run can't be re-confirmed at this gmu.
+as indicative, not precise; qwen-7b fp16 and qwen-math-7b fp16
+weren't speed-tested this run (commented out for VRAM headroom at
+gmu=0.3) — memory-only rows — so the int4-win-at-7B claim from the
+2026-06-12 run can't be re-confirmed at this gmu.
 
 ## GPU memory: generative models (HF Transformers)
 
@@ -100,14 +106,14 @@ include the CUDA context (~0.5 GB). fp16 via
 The fp32 column is from an earlier run where no `dtype` was
 passed (`from_pretrained` defaults to fp32) — kept for reference.
 
-| Model                      | fp32 (GB) | fp16 (GB) | int4 (GB) |
-|----------------------------|-----------|-----------|-----------|
-| Llama3.2-1B-Instruct       |     —     |    2.80   |     —     |
-| Llama3.2-3B-Instruct       |   12.47   |    6.47   |    2.57   |
-| Qwen2.5-3B-Instruct        |   14.30   |    8.41   |    4.63   |
-| Qwen2.5-7B-Instruct        |   31.43   |   16.86   |    7.83   |
-| Qwen2.5-Math-1.5B-Instruct |     —     |    5.54   |     —     |
-| Qwen2.5-Math-7B-Instruct   |     —     |   16.87   |     —     |
+| Model         | fp32 (GB) | fp16 (GB) | int4 (GB) |
+|---------------|-----------|-----------|-----------|
+| llama-1b      |     —     |    2.80   |     —     |
+| llama-3b      |   12.47   |    6.47   |    2.57   |
+| qwen-3b       |   14.30   |    8.41   |    4.63   |
+| qwen-7b       |   31.43   |   16.86   |    7.83   |
+| qwen-math-1.5b|     —     |    5.54   |     —     |
+| qwen-math-7b  |     —     |   16.87   |     —     |
 
 int4 = GPTQ checkpoint (`-GPTQ` / `-GPTQ-Int4`). fp32 not
 re-measured for the 1B and Math models. All values include the
