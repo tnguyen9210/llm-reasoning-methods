@@ -7,27 +7,34 @@ from dataclasses import dataclass, field
 from typing import Any, Optional
 
 
-# W&B run-id sidecar: generation writes the run id into the result
-# dir so later post-processing (prepare_scored_dataset / compute_stats,
-# separate processes after the run is closed) can reattach via
-# wandb.init(id=..., resume="must") and log onto the SAME run. Kept in
-# a file rather than encoded in config_name so the dir stays uniquely
-# determined by the config (re-runs would otherwise get new paths).
+# W&B run id: recorded into manifest.json (run_id field) so later
+# post-processing (prepare_scored_dataset / compute_stats, separate
+# processes after the run is closed) can reattach via
+# wandb.init(id=..., resume="must") and log onto the SAME run. Not
+# known until wandb.init() returns, so generation writes the manifest
+# twice: once before wandb.init (run_id=None, so the dir is still
+# identity-locatable if wandb.init itself never returns), once after
+# (run_id=wandb_run.id). Older dirs carry the id in a standalone
+# wandb_run_id.txt sidecar instead — load_wandb_run_id falls back to
+# that file when manifest.json has no run_id.
 WANDB_RUN_ID_FILE = "wandb_run_id.txt"
 
 
-def save_wandb_run_id(result_dir: str, run_id: str) -> None:
-    with open(f"{result_dir}/{WANDB_RUN_ID_FILE}", "w") as fout:
-        fout.write(run_id + "\n")
-
-
 def load_wandb_run_id(result_dir: str) -> Optional[str]:
-    """Return the saved W&B run id for this result dir, or None if no
-    sidecar exists (e.g. a run generated before this was added)."""
-    path = f"{result_dir}/{WANDB_RUN_ID_FILE}"
-    if not os.path.exists(path):
+    """Return the saved W&B run id for this result dir, or None if
+    neither manifest.json nor the legacy sidecar has one."""
+    path = f"{result_dir}/{MANIFEST_FILE}"
+    try:
+        with open(path, encoding="utf-8") as fin:
+            run_id = json.load(fin).get("run_id")
+        if run_id:
+            return run_id
+    except (OSError, json.JSONDecodeError):
+        pass
+    legacy_path = f"{result_dir}/{WANDB_RUN_ID_FILE}"
+    if not os.path.exists(legacy_path):
         return None
-    with open(path) as fin:
+    with open(legacy_path) as fin:
         return fin.read().strip() or None
 
 
@@ -523,17 +530,22 @@ def config_name(cfg) -> str:
     )
 
 
-def write_manifest(result_dir: str, cfg, varied=None) -> None:
+def write_manifest(
+    result_dir: str, cfg, varied=None, run_id: Optional[str] = None,
+) -> None:
     """Record the run's identity into {result_dir}/manifest.json so it
     can be located later by recorded fact (find_run_dir), not by
     re-deriving the name. Atomic write (temp + rename). `varied` is an
     optional list of the knob names this run sweeps — a display hint
-    for tables/readers, not part of identity."""
+    for tables/readers, not part of identity. `run_id` is the W&B run
+    id; called once before wandb.init (run_id=None) and once after
+    (run_id=wandb_run.id) — see load_wandb_run_id."""
     payload = {
         "config_name": config_name(cfg),
         "config_hash": config_hash(cfg),
         "config_identity": config_identity(cfg),
         "varied": list(varied) if varied else [],
+        "run_id": run_id,
     }
     path = f"{result_dir}/{MANIFEST_FILE}"
     tmp = path + ".tmp"

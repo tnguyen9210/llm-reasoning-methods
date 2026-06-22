@@ -21,7 +21,7 @@ from core.reward_models import RLHFlowPRM
 from core.scoring import build_scored_dataset
 from utils.configs import (
     ExpConfig, BLMCTSCntConfig, config_name, level_dir,
-    write_manifest, save_wandb_run_id, load_wandb_run_id,
+    write_manifest, load_wandb_run_id,
 )
 from utils.load_data import load_data_hf
 
@@ -103,8 +103,9 @@ def main(cfg: ExpConfig):
     write_manifest(result_dir, cfg)
 
     # Resume onto the same run if this is a restart. load_ returns None
-    # on a fresh launch (no sidecar) -> W&B mints a new id. resume="allow"
-    # (not "must") so both first launch and restart share this one path.
+    # on a fresh launch (no manifest run_id) -> W&B mints a new id.
+    # resume="allow" (not "must") so both first launch and restart
+    # share this one path.
     run_id = load_wandb_run_id(result_dir)
     wandb_run = wandb.init(
         project="llm-reasoning",
@@ -113,9 +114,10 @@ def main(cfg: ExpConfig):
         id=run_id,
         resume="allow",
     )
-    # Persist the run id so a restart -- and compute_stats -- can
-    # reattach and log onto this same run. Idempotent on a resume.
-    save_wandb_run_id(result_dir, wandb_run.id)
+    # Persist the run id into the manifest so a restart -- and
+    # compute_stats -- can reattach and log onto this same run.
+    # Idempotent on a resume.
+    write_manifest(result_dir, cfg, run_id=wandb_run.id)
 
     print(f"node = {socket.gethostname()}")
 
