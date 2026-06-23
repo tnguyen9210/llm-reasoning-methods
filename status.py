@@ -201,6 +201,88 @@ _METHOD_TO_ROOT = {
     "mcts_sem_v02": "mcts_sem_v02_prm800k",
 }
 
+_METHOD_TO_LAUNCHER = {
+    "mcts_cnt": "generate_mcts_cnt.py",
+    "mcts_sem_v01": "generate_mcts_sem.py",
+    "mcts_sem_v02": "generate_mcts_sem.py",
+}
+
+# Group SELECTOR maps: a manifest records resolved *values*, not which
+# group file produced them, so to emit `<group>=<file>` we map the
+# group's identifying value back to its conf/<group>/<file>.yaml. Keyed
+# by the field that uniquely identifies a file in that group.
+#   llm  -> by llm.name      prm -> by prm.kind     data -> by data.name
+# Derived from conf/<group>/*.yaml; keep in sync if files are added.
+_LLM_BY_NAME = {
+    "Llama3.2-1B-Instruct": "llama_1b",
+    "Llama3.2-3B-Instruct": "llama_3b",
+    "Llama3.2-3B-Instruct-GPTQ": "llama_3b_gptq",
+    "Qwen2.5-3B-Instruct": "qwen_3b",
+    "Qwen2.5-3B-Instruct-GPTQ-Int4": "qwen_3b_gptq_int4",
+    "Qwen2.5-7B-Instruct-GPTQ-Int4": "qwen_7b_gptq_int4",
+    "Qwen2.5-Math-1.5B-Instruct": "qwen_math_1_5b",
+    "Qwen2.5-Math-7B-Instruct": "qwen_math_7b",
+}
+_PRM_BY_KIND = {"rlhflow": "llama_prm", "qwen": "qwen_prm"}
+_DATA_BY_NAME = {"prm800k": "prm800k"}
+
+# How to select a group file from its config_identity block: (id-field,
+# value->file map). Other groups (search, gen) are plain field diffs.
+_GROUP_SELECTORS = {
+    "llm": ("name", _LLM_BY_NAME),
+    "prm": ("kind", _PRM_BY_KIND),
+    "data": ("name", _DATA_BY_NAME),
+}
+
+
+def derive_overrides(root, ident):
+    """Reconstruct the minimal Hydra overrides that turn `root`'s
+    defaults into the recorded `config_identity`. Returns (overrides
+    dict, warnings list). For llm/prm/data, a changed identifying value
+    becomes a group swap (`llm=qwen_3b`); any remaining in-group field
+    diffs become `llm.field=val`. For search/gen, every differing field
+    is a `group.field=val` override. Verified by the caller via hash
+    round-trip."""
+    ref = compose_cfg(root, [])
+    overrides = {}
+    warns = []
+    # First pass: resolve any group SWAPS (llm/prm/data file selection),
+    # so the per-field baseline below is taken against the SELECTED file,
+    # not the root default -- otherwise a field like llm.enforce_eager
+    # would be diffed against the wrong group's value.
+    for group, (id_field, vmap) in _GROUP_SELECTORS.items():
+        gvals = ident.get(group)
+        if not isinstance(gvals, dict):
+            continue
+        cur_id = gvals.get(id_field)
+        ref_id = getattr(getattr(ref, group, None), id_field, None)
+        if cur_id != ref_id:
+            fname = vmap.get(cur_id)
+            if fname is None:
+                warns.append(
+                    f"{group}.{id_field}={cur_id!r} has no group file")
+            else:
+                overrides[group] = fname
+    # Recompose with the swaps applied: this is the correct per-field
+    # baseline for ALL groups (a swap changes its own group's defaults).
+    swap_list = [f"{g}={f}" for g, f in overrides.items()]
+    ref = compose_cfg(root, swap_list)
+    # Second pass: every group's remaining field diffs become
+    # group.field=val -- including non-selector fields of a swapped
+    # group (e.g. llm.enforce_eager) and the plain groups (search, gen).
+    for group, gvals in ident.items():
+        if not isinstance(gvals, dict):
+            continue
+        ref_g = getattr(ref, group, None)
+        id_field = _GROUP_SELECTORS.get(group, (None,))[0]
+        for k, v in gvals.items():
+            if k == id_field:
+                continue  # the selector itself is handled by the swap
+            ref_v = getattr(ref_g, k, None) if ref_g is not None else None
+            if v != ref_v:
+                overrides[f"{group}.{k}"] = v
+    return overrides, warns
+
 
 def backfill(queue):
     claimed = set()
@@ -221,12 +303,23 @@ def backfill(queue):
         if root is None:
             continue  # out of scope (e.g. bon, bl) -- skip silently
         n_done = count_done(rdir)
-        new.append({
-            "launcher": f"generate_{method}.py"
-            if method != "mcts_sem_v02" and method != "mcts_sem_v01"
-            else "generate_mcts_sem.py",
+
+        overrides, warns = derive_overrides(root, ident)
+        # Verify: re-compose with the derived overrides and check the
+        # hash round-trips back to the recorded one. A mismatch means
+        # an override couldn't be reconstructed (e.g. a missing group
+        # file) -- flag it instead of emitting a wrong entry silently.
+        ov_list = [f"{k}={v}" for k, v in overrides.items()]
+        try:
+            verified = config_hash(compose_cfg(root, ov_list)) == h
+        except Exception as ex:
+            verified = False
+            warns.append(f"re-compose failed: {type(ex).__name__}: {ex}")
+
+        entry = {
+            "launcher": _METHOD_TO_LAUNCHER[method],
             "config_root": root,
-            "overrides": "# TODO: fill from config_identity if re-runnable",
+            "overrides": overrides,
             "trials": n_done or 1,
             "feeds": [],
             "group": "sem-mcts" if method.startswith("mcts_sem")
@@ -235,7 +328,11 @@ def backfill(queue):
             "_backfilled_from": os.path.basename(rdir),
             "_config_hash": h,
             "_run_id": rec.get("run_id"),
-        })
+            "_verified": verified,
+        }
+        if warns:
+            entry["_warnings"] = warns
+        new.append(entry)
     return new
 
 

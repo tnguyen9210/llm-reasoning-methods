@@ -45,3 +45,148 @@
   group: sem-mcts
   priority: 1
   recorded: false
+
+# --- backfilled from existing result dirs (status.py --backfill,
+#     all hash-verified). feeds left empty: fill when recording into
+#     docs/exp-comparison.md. NOTE: the llama_3b + enforce_eager=true
+#     cnt entry below feeds ONLY the enforce_eager comparison table.
+- launcher: generate_mcts_sem.py
+  config_root: mcts_sem_v02_prm800k
+  overrides:
+    llm: qwen_math_1_5b
+    search.ds_alpha: 1000.0
+  trials: 2
+  feeds: []
+  group: sem-mcts
+  priority: 2
+  recorded: false
+  run_id: kbwjqw96
+  from_dir: mcts_sem_v02--level-4--Qwen2.5-Math-1.5B--rlhflow--d-20--bs-4--b-080--cfg-036c554c
+- launcher: generate_mcts_sem.py
+  config_root: mcts_sem_v02_prm800k
+  overrides:
+    search.ds_alpha: 10.0
+  trials: 2
+  feeds: []
+  group: sem-mcts
+  priority: 2
+  recorded: false
+  run_id: wsvy5q72
+  from_dir: mcts_sem_v02--level-4--Llama3.2-1B--rlhflow--d-20--bs-4--b-080--cfg-047767a8
+- launcher: generate_mcts_sem.py
+  config_root: mcts_sem_v02_prm800k
+  overrides:
+    llm: llama_3b
+    search.ds_alpha: 1000.0
+  trials: 2
+  feeds: []
+  group: sem-mcts
+  priority: 2
+  recorded: false
+  run_id: fv18snbn
+  from_dir: mcts_sem_v02--level-4--Llama3.2-3B--rlhflow--d-20--bs-4--b-080--cfg-05ab09f5
+- launcher: generate_mcts_cnt.py
+  config_root: mcts_cnt_prm800k
+  overrides:
+    llm: qwen_3b
+    prm: qwen_prm
+  trials: 2
+  feeds: []
+  group: cnt-mcts
+  priority: 2
+  recorded: false
+  run_id: 9kxy56vs
+  from_dir: mcts_cnt--level-4--Qwen2.5-3B--qwen--d-20--bs-4--b-080--cfg-076f1b3f
+- launcher: generate_mcts_sem.py
+  config_root: mcts_sem_v02_prm800k
+  overrides:
+    llm: llama_3b
+    search.ds_alpha: 10.0
+  trials: 2
+  feeds: []
+  group: sem-mcts
+  priority: 2
+  recorded: false
+  run_id: 8882rt6u
+  from_dir: mcts_sem_v02--level-4--Llama3.2-3B--rlhflow--d-20--bs-4--b-080--cfg-585b090a
+- launcher: generate_mcts_sem.py
+  config_root: mcts_sem_v02_prm800k
+  overrides:
+    llm: qwen_math_1_5b
+  trials: 2
+  feeds: []
+  group: sem-mcts
+  priority: 2
+  recorded: false
+  run_id: qn3b8lg0
+  from_dir: mcts_sem_v02--level-4--Qwen2.5-Math-1.5B--rlhflow--d-20--bs-4--b-080--cfg-6d71fe7e
+- launcher: generate_mcts_sem.py
+  config_root: mcts_sem_v02_prm800k
+  overrides:
+    llm: qwen_math_1_5b
+    search.ds_alpha: 10.0
+  trials: 2
+  feeds: []
+  group: sem-mcts
+  priority: 2
+  recorded: false
+  run_id: ihxrzedi
+  from_dir: mcts_sem_v02--level-4--Qwen2.5-Math-1.5B--rlhflow--d-20--bs-4--b-080--cfg-9b20f7fe
+- launcher: generate_mcts_cnt.py
+  config_root: mcts_cnt_prm800k
+  overrides:
+    llm: qwen_math_1_5b
+    prm: qwen_prm
+  trials: 2
+  feeds: []
+  group: cnt-mcts
+  priority: 2
+  recorded: false
+  run_id: 9skdu6r4
+  from_dir: mcts_cnt--level-4--Qwen2.5-Math-1.5B--qwen--d-20--bs-4--b-080--cfg-b9bdc323
+- launcher: generate_mcts_cnt.py
+  config_root: mcts_cnt_prm800k
+  overrides:
+    llm: llama_3b
+    prm: qwen_prm
+  trials: 2
+  feeds: []
+  group: cnt-mcts
+  priority: 2
+  recorded: false
+  run_id: 5opc7rii
+  from_dir: mcts_cnt--level-4--Llama3.2-3B--qwen--d-20--bs-4--b-080--cfg-d13c8fc3
+- launcher: generate_mcts_sem.py
+  config_root: mcts_sem_v02_prm800k
+  overrides:
+    search.ds_alpha: 0.0
+  trials: 2
+  feeds: []
+  group: sem-mcts
+  priority: 2
+  recorded: false
+  run_id: bjz0yxrg
+  from_dir: mcts_sem_v02--level-4--Llama3.2-1B--rlhflow--d-20--bs-4--b-080--cfg-dfcb1c57
+- launcher: generate_mcts_sem.py
+  config_root: mcts_sem_v02_prm800k
+  overrides:
+    llm: llama_3b
+  trials: 2
+  feeds: []
+  group: sem-mcts
+  priority: 2
+  recorded: false
+  run_id: gv2b7ajq
+  from_dir: mcts_sem_v02--level-4--Llama3.2-3B--rlhflow--d-20--bs-4--b-080--cfg-e5707db9
+- launcher: generate_mcts_cnt.py
+  config_root: mcts_cnt_prm800k
+  overrides:
+    llm: llama_3b
+    llm.enforce_eager: true
+  trials: 2
+  feeds: []
+  group: cnt-mcts
+  priority: 2
+  recorded: false
+  run_id: e5ki98he
+  from_dir: mcts_cnt--level-4--Llama3.2-3B--rlhflow--d-20--bs-4--b-080--cfg-e829c53b
