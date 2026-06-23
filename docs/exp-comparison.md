@@ -537,42 +537,50 @@ a
 > proj=sparse512, cov_update=sm, prm=rlhflow, ds_beta=1.0,
 > prm_batch_size=1.
 >
-> ⚠️ llama-1b `ds_alpha=0` is only 1 trial (run still in
-> progress, trial 1 not yet generated) — treat as preliminary.
-> llama-1b `ds_alpha=100`/`1000` cells are `planned`: no
-> prmbs-1 run exists yet, only a legacy prmbs-4 dir (used
-> elsewhere in the doc) — left out here to keep this row's
-> prmbs consistent. qwen-math-1.5b `ds_alpha=0` is also
+> ⚠️ llama-1b `ds_alpha=1000` is only 2/4 trials so far (run
+> incomplete) — left `planned` until it finishes; a legacy
+> prmbs-4 dir for this cell exists but is used elsewhere, so
+> it's not slotted here. qwen-math-1.5b `ds_alpha=0` is
 > `planned` (untouched, see below).
 >
 > **W&B:** llama-1b ds_alpha=0 `bjz0yxrg`, ds_alpha=10
-> `wsvy5q72`; qwen-math-1.5b ds_alpha=10 `ihxrzedi`,
-> ds_alpha=100 `qn3b8lg0`, ds_alpha=1000 `kbwjqw96`.
+> `wsvy5q72`, ds_alpha=100 `hdiysdi6`; qwen-math-1.5b
+> ds_alpha=10 `ihxrzedi`, ds_alpha=100 `qn3b8lg0`,
+> ds_alpha=1000 `kbwjqw96`; llama-3b ds_alpha=10 `8882rt6u`,
+> ds_alpha=100 `gv2b7ajq`, ds_alpha=1000 `fv18snbn`.
 
 | llm | ds_alpha | trials | status | pass@gb | naive@gb | wei@gb | maj@gb | hr/trial |
 |---|---|---|---|---|---|---|---|---|
-| llama-1b | 0 | 1 | scored ⚠ | .3984<br>±.0434 | .3672<br>±.0428 | .3594<br>±.0426 | .3047<br>±.0408 | 3.42 |
+| llama-1b | 0 | 2 | scored | .4336<br>±.0310 | .4023<br>±.0307 | .4023<br>±.0307 | .3359<br>±.0296 | 3.36 |
 | llama-1b | 10 | 2 | scored | .6133<br>±.0305 | .4453<br>±.0311 | .4180<br>±.0309 | .3906<br>±.0306 | 4.93 |
-| llama-1b | 100 (default) | — | planned | — | — | — | — | — |
+| llama-1b | 100 (default) | 2 | scored | .5898<br>±.0308 | .4336<br>±.0310 | .4336<br>±.0310 | .4062<br>±.0308 | 4.99 |
 | llama-1b | 1000 | — | planned | — | — | — | — | — |
 | qwen-math-1.5b | 0 | — | planned | — | — | — | — | — |
 | qwen-math-1.5b | 10 | 2 | scored | .8945<br>±.0192 | .7617<br>±.0267 | .7812<br>±.0259 | .7578<br>±.0268 | 4.78 |
 | qwen-math-1.5b | 100 (default) | 2 | scored | .8789<br>±.0204 | .7461<br>±.0273 | .7656<br>±.0265 | .7461<br>±.0273 | 4.81 |
 | qwen-math-1.5b | 1000 | 2 | scored | .8867<br>±.0198 | .7656<br>±.0265 | .7656<br>±.0265 | .7422<br>±.0274 | 4.86 |
+| llama-3b | 10 | 2 | scored | .7422<br>±.0274 | .5430<br>±.0312 | .5781<br>±.0309 | .5703<br>±.0310 | 6.74 |
+| llama-3b | 100 (default) | 2 | scored | .7383<br>±.0275 | .5469<br>±.0312 | .5703<br>±.0310 | .5703<br>±.0310 | 6.61 |
+| llama-3b | 1000 | 2 | scored | .7344<br>±.0277 | .5586<br>±.0311 | .5977<br>±.0307 | .5938<br>±.0308 | 6.71 |
 
-> **Analysis.** qwen-math-1.5b's three filled cells (10/100/1000)
-> are all within ~1 SEM of each other on every metric — no clear
-> `ds_alpha` effect visible at this model size over this range,
-> though `ds_alpha=0` (pure q-value, no diversity bonus) isn't in
-> yet to check the lower-bound case. llama-1b's two filled cells
-> move more (pass .398 at 0 vs .613 at 10), suggesting the
-> diversity bonus matters more for this smaller model, but n=1
-> at `ds_alpha=0` makes that comparison unreliable.
-> **Limitations / follow-up:** llama-1b needs prmbs-1 runs at
-> `ds_alpha={100,1000}` and a second trial at `ds_alpha=0` before
-> its row is comparable to qwen-math-1.5b's; qwen-math-1.5b needs
-> a `ds_alpha=0` run to complete the lower-bound check at that
-> model size too.
+> **Analysis.** The clearest signal is at **llama-1b** (three
+> filled cells, 0/10/100): pass .434 at `ds_alpha=0` → .613 at 10
+> → .590 at 100. The 0→10 jump — turning the diversity bonus *on*
+> — is the one real move in the whole table; 10 vs 100 is within
+> ~1 SEM (the bonus saturates). The two larger models are flat
+> over the 10-1000 range: **qwen-math-1.5b** (10/100/1000) and
+> **llama-3b** (10/100/1000) each sit within ~1 SEM across all
+> three cells on every metric — no `ds_alpha` effect visible once
+> the bonus is on. So the picture is consistent: the diversity
+> term matters most for the smallest model (where it lifts pass@gb
+> off the `ds_alpha=0` lower bound), and its *magnitude* past ~10
+> doesn't matter at any model size checked.
+> **Limitations / follow-up:** the `ds_alpha=0` lower-bound cell
+> exists only for llama-1b — qwen-math-1.5b (`planned`) and
+> llama-3b (not run) both need it to confirm the "bonus helps"
+> result generalizes. llama-1b `ds_alpha=1000` is still 2/4 trials
+> (relaunch to finish). All filled cells are n=2, so the 0-vs-10
+> llama-1b jump is suggestive, not settled.
 
 #### model family, size, quantization comparison
 > **Compares:** model family, size, and quantization jointly —
@@ -588,10 +596,9 @@ a
 > qwen-3b-gptq-int4/qwen-7b-gptq-int4; 2 for llama-1b/
 > qwen-math-1.5b — no prmbs-1+rlhflow run exists yet for those
 > two), so hr/trial isn't perfectly apples-to-apples across every
-> row. llama-3b fp16 is only 1 trial scored — treat as
-> preliminary, not a stable estimate.
+> row.
 >
-> **W&B:** llama-1b `kqn1lj13`, llama-3b `ctmgmcrp`, llama-3b
+> **W&B:** llama-1b `kqn1lj13`, llama-3b `gv2b7ajq`, llama-3b
 > gptq `p035tdjs`, qwen-3b `hkrjgbwl`, qwen-3b gptq-int4
 > `ekf9b680`, qwen-7b gptq-int4 `f2dhl1ja`, qwen-math-1.5b
 > `qn3b8lg0`.
@@ -599,7 +606,7 @@ a
 | llm | trials | status | pass@gb | naive@gb | wei@gb | maj@gb | hr/trial |
 |---|---|---|---|---|---|---|---|
 | llama-1b fp16 | 2 | scored | .5938<br>±.0308 | .4453<br>±.0311 | .4297<br>±.0310 | .4141<br>±.0308 | 4.27 |
-| llama-3b fp16 | 1 | scored ⚠ | .7188<br>±.0399 | .5391<br>±.0442 | .5781<br>±.0438 | .5547<br>±.0441 | 6.60 |
+| llama-3b fp16 | 2 | scored | .7383<br>±.0275 | .5469<br>±.0312 | .5703<br>±.0310 | .5703<br>±.0310 | 6.61 |
 | llama-3b gptq | 2 | scored | .6992<br>±.0287 | .5391<br>±.0312 | .5273<br>±.0313 | .5039<br>±.0313 | 5.71 |
 | qwen-3b fp16 | 2 | scored | .8398<br>±.0230 | .6289<br>±.0303 | .7031<br>±.0286 | .6992<br>±.0287 | 5.85 |
 | qwen-3b gptq-int4 | 2 | scored | .8242<br>±.0238 | .6836<br>±.0291 | .6992<br>±.0287 | .6914<br>±.0289 | 4.93 |
@@ -607,19 +614,19 @@ a
 | qwen-math-1.5b fp16 | 2 | scored | .8789<br>±.0204 | .7461<br>±.0273 | .7656<br>±.0265 | .7461<br>±.0273 | 4.81 |
 
 > **Analysis.** Accuracy scales with model size/quality as
-> expected (llama-1b .594 → llama-3b .719-ish → qwen-7b .906),
+> expected (llama-1b .594 → llama-3b .738 → qwen-7b .906),
 > and qwen-7b gptq-int4 again posts the best score in the table
 > despite being quantized — consistent with the cnt-mcts version
 > of this comparison. GPTQ's accuracy cost at matched size is
 > smaller here than for cnt-mcts: llama-3b gptq trails its fp16
-> counterpart by ~2 pts (.699 vs .719, though fp16 is n=1) and
-> qwen-3b gptq-int4 trails by ~1.6 pts (.824 vs .840) — both
-> gaps comfortably within noise.
-> **Limitations / follow-up:** llama-3b fp16's single trial and
-> the prm_batch_size mismatch (2 vs 1) both need addressing
-> before this table supports a confident fp16-vs-GPTQ verdict for
-> sem-mcts; a second llama-3b fp16 trial and a prmbs-1 rerun for
-> llama-1b/qwen-math-1.5b are the next concrete steps.
+> counterpart by ~4 pts (.699 vs .738) and qwen-3b gptq-int4
+> trails by ~1.6 pts (.824 vs .840) — both gaps comfortably
+> within noise at n=2.
+> **Limitations / follow-up:** the prm_batch_size mismatch (2 vs
+> 1) on the llama-1b/qwen-math-1.5b rows still needs a prmbs-1
+> rerun before this table supports a fully apples-to-apples
+> fp16-vs-GPTQ runtime verdict for sem-mcts. All cells are now
+> n=2, so accuracy gaps within ~1 SEM should be read as ties.
 
 #### rlhflow vs qwen PRM comparison
 > **Compares:** `prm.kind` (Llama-8B-PRM "rlhflow" vs
