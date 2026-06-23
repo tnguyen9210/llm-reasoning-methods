@@ -1,0 +1,47 @@
+# Experiment intent ledger. APPEND-ONLY: never delete or reorder
+# entries; status is COMPUTED by status.py, not stored here. The one
+# mutable field is `recorded` (has this done run's number been written
+# into docs/exp-comparison.md yet?). See status.py and the vault guide
+# research-coding-practices-guides/tracking-experiment-status.
+#
+# Per entry:
+#   launcher     informational: which generate_*.py runs this
+#   config_root  Hydra root config name (used by status.py to compose)
+#   overrides    dict of Hydra overrides vs the root config's defaults
+#   trials       expected num_trials (status.py counts .done against it)
+#   feeds        comparison-table cell(s) this run populates (loose keys)
+#   group        algorithm family (cheap filter axis)
+#   priority     1 = launch now, 2 = later
+#   recorded     true once its number is in docs/exp-comparison.md
+#
+# Existing on-disk runs are seeded via `python status.py --backfill`,
+# not hand-written. Below are a few entries to exercise status.py.
+
+# --- known-done (sem default, 2 trials on disk) ----------------------
+- launcher: generate_mcts_sem.py
+  config_root: mcts_sem_v02_prm800k
+  overrides: {}
+  trials: 2
+  feeds: [sem-mcts/ds_alpha-sweep]
+  group: sem-mcts
+  priority: 2
+  recorded: true
+
+# --- planned (the run we deleted earlier; no dir -> planned) ---------
+- launcher: generate_mcts_sem.py
+  config_root: mcts_sem_v02_prm800k
+  overrides: {search.ds_alpha: 1000}
+  trials: 4
+  feeds: [sem-mcts/ds_alpha-sweep]
+  group: sem-mcts
+  priority: 1
+  recorded: false
+
+- launcher: generate_mcts_sem.py
+  config_root: mcts_sem_v02_prm800k
+  overrides: {llm: qwen_math_1_5b, search.ds_alpha: 0}
+  trials: 4
+  feeds: [sem-mcts/ds_alpha-sweep]
+  group: sem-mcts
+  priority: 1
+  recorded: false
