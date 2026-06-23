@@ -190,3 +190,83 @@
   recorded: false
   run_id: e5ki98he
   from_dir: mcts_cnt--level-4--Llama3.2-3B--rlhflow--d-20--bs-4--b-080--cfg-e829c53b
+
+# --- planned (harvested from docs/exp-comparison.md planned cells,
+#     all compose-verified, no hash collision with existing entries):
+#       * 3 proj/cov 'exact' cells (embeds_proj x cov_update sweep)
+#       * 3 v01-policy runs (LLM-vs-PRM-embeds; v01 has no runs yet)
+#     The doc's llama-1b ds_alpha=100/1000 'planned' cells were stale
+#     (hash to the already-done default / already-partial dirs), so
+#     they are NOT added here.
+- launcher: generate_mcts_sem.py
+  config_root: mcts_sem_v02_prm800k
+  overrides:
+    llm: llama_1b
+    search.embeds_proj: none
+    search.cov_update: exact
+  trials: 4
+  feeds:
+  - sem-mcts/proj-cov-sweep
+  group: sem-mcts
+  priority: 1
+  recorded: false
+  note: llama-1b none/exact
+- launcher: generate_mcts_sem.py
+  config_root: mcts_sem_v02_prm800k
+  overrides:
+    llm: llama_1b
+    search.cov_update: exact
+  trials: 4
+  feeds:
+  - sem-mcts/proj-cov-sweep
+  group: sem-mcts
+  priority: 1
+  recorded: false
+  note: llama-1b sparse512/exact
+- launcher: generate_mcts_sem.py
+  config_root: mcts_sem_v02_prm800k
+  overrides:
+    llm: qwen_math_1_5b
+    search.embeds_proj: none
+    search.cov_update: exact
+  trials: 4
+  feeds:
+  - sem-mcts/proj-cov-sweep
+  group: sem-mcts
+  priority: 1
+  recorded: false
+  note: qwen-math-1.5b none/exact
+- launcher: generate_mcts_sem.py
+  config_root: mcts_sem_v01_prm800k
+  overrides:
+    llm: llama_1b
+  trials: 4
+  feeds:
+  - sem-mcts/llm-vs-prm-embeds
+  group: sem-mcts
+  priority: 1
+  recorded: false
+  note: v01 policy llama-1b custom
+- launcher: generate_mcts_sem.py
+  config_root: mcts_sem_v01_prm800k
+  overrides:
+    llm: llama_3b
+  trials: 4
+  feeds:
+  - sem-mcts/llm-vs-prm-embeds
+  group: sem-mcts
+  priority: 1
+  recorded: false
+  note: v01 policy llama-3b custom
+- launcher: generate_mcts_sem.py
+  config_root: mcts_sem_v01_prm800k
+  overrides:
+    llm: qwen_math_1_5b
+    llm.use_custom_template: false
+  trials: 4
+  feeds:
+  - sem-mcts/llm-vs-prm-embeds
+  group: sem-mcts
+  priority: 1
+  recorded: false
+  note: v01 policy qwen-math-1.5b native
