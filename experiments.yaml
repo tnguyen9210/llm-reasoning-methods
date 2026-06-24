@@ -22,7 +22,7 @@
   config_root: mcts_sem_v02_prm800k
   overrides: {}
   trials: 2
-  feeds: [sem-mcts/ds_alpha-sweep]
+  feeds: [sem-mcts/ds_alpha-sweep, sem-mcts/model-family, sem-mcts/prm-comparison]
   group: sem-mcts
   priority: 2
   recorded: true
@@ -56,7 +56,7 @@
     llm: qwen_math_1_5b
     search.ds_alpha: 1000.0
   trials: 2
-  feeds: []
+  feeds: [sem-mcts/ds_alpha-sweep]
   group: sem-mcts
   priority: 2
   recorded: true
@@ -67,7 +67,7 @@
   overrides:
     search.ds_alpha: 10.0
   trials: 2
-  feeds: []
+  feeds: [sem-mcts/ds_alpha-sweep]
   group: sem-mcts
   priority: 2
   recorded: true
@@ -79,7 +79,7 @@
     llm: llama_3b
     search.ds_alpha: 1000.0
   trials: 2
-  feeds: []
+  feeds: [sem-mcts/ds_alpha-sweep]
   group: sem-mcts
   priority: 2
   recorded: true
@@ -91,7 +91,7 @@
     llm: qwen_3b
     prm: qwen_prm
   trials: 2
-  feeds: []
+  feeds: [cnt-mcts/prm-comparison]
   group: cnt-mcts
   priority: 2
   recorded: true
@@ -103,7 +103,7 @@
     llm: llama_3b
     search.ds_alpha: 10.0
   trials: 2
-  feeds: []
+  feeds: [sem-mcts/ds_alpha-sweep]
   group: sem-mcts
   priority: 2
   recorded: true
@@ -114,7 +114,7 @@
   overrides:
     llm: qwen_math_1_5b
   trials: 2
-  feeds: []
+  feeds: [sem-mcts/ds_alpha-sweep, sem-mcts/model-family, sem-mcts/prm-comparison]
   group: sem-mcts
   priority: 2
   recorded: true
@@ -126,7 +126,7 @@
     llm: qwen_math_1_5b
     search.ds_alpha: 10.0
   trials: 2
-  feeds: []
+  feeds: [sem-mcts/ds_alpha-sweep]
   group: sem-mcts
   priority: 2
   recorded: true
@@ -138,7 +138,7 @@
     llm: qwen_math_1_5b
     prm: qwen_prm
   trials: 2
-  feeds: []
+  feeds: [cnt-mcts/prm-comparison]
   group: cnt-mcts
   priority: 2
   recorded: true
@@ -150,7 +150,7 @@
     llm: llama_3b
     prm: qwen_prm
   trials: 2
-  feeds: []
+  feeds: [cnt-mcts/prm-comparison]
   group: cnt-mcts
   priority: 2
   recorded: true
@@ -161,7 +161,7 @@
   overrides:
     search.ds_alpha: 0.0
   trials: 2
-  feeds: []
+  feeds: [sem-mcts/ds_alpha-sweep]
   group: sem-mcts
   priority: 2
   recorded: true
@@ -172,7 +172,7 @@
   overrides:
     llm: llama_3b
   trials: 2
-  feeds: []
+  feeds: [sem-mcts/ds_alpha-sweep, sem-mcts/model-family, sem-mcts/prm-comparison]
   group: sem-mcts
   priority: 2
   recorded: true
@@ -184,7 +184,7 @@
     llm: llama_3b
     llm.enforce_eager: true
   trials: 2
-  feeds: []
+  feeds: [cnt-mcts/enforce-eager]
   group: cnt-mcts
   priority: 2
   recorded: true
@@ -205,8 +205,7 @@
     search.embeds_proj: none
     search.cov_update: exact
   trials: 2
-  feeds:
-  - sem-mcts/proj-cov-sweep
+  feeds: [sem-mcts/proj-cov-sweep]
   group: sem-mcts
   priority: 1
   recorded: false
@@ -217,8 +216,7 @@
     llm: llama_1b
     search.cov_update: exact
   trials: 2
-  feeds:
-  - sem-mcts/proj-cov-sweep
+  feeds: [sem-mcts/proj-cov-sweep]
   group: sem-mcts
   priority: 1
   recorded: false
@@ -230,8 +228,7 @@
     search.embeds_proj: none
     search.cov_update: exact
   trials: 2
-  feeds:
-  - sem-mcts/proj-cov-sweep
+  feeds: [sem-mcts/proj-cov-sweep]
   group: sem-mcts
   priority: 1
   recorded: false
@@ -241,8 +238,7 @@
   overrides:
     llm: llama_1b
   trials: 2
-  feeds:
-  - sem-mcts/llm-vs-prm-embeds
+  feeds: [sem-mcts/llm-vs-prm-embeds]
   group: sem-mcts
   priority: 1
   recorded: false
@@ -252,8 +248,7 @@
   overrides:
     llm: llama_3b
   trials: 2
-  feeds:
-  - sem-mcts/llm-vs-prm-embeds
+  feeds: [sem-mcts/llm-vs-prm-embeds]
   group: sem-mcts
   priority: 1
   recorded: false
@@ -264,8 +259,7 @@
     llm: qwen_math_1_5b
     llm.use_custom_template: false
   trials: 2
-  feeds:
-  - sem-mcts/llm-vs-prm-embeds
+  feeds: [sem-mcts/llm-vs-prm-embeds]
   group: sem-mcts
   priority: 1
   recorded: false
