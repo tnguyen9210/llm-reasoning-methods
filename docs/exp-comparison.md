@@ -582,6 +582,49 @@ a
 > more trials would tighten the wide SEMs before treating the
 > plateau as final.
 
+#### ds_alpha sweep (v02, qwen PRM)
+> **Compares:** the same `ds_alpha` diversity-bonus sweep as the
+> table above, but with `prm=qwen` (Qwen-Math-7B-PRM) as the
+> scoring model instead of `prm=rlhflow` (Llama-8B-PRM). Reading
+> this table against the rlhflow one isolates whether the
+> `ds_alpha` behavior (the "bonus helps, magnitude past ~10
+> doesn't" shape) is robust to the choice of PRM, or specific to
+> rlhflow scoring. `ds_alpha=0` is omitted here — the lower-bound
+> check is already covered in the rlhflow table; this sweep
+> focuses on the on-bonus range (10/100/1000).
+>
+> **Fixed:** tmpl=model-family default, bs-4, d-20, b=80,
+> proj=sparse512, cov_update=sm, prm=qwen, ds_beta=1.0,
+> prm_batch_size=1.
+>
+> ⚠️ Entirely `planned` — no runs yet. Every cell needs a
+> `prm=qwen` sem-v02 run at the listed `ds_alpha`.
+>
+> **W&B:** none yet (no runs exist).
+
+| llm | ds_alpha | trials | status | pass@gb | naive@gb | wei@gb | maj@gb | hr/trial |
+|---|---|---|---|---|---|---|---|---|
+| llama-1b | 10 | — | planned | — | — | — | — | — |
+| llama-1b | 100 (default) | — | planned | — | — | — | — | — |
+| llama-1b | 1000 | — | planned | — | — | — | — | — |
+| qwen-math-1.5b | 10 | — | planned | — | — | — | — | — |
+| qwen-math-1.5b | 100 (default) | — | planned | — | — | — | — | — |
+| qwen-math-1.5b | 1000 | — | planned | — | — | — | — | — |
+| llama-3b | 10 | — | planned | — | — | — | — | — |
+| llama-3b | 100 (default) | — | planned | — | — | — | — | — |
+| llama-3b | 1000 | — | planned | — | — | — | — | — |
+
+> **Analysis.** No data yet — nothing to take away. Once filled,
+> the key read is whether each model's pass@gb is flat across
+> 10/100/1000 (matching the rlhflow table's plateau) and whether
+> the absolute levels track the `rlhflow vs qwen PRM comparison`
+> below (where qwen-PRM was at least competitive at every model).
+> **Limitations / follow-up:** all 9 cells are planned (see
+> `experiments.yaml`, group `sem-mcts`, feeds
+> `sem-mcts/ds_alpha-sweep-qwen`). A `ds_alpha=0` qwen-PRM row per
+> model would extend the lower-bound check to this PRM too, but is
+> deferred — the rlhflow table already establishes the 0→on jump.
+
 #### model family, size, quantization comparison
 > **Compares:** model family, size, and quantization jointly —
 > same shape as cnt-mcts's table above, for cross-method
@@ -792,6 +835,51 @@ a
 > budget). The within-algorithm scaling curve (80→160→320) is
 > read across the `gen_budget=N` tuning sections; the Summary
 > above carries the cross-algorithm cut per budget.
+
+### cnt-mcts
+
+#### model family comparison (b=320, qwen PRM)
+> **Compares:** the same 7-model family/size/quantization sweep
+> as the `[gen_budget=80]` table above, but at
+> `search.gen_budget=320` (4× the b=80 budget) with
+> `prm=qwen_prm` instead of the b=80 table's default
+> `llama_prm`. Two axes change at once — budget and PRM — so
+> this table isn't a clean isolation of either; it answers
+> "does the b=80 ranking across model family/size/quantization
+> hold at a much larger search budget under qwen scoring," not
+> "what does budget alone do." A matched-PRM (llama) b=320 row
+> per model would be needed to separate the two effects.
+>
+> **Fixed:** cpuct=2.0, bs-4, d-20, b=320, prm=qwen,
+> tmpl=model-family default (native for Qwen, custom for Llama).
+>
+> ⚠️ Entirely `planned` — no runs yet. Budget=320 is a 4×
+> generation-count increase over the b=80 table; expect roughly
+> 4× the per-trial wall-clock of the corresponding b=80 row
+> (e.g. qwen-7b gptq-int4 was 3.21 hr/trial at b=80).
+>
+> **W&B:** none yet (no runs exist).
+
+| llm | prm | trials | status | pass@gb | naive@gb | wei@gb | maj@gb | hr/trial |
+|---|---|---|---|---|---|---|---|---|
+| llama-1b fp16 | qwen | — | planned | — | — | — | — | — |
+| llama-3b fp16 | qwen | — | planned | — | — | — | — | — |
+| llama-3b gptq | qwen | — | planned | — | — | — | — | — |
+| qwen-3b fp16 | qwen | — | planned | — | — | — | — | — |
+| qwen-3b gptq-int4 | qwen | — | planned | — | — | — | — | — |
+| qwen-7b gptq-int4 | qwen | — | planned | — | — | — | — | — |
+| qwen-math-1.5b fp16 | qwen | — | planned | — | — | — | — | — |
+
+> **Analysis.** No data yet — nothing to take away. Once
+> filled, the key read is whether the b=80 table's ranking
+> (qwen-7b gptq-int4 best, GPTQ trading accuracy for speed)
+> holds at b=320, and whether qwen-PRM scoring shifts the
+> absolute levels relative to the b=80/llama-PRM table.
+> **Limitations / follow-up:** all 7 cells are planned (see
+> `experiments.yaml`, group `cnt-mcts`, feeds
+> `cnt-mcts/model-family-b320-qwen`). Budget and PRM both
+> differ from the b=80 table at once; a matched-PRM b=320 row
+> would isolate the budget effect alone.
 
 ---
 

@@ -264,3 +264,225 @@
   priority: 1
   recorded: false
   note: v01 policy qwen-math-1.5b native
+
+# --- planned: ds_alpha sweep with qwen PRM (parallel to the
+#     rlhflow ds_alpha sweep, feeds sem-mcts/ds_alpha-sweep-qwen).
+#     3 models x ds_alpha {10,100,1000}; ds_alpha=0 omitted
+#     (lower-bound check already covered in the rlhflow table).
+- launcher: generate_mcts_sem.py
+  config_root: mcts_sem_v02_prm800k
+  overrides:
+    llm: llama_1b
+    prm: qwen_prm
+    search.ds_alpha: 10
+  trials: 2
+  feeds:
+  - sem-mcts/ds_alpha-sweep-qwen
+  group: sem-mcts
+  priority: 2
+  recorded: false
+  note: qwen-PRM ds_alpha=10 llama-1b
+- launcher: generate_mcts_sem.py
+  config_root: mcts_sem_v02_prm800k
+  overrides:
+    llm: llama_1b
+    prm: qwen_prm
+    search.ds_alpha: 100
+  trials: 2
+  feeds:
+  - sem-mcts/ds_alpha-sweep-qwen
+  group: sem-mcts
+  priority: 2
+  recorded: false
+  note: qwen-PRM ds_alpha=100 llama-1b
+- launcher: generate_mcts_sem.py
+  config_root: mcts_sem_v02_prm800k
+  overrides:
+    llm: llama_1b
+    prm: qwen_prm
+    search.ds_alpha: 1000
+  trials: 2
+  feeds:
+  - sem-mcts/ds_alpha-sweep-qwen
+  group: sem-mcts
+  priority: 2
+  recorded: false
+  note: qwen-PRM ds_alpha=1000 llama-1b
+- launcher: generate_mcts_sem.py
+  config_root: mcts_sem_v02_prm800k
+  overrides:
+    llm: qwen_math_1_5b
+    prm: qwen_prm
+    search.ds_alpha: 10
+    llm.use_custom_template: false
+  trials: 2
+  feeds:
+  - sem-mcts/ds_alpha-sweep-qwen
+  group: sem-mcts
+  priority: 2
+  recorded: false
+  note: qwen-PRM ds_alpha=10 qwen-math-1.5b
+- launcher: generate_mcts_sem.py
+  config_root: mcts_sem_v02_prm800k
+  overrides:
+    llm: qwen_math_1_5b
+    prm: qwen_prm
+    search.ds_alpha: 100
+    llm.use_custom_template: false
+  trials: 2
+  feeds:
+  - sem-mcts/ds_alpha-sweep-qwen
+  group: sem-mcts
+  priority: 2
+  recorded: false
+  note: qwen-PRM ds_alpha=100 qwen-math-1.5b
+- launcher: generate_mcts_sem.py
+  config_root: mcts_sem_v02_prm800k
+  overrides:
+    llm: qwen_math_1_5b
+    prm: qwen_prm
+    search.ds_alpha: 1000
+    llm.use_custom_template: false
+  trials: 2
+  feeds:
+  - sem-mcts/ds_alpha-sweep-qwen
+  group: sem-mcts
+  priority: 2
+  recorded: false
+  note: qwen-PRM ds_alpha=1000 qwen-math-1.5b
+- launcher: generate_mcts_sem.py
+  config_root: mcts_sem_v02_prm800k
+  overrides:
+    llm: llama_3b
+    prm: qwen_prm
+    search.ds_alpha: 10
+  trials: 2
+  feeds:
+  - sem-mcts/ds_alpha-sweep-qwen
+  group: sem-mcts
+  priority: 2
+  recorded: false
+  note: qwen-PRM ds_alpha=10 llama-3b
+- launcher: generate_mcts_sem.py
+  config_root: mcts_sem_v02_prm800k
+  overrides:
+    llm: llama_3b
+    prm: qwen_prm
+    search.ds_alpha: 100
+  trials: 2
+  feeds:
+  - sem-mcts/ds_alpha-sweep-qwen
+  group: sem-mcts
+  priority: 2
+  recorded: false
+  note: qwen-PRM ds_alpha=100 llama-3b
+- launcher: generate_mcts_sem.py
+  config_root: mcts_sem_v02_prm800k
+  overrides:
+    llm: llama_3b
+    prm: qwen_prm
+    search.ds_alpha: 1000
+  trials: 2
+  feeds:
+  - sem-mcts/ds_alpha-sweep-qwen
+  group: sem-mcts
+  priority: 2
+  recorded: false
+  note: qwen-PRM ds_alpha=1000 llama-3b
+
+# --- planned: cnt-mcts model family comparison at b=320 with
+#     qwen PRM (parallel to the b=80 model-family table, which
+#     uses the default llama PRM). 7 models matching the b=80
+#     table's rows; budget and PRM both differ from that table
+#     at once. feeds cnt-mcts/model-family-b320-qwen.
+- launcher: generate_mcts_cnt.py
+  config_root: mcts_cnt_prm800k
+  overrides:
+    llm: llama_1b
+    prm: qwen_prm
+    search.gen_budget: 320
+  trials: 2
+  feeds:
+  - cnt-mcts/model-family-b320-qwen
+  group: cnt-mcts
+  priority: 2
+  recorded: false
+  note: b=320 qwen-PRM llama-1b fp16
+- launcher: generate_mcts_cnt.py
+  config_root: mcts_cnt_prm800k
+  overrides:
+    llm: llama_3b
+    prm: qwen_prm
+    search.gen_budget: 320
+  trials: 2
+  feeds:
+  - cnt-mcts/model-family-b320-qwen
+  group: cnt-mcts
+  priority: 2
+  recorded: false
+  note: b=320 qwen-PRM llama-3b fp16
+- launcher: generate_mcts_cnt.py
+  config_root: mcts_cnt_prm800k
+  overrides:
+    llm: llama_3b_gptq
+    prm: qwen_prm
+    search.gen_budget: 320
+  trials: 2
+  feeds:
+  - cnt-mcts/model-family-b320-qwen
+  group: cnt-mcts
+  priority: 2
+  recorded: false
+  note: b=320 qwen-PRM llama-3b gptq
+- launcher: generate_mcts_cnt.py
+  config_root: mcts_cnt_prm800k
+  overrides:
+    llm: qwen_3b
+    prm: qwen_prm
+    search.gen_budget: 320
+  trials: 2
+  feeds:
+  - cnt-mcts/model-family-b320-qwen
+  group: cnt-mcts
+  priority: 2
+  recorded: false
+  note: b=320 qwen-PRM qwen-3b fp16
+- launcher: generate_mcts_cnt.py
+  config_root: mcts_cnt_prm800k
+  overrides:
+    llm: qwen_3b_gptq_int4
+    prm: qwen_prm
+    search.gen_budget: 320
+  trials: 2
+  feeds:
+  - cnt-mcts/model-family-b320-qwen
+  group: cnt-mcts
+  priority: 2
+  recorded: false
+  note: b=320 qwen-PRM qwen-3b gptq-int4
+- launcher: generate_mcts_cnt.py
+  config_root: mcts_cnt_prm800k
+  overrides:
+    llm: qwen_7b_gptq_int4
+    prm: qwen_prm
+    search.gen_budget: 320
+  trials: 2
+  feeds:
+  - cnt-mcts/model-family-b320-qwen
+  group: cnt-mcts
+  priority: 2
+  recorded: false
+  note: b=320 qwen-PRM qwen-7b gptq-int4
+- launcher: generate_mcts_cnt.py
+  config_root: mcts_cnt_prm800k
+  overrides:
+    llm: qwen_math_1_5b
+    prm: qwen_prm
+    search.gen_budget: 320
+  trials: 2
+  feeds:
+  - cnt-mcts/model-family-b320-qwen
+  group: cnt-mcts
+  priority: 2
+  recorded: false
+  note: b=320 qwen-PRM qwen-math-1.5b fp16
