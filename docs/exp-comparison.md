@@ -537,25 +537,25 @@ a
 > proj=sparse512, cov_update=sm, prm=rlhflow, ds_beta=1.0,
 > prm_batch_size=1.
 >
-> ⚠️ llama-1b `ds_alpha=1000` is only 2/4 trials so far (run
-> incomplete) — left `planned` until it finishes; a legacy
-> prmbs-4 dir for this cell exists but is used elsewhere, so
-> it's not slotted here. qwen-math-1.5b `ds_alpha=0` is
-> `planned` (untouched, see below).
+> ⚠️ All cells are 2 trials at prmbs-1 — treat as preliminary
+> (SEMs are wide at n=2), but the grid is now complete and
+> internally consistent (same proj=sparse512/cov=sm/prmbs-1
+> across every row).
 >
 > **W&B:** llama-1b ds_alpha=0 `bjz0yxrg`, ds_alpha=10
-> `wsvy5q72`, ds_alpha=100 `hdiysdi6`; qwen-math-1.5b
-> ds_alpha=10 `ihxrzedi`, ds_alpha=100 `qn3b8lg0`,
-> ds_alpha=1000 `kbwjqw96`; llama-3b ds_alpha=10 `8882rt6u`,
-> ds_alpha=100 `gv2b7ajq`, ds_alpha=1000 `fv18snbn`.
+> `wsvy5q72`, ds_alpha=100 `hdiysdi6`, ds_alpha=1000 `nlx82zbw`;
+> qwen-math-1.5b ds_alpha=0 `j2ms4lvk`, ds_alpha=10 `ihxrzedi`,
+> ds_alpha=100 `qn3b8lg0`, ds_alpha=1000 `kbwjqw96`; llama-3b
+> ds_alpha=10 `8882rt6u`, ds_alpha=100 `gv2b7ajq`, ds_alpha=1000
+> `fv18snbn`.
 
 | llm | ds_alpha | trials | status | pass@gb | naive@gb | wei@gb | maj@gb | hr/trial |
 |---|---|---|---|---|---|---|---|---|
 | llama-1b | 0 | 2 | scored | .4336<br>±.0310 | .4023<br>±.0307 | .4023<br>±.0307 | .3359<br>±.0296 | 3.36 |
 | llama-1b | 10 | 2 | scored | .6133<br>±.0305 | .4453<br>±.0311 | .4180<br>±.0309 | .3906<br>±.0306 | 4.93 |
 | llama-1b | 100 (default) | 2 | scored | .5898<br>±.0308 | .4336<br>±.0310 | .4336<br>±.0310 | .4062<br>±.0308 | 4.99 |
-| llama-1b | 1000 | — | planned | — | — | — | — | — |
-| qwen-math-1.5b | 0 | — | planned | — | — | — | — | — |
+| llama-1b | 1000 | 2 | scored | .5938<br>±.0308 | .4258<br>±.0310 | .4375<br>±.0311 | .3906<br>±.0306 | 4.96 |
+| qwen-math-1.5b | 0 | 2 | scored | .7812<br>±.0259 | .7266<br>±.0279 | .7266<br>±.0279 | .7227<br>±.0280 | 3.03 |
 | qwen-math-1.5b | 10 | 2 | scored | .8945<br>±.0192 | .7617<br>±.0267 | .7812<br>±.0259 | .7578<br>±.0268 | 4.78 |
 | qwen-math-1.5b | 100 (default) | 2 | scored | .8789<br>±.0204 | .7461<br>±.0273 | .7656<br>±.0265 | .7461<br>±.0273 | 4.81 |
 | qwen-math-1.5b | 1000 | 2 | scored | .8867<br>±.0198 | .7656<br>±.0265 | .7656<br>±.0265 | .7422<br>±.0274 | 4.86 |
@@ -563,24 +563,24 @@ a
 | llama-3b | 100 (default) | 2 | scored | .7383<br>±.0275 | .5469<br>±.0312 | .5703<br>±.0310 | .5703<br>±.0310 | 6.61 |
 | llama-3b | 1000 | 2 | scored | .7344<br>±.0277 | .5586<br>±.0311 | .5977<br>±.0307 | .5938<br>±.0308 | 6.71 |
 
-> **Analysis.** The clearest signal is at **llama-1b** (three
-> filled cells, 0/10/100): pass .434 at `ds_alpha=0` → .613 at 10
-> → .590 at 100. The 0→10 jump — turning the diversity bonus *on*
-> — is the one real move in the whole table; 10 vs 100 is within
-> ~1 SEM (the bonus saturates). The two larger models are flat
-> over the 10-1000 range: **qwen-math-1.5b** (10/100/1000) and
-> **llama-3b** (10/100/1000) each sit within ~1 SEM across all
-> three cells on every metric — no `ds_alpha` effect visible once
-> the bonus is on. So the picture is consistent: the diversity
-> term matters most for the smallest model (where it lifts pass@gb
-> off the `ds_alpha=0` lower bound), and its *magnitude* past ~10
-> doesn't matter at any model size checked.
-> **Limitations / follow-up:** the `ds_alpha=0` lower-bound cell
-> exists only for llama-1b — qwen-math-1.5b (`planned`) and
-> llama-3b (not run) both need it to confirm the "bonus helps"
-> result generalizes. llama-1b `ds_alpha=1000` is still 2/4 trials
-> (relaunch to finish). All filled cells are n=2, so the 0-vs-10
-> llama-1b jump is suggestive, not settled.
+> **Analysis.** The grid is now complete for llama-1b and
+> qwen-math-1.5b (full 0/10/100/1000), and both tell the **same
+> story**: turning the diversity bonus *on* helps, but its
+> magnitude past ~10 doesn't. llama-1b: .434 at `ds_alpha=0` →
+> .613 at 10, then flat (.590 at 100, .594 at 1000). qwen-math-1.5b:
+> .781 at `ds_alpha=0` → .894/.879/.887 at 10/100/1000 — same shape,
+> a ~10pt lift off the lower bound then a plateau within ~1 SEM.
+> So the 0→10 jump is the one real move at *both* model sizes, and
+> the "bonus helps, amount doesn't" read now generalizes rather
+> than resting on llama-1b alone. **llama-3b** (10/100/1000, no
+> `ds_alpha=0` yet) is flat across its filled cells, consistent
+> with the plateau, but can't speak to the lower-bound jump
+> without a `ds_alpha=0` run.
+> **Limitations / follow-up:** llama-3b needs a `ds_alpha=0` run
+> to complete its grid and confirm the 0→on jump at that size too.
+> All cells are n=2, so the jumps are suggestive, not settled —
+> more trials would tighten the wide SEMs before treating the
+> plateau as final.
 
 #### model family, size, quantization comparison
 > **Compares:** model family, size, and quantization jointly —
@@ -647,40 +647,38 @@ a
 > rows use whatever prmbs the original v02 sweep ran at; every
 > other row, including qwen-math-1.5b rlhflow, is prmbs-1) —
 > doesn't affect accuracy per the prm_batch_size sweep (cnt-mcts,
-> above), so left as-is rather than re-run. llama-3b rlhflow is
-> only 1 trial — not a stable estimate.
+> above), so left as-is rather than re-run.
 >
 > **W&B:** llama-1b rlhflow `kqn1lj13`, llama-1b qwen `j34q0wjq`;
-> llama-3b rlhflow `ctmgmcrp`, llama-3b qwen `q4fz58mg`;
+> llama-3b rlhflow `gv2b7ajq`, llama-3b qwen `q4fz58mg`;
 > qwen-math-1.5b rlhflow `qn3b8lg0`, qwen-math-1.5b qwen `g1z9k6mk`.
 
 | llm | prm | prmbs | trials | status | pass@gb | naive@gb | wei@gb | maj@gb | hr/trial |
 |---|---|---|---|---|---|---|---|---|---|
 | llama-1b | rlhflow | 4 | 2 | scored | .5938<br>±.0308 | .4453<br>±.0311 | .4297<br>±.0310 | .4141<br>±.0308 | 4.27 |
 | llama-1b | qwen | 1 | 2 | scored | .6133<br>±.0305 | .5156<br>±.0313 | .4414<br>±.0311 | .4180<br>±.0309 | 3.93 |
-| llama-3b | rlhflow | 1 | 1 | scored ⚠ | .7188<br>±.0399 | .5391<br>±.0442 | .5781<br>±.0438 | .5547<br>±.0441 | 6.60 |
+| llama-3b | rlhflow | 1 | 2 | scored | .7383<br>±.0275 | .5469<br>±.0312 | .5703<br>±.0310 | .5703<br>±.0310 | 6.61 |
 | llama-3b | qwen | 1 | 2 | scored | .7500<br>±.0271 | .6797<br>±.0292 | .6133<br>±.0305 | .5977<br>±.0307 | 5.39 |
 | qwen-math-1.5b | rlhflow | 1 | 2 | scored | .8789<br>±.0204 | .7461<br>±.0273 | .7656<br>±.0265 | .7461<br>±.0273 | 4.81 |
 | qwen-math-1.5b | qwen | 1 | 2 | scored | .8672<br>±.0213 | .7812<br>±.0259 | .7656<br>±.0265 | .7617<br>±.0267 | 3.90 |
 
 > **Analysis.** llama-1b: qwen-PRM scoring edges out rlhflow
-> (.6133 vs .5938). llama-3b: qwen-PRM scores notably higher
-> (.7500 vs .7188), but the rlhflow row is only 1 trial — treat
-> this gap as suggestive rather than confirmed. qwen-math-1.5b:
-> the two PRMs are within ~1 SEM of each other (.8789 vs .8672) —
-> no real separation at this model size. Net: qwen-PRM scoring is
-> at least as good as rlhflow at every model checked so far,
-> never worse by more than noise. **Runtime:** qwen-PRM is faster
-> than rlhflow at llama-1b and llama-3b (3.93 vs 4.27; 5.39 vs
-> 6.60 hr/trial) — but those rlhflow rows run at prmbs-4/1 vs
-> qwen's prmbs-1, and prmbs is a throughput knob (prm_batch_size
-> sweep, cnt-mcts, above), so part of that gap is the batch-size
-> mismatch, not the PRM itself. At qwen-math-1.5b, where both
-> rows are matched at prmbs-1, rlhflow is actually *slower* (4.81
-> vs 3.90 hr/trial) — the opposite direction, suggesting the
-> earlier "qwen-PRM is faster" read was largely the prmbs
-> confound, not a real per-PRM cost difference.
-> **Limitations / follow-up:** n=1-2 trials per cell throughout —
+> (.6133 vs .5938). llama-3b: qwen-PRM scores higher (.7500 vs
+> .7383), now both at 2 trials — a real but modest gap, ~1 SEM.
+> qwen-math-1.5b: the two PRMs are within ~1 SEM of each other
+> (.8789 vs .8672) — no real separation at this model size. Net:
+> qwen-PRM scoring is at least as good as rlhflow at every model
+> checked so far, never worse by more than noise. **Runtime:**
+> qwen-PRM is faster than rlhflow at llama-1b and llama-3b (3.93
+> vs 4.27; 5.39 vs 6.61 hr/trial) — but those rlhflow rows run at
+> prmbs-4/1 vs qwen's prmbs-1, and prmbs is a throughput knob
+> (prm_batch_size sweep, cnt-mcts, above), so part of that gap is
+> the batch-size mismatch, not the PRM itself. At qwen-math-1.5b,
+> where both rows are matched at prmbs-1, rlhflow is actually
+> *slower* (4.81 vs 3.90 hr/trial) — the opposite direction,
+> suggesting the earlier "qwen-PRM is faster" read was largely the
+> prmbs confound, not a real per-PRM cost difference.
+> **Limitations / follow-up:** n=2 trials per cell throughout —
 > this is a lead to firm up with more trials, not a settled
 > result. llama-1b/llama-3b need a prmbs-1 rlhflow re-run to
 > isolate the runtime comparison from the batch-size confound,

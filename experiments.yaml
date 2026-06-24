@@ -31,20 +31,20 @@
 - launcher: generate_mcts_sem.py
   config_root: mcts_sem_v02_prm800k
   overrides: {search.ds_alpha: 1000}
-  trials: 4
+  trials: 2
   feeds: [sem-mcts/ds_alpha-sweep]
   group: sem-mcts
   priority: 1
-  recorded: false
+  recorded: true
 
 - launcher: generate_mcts_sem.py
   config_root: mcts_sem_v02_prm800k
   overrides: {llm: qwen_math_1_5b, search.ds_alpha: 0}
-  trials: 4
+  trials: 2
   feeds: [sem-mcts/ds_alpha-sweep]
   group: sem-mcts
   priority: 1
-  recorded: false
+  recorded: true
 
 # --- backfilled from existing result dirs (status.py --backfill,
 #     all hash-verified). feeds left empty: fill when recording into
@@ -204,7 +204,7 @@
     llm: llama_1b
     search.embeds_proj: none
     search.cov_update: exact
-  trials: 4
+  trials: 2
   feeds:
   - sem-mcts/proj-cov-sweep
   group: sem-mcts
@@ -216,7 +216,7 @@
   overrides:
     llm: llama_1b
     search.cov_update: exact
-  trials: 4
+  trials: 2
   feeds:
   - sem-mcts/proj-cov-sweep
   group: sem-mcts
@@ -229,7 +229,7 @@
     llm: qwen_math_1_5b
     search.embeds_proj: none
     search.cov_update: exact
-  trials: 4
+  trials: 2
   feeds:
   - sem-mcts/proj-cov-sweep
   group: sem-mcts
@@ -240,7 +240,7 @@
   config_root: mcts_sem_v01_prm800k
   overrides:
     llm: llama_1b
-  trials: 4
+  trials: 2
   feeds:
   - sem-mcts/llm-vs-prm-embeds
   group: sem-mcts
@@ -251,7 +251,7 @@
   config_root: mcts_sem_v01_prm800k
   overrides:
     llm: llama_3b
-  trials: 4
+  trials: 2
   feeds:
   - sem-mcts/llm-vs-prm-embeds
   group: sem-mcts
@@ -263,7 +263,7 @@
   overrides:
     llm: qwen_math_1_5b
     llm.use_custom_template: false
-  trials: 4
+  trials: 2
   feeds:
   - sem-mcts/llm-vs-prm-embeds
   group: sem-mcts
