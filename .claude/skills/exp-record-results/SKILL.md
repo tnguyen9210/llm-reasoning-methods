@@ -82,15 +82,20 @@ python compute_stats.py --config-name <config_root> \
 ```
 
 It prints `result_dir`, `config_name`, then the summary. The
-stat keys it returns (each is `mean, sem`):
+dict keys `metrics.compute_stats_basics` returns (each value is
+a `(mean, sem)` tuple) are **underscore form** — NOT the `@gb`
+form used as the doc *column* heading. Don't confuse them:
 
-| key | doc column |
+| dict key (what you index) | doc column (what you write under) |
 |---|---|
-| `pass@gb` | pass@gb |
-| `naive@gb` | naive@gb |
-| `weighted@gb` | wei@gb |
-| `maj@gb` | maj@gb |
+| `pass_gb` | pass@gb |
+| `naive_gb` | naive@gb |
+| `weighted_gb` | wei@gb |
+| `maj_gb` | maj@gb |
 | `ncomps`, `depth`, `nphases`, `ndepths` | (context, not usually in the table) |
+
+> ⚠️ Indexing `s["pass@gb"]` raises `KeyError` — the key is
+> `s["pass_gb"]`. The `@gb` strings are doc-column labels only.
 
 Format in the doc as `.NNNN<br>±.NNNN` (4 dp), matching
 existing scored cells.
@@ -120,8 +125,10 @@ existing scored cells.
    is a done run whose number isn't in the doc yet. If empty —
    nothing to record; say so and stop.
 
-2. **For each entry, compute real stats** (§2). Capture
-   `pass@gb / naive@gb / weighted@gb / maj@gb` mean±SEM.
+2. **For each entry, compute real stats** (§2). Capture the
+   four summary metrics' mean±SEM — dict keys `pass_gb /
+   naive_gb / weighted_gb / maj_gb` (§2 maps them to the
+   pass@gb/naive@gb/wei@gb/maj@gb doc columns).
 
 3. **Locate the target cell(s)** via the entry's `feeds`
    key(s). Find the matching table + row in

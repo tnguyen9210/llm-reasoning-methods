@@ -523,6 +523,55 @@ a
 > sharpen the proj-effect read; the `exact` cells for llama-1b are
 > still entirely `planned`.
 
+#### embeds_strategy × scope sweep (v02, qwen PRM)
+> **Compares:** how the PRM hidden state is pooled into the
+> covariance bonus — `embeds_strategy` (`last` = final-token
+> hidden state vs. `avg` = mean over tokens) crossed with
+> `embeds_scope` (`full` = the whole prompt+response sequence
+> vs. `response` = only the assistant response tokens). The
+> question is whether averaging or response-only scoping
+> changes the diversity signal enough to move pass@gb.
+>
+> **Fixed:** method=`mcts_sem_v02`, llm=llama-3b, prm=qwen,
+> tmpl=custom (llama default), bs-4, d-20, b=80,
+> proj=sparse512, cov_update=sm, ds_beta=1.0.
+>
+> ⚠️ `embeds_scope=response` is **not supported on v02** (PRM
+> source): `_extract_embeds` computes `response_start_idx`
+> with the generator tokenizer, which doesn't apply to PRM
+> hidden states, so the core raises for that combination (see
+> `core/mcts_sem_search_v02_00_00.py:227`). The two `response`
+> rows are therefore **blocked** — shown for completeness but
+> not runnable until that fix lands; they are NOT queued in
+> `experiments.yaml`. `last`×`full` is the v02 default config
+> and is already done (it's the qwen-PRM llama-3b default run,
+> W&B `kbwjqw96`-family — same cfg as the ds_alpha=100 cell).
+>
+> **W&B:** last×full done (cfg-2b647a18); avg×full planned;
+> response rows blocked (no runs).
+
+| strategy | scope | trials | status | pass@gb | naive@gb | wei@gb | maj@gb | hr/trial |
+|---|---|---|---|---|---|---|---|---|
+| last | full | 2 | done (see ds_alpha=100) | — | — | — | — | — |
+| avg | full | — | planned | — | — | — | — | — |
+| last | response | — | blocked | — | — | — | — | — |
+| avg | response | — | blocked | — | — | — | — | — |
+
+> **Analysis.** No new data yet. `last`×`full` is already
+> measured (transcribe from the ds_alpha=100 qwen-PRM llama-3b
+> cell via the recorder); the one new runnable cell is
+> `avg`×`full` — the key read is whether mean-pooling changes
+> pass@gb vs. the last-token default at matched everything
+> else.
+> **Limitations / follow-up:** only 1 of 4 cells is genuinely
+> new+runnable (`avg`×`full`, queued — `experiments.yaml`
+> group `sem-mcts`, feeds `sem-mcts/embeds-strategy-scope`).
+> The two `response` rows are blocked on PRM-source
+> `response_start_idx` support; queue them once the v02 core
+> handles `embeds_scope=response` for `embeds_source=prm`. A
+> v01 (policy-embeds) version of this table would unblock the
+> `response` axis, since v01 supports it.
+
 #### ds_alpha sweep (v02)
 > **Compares:** `ds_alpha`, the diversity-bonus weight in
 > `q_val = ds_beta*score + ds_alpha*diversity` (scaled by
@@ -597,33 +646,43 @@ a
 > proj=sparse512, cov_update=sm, prm=qwen, ds_beta=1.0,
 > prm_batch_size=1.
 >
-> ⚠️ Entirely `planned` — no runs yet. Every cell needs a
-> `prm=qwen` sem-v02 run at the listed `ds_alpha`.
+> ⚠️ 8/9 cells scored (2 trials each); llama-3b ds_alpha=1000
+> is still running (the only remaining `planned`/in-flight
+> cell). `hr/trial` read from each run's `timing_state.json`
+> (`avg_time_per_trial_hr`).
 >
-> **W&B:** none yet (no runs exist).
+> **W&B:** llama-1b 10/100/1000 `02xrjfdb`/`7hjxksmx`/`fgem65eg`;
+> qwen-math-1.5b 10/100/1000 `6hbme316`/`q0d6yk4f`/`sczanhp2`;
+> llama-3b 10/100 `qvp2vneb`/`ynia3d1p`; llama-3b 1000 in flight.
 
 | llm | ds_alpha | trials | status | pass@gb | naive@gb | wei@gb | maj@gb | hr/trial |
 |---|---|---|---|---|---|---|---|---|
-| llama-1b | 10 | — | planned | — | — | — | — | — |
-| llama-1b | 100 (default) | — | planned | — | — | — | — | — |
-| llama-1b | 1000 | — | planned | — | — | — | — | — |
-| qwen-math-1.5b | 10 | — | planned | — | — | — | — | — |
-| qwen-math-1.5b | 100 (default) | — | planned | — | — | — | — | — |
-| qwen-math-1.5b | 1000 | — | planned | — | — | — | — | — |
-| llama-3b | 10 | — | planned | — | — | — | — | — |
-| llama-3b | 100 (default) | — | planned | — | — | — | — | — |
+| llama-1b | 10 | 2 | scored | .6211<br>±.0304 | .5352<br>±.0312 | .4844<br>±.0313 | .4258<br>±.0310 | 3.75 |
+| llama-1b | 100 (default) | 2 | scored | .6133<br>±.0305 | .4961<br>±.0313 | .4492<br>±.0311 | .3906<br>±.0306 | 3.90 |
+| llama-1b | 1000 | 2 | scored | .6289<br>±.0303 | .5078<br>±.0313 | .4688<br>±.0312 | .3945<br>±.0306 | 3.92 |
+| qwen-math-1.5b | 10 | 2 | scored | .8789<br>±.0204 | .7969<br>±.0252 | .7891<br>±.0255 | .7695<br>±.0264 | 3.98 |
+| qwen-math-1.5b | 100 (default) | 2 | scored | .8750<br>±.0207 | .7969<br>±.0252 | .7734<br>±.0262 | .7578<br>±.0268 | 3.96 |
+| qwen-math-1.5b | 1000 | 2 | scored | .8750<br>±.0207 | .8008<br>±.0250 | .7500<br>±.0271 | .7539<br>±.0270 | 3.92 |
+| llama-3b | 10 | 2 | scored | .7695<br>±.0264 | .6797<br>±.0292 | .6445<br>±.0300 | .6211<br>±.0304 | 5.44 |
+| llama-3b | 100 (default) | 2 | scored | .7656<br>±.0265 | .6562<br>±.0297 | .6289<br>±.0303 | .6016<br>±.0307 | 5.43 |
 | llama-3b | 1000 | — | planned | — | — | — | — | — |
 
-> **Analysis.** No data yet — nothing to take away. Once filled,
-> the key read is whether each model's pass@gb is flat across
-> 10/100/1000 (matching the rlhflow table's plateau) and whether
-> the absolute levels track the `rlhflow vs qwen PRM comparison`
-> below (where qwen-PRM was at least competitive at every model).
-> **Limitations / follow-up:** all 9 cells are planned (see
-> `experiments.yaml`, group `sem-mcts`, feeds
-> `sem-mcts/ds_alpha-sweep-qwen`). A `ds_alpha=0` qwen-PRM row per
-> model would extend the lower-bound check to this PRM too, but is
-> deferred — the rlhflow table already establishes the 0→on jump.
+> **Analysis.** The "magnitude past ~10 doesn't matter" shape
+> from the rlhflow table holds under qwen-PRM scoring too: within
+> each model, pass@gb is flat across 10/100/1000 to within SEM
+> (llama-1b .621/.613/.629; qwen-math-1.5b .879/.875/.875;
+> llama-3b .770/.766/[1000 pending]). So the ds_alpha plateau is
+> robust to PRM choice, not an rlhflow artifact. Absolute levels
+> track the model, as expected (qwen-math-1.5b highest at ~.88,
+> llama-3b ~.77, llama-1b ~.62) — consistent with the `rlhflow
+> vs qwen PRM comparison` below.
+> **Limitations / follow-up:** 2 trials/cell — SEMs ~.03, so the
+> within-model flatness is "no detectable trend," not "proven
+> equal." llama-3b ds_alpha=1000 still running; record it when
+> done (feeds `sem-mcts/ds_alpha-sweep-qwen`). A `ds_alpha=0`
+> qwen-PRM row per model would extend the lower-bound check to
+> this PRM, but is deferred — the rlhflow table already
+> establishes the 0→on jump.
 
 #### model family, size, quantization comparison
 > **Compares:** model family, size, and quantization jointly —
