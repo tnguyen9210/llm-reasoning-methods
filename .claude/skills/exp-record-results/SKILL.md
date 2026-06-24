@@ -6,6 +6,13 @@ into `docs/exp-comparison.md` — e.g. "record the done runs",
 "what's done but not in the doc yet". Sibling of
 `exp-new-comparison-table`.
 
+**Two entry points, same operation.** This fires whether Tuan
+enters *ledger-first* ("record the done runs") or *table-first*
+("update / refresh / check the `<table name>` table", "fill in
+what's done for this table", with a table selected or named).
+Table-first is identical — a table IS a `feeds` value — it just
+scopes the worklist to one table's cells (see §3a).
+
 This skill closes the gap between a run being **done** (all
 trials finished, on disk + W&B) and its number being **in the
 doc**. Those are two separate states; the gap between them is
@@ -115,7 +122,33 @@ existing scored cells.
 
 ---
 
-## 3. Procedure
+## 3. Procedure — step 0: table-first scoping (if a table was named)
+
+If the request is "update/refresh/check the `<table>` table"
+rather than "record the done runs," do this first, then
+continue with the numbered steps below:
+
+1. **Map the table → its `feeds` key.** Read the table's `####`
+   heading + its `**Limitations / follow-up:**` line in
+   `docs/exp-comparison.md` (it usually names the feeds key,
+   e.g. `sem-mcts/ds_alpha-sweep-qwen`). That key is the scope.
+2. **Check feeds coverage of EVERY cell — the gap ledger-first
+   misses.** For each row of the table, confirm a ledger entry
+   exists whose `feeds` includes this table's key. A cell can
+   be *done on disk* yet invisible to the worklist because its
+   entry's `feeds` doesn't name this table (this happened: a
+   `last×full` cell was done but only fed `ds_alpha-sweep-qwen`,
+   not `embeds-strategy-scope`). For such a cell: `--check` its
+   config to find the backing entry, then **add this table's
+   feeds key** to that entry's `feeds` list (append-only-safe
+   ledger edit) so the recorder sees it. Only then proceed.
+3. **Scope the worklist** to this table: run step 1 below with
+   `--group <group>` and mentally filter to entries whose
+   `feeds` includes the table key (or eyeball `status.py
+   --group <g>` for the relevant rows). From here, the
+   procedure is identical.
+
+### Numbered steps
 
 1. **List the worklist:**
    ```
