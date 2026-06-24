@@ -20,7 +20,7 @@ from core import mcts_cnt_search_v01_00_00
 from core.reward_models import build_prm
 from core.scoring import build_scored_dataset
 from utils.configs import (
-    ExpConfig, MCTSCntConfig, config_name, level_dir,
+    ExpConfig, MCTSCntConfig, config_name, level_dir, results_root,
     write_manifest, load_wandb_run_id,
     save_timing_state, load_timing_state,
 )
@@ -94,7 +94,7 @@ def main(cfg: ExpConfig):
     run_name = config_name(cfg)
     print(run_name)
     result_dir = (
-        f"{root_dir}/results/{cfg.data.name}"
+        f"{root_dir}/results/{results_root(cfg)}"
         f"/{level_dir(cfg)}/{run_name}"
     )
     _make_result_dir(result_dir)

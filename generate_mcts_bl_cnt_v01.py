@@ -20,7 +20,7 @@ from core import mcts_bl_cnt_search_v01_00_00
 from core.reward_models import RLHFlowPRM
 from core.scoring import build_scored_dataset
 from utils.configs import (
-    ExpConfig, BLMCTSCntConfig, config_name, level_dir,
+    ExpConfig, BLMCTSCntConfig, config_name, level_dir, results_root,
     write_manifest, load_wandb_run_id,
 )
 from utils.load_data import load_data_hf
@@ -93,7 +93,7 @@ def main(cfg: ExpConfig):
     run_name = config_name(cfg)
     print(run_name)
     result_dir = (
-        f"{root_dir}/results/{cfg.data.name}"
+        f"{root_dir}/results/{results_root(cfg)}"
         f"/{level_dir(cfg)}/{run_name}"
     )
     _make_result_dir(result_dir)

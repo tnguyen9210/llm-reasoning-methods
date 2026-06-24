@@ -47,7 +47,7 @@ from hydra.core.config_store import ConfigStore
 
 from utils.configs import (
     ExpConfig, MCTSCntConfig, MCTSSemV01Config, MCTSSemV02Config,
-    config_hash, config_name, level_dir, MANIFEST_FILE,
+    config_hash, config_name, level_dir, results_root, MANIFEST_FILE,
 )
 
 ROOT = os.path.dirname(os.path.abspath(__file__))
@@ -91,7 +91,7 @@ def find_dir_by_hash(cfg):
     """Result dir whose manifest records this cfg's hash, or None.
     Same contract as utils.configs.find_run_dir but rooted here."""
     target = config_hash(cfg)
-    parent = f"{RESULTS_DIR}/{cfg.data.name}/{level_dir(cfg)}"
+    parent = f"{RESULTS_DIR}/{results_root(cfg)}/{level_dir(cfg)}"
     for mpath in glob.glob(f"{parent}/*/{MANIFEST_FILE}"):
         if _is_smoketest(mpath):
             continue

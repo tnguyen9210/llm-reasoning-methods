@@ -376,6 +376,13 @@ class RunConfig:
     # process. Raise to match the cores your session actually has
     # (check `nproc`); exceeding them just thrashes.
     num_proc: int = 1
+    # Top-level results subdir override. Empty -> use data.name (the
+    # normal case: results/{data.name}/...). Set to e.g. "smoketest"
+    # to reroute output to results/smoketest/... WITHOUT changing the
+    # dataset or the config hash (run is not a hash group). This is
+    # how throwaway smoke-test runs stay isolated from real result
+    # dirs while still loading the real dataset. See results_root().
+    results_subdir: str = ""
 
 
 @dataclass
@@ -408,11 +415,21 @@ class ExpConfig:
 # a DictConfig (launcher) and a real ExpConfig (notebook).
 
 
+def results_root(cfg) -> str:
+    """The top-level results subdir for this run: run.results_subdir
+    if set, else data.name. One definition so every path-builder
+    (launchers + find_run_dir + status.py) agrees on where a run's
+    dir lives. Overriding run.results_subdir (e.g. 'smoketest')
+    reroutes output without touching the dataset or the config hash."""
+    sub = getattr(cfg.run, "results_subdir", "") or ""
+    return sub if sub else cfg.data.name
+
+
 def level_dir(cfg) -> str:
-    """Per-level grouping dir under results/{data.name}/, e.g.
+    """Per-level grouping dir under results/{results_root}/, e.g.
     'bon--level-3'. Drops the level suffix to just 'bon' when level
     is None (whole split). The run dir is then nested inside it:
-    results/{data.name}/{level_dir}/{config_name}."""
+    results/{results_root}/{level_dir}/{config_name}."""
     level_str = (
         f"--level-{cfg.data.level}"
         if cfg.data.level is not None else ""
@@ -558,11 +575,12 @@ def write_manifest(
 def find_run_dir(root_dir: str, cfg) -> Optional[str]:
     """Locate an existing run dir for `cfg` by matching the recorded
     identity hash in each candidate's manifest.json — NOT by trusting
-    a re-derived name. Searches results/{data.name}/{level_dir}/*/.
-    Returns the dir path, or None if no manifest matches (a fresh
-    run, or an old dir not yet backfilled with a manifest)."""
+    a re-derived name. Searches
+    results/{results_root}/{level_dir}/*/. Returns the dir path, or
+    None if no manifest matches (a fresh run, or an old dir not yet
+    backfilled with a manifest)."""
     target = config_hash(cfg)
-    parent = f"{root_dir}/results/{cfg.data.name}/{level_dir(cfg)}"
+    parent = f"{root_dir}/results/{results_root(cfg)}/{level_dir(cfg)}"
     for manifest_path in glob.glob(f"{parent}/*/{MANIFEST_FILE}"):
         try:
             with open(manifest_path, encoding="utf-8") as fin:
@@ -613,7 +631,7 @@ def resolve_result_dir(root_dir: str, cfg, override=None):
             # No manifest matched: fresh run, or an un-backfilled old
             # dir. Recompute the name (legacy path).
             result_dir = (
-                f"{root_dir}/results/{cfg.data.name}"
+                f"{root_dir}/results/{results_root(cfg)}"
                 f"/{level_dir(cfg)}/{config_name(cfg)}"
             )
     run_name = manifest_run_name(result_dir) or os.path.basename(
