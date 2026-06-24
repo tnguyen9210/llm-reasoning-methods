@@ -18,3 +18,7 @@ llm-reasoning-methods.code-workspace
 
 # Run logs — local only
 zlogs/
+
+# Claude Code: commit shared skills, ignore machine-local state
+.claude/settings.local.json
+.claude/scheduled_tasks.lock

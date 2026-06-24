@@ -29,8 +29,13 @@ Usage
   python status.py --done --not-recorded
   python status.py --planned --priority 1
   python status.py --backfill           # emit yaml for orphan dirs
+  python status.py --planned --commands # launch cmds for planned entries
+  python status.py --verify             # assert all hashes still match
+  python status.py --check mcts_cnt_prm800k llm=qwen_3b prm=qwen_prm \
+                          search.gen_budget=320   # probe a candidate cell
 """
 import argparse
+import contextlib
 import glob
 import json
 import os
@@ -72,9 +77,14 @@ _cs.store(group="search", name="mcts_sem_v02_schema", node=MCTSSemV02Config)
 def compose_cfg(config_root, overrides):
     """Resolve a cfg from {root config name, override list} via Hydra
     compose -- no model load, no engine build. Mirrors the launcher's
-    compose so config_hash()/config_name() match the recorded dir."""
-    with initialize_config_dir(config_dir=CONF_DIR, version_base=None):
-        return compose(config_name=config_root, overrides=overrides)
+    compose so config_hash()/config_name() match the recorded dir.
+
+    Hydra's override parser pulls in an antlr4 runtime that prints a
+    benign version-mismatch line to STDOUT on each parse; redirect that
+    to stderr so --check / --commands stdout stays machine-parseable."""
+    with contextlib.redirect_stdout(sys.stderr):
+        with initialize_config_dir(config_dir=CONF_DIR, version_base=None):
+            return compose(config_name=config_root, overrides=overrides)
 
 
 def find_dir_by_hash(cfg):
@@ -336,6 +346,79 @@ def backfill(queue):
     return new
 
 
+# ------------------------------------------------------------------ #
+# Launch-command emitter. Assemble the exact command for an entry     #
+# from its own fields, so the command you run is guaranteed to match  #
+# the entry status.py reconciles (no hand-transcription gap).         #
+# ------------------------------------------------------------------ #
+def launch_command(entry):
+    parts = [
+        "python", entry["launcher"],
+        "--config-name", entry["config_root"],
+    ]
+    parts += entry.get("overrides_list", [])
+    parts.append(f"run.num_trials={entry.get('trials', 1)}")
+    return " ".join(parts)
+
+
+# ------------------------------------------------------------------ #
+# --check: compose a CANDIDATE override set (not yet in the ledger)   #
+# and report its identity + whether it already exists. This is the    #
+# per-cell primitive the new-comparison-table skill calls instead of  #
+# re-deriving hashes itself -- one source of truth for compose/hash.  #
+# ------------------------------------------------------------------ #
+def check_candidate(config_root, overrides, queue):
+    cfg = compose_cfg(config_root, overrides)
+    h = config_hash(cfg)
+    name = config_name(cfg)
+    rdir = find_dir_by_hash(cfg)
+    on_disk = rdir is not None
+    n_done = count_done(rdir) if on_disk else 0
+    collision = False
+    for e in queue:
+        try:
+            if config_hash(compose_cfg(
+                    e["config_root"], e.get("overrides_list", []))) == h:
+                collision = True
+                break
+        except Exception:
+            pass
+    return {
+        "hash": h, "name": name, "on_disk": on_disk,
+        "n_done": n_done, "ledger_collision": collision,
+        "dir": os.path.basename(rdir) if on_disk else None,
+    }
+
+
+# ------------------------------------------------------------------ #
+# --verify: re-compose every ledger entry and assert its hash still   #
+# matches what's recorded (the dir it was backfilled from, if any).   #
+# Tripwire for launcher/config drift desyncing this script's mirrored #
+# ConfigStore from the real launchers. Run after any launcher edit.   #
+# ------------------------------------------------------------------ #
+def verify_queue(queue):
+    problems = []
+    for e in queue:
+        label = e.get("note") or e.get("from_dir") or str(e.get("overrides"))
+        try:
+            h = config_hash(compose_cfg(
+                e["config_root"], e.get("overrides_list", [])))
+        except Exception as ex:
+            problems.append((label, f"compose failed: "
+                                    f"{type(ex).__name__}: {ex}"))
+            continue
+        # If the entry records the dir it came from, that dir's name
+        # encodes its cfg hash suffix (cfg-XXXXXXXX); check it matches.
+        from_dir = e.get("from_dir")
+        if from_dir and "cfg-" in from_dir:
+            recorded_h = from_dir.rsplit("cfg-", 1)[1]
+            if not h.startswith(recorded_h) and not recorded_h.startswith(h):
+                problems.append(
+                    (label, f"hash drift: composes to {h}, "
+                            f"from_dir says cfg-{recorded_h}"))
+    return problems
+
+
 def matches_filters(entry, status, args):
     if args.status and status != args.status:
         return False
@@ -373,9 +456,34 @@ def main():
     ap.add_argument("--priority", type=int, help="only this priority level")
     ap.add_argument("--backfill", action="store_true",
                     help="emit yaml entries for result dirs not in the queue")
+    ap.add_argument("--commands", action="store_true",
+                    help="print launch commands for matching entries")
+    ap.add_argument("--verify", action="store_true",
+                    help="re-compose every entry, assert hashes still match")
+    ap.add_argument("--check", nargs="+", metavar="ROOT OVERRIDE",
+                    help="compose a candidate (config_root key=val ...) and "
+                         "report hash/name/on-disk/collision; does not write")
     args = ap.parse_args()
 
     queue = load_queue()
+
+    if args.check:
+        root, overrides = args.check[0], args.check[1:]
+        info = check_candidate(root, overrides, queue)
+        print(yaml.safe_dump(info, sort_keys=False, allow_unicode=True),
+              end="")
+        return
+
+    if args.verify:
+        problems = verify_queue(queue)
+        if not problems:
+            print(f"# OK: all {len(queue)} entries compose and match "
+                  f"their recorded hash")
+            return
+        print(f"# {len(problems)} problem(s):")
+        for label, msg in problems:
+            print(f"  ! {label}: {msg}")
+        sys.exit(1)
 
     if args.backfill:
         new = backfill(queue)
@@ -400,6 +508,12 @@ def main():
 
     if not rows:
         print("# no entries match")
+        return
+
+    if args.commands:
+        for e, status, detail in rows:
+            print(f"# [{status}] {detail.get('name') or e['config_root']}")
+            print(launch_command(e))
         return
 
     for e, status, detail in rows:
