@@ -1,4 +1,4 @@
-# New comparison table
+# exp-new-comparison-table
 
 Loaded when: Tuan asks to add a new comparison table to
 `docs/exp-comparison.md` and queue its experiments — e.g.
@@ -53,7 +53,7 @@ Three layers (full design: vault guide
   NOT reimplement composing or hashing.
 - `docs/exp-comparison.md` — the human report. Tables are a
   *view*; numbers only land here from `done` runs (that's
-  the separate `record-results` skill's job).
+  the separate `exp-record-results` skill's job).
 
 The link between a ledger entry and a doc table is the
 `feeds` key — a loose string roughly tracking the doc
@@ -236,8 +236,8 @@ Conventions:
   --commands` emits the exact commands. (Tuan launches; or,
   if he asks, run them here via Bash.)
 - Recording results once runs finish: that's the
-  `record-results` skill — `status.py --done --not-recorded`
-  → compute stats → write into the cell named by `feeds` →
+  `exp-record-results` skill — `status.py --done
+  --not-recorded` → compute stats → audit the cell → write →
   flip `recorded: true`.
 
 ---

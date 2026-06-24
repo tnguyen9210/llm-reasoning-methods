@@ -364,7 +364,7 @@ def launch_command(entry):
 # ------------------------------------------------------------------ #
 # --check: compose a CANDIDATE override set (not yet in the ledger)   #
 # and report its identity + whether it already exists. This is the    #
-# per-cell primitive the new-comparison-table skill calls instead of  #
+# per-cell primitive the exp-new-comparison-table skill calls, not    #
 # re-deriving hashes itself -- one source of truth for compose/hash.  #
 # ------------------------------------------------------------------ #
 def check_candidate(config_root, overrides, queue):
