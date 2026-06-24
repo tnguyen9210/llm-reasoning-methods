@@ -291,10 +291,11 @@
   trials: 2
   feeds:
   - sem-mcts/ds_alpha-sweep-qwen
+  - sem-mcts/model-family-qwen
   group: sem-mcts
   priority: 2
   recorded: true
-  note: qwen-PRM ds_alpha=100 llama-1b
+  note: qwen-PRM ds_alpha=100 llama-1b (= model-family fp16 default)
 - launcher: generate_mcts_sem.py
   config_root: mcts_sem_v02_prm800k
   overrides:
@@ -332,10 +333,11 @@
   trials: 2
   feeds:
   - sem-mcts/ds_alpha-sweep-qwen
+  - sem-mcts/model-family-qwen
   group: sem-mcts
   priority: 2
   recorded: true
-  note: qwen-PRM ds_alpha=100 qwen-math-1.5b
+  note: qwen-PRM ds_alpha=100 qwen-math-1.5b (= model-family fp16 default)
 - launcher: generate_mcts_sem.py
   config_root: mcts_sem_v02_prm800k
   overrides:
@@ -373,10 +375,11 @@
   feeds:
   - sem-mcts/ds_alpha-sweep-qwen
   - sem-mcts/embeds-strategy-scope
+  - sem-mcts/model-family-qwen
   group: sem-mcts
   priority: 2
   recorded: true
-  note: qwen-PRM ds_alpha=100 llama-3b (= embeds last x full default)
+  note: qwen-PRM ds_alpha=100 llama-3b (= embeds last x full = model-family fp16 default)
 - launcher: generate_mcts_sem.py
   config_root: mcts_sem_v02_prm800k
   overrides:
@@ -509,3 +512,57 @@
   priority: 2
   recorded: false
   note: qwen-PRM embeds avg x full llama-3b
+
+# --- planned: sem-mcts (v02) model family / quantization sweep
+#     with qwen PRM. The 4 non-default-fp16 cells; the 3 fp16
+#     rows (llama-1b/llama-3b/qwen-math-1.5b) are the qwen-PRM
+#     ds_alpha=100 default runs above, now also feeding
+#     sem-mcts/model-family-qwen.
+- launcher: generate_mcts_sem.py
+  config_root: mcts_sem_v02_prm800k
+  overrides:
+    llm: llama_3b_gptq
+    prm: qwen_prm
+  trials: 2
+  feeds:
+  - sem-mcts/model-family-qwen
+  group: sem-mcts
+  priority: 2
+  recorded: false
+  note: qwen-PRM sem model-family llama-3b gptq
+- launcher: generate_mcts_sem.py
+  config_root: mcts_sem_v02_prm800k
+  overrides:
+    llm: qwen_3b
+    prm: qwen_prm
+  trials: 2
+  feeds:
+  - sem-mcts/model-family-qwen
+  group: sem-mcts
+  priority: 2
+  recorded: false
+  note: qwen-PRM sem model-family qwen-3b fp16
+- launcher: generate_mcts_sem.py
+  config_root: mcts_sem_v02_prm800k
+  overrides:
+    llm: qwen_3b_gptq_int4
+    prm: qwen_prm
+  trials: 2
+  feeds:
+  - sem-mcts/model-family-qwen
+  group: sem-mcts
+  priority: 2
+  recorded: false
+  note: qwen-PRM sem model-family qwen-3b gptq-int4
+- launcher: generate_mcts_sem.py
+  config_root: mcts_sem_v02_prm800k
+  overrides:
+    llm: qwen_7b_gptq_int4
+    prm: qwen_prm
+  trials: 2
+  feeds:
+  - sem-mcts/model-family-qwen
+  group: sem-mcts
+  priority: 2
+  recorded: false
+  note: qwen-PRM sem model-family qwen-7b gptq-int4

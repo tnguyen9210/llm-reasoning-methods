@@ -730,6 +730,57 @@ a
 > fp16-vs-GPTQ runtime verdict for sem-mcts. All cells are now
 > n=2, so accuracy gaps within ~1 SEM should be read as ties.
 
+#### model family, size, quantization comparison (qwen PRM)
+> **Compares:** the same 7-model family/size/quantization sweep
+> as the sem table above, but scored with `prm=qwen`
+> (Qwen-Math-7B-PRM) instead of the default `prm=rlhflow`
+> (Llama-8B-PRM). Read against that table, it isolates whether
+> the model-family ranking (and the GPTQ accuracy/speed
+> tradeoff) is robust to the PRM, or specific to rlhflow
+> scoring.
+>
+> **Fixed:** method=`mcts_sem_v02` (PRM embeds), prm=qwen,
+> bs-4, d-20, b=80, tmpl=model-family default (native for Qwen,
+> custom for Llama), `embeds_proj=sparse512`,
+> `cov_update=sherman_morrison` (sm), ds_alpha=100, ds_beta=1.0,
+> prm_batch_size=1.
+>
+> ⚠️ 3/7 cells already scored — the three fp16 rows
+> (llama-1b/llama-3b/qwen-math-1.5b) are the qwen-PRM default
+> configs shared with the `ds_alpha sweep (v02, qwen PRM)` table
+> (ds_alpha=100 = the default). The 4 quantized/other rows
+> (llama-3b gptq, qwen-3b fp16, qwen-3b/qwen-7b gptq-int4) are
+> `planned`.
+>
+> **W&B:** fp16 rows are the cfg-`f24283b8`/`2b647a18`/
+> `7a4be169` runs (see ds_alpha-sweep-qwen); quantized rows no
+> runs yet.
+
+| llm | trials | status | pass@gb | naive@gb | wei@gb | maj@gb | hr/trial |
+|---|---|---|---|---|---|---|---|
+| llama-1b fp16 | 2 | scored | .6133<br>±.0305 | .4961<br>±.0313 | .4492<br>±.0311 | .3906<br>±.0306 | 3.90 |
+| llama-3b fp16 | 2 | scored | .7656<br>±.0265 | .6562<br>±.0297 | .6289<br>±.0303 | .6016<br>±.0307 | 5.43 |
+| llama-3b gptq | — | planned | — | — | — | — | — |
+| qwen-3b fp16 | — | planned | — | — | — | — | — |
+| qwen-3b gptq-int4 | — | planned | — | — | — | — | — |
+| qwen-7b gptq-int4 | — | planned | — | — | — | — | — |
+| qwen-math-1.5b fp16 | 2 | scored | .8750<br>±.0207 | .7969<br>±.0252 | .7734<br>±.0262 | .7578<br>±.0268 | 3.96 |
+
+> **Analysis.** Partial. The 3 fp16 rows track the rlhflow sem
+> model-family table's ordering (qwen-math-1.5b ≈ .875 best of
+> the three, llama-3b ≈ .766, llama-1b ≈ .613), and the naive@gb
+> levels run higher than rlhflow's (consistent with the `rlhflow
+> vs qwen PRM comparison` finding that qwen lifts naive@gb most).
+> The quantization tradeoff can't be read until the 4 quantized
+> rows land.
+> **Limitations / follow-up:** 4 of 7 cells planned (see
+> `experiments.yaml`, group `sem-mcts`, feeds
+> `sem-mcts/model-family-qwen`); n=2 throughout, so read
+> gaps within ~1 SEM as ties. Once the gptq/qwen rows complete,
+> the key read is whether qwen-7b gptq-int4 tops this table too
+> (as it did under cnt-mcts) and whether GPTQ's accuracy cost
+> matches the rlhflow table's.
+
 #### rlhflow vs qwen PRM comparison
 > **Compares:** `prm.kind` (Llama-8B-PRM "rlhflow" vs
 > Qwen-Math-7B-PRM "qwen") — the *scoring* model, not the policy
