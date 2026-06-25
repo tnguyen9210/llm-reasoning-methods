@@ -7,6 +7,54 @@ section per decision. Titles carry one or two area prefixes
 (`Area:` or `Area, Area:`) so skimming groups by eye and
 `grep '^## .*Area'` gives a per-topic view.
 
+## 2026-06-24 — Experiments: read run_id BEFORE the first write_manifest (resume-fragmentation bug)
+
+**Context:** the three launchers
+([generate_mcts_cnt.py](../generate_mcts_cnt.py),
+[generate_mcts_sem.py](../generate_mcts_sem.py),
+[generate_mcts_bl_cnt_v01.py](../generate_mcts_bl_cnt_v01.py))
+write `manifest.json` twice per run — once before `wandb.init`
+and once after (the run-id lifecycle from the 2026-06-21 "fold
+run-id into manifest" decision below). The original ordering
+was: `write_manifest(cfg)` (no run_id) → `load_wandb_run_id` →
+`wandb.init(id=run_id, resume="allow")` → `write_manifest(cfg,
+run_id=wandb_run.id)`.
+
+**Bug:** the first `write_manifest(cfg)` passed `run_id=None`,
+and `write_manifest` writes the *whole* payload (atomic
+replace) — so it **overwrote the saved `run_id` with null
+before `load_wandb_run_id` ran one line later**. Every resume
+therefore loaded `None`, `wandb.init(id=None)` minted a *fresh*
+run, and the original run was orphaned. Observed live: a
+stalled `mfs5klyg` resumed as `aum658fp` (and `7ccy14de` →
+`lzqhvfj6`), fragmenting one logical run across multiple empty
+W&B runs and leaving any doc/ledger citation of the old id
+dangling — the same failure class as the deleted-`ctmgmcrp`
+citation the recorder caught earlier.
+
+**Decision:** read `load_wandb_run_id` **before** the first
+`write_manifest`, and pass it through:
+`run_id = load_wandb_run_id(result_dir)` then
+`write_manifest(result_dir, cfg, run_id=run_id)`. The
+pre-`init` write now *preserves* an existing id instead of
+nulling it.
+**Why:** restores the invariant the 2026-06-21 fold-decision
+assumed — run_id is "set-once-then-frozen," written twice but
+never *cleared*. Fresh runs are unchanged (`load_` returns
+None → `wandb.init` mints one, as intended); resumes keep the
+id and `wandb.init(id=<old>, resume="allow")` reattaches to the
+same W&B run. `run_id` is not part of `config_identity`/the
+hash, so this touches nothing `status.py` reconciles
+(`status.py --verify` stayed green across the change).
+**Verified:** re-running the two stalled configs kept their
+original ids (`mfs5klyg`, `7ccy14de`) in the manifest instead
+of minting new ones; the two orphan runs were deleted from W&B
+(both empty, uncited).
+**Revisit if:** `write_manifest` ever gains a caller that
+legitimately needs to *clear* run_id — then the "first write
+preserves" assumption would need an explicit flag rather than
+relying on the loaded value.
+
 ## 2026-06-21 — Configs: don't fold timing_state.json into manifest.json
 
 **Context:** after folding `run_id` into `manifest.json` (below),
