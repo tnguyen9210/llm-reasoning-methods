@@ -142,16 +142,18 @@ def main(cfg: ExpConfig):
         f"/{level_dir(cfg)}/{run_name}"
     )
     _make_result_dir(result_dir)
-    # Record the full config identity so post-processing can locate
-    # this run by recorded hash (find_run_dir), not by re-deriving the
-    # name. Idempotent on a resume (atomic overwrite).
-    write_manifest(result_dir, cfg)
-
     # Resume onto the same run if this is a restart. load_ returns None
     # on a fresh launch (no manifest run_id) -> W&B mints a new id.
     # resume="allow" (not "must") so both first launch and restart
-    # share this one path.
+    # share this one path. MUST read this BEFORE write_manifest below:
+    # write_manifest with run_id=None would overwrite a saved id with
+    # null, so a restart would lose it and mint a fresh run every time.
     run_id = load_wandb_run_id(result_dir)
+    # Record the full config identity so post-processing can locate
+    # this run by recorded hash (find_run_dir), not by re-deriving the
+    # name. Pass the loaded run_id through so the pre-init write
+    # preserves it on a resume. Idempotent (atomic overwrite).
+    write_manifest(result_dir, cfg, run_id=run_id)
     wandb_run = wandb.init(
         project="llm-reasoning",
         name=run_name,
