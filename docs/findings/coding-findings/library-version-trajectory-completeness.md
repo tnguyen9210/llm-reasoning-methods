@@ -102,3 +102,60 @@ producing garbage. Tools: `unittests/check_trajectory_completeness.py`
 `unittests/test_step_separator_affect_generation.ipynb`
 (tokenizer-only env gate, runs in seconds; optional GPU check for the
 model behavior itself).
+
+## Addendum 2026-07-06 — the template-family dimension, and sem never got the fix
+
+Two updates from smoke-testing `mcts_sem_v02` on the native
+Llama template (per-template analysis:
+`unittests/examine_llm_chat_templates_v1.ipynb` and the vault
+note `llm-prm-deep-dive/findings/llm-chat-templates.md`).
+
+**1. The library isn't the only thing that trims — templates
+differ by family.** Llama's *native* template trims the trailing
+`\n\n` (`| trim` on message content); Qwen's native template
+preserves it. So on the current py311 stack the failure mode
+above reappears whenever a Llama model runs on its native
+template without the strip-and-reappend guard.
+
+**2. The strip-and-reappend fix never reached the sem family.**
+It lives in `mcts_cnt_search_v01_00_00` (:263-273) and
+`mcts_bl_cnt_search_v01/v02_00_00`, but `mcts_sem_search_v01/
+v02_00_00` template `current_text` directly (their only
+`removesuffix("\n\n")` is on the embed/score copy of
+candidates, not the generation prompt). Nothing has broken in
+practice because the 2026-06-19 per-family default keeps Llama
+on the custom (whitespace-preserving) template — configuration
+masking the missing guard.
+
+Measured (sem-v02, Llama3.2-1B, prm=qwen, level 4):
+
+| | Llama native (no guard) | Llama custom (control) | Qwen-Math-1.5B native (full trial) |
+|---|---|---|---|
+| nodes reaching a final answer | **0/26** | 8/8 | **99.7%** (2809/2817) |
+| 1-step stubs (<600 chars) | 77% | 0% | 1.8% |
+| tree depth | 1–2 | up to 16 | median 12 |
+
+**Implications:** recorded qwen sem-v02 results are unaffected
+(full-trial census healthy). Llama sem runs are safe only by
+configuration. Fix: add the same strip-and-reappend block to
+`mcts_sem_search_v01/v02` (finish the migration this finding's
+fix started).
+
+**Fixed 2026-07-06.** Ported the identical strip-and-reappend
+block (`mcts_cnt_search_v01_00_00:263-273`) into both
+`mcts_sem_search_v01_00_00` and `mcts_sem_search_v02_00_00`'s
+`_generate_candidates`. No version bump — every currently
+recorded sem run uses a template that already preserves the
+separator (Llama+custom or Qwen+native), so the fix reproduces
+byte-identical prompts at every existing hash; zero Llama+native
+sem runs existed prior to this fix. Re-ran the same smoke test
+after the change:
+
+| | Llama native, before fix | Llama native, after fix |
+|---|---|---|
+| nodes reaching a final answer | 0/26 | **32/39 (82%)** |
+| 1-step stubs (<600 chars) | 77% | **2.6%** |
+| tree depth | 1–2 | back to normal multi-step trees |
+
+Matches the healthy controls (Llama+custom 8/8, Qwen+native
+99.7%). Migration is now complete across cnt/bl_cnt/sem.

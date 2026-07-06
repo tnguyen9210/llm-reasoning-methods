@@ -7,6 +7,53 @@ section per decision. Titles carry one or two area prefixes
 (`Area:` or `Area, Area:`) so skimming groups by eye and
 `grep '^## .*Area'` gives a per-topic view.
 
+## 2026-07-06 — Search: sem-mcts gets the strip-and-reappend separator guard, applied in place
+
+**Context:** the 2026-06-13 "use native chat templates" decision
+(below) fixed prompt corruption for `mcts_cnt_search_v01_00_00`
+and `mcts_bl_cnt_search_v01/v02_00_00` by stripping the trailing
+`\n\n` step separator before `apply_chat_template` and
+re-appending it after, making the separator's survival
+independent of the template/transformers version. That
+migration never reached `mcts_sem_search_v01/v02_00_00` — their
+`_generate_candidates` templates `current_text` directly, with
+`removesuffix("\n\n")` applied only to the embed/score copy of
+candidates, never the generation prompt.
+
+**Bug:** Llama's native template trims a trailing `\n\n`; without
+the guard, the model sees a finished-looking message and emits
+EOS immediately, collapsing the search tree to 1-step stubs
+(same failure class as
+[library-version-trajectory-completeness.md](findings/coding-findings/library-version-trajectory-completeness.md)).
+Nothing broke in practice because the 2026-06-19 per-family
+default (below) keeps Llama on the custom, whitespace-preserving
+template — configuration was masking a missing code guard, not
+correctness.
+
+**Decision:** port the identical strip-and-reappend block
+(`mcts_cnt_search_v01_00_00:263-273`) into both
+`mcts_sem_search_v01_00_00` and `mcts_sem_search_v02_00_00`,
+**applied in place, no version/method-string bump**. Normally a
+core-file behavior change needs a new `search.method` label
+(config hash includes it, so old and new code would otherwise
+collide on the same result dir) — but every currently recorded
+sem run uses a template that already preserves the separator
+(Llama+custom or Qwen+native), so the fix reproduces
+byte-identical prompts at every existing hash, and zero
+Llama+native sem runs existed before this fix. There is no prior
+data at the one hash this changes behavior for.
+
+**Verified:** smoke-tested Llama3.2-1B + native template + sem-v02
+before and after. Before: 0/26 nodes reached a final answer, 77%
+were 1-step stubs. After: 32/39 (82%) final-answer, 2.6% stubs —
+in line with the healthy controls (Llama+custom 8/8, Qwen+native
+99.7% over a full trial). Recorded qwen sem-v02 results were
+never affected (native-Qwen preserves the separator).
+
+**Revisit if:** a future sem search file is added that copies the
+old un-guarded pattern — check for the strip-and-reappend block
+whenever cloning `_generate_candidates` into a new version.
+
 ## 2026-06-24 — Experiments: read run_id BEFORE the first write_manifest (resume-fragmentation bug)
 
 **Context:** the three launchers

@@ -516,8 +516,16 @@ def _generate_candidates(
     # is True only on the first step (depth==0) because at depth>0 we
     # want vLLM to continue the existing assistant turn rather than
     # start a fresh one.
+    #
+    # Strip the step terminator before templating, then re-append it to
+    # the templated string: some templates / transformers versions trim
+    # or crash on trailing "\n\n" inside apply_chat_template, but the
+    # model must see the separator to continue with a next step instead
+    # of emitting EOS (docs/findings/coding-findings/
+    # library-version-trajectory-completeness.md, 2026-06-11).
+    current_text_clean = current_text.removesuffix("\n\n")
     current_convs = [
-        build_conv(question, current_text, config.gen.system_prompt)
+        build_conv(question, current_text_clean, config.gen.system_prompt)
     ]
     current_templated = tokenizer.apply_chat_template(
         current_convs,
@@ -526,6 +534,8 @@ def _generate_candidates(
         date_string=config.gen.date_string,
         tokenize=False,
     )
+    if current_text.endswith("\n\n"):
+        current_templated = [t + "\n\n" for t in current_templated]
     # Replicate the same prompt config.search.batch_size times —
     # `generate_k_steps` uses each copy as an independent sampling
     # slot. Sampling differs across copies because SamplingParams sets
