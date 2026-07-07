@@ -540,12 +540,12 @@ a
 
 | llm | prm | agg_strategy | trials | status | pass@gb | naive@gb | wei@gb | maj@gb | hr/trial |
 |---|---|---|---|---|---|---|---|---|---|
-| qwen-3b | rlhflow | min | — | to rerun | — | — | — | — | — |
-| qwen-3b | rlhflow | prod | — | to rerun | — | — | — | — | — |
-| qwen-3b | rlhflow | last | — | to rerun | — | — | — | — | — |
-| qwen-3b | qwen | min | — | to rerun | — | — | — | — | — |
-| qwen-3b | qwen | prod | — | to rerun | — | — | — | — | — |
-| qwen-3b | qwen | last | — | to rerun | — | — | — | — | — |
+| qwen-3b | rlhflow | min | 2 | scored | .8633<br>±.0215 | .6367<br>±.0301 | .7344<br>±.0277 | .7148<br>±.0283 | 4.03 |
+| qwen-3b | rlhflow | prod | 2 | scored | .8477<br>±.0225 | .7031<br>±.0286 | .7344<br>±.0277 | .7031<br>±.0286 | 4.00 |
+| qwen-3b | rlhflow | last | 2 | scored | .8398<br>±.0230 | .6875<br>±.0290 | .7148<br>±.0283 | .7070<br>±.0285 | 4.01 |
+| qwen-3b | qwen | min | 2 | scored | .8867<br>±.0198 | .7969<br>±.0252 | .7852<br>±.0257 | .7500<br>±.0271 | 3.78 |
+| qwen-3b | qwen | prod | 2 | scored | .8398<br>±.0230 | .7891<br>±.0255 | .7891<br>±.0255 | .7422<br>±.0274 | 3.70 |
+| qwen-3b | qwen | last | 2 | scored | .8789<br>±.0204 | .7461<br>±.0273 | .7695<br>±.0264 | .7617<br>±.0267 | 3.76 |
 | qwen-math-1.5b | rlhflow | min | 2 | scored | .8789<br>±.0204 | .6836<br>±.0291 | .7188<br>±.0282 | .7031<br>±.0286 | 3.12 |
 | qwen-math-1.5b | rlhflow | prod | 2 | scored | .8906<br>±.0195 | .7617<br>±.0267 | .7812<br>±.0259 | .7422<br>±.0274 | 3.09 |
 | qwen-math-1.5b | rlhflow | last | 2 | scored | .9102<br>±.0179 | .7695<br>±.0264 | .7891<br>±.0255 | .7812<br>±.0259 | 3.15 |
@@ -553,24 +553,30 @@ a
 | qwen-math-1.5b | qwen | prod | 2 | scored | .8711<br>±.0210 | .8086<br>±.0246 | .7891<br>±.0255 | .7617<br>±.0267 | 2.90 |
 | qwen-math-1.5b | qwen | last | 2 | scored | .8906<br>±.0195 | .8008<br>±.0250 | .8047<br>±.0248 | .7891<br>±.0255 | 2.84 |
 
-> **Analysis (qwen-math-1.5b only — qwen-3b still to rerun).**
-> pass@gb is flat within ~1 SEM across all three strategies for
-> both PRMs (rlhflow: .879/.891/.910; qwen: .887/.871/.891) — at
-> n=2 trials, no strategy wins outright on the headline metric.
-> naive@gb tells a sharper, **PRM-dependent** story: under
-> rlhflow, `min` is clearly worst (.684 vs `last`'s .770 — a ~9pt
-> gap, outside noise); under qwen, `min` is the *best* of the
-> three (.813 vs `last`'s .801) — the opposite direction. So
-> "which agg_strategy helps naive@gb" doesn't have a PRM-general
-> answer here; it flips depending on the scoring model. hr/trial
-> is flat across strategies within each PRM (~2.8-2.9 rlhflow→qwen
-> gap dominates over any agg_strategy effect), as expected —
+> **Analysis (both models).**
+> pass@gb is flat within ~1-2 SEM across all three strategies for
+> both PRMs and both models (qwen-math-1.5b rlhflow: .879/.891/
+> .910; qwen: .887/.871/.891 — qwen-3b rlhflow: .863/.848/.840;
+> qwen: .887/.840/.879) — at n=2 trials, no strategy wins
+> outright on the headline metric. naive@gb tells a sharper,
+> **PRM-dependent** story that now replicates across both models:
+> under rlhflow, `min` is the *worst* of the three
+> (qwen-math-1.5b: .684 vs `last`'s .770; qwen-3b: .637 vs
+> `prod`'s .703 — same direction, ~6-9pt gaps); under qwen, `min`
+> is the *best* of the three (qwen-math-1.5b: .813 vs `last`'s
+> .801; qwen-3b: .797 vs `last`'s .746) — the opposite direction,
+> consistently. So "which agg_strategy helps naive@gb" doesn't
+> have a PRM-general answer — it flips depending on the scoring
+> model, and this flip now holds at both model sizes tested.
+> hr/trial is flat across strategies within each PRM (~3.7-4.0hr
+> for qwen-3b vs ~2.8-2.9hr for qwen-math-1.5b — model-size gap
+> dominates over any agg_strategy effect), as expected —
 > aggregation is a scoring-time choice, not a generation-time one.
-> **Limitations / follow-up:** n=2 trials only; the naive@gb
-> divergence is the most interesting lead here and would benefit
-> from more trials before treating it as settled. qwen-3b rows
-> still `to rerun` — can't yet say whether the rlhflow/qwen
-> divergence direction generalizes past this one model.
+> **Limitations / follow-up:** n=2 trials only per cell; the
+> naive@gb PRM-direction-flip is the most interesting lead here
+> and would benefit from more trials before treating it as
+> settled, but replication across two model sizes is a
+> reasonably strong signal already.
 
 ### sem-mcts
 > **Runnable as of 2026-06-18** (rename + migration landed).
