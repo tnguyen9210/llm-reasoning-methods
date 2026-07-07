@@ -523,6 +523,36 @@ a
 | qwen-7b gptq-int4 | — | to rerun | — | — | — | — | — |
 | qwen-math-1.5b fp16 | — | to rerun | — | — | — | — | — |
 
+#### agg_strategy comparison (qwen-3b, qwen-math-1.5b)
+> **Compares:** `gen.agg_strategy` (`"min"` | `"prod"` | `"last"` —
+> `core/scoring.py::aggregate_scores`) — how a candidate's
+> per-step PRM scores collapse to one scalar. `"last"` is every
+> other table's fixed default; `"min"` and `"prod"` are
+> implemented but not yet reported anywhere in this doc. Prompted
+> by the `_split_steps` fix (`agg="last"`-specific bug, see
+> `### cnt-mcts (updated)` header above) — `"min"` in particular
+> is a useful cross-check since it's structurally less exposed to
+> that bug (a holistic bogus score rarely wins a min() over a
+> trajectory with a genuinely bad step).
+>
+> **Fixed:** method=`mcts_cnt_v01`, cpuct=2.0, bs-4, d-20, b=80,
+> tmpl=model-family default (native for both models here).
+
+| llm | prm | agg_strategy | trials | status | pass@gb | naive@gb | wei@gb | maj@gb | hr/trial |
+|---|---|---|---|---|---|---|---|---|---|
+| qwen-3b | rlhflow | min | — | to rerun | — | — | — | — | — |
+| qwen-3b | rlhflow | prod | — | to rerun | — | — | — | — | — |
+| qwen-3b | rlhflow | last | — | to rerun | — | — | — | — | — |
+| qwen-3b | qwen | min | — | to rerun | — | — | — | — | — |
+| qwen-3b | qwen | prod | — | to rerun | — | — | — | — | — |
+| qwen-3b | qwen | last | — | to rerun | — | — | — | — | — |
+| qwen-math-1.5b | rlhflow | min | — | to rerun | — | — | — | — | — |
+| qwen-math-1.5b | rlhflow | prod | — | to rerun | — | — | — | — | — |
+| qwen-math-1.5b | rlhflow | last | — | to rerun | — | — | — | — | — |
+| qwen-math-1.5b | qwen | min | — | to rerun | — | — | — | — | — |
+| qwen-math-1.5b | qwen | prod | — | to rerun | — | — | — | — | — |
+| qwen-math-1.5b | qwen | last | — | to rerun | — | — | — | — | — |
+
 ### sem-mcts
 > **Runnable as of 2026-06-18** (rename + migration landed).
 > Two methods = two embedding sources: `mcts_sem_v01` (policy
