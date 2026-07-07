@@ -440,6 +440,89 @@ a
 > exact percentages. A matched-prmbs re-run would sharpen the
 > runtime deltas.
 
+### cnt-mcts (updated)
+> method=`mcts_cnt_v01`. Corrected reruns following the
+> `PRM._split_steps` fix (2026-07-06 — see
+> [findings/coding-findings/prm-step-split-trailing-separator.md](findings/coding-findings/prm-step-split-trailing-separator.md)
+> and `docs/decisions.md`), which affected `agg_strategy="last"`
+> scoring for non-terminal candidates in every table below. The
+> `### cnt-mcts` section above is kept as-is (method=`mcts_cnt`,
+> pre-fix) for comparison; do not edit it. Table shapes copied
+> from there; rows to be filled in as reruns land.
+
+#### custom vs native template comparison
+
+| llm | tmpl | trials | status | pass@gb | naive@gb | wei@gb | maj@gb | hr/trial |
+|---|---|---|---|---|---|---|---|---|
+| llama-1b | custom | — | to rerun | — | — | — | — | — |
+| llama-1b | native | — | to rerun | — | — | — | — | — |
+
+| llm | tmpl | trials | status | pass@gb | naive@gb | wei@gb | maj@gb | hr/trial |
+|---|---|---|---|---|---|---|---|---|
+| llama-3b | custom | — | to rerun | — | — | — | — | — |
+| llama-3b | native | — | to rerun | — | — | — | — | — |
+
+| llm | tmpl | trials | status | pass@gb | naive@gb | wei@gb | maj@gb | hr/trial |
+|---|---|---|---|---|---|---|---|---|
+| qwen-3b | native | — | to rerun | — | — | — | — | — |
+
+| llm | tmpl | trials | status | pass@gb | naive@gb | wei@gb | maj@gb | hr/trial |
+|---|---|---|---|---|---|---|---|---|
+| qwen-math-1.5b | custom | — | to rerun | — | — | — | — | — |
+| qwen-math-1.5b | native | — | to rerun | — | — | — | — | — |
+
+| llm | tmpl | trials | status | pass@gb | naive@gb | wei@gb | maj@gb | hr/trial |
+|---|---|---|---|---|---|---|---|---|
+| qwen-3b gptq-int4 | custom | — | to rerun | — | — | — | — | — |
+| qwen-3b gptq-int4 | native | — | to rerun | — | — | — | — | — |
+
+| llm | tmpl | trials | status | pass@gb | naive@gb | wei@gb | maj@gb | hr/trial |
+|---|---|---|---|---|---|---|---|---|
+| qwen-7b gptq-int4 | custom | — | to rerun | — | — | — | — | — |
+| qwen-7b gptq-int4 | native | — | to rerun | — | — | — | — | — |
+
+#### prm_batch_size sweep
+
+| prm | prm_bs | trials | status | pass@gb | hr/trial | peak GPU mem (GB) |
+|---|---|---|---|---|---|---|
+| rlhflow | 1 | — | to rerun | — | — | — |
+| rlhflow | 2 | — | to rerun | — | — | — |
+| rlhflow | 4 | — | to rerun | — | — | — |
+| qwen | 1 | — | to rerun | — | — | — |
+| qwen | 4 | — | to rerun | — | — | — |
+
+#### rlhflow vs qwen PRM comparison
+
+| llm | prm | prmbs | trials | status | pass@gb | naive@gb | wei@gb | maj@gb | hr/trial |
+|---|---|---|---|---|---|---|---|---|---|
+| llama-1b | rlhflow | 1 | — | to rerun | — | — | — | — | — |
+| llama-1b | qwen | 1 | — | to rerun | — | — | — | — | — |
+| llama-3b | rlhflow | — | — | to rerun | — | — | — | — | — |
+| llama-3b | qwen | 1 | — | to rerun | — | — | — | — | — |
+| qwen-3b | rlhflow | — | — | to rerun | — | — | — | — | — |
+| qwen-3b | qwen | 1 | — | to rerun | — | — | — | — | — |
+| qwen-math-1.5b | rlhflow | — | — | to rerun | — | — | — | — | — |
+| qwen-math-1.5b | qwen | 1 | — | to rerun | — | — | — | — | — |
+
+#### enforce_eager comparison
+
+| llm | prm | enforce_eager | trials | status | pass@gb | naive@gb | wei@gb | maj@gb | hr/trial |
+|---|---|---|---|---|---|---|---|---|---|
+| llama-3b | rlhflow | False (default) | — | to rerun | — | — | — | — | — |
+| llama-3b | rlhflow | True | — | to rerun | — | — | — | — | — |
+
+#### model family, size, quantization comparison
+
+| llm | trials | status | pass@gb | naive@gb | wei@gb | maj@gb | hr/trial |
+|---|---|---|---|---|---|---|---|
+| llama-1b fp16 | — | to rerun | — | — | — | — | — |
+| llama-3b fp16 | — | to rerun | — | — | — | — | — |
+| llama-3b gptq | — | to rerun | — | — | — | — | — |
+| qwen-3b fp16 | — | to rerun | — | — | — | — | — |
+| qwen-3b gptq-int4 | — | to rerun | — | — | — | — | — |
+| qwen-7b gptq-int4 | — | to rerun | — | — | — | — | — |
+| qwen-math-1.5b fp16 | — | to rerun | — | — | — | — | — |
+
 ### sem-mcts
 > **Runnable as of 2026-06-18** (rename + migration landed).
 > Two methods = two embedding sources: `mcts_sem_v01` (policy

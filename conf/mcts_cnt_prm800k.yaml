@@ -16,7 +16,7 @@ hydra:
 # base path interpolated by the group files (${base_dir}/...)
 base_dir: /groups/chichengz/tnn/datasets
 
-algo: mcts_cnt
+algo: mcts_cnt_v01
 
 # generation params (group: gen) — only overrides vs GenConfig defaults
 gen:

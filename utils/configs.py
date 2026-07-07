@@ -219,7 +219,7 @@ class SearchConfig:
 @dataclass
 class MCTSCntConfig(SearchConfig):
     """Count-based MCTS search params."""
-    method: str = "mcts_cnt"
+    method: str = "mcts_cnt_v01"
     num_phases: int = 1000
     gen_budget: int = 80          # total generations across the run
     cpuct: float = 2.0

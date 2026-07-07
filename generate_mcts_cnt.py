@@ -28,6 +28,7 @@ from utils.load_data import load_data_hf
 
 algo_dict = {
     "mcts_cnt": mcts_cnt_search_v01_00_00,
+    "mcts_cnt_v01": mcts_cnt_search_v01_00_00,
 }
 
 # Register the structured schemas so the YAML binds onto typed,

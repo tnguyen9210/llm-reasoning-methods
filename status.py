@@ -207,12 +207,14 @@ def scan_result_manifests():
 # the recorded method. (Only sem/cnt families are in scope here.)
 _METHOD_TO_ROOT = {
     "mcts_cnt": "mcts_cnt_prm800k",
+    "mcts_cnt_v01": "mcts_cnt_prm800k",
     "mcts_sem_v01": "mcts_sem_v01_prm800k",
     "mcts_sem_v02": "mcts_sem_v02_prm800k",
 }
 
 _METHOD_TO_LAUNCHER = {
     "mcts_cnt": "generate_mcts_cnt.py",
+    "mcts_cnt_v01": "generate_mcts_cnt.py",
     "mcts_sem_v01": "generate_mcts_sem.py",
     "mcts_sem_v02": "generate_mcts_sem.py",
 }
