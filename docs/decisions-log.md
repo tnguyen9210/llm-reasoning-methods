@@ -14,6 +14,67 @@ scaffold, it also gets a standalone file in [decisions/](decisions/);
 the log entry then carries a one-line pointer to it rather than
 repeating the full writeup.
 
+## 2026-07-07 — Experiments: three-layer tracking — experiments.yaml (intent) → status.py (computed) → exp-comparison.md (report)
+
+**Context:** the experiment matrix spans many comparison tables,
+algorithms, and nodes, launched out of order — and its state lives
+in three places that drift apart if nothing reconciles them: the
+comparison tables (intent — what *should* run), the results folders
+(artifacts — what *has* run), and W&B (telemetry — what's running
+now). The design was worked out 2026-06-22 (vault guide
+`research-coding-practices-guides/tracking-experiment-status`) and
+implemented 2026-06-23 (`status.py` + `experiments.yaml`,
+commit `ca5f1c6`); `exp-comparison.md` predates the system as the
+cross-algorithm tuning tracker (moved into `docs/` 2026-06-21).
+This entry records the standing decision retroactively — it never
+got a log entry at the time.
+
+**Decision:** don't merge the three sources of truth (different
+audiences, different update cadences); add a fourth, *computed*
+layer that reconciles them on demand:
+- `experiments.yaml` — append-only intent ledger, a flat priority
+  queue (NOT grouped by table). One entry per launchable run:
+  launcher, `config_root`, `overrides`, `trials`, plus `feeds:`
+  (which table cell(s) the run populates — a list, deliberately
+  loose keys, two-way reference) and `recorded:` (has the number
+  been transcribed into the doc — the ONLY mutable field).
+- `status.py` — read-only reconciler. Composes each entry's cfg
+  offline (Hydra compose, no model load), matches its
+  `config_hash` against on-disk manifests, counts `.done` markers
+  vs `trials`, optionally checks W&B run state → `planned` /
+  `partial`(/`stalled`) / `done` / orphan. Status is COMPUTED,
+  never stored — a hand-written `status:` field goes stale within
+  the hour.
+- `exp-comparison.md` — the report layer; a *view* over completed
+  runs, never a queue. Numbers move in only from `done` rows, and
+  flipping `recorded: true` happens in the same motion.
+
+**Why:** a flat queue dissolves "finish Table 1 before Table 2"
+(one run can feed several tables via `feeds`); `stalled` detection
+(partial `.done` + W&B not running) replaces log-watching for
+OOM/crash/disconnect, and relaunching a stalled entry is just
+rerunning the same command (resume skips `.done` trials and
+reattaches the manifest `run_id`); the append-only rule (never
+delete or reorder; completed entries stay) is what keeps finished
+runs from reading as orphans, preserves idempotency-by-inspection,
+and makes the file safe for assistant edits. The `recorded` bit is
+the one stored-state exception because "is it in the doc?" is not
+reliably derivable — and the done-but-not-recorded gap is exactly
+the worst drift (results on disk/W&B but missing from the tables).
+
+**Verified in practice:** the backfill/hash-collision pass caught
+several doc rows marked "planned" that actually hashed to
+already-done dirs — the doc was stale, not the runs (the same
+class of catch repeated on 2026-07-07 with the ds_alpha llama-3b
+row and the model-family table).
+
+**Revisit if:** the queue outgrows one file (split by group and
+glob — not preemptively), or the not-yet-built layers land (the
+assistant recorder loop; the multi-node orchestrator, explicitly
+sequenced *after* the reconciler is trustworthy). Full design:
+vault guide `tracking-experiment-status`; repo-side schema docs in
+the `experiments.yaml` header and `status.py` docstring.
+
 ## 2026-07-07 — Search: sem-mcts v02 child selection dispatches on visit count (first-visit q-only, subsequent q+diversity)
 
 **Context:** `MCTS.select_child` (`mcts_sem_search_v02_00_00.py`) has
