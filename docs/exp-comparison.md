@@ -778,14 +778,15 @@ a
 > proj=sparse512, cov_update=sm, prm=qwen, ds_beta=1.0,
 > prm_batch_size=1.
 >
-> ⚠️ 8/9 cells scored (2 trials each); llama-3b ds_alpha=1000
-> is still running (the only remaining `planned`/in-flight
-> cell). `hr/trial` read from each run's `timing_state.json`
-> (`avg_time_per_trial_hr`).
+> ⚠️ 9/9 cells scored (2 trials each) as of 2026-07-07 — llama-3b
+> ds_alpha=1000 completed and is filled in below. `hr/trial` read
+> from each run's `timing_state.json` (`avg_time_per_trial_hr`).
 >
 > **W&B:** llama-1b 10/100/1000 `02xrjfdb`/`7hjxksmx`/`fgem65eg`;
 > qwen-math-1.5b 10/100/1000 `6hbme316`/`q0d6yk4f`/`sczanhp2`;
-> llama-3b 10/100 `qvp2vneb`/`ynia3d1p`; llama-3b 1000 in flight.
+> llama-3b 10/100/1000 `qvp2vneb`/`ynia3d1p`/`7ccy14de` — the 1000
+> run is one of the two runs recovered by the 2026-06-24 run_id
+> resume-fragmentation fix (`docs/decisions.md`), not a fresh run.
 
 | llm | ds_alpha | trials | status | pass@gb | naive@gb | wei@gb | maj@gb | hr/trial |
 |---|---|---|---|---|---|---|---|---|
@@ -797,24 +798,25 @@ a
 | qwen-math-1.5b | 1000 | 2 | scored | .8750<br>±.0207 | .8008<br>±.0250 | .7500<br>±.0271 | .7539<br>±.0270 | 3.92 |
 | llama-3b | 10 | 2 | scored | .7695<br>±.0264 | .6797<br>±.0292 | .6445<br>±.0300 | .6211<br>±.0304 | 5.44 |
 | llama-3b | 100 (default) | 2 | scored | .7656<br>±.0265 | .6562<br>±.0297 | .6289<br>±.0303 | .6016<br>±.0307 | 5.43 |
-| llama-3b | 1000 | — | planned | — | — | — | — | — |
+| llama-3b | 1000 | 2 | scored | .7617<br>±.0267 | .6562<br>±.0297 | .6172<br>±.0304 | .5898<br>±.0308 | 5.61 |
 
 > **Analysis.** The "magnitude past ~10 doesn't matter" shape
 > from the rlhflow table holds under qwen-PRM scoring too: within
 > each model, pass@gb is flat across 10/100/1000 to within SEM
 > (llama-1b .621/.613/.629; qwen-math-1.5b .879/.875/.875;
-> llama-3b .770/.766/[1000 pending]). So the ds_alpha plateau is
-> robust to PRM choice, not an rlhflow artifact. Absolute levels
-> track the model, as expected (qwen-math-1.5b highest at ~.88,
-> llama-3b ~.77, llama-1b ~.62) — consistent with the `rlhflow
-> vs qwen PRM comparison` below.
+> llama-3b .770/.766/.762). Now that all 9 cells are in, the
+> flatness holds cleanly at llama-3b too — .762 (ds_alpha=1000) is
+> within 1 SEM of both .770 (10) and .766 (100), no trend in
+> either direction. So the ds_alpha plateau is robust to PRM
+> choice, not an rlhflow artifact. Absolute levels track the
+> model, as expected (qwen-math-1.5b highest at ~.88, llama-3b
+> ~.77, llama-1b ~.62) — consistent with the `rlhflow vs qwen PRM
+> comparison` below.
 > **Limitations / follow-up:** 2 trials/cell — SEMs ~.03, so the
 > within-model flatness is "no detectable trend," not "proven
-> equal." llama-3b ds_alpha=1000 still running; record it when
-> done (feeds `sem-mcts/ds_alpha-sweep-qwen`). A `ds_alpha=0`
-> qwen-PRM row per model would extend the lower-bound check to
-> this PRM, but is deferred — the rlhflow table already
-> establishes the 0→on jump.
+> equal." A `ds_alpha=0` qwen-PRM row per model would extend the
+> lower-bound check to this PRM, but is deferred — the rlhflow
+> table already establishes the 0→on jump.
 
 #### model family, size, quantization comparison
 > **Compares:** model family, size, and quantization jointly —
@@ -877,41 +879,52 @@ a
 > `cov_update=sherman_morrison` (sm), ds_alpha=100, ds_beta=1.0,
 > prm_batch_size=1.
 >
-> ⚠️ 3/7 cells already scored — the three fp16 rows
-> (llama-1b/llama-3b/qwen-math-1.5b) are the qwen-PRM default
-> configs shared with the `ds_alpha sweep (v02, qwen PRM)` table
-> (ds_alpha=100 = the default). The 4 quantized/other rows
-> (llama-3b gptq, qwen-3b fp16, qwen-3b/qwen-7b gptq-int4) are
-> `planned`.
+> ⚠️ All 7 cells scored as of 2026-07-07. **qwen-3b fp16**
+> (`cfg-77cae091`) and **qwen-math-1.5b fp16** (`cfg-7a4be169`)
+> are read from the pre-fix `--prefix-backup` copies (numbers
+> below), not the in-progress precautionary regen described in
+> `docs/decisions.md` (2026-07-07 entry) — that regen is expected
+> to reproduce these exact numbers (verified no-op at existing
+> hashes); re-check this row once it lands and is diffed.
 >
-> **W&B:** fp16 rows are the cfg-`f24283b8`/`2b647a18`/
-> `7a4be169` runs (see ds_alpha-sweep-qwen); quantized rows no
-> runs yet.
+> **W&B:** fp16 rows are the cfg-`f24283b8`/`2b647a18`/`7a4be169`
+> runs (see ds_alpha-sweep-qwen), qwen-3b fp16 `jun56c12`;
+> gptq/gptq-int4 rows: llama-3b gptq `u4w3ylt1`, qwen-3b gptq-int4
+> `oe1lbvdy`, qwen-7b gptq-int4 `l38fiewz`.
 
 | llm | trials | status | pass@gb | naive@gb | wei@gb | maj@gb | hr/trial |
 |---|---|---|---|---|---|---|---|
 | llama-1b fp16 | 2 | scored | .6133<br>±.0305 | .4961<br>±.0313 | .4492<br>±.0311 | .3906<br>±.0306 | 3.90 |
 | llama-3b fp16 | 2 | scored | .7656<br>±.0265 | .6562<br>±.0297 | .6289<br>±.0303 | .6016<br>±.0307 | 5.43 |
-| llama-3b gptq | — | planned | — | — | — | — | — |
-| qwen-3b fp16 | — | planned | — | — | — | — | — |
-| qwen-3b gptq-int4 | — | planned | — | — | — | — | — |
-| qwen-7b gptq-int4 | — | planned | — | — | — | — | — |
-| qwen-math-1.5b fp16 | 2 | scored | .8750<br>±.0207 | .7969<br>±.0252 | .7734<br>±.0262 | .7578<br>±.0268 | 3.96 |
+| llama-3b gptq | 2 | scored | .7148<br>±.0283 | .6094<br>±.0306 | .5625<br>±.0311 | .5078<br>±.0313 | 4.45 |
+| qwen-3b fp16 | 2 | scored (pre-fix backup) | .8750<br>±.0207 | .7734<br>±.0262 | .7461<br>±.0273 | .7227<br>±.0280 | 5.00 |
+| qwen-3b gptq-int4 | 2 | scored | .7930<br>±.0254 | .6953<br>±.0288 | .6953<br>±.0288 | .6875<br>±.0290 | 3.87 |
+| qwen-7b gptq-int4 | 2 | scored | .9375<br>±.0152 | .8164<br>±.0242 | .8086<br>±.0246 | .8047<br>±.0248 | 4.20 |
+| qwen-math-1.5b fp16 | 2 | scored (pre-fix backup) | .8750<br>±.0207 | .7969<br>±.0252 | .7734<br>±.0262 | .7578<br>±.0268 | 3.96 |
 
-> **Analysis.** Partial. The 3 fp16 rows track the rlhflow sem
-> model-family table's ordering (qwen-math-1.5b ≈ .875 best of
-> the three, llama-3b ≈ .766, llama-1b ≈ .613), and the naive@gb
-> levels run higher than rlhflow's (consistent with the `rlhflow
-> vs qwen PRM comparison` finding that qwen lifts naive@gb most).
-> The quantization tradeoff can't be read until the 4 quantized
-> rows land.
-> **Limitations / follow-up:** 4 of 7 cells planned (see
-> `experiments.yaml`, group `sem-mcts`, feeds
-> `sem-mcts/model-family-qwen`); n=2 throughout, so read
-> gaps within ~1 SEM as ties. Once the gptq/qwen rows complete,
-> the key read is whether qwen-7b gptq-int4 tops this table too
-> (as it did under cnt-mcts) and whether GPTQ's accuracy cost
-> matches the rlhflow table's.
+> **Analysis.** qwen-7b gptq-int4 is the standout — **.9375**
+> pass@gb, comfortably the best in this table and ahead of every
+> fp16 row too, echoing the cnt-mcts version of this comparison
+> (where qwen-7b gptq-int4 also topped its table). llama-3b gptq
+> trails its fp16 counterpart by ~5 pts (.7148 vs .7656); qwen-3b
+> gptq-int4 trails qwen-3b fp16 by a larger ~8pt gap (.7930 vs
+> .8750) — so quantization's accuracy cost is actually *larger*
+> for Qwen-3b here than for Llama-3b, the opposite of what the
+> single gptq-int4 vs fp16 comparison alone might have suggested.
+> qwen-3b fp16 (.8750) and qwen-math-1.5b fp16 (.8750) tie exactly
+> at n=2 despite very different model sizes — worth another look
+> once the regen confirms these numbers are stable, not just a
+> coincidence of a 2-trial sample.
+> **Limitations / follow-up:** qwen-3b fp16 and qwen-math-1.5b
+> fp16 are currently read from pre-fix backups pending the
+> regen's completion — see `docs/decisions.md` 2026-07-07 for why
+> and what to verify (should be byte-identical; if not, re-open
+> every sem-mcts result for scrutiny). n=2 throughout, so read
+> gaps within ~1 SEM as ties.
+> Once qwen-3b fp16 lands, the key remaining read is whether
+> qwen-3b gptq-int4's accuracy cost (vs fp16) is smaller than
+> Llama's, matching or diverging from the rlhflow table's
+> pattern.
 
 #### rlhflow vs qwen PRM comparison
 > **Compares:** `prm.kind` (Llama-8B-PRM "rlhflow" vs
@@ -991,13 +1004,13 @@ a
 | qwen-3b | rlhflow | last | — | to rerun | — | — | — | — | — |
 | qwen-3b | qwen | min | — | to rerun | — | — | — | — | — |
 | qwen-3b | qwen | prod | — | to rerun | — | — | — | — | — |
-| qwen-3b | qwen | last | — | to rerun | — | — | — | — | — |
+| qwen-3b | qwen | last | 2 | scored (pre-fix backup) | .8750<br>±.0207 | .7734<br>±.0262 | .7461<br>±.0273 | .7227<br>±.0280 | 5.00 |
 | qwen-math-1.5b | rlhflow | min | — | to rerun | — | — | — | — | — |
 | qwen-math-1.5b | rlhflow | prod | — | to rerun | — | — | — | — | — |
 | qwen-math-1.5b | rlhflow | last | — | to rerun | — | — | — | — | — |
 | qwen-math-1.5b | qwen | min | — | to rerun | — | — | — | — | — |
 | qwen-math-1.5b | qwen | prod | — | to rerun | — | — | — | — | — |
-| qwen-math-1.5b | qwen | last | — | to rerun | — | — | — | — | — |
+| qwen-math-1.5b | qwen | last | 2 | scored (pre-fix backup) | .8750<br>±.0207 | .7969<br>±.0252 | .7734<br>±.0262 | .7578<br>±.0268 | 3.96 |
 
 #### LLM vs PRM embeds comparison
 > **Compares:** the diversity-embedding *source* — v01 sources

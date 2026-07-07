@@ -7,6 +7,58 @@ section per decision. Titles carry one or two area prefixes
 (`Area:` or `Area, Area:`) so skimming groups by eye and
 `grep '^## .*Area'` gives a per-topic view.
 
+## 2026-07-07 — Experiments: precautionary regen of two sem-mcts+qwen-PRM cells, old dirs moved aside not deleted, new W&B run ids
+
+**Context:** the 2026-07-06 sem-mcts strip-and-reappend fix
+(below) was verified to be a no-op at every existing recorded
+sem-mcts config hash — every recorded run uses a
+separator-preserving template (Llama+custom or Qwen+native), so
+old and new code produce byte-identical prompts. That verification
+was reasoned/spot-checked, not an exhaustive re-run of every
+sem-mcts result. As a precaution — not because the fix is expected
+to change anything — two cells feeding the new `agg_strategy
+comparison (qwen-3b, qwen-math-1.5b)` sem-mcts table (method
+`mcts_sem_v02`, `prm=qwen`, `agg_strategy=last`, the repo-wide
+default) are being regenerated under the current code before their
+numbers go in that table:
+
+| llm | config hash | pre-fix W&B run_id |
+|---|---|---|
+| qwen-math-1.5b | `cfg-7a4be169` | `q0d6yk4f` |
+| qwen-3b | `cfg-77cae091` | `jun56c12` |
+
+**Why the old dirs had to move, not just relaunch in place:** both
+already had 2/2 `.done` trial markers from before the fix (June
+24/25) — the launcher's resume logic
+(`generate_mcts_sem.py`/`generate_mcts_cnt.py`'s "skip any trial
+whose `.done` marker exists") would skip straight past them and
+regenerate nothing. Moved both result dirs to a `--prefix-backup`
+suffix (same directory, not deleted) so a fresh launch at the same
+config hash starts clean.
+
+**Decision:** relaunch at the identical config (same hash,
+`run.num_trials=2`, unchanged seed) into the now-empty original
+path, rather than restoring/resuming the old run's W&B identity.
+
+**Consequence — new W&B run ids, by design:** `load_wandb_run_id`
+(`utils/configs.py`) reads `run_id` from `{result_dir}/
+manifest.json` on disk; with the old dir moved aside, the fresh
+launch finds no manifest, so `wandb.init(id=None, resume="allow")`
+mints a **new** run. The pre-fix W&B runs (`q0d6yk4f`, `jun56c12`)
+are untouched — they remain the historical record of pre-fix
+generation, not resumed into or overwritten. No manual W&B edit
+was made or needed; this is the same `write_manifest`/
+`load_wandb_run_id` mechanism from the 2026-06-24 resume-
+fragmentation-bug decision, behaving as designed (fresh manifest →
+fresh run) rather than fragmenting an existing run.
+
+**Revisit if:** the regenerated raw `.jsonl` differs from the
+`--prefix-backup` copy at all — that would mean the "no-op at
+existing hashes" verification from the 2026-07-06 entry was wrong,
+and every other sem-mcts result would need the same scrutiny, not
+just these two cells. (Not yet checked as of this writing — regen
+launched manually on separate nodes, diff to follow.)
+
 ## 2026-07-06 — PRM, Scoring: shared `_split_steps` strips the trailing separator before splitting
 
 **Context:** `QwenPRM._build_prompt` and
