@@ -512,16 +512,40 @@ a
 | llama-3b | rlhflow | True | — | to rerun | — | — | — | — | — |
 
 #### model family, size, quantization comparison
+> **Fixed:** method=`mcts_cnt_v01`, prm=rlhflow, agg_strategy=
+> `last`, cpuct=2.0, bs-4, d-20, b=80, prm_batch_size=1 (default,
+> unlike the pre-fix `### cnt-mcts` table's GPTQ rows which used
+> prm_batch_size=2 — here every row uses the same default, so
+> fp16/GPTQ runtimes are directly comparable), tmpl=model-family
+> default (native for Qwen, custom for Llama).
 
 | llm | trials | status | pass@gb | naive@gb | wei@gb | maj@gb | hr/trial |
 |---|---|---|---|---|---|---|---|
 | llama-1b fp16 | — | to rerun | — | — | — | — | — |
 | llama-3b fp16 | — | to rerun | — | — | — | — | — |
 | llama-3b gptq | — | to rerun | — | — | — | — | — |
-| qwen-3b fp16 | — | to rerun | — | — | — | — | — |
+| qwen-3b fp16 | 2 | scored | .8398<br>±.0230 | .6875<br>±.0290 | .7148<br>±.0283 | .7070<br>±.0285 | 4.01 |
 | qwen-3b gptq-int4 | — | to rerun | — | — | — | — | — |
 | qwen-7b gptq-int4 | — | to rerun | — | — | — | — | — |
-| qwen-math-1.5b fp16 | — | to rerun | — | — | — | — | — |
+| qwen-math-1.5b fp16 | 2 | scored | .9102<br>±.0179 | .7695<br>±.0264 | .7891<br>±.0255 | .7812<br>±.0259 | 3.15 |
+
+#### model family, size, quantization comparison (qwen PRM)
+> **Fixed:** method=`mcts_cnt_v01`, prm=qwen, agg_strategy=
+> `last`, cpuct=2.0, bs-4, d-20, b=80, prm_batch_size=1 (default,
+> matched across every row — same rationale as the rlhflow
+> table above), tmpl=model-family default (native for Qwen,
+> custom for Llama). Companion to the rlhflow-PRM table above;
+> same 7 model/quant configs, different scoring PRM.
+
+| llm | trials | status | pass@gb | naive@gb | wei@gb | maj@gb | hr/trial |
+|---|---|---|---|---|---|---|---|
+| llama-1b fp16 | — | to rerun | — | — | — | — | — |
+| llama-3b fp16 | — | to rerun | — | — | — | — | — |
+| llama-3b gptq | — | to rerun | — | — | — | — | — |
+| qwen-3b fp16 | 2 | scored | .8789<br>±.0204 | .7461<br>±.0273 | .7695<br>±.0264 | .7617<br>±.0267 | 3.76 |
+| qwen-3b gptq-int4 | — | to rerun | — | — | — | — | — |
+| qwen-7b gptq-int4 | — | to rerun | — | — | — | — | — |
+| qwen-math-1.5b fp16 | 2 | scored | .8906<br>±.0195 | .8008<br>±.0250 | .8047<br>±.0248 | .7891<br>±.0255 | 2.84 |
 
 #### agg_strategy comparison (qwen-3b, qwen-math-1.5b)
 > **Compares:** `gen.agg_strategy` (`"min"` | `"prod"` | `"last"` —
@@ -731,10 +755,10 @@ a
 >
 > **W&B:** llama-1b ds_alpha=0 `bjz0yxrg`, ds_alpha=10
 > `wsvy5q72`, ds_alpha=100 `hdiysdi6`, ds_alpha=1000 `nlx82zbw`;
-> qwen-math-1.5b ds_alpha=0 `j2ms4lvk`, ds_alpha=10 `ihxrzedi`,
-> ds_alpha=100 `qn3b8lg0`, ds_alpha=1000 `kbwjqw96`; llama-3b
-> ds_alpha=10 `8882rt6u`, ds_alpha=100 `gv2b7ajq`, ds_alpha=1000
-> `fv18snbn`.
+> llama-3b ds_alpha=10 `8882rt6u`, ds_alpha=100 `gv2b7ajq`,
+> ds_alpha=1000 `fv18snbn`; qwen-math-1.5b ds_alpha=0 `j2ms4lvk`,
+> ds_alpha=10 `ihxrzedi`, ds_alpha=100 `qn3b8lg0`, ds_alpha=1000
+> `kbwjqw96`.
 
 | llm | ds_alpha | trials | status | pass@gb | naive@gb | wei@gb | maj@gb | hr/trial |
 |---|---|---|---|---|---|---|---|---|
@@ -742,13 +766,13 @@ a
 | llama-1b | 10 | 2 | scored | .6133<br>±.0305 | .4453<br>±.0311 | .4180<br>±.0309 | .3906<br>±.0306 | 4.93 |
 | llama-1b | 100 (default) | 2 | scored | .5898<br>±.0308 | .4336<br>±.0310 | .4336<br>±.0310 | .4062<br>±.0308 | 4.99 |
 | llama-1b | 1000 | 2 | scored | .5938<br>±.0308 | .4258<br>±.0310 | .4375<br>±.0311 | .3906<br>±.0306 | 4.96 |
+| llama-3b | 10 | 2 | scored | .7422<br>±.0274 | .5430<br>±.0312 | .5781<br>±.0309 | .5703<br>±.0310 | 6.74 |
+| llama-3b | 100 (default) | 2 | scored | .7383<br>±.0275 | .5469<br>±.0312 | .5703<br>±.0310 | .5703<br>±.0310 | 6.61 |
+| llama-3b | 1000 | 2 | scored | .7344<br>±.0277 | .5586<br>±.0311 | .5977<br>±.0307 | .5938<br>±.0308 | 6.71 |
 | qwen-math-1.5b | 0 | 2 | scored | .7812<br>±.0259 | .7266<br>±.0279 | .7266<br>±.0279 | .7227<br>±.0280 | 3.03 |
 | qwen-math-1.5b | 10 | 2 | scored | .8945<br>±.0192 | .7617<br>±.0267 | .7812<br>±.0259 | .7578<br>±.0268 | 4.78 |
 | qwen-math-1.5b | 100 (default) | 2 | scored | .8789<br>±.0204 | .7461<br>±.0273 | .7656<br>±.0265 | .7461<br>±.0273 | 4.81 |
 | qwen-math-1.5b | 1000 | 2 | scored | .8867<br>±.0198 | .7656<br>±.0265 | .7656<br>±.0265 | .7422<br>±.0274 | 4.86 |
-| llama-3b | 10 | 2 | scored | .7422<br>±.0274 | .5430<br>±.0312 | .5781<br>±.0309 | .5703<br>±.0310 | 6.74 |
-| llama-3b | 100 (default) | 2 | scored | .7383<br>±.0275 | .5469<br>±.0312 | .5703<br>±.0310 | .5703<br>±.0310 | 6.61 |
-| llama-3b | 1000 | 2 | scored | .7344<br>±.0277 | .5586<br>±.0311 | .5977<br>±.0307 | .5938<br>±.0308 | 6.71 |
 
 > **Analysis.** The grid is now complete for llama-1b and
 > qwen-math-1.5b (full 0/10/100/1000), and both tell the **same
@@ -789,28 +813,28 @@ a
 > from each run's `timing_state.json` (`avg_time_per_trial_hr`).
 >
 > **W&B:** llama-1b 10/100/1000 `02xrjfdb`/`7hjxksmx`/`fgem65eg`;
-> qwen-math-1.5b 10/100/1000 `6hbme316`/`q0d6yk4f`/`sczanhp2`;
 > llama-3b 10/100/1000 `qvp2vneb`/`ynia3d1p`/`7ccy14de` — the 1000
 > run is one of the two runs recovered by the 2026-06-24 run_id
-> resume-fragmentation fix (`docs/decisions.md`), not a fresh run.
+> resume-fragmentation fix (`docs/decisions.md`), not a fresh run;
+> qwen-math-1.5b 10/100/1000 `6hbme316`/`q0d6yk4f`/`sczanhp2`.
 
 | llm | ds_alpha | trials | status | pass@gb | naive@gb | wei@gb | maj@gb | hr/trial |
 |---|---|---|---|---|---|---|---|---|
 | llama-1b | 10 | 2 | scored | .6211<br>±.0304 | .5352<br>±.0312 | .4844<br>±.0313 | .4258<br>±.0310 | 3.75 |
 | llama-1b | 100 (default) | 2 | scored | .6133<br>±.0305 | .4961<br>±.0313 | .4492<br>±.0311 | .3906<br>±.0306 | 3.90 |
 | llama-1b | 1000 | 2 | scored | .6289<br>±.0303 | .5078<br>±.0313 | .4688<br>±.0312 | .3945<br>±.0306 | 3.92 |
-| qwen-math-1.5b | 10 | 2 | scored | .8789<br>±.0204 | .7969<br>±.0252 | .7891<br>±.0255 | .7695<br>±.0264 | 3.98 |
-| qwen-math-1.5b | 100 (default) | 2 | scored | .8750<br>±.0207 | .7969<br>±.0252 | .7734<br>±.0262 | .7578<br>±.0268 | 3.96 |
-| qwen-math-1.5b | 1000 | 2 | scored | .8750<br>±.0207 | .8008<br>±.0250 | .7500<br>±.0271 | .7539<br>±.0270 | 3.92 |
 | llama-3b | 10 | 2 | scored | .7695<br>±.0264 | .6797<br>±.0292 | .6445<br>±.0300 | .6211<br>±.0304 | 5.44 |
 | llama-3b | 100 (default) | 2 | scored | .7656<br>±.0265 | .6562<br>±.0297 | .6289<br>±.0303 | .6016<br>±.0307 | 5.43 |
 | llama-3b | 1000 | 2 | scored | .7617<br>±.0267 | .6562<br>±.0297 | .6172<br>±.0304 | .5898<br>±.0308 | 5.61 |
+| qwen-math-1.5b | 10 | 2 | scored | .8789<br>±.0204 | .7969<br>±.0252 | .7891<br>±.0255 | .7695<br>±.0264 | 3.98 |
+| qwen-math-1.5b | 100 (default) | 2 | scored | .8750<br>±.0207 | .7969<br>±.0252 | .7734<br>±.0262 | .7578<br>±.0268 | 3.96 |
+| qwen-math-1.5b | 1000 | 2 | scored | .8750<br>±.0207 | .8008<br>±.0250 | .7500<br>±.0271 | .7539<br>±.0270 | 3.92 |
 
 > **Analysis.** The "magnitude past ~10 doesn't matter" shape
 > from the rlhflow table holds under qwen-PRM scoring too: within
 > each model, pass@gb is flat across 10/100/1000 to within SEM
-> (llama-1b .621/.613/.629; qwen-math-1.5b .879/.875/.875;
-> llama-3b .770/.766/.762). Now that all 9 cells are in, the
+> (llama-1b .621/.613/.629; llama-3b .770/.766/.762;
+> qwen-math-1.5b .879/.875/.875). Now that all 9 cells are in, the
 > flatness holds cleanly at llama-3b too — .762 (ds_alpha=1000) is
 > within 1 SEM of both .770 (10) and .766 (100), no trend in
 > either direction. So the ds_alpha plateau is robust to PRM

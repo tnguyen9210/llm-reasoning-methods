@@ -337,11 +337,12 @@ def _embed_candidates(
                 "index (the generator's response_start_idx doesn't "
                 "apply to the PRM sequence)."
             )
-        # One batched forward pass for all candidates of this question.
-        # prm.embed returns [question][answer] -> (seq_len, dim) tensors;
-        # one question here, so [0] is the per-candidate list. The PRM
-        # builds the plain candidate chat with config.gen.system_prompt
-        # so the embedded text matches the policy path's.
+        # Forward pass(es) over all candidates of this question, chunked
+        # by sc.prm_batch_size (see PRM.embed). prm.embed returns
+        # [question][answer] -> (seq_len, dim) tensors; one question
+        # here, so [0] is the per-candidate list. The PRM builds the
+        # plain candidate chat with config.gen.system_prompt so the
+        # embedded text matches the policy path's.
         raw_embeds = prm.embed(
             [question], [candidate_texts],
             system_prompt=config.gen.system_prompt,
