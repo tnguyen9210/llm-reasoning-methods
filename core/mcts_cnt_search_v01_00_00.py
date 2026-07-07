@@ -322,10 +322,11 @@ def mcts_search(question, agent, config, llm_vllm, prm):
     # Template selection (mirrors generate_bon / bon_search): default
     # is the model's NATIVE chat template — each model's own
     # in-distribution format, avoiding the cross-model confound (see
-    # docs/decisions.md 2026-06-13). llm.use_custom_template defaults
-    # True (custom) for Llama; Qwen YAML groups set it False (native)
-    # — see LLMConfig.use_custom_template. Either way the trailing
-    # "\n\n" step separator is preserved by the strip-and-reappend in
+    # docs/decisions/chat-template-per-family.md).
+    # llm.use_custom_template defaults True (custom) for Llama; Qwen
+    # YAML groups set it False (native) — see
+    # LLMConfig.use_custom_template. Either way the trailing "\n\n"
+    # step separator is preserved by the strip-and-reappend in
     # _generate_candidates.
     if config.llm.use_custom_template:
         tokenizer.chat_template = config.gen.custom_chat_template

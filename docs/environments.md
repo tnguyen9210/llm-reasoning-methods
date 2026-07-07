@@ -1,7 +1,7 @@
 # Environments
 
 Two micromamba envs are used side by side. `py311` is canonical for
-experiment results (see `decisions.md`, 2026-06-11); `vllm1` is kept
+experiment results (see `decisions-log.md`, 2026-06-11); `vllm1` is kept
 for comparing environment effects on generated outputs.
 
 Activate with `micromamba activate py311` (or `vllm1`). The SLURM

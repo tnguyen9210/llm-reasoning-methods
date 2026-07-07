@@ -301,7 +301,7 @@ instead of one wide sparse grid.)
 > **Compares:** `prm.kind` (Llama-8B-PRM "rlhflow" vs
 > Qwen-Math-7B-PRM "qwen") — the *scoring* model, not the policy
 > LLM. Both PRMs support scoring via `PRM_REGISTRY`/`build_prm()`
-> (decisions.md, 2026-06-19); this is the scoring-side
+> (decisions-log.md, 2026-06-19); this is the scoring-side
 > counterpart to the embeds-source ablation (sem-mcts,
 > PRM-as-embedder, 2026-06-20).
 >
@@ -443,7 +443,7 @@ instead of one wide sparse grid.)
 > method=`mcts_cnt_v01`. Corrected reruns following the
 > `PRM._split_steps` fix (2026-07-06 — see
 > [findings/coding-findings/prm-step-split-trailing-separator.md](findings/coding-findings/prm-step-split-trailing-separator.md)
-> and `docs/decisions.md`), which affected `agg_strategy="last"`
+> and `docs/decisions-log.md`), which affected `agg_strategy="last"`
 > scoring for non-terminal candidates in every table below. The
 > `### cnt-mcts` section above is kept as-is (method=`mcts_cnt`,
 > pre-fix) for comparison; do not edit it. Table shapes copied
@@ -814,7 +814,7 @@ instead of one wide sparse grid.)
 > **W&B:** llama-1b 10/100/1000 `02xrjfdb`/`7hjxksmx`/`fgem65eg`;
 > llama-3b 10/100/1000 `qvp2vneb`/`ynia3d1p`/`7ccy14de` — the 1000
 > run is one of the two runs recovered by the 2026-06-24 run_id
-> resume-fragmentation fix (`docs/decisions.md`), not a fresh run;
+> resume-fragmentation fix (`docs/decisions-log.md`), not a fresh run;
 > qwen-math-1.5b 10/100/1000 `6hbme316`/`q0d6yk4f`/`sczanhp2`.
 
 | llm | ds_alpha | trials | status | pass@gb | naive@gb | wei@gb | maj@gb | hr/trial |
@@ -855,7 +855,7 @@ instead of one wide sparse grid.)
 > **Fixed:** bs-4, d-20, b=80, tmpl=model-family default,
 > method=`mcts_sem_v02` (PRM embeds), `embeds_proj=sparse512`,
 > `cov_update=sherman_morrison` (sm) — the project's default path
-> (path-identical to exact, proven, see decisions.md).
+> (path-identical to exact, proven, see decisions-log.md).
 >
 > ⚠️ `prm_batch_size` differs by row (1 for llama-3b/gptq/qwen-3b/
 > qwen-3b-gptq-int4/qwen-7b-gptq-int4; 2 for llama-1b/
@@ -912,7 +912,7 @@ instead of one wide sparse grid.)
 > (`cfg-77cae091`) and **qwen-math-1.5b fp16** (`cfg-7a4be169`)
 > are read from the pre-fix `--prefix-backup` copies (numbers
 > below), not the in-progress precautionary regen described in
-> `docs/decisions.md` (2026-07-07 entry) — that regen is expected
+> `docs/decisions-log.md` (2026-07-07 entry) — that regen is expected
 > to reproduce these exact numbers (verified no-op at existing
 > hashes); re-check this row once it lands and is diffed.
 >
@@ -946,7 +946,7 @@ instead of one wide sparse grid.)
 > coincidence of a 2-trial sample.
 > **Limitations / follow-up:** qwen-3b fp16 and qwen-math-1.5b
 > fp16 are currently read from pre-fix backups pending the
-> regen's completion — see `docs/decisions.md` 2026-07-07 for why
+> regen's completion — see `docs/decisions-log.md` 2026-07-07 for why
 > and what to verify (should be byte-identical; if not, re-open
 > every sem-mcts result for scrutiny). n=2 throughout, so read
 > gaps within ~1 SEM as ties.

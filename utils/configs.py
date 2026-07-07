@@ -170,10 +170,10 @@ class LLMConfig:
     # False, use whatever template the model ships with. Default True
     # (custom) for Llama; Qwen YAML groups (conf/llm/qwen_*.yaml) set
     # this False — the vendored template is Llama-3.1-specific and
-    # isn't trained-on for Qwen (docs/decisions.md 2026-06-13; see the
-    # template-bug note in llm-reasoning-mcts-comparison-main for what
-    # happens otherwise). CLI override (llm.use_custom_template=...)
-    # always wins.
+    # isn't trained-on for Qwen (docs/decisions/
+    # chat-template-per-family.md; see the template-bug note in
+    # llm-reasoning-mcts-comparison-main for what happens otherwise).
+    # CLI override (llm.use_custom_template=...) always wins.
     use_custom_template: bool = True
 
 
@@ -454,7 +454,7 @@ def level_dir(cfg) -> str:
 # (find_run_dir), NOT by trusting a re-derived name. Only the        #
 # launcher recomputes (to decide resume-vs-fresh). Full rationale:   #
 # vault note `question-config-name-experiment-naming` /              #
-# docs/decisions.md 2026-06-21.                                      #
+# docs/decisions-log.md 2026-06-21.                                  #
 # --------------------------------------------------------------- #
 
 MANIFEST_FILE = "manifest.json"

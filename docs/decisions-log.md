@@ -1,11 +1,18 @@
-# Design decisions
+# Design decisions log
 
-Append-only log of decisions git history can't show: cross-cutting
-design choices that span multiple files, and deliberate omissions —
-things chosen *not* to be built, and why. Newest first. One `##`
-section per decision. Titles carry one or two area prefixes
+Append-only chronological record of decisions git history can't show:
+cross-cutting design choices that span multiple files, and deliberate
+omissions — things chosen *not* to be built, and why. Newest first.
+One `##` section per decision. Titles carry one or two area prefixes
 (`Area:` or `Area, Area:`) so skimming groups by eye and
 `grep '^## .*Area'` gives a per-topic view.
+
+Every decision gets an entry here, always — this file is the
+chronological spine. When a decision is substantial enough to need a
+table, multiple named alternatives, or an open still-unresolved
+scaffold, it also gets a standalone file in [decisions/](decisions/);
+the log entry then carries a one-line pointer to it rather than
+repeating the full writeup.
 
 ## 2026-07-07 — Search: `embeds_scope="response"` stays unimplemented for `embeds_source="prm"`
 
@@ -562,6 +569,8 @@ fixing the actual bug (Qwen no longer silently gets a foreign template).
 **Revisit if:** the per-family default needs to depend on more than
 just "which YAML group is loaded" (e.g. on dataset or task), at which
 point a real resolver would earn its complexity.
+Full current-state writeup:
+[decisions/chat-template-per-family.md](decisions/chat-template-per-family.md).
 
 ## 2026-06-18 — Hardware, Experiments: fit 7B generator + PRM on a V100S via int4 LLM (primary) or a small PRM (fallback)
 
@@ -908,6 +917,10 @@ with no `continue_final_message` crash.
 the separator even with strip-and-reappend, or the backlogged M2
 template A/B (`llm-prm-deep-dive`) shows native is *worse* than the
 custom template for some model.
+Superseded/refined by the 2026-06-19 entry below (this decision read
+as "native for everyone"; the actual, current, per-family split is
+Llama=custom / Qwen=native). Full current-state writeup:
+[decisions/chat-template-per-family.md](decisions/chat-template-per-family.md).
 
 ## 2026-06-13 — Configs: adopt structured Hydra config schema
 
@@ -1005,6 +1018,7 @@ to keep comparisons with MCTS fair.
 **Why:** MCTS charges budget per expansion regardless of depth, so the
 per-depth factorization was an artifact of the BoB framing; setting the
 total directly makes sweeps and cross-algorithm comparisons explicit.
+Full writeup: [decisions/gen-budget-direct.md](decisions/gen-budget-direct.md).
 
 ## 2026-06-11 — Naming, Configs: BoN keeps `n`; MCTS uses `batch_size`; SAL untouched
 

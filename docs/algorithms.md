@@ -3,7 +3,7 @@
 Map of active search algorithm variants: which core file implements each,
 which launcher runs it, and which config drives it. Algorithm descriptions
 live in the module docstrings of the core files — this file is the index,
-not the spec. Cross-cutting design decisions: [decisions.md](decisions.md).
+not the spec. Cross-cutting design decisions: [decisions-log.md](decisions-log.md).
 Empirical observations about repo behavior: [findings/](findings/README.md).
 
 ## Terminology
@@ -29,70 +29,85 @@ Empirical observations about repo behavior: [findings/](findings/README.md).
 
 | Algorithm | Core file | Launcher | Config |
 |---|---|---|---|
-| CNT-MCTS (PUCT) | `core/mcts_cnt_search_v01_00_00.py` | `generate_mcts_cnt.py` | `conf/mcts_cnt_prm800k.yaml` |
-| BL-MCTS v01 (PUCT, best-first) | `core/mcts_bl_cnt_search_v01_00_00.py` | `generate_mcts_bl_cnt_v01.py` | `conf/mcts_bl_cnt_v01_prm800k.yaml` |
-| BL-MCTS v02 (KUBE) | `core/mcts_bl_cnt_search_v02_00_00.py` | `generate_mcts_bl_cnt_v02.py` | `conf/mcts_bl_cnt_v02_prm800k.yaml` |
+| CNT-MCTS (PUCT), `method=mcts_cnt_v01` | `core/mcts_cnt_search_v01_00_00.py` | `generate_mcts_cnt.py` | `conf/mcts_cnt_prm800k.yaml` |
 | Semantic-MCTS v01 (`mcts_sem_v01`, policy embeds) | `core/mcts_sem_search_v01_00_00.py` | `generate_mcts_sem.py` | `conf/mcts_sem_v01_prm800k.yaml` |
 | Semantic-MCTS v02 (`mcts_sem_v02`, PRM embeds) | `core/mcts_sem_search_v02_00_00.py` | `generate_mcts_sem.py` | `conf/mcts_sem_v02_prm800k.yaml` |
+| BL-MCTS v01 (PUCT, best-first) | `core/mcts_bl_cnt_search_v01_00_00.py` | `generate_mcts_bl_cnt_v01.py` | `conf/mcts_bl_cnt_v01_prm800k.yaml` |
+| BL-MCTS v02 (KUBE) | `core/mcts_bl_cnt_search_v02_00_00.py` | `generate_mcts_bl_cnt_v02.py` | `conf/mcts_bl_cnt_v02_prm800k.yaml` |
 | BoN | `core/bon_search_v01_0_0.py` | `generate_bon.py` | `conf/bon_prm800k.yaml` (+ gsm8k, aime2025) |
 | BoB | `core/bob_search_v03_0_0.py` | `generate_bob_prm800k_v0101.py` | none (params hardcoded in launcher) |
 
-Archived (pre-rename `mcts_embeds` lineage and old `prm800k_*`
-launchers, superseded by the rows above): moved to
-`archive/core/`, `archive/generate/`, `archive/conf/`.
+CNT-MCTS routes under two `method=`/`algo=` labels onto the same core
+file: `mcts_cnt_v01` (default, current) and `mcts_cnt` (retained only so
+older result dirs remain queryable). New experiments always use
+`mcts_cnt_v01`.
 
-## Lineage
+## CNT-MCTS
 
-### CNT-MCTS
-- `v03_01_00` — baseline (rStar-Math-derived). Superseded; archived
-  to `archive/core/`.
-- `v01_00_00` (renumbered from `v05_00_00`, which had reorganized
-  to match the semantic-MCTS file structure with no behavior
-  changes) — Canonical.
+Phase-based root-to-leaf walks: each of `num_phases` outer iterations
+descends from the root via PUCT selection, expanding the first
+unexpanded node it reaches. Only expansions charge against
+`gen_budget`.
 
-### BL-MCTS
-Budget-limited best-first MCTS: explicit `leaf_nodes` frontier with
+## BL-MCTS
+
+Budget-limited best-first MCTS: an explicit `leaf_nodes` frontier with
 global leaf selection, instead of CNT-MCTS's phase-based root-to-leaf
 walks.
-- `v01_00_00` — PUCT leaf selection. Active.
-- `v02_00_00` — KUBE (fractional knapsack) density-based leaf
-  selection; otherwise identical to v01. Active.
+- **v01** — PUCT leaf selection.
+- **v02** — KUBE (fractional-knapsack) density-based leaf selection.
 
-Both variants are maintained in parallel for PUCT-vs-KUBE comparison.
+Both are maintained in parallel for a PUCT-vs-KUBE comparison.
 
-### Semantic-MCTS
-Fresh lineage, renumbered from `v01_00_00` (was `v05_00_00` under the
-old `mcts_embeds` numbering). The two active variants differ only in
-the SOURCE of the diversity embeddings and are maintained in parallel
-for an embedding-source ablation; one launcher (`generate_mcts_sem.py`,
-`algo=mcts_sem_v01|v02`) serves both, building the second vLLM pooling
-engine only when `search.embeds_source == "policy"`.
-- `v01_00_00` — policy embeds. A second vLLM engine (`runner=
+## Semantic-MCTS
+
+Adds an embedding-based diversity bonus to child selection: `q_val =
+ds_beta*q_value + ds_alpha*sqrt(x^T V^-1 x)`, where the second term
+grows for candidates whose pooled embedding points in a direction the
+running covariance `V` has seen little of. One launcher
+(`generate_mcts_sem.py`, `algo=mcts_sem_v01|v02`) serves both variants;
+they differ only in the SOURCE of the diversity embeddings:
+
+- **v01** (`embeds_source=policy`) — a second vLLM engine (`runner=
   "pooling"`) on the generator supplies per-token hidden states.
-  Variant behavior gated behind config flags (defaults reproduce the
-  old `v03_01_00` baseline). Canonical baseline.
-- `v02_00_00` — PRM embeds (`embeds_source=prm`). Same algorithm and
-  the same `embeds_*` knobs as v01, but embeddings come from the PRM's
-  last-layer hidden states (folded into the in-loop `prm.score`
-  forward pass), so no pooling engine is loaded. *Scaffolded; the
-  embedding-source mechanism is not yet implemented — see the module
-  docstring.*
+- **v02** (`embeds_source=prm`, the config default) — embeddings come
+  from a dedicated `prm.embed(...)` forward pass over the plain
+  candidate chat (last-layer hidden states by default, `prm_embeds_layer`
+  selects others), separate from the judge-transcript pass
+  `prm.score(...)` runs. Both reuse the already-loaded PRM, so no
+  second engine is needed.
 
-Earlier `mcts_embeds_search_v03_*` / `v04_01_00` files are archived,
-untouched (not consolidated into the v01 file). The flags that supersede
-them live in v01:
-- `v03_01_00` — baseline.
-- `v03_02_00` — +mean-centering (`embeds_center`, `embeds_mean`).
-- `v03_02_01` — docstring claimed Sherman-Morrison update; not
-  implemented (now a real flag: `cov_update`).
-- `v03_02_02` — last vs avg pooling (`embeds_strategy`).
-- `v03_02_03` — response-only token scope (`embeds_scope`).
-- `v04_01_00` — docstring claimed regenerate-on-revisit; not
-  implemented (now a real flag: `revisit_policy`).
+Both variants pool a candidate's embedding through the same
+`_extract_embeds` pipeline (scope → pool → project → center →
+normalize), so the v01-vs-v02 comparison isolates the embedding model
+alone. Config flags (`utils/configs.py::MCTSSemV01Config` /
+`MCTSSemV02Config`):
 
-### Older exploratory files
-`core/bon_search_v1.py`, `core/bob_search_v01_*` predate the
-current naming scheme; superseded or exploratory, pending archive.
-`core/diverse_reward_search_v*` and `core/mcts_search_extra_v21/
-v61/v72/v73/v81.py` moved to `archive/core/` (`v71` was renamed to
-`core/mcts_search_extra.py`, kept in place).
+- `embeds_strategy`: `"last"` | `"avg"` — pooling over the scoped tokens.
+- `embeds_scope`: `"full"` | `"response"` — which tokens are pooled.
+  `"response"` is unimplemented for `embeds_source="prm"` (the
+  generator-tokenizer `response_start_idx` doesn't apply to the PRM's
+  own tokenization) — see `docs/decisions-log.md` (2026-07-07).
+- `embeds_center` / `embeds_mean`: optional held-out mean subtraction.
+- `cov_update`: `"exact"` | `"sm"` (Sherman-Morrison) — how `V^-1` is
+  maintained across selections; `"sm"` is the default fast path.
+- `revisit_policy`: `"reuse"` | `"regenerate"` — whether a revisited
+  node's candidates are cached or regenerated.
+- `ds_alpha` / `ds_beta`: diversity-bonus weight vs. q-value weight.
+  `ds_alpha` needs to be roughly 100x `ds_beta` since the diversity
+  term's scale at initialization (~10, from `V_inv=(1/lam)*I`) sits far
+  above the PRM score's `[0,1]` range — see
+  [findings/coding-findings/ds-alpha-ds-beta-scale.md](findings/coding-findings/ds-alpha-ds-beta-scale.md).
+  Empirically, turning the bonus on matters; its magnitude past
+  `ds_alpha≈10` does not — see
+  [findings/exp-findings/ds-alpha-diversity-bonus-plateau.md](findings/exp-findings/ds-alpha-diversity-bonus-plateau.md).
+
+Both sem-mcts variants (and CNT-MCTS) carry the `\n\n` step-separator
+strip-and-reappend guard in candidate-generation templating (some chat
+templates trim or crash on a trailing `\n\n`, but the model needs to see
+it to continue instead of emitting EOS) — see
+[findings/coding-findings/library-version-trajectory-completeness.md](findings/coding-findings/library-version-trajectory-completeness.md).
+All PRM scoring relies on `PRM._split_steps` (`core/reward_models.py`)
+so `agg_strategy="last"` scoring isn't corrupted by a bogus trailing
+empty step from vLLM's `include_stop_str_in_output=True` — see
+[findings/coding-findings/prm-step-split-trailing-separator.md](findings/coding-findings/prm-step-split-trailing-separator.md).
