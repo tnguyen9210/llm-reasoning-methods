@@ -969,6 +969,36 @@ a
 > isolate the runtime comparison from the batch-size confound,
 > the way qwen-math-1.5b already is.
 
+#### agg_strategy comparison (qwen-3b, qwen-math-1.5b)
+> **Compares:** `gen.agg_strategy` (`"min"` | `"prod"` | `"last"` —
+> `core/scoring.py::aggregate_scores`) — how a candidate's
+> per-step PRM scores collapse to one scalar. Scoring-side
+> counterpart to the cnt-mcts table of the same name. Note:
+> sem-mcts's `_generate_candidates` already strips the trailing
+> `"\n\n"` before calling `prm.score` (verified — the embed and
+> score paths share the same cleaned `candidate_texts`), so unlike
+> cnt-mcts this table isn't tied to the `_split_steps` fix; it's a
+> fresh sweep, not a rerun.
+>
+> **Fixed:** method=`mcts_sem_v02`, bs-4, d-20, b=80,
+> tmpl=model-family default (native for both models here),
+> proj=sparse512, cov=sm, ds_alpha=100.0, ds_beta=1.0.
+
+| llm | prm | agg_strategy | trials | status | pass@gb | naive@gb | wei@gb | maj@gb | hr/trial |
+|---|---|---|---|---|---|---|---|---|---|
+| qwen-3b | rlhflow | min | — | to rerun | — | — | — | — | — |
+| qwen-3b | rlhflow | prod | — | to rerun | — | — | — | — | — |
+| qwen-3b | rlhflow | last | — | to rerun | — | — | — | — | — |
+| qwen-3b | qwen | min | — | to rerun | — | — | — | — | — |
+| qwen-3b | qwen | prod | — | to rerun | — | — | — | — | — |
+| qwen-3b | qwen | last | — | to rerun | — | — | — | — | — |
+| qwen-math-1.5b | rlhflow | min | — | to rerun | — | — | — | — | — |
+| qwen-math-1.5b | rlhflow | prod | — | to rerun | — | — | — | — | — |
+| qwen-math-1.5b | rlhflow | last | — | to rerun | — | — | — | — | — |
+| qwen-math-1.5b | qwen | min | — | to rerun | — | — | — | — | — |
+| qwen-math-1.5b | qwen | prod | — | to rerun | — | — | — | — | — |
+| qwen-math-1.5b | qwen | last | — | to rerun | — | — | — | — | — |
+
 #### LLM vs PRM embeds comparison
 > **Compares:** the diversity-embedding *source* — v01 sources
 > from the policy LLM (2nd vLLM engine); v02 sources from the
