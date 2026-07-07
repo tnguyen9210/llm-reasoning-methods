@@ -307,6 +307,8 @@ of minting new ones; the two orphan runs were deleted from W&B
 legitimately needs to *clear* run_id — then the "first write
 preserves" assumption would need an explicit flag rather than
 relying on the loaded value.
+Full lineage (this entry plus the 2026-06-17/06-21 entries it
+builds on): [decisions/manifest-runid-resume-design.md](decisions/manifest-runid-resume-design.md).
 
 ## 2026-06-21 — Configs: don't fold timing_state.json into manifest.json
 
@@ -336,6 +338,8 @@ incidental structure.
 bottleneck (e.g. very many small result dirs), or `timing_state`
 gains fields that need cross-referencing with manifest identity at
 read time.
+Part of the manifest/run-id lifecycle thread:
+[decisions/manifest-runid-resume-design.md](decisions/manifest-runid-resume-design.md).
 
 ## 2026-06-21 — Experiments, Configs: fold the W&B run-id sidecar into manifest.json
 
@@ -363,6 +367,8 @@ within it.
 mismatches), then deleted all 42 now-redundant sidecar files.
 Verified `load_wandb_run_id()` still resolves correctly post-
 deletion via spot-check.
+Part of the manifest/run-id lifecycle thread:
+[decisions/manifest-runid-resume-design.md](decisions/manifest-runid-resume-design.md).
 
 ## 2026-06-21 — Configs: result-dir naming = readable prefix + config hash; locate runs by recorded manifest, not recomputed name
 
@@ -807,6 +813,7 @@ mutable run id from the stable config identity.
 **Revisit if:** W&B adds a first-class way to attach late metrics to a
 closed run, or runs move to a store where a content-addressed id is
 natural.
+Full lineage: [decisions/manifest-runid-resume-design.md](decisions/manifest-runid-resume-design.md).
 
 ## 2026-06-17 — Experiments: resume interrupted multi-trial runs; trial-body write order
 
@@ -832,6 +839,7 @@ it isn't "cleaned up" later and silently lost.
 **Caveat (see 2026-06-18):** resume keys off the `.done` marker in the
 `config_name` dir, so any result-affecting knob missing from
 `config_name` lets an unrelated run resume-skip a trial it shouldn't.
+Full lineage: [decisions/manifest-runid-resume-design.md](decisions/manifest-runid-resume-design.md).
 
 ## 2026-06-17 — Configs: self-describing run names (config_name encodes level, model, template)
 
