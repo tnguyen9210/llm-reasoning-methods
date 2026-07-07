@@ -558,25 +558,25 @@ a
 > both PRMs and both models (qwen-math-1.5b rlhflow: .879/.891/
 > .910; qwen: .887/.871/.891 — qwen-3b rlhflow: .863/.848/.840;
 > qwen: .887/.840/.879) — at n=2 trials, no strategy wins
-> outright on the headline metric. naive@gb tells a sharper,
-> **PRM-dependent** story that now replicates across both models:
-> under rlhflow, `min` is the *worst* of the three
-> (qwen-math-1.5b: .684 vs `last`'s .770; qwen-3b: .637 vs
-> `prod`'s .703 — same direction, ~6-9pt gaps); under qwen, `min`
-> is the *best* of the three (qwen-math-1.5b: .813 vs `last`'s
-> .801; qwen-3b: .797 vs `last`'s .746) — the opposite direction,
-> consistently. So "which agg_strategy helps naive@gb" doesn't
-> have a PRM-general answer — it flips depending on the scoring
-> model, and this flip now holds at both model sizes tested.
-> hr/trial is flat across strategies within each PRM (~3.7-4.0hr
-> for qwen-3b vs ~2.8-2.9hr for qwen-math-1.5b — model-size gap
-> dominates over any agg_strategy effect), as expected —
-> aggregation is a scoring-time choice, not a generation-time one.
+> outright on the headline metric. naive@gb is where the two PRMs
+> diverge, but only **one direction clears noise**: under
+> rlhflow, `min` is clearly worst and replicates at both sizes
+> (qwen-math-1.5b: .684 vs `last`'s .770, an 8.6pt gap against a
+> ~2.9pt SEM; qwen-3b: .637 vs `prod`'s .703, a 6.6pt gap against
+> a ~3.0pt SEM — both outside 2 SEM). Under qwen, `min` numerically
+> edges out `last` at both sizes (qwen-math-1.5b: .813 vs .801,
+> +1.2pt; qwen-3b: .797 vs .746, +5.1pt) but neither gap clears
+> even 1 SEM (~2.5-2.7pt) — **not distinguishable from noise at
+> n=2 trials**, so "qwen favors min" is not yet a supportable
+> claim, only "rlhflow clearly penalizes min" is. hr/trial is flat
+> across strategies within each PRM (~3.7-4.0hr for qwen-3b vs
+> ~2.8-2.9hr for qwen-math-1.5b — model-size gap dominates over
+> any agg_strategy effect), as expected — aggregation is a
+> scoring-time choice, not a generation-time one.
 > **Limitations / follow-up:** n=2 trials only per cell; the
-> naive@gb PRM-direction-flip is the most interesting lead here
-> and would benefit from more trials before treating it as
-> settled, but replication across two model sizes is a
-> reasonably strong signal already.
+> rlhflow `min`-penalty is the one finding here that clears noise
+> and replicates across model sizes. The qwen-side gap needs more
+> trials before claiming a direction at all.
 
 ### sem-mcts
 > **Runnable as of 2026-06-18** (rename + migration landed).
