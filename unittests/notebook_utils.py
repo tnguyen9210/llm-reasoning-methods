@@ -54,13 +54,17 @@ def short_model_name(name_or_dir: str) -> str:
     return f"{label}{quant}"
 
 
-def print_step_scores(steps: list[str], scores: list[float]) -> None:
+def print_step_scores(
+    steps: list[str], scores: list[float], start: int = 1,
+) -> None:
     """Print per-step P(correct) scores with a truncated step preview.
 
     Truncates each step to 60 chars so long flamingo-style steps
-    don't flood the output.
+    don't flood the output. `start` labels the first element (default
+    1); pass start=0 when steps[0] is a preamble meant to read as
+    "Step 0" rather than "Step 1".
     """
-    for idx, (step, score) in enumerate(zip(steps, scores), start=1):
+    for idx, (step, score) in enumerate(zip(steps, scores), start=start):
         preview = step if len(step) <= 60 else step[:60] + "..."
         print(f"Step {idx}: P(correct) = {score:.4f}")
         print(preview)

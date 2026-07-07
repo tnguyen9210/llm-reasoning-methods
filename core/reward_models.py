@@ -72,6 +72,19 @@ class PRM(ABC):
         specific position masking lives here.
         """
 
+    @staticmethod
+    def _split_steps(answer: str) -> list[str]:
+        """Split a "\\n\\n"-joined answer into its per-step strings.
+
+        Non-terminal candidates keep a trailing "\\n\\n" (the vLLM
+        stop string, kept via include_stop_str_in_output); strip it
+        first so a plain split doesn't produce a bogus empty final
+        "step" (which would otherwise get its own scored position).
+        Shared by every subclass's step-splitting so the fix lives in
+        one place.
+        """
+        return answer.removesuffix("\n\n").split("\n\n")
+
     def _embed_batch(
         self,
         pairs: list[tuple[str, str]],
@@ -220,7 +233,7 @@ class QwenPRM(PRM):
     def _build_prompt(self, question: str, answer: str) -> str:
         # Each step ends with a separator, including the last, so the
         # final step gets its own score position.
-        steps = answer.split("\n\n")
+        steps = self._split_steps(answer)
         assistant = self.SEPARATOR.join(steps) + self.SEPARATOR
         messages = [
             {"role": "system", "content": self.system_prompt},
@@ -393,7 +406,7 @@ class RLHFlowPRM(PRM):
     ) -> tuple[list[dict], list[dict]]:
         # Parallel conversations: one with `+`, one with the marker.
         conv, marker_conv = [], []
-        for idx, step in enumerate(answer.split("\n\n")):
+        for idx, step in enumerate(self._split_steps(answer)):
             # First user turn carries the problem; later turns are
             # the bare step, judged given the prior chain.
             text = question + " " + step if idx == 0 else step
