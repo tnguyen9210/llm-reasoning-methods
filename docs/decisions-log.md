@@ -14,6 +14,50 @@ scaffold, it also gets a standalone file in [decisions/](decisions/);
 the log entry then carries a one-line pointer to it rather than
 repeating the full writeup.
 
+## 2026-07-07 — Search: sem-mcts v02 child selection dispatches on visit count (first-visit q-only, subsequent q+diversity)
+
+**Context:** `MCTS.select_child` (`mcts_sem_search_v02_00_00.py`) has
+carried a two-scenario dispatch since the file's current form: a first
+visit (`node.visit_count() == 1`) selects by pure q-value argmax
+(`_select_by_q_value`), while any subsequent visit combines q-value
+with the diversity bonus (`_select_by_diversity`). No prior log entry
+recorded the reasoning behind this split; documented here as the
+standing design the current code embodies, following a session
+discussion of the mechanism — treat this as the current implementation
+decision for now, not a closed question.
+
+**Decision (as embodied by current code):** dispatch purely on
+`node.visit_count()`, with no diversity term at all on a child's first
+visit and the full `ds_beta*q + ds_alpha*sqrt(log(1+visits))*diversity`
+combination on every visit after.
+
+**Why:** right after a node is expanded, every child has
+`visit_count() == 1` and a q-value equal to its raw PRM candidate
+score — nothing has been backpropagated through it yet. At that
+instant, `V` (the diversity covariance) hasn't accumulated *any* of
+these specific children's embeddings, so the diversity bonus would
+reflect only unrelated earlier selections, not real signal about how
+these children differ from each other. A plain q-value argmax is
+cleaner than mixing in that noise. Once revisited, `V` has accumulated
+at least one of the node's own children, so the diversity term becomes
+genuinely informative, and the `sqrt(log(1+visits))` factor scales
+exploration pressure up the longer a node has been sunk into (a
+UCB-style schedule).
+
+Regardless of which path fires, the selected child's embedding is
+**unconditionally** folded into the covariance afterward — even on the
+first-visit path that never reads `V_inv` — since that path still
+commits to a child, and omitting the fold-in would let `V_inv` go
+stale relative to what was actually selected.
+
+**Revisit if:** this split is found not to hold up for v01's selection
+shape (v01 uses a differently-structured, within-call greedy-K batch
+selector, not this persistent-state dispatcher — unverified whether
+the same first-visit special case applies there), or if empirical
+comparison ever suggests the first-visit q-only step costs more in
+missed diversity signal than it gains in reduced noise. Full writeup:
+[decisions/child-selection-design.md](decisions/child-selection-design.md).
+
 ## 2026-07-07 — Search: `embeds_scope="response"` stays unimplemented for `embeds_source="prm"`
 
 **Context:** `mcts_sem_search_v02_00_00.py::_embed_candidates`
@@ -63,6 +107,8 @@ worse failure mode to leave unguarded than to block outright.
 guard exists to keep a future misconfiguration loud (`raise`) 
 instead of silently wrong. Revisit if a future ablation specifically
 wants to isolate the response-only embedding under the PRM source.
+Full design across both scope values and both embedding sources:
+[decisions/embeds-scope-design.md](decisions/embeds-scope-design.md).
 
 ## 2026-07-07 — Experiments: precautionary regen of two sem-mcts+qwen-PRM cells, old dirs moved aside not deleted, new W&B run ids
 
@@ -162,6 +208,8 @@ bounded in direction either. Full writeup:
 used `agg_strategy="last"` comes under question — check whether
 it predates this fix, with extra scrutiny for any RLHFlowPRM
 result given the masking risk above.
+This entry is part of a larger PRM-scoring architecture thread; see
+[decisions/prm-scoring-design.md](decisions/prm-scoring-design.md).
 
 ## 2026-07-06 — Search: sem-mcts gets the strip-and-reappend separator guard, applied in place
 
@@ -209,6 +257,8 @@ never affected (native-Qwen preserves the separator).
 **Revisit if:** a future sem search file is added that copies the
 old un-guarded pattern — check for the strip-and-reappend block
 whenever cloning `_generate_candidates` into a new version.
+Full mechanism + current coverage across all 5 MCTS variants:
+[decisions/strip-and-reappend-separator.md](decisions/strip-and-reappend-separator.md).
 
 ## 2026-06-24 — Experiments: read run_id BEFORE the first write_manifest (resume-fragmentation bug)
 
@@ -373,6 +423,8 @@ agreed design). Ran the backfill over the 45 existing dirs.
 starts living outside `cfg` (env var / code constant) — then the
 manifest is incomplete and the hash under-identifies (currently only
 the hardcoded projection seed is in this category, and it's fixed).
+Full lineage (this entry plus the 2026-06-17/06-18/06-20 entries that
+led here): [decisions/config-name-design.md](decisions/config-name-design.md).
 
 ## 2026-06-20 — Reward models: QwenPRM gains _embed_batch; PRM-source embeds drop the scoring separators
 
@@ -447,6 +499,8 @@ dirs now tag `--prmbs-1`; existing `--prmbs-2/4` runs are unaffected
 and stay comparable on the metric that matters (pass@gb).
 **Revisit if:** PRM scoring becomes the wall-clock bottleneck and
 memory allows a larger micro-batch (raise via CLI/YAML).
+Part of the PRM-scoring architecture thread:
+[decisions/prm-scoring-design.md](decisions/prm-scoring-design.md).
 
 ## 2026-06-20 — Configs: config_name always tags projection (incl. --proj-none), reversing "append only when on"
 
@@ -483,6 +537,8 @@ structural fix (manifest + explicit `--result-dir`, or readable-prefix
 + config-hash) is still pending a decision there.
 **Revisit if:** the naming redesign lands (then proj/cov tagging gets
 subsumed by whatever scheme it picks).
+(It did — see the 2026-06-21 entry above.) Full lineage:
+[decisions/config-name-design.md](decisions/config-name-design.md).
 
 ## 2026-06-20 — Configs: cov_update value renamed "sherman_morrison" -> "sm"
 
@@ -502,6 +558,10 @@ and the special-case bridge. The dir tag string is unchanged
 (`--cov-sm` / `--cov-exact`), so existing result dirs are NOT affected
 and don't need renaming — only the accepted CLI/YAML value changed.
 **Revisit if:** never expected — straight rename for consistency.
+This entry covers only the value spelling; for the algorithm itself
+(what `"exact"` vs `"sm"` actually do, and a real divergence between
+v01's and v02's `"sm"` implementations) see
+[decisions/sherman-morrison-covariance-update.md](decisions/sherman-morrison-covariance-update.md).
 
 ## 2026-06-19 — Architecture, Configs: PRM selection is a registry on the PRM module, not a dict per launcher
 
@@ -638,6 +698,11 @@ the point. Full rationale in the vault note
 **Revisit if:** online centering turns out to need a structurally
 different search loop (then it earns its own version), or the ablation
 shows centering mode is irrelevant (then drop the flag).
+**Status (2026-07-07):** the `centering_mode` flag and online-mean
+mechanism described above are not yet implemented — only fixed-mean
+centering exists in code today; online is planned. Full status and
+design across all centering modes:
+[decisions/embeds-centering-design.md](decisions/embeds-centering-design.md).
 
 ## 2026-06-18 — Search: sparse random projection of PRM embeds; fixed matrix; pool→project→center→normalize
 
@@ -720,6 +785,7 @@ same discipline already applied to `enorm`/`ecenter`/`cpuct` etc.
 **Revisit if:** a knob is purely cosmetic (no effect on results) — those
 stay out of the name to keep dirs short (e.g. `embeds_source` is omitted
 because it's implied by the v01/v02 prefix).
+Full lineage: [decisions/config-name-design.md](decisions/config-name-design.md).
 
 ## 2026-06-17 — Experiments, Configs: W&B run-id sidecar so scores reattach to the generation run
 
@@ -787,6 +853,7 @@ knobs currently violate).
 **Revisit if:** names grow unwieldy — then move low-cardinality axes
 (e.g. level) back to the parent dir alone, keeping only result-affecting
 knobs in the leaf name.
+Full lineage: [decisions/config-name-design.md](decisions/config-name-design.md).
 
 ## 2026-06-16 — Models: Qwen2.5-Math (not Qwen2.5-Instruct) is the primary Qwen generator family
 
@@ -848,6 +915,8 @@ completion stats (bon) alike.
 **Revisit if:** BoN n shrinks enough to co-reside with the PRM (then
 fold its scoring in-loop too), or scoring needs to diverge from sal's
 parser semantics (then the byte-identical guarantee no longer applies).
+Part of the PRM-scoring architecture thread:
+[decisions/prm-scoring-design.md](decisions/prm-scoring-design.md).
 
 ## 2026-06-16 — Naming, Configs: PRM scoring batch and CPU procs are separate from search batch_size
 
@@ -866,6 +935,8 @@ path, which had quietly reused the search batch. Conflating them coupled
 PRM throughput to a search hyperparameter and made large-n scoring
 needlessly slow.
 **Revisit if:** never expected — this is a straight de-conflation.
+Part of the PRM-scoring architecture thread:
+[decisions/prm-scoring-design.md](decisions/prm-scoring-design.md).
 
 ## 2026-06-15 — Configs: ExpConfig.search is the base type; each launcher registers its method's subclass
 
@@ -923,6 +994,9 @@ Superseded/refined by the 2026-06-19 entry below (this decision read
 as "native for everyone"; the actual, current, per-family split is
 Llama=custom / Qwen=native). Full current-state writeup:
 [decisions/chat-template-per-family.md](decisions/chat-template-per-family.md).
+For the strip-and-reappend mechanism itself (introduced here) and its
+current coverage across all MCTS variants:
+[decisions/strip-and-reappend-separator.md](decisions/strip-and-reappend-separator.md).
 
 ## 2026-06-13 — Configs: adopt structured Hydra config schema
 
