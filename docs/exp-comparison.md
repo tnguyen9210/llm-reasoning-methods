@@ -60,7 +60,6 @@ instead of one wide sparse grid.)
   different budget or LLM into a Summary row — that breaks
   the comparison.
 
-a
 ---
 
 ## Algorithm name ↔ code mapping
