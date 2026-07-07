@@ -7,6 +7,56 @@ section per decision. Titles carry one or two area prefixes
 (`Area:` or `Area, Area:`) so skimming groups by eye and
 `grep '^## .*Area'` gives a per-topic view.
 
+## 2026-07-07 — Search: `embeds_scope="response"` stays unimplemented for `embeds_source="prm"`
+
+**Context:** `mcts_sem_search_v02_00_00.py::_embed_candidates`
+guards the `prm` embedding source with `if sc.embeds_scope !=
+"full": raise NotImplementedError(...)` — `"response"` scope
+(pool only the assistant-response tokens, not the full
+system/user/assistant sequence) works for `embeds_source="policy"`
+(v01) but is deliberately blocked for `embeds_source="prm"` (v02).
+
+**Why it's blocked:** `response_start_idx` is computed once per
+question, in `_compute_response_start_idx`, using the
+**generator's** tokenizer and chat template
+(`llm_vllm.get_tokenizer()`, via `mcts_search`). Slicing the PRM's
+pooled hidden-state tensor at that index is not merely
+approximate — it is a different tokenizer, over a different chat
+template, so the index has no defined meaning in the PRM's token
+stream. It would silently produce a valid-shaped but wrong slice
+(pooling over the wrong tokens), not an error, which makes this a
+worse failure mode to leave unguarded than to block outright.
+
+**Decision:** leave `embeds_source="prm"` restricted to
+`embeds_scope="full"` and raise `NotImplementedError` for
+`"response"`, rather than reusing the generator's
+`response_start_idx` or attempting an approximate fix.
+
+**What a correct implementation would need**, if ever prioritized:
+1. A parallel `_compute_prm_response_start_idx(question, config,
+   prm.tokenizer)` that renders the PRM's own prefix-only chat
+   (via the PRM's `apply_chat_template`) and counts **its** tokens
+   — the generator's index cannot simply be reused or adjusted.
+2. Threading the PRM's tokenizer to wherever this gets computed
+   (currently only the generator's tokenizer is passed around for
+   this purpose).
+3. Likely a **per-row** start index rather than a single scalar,
+   if `PRM._embed_batch` ever batches candidates across more than
+   one question in a forward pass (today it's one question at a
+   time via `_embed_candidates`, so a scalar suffices only
+   incidentally).
+4. Verification via decoded token spans (confirm the computed
+   index actually lands at the assistant turn for the PRM's
+   template), since a wrong-but-plausible index wouldn't crash —
+   it would just quietly pool the wrong tokens.
+
+**Why deferred rather than fixed now:** the real config
+(`conf/search/mcts_sem_v02.yaml`) already runs
+`embeds_scope=full`, so no current experiment needs this path; the
+guard exists to keep a future misconfiguration loud (`raise`) 
+instead of silently wrong. Revisit if a future ablation specifically
+wants to isolate the response-only embedding under the PRM source.
+
 ## 2026-07-07 — Experiments: precautionary regen of two sem-mcts+qwen-PRM cells, old dirs moved aside not deleted, new W&B run ids
 
 **Context:** the 2026-07-06 sem-mcts strip-and-reappend fix
