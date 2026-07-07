@@ -31,23 +31,28 @@ that strips the trailing separator before splitting
 call it instead of splitting directly. No-op for terminal
 candidates.
 
-**Verified:** live against the loaded `QwenPRM` model
-(`unittests/examine_prm_scores_qwenprm_v1.ipynb`), reproducing
-the pre-fix behavior via a temporary `unittest.mock.patch.object`
-(auto-restoring, no source file touched). The bogus score tracks
-overall trajectory quality rather than the last step specifically
-— cut right after a bad step, it sits next to that step's own
-score (0.0115 vs 0.0103); the divergence appears on full
-trajectories where it reads as holistic P(correct) (0.30,
-between an early bad step at 0.01 and a later recovered step at
-0.51). So the bug substituted trajectory-level value for
-last-step value on every internal search node — bounded in
-direction, but real in magnitude and broad in blast radius.
-Full writeup: [prm-step-split-trailing-separator.md](findings/coding-findings/prm-step-split-trailing-separator.md).
+**Verified:** live against both loaded PRMs (`unittests/
+examine_prm_scores_qwenprm_v1.ipynb`,
+`examine_prm_scores_rlhflowprm_v1.ipynb`), reproducing the
+pre-fix behavior via a temporary `unittest.mock.patch.object`
+(auto-restoring, no source file touched). Both PRMs' bogus score
+reads as a holistic trajectory-level P(correct) rather than a
+per-step judgment — but whether it can *mask* a bad branch is
+PRM-specific: **QwenPRM tracks** a just-failed step tightly (cut
+right after a bad step, bogus 0.0115 vs the bad step's own
+0.0103 — no masking); **RLHFlowPRM masks it** (bogus 0.8130 vs
+the bad step's own 0.2394 — a bad branch scored healthy at
+exactly the point search should prune it). So the bug substituted
+trajectory-level value for last-step value on every internal
+search node, for both PRMs in the codebase — real in magnitude
+and broad in blast radius, and for RLHFlowPRM specifically, not
+bounded in direction either. Full writeup:
+[prm-step-split-trailing-separator.md](findings/coding-findings/prm-step-split-trailing-separator.md).
 
 **Revisit if:** a ds_alpha or model-family comparison result that
 used `agg_strategy="last"` comes under question — check whether
-it predates this fix.
+it predates this fix, with extra scrutiny for any RLHFlowPRM
+result given the masking risk above.
 
 ## 2026-07-06 — Search: sem-mcts gets the strip-and-reappend separator guard, applied in place
 
