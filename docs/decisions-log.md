@@ -1020,7 +1020,7 @@ to keep comparisons with MCTS fair.
 **Why:** MCTS charges budget per expansion regardless of depth, so the
 per-depth factorization was an artifact of the BoB framing; setting the
 total directly makes sweeps and cross-algorithm comparisons explicit.
-Full writeup: [decisions/gen-budget-direct.md](decisions/gen-budget-direct.md).
+Full writeup: [decisions/set-gen-budget-for-mcts-search.md](decisions/set-gen-budget-for-mcts-search.md).
 
 ## 2026-06-11 — Naming, Configs: BoN keeps `n`; MCTS uses `batch_size`; SAL untouched
 
