@@ -22,7 +22,6 @@ Decisions motivated by a finding go in
 - [hf-vllm-memory-residual.md](coding-findings/hf-vllm-memory-residual.md) — 2026-06-12, HF model deletion doesn't free GPU memory
 - [library-version-trajectory-completeness.md](coding-findings/library-version-trajectory-completeness.md) — 2026-06-11, library version changes generated trajectory completeness
 - [prm-step-split-trailing-separator.md](coding-findings/prm-step-split-trailing-separator.md) — 2026-07-06, PRM.score splits a bogus trailing empty step; RLHFlowPRM can mask a bad step, QwenPRM only tracks it
-- [ds-alpha-ds-beta-scale.md](coding-findings/ds-alpha-ds-beta-scale.md) — 2026-07-07, why ds_alpha needs ~100x ds_beta (q_diversity starts ≈10 at init, q_scores is [0,1]) and why ds_beta=1 + ds_alpha-only sweep is lossless
 
 ## exp-findings/
 

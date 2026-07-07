@@ -14,6 +14,49 @@ scaffold, it also gets a standalone file in [decisions/](decisions/);
 the log entry then carries a one-line pointer to it rather than
 repeating the full writeup.
 
+## 2026-07-07 — Search: `ds_alpha` needs to be ~100x `ds_beta`, and `lam` sets what "matched scale" means
+
+**Context:** `_diverse_select` (`mcts_sem_search_v02_00_00.py`) scores
+each candidate arm as `q_vals = ds_beta*q_scores + ds_alpha*
+q_diversity`, where `q_diversity`'s starting scale is set by the ridge
+constant `lam` (`V_0 = lam*I`). Before choosing sweep values, the
+terms' scales needed checking: `q_scores` is a PRM-derived running
+mean — is it actually bounded, how does it compare to `q_diversity`,
+and does `lam` need tuning alongside `ds_alpha`/`ds_beta` or can it be
+treated as fixed?
+
+**Decision (as embodied by the repo's default `ds_alpha=100,
+ds_beta=1, lam=0.01` and its `ds_alpha`-only sweep tables):** confirmed
+`q_scores ∈ [0,1]` (both PRMs emit softmax probabilities;
+`aggregate_scores`'s `min`/`prod`/`last` all preserve that range).
+Derived `q_diversity`'s initial scale in closed form:
+`q_diversity(x) = 1/sqrt(lam)` exactly, at `lam=0.01` giving `≈10` —
+two orders of magnitude above `q_scores`. This is what the existing
+`ds_alpha=100` default is compensating for — scale-matching, not a
+stated belief that diversity should dominate 100x. Because only the
+*ratio* `ds_alpha/ds_beta` affects the argmax, fixing `ds_beta=1` and
+sweeping only `ds_alpha` is lossless. `lam` and `ds_alpha` are coupled,
+not independent — changing `lam` rescales `q_diversity`'s starting
+point and silently changes what an already-tuned `ds_alpha` achieves,
+so the informative single quantity is really `ds_alpha * sqrt(lam)`.
+
+**Why:** without confirming the score range and deriving the
+diversity term's actual scale (as a function of `lam`, not a fixed
+constant), a sweep could easily test values that don't span the
+informative range, or a `ds_alpha` sweep result could be silently
+misapplied after a `lam` change without anyone noticing the scale had
+shifted underneath it.
+
+**Revisit if:** the plateau conclusion this reasoning feeds
+(`ds_alpha ∈ {0,10,100}` sufficient at `lam=0.01`, `1000` redundant —
+see
+[findings/exp-findings/ds-alpha-diversity-bonus-plateau.md](findings/exp-findings/ds-alpha-diversity-bonus-plateau.md))
+is challenged at higher trial counts than the current n=2/cell, or if
+`lam` is ever swept — no `lam` sweep exists in the repo yet, and the
+current sweep range is scoped to `lam=0.01` specifically. Full
+derivation and design-discussion writeup:
+[decisions/tuning-semantic-score-weights-and-lambda.md](decisions/tuning-semantic-score-weights-and-lambda.md).
+
 ## 2026-07-07 — Experiments: three-layer tracking — experiments.yaml (intent) → status.py (computed) → exp-comparison.md (report)
 
 **Context:** the experiment matrix spans many comparison tables,

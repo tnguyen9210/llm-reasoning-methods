@@ -138,8 +138,11 @@ such defense.
 - [prm-batch-size-throughput-memory.md](prm-batch-size-throughput-memory.md)
   — sibling finding; same "flat within noise, don't chase a
   null" reasoning and the `n ≈ 16(σ/Δ)²` trial-count rule.
-- [ds-alpha-ds-beta-scale.md](../coding-findings/ds-alpha-ds-beta-scale.md)
+- [tuning-semantic-score-weights-and-lambda.md](../../decisions/tuning-semantic-score-weights-and-lambda.md)
   — the mechanism behind this finding: why `ds_alpha` needs to
-  be ~100x `ds_beta` (the diversity term's scale at init vs.
-  the `[0,1]`-bounded score term), and why `ds_beta=1` fixed +
-  `ds_alpha`-only sweeping is lossless.
+  be ~100x `ds_beta` (the diversity term's scale at init is
+  `1/sqrt(lam)` vs. the `[0,1]`-bounded score term), why
+  `ds_beta=1` fixed + `ds_alpha`-only sweeping is lossless, and
+  why the sweep range found here is scoped to `lam=0.01`
+  specifically (`lam` and `ds_alpha` are coupled, not
+  independent knobs).

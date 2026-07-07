@@ -95,9 +95,10 @@ alone. Config flags (`utils/configs.py::MCTSSemV01Config` /
   node's candidates are cached or regenerated.
 - `ds_alpha` / `ds_beta`: diversity-bonus weight vs. q-value weight.
   `ds_alpha` needs to be roughly 100x `ds_beta` since the diversity
-  term's scale at initialization (~10, from `V_inv=(1/lam)*I`) sits far
-  above the PRM score's `[0,1]` range — see
-  [findings/coding-findings/ds-alpha-ds-beta-scale.md](findings/coding-findings/ds-alpha-ds-beta-scale.md).
+  term's scale at initialization (`1/sqrt(lam)` ≈10 at the default
+  `lam=0.01`) sits far above the PRM score's `[0,1]` range, and `lam`
+  itself is coupled to `ds_alpha` (not an independent knob) — see
+  [decisions/tuning-semantic-score-weights-and-lambda.md](decisions/tuning-semantic-score-weights-and-lambda.md).
   Empirically, turning the bonus on matters; its magnitude past
   `ds_alpha≈10` does not — see
   [findings/exp-findings/ds-alpha-diversity-bonus-plateau.md](findings/exp-findings/ds-alpha-diversity-bonus-plateau.md).
