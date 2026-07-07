@@ -7,6 +7,48 @@ section per decision. Titles carry one or two area prefixes
 (`Area:` or `Area, Area:`) so skimming groups by eye and
 `grep '^## .*Area'` gives a per-topic view.
 
+## 2026-07-06 — PRM, Scoring: shared `_split_steps` strips the trailing separator before splitting
+
+**Context:** `QwenPRM._build_prompt` and
+`RLHFlowPRM._build_conversations` (`core/reward_models.py`) each
+split a candidate answer into steps with `answer.split("\n\n")`.
+vLLM's `include_stop_str_in_output=True` with `stop=["\n\n"]`
+means non-terminal candidates — generation cut mid-search by the
+stop string, not EOS/length — keep a trailing `"\n\n"`; a plain
+split on that trailing separator produces a bogus empty final
+step, which gets its own scored `<extra_0>` position.
+
+**Bug:** under `agg_strategy="last"` (`core/scoring.py::
+aggregate_scores`), the bogus step's score silently replaced the
+trajectory's true last-step score, on every non-terminal
+candidate. Same root cause as the 2026-06-11 generation-side
+separator bug (finding below), but on the scoring side — a
+distortion rather than a collapse.
+
+**Decision:** add a shared static helper, `PRM._split_steps`,
+that strips the trailing separator before splitting
+(`answer.removesuffix("\n\n").split("\n\n")`); both subclasses
+call it instead of splitting directly. No-op for terminal
+candidates.
+
+**Verified:** live against the loaded `QwenPRM` model
+(`unittests/examine_prm_scores_qwenprm_v1.ipynb`), reproducing
+the pre-fix behavior via a temporary `unittest.mock.patch.object`
+(auto-restoring, no source file touched). The bogus score tracks
+overall trajectory quality rather than the last step specifically
+— cut right after a bad step, it sits next to that step's own
+score (0.0115 vs 0.0103); the divergence appears on full
+trajectories where it reads as holistic P(correct) (0.30,
+between an early bad step at 0.01 and a later recovered step at
+0.51). So the bug substituted trajectory-level value for
+last-step value on every internal search node — bounded in
+direction, but real in magnitude and broad in blast radius.
+Full writeup: [prm-step-split-trailing-separator.md](findings/coding-findings/prm-step-split-trailing-separator.md).
+
+**Revisit if:** a ds_alpha or model-family comparison result that
+used `agg_strategy="last"` comes under question — check whether
+it predates this fix.
+
 ## 2026-07-06 — Search: sem-mcts gets the strip-and-reappend separator guard, applied in place
 
 **Context:** the 2026-06-13 "use native chat templates" decision
