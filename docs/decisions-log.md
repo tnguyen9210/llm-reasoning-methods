@@ -690,6 +690,8 @@ is unchanged, so the win is entirely in the covariance math.
 diversity signal (raise it, or set `embeds_proj=none` + `embeds_dim=4096`
 to feed raw PRM embeds), or a data-adaptive subspace (PCA on PRM embeds)
 is wanted — that's a separate experiment, not a mutation of this fixed R.
+Full current-state writeup:
+[decisions/sparse-random-projection.md](decisions/sparse-random-projection.md).
 
 ## 2026-06-18 — Configs: config_name should encode every knob that changes results
 
