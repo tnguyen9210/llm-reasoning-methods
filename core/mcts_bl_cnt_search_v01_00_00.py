@@ -145,6 +145,9 @@ class BaseTree(BaseModel):
     def __init__(self, **kwargs) -> None:
         super().__init__(**kwargs)
         self.root = self.create_root()
+        # Seed root with one update so visit_count >= 1 from the start;
+        # prevents the visit_count==1 PUCT special case from triggering
+        # on the wrong iteration.
         self.root.update(0)
 
     def create_root(self):
@@ -336,7 +339,8 @@ def _generate_candidates(
         for output in candidate_infos
     ]
     candidate_scores = prm.score(
-        [question], [cand_texts], batch_size=4
+        [question], [cand_texts],
+        batch_size=config.search.prm_batch_size,
     )
     # score returns [question][answer][step]; one question here, so
     # candidate_scores[0] is a list of candidates, each a per-step
@@ -363,6 +367,15 @@ def mcts_search(question, agent, config, llm_vllm, prm):
     Only expansions charge gen_cnt.
     """
     tokenizer = llm_vllm.get_tokenizer()
+    # Template selection (mirrors generate_bon / bon_search): default
+    # is the model's NATIVE chat template — each model's own
+    # in-distribution format, avoiding the cross-model confound (see
+    # docs/decisions/chat-template-per-family.md).
+    # llm.use_custom_template defaults True (custom) for Llama; Qwen
+    # YAML groups set it False (native) — see
+    # LLMConfig.use_custom_template. Either way the trailing "\n\n"
+    # step separator is preserved by the strip-and-reappend in
+    # _generate_candidates.
     if config.llm.use_custom_template:
         tokenizer.chat_template = config.gen.custom_chat_template
 
@@ -483,11 +496,20 @@ def _search(batch_of_questions, config, trial_idx, llm_vllm, prm):
     # over phases.
     results: Dict[str, Any] = defaultdict(list)
     results["completions"] = batch_completions
+    # comp_depth: per completion, tree depth at which it finished.
     results["comp_depth"] = batch_comp_depth
+    # comp_phase: per completion, MCTS phase it finished in.
     results["comp_phase"] = batch_comp_phase
+    # comp_gen: per completion, generation count when it finished.
     results["comp_gen"] = batch_comp_gen
+    # q_total_gens: per question, total generations used (budget).
     results["q_total_gens"] = batch_q_total_gens
+    # q_last_phase: per question, final MCTS phase index reached.
     results["q_last_phase"] = batch_q_last_phase
+    # phase_depths: per question, depth of the selected leaf on each
+    # phase that backprops (not appended on an expand phase — this
+    # frontier-based search has no fixed root-to-leaf walk per phase).
     results["phase_depths"] = batch_phase_depths
+    # q_nodes_max_depth: per question, # nodes that hit max depth.
     results["q_nodes_max_depth"] = batch_q_nodes_max_depth
     return results

@@ -239,6 +239,12 @@ class BLMCTSCntConfig(SearchConfig):
     gen_budget: int = 80          # total generations across the run
     cpuct: float = 2.0
 
+    # PRM forward-pass micro-batch *inside* the search loop (distinct
+    # from prm.score_batch_size, which scores the final dataset). Kept
+    # small because in-loop scoring is per-candidate-set. Mirrors
+    # MCTSCntConfig.prm_batch_size.
+    prm_batch_size: int = 1
+
 
 @dataclass
 class MCTSSemV01Config(SearchConfig):
