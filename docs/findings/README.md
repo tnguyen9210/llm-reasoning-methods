@@ -22,6 +22,7 @@ Decisions motivated by a finding go in
 - [hf-vllm-memory-residual.md](coding-findings/hf-vllm-memory-residual.md) — 2026-06-12, HF model deletion doesn't free GPU memory
 - [library-version-trajectory-completeness.md](coding-findings/library-version-trajectory-completeness.md) — 2026-06-11, library version changes generated trajectory completeness
 - [prm-step-split-trailing-separator.md](coding-findings/prm-step-split-trailing-separator.md) — 2026-07-06, PRM.score splits a bogus trailing empty step; RLHFlowPRM can mask a bad step, QwenPRM only tracks it
+- [compute-stats-sympy-hang.md](coding-findings/compute-stats-sympy-hang.md) — 2026-07-07, compute_stats.py's signal.alarm can't interrupt a sympy hang on a pathological boxed answer; fixed by using grader2's existing multiprocessing hard-kill path
 
 ## exp-findings/
 

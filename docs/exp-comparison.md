@@ -517,16 +517,40 @@ instead of one wide sparse grid.)
 > prm_batch_size=2 — here every row uses the same default, so
 > fp16/GPTQ runtimes are directly comparable), tmpl=model-family
 > default (native for Qwen, custom for Llama).
+>
+> **W&B:** llama-1b `w0e8cidi`, qwen-7b gptq-int4 `qumxbcc8` (both
+> generated 2026-07-07; scoring backfilled via `compute_stats.py`
+> since the generation runs predate `eval/*` W&B logging).
 
 | llm | trials | status | pass@gb | naive@gb | wei@gb | maj@gb | hr/trial |
 |---|---|---|---|---|---|---|---|
-| llama-1b fp16 | — | to rerun | — | — | — | — | — |
+| llama-1b fp16 | 2 | scored | .5430<br>±.0312 | .4258<br>±.0310 | .3984<br>±.0307 | .3867<br>±.0305 | 2.68 |
 | llama-3b fp16 | — | to rerun | — | — | — | — | — |
 | llama-3b gptq | — | to rerun | — | — | — | — | — |
 | qwen-3b fp16 | 2 | scored | .8398<br>±.0230 | .6875<br>±.0290 | .7148<br>±.0283 | .7070<br>±.0285 | 4.01 |
-| qwen-3b gptq-int4 | — | to rerun | — | — | — | — | — |
-| qwen-7b gptq-int4 | — | to rerun | — | — | — | — | — |
+| qwen-3b gptq-int4 | 2 | scored | .7812<br>±.0259 | .6445<br>±.0300 | .6797<br>±.0292 | .6641<br>±.0296 | 2.97 |
+| qwen-7b gptq-int4 | 2 | scored | .9180<br>±.0172 | .7148<br>±.0283 | .7852<br>±.0257 | .7812<br>±.0259 | 3.36 |
 | qwen-math-1.5b fp16 | 2 | scored | .9102<br>±.0179 | .7695<br>±.0264 | .7891<br>±.0255 | .7812<br>±.0259 | 3.15 |
+
+> **Fixed a real `compute_stats.py` hang while filling this row.**
+> `qwen-3b gptq-int4` (rlhflow) reproducibly hung — bisected to one
+> record (`test/precalculus/920.json`, a matrix-power question)
+> whose model completion boxed a whole equation instead of a value;
+> comparing it via `sympy` hung so hard that `signal.alarm`
+> (`utils/metrics.py::run_with_timeout`/`_grade_pred`) couldn't
+> interrupt it — signals only fire between Python bytecode
+> instructions, and the stuck call was in `sympy`'s C-level code.
+> Fixed by passing `timeout=True` to `grader2.math_equal` at both
+> call sites, routing symbolic comparison through `grader2.py`'s
+> already-existing (but previously unused by `metrics.py`) hard-kill
+> subprocess path (`call_with_timeout`/`symbolic_equal_process`,
+> `multiprocessing.Process.terminate()`) instead of in-process
+> comparison. Verified: the poison record now resolves in ~1-10s
+> instead of hanging forever; both trial files replayed clean
+> end-to-end; the real `compute_stats.py` invocation for this cell
+> now completes in ~1 minute. See
+> [findings/coding-findings/compute-stats-sympy-hang.md](findings/coding-findings/compute-stats-sympy-hang.md)
+> for the full write-up.
 
 #### model family, size, quantization comparison (qwen PRM)
 > **Fixed:** method=`mcts_cnt_v01`, prm=qwen, agg_strategy=
@@ -535,15 +559,20 @@ instead of one wide sparse grid.)
 > table above), tmpl=model-family default (native for Qwen,
 > custom for Llama). Companion to the rlhflow-PRM table above;
 > same 7 model/quant configs, different scoring PRM.
+>
+> **W&B:** llama-1b `cqbxegfu`, llama-3b `sfy5oinp`, llama-3b gptq
+> `34hihgfu`, qwen-3b gptq-int4 `pr4yz0v3`, qwen-7b gptq-int4
+> `pk4vy32g` (all generated 2026-07-07; scoring backfilled via
+> `compute_stats.py`).
 
 | llm | trials | status | pass@gb | naive@gb | wei@gb | maj@gb | hr/trial |
 |---|---|---|---|---|---|---|---|
-| llama-1b fp16 | — | to rerun | — | — | — | — | — |
-| llama-3b fp16 | — | to rerun | — | — | — | — | — |
-| llama-3b gptq | — | to rerun | — | — | — | — | — |
+| llama-1b fp16 | 2 | scored | .6367<br>±.0301 | .5352<br>±.0312 | .4961<br>±.0313 | .4531<br>±.0312 | 2.38 |
+| llama-3b fp16 | 2 | scored | .7656<br>±.0265 | .6758<br>±.0293 | .6523<br>±.0298 | .6445<br>±.0300 | 4.02 |
+| llama-3b gptq | 2 | scored | .7148<br>±.0283 | .6055<br>±.0306 | .5781<br>±.0309 | .5625<br>±.0311 | 2.85 |
 | qwen-3b fp16 | 2 | scored | .8789<br>±.0204 | .7461<br>±.0273 | .7695<br>±.0264 | .7617<br>±.0267 | 3.76 |
-| qwen-3b gptq-int4 | — | to rerun | — | — | — | — | — |
-| qwen-7b gptq-int4 | — | to rerun | — | — | — | — | — |
+| qwen-3b gptq-int4 | 2 | scored | .8320<br>±.0234 | .7031<br>±.0286 | .7109<br>±.0284 | .6914<br>±.0289 | 2.68 |
+| qwen-7b gptq-int4 | 2 | scored | .9102<br>±.0179 | .8086<br>±.0246 | .8164<br>±.0242 | .8008<br>±.0250 | 3.11 |
 | qwen-math-1.5b fp16 | 2 | scored | .8906<br>±.0195 | .8008<br>±.0250 | .8047<br>±.0248 | .7891<br>±.0255 | 2.84 |
 
 #### agg_strategy comparison (qwen-3b, qwen-math-1.5b)
@@ -890,7 +919,7 @@ instead of one wide sparse grid.)
 | llama-1b | qwen | 0.01 | 0.1 | 1 | — | planned | — | — | — | — | — |
 | llama-1b | qwen | **1.0** | **10** | **10** | **—** | **planned (step 1)** | — | — | — | — | — |
 | llama-1b | qwen | 0.1 | 3.16 | 10 | — | planned | — | — | — | — | — |
-| llama-1b | qwen | **0.01** | **0.1** | **10** | **—** | **planned (step 1)** | — | — | — | — | — |
+| llama-1b | qwen | **0.01** | **1.0** | **10** | **—** | **planned (step 1)** | — | — | — | — | — |
 | llama-1b | qwen | 1.0 | 100 | 100 | — | planned | — | — | — | — | — |
 | llama-1b | qwen | 0.1 | 31.6 | 100 | — | planned | — | — | — | — | — |
 | llama-1b | qwen | 0.01 | 10 | 100 | 2 | scored (see qwen-PRM ds_alpha=10 above) | .6211<br>±.0304 | .5352<br>±.0312 | .4844<br>±.0313 | .4258<br>±.0310 | 3.75 |
@@ -939,7 +968,7 @@ instead of one wide sparse grid.)
 | llama-3b | qwen | 0.01 | 0.1 | 1 | — | planned | — | — | — | — | — |
 | llama-3b | qwen | **1.0** | **10** | **10** | **—** | **planned (step 1)** | — | — | — | — | — |
 | llama-3b | qwen | 0.1 | 3.16 | 10 | — | planned | — | — | — | — | — |
-| llama-3b | qwen | **0.01** | **0.1** | **10** | **—** | **planned (step 1)** | — | — | — | — | — |
+| llama-3b | qwen | **0.01** | **1.0** | **10** | **—** | **planned (step 1)** | — | — | — | — | — |
 | llama-3b | qwen | 1.0 | 100 | 100 | — | planned | — | — | — | — | — |
 | llama-3b | qwen | 0.1 | 31.6 | 100 | — | planned | — | — | — | — | — |
 | llama-3b | qwen | 0.01 | 10 | 100 | 2 | scored (see qwen-PRM ds_alpha=10 above) | .7695<br>±.0264 | .6797<br>±.0292 | .6445<br>±.0300 | .6211<br>±.0304 | 5.44 |

@@ -48,13 +48,22 @@ def run_with_timeout(
     fn_extract_answer, fn_grade, completion, gt_answer, timeout=2
 ):
     """Extract an answer from `completion` and grade it against
-    `gt_answer`, aborting if it runs past `timeout` seconds (the
-    sympy grader can hang on pathological strings)."""
+    `gt_answer`, aborting if it runs past `timeout` seconds.
+
+    The grading call passes timeout=True so grader2.math_equal routes
+    symbolic comparison through its multiprocessing hard-kill path
+    (call_with_timeout / symbolic_equal_process) instead of comparing
+    in-process: sympy can hang on pathological strings (e.g. a boxed
+    equation instead of a value) in ways signal.alarm cannot interrupt
+    -- signals only fire between Python bytecode instructions, and a
+    stuck sympy call can sit entirely in C. The signal.alarm here still
+    bounds fn_extract_answer (pure-Python, not sympy) and acts as a
+    second guard around the whole call."""
     signal.signal(signal.SIGALRM, timeout_handler)
     signal.alarm(timeout)
     try:
         c_answer = fn_extract_answer(completion, 'math')
-        result = fn_grade(c_answer, gt_answer)
+        result = fn_grade(c_answer, gt_answer, timeout=True)
     except TimeoutException:
         print(f"Timeout: {completion}")
         c_answer = None
@@ -66,12 +75,14 @@ def run_with_timeout(
 
 def _grade_pred(pred_field, gt_answer, timeout=2):
     """Grade a single pred_*@gb field string against the ground
-    truth. Returns bool (False on timeout)."""
+    truth. Returns bool (False on timeout). See run_with_timeout for
+    why grading passes timeout=True (hard-kill subprocess, not
+    signal.alarm)."""
     pred_answer = parser.extract_answer(pred_field, 'math')
     signal.signal(signal.SIGALRM, timeout_handler)
     signal.alarm(timeout)
     try:
-        return grader2.math_equal(pred_answer, gt_answer)
+        return grader2.math_equal(pred_answer, gt_answer, timeout=True)
     except TimeoutException:
         return False
     finally:
