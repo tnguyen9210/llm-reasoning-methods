@@ -878,7 +878,7 @@ instead of one wide sparse grid.)
 > lower-bound check to this PRM, but is deferred — the rlhflow
 > table already establishes the 0→on jump.
 
-#### lam / ds_alpha joint sweep (v02, llama-1b, design — not yet run)
+#### lam / ds_alpha joint sweep (v02, llama-1b, step 1 done)
 > **Compares:** whether `lam` (the ridge constant setting `V`'s
 > initial scale, `V_0 = lam*I`) and `ds_alpha` are truly redundant
 > along the derived invariant `w_eff = ds_alpha/sqrt(lam)`, or
@@ -910,13 +910,15 @@ instead of one wide sparse grid.)
 > `w_eff` at one fixed `lam` (skip the rest of the grid); if they
 > disagree outside SEM, run the full grid.
 >
-> ⚠️ Not started — no `experiments.yaml` entries yet. Under
-> `prm=qwen`, llama-1b has **no existing `ds_alpha=0` (w_eff=0)
-> baseline** to reuse (the qwen-PRM `ds_alpha sweep (v02, qwen PRM)`
-> table above only has 10/100/1000 for llama-1b; only the *rlhflow*
-> table has a llama-1b `ds_alpha=0` row) — so the `w_eff=0` row here
-> is genuinely new. The `w_eff=100, lam=0.01` row reuses the already-
-> scored llama-1b `ds_alpha=10` cell from the qwen-PRM sweep table.
+> ✅ Step 1 done (2026-07-08), scored via `compute_stats.py` — no
+> `experiments.yaml` entries were added for these runs (launched and
+> generated directly; see below). Under `prm=qwen`, llama-1b still
+> has **no existing `ds_alpha=0` (w_eff=0) baseline** (the qwen-PRM
+> `ds_alpha sweep (v02, qwen PRM)` table above only has 10/100/1000
+> for llama-1b; only the *rlhflow* table has a llama-1b `ds_alpha=0`
+> row) — that row is still not started. The `w_eff=100, lam=0.01`
+> row reuses the already-scored llama-1b `ds_alpha=10` cell from the
+> qwen-PRM sweep table.
 
 | llm | prm | lam | ds_alpha | w_eff | trials | status | pass@gb | naive@gb | wei@gb | maj@gb | hr/trial |
 |---|---|---|---|---|---|---|---|---|---|---|---|
@@ -927,30 +929,43 @@ instead of one wide sparse grid.)
 | llama-1b | qwen | 1.0 | 0.3 | 0.3 | — | planned | — | — | — | — | — |
 | llama-1b | qwen | 0.1 | 0.0949 | 0.3 | — | planned | — | — | — | — | — |
 | llama-1b | qwen | 0.01 | 0.03 | 0.3 | — | planned | — | — | — | — | — |
-| llama-1b | qwen | 1.0 | 1 | 1 | — | planned | — | — | — | — | — |
-| llama-1b | qwen | 0.1 | 0.316 | 1 | — | planned | — | — | — | — | — |
-| llama-1b | qwen | 0.01 | 0.1 | 1 | — | planned | — | — | — | — | — |
+| llama-1b | qwen | 1.0 | 1 | 1 | 2 | scored | .5781<br>±.0309 | .5078<br>±.0313 | .4883<br>±.0313 | .4805<br>±.0313 | — |
+| llama-1b | qwen | 0.1 | 0.316 | 1 | 2 | scored | .6016<br>±.0307 | .5391<br>±.0312 | .5352<br>±.0312 | .5000<br>±.0313 | — |
+| llama-1b | qwen | 0.01 | 0.1 | 1 | 2 | scored | .6094<br>±.0306 | .5391<br>±.0312 | .5039<br>±.0313 | .4727<br>±.0313 | — |
 | llama-1b | qwen | 1.0 | 3.0 | 3.0 | — | planned | — | — | — | — | — |
 | llama-1b | qwen | 0.1 | 0.949 | 3.0 | — | planned | — | — | — | — | — |
 | llama-1b | qwen | 0.01 | 0.3 | 3.0 | — | planned | — | — | — | — | — |
-| llama-1b | qwen | **1.0** | **10** | **10** | **—** | **planned (step 1)** | — | — | — | — | — |
-| llama-1b | qwen | 0.1 | 3.16 | 10 | — | planned | — | — | — | — | — |
-| llama-1b | qwen | **0.01** | **1.0** | **10** | **—** | **planned (step 1)** | — | — | — | — | — |
+| llama-1b | qwen | **1.0** | **10** | **10** | **2** | **scored (step 1)** | **.6172<br>±.0304** | **.5273<br>±.0313** | **.4766<br>±.0313** | **.4375<br>±.0311** | — |
+| llama-1b | qwen | 0.1 | 3.16 | 10 | 2 | scored | .6133<br>±.0305 | .5156<br>±.0313 | .4766<br>±.0313 | .4375<br>±.0311 | — |
+| llama-1b | qwen | **0.01** | **1.0** | **10** | **2** | **scored (step 1)** | **.6250<br>±.0303** | **.5469<br>±.0312** | **.5039<br>±.0313** | **.4648<br>±.0312** | — |
 | llama-1b | qwen | 1.0 | 100 | 100 | — | planned | — | — | — | — | — |
 | llama-1b | qwen | 0.1 | 31.6 | 100 | — | planned | — | — | — | — | — |
 | llama-1b | qwen | 0.01 | 10 | 100 | 2 | scored (see qwen-PRM ds_alpha=10 above) | .6211<br>±.0304 | .5352<br>±.0312 | .4844<br>±.0313 | .4258<br>±.0310 | 3.75 |
 
-> **Analysis.** No new data yet — this is the design table for the
-> lam/ds_alpha joint-tuning procedure, not a results table. The
-> `w_eff=100, lam=0.01` row reuses an already-scored cell from the
-> qwen-PRM `ds_alpha sweep (v02, qwen PRM)` table (same config, so no
-> need to re-run); every other cell, including `w_eff=0`, is new.
-> **Limitations / follow-up:** this table is queued *after* the
-> llama-3b table below — run its step 1 first and use that result to
-> decide whether this table needs the full grid or just its own two
-> step-1 cells.
+> **Analysis.** Step 1 done: `w_eff=10` at `lam=1.0`
+> (pass@gb=.6172±.0304) and `lam=0.01` (pass@gb=.6250±.0303) agree
+> within SEM (Δ=.008, naive@gb Δ=.020, both ≪ SEM≈.031) — same
+> conclusion as the llama-3b table below. Per the procedure's own
+> rule, `lam`'s independent role is negligible here too, so the
+> remaining `lam≠0.01` on-ramp cells (`w_eff∈{0.1,0.3,1,3}` at
+> `lam=1.0`/`0.1`) are skippable; only the `w_eff=0` gap-closer and
+> the `lam=0.01` 1D sweep are worth finishing. **The `w_eff=1` row is
+> also done** (all three `lam` values scored: 1.0→.578, 0.1→.602,
+> 0.01→.609 pass@gb — consistent with the same no-lam-effect
+> pattern, though noisier at this smaller `w_eff`). `w_eff=100,
+> lam=0.01` reuses the already-scored qwen-PRM `ds_alpha=10` cell (no
+> re-run needed); `w_eff=1000, lam=0.01` (pass@gb=.6289±.0303) was
+> also generated but isn't part of this table's own grid — it
+> matches the already-scored llama-1b `ds_alpha=1000` row in the
+> qwen-PRM sweep table above (same config, reused, not duplicated
+> here).
+> **Limitations / follow-up:** `w_eff=0` (`lam=0.01, ds_alpha=0`) and
+> the `w_eff∈{0.1,0.3,3.0}` on-ramp cells at non-`lam=0.01` values are
+> still not started — low priority now that step 1 confirms `lam` is
+> negligible; the `lam=0.01` 1D sweep (`w_eff=0` through `100`) is
+> the one worth completing.
 
-#### lam / ds_alpha joint sweep (v02, llama-3b, design — not yet run)
+#### lam / ds_alpha joint sweep (v02, llama-3b, step 1 done)
 > **Compares:** the same `lam`/`ds_alpha` joint-tuning question as
 > the llama-1b table above, on llama-3b. **This is the table queued
 > to run first** — llama-3b has no existing `ds_alpha=0` baseline
@@ -972,42 +987,58 @@ instead of one wide sparse grid.)
 > before) and is independent of the step-1 outcome, so it's fine to
 > launch alongside step 1 rather than wait.
 >
-> ⚠️ Not started — no `experiments.yaml` entries yet. Launch
-> commands (given 2026-07-07): `generate_mcts_sem.py --config-name
+> ✅ Step 1 done (2026-07-08) — both step-1 cells generated 2026-07-07
+> and scored via `compute_stats.py` 2026-07-08 (no `experiments.yaml`
+> entries added; launched and generated directly). The `w_eff=0` gap-
+> closer (`lam=0.01, ds_alpha=0`) is still not generated. Launch
+> command used: `generate_mcts_sem.py --config-name
 > mcts_sem_v02_prm800k llm=llama_3b prm=qwen_prm
 > search.lam=<lam> search.ds_alpha=<ds_alpha> search.ds_beta=1.0`.
 
 | llm | prm | lam | ds_alpha | w_eff | trials | status | pass@gb | naive@gb | wei@gb | maj@gb | hr/trial |
 |---|---|---|---|---|---|---|---|---|---|---|---|
-| llama-3b | qwen | 0.01 | **0** | **0** | **—** | **planned (step 1: new gap-closing cell)** | — | — | — | — | — |
+| llama-3b | qwen | 0.01 | **0** | **0** | — | planned (step 1: new gap-closing cell) | — | — | — | — | — |
 | llama-3b | qwen | 1.0 | 0.1 | 0.1 | — | planned | — | — | — | — | — |
 | llama-3b | qwen | 0.1 | 0.0316 | 0.1 | — | planned | — | — | — | — | — |
 | llama-3b | qwen | 0.01 | 0.01 | 0.1 | — | planned | — | — | — | — | — |
 | llama-3b | qwen | 1.0 | 0.3 | 0.3 | — | planned | — | — | — | — | — |
 | llama-3b | qwen | 0.1 | 0.0949 | 0.3 | — | planned | — | — | — | — | — |
 | llama-3b | qwen | 0.01 | 0.03 | 0.3 | — | planned | — | — | — | — | — |
-| llama-3b | qwen | 1.0 | 1 | 1 | — | planned | — | — | — | — | — |
-| llama-3b | qwen | 0.1 | 0.316 | 1 | — | planned | — | — | — | — | — |
-| llama-3b | qwen | 0.01 | 0.1 | 1 | — | planned | — | — | — | — | — |
+| llama-3b | qwen | 1.0 | 1 | 1 | 2 | scored | .7109<br>±.0284 | .6406<br>±.0300 | .6328<br>±.0302 | .6328<br>±.0302 | — |
+| llama-3b | qwen | 0.1 | 0.316 | 1 | 2 | scored | .7109<br>±.0284 | .6641<br>±.0296 | .6562<br>±.0297 | .6484<br>±.0299 | — |
+| llama-3b | qwen | 0.01 | 0.1 | 1 | 2 | scored | .7266<br>±.0279 | .6680<br>±.0295 | .6602<br>±.0297 | .6484<br>±.0299 | — |
 | llama-3b | qwen | 1.0 | 3.0 | 3.0 | — | planned | — | — | — | — | — |
 | llama-3b | qwen | 0.1 | 0.949 | 3.0 | — | planned | — | — | — | — | — |
 | llama-3b | qwen | 0.01 | 0.3 | 3.0 | — | planned | — | — | — | — | — |
-| llama-3b | qwen | **1.0** | **10** | **10** | **—** | **planned (step 1)** | — | — | — | — | — |
-| llama-3b | qwen | 0.1 | 3.16 | 10 | — | planned | — | — | — | — | — |
-| llama-3b | qwen | **0.01** | **1.0** | **10** | **—** | **planned (step 1)** | — | — | — | — | — |
-| llama-3b | qwen | 1.0 | 100 | 100 | — | planned | — | — | — | — | — |
-| llama-3b | qwen | 0.1 | 31.6 | 100 | — | planned | — | — | — | — | — |
+| llama-3b | qwen | **1.0** | **10** | **10** | **2** | **scored (step 1)** | **.7422<br>±.0274** | **.6562<br>±.0297** | **.6445<br>±.0300** | **.6211<br>±.0304** | — |
+| llama-3b | qwen | 0.1 | 3.16 | 10 | 2 | scored | .7578<br>±.0268 | .6719<br>±.0294 | .6602<br>±.0297 | .6289<br>±.0303 | — |
+| llama-3b | qwen | **0.01** | **1.0** | **10** | **2** | **scored (step 1)** | **.7500<br>±.0271** | **.6562<br>±.0297** | **.6562<br>±.0297** | **.6523<br>±.0298** | — |
+| llama-3b | qwen | 1.0 | 100 | 100 | 2 | scored | .7383<br>±.0275 | .6602<br>±.0297 | .6016<br>±.0307 | .5742<br>±.0310 | — |
+| llama-3b | qwen | 0.1 | 31.6 | 100 | 2 | scored | .7812<br>±.0259 | .6562<br>±.0297 | .6211<br>±.0304 | .5938<br>±.0308 | — |
 | llama-3b | qwen | 0.01 | 10 | 100 | 2 | scored (see qwen-PRM ds_alpha=10 above) | .7695<br>±.0264 | .6797<br>±.0292 | .6445<br>±.0300 | .6211<br>±.0304 | 5.44 |
 
-> **Analysis.** No new data yet. The `w_eff=100, lam=0.01` row reuses
-> the already-scored llama-3b `ds_alpha=10` cell from the qwen-PRM
-> `ds_alpha sweep (v02, qwen PRM)` table above; every other cell,
-> including `w_eff=0`, is new.
-> **Limitations / follow-up:** run this table's step 1 (the three
-> bolded cells) first — its result decides whether the remaining
-> cells here are worth running, and informs how much of the
-> llama-1b table above (queued second) needs the full grid versus
-> just its own two step-1 cells.
+> **Analysis.** Two of step 1's three bolded cells are done —
+> `w_eff=10` at `lam=1.0` (pass@gb=.7422±.0274) and `lam=0.01`
+> (pass@gb=.7500±.0271) agree within SEM (Δ=.008, naive@gb Δ=0,
+> both ≪ SEM≈.027-.030). **Decision: `lam`'s independent role is
+> negligible** — per the procedure's own rule, the grid collapses to
+> a 1D sweep over `w_eff` at `lam=0.01` rather than the full 3×5
+> grid. This also confirms the llama-1b table's analysis above
+> (same conclusion, smaller model). The third bolded cell
+> (`w_eff=0`, `lam=0.01, ds_alpha=0`, the gap-closer) is still not
+> generated. Beyond step 1, most of the on-ramp grid at `w_eff=1`
+> and `w_eff=100` also got generated as a side effect and is
+> consistent with the no-lam-effect finding: at `w_eff=1`, pass@gb is
+> .711/.711/.727 across `lam=1.0/0.1/0.01` (flat within SEM); at
+> `w_eff=100`, .738/.781/.770 (a bit more spread, but still within
+> ~2×SEM of each other). The `w_eff=100, lam=0.01` row reuses the
+> already-scored llama-3b `ds_alpha=10` cell from the qwen-PRM
+> `ds_alpha sweep (v02, qwen PRM)` table above (unchanged).
+> **Limitations / follow-up:** with `lam` ruled out as of step 1, the
+> remaining `w_eff∈{0.1,0.3,3.0}` on-ramp cells at `lam≠0.01` are low
+> priority — only the `w_eff=0` gap-closer (`lam=0.01, ds_alpha=0`)
+> and completing the `lam=0.01` 1D sweep across all `w_eff` values
+> are worth running next.
 
 #### model family, size, quantization comparison
 > **Compares:** model family, size, and quantization jointly —
