@@ -741,28 +741,55 @@ instead of one wide sparse grid.)
 >
 > **W&B:** last×full done (cfg-2b647a18); avg×full planned;
 > response rows blocked (no runs).
+>
+> **`lam=0.1` addendum (2026-07-08):** two extra `w_eff` checkpoints
+> per strategy, at `lam=0.1` (`w_eff = ds_alpha/sqrt(lam)`, so
+> `w_eff=10 → ds_alpha=3.16`, `w_eff=100 → ds_alpha=31.6`). The
+> `last` rows at both checkpoints reuse already-scored cells from
+> the `lam / ds_alpha joint sweep (v02, llama-3b)` table (same
+> `lam=0.1, ds_alpha` pairs, same fixed config) — no new run. The
+> `avg` rows at both checkpoints are new and queued.
+>
+> **`lam=0.01` addendum (2026-07-08):** same two `w_eff` checkpoints
+> at the table's default `lam=0.01` (`w_eff=10 → ds_alpha=1.0`,
+> `w_eff=100 → ds_alpha=10`). The `last` rows reuse already-scored
+> cells from the `lam / ds_alpha joint sweep (v02, llama-3b)` table
+> (`cfg-23f6c64a`, `cfg-baa5b18e`) — no new run. The `avg` rows are
+> new and queued.
 
-| strategy | scope | trials | status | pass@gb | naive@gb | wei@gb | maj@gb | hr/trial |
-|---|---|---|---|---|---|---|---|---|
-| last | full | 2 | done (see ds_alpha=100) | — | — | — | — | — |
-| avg | full | — | planned | — | — | — | — | — |
-| last | response | — | blocked | — | — | — | — | — |
-| avg | response | — | blocked | — | — | — | — | — |
+| strategy | scope | lam | ds_alpha | w_eff | trials | status | pass@gb | naive@gb | wei@gb | maj@gb | hr/trial |
+|---|---|---|---|---|---|---|---|---|---|---|---|
+| last | full | 0.01 | 100 | 1000 | 2 | done (see ds_alpha=100) | — | — | — | — | — |
+| last | full | 0.01 | 1.0 | 10 | 2 | scored (see lam/ds_alpha joint sweep) | .7500<br>±.0271 | .6562<br>±.0297 | .6562<br>±.0297 | .6523<br>±.0298 | — |
+| last | full | 0.01 | 10 | 100 | 2 | scored (see lam/ds_alpha joint sweep) | .7695<br>±.0264 | .6797<br>±.0292 | .6445<br>±.0300 | .6211<br>±.0304 | — |
+| last | full | 0.1 | 3.16 | 10 | 2 | scored (see lam/ds_alpha joint sweep) | .7578<br>±.0268 | .6719<br>±.0294 | .6602<br>±.0297 | .6289<br>±.0303 | — |
+| last | full | 0.1 | 31.6 | 100 | 2 | scored (see lam/ds_alpha joint sweep) | .7812<br>±.0259 | .6562<br>±.0297 | .6211<br>±.0304 | .5938<br>±.0308 | — |
+| avg | full | 0.01 | 100 | 1000 | — | planned | — | — | — | — | — |
+| avg | full | 0.01 | 1.0 | 10 | — | planned | — | — | — | — | — |
+| avg | full | 0.01 | 10 | 100 | — | planned | — | — | — | — | — |
+| avg | full | 0.1 | 3.16 | 10 | — | planned | — | — | — | — | — |
+| avg | full | 0.1 | 31.6 | 100 | — | planned | — | — | — | — | — |
+| last | response | — | — | — | — | blocked | — | — | — | — | — |
+| avg | response | — | — | — | — | blocked | — | — | — | — | — |
 
-> **Analysis.** No new data yet. `last`×`full` is already
-> measured (transcribe from the ds_alpha=100 qwen-PRM llama-3b
-> cell via the recorder); the one new runnable cell is
-> `avg`×`full` — the key read is whether mean-pooling changes
-> pass@gb vs. the last-token default at matched everything
-> else.
-> **Limitations / follow-up:** only 1 of 4 cells is genuinely
-> new+runnable (`avg`×`full`, queued — `experiments.yaml`
-> group `sem-mcts`, feeds `sem-mcts/embeds-strategy-scope`).
-> The two `response` rows are blocked on PRM-source
-> `response_start_idx` support; queue them once the v02 core
-> handles `embeds_scope=response` for `embeds_source=prm`. A
-> v01 (policy-embeds) version of this table would unblock the
-> `response` axis, since v01 supports it.
+> **Analysis.** No new data yet for `avg`. `last`×`full` is fully
+> covered at all four `w_eff` checkpoints tested so far (1000, 10,
+> 100 at both `lam=0.01` and `lam=0.1`) via reuse — no new runs
+> needed for `last`. The five new `avg`×`full` cells (default
+> `lam=0.01,ds_alpha=100` plus the `w_eff∈{10,100}` checkpoints at
+> both `lam=0.01` and `lam=0.1`) are the genuinely new+runnable work
+> here — the key read is whether mean-pooling changes pass@gb vs.
+> the last-token default at matched `w_eff`, and whether that answer
+> is consistent across `w_eff` levels and across `lam` the way
+> `last` already is.
+> **Limitations / follow-up:** 5 of 12 cells are genuinely
+> new+runnable (`avg`×`full` at all `w_eff`/`lam` checkpoints,
+> queued — `experiments.yaml` group `sem-mcts`, feeds
+> `sem-mcts/embeds-strategy-scope`). The two `response` rows are
+> blocked on PRM-source `response_start_idx` support; queue them
+> once the v02 core handles `embeds_scope=response` for
+> `embeds_source=prm`. A v01 (policy-embeds) version of this table
+> would unblock the `response` axis, since v01 supports it.
 
 #### ds_alpha sweep (v02)
 > **Compares:** `ds_alpha`, the diversity-bonus weight in
@@ -910,14 +937,16 @@ instead of one wide sparse grid.)
 > `w_eff` at one fixed `lam` (skip the rest of the grid); if they
 > disagree outside SEM, run the full grid.
 >
-> ✅ Step 1 done (2026-07-08), scored via `compute_stats.py` — no
-> `experiments.yaml` entries were added for these runs (launched and
-> generated directly; see below). Under `prm=qwen`, llama-1b still
-> has **no existing `ds_alpha=0` (w_eff=0) baseline** (the qwen-PRM
-> `ds_alpha sweep (v02, qwen PRM)` table above only has 10/100/1000
-> for llama-1b; only the *rlhflow* table has a llama-1b `ds_alpha=0`
-> row) — that row is still not started. The `w_eff=100, lam=0.01`
-> row reuses the already-scored llama-1b `ds_alpha=10` cell from the
+> ✅ Step 1 done (2026-07-08); every `w_eff∈{1,3,10,100}` row across
+> all three `lam` values scored via `compute_stats.py` as of
+> 2026-07-08 — no `experiments.yaml` entries were added for these runs
+> (launched and generated directly; see below). Under `prm=qwen`,
+> llama-1b still has **no existing `ds_alpha=0` (w_eff=0) baseline**
+> (the qwen-PRM `ds_alpha sweep (v02, qwen PRM)` table above only has
+> 10/100/1000 for llama-1b; only the *rlhflow* table has a llama-1b
+> `ds_alpha=0` row) — that row is still not started, and neither are
+> the `w_eff∈{0.1,0.3}` on-ramp cells. The `w_eff=100, lam=0.01` row
+> reuses the already-scored llama-1b `ds_alpha=10` cell from the
 > qwen-PRM sweep table.
 
 | llm | prm | lam | ds_alpha | w_eff | trials | status | pass@gb | naive@gb | wei@gb | maj@gb | hr/trial |
@@ -932,14 +961,14 @@ instead of one wide sparse grid.)
 | llama-1b | qwen | 1.0 | 1 | 1 | 2 | scored | .5781<br>±.0309 | .5078<br>±.0313 | .4883<br>±.0313 | .4805<br>±.0313 | — |
 | llama-1b | qwen | 0.1 | 0.316 | 1 | 2 | scored | .6016<br>±.0307 | .5391<br>±.0312 | .5352<br>±.0312 | .5000<br>±.0313 | — |
 | llama-1b | qwen | 0.01 | 0.1 | 1 | 2 | scored | .6094<br>±.0306 | .5391<br>±.0312 | .5039<br>±.0313 | .4727<br>±.0313 | — |
-| llama-1b | qwen | 1.0 | 3.0 | 3.0 | — | planned | — | — | — | — | — |
-| llama-1b | qwen | 0.1 | 0.949 | 3.0 | — | planned | — | — | — | — | — |
-| llama-1b | qwen | 0.01 | 0.3 | 3.0 | — | planned | — | — | — | — | — |
+| llama-1b | qwen | 1.0 | 3.0 | 3.0 | 2 | scored | .6172<br>±.0304 | .5391<br>±.0312 | .5117<br>±.0313 | .4727<br>±.0313 | — |
+| llama-1b | qwen | 0.1 | 0.949 | 3.0 | 2 | scored | .6133<br>±.0305 | .5195<br>±.0313 | .5312<br>±.0312 | .4961<br>±.0313 | — |
+| llama-1b | qwen | 0.01 | 0.3 | 3.0 | 2 | scored | .5938<br>±.0308 | .5508<br>±.0311 | .5234<br>±.0313 | .4688<br>±.0312 | — |
 | llama-1b | qwen | **1.0** | **10** | **10** | **2** | **scored (step 1)** | **.6172<br>±.0304** | **.5273<br>±.0313** | **.4766<br>±.0313** | **.4375<br>±.0311** | — |
 | llama-1b | qwen | 0.1 | 3.16 | 10 | 2 | scored | .6133<br>±.0305 | .5156<br>±.0313 | .4766<br>±.0313 | .4375<br>±.0311 | — |
 | llama-1b | qwen | **0.01** | **1.0** | **10** | **2** | **scored (step 1)** | **.6250<br>±.0303** | **.5469<br>±.0312** | **.5039<br>±.0313** | **.4648<br>±.0312** | — |
-| llama-1b | qwen | 1.0 | 100 | 100 | — | planned | — | — | — | — | — |
-| llama-1b | qwen | 0.1 | 31.6 | 100 | — | planned | — | — | — | — | — |
+| llama-1b | qwen | 1.0 | 100 | 100 | 2 | scored | .6289<br>±.0303 | .5312<br>±.0312 | .4375<br>±.0311 | .3438<br>±.0297 | — |
+| llama-1b | qwen | 0.1 | 31.6 | 100 | 2 | scored | .6094<br>±.0306 | .5117<br>±.0313 | .4531<br>±.0312 | .4219<br>±.0309 | — |
 | llama-1b | qwen | 0.01 | 10 | 100 | 2 | scored (see qwen-PRM ds_alpha=10 above) | .6211<br>±.0304 | .5352<br>±.0312 | .4844<br>±.0313 | .4258<br>±.0310 | 3.75 |
 
 > **Analysis.** Step 1 done: `w_eff=10` at `lam=1.0`
@@ -947,23 +976,28 @@ instead of one wide sparse grid.)
 > within SEM (Δ=.008, naive@gb Δ=.020, both ≪ SEM≈.031) — same
 > conclusion as the llama-3b table below. Per the procedure's own
 > rule, `lam`'s independent role is negligible here too, so the
-> remaining `lam≠0.01` on-ramp cells (`w_eff∈{0.1,0.3,1,3}` at
-> `lam=1.0`/`0.1`) are skippable; only the `w_eff=0` gap-closer and
-> the `lam=0.01` 1D sweep are worth finishing. **The `w_eff=1` row is
-> also done** (all three `lam` values scored: 1.0→.578, 0.1→.602,
-> 0.01→.609 pass@gb — consistent with the same no-lam-effect
-> pattern, though noisier at this smaller `w_eff`). `w_eff=100,
-> lam=0.01` reuses the already-scored qwen-PRM `ds_alpha=10` cell (no
-> re-run needed); `w_eff=1000, lam=0.01` (pass@gb=.6289±.0303) was
-> also generated but isn't part of this table's own grid — it
-> matches the already-scored llama-1b `ds_alpha=1000` row in the
-> qwen-PRM sweep table above (same config, reused, not duplicated
-> here).
-> **Limitations / follow-up:** `w_eff=0` (`lam=0.01, ds_alpha=0`) and
-> the `w_eff∈{0.1,0.3,3.0}` on-ramp cells at non-`lam=0.01` values are
-> still not started — low priority now that step 1 confirms `lam` is
-> negligible; the `lam=0.01` 1D sweep (`w_eff=0` through `100`) is
-> the one worth completing.
+> remaining `lam≠0.01` on-ramp cells were low priority, but got run
+> anyway (2026-07-08) and confirm the same pattern: **`w_eff=3` is
+> flat across all three `lam`** (1.0→.6172, 0.1→.6133, 0.01→.5938
+> pass@gb — all within ~1.5 SEM), and **`w_eff=1` was already flat**
+> (1.0→.578, 0.1→.602, 0.01→.609). **`w_eff=100` is flat on pass@gb**
+> (1.0→.6289, 0.1→.6094, 0.01→.6211 — all within SEM) but shows
+> real spread on `maj@gb`/`wei@gb`: `lam=1.0` drops to maj=.3438,
+> noticeably below `lam=0.1`'s .4219 and `lam=0.01`'s .4258 — the
+> only clear @gb-metric divergence across `lam` anywhere in this
+> table, though pass@gb itself (the primary metric) is unaffected.
+> `w_eff=1000, lam=0.01` (pass@gb=.6289±.0303) was also generated but
+> isn't part of this table's own grid — it matches the already-scored
+> llama-1b `ds_alpha=1000` row in the qwen-PRM sweep table above
+> (same config, reused, not duplicated here; a numerical coincidence
+> that this also equals the `w_eff=100, lam=1.0` cell's pass@gb —
+> different configs, not the same run).
+> **Limitations / follow-up:** only `w_eff=0` (`lam=0.01, ds_alpha=0`)
+> and the `w_eff∈{0.1,0.3}` on-ramp cells at non-`lam=0.01` values
+> remain unrun — every `w_eff∈{1,3,10,100}` row across all three `lam`
+> values is now filled. The `maj@gb` dip at `lam=1.0, w_eff=100` is
+> worth a second look if a `lam=1.0` sweep is ever prioritized, but
+> pass@gb itself shows no `lam` effect anywhere in the completed grid.
 
 #### lam / ds_alpha joint sweep (v02, llama-3b, step 1 done)
 > **Compares:** the same `lam`/`ds_alpha` joint-tuning question as
@@ -1007,9 +1041,9 @@ instead of one wide sparse grid.)
 | llama-3b | qwen | 1.0 | 1 | 1 | 2 | scored | .7109<br>±.0284 | .6406<br>±.0300 | .6328<br>±.0302 | .6328<br>±.0302 | — |
 | llama-3b | qwen | 0.1 | 0.316 | 1 | 2 | scored | .7109<br>±.0284 | .6641<br>±.0296 | .6562<br>±.0297 | .6484<br>±.0299 | — |
 | llama-3b | qwen | 0.01 | 0.1 | 1 | 2 | scored | .7266<br>±.0279 | .6680<br>±.0295 | .6602<br>±.0297 | .6484<br>±.0299 | — |
-| llama-3b | qwen | 1.0 | 3.0 | 3.0 | — | planned | — | — | — | — | — |
-| llama-3b | qwen | 0.1 | 0.949 | 3.0 | — | planned | — | — | — | — | — |
-| llama-3b | qwen | 0.01 | 0.3 | 3.0 | — | planned | — | — | — | — | — |
+| llama-3b | qwen | 1.0 | 3.0 | 3.0 | 2 | scored | .7227<br>±.0280 | .6523<br>±.0298 | .6484<br>±.0299 | .6367<br>±.0301 | — |
+| llama-3b | qwen | 0.1 | 0.949 | 3.0 | 2 | scored | .7422<br>±.0274 | .6758<br>±.0293 | .6680<br>±.0295 | .6602<br>±.0297 | — |
+| llama-3b | qwen | 0.01 | 0.3 | 3.0 | 2 | scored | .7305<br>±.0278 | .6641<br>±.0296 | .6836<br>±.0291 | .6602<br>±.0297 | — |
 | llama-3b | qwen | **1.0** | **10** | **10** | **2** | **scored (step 1)** | **.7422<br>±.0274** | **.6562<br>±.0297** | **.6445<br>±.0300** | **.6211<br>±.0304** | — |
 | llama-3b | qwen | 0.1 | 3.16 | 10 | 2 | scored | .7578<br>±.0268 | .6719<br>±.0294 | .6602<br>±.0297 | .6289<br>±.0303 | — |
 | llama-3b | qwen | **0.01** | **1.0** | **10** | **2** | **scored (step 1)** | **.7500<br>±.0271** | **.6562<br>±.0297** | **.6562<br>±.0297** | **.6523<br>±.0298** | — |
@@ -1026,19 +1060,56 @@ instead of one wide sparse grid.)
 > grid. This also confirms the llama-1b table's analysis above
 > (same conclusion, smaller model). The third bolded cell
 > (`w_eff=0`, `lam=0.01, ds_alpha=0`, the gap-closer) is still not
-> generated. Beyond step 1, most of the on-ramp grid at `w_eff=1`
-> and `w_eff=100` also got generated as a side effect and is
-> consistent with the no-lam-effect finding: at `w_eff=1`, pass@gb is
-> .711/.711/.727 across `lam=1.0/0.1/0.01` (flat within SEM); at
+> generated. Beyond step 1, most of the on-ramp grid at `w_eff=1`,
+> `w_eff=3`, and `w_eff=100` also got generated as a side effect and
+> is consistent with the no-lam-effect finding: at `w_eff=1`, pass@gb
+> is .711/.711/.727 across `lam=1.0/0.1/0.01` (flat within SEM); at
+> **`w_eff=3`, .7227/.7422/.7305 (all within ~1 SEM, no trend)**; at
 > `w_eff=100`, .738/.781/.770 (a bit more spread, but still within
-> ~2×SEM of each other). The `w_eff=100, lam=0.01` row reuses the
-> already-scored llama-3b `ds_alpha=10` cell from the qwen-PRM
-> `ds_alpha sweep (v02, qwen PRM)` table above (unchanged).
+> ~2×SEM of each other). Unlike llama-1b, the `maj@gb`/`wei@gb`
+> metrics at `w_eff=100` don't show the same `lam=1.0` dip here —
+> `lam=1.0`'s maj@gb (.574) is the lowest of the three but the spread
+> (.574/.594/.621) is milder than llama-1b's (.344/.422/.426). The
+> `w_eff=100, lam=0.01` row reuses the already-scored llama-3b
+> `ds_alpha=10` cell from the qwen-PRM `ds_alpha sweep (v02, qwen
+> PRM)` table above (unchanged).
 > **Limitations / follow-up:** with `lam` ruled out as of step 1, the
 > remaining `w_eff∈{0.1,0.3,3.0}` on-ramp cells at `lam≠0.01` are low
 > priority — only the `w_eff=0` gap-closer (`lam=0.01, ds_alpha=0`)
 > and completing the `lam=0.01` 1D sweep across all `w_eff` values
 > are worth running next.
+
+#### lam / ds_alpha joint sweep (v02, qwen-math-1.5b)
+> **Compares:** two `w_eff` checkpoints at `lam=0.1` against the
+> existing `lam=0.01` baseline in the `ds_alpha sweep (v02, qwen
+> PRM)` table above — a spot-check on qwen-math-1.5b, not a full
+> joint sweep like the llama-1b/llama-3b tables (no `lam=1.0` arm
+> run here, and no `w_eff=3` or on-ramp cells).
+>
+> **Fixed:** tmpl=model-family default (native), bs-4, d-20, b=80,
+> proj=sparse512, cov_update=sm, prm=qwen, ds_beta=1.0,
+> prm_batch_size=1, llm=qwen-math-1.5b.
+
+| llm | prm | lam | ds_alpha | w_eff | trials | status | pass@gb | naive@gb | wei@gb | maj@gb | hr/trial |
+|---|---|---|---|---|---|---|---|---|---|---|---|
+| qwen-math-1.5b | qwen | 0.01 | 10 | 100 | 2 | scored (see qwen-PRM ds_alpha=10 above) | .8789<br>±.0204 | .7969<br>±.0252 | .7891<br>±.0255 | .7695<br>±.0264 | 3.98 |
+| qwen-math-1.5b | qwen | 0.1 | 3.16 | 10 | 2 | scored | .8867<br>±.0198 | .7930<br>±.0254 | .7578<br>±.0268 | .7500<br>±.0271 | — |
+| qwen-math-1.5b | qwen | 0.1 | 31.6 | 100 | 2 | scored | .8672<br>±.0213 | .7891<br>±.0255 | .7656<br>±.0265 | .7422<br>±.0274 | — |
+
+> **Analysis.** Both `lam=0.1` cells (w_eff=10: .8867, w_eff=100:
+> .8672) are within ~1 SEM of the `lam=0.01, w_eff=100` baseline
+> (.8789) — consistent with the llama-1b/llama-3b tables' finding
+> that `lam` has no independent effect once `w_eff` is matched, now
+> extended to a third model. Unlike llama-1b (which showed
+> maj@gb/wei@gb degrading noticeably at `w_eff=100`), qwen-math-1.5b
+> stays flat across all four @gb metrics between `w_eff=10` and
+> `w_eff=100` — no sign of the same weighted/majority-vote
+> degradation at high diversity weight for this model.
+> **Limitations / follow-up:** no `lam=1.0` arm run for this model,
+> so this isn't a full step-1 replication (only one `lam` value
+> tested per `w_eff`) — treat as a spot-check, not confirmation.
+> Completing the `lam=1.0` arm at `w_eff=10` and `100` would make
+> this a proper step-1 check like the other two tables.
 
 #### model family, size, quantization comparison
 > **Compares:** model family, size, and quantization jointly —
@@ -1234,6 +1305,70 @@ instead of one wide sparse grid.)
 | qwen-math-1.5b | qwen | prod | — | to rerun | — | — | — | — | — |
 | qwen-math-1.5b | qwen | last | 2 | scored (pre-fix backup) | .8750<br>±.0207 | .7969<br>±.0252 | .7734<br>±.0262 | .7578<br>±.0268 | 3.96 |
 
+#### agg_strategy comparison (qwen-3b, qwen-math-1.5b, lam=0.1, w_eff=10)
+> **Compares:** same `gen.agg_strategy` knob as the table above, at
+> `lam=0.1` instead of the default `lam=0.01` — matched `w_eff` (via
+> `w_eff = ds_alpha/sqrt(lam)`) rather than matched `ds_alpha`, so
+> this is a cross-check on the `agg_strategy` finding under a
+> different `lam` operating point, not a new axis.
+>
+> **Fixed:** method=`mcts_sem_v02`, bs-4, d-20, b=80,
+> tmpl=model-family default (native for both models here),
+> proj=sparse512, cov=sm, lam=0.1, ds_alpha=3.16 (w_eff=10),
+> ds_beta=1.0.
+
+| llm | prm | agg_strategy | trials | status | pass@gb | naive@gb | wei@gb | maj@gb | hr/trial |
+|---|---|---|---|---|---|---|---|---|---|
+| qwen-3b | rlhflow | min | — | planned | — | — | — | — | — |
+| qwen-3b | rlhflow | prod | — | planned | — | — | — | — | — |
+| qwen-3b | rlhflow | last | — | planned | — | — | — | — | — |
+| qwen-3b | qwen | min | — | planned | — | — | — | — | — |
+| qwen-3b | qwen | prod | — | planned | — | — | — | — | — |
+| qwen-3b | qwen | last | — | planned | — | — | — | — | — |
+| qwen-math-1.5b | rlhflow | min | — | planned | — | — | — | — | — |
+| qwen-math-1.5b | rlhflow | prod | — | planned | — | — | — | — | — |
+| qwen-math-1.5b | rlhflow | last | — | planned | — | — | — | — | — |
+| qwen-math-1.5b | qwen | min | — | planned | — | — | — | — | — |
+| qwen-math-1.5b | qwen | prod | — | planned | — | — | — | — | — |
+| qwen-math-1.5b | qwen | last | — | planned | — | — | — | — | — |
+
+> **Analysis.** No data yet.
+> **Limitations / follow-up:** all 12 cells are new; none queued in
+> `experiments.yaml`. Lowest priority among open sem-mcts threads —
+> the `lam=0.01` version of this table already showed `agg_strategy`
+> is flat within SEM (and cnt-mcts's identical sweep agrees), so
+> this is a robustness check on an already-flat finding, not a
+> likely source of new signal.
+
+#### agg_strategy comparison (qwen-3b, qwen-math-1.5b, lam=0.1, w_eff=100)
+> **Compares:** same as the `w_eff=10` table above, at the next
+> `w_eff` checkpoint.
+>
+> **Fixed:** method=`mcts_sem_v02`, bs-4, d-20, b=80,
+> tmpl=model-family default (native for both models here),
+> proj=sparse512, cov=sm, lam=0.1, ds_alpha=31.6 (w_eff=100),
+> ds_beta=1.0.
+
+| llm | prm | agg_strategy | trials | status | pass@gb | naive@gb | wei@gb | maj@gb | hr/trial |
+|---|---|---|---|---|---|---|---|---|---|
+| qwen-3b | rlhflow | min | — | planned | — | — | — | — | — |
+| qwen-3b | rlhflow | prod | — | planned | — | — | — | — | — |
+| qwen-3b | rlhflow | last | — | planned | — | — | — | — | — |
+| qwen-3b | qwen | min | — | planned | — | — | — | — | — |
+| qwen-3b | qwen | prod | — | planned | — | — | — | — | — |
+| qwen-3b | qwen | last | — | planned | — | — | — | — | — |
+| qwen-math-1.5b | rlhflow | min | — | planned | — | — | — | — | — |
+| qwen-math-1.5b | rlhflow | prod | — | planned | — | — | — | — | — |
+| qwen-math-1.5b | rlhflow | last | — | planned | — | — | — | — | — |
+| qwen-math-1.5b | qwen | min | — | planned | — | — | — | — | — |
+| qwen-math-1.5b | qwen | prod | — | planned | — | — | — | — | — |
+| qwen-math-1.5b | qwen | last | — | planned | — | — | — | — | — |
+
+> **Analysis.** No data yet.
+> **Limitations / follow-up:** all 12 cells are new; none queued in
+> `experiments.yaml`. Same low-priority rationale as the `w_eff=10`
+> table above.
+
 #### LLM vs PRM embeds comparison
 > **Compares:** the diversity-embedding *source* — v01 sources
 > from the policy LLM (2nd vLLM engine); v02 sources from the
@@ -1326,6 +1461,39 @@ instead of one wide sparse grid.)
 > **Limitations / follow-up:** reconcile the trial-count mismatch
 > against cnt-mcts (`llm-reasoning-mcts-bl-exp-todo` M3) before
 > using this row in any head-to-head with cnt-mcts.
+
+#### model family, size, quantization comparison (qwen PRM)
+> **Compares:** model family, size, and quantization jointly —
+> same 7-model/quant grid as cnt-mcts (updated)'s equivalent
+> table above, so a direct bl_cnt-vs-cnt read is possible once
+> both are filled. All 7 cells are new for bl_cnt_v01 with the
+> qwen PRM — the two existing `#####` cells above (llama-1b,
+> qwen-math-1.5b) used the rlhflow PRM, so they don't populate
+> this table directly and would need a qwen-PRM rerun to join
+> it.
+>
+> **Fixed:** method=`mcts_bl_cnt_v01`, prm=qwen, agg_strategy=
+> `last`, cpuct=2.0, bs-4, d-20, b=80, prm_batch_size=1 (the
+> new default — see `generate_mcts_bl_cnt_v01.py`/
+> `BLMCTSCntConfig` alignment fix), tmpl=model-family default
+> (native for Qwen, custom for Llama).
+
+| llm | trials | status | pass@gb | naive@gb | wei@gb | maj@gb | hr/trial |
+|---|---|---|---|---|---|---|---|
+| llama-1b fp16 | — | planned | — | — | — | — | — |
+| llama-3b fp16 | — | planned | — | — | — | — | — |
+| llama-3b gptq | — | planned | — | — | — | — | — |
+| qwen-3b fp16 | — | planned | — | — | — | — | — |
+| qwen-3b gptq-int4 | — | planned | — | — | — | — | — |
+| qwen-7b gptq-int4 | — | planned | — | — | — | — | — |
+| qwen-math-1.5b fp16 | — | planned | — | — | — | — | — |
+
+> **Analysis.** No data yet.
+> **Limitations / follow-up:** all 7 cells are new; none queued
+> in `experiments.yaml`. Priority depends on whether bl_cnt_v01
+> is still an active comparison target vs. cnt-mcts — check
+> `llm-reasoning-mcts-bl-exp-todo` before launching a full sweep
+> here.
 
 ### sem-mcts-bl
 > **Compares:** nothing yet — `mcts_sem_bl` is not implemented
