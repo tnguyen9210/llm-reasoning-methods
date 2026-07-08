@@ -888,7 +888,12 @@ instead of one wide sparse grid.)
 > `lam=0.01`; this table holds `w_eff` fixed across rows and varies
 > `lam`/`ds_alpha` jointly, filling in `w_eff` values below the
 > confirmed plateau (`w_eff≥100`, i.e. `ds_alpha≥10` at `lam=0.01`)
-> that have never been tested.
+> that have never been tested. `w_eff ∈ {0.1, 0.3, 3.0}` extend the
+> grid below `w_eff=1` — the existing plateau finding only shows
+> *that* a switch happens somewhere in `(0, 100)`, not the shape of
+> the on-ramp; these log-spaced points (matching the existing
+> `{0.316, 3.16, 31.6}` spacing at `lam=0.1`) probe whether the
+> switch is sharp near `w_eff≈1` or a gradual ramp from `w_eff=0`.
 >
 > **Fixed:** tmpl=model-family default, bs-4, d-20, b=80,
 > proj=sparse512, cov_update=sm, prm=qwen, ds_beta=1.0,
@@ -916,9 +921,18 @@ instead of one wide sparse grid.)
 | llm | prm | lam | ds_alpha | w_eff | trials | status | pass@gb | naive@gb | wei@gb | maj@gb | hr/trial |
 |---|---|---|---|---|---|---|---|---|---|---|---|
 | llama-1b | qwen | 0.01 | 0 | 0 | — | planned (new; no existing qwen-PRM baseline) | — | — | — | — | — |
+| llama-1b | qwen | 1.0 | 0.1 | 0.1 | — | planned | — | — | — | — | — |
+| llama-1b | qwen | 0.1 | 0.0316 | 0.1 | — | planned | — | — | — | — | — |
+| llama-1b | qwen | 0.01 | 0.01 | 0.1 | — | planned | — | — | — | — | — |
+| llama-1b | qwen | 1.0 | 0.3 | 0.3 | — | planned | — | — | — | — | — |
+| llama-1b | qwen | 0.1 | 0.0949 | 0.3 | — | planned | — | — | — | — | — |
+| llama-1b | qwen | 0.01 | 0.03 | 0.3 | — | planned | — | — | — | — | — |
 | llama-1b | qwen | 1.0 | 1 | 1 | — | planned | — | — | — | — | — |
 | llama-1b | qwen | 0.1 | 0.316 | 1 | — | planned | — | — | — | — | — |
 | llama-1b | qwen | 0.01 | 0.1 | 1 | — | planned | — | — | — | — | — |
+| llama-1b | qwen | 1.0 | 3.0 | 3.0 | — | planned | — | — | — | — | — |
+| llama-1b | qwen | 0.1 | 0.949 | 3.0 | — | planned | — | — | — | — | — |
+| llama-1b | qwen | 0.01 | 0.3 | 3.0 | — | planned | — | — | — | — | — |
 | llama-1b | qwen | **1.0** | **10** | **10** | **—** | **planned (step 1)** | — | — | — | — | — |
 | llama-1b | qwen | 0.1 | 3.16 | 10 | — | planned | — | — | — | — | — |
 | llama-1b | qwen | **0.01** | **1.0** | **10** | **—** | **planned (step 1)** | — | — | — | — | — |
@@ -943,7 +957,8 @@ instead of one wide sparse grid.)
 > under either PRM (closing that gap and running step 1 happen in
 > the same pass), and its result determines how much of the llama-1b
 > table (and any later cross-check per procedure step 5) is worth
-> running.
+> running. `w_eff ∈ {0.1, 0.3, 3.0}` fill in the on-ramp below
+> `w_eff=1`, same rationale as the llama-1b table above.
 >
 > **Fixed:** tmpl=model-family default, bs-4, d-20, b=80,
 > proj=sparse512, cov_update=sm, prm=qwen, ds_beta=1.0,
@@ -965,9 +980,18 @@ instead of one wide sparse grid.)
 | llm | prm | lam | ds_alpha | w_eff | trials | status | pass@gb | naive@gb | wei@gb | maj@gb | hr/trial |
 |---|---|---|---|---|---|---|---|---|---|---|---|
 | llama-3b | qwen | 0.01 | **0** | **0** | **—** | **planned (step 1: new gap-closing cell)** | — | — | — | — | — |
+| llama-3b | qwen | 1.0 | 0.1 | 0.1 | — | planned | — | — | — | — | — |
+| llama-3b | qwen | 0.1 | 0.0316 | 0.1 | — | planned | — | — | — | — | — |
+| llama-3b | qwen | 0.01 | 0.01 | 0.1 | — | planned | — | — | — | — | — |
+| llama-3b | qwen | 1.0 | 0.3 | 0.3 | — | planned | — | — | — | — | — |
+| llama-3b | qwen | 0.1 | 0.0949 | 0.3 | — | planned | — | — | — | — | — |
+| llama-3b | qwen | 0.01 | 0.03 | 0.3 | — | planned | — | — | — | — | — |
 | llama-3b | qwen | 1.0 | 1 | 1 | — | planned | — | — | — | — | — |
 | llama-3b | qwen | 0.1 | 0.316 | 1 | — | planned | — | — | — | — | — |
 | llama-3b | qwen | 0.01 | 0.1 | 1 | — | planned | — | — | — | — | — |
+| llama-3b | qwen | 1.0 | 3.0 | 3.0 | — | planned | — | — | — | — | — |
+| llama-3b | qwen | 0.1 | 0.949 | 3.0 | — | planned | — | — | — | — | — |
+| llama-3b | qwen | 0.01 | 0.3 | 3.0 | — | planned | — | — | — | — | — |
 | llama-3b | qwen | **1.0** | **10** | **10** | **—** | **planned (step 1)** | — | — | — | — | — |
 | llama-3b | qwen | 0.1 | 3.16 | 10 | — | planned | — | — | — | — | — |
 | llama-3b | qwen | **0.01** | **1.0** | **10** | **—** | **planned (step 1)** | — | — | — | — | — |

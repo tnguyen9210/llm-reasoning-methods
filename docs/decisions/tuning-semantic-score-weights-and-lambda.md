@@ -198,11 +198,20 @@ Target the same `w_eff` checkpoints at each `lam`, via
 `ds_alpha = w_eff * sqrt(lam)`, filling in the previously-untested
 region below the known plateau (`w_eff=100`):
 
-| lam | w_eff=0 | w_eff=1 | w_eff=10 | w_eff=100 (known: saturated) |
-|---|---|---|---|---|
-| 1.0 | 0 | 1 | 10 | 100 |
-| 0.1 | 0 | 0.316 | 3.16 | 31.6 |
-| 0.01 | 0 | 0.1 | 1 | 10 |
+| lam | w_eff=0 | w_eff=0.1 | w_eff=0.3 | w_eff=1 | w_eff=3 | w_eff=10 | w_eff=100 (known: saturated) |
+|---|---|---|---|---|---|---|---|
+| 1.0 | 0 | 0.1 | 0.3 | 1 | 3.0 | 10 | 100 |
+| 0.1 | 0 | 0.0316 | 0.0949 | 0.316 | 0.949 | 3.16 | 31.6 |
+| 0.01 | 0 | 0.01 | 0.03 | 0.1 | 0.3 | 1 | 10 |
+
+`w_eff ∈ {0.1, 0.3}` (added 2026-07-07, alongside the already-planned
+`w_eff=3`) probe the on-ramp between the confirmed "off" (`w_eff=0`)
+and the first previously-tested "on" point (`w_eff=1`) — the existing
+plateau finding shows *that* a switch happens somewhere below
+`w_eff=100`, but nothing below `w_eff=1` has ever been measured, so
+whether the switch is sharp near `w_eff≈1` or ramps gradually from
+`w_eff=0` is still open. Log-spaced to match the existing
+`{0.316, 3.16, 31.6}` step size at `lam=0.1`.
 
 Note this does **not** reuse the repo's existing raw `ds_alpha` grid
 at `lam=0.01` (`{0,10,100,1000}`) — those all sit at `w_eff≥100`,
