@@ -518,15 +518,17 @@ instead of one wide sparse grid.)
 > fp16/GPTQ runtimes are directly comparable), tmpl=model-family
 > default (native for Qwen, custom for Llama).
 >
-> **W&B:** llama-1b `w0e8cidi`, qwen-7b gptq-int4 `qumxbcc8` (both
-> generated 2026-07-07; scoring backfilled via `compute_stats.py`
-> since the generation runs predate `eval/*` W&B logging).
+> **W&B:** llama-1b `w0e8cidi`, llama-3b fp16 `87yk0nf9`, llama-3b
+> gptq `c9qcq6dk`, qwen-7b gptq-int4 `qumxbcc8` (all generated
+> 2026-07-07; scoring backfilled via `compute_stats.py` — the
+> llama-3b rows had no prior generation-time W&B run, so
+> `compute_stats.py` created a fresh run rather than resuming one).
 
 | llm | trials | status | pass@gb | naive@gb | wei@gb | maj@gb | hr/trial |
 |---|---|---|---|---|---|---|---|
 | llama-1b fp16 | 2 | scored | .5430<br>±.0312 | .4258<br>±.0310 | .3984<br>±.0307 | .3867<br>±.0305 | 2.68 |
-| llama-3b fp16 | — | to rerun | — | — | — | — | — |
-| llama-3b gptq | — | to rerun | — | — | — | — | — |
+| llama-3b fp16 | 2 | scored | .7422<br>±.0274 | .5547<br>±.0311 | .6055<br>±.0306 | .5898<br>±.0308 | 4.44 |
+| llama-3b gptq | 2 | scored | .6953<br>±.0288 | .5195<br>±.0313 | .5195<br>±.0313 | .5078<br>±.0313 | 3.35 |
 | qwen-3b fp16 | 2 | scored | .8398<br>±.0230 | .6875<br>±.0290 | .7148<br>±.0283 | .7070<br>±.0285 | 4.01 |
 | qwen-3b gptq-int4 | 2 | scored | .7812<br>±.0259 | .6445<br>±.0300 | .6797<br>±.0292 | .6641<br>±.0296 | 2.97 |
 | qwen-7b gptq-int4 | 2 | scored | .9180<br>±.0172 | .7148<br>±.0283 | .7852<br>±.0257 | .7812<br>±.0259 | 3.36 |
