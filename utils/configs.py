@@ -364,6 +364,83 @@ class MCTSSemV02Config(MCTSSemV01Config):
 
 
 @dataclass
+class BLMCTSSemConfig(SearchConfig):
+    """Semantic MCTS with best-first frontier selection.
+
+    Frontier counterpart of MCTSSemV02Config, exactly as
+    BLMCTSCntConfig is to MCTSCntConfig: selection is global across
+    the leaf frontier (mcts_bl_sem_search_v01_00_00), with the sem
+    family's diversity-adjusted value replacing bl_cnt's PUCT.
+
+    A fresh SearchConfig subclass (not a MCTSSemV02Config child) so it
+    carries only knobs that mean something here: no cpuct (no PUCT)
+    and no revisit_policy (a frontier node is expanded at most once by
+    construction). The embeds_*/ds_*/lam/cov_update knobs are the sem
+    family's, with the same semantics; defaults match sem_v02's YAML
+    operating point (PRM embeds, 512-dim sparse projection, sm).
+
+    Adds ds_alpha_schedule: how the effective diversity weight evolves
+    over the run. sem_v02 hardcodes the per-parent form; on a global
+    frontier the choice is a real design axis, so it's exposed:
+      "global" — ds_alpha * sqrt(log(1+t)), t = frontier selections
+                 so far. The frontier is a flat arm set and
+                 sqrt(x^T V^-1 x) is the LinUCB confidence width, so
+                 the global-clock growth is the OFUL-standard
+                 schedule (default).
+      "parent" — ds_alpha * sqrt(log(1+parent_visits)) per node: the
+                 literal sem_v02 transplant. Nodes get tree-position-
+                 dependent exploration scales.
+      "none"   — constant ds_alpha (no schedule).
+    """
+    method: str = "mcts_bl_sem_v01"
+    num_phases: int = 1000        # iteration cap (safety), not budget
+    gen_budget: int = 80          # total generations across the run
+
+    # Where the diversity embeddings come from (see MCTSSemV01Config):
+    # "prm" needs no second engine; "policy" builds the pooling engine.
+    embeds_source: str = "prm"
+
+    # Diversity selection: q_val = ds_beta*score + ds_alpha*sched*div.
+    lam: float = 0.01             # ridge: V_0 = lam * I
+    ds_alpha: float = 100.0       # diversity weight
+    ds_beta: float = 1.0          # q-value weight
+    ds_alpha_schedule: str = "global"  # "global" | "parent" | "none"
+
+    # Embedding extraction (see core._extract_embeds). Pipeline order
+    # is pool -> project -> center -> normalize.
+    embeds_strategy: str = "last"     # "last" | "avg"  (pooling)
+    embeds_scope: str = "full"        # "full" | "response"
+    embeds_normalize: bool = True     # L2-normalize pooled vector
+    embeds_center: bool = False       # subtract held-out mean
+    embeds_mean_dir: str = ""         # results/-relative .npy prefix
+    # Post-projection dim = size of the covariance V (the raw source
+    # dim is read off the pooled tensor at runtime).
+    embeds_dim: int = 512
+    embeds_proj: str = "sparse"       # "none" | "sparse"
+
+    # Which PRM hidden-state layer to pool (-1 = last). Only used
+    # when embeds_source == "prm".
+    prm_embeds_layer: int = -1
+
+    # Covariance bookkeeping. Default sm (Sherman-Morrison): O(d^2)
+    # persistent inverse update, validated machine-precision-identical
+    # to exact in sem_v02 (see conf/search/mcts_sem_v02.yaml).
+    cov_update: str = "sm"            # "exact" | "sm"
+
+    # Second (pooling) vLLM engine's share of GPU memory. Only used
+    # when embeds_source == "policy".
+    embeds_gpu_memory_utilization: float = 0.1
+
+    # PRM forward-pass micro-batch *inside* the search loop (distinct
+    # from prm.score_batch_size, which scores the final dataset).
+    prm_batch_size: int = 1
+
+    # Populated at runtime by the launcher when embeds_center=True
+    # (np.load of the mean .npy). Not set from YAML.
+    embeds_mean: Optional[Any] = None
+
+
+@dataclass
 class BoNConfig(SearchConfig):
     """Best-of-N search params. n completions sampled per question
     in a single expansion (no tree), so depth/lookahead are unused."""

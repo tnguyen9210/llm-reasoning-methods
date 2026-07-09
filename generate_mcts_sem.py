@@ -20,36 +20,43 @@ import wandb
 from core import (
     mcts_sem_search_v01_00_00,
     mcts_sem_search_v02_00_00,
+    mcts_bl_sem_search_v01_00_00,
 )
 from core.reward_models import build_prm
 from core.scoring import build_scored_dataset
 from utils.configs import (
-    ExpConfig, MCTSSemV01Config, MCTSSemV02Config, config_name,
+    ExpConfig, MCTSSemV01Config, MCTSSemV02Config, BLMCTSSemConfig,
+    config_name,
     level_dir, results_root, write_manifest, load_wandb_run_id,
     save_timing_state, load_timing_state,
 )
 from utils.load_data import load_data_hf
 
-# One launcher, two semantic-MCTS variants. cfg.algo picks the core
+# One launcher, three semantic-MCTS variants. cfg.algo picks the core
 # search module: v01 sources diversity embeds from a second vLLM
 # pooling engine on the policy; v02 sources them from the PRM and
-# skips that engine. The differing wiring (whether to build the
-# pooling engine) is driven by cfg.search.embeds_source below, not
-# by this dict — the dict only selects the algorithm.
+# skips that engine; bl_sem_v01 is v02's best-first frontier
+# counterpart (same _search signature). The differing wiring (whether
+# to build the pooling engine) is driven by cfg.search.embeds_source
+# below, not by this dict — the dict only selects the algorithm.
 algo_dict = {
     "mcts_sem_v01": mcts_sem_search_v01_00_00,
     "mcts_sem_v02": mcts_sem_search_v02_00_00,
+    "mcts_bl_sem_v01": mcts_bl_sem_search_v01_00_00,
 }
 
 # Register the structured schemas so the YAML binds onto typed,
-# validated dataclasses instead of a plain DictConfig. Both search
+# validated dataclasses instead of a plain DictConfig. All search
 # subclasses are registered under the "search" group; conf/search/
-# mcts_sem_v01|v02 selects one (ExpConfig.search is the base type, so
-# the concrete schema must come from the group).
+# mcts_sem_v01|v02|bl_sem_v01 selects one (ExpConfig.search is the
+# base type, so the concrete schema must come from the group).
 cs = ConfigStore.instance()
 cs.store(name="exp_schema", node=ExpConfig)
 cs.store(group="search", name="mcts_sem_v01_schema", node=MCTSSemV01Config)
 cs.store(group="search", name="mcts_sem_v02_schema", node=MCTSSemV02Config)
+cs.store(
+    group="search", name="mcts_bl_sem_v01_schema", node=BLMCTSSemConfig,
+)
 
 
 def _make_result_dir(path: str) -> None:

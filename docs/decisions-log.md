@@ -14,6 +14,86 @@ scaffold, it also gets a standalone file in [decisions/](decisions/);
 the log entry then carries a one-line pointer to it rather than
 repeating the full writeup.
 
+## 2026-07-08 — Search: PUCT's local per-parent clock is not a fairness gap to fix, in either direction
+
+**Context:** follow-on to the `mcts_bl_sem_v01` entry below. Two
+related "should X use a global clock instead, for fairness" questions
+came up: (1) should `mcts_bl_cnt_v01` adopt `mcts_bl_sem_v01`'s new
+`ds_alpha_schedule="global"` default; (2) should `mcts_bl_cnt_v01`'s
+PUCT bonus use a global visit-count clock instead of `parent_visits`,
+for fairness against `mcts_cnt_v01`.
+
+**Decision (no code change; findings only):** both answered no, for
+different reasons — full derivation in
+[decisions/global-vs-local-exploration-schedule.md](decisions/global-vs-local-exploration-schedule.md).
+(1) doesn't apply because PUCT has no `ds_alpha`/schedule concept at
+all — its bonus is the count-based degenerate case of the diversity
+term's linear-bandit width, not an approximation needing the same fix.
+(2) doesn't apply because `mcts_cnt_v01::MCTSNode.puct` and
+`mcts_bl_cnt_v01::MCTSNode.puct` are byte-identical already — there is
+no existing asymmetry between them to correct. Both real reasons trace
+back to the same fact: PUCT's `parent_visits`/`visits` are exact local
+counts that make `sqrt(log N/n)` a valid per-node confidence bound;
+swapping in a global counter would compare mismatched quantities
+(elapsed global time vs. one node's own visits), not "generalize" the
+bonus. A genuine "make PUCT's exploration term account for global
+tree state" idea would need its own bandit-theoretic justification and
+would apply identically to `mcts_cnt_v01` and `mcts_bl_cnt_v01` (same
+formula) — open, unexplored, not pursued here.
+
+## 2026-07-08 — Search: `mcts_bl_sem_v01` composes frontier selection with semantic diversity; the alpha schedule is exposed, not hardcoded
+
+**Context:** the frontier (best-first) and semantic-diversity search
+families existed only as separate variants: `mcts_bl_cnt_v01` (global
+`leaf_nodes` frontier, PUCT selection) and `mcts_sem_v02` (phase-based
+root-to-leaf walks, `ds_beta*q + ds_alpha*sqrt(x^T V^-1 x)` child
+selection). A combined variant — frontier selection with the
+diversity-adjusted value — needed three composition decisions where
+the parents disagree.
+
+**Decision:** new `core/mcts_bl_sem_search_v01_00_00.py`
+(`method=mcts_bl_sem_v01`, `BLMCTSSemConfig`), run from
+`generate_mcts_sem.py` (same `_search` signature as sem — no new
+launcher; bl_cnt only got its own because its signature differs).
+
+1. **ds_alpha schedule is a config knob (`ds_alpha_schedule`), not a
+   hardcoded transplant.** sem_v02 scales the diversity weight by
+   `sqrt(log(1+parent_visits))` per selection — a local clock. On a
+   global frontier the natural analog is ambiguous, and the choice is
+   a real design axis, so all three candidates are implemented:
+   `global` (default; `sqrt(log(1+t))`, t = frontier selections —
+   the frontier is a flat arm set and the diversity term is the
+   LinUCB confidence width, so the global clock is the OFUL-standard
+   form and keeps effective-alpha magnitudes comparable to sem_v02's),
+   `parent` (literal transplant), `none` (constant); full derivation
+   (plus why the same reasoning does NOT extend to `mcts_bl_cnt_v01`'s
+   PUCT bonus) in
+   [decisions/global-vs-local-exploration-schedule.md](decisions/global-vs-local-exploration-schedule.md).
+   The knob is in
+   the config hash, so schedule ablations get distinct run
+   identities. Expected to be empirically minor at `ds_alpha≥10`
+   (the multiplier only spans ~0.8–2x and the plateau finding says
+   that range is flat) but it matters for interpretability and for
+   small-alpha sweeps.
+2. **No first-visit q-only special case.** sem_v02 selects by q alone
+   on the first descent through a newly expanded node. That concept
+   is per-parent and has no analog under global selection; fresh
+   children compete by `q + diversity` immediately, and since none of
+   them are in `V` yet their widths start near-equal — q
+   differentiates them anyway, which is what the special case
+   approximated.
+3. **Covariance folds on every selection, root excluded.** Same
+   semantics as sem_v02 (every committed direction enters `V`,
+   including terminal picks). The root has no embedding and is only
+   ever selected alone on the first iteration, so it is skipped —
+   mirroring sem, where the root's embedding never enters `V` either.
+
+Also dropped from the schema: `cpuct` (no PUCT) and `revisit_policy`
+(a frontier node is expanded at most once by construction).
+`BLMCTSSemConfig` is a fresh `SearchConfig` subclass rather than a
+`MCTSSemV02Config` child so it can't silently inherit knobs that mean
+nothing here. Index entry: docs/algorithms.md ("BL-Sem-MCTS").
+
 ## 2026-07-07 — Search: `ds_alpha` needs to be ~100x `ds_beta`, and `lam` sets what "matched scale" means
 
 **Context:** `_diverse_select` (`mcts_sem_search_v02_00_00.py`) scores

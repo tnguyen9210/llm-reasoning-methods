@@ -32,6 +32,7 @@ Empirical observations about repo behavior: [findings/](findings/README.md).
 | CNT-MCTS (PUCT), `method=mcts_cnt_v01` | `core/mcts_cnt_search_v01_00_00.py` | `generate_mcts_cnt.py` | `conf/mcts_cnt_prm800k.yaml` |
 | Semantic-MCTS v01 (`mcts_sem_v01`, policy embeds) | `core/mcts_sem_search_v01_00_00.py` | `generate_mcts_sem.py` | `conf/mcts_sem_v01_prm800k.yaml` |
 | Semantic-MCTS v02 (`mcts_sem_v02`, PRM embeds) | `core/mcts_sem_search_v02_00_00.py` | `generate_mcts_sem.py` | `conf/mcts_sem_v02_prm800k.yaml` |
+| BL-Sem-MCTS v01 (`mcts_bl_sem_v01`, best-first + PRM embeds) | `core/mcts_bl_sem_search_v01_00_00.py` | `generate_mcts_sem.py` | `conf/mcts_bl_sem_v01_prm800k.yaml` |
 | BL-MCTS v01 (PUCT, best-first) | `core/mcts_bl_cnt_search_v01_00_00.py` | `generate_mcts_bl_cnt_v01.py` | `conf/mcts_bl_cnt_v01_prm800k.yaml` |
 | BL-MCTS v02 (KUBE) | `core/mcts_bl_cnt_search_v02_00_00.py` | `generate_mcts_bl_cnt_v02.py` | `conf/mcts_bl_cnt_v02_prm800k.yaml` |
 | BoN | `core/bon_search_v01_0_0.py` | `generate_bon.py` | `conf/bon_prm800k.yaml` (+ gsm8k, aime2025) |
@@ -102,6 +103,38 @@ alone. Config flags (`utils/configs.py::MCTSSemV01Config` /
   Empirically, turning the bonus on matters; its magnitude past
   `ds_alpha≈10` does not — see
   [findings/exp-findings/ds-alpha-diversity-bonus-plateau.md](findings/exp-findings/ds-alpha-diversity-bonus-plateau.md).
+
+## BL-Sem-MCTS
+
+Frontier counterpart of Semantic-MCTS v02, exactly as BL-MCTS v01 is
+to CNT-MCTS: an explicit `leaf_nodes` frontier with global best-first
+selection, where the sem family's diversity-adjusted value replaces
+BL-MCTS's PUCT:
+
+    q_val = ds_beta*q + ds_alpha*sched*sqrt(x^T V^-1 x)
+
+computed fresh over the whole frontier each iteration; the selected
+leaf's embedding is folded into `V` (rank-1) on every selection. Runs
+from the same launcher (`generate_mcts_sem.py`,
+`algo=mcts_bl_sem_v01`); embeddings default to the PRM source.
+
+`sched` is the `ds_alpha_schedule` knob (`BLMCTSSemConfig`), exposed
+because on a global frontier the schedule is a real design axis
+(sem_v02 hardcodes the per-parent form):
+
+- `global` (default) — `sqrt(log(1+t))`, `t` = frontier selections so
+  far. The frontier is a flat arm set and `sqrt(x^T V^-1 x)` is the
+  LinUCB confidence width, so the global clock is the OFUL-standard
+  schedule; the multiplier is shared across the frontier, so per-node
+  differentiation comes only from `q` and the `V^-1` geometry.
+- `parent` — `sqrt(log(1+parent_visits))` per node, the literal
+  sem_v02 transplant (tree-position-dependent scales).
+- `none` — constant `ds_alpha`.
+
+Differences from sem_v02 beyond the frontier: no first-visit q-only
+special case (per-parent concept, no global analog) and no
+`revisit_policy` (frontier nodes expand at most once). See the module
+docstring and `docs/decisions-log.md` (2026-07-08).
 
 Both sem-mcts variants (and CNT-MCTS) carry the `\n\n` step-separator
 strip-and-reappend guard in candidate-generation templating (some chat

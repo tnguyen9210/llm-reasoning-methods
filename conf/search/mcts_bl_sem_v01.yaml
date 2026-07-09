@@ -1,0 +1,66 @@
+# @package search
+# Search-method group → binds onto BLMCTSSemConfig (frontier + sem).
+# The mcts_bl_sem_v01_schema node (registered in the launcher under
+# group "search") supplies the typed dataclass; values below override
+# it. Each method carries only its own hyperparameters.
+#
+# Frontier counterpart of mcts_sem_v02: global best-first selection
+# over the leaf frontier (like mcts_bl_cnt_v01), with the sem family's
+# diversity-adjusted value replacing PUCT. No cpuct, no revisit_policy
+# (a frontier node is expanded at most once by construction).
+defaults:
+  - mcts_bl_sem_v01_schema
+  - _self_
+
+method: mcts_bl_sem_v01
+embeds_source: prm      # PRM last-layer hidden states (no 2nd engine)
+batch_size: 4           # candidates generated per expansion
+lookahead: 0
+max_depth: 20
+negative_reward: 0
+num_phases: 1000        # iteration cap (safety), not the budget
+gen_budget: 80          # total generations across the full run
+
+# diversity selection:
+#   q_val = ds_beta*score + ds_alpha*sched*sqrt(x^T V^-1 x)
+lam: 0.01               # ridge: V_0 = lam * I
+ds_alpha: 100.0         # diversity weight
+ds_beta: 1.0            # q-value weight
+# How the effective diversity weight evolves over the run:
+#   global — ds_alpha * sqrt(log(1+t)), t = frontier selections so
+#            far (LinUCB-standard for a flat arm set; default)
+#   parent — ds_alpha * sqrt(log(1+parent_visits)) per node (the
+#            literal mcts_sem_v02 transplant)
+#   none   — constant ds_alpha
+ds_alpha_schedule: global
+
+# embedding extraction. Pipeline: pool -> project -> center -> normalize.
+embeds_strategy: last   # "last" | "avg"
+embeds_scope: full      # "full" | "response" ("response" unsupported
+                        #   for embeds_source=prm — see search core)
+embeds_normalize: true
+embeds_center: false
+embeds_mean_dir: ""     # results/-relative .npy prefix (if center=true);
+                        #   the mean must be computed POST-projection
+                        #   when proj is on
+# Post-projection dim = size of the covariance V. The raw PRM hidden
+# size (Llama3.1-8B-PRM = 4096) is read off the pooled tensor, then
+# sparse-projected down to this. (Set 4096 + embeds_proj=none to feed
+# the raw PRM embeds straight in.)
+embeds_dim: 512
+embeds_proj: sparse     # "none" | "sparse" (JL random projection;
+                        #   matrix seed is fixed internally, not a knob)
+prm_embeds_layer: -1    # which PRM layer to pool (-1 = last)
+
+# covariance bookkeeping
+# Default is sm (Sherman-Morrison): O(d^2)/selection persistent inverse
+# update vs exact's O(d^3) re-inversion, validated machine-precision-
+# identical to exact in sem_v02.
+cov_update: sm          # "exact" | "sm" (Sherman-Morrison)
+
+# NOTE: no embeds_gpu_memory_utilization here — the default source is
+# the PRM (no pooling engine). The schema default is inherited but
+# unused unless embeds_source=policy is set.
+
+# PRM micro-batch for in-loop candidate scoring
+prm_batch_size: 1

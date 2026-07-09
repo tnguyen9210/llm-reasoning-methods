@@ -74,7 +74,7 @@ instead of one wide sparse grid.)
 | sem-mcts (policy) | `mcts_sem_v01` | `mcts_sem_search_v01_00_00` | runnable, no runs yet |
 | cnt-mcts-bl | `mcts_bl_cnt_v01` | `mcts_bl_cnt_search_v01_00_00` | runs logged |
 | cnt-mcts-bl v02 | `mcts_bl_cnt_v02` | `mcts_bl_cnt_search_v02_00_00` | runnable, no runs yet |
-| sem-mcts-bl | `mcts_sem_bl` *(pending)* | — (not built) | not implemented |
+| sem-mcts-bl | `mcts_bl_sem_v01` | `mcts_bl_sem_search_v01_00_00` | runnable, no runs yet |
 
 > Every sem-mcts row elsewhere in this doc is **v02** (PRM-sourced
 > embeddings) — v01 (policy-sourced, via a 2nd vLLM pooling
@@ -84,8 +84,11 @@ instead of one wide sparse grid.)
 > `embeds_proj=none|sparse` (sparse = JL projection to 512-dim,
 > ~2.5x faster) and `cov_update=exact|sherman_morrison`.
 > `mcts_bl_cnt_v02` has a launcher + config now (previously
-> flat/unmigrated) but hasn't been run. `sem-mcts-bl` remains
-> unbuilt (`llm-reasoning-mcts-bl-exp` backlog, `mcts_bl_embeds`).
+> flat/unmigrated) but hasn't been run. `sem-mcts-bl`
+> (`mcts_bl_sem_v01`) is now implemented (2026-07-08) — best-
+> first frontier selection with sem's diversity-adjusted value,
+> run from `generate_mcts_sem.py`, `algo=mcts_bl_sem_v01` — but
+> has no runs yet.
 
 ## Summary — results per (algorithm, model, budget)
 > The cross-model / cross-algorithm comparison: one row per
@@ -109,9 +112,8 @@ instead of one wide sparse grid.)
 | sem-mcts (PRM) | qwen-3b | 80 | 2 | .840<br>±.023 | .629<br>±.030 | .703<br>±.029 | .699<br>±.029 |
 | sem-mcts (PRM) | qwen-math-1.5b | 80 | 2 | .879<br>±.020 | .746<br>±.027 | .766<br>±.027 | .746<br>±.027 |
 | sem-mcts (policy) | — | 80 | — | *planned (no runs yet)* | — | — | — |
-| cnt-mcts-bl | llama-1b | 80 | 4 | .492<br>±.022 | .395<br>±.022 | .383<br>±.022 | .381<br>±.022 |
-| cnt-mcts-bl | qwen-math-1.5b | 80 | 3 | .654<br>±.024 | .578<br>±.025 | .573<br>±.025 | .576<br>±.026 |
-| sem-mcts-bl | — | 80 | — | *not built* | — | — | — |
+| cnt-mcts-bl | — | 80 | — | *planned (no qwen-PRM runs yet)* | — | — | — |
+| sem-mcts-bl | — | 80 | — | *planned (no runs yet)* | — | — | — |
 
 > Winning config per row (cpuct fixed at 2.0 throughout — no
 > sweep yet, so template is the only knob currently in play;
@@ -122,20 +124,9 @@ instead of one wide sparse grid.)
 > qwen-math-1.5b **native** (custom is scored at .894 over 2
 > trials but template-bug — see tuning table; not a valid
 > winner yet).
-> cnt-mcts-bl — llama-1b **custom**,
-> qwen-math-1.5b **native** (each only scored). `sem-*`
-> blocked (rename / not built).
+> `sem-mcts (policy)`/`cnt-mcts-bl`/`sem-mcts-bl` — no runs yet.
 >
 > **What the numbers say (budget 80):**
-> - **cnt-bl loses to cnt where they overlap.** llama-1b:
->   cnt .648 vs cnt-bl .492. qwen-math-1.5b: cnt .879 vs
->   cnt-bl .654. The best-first frontier protocol is
->   *underperforming* the phase-based baseline at this budget
->   on both shared models — worth a hard look before
->   investing more in BL.
-> - qwen-math-1.5b-native: cnt has 2 scored trials, cnt-bl
->   has 3 — ⚠ not a matched comparison yet
->   (`llm-reasoning-mcts-bl-exp-todo` M3).
 > - Within cnt, model size/family dominates template: both
 >   Qwen models hit .879 pass@gb, well above Llama
 >   (.648/.744).
@@ -1430,53 +1421,12 @@ instead of one wide sparse grid.)
 > `llm-reasoning-mcts-bl-exp-todo` on whether to keep it,
 > replace it, or remove it.)
 
-##### llama-1b
-> **Compares:** cnt-mcts-bl's only run config for this model —
-> not yet a sweep, just the baseline reference cell.
->
-> **Fixed:** tmpl=custom, cpuct=2.0, bs-4, d-20, b=80.
->
-> **W&B:** not yet recorded here — see Run log below
-> (2026-06-18 entry).
-
-| tmpl | cpuct | trials | status | pass@gb | naive@gb | wei@gb | maj@gb |
-|---|---|---|---|---|---|---|---|
-| custom | 2.0 | 4 | scored | .492<br>±.022 | .395<br>±.022 | .383<br>±.022 | .381<br>±.022 |
-
-> **Analysis.** Single config, no comparison axis yet — this is
-> the reference cell promoted to the Summary table.
-> **Limitations / follow-up:** no template or cpuct sweep run
-> yet for this model.
-
-##### qwen-math-1.5b
-> **Compares:** cnt-mcts-bl's only run config for this model —
-> not yet a sweep, just the baseline reference cell.
->
-> **Fixed:** tmpl=native, cpuct=2.0, bs-4, d-20, b=80.
->
-> ⚠️ trial-count mismatch vs. cnt-mcts for qwen-math-1.5b native
-> (bl=3, cnt=2) — not yet reconciled.
->
-> **W&B:** not yet recorded here.
-
-| tmpl | cpuct | trials | status | pass@gb | naive@gb | wei@gb | maj@gb |
-|---|---|---|---|---|---|---|---|
-| native | 2.0 | 3 | scored | .654<br>±.024 | .578<br>±.025 | .573<br>±.025 | .576<br>±.026 |
-
-> **Analysis.** Single config, no comparison axis yet.
-> **Limitations / follow-up:** reconcile the trial-count mismatch
-> against cnt-mcts (`llm-reasoning-mcts-bl-exp-todo` M3) before
-> using this row in any head-to-head with cnt-mcts.
-
 #### model family, size, quantization comparison (qwen PRM)
 > **Compares:** model family, size, and quantization jointly —
 > same 7-model/quant grid as cnt-mcts (updated)'s equivalent
 > table above, so a direct bl_cnt-vs-cnt read is possible once
 > both are filled. All 7 cells are new for bl_cnt_v01 with the
-> qwen PRM — the two existing `#####` cells above (llama-1b,
-> qwen-math-1.5b) used the rlhflow PRM, so they don't populate
-> this table directly and would need a qwen-PRM rerun to join
-> it.
+> qwen PRM.
 >
 > **Fixed:** method=`mcts_bl_cnt_v01`, prm=qwen, agg_strategy=
 > `last`, cpuct=2.0, bs-4, d-20, b=80, prm_batch_size=1 (the
@@ -1502,12 +1452,87 @@ instead of one wide sparse grid.)
 > here.
 
 ### sem-mcts-bl
-> **Compares:** nothing yet — `mcts_sem_bl` is not implemented
-> in code (no core module, no launcher, no config). Listed here
-> only so the target algorithm grid is visible.
+> knobs: model family/size/quantization (this table); lam,
+> ds_alpha, ds_alpha_schedule not yet swept — every row below
+> is the same fixed point. method=`mcts_bl_sem_v01`
+> (`core/mcts_bl_sem_search_v01_00_00.py`), best-first frontier
+> selection with the sem family's diversity-adjusted value
+> (frontier counterpart of sem-mcts v02, as cnt-mcts-bl is to
+> cnt-mcts). Run from `generate_mcts_sem.py`,
+> `algo=mcts_bl_sem_v01`. See `docs/algorithms.md`
+> ("BL-Sem-MCTS") and `docs/decisions-log.md` (2026-07-08) for
+> the algorithm and its `ds_alpha_schedule` design.
+
+#### model family, size, quantization comparison (qwen PRM, w_eff=100)
+> **Compares:** model family, size, and quantization jointly —
+> same 7-model/quant grid as cnt-mcts-bl's equivalent table
+> above, so a direct bl_sem-vs-bl_cnt read is possible once both
+> are filled. All 7 cells are new.
 >
-> **Limitations / follow-up:** blocked on
-> `llm-reasoning-mcts-bl-exp` backlog item `mcts_bl_embeds`.
+> **Fixed:** method=`mcts_bl_sem_v01`, prm=qwen (both scoring
+> AND diversity embeds — `embeds_source=prm` is the schema
+> default, no second pooling engine), agg_strategy=`last`, bs-4,
+> d-20, b=80, prm_batch_size=1, `ds_alpha_schedule=global`
+> (default — see decisions-log), `cov_update=sm`,
+> `embeds_dim=512`/`embeds_proj=sparse` (defaults), tmpl=
+> model-family default (native for Qwen, custom for Llama).
+> **lam=0.1, ds_alpha=31.6** (`w_eff = ds_alpha/sqrt(lam) = 100`
+> — see
+> [decisions/tuning-semantic-score-weights-and-lambda.md](decisions/tuning-semantic-score-weights-and-lambda.md)'s
+> `lam=0.1` row; `ds_beta=1.0` fixed throughout, so only the
+> ratio matters).
+
+| llm | trials | status | pass@gb | naive@gb | wei@gb | maj@gb | hr/trial |
+|---|---|---|---|---|---|---|---|
+| llama-1b fp16 | — | planned | — | — | — | — | — |
+| llama-3b fp16 | — | planned | — | — | — | — | — |
+| llama-3b gptq | — | planned | — | — | — | — | — |
+| qwen-3b fp16 | — | planned | — | — | — | — | — |
+| qwen-3b gptq-int4 | — | planned | — | — | — | — | — |
+| qwen-7b gptq-int4 | — | planned | — | — | — | — | — |
+| qwen-math-1.5b fp16 | — | planned | — | — | — | — | — |
+
+> **Analysis.** No data yet.
+> **Limitations / follow-up:** all 7 cells are new; none queued
+> in `experiments.yaml`. `lam`/`ds_alpha`/`ds_alpha_schedule`
+> are fixed at one point (`w_eff=100`, `global` schedule) —
+> no sweep along any of those axes yet for this algorithm.
+
+#### model family, size, quantization comparison (qwen PRM, w_eff=10)
+> **Compares:** same 7-model/quant grid as the `w_eff=100` table
+> above, at one order of magnitude lower effective diversity
+> weight — the two tables together give a first (coarse) read on
+> whether the model-family ranking is sensitive to `w_eff` for
+> this algorithm, ahead of a proper `w_eff` sweep.
+>
+> **Fixed:** identical to the `w_eff=100` table above (method=
+> `mcts_bl_sem_v01`, prm=qwen, agg_strategy=`last`, bs-4, d-20,
+> b=80, prm_batch_size=1, `ds_alpha_schedule=global`,
+> `cov_update=sm`, `embeds_dim=512`/`embeds_proj=sparse`, tmpl=
+> model-family default) except the diversity weight.
+> **lam=0.1, ds_alpha=3.16** (`w_eff = ds_alpha/sqrt(lam) = 10`
+> — see
+> [decisions/tuning-semantic-score-weights-and-lambda.md](decisions/tuning-semantic-score-weights-and-lambda.md)'s
+> `lam=0.1` row).
+
+| llm | trials | status | pass@gb | naive@gb | wei@gb | maj@gb | hr/trial |
+|---|---|---|---|---|---|---|---|
+| llama-1b fp16 | — | planned | — | — | — | — | — |
+| llama-3b fp16 | — | planned | — | — | — | — | — |
+| llama-3b gptq | — | planned | — | — | — | — | — |
+| qwen-3b fp16 | — | planned | — | — | — | — | — |
+| qwen-3b gptq-int4 | — | planned | — | — | — | — | — |
+| qwen-7b gptq-int4 | — | planned | — | — | — | — | — |
+| qwen-math-1.5b fp16 | — | planned | — | — | — | — | — |
+
+> **Analysis.** No data yet.
+> **Limitations / follow-up:** all 7 cells are new; none queued
+> in `experiments.yaml`. Per
+> [ds-alpha-diversity-bonus-plateau.md](findings/exp-findings/ds-alpha-diversity-bonus-plateau.md),
+> `w_eff=10` is right at the plateau's onset (in sem_v02's
+> rlhflow-PRM data) — the two tables together are a cheap probe
+> for whether bl_sem's plateau sits in the same place, not a
+> replacement for a real sweep.
 
 ## Tuning tables [gen_budget=160, 320, …] *(future)*
 > Add a new `## Tuning tables [gen_budget=N]` section, then
@@ -1582,8 +1607,9 @@ instead of one wide sparse grid.)
 - Does sem-UCT beat cnt-UCT at matched budget? (needs
   sem-mcts runnable)
 - Does the BL frontier protocol beat phase-based walks?
-  (cnt-mcts-bl vs cnt-mcts @80 — data exists, pending the
-  trial-count fix + write-up)
+  (cnt-mcts-bl vs cnt-mcts @80, qwen PRM — no runs yet, see
+  `#### model family, size, quantization comparison (qwen PRM)`
+  under `### cnt-mcts-bl`)
 - Custom vs native template: consistent across algorithms?
 - cpuct sensitivity: same optimum across algorithms? (no
   sweep for any algorithm yet)
