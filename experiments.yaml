@@ -1544,3 +1544,49 @@
   note: backfilled from mcts_bl_sem_v01--level-4--Qwen2.5-7B-GPTQ-Int4--qwen--d-20--bs-4--b-080--cfg-fe3325af
     (run_id xc7rd2nt); trials corrected 1->2 (run.num_trials=2 default, only 1 .done
     at backfill time); scored 2026-07-09, pass@gb .9102±.0179
+- launcher: generate_mcts_sem.py
+  config_root: mcts_bl_sem_v01_prm800k
+  overrides:
+    llm: qwen_3b_gptq_int4
+    prm: qwen_prm
+    search.lam: 0.1
+    search.ds_alpha: 31.6
+  trials: 2
+  feeds: []
+  group: sem-mcts-bl
+  recorded: true
+  priority: 2
+  note: backfilled from mcts_bl_sem_v01--level-4--Qwen2.5-3B-GPTQ-Int4--qwen--d-20--bs-4--b-080--cfg-b6c3b99c
+    (run_id g1dwjiyv); scored 2026-07-09, pass@gb .7422±.0274 (already in
+    docs/exp-comparison.md sem-mcts-bl w_eff=100 table)
+- launcher: generate_mcts_sem.py
+  config_root: mcts_bl_sem_v01_prm800k
+  overrides:
+    llm: qwen_7b_gptq_int4
+    prm: qwen_prm
+    search.lam: 0.1
+    search.ds_alpha: 31.6
+  trials: 2
+  feeds: []
+  group: sem-mcts-bl
+  recorded: true
+  priority: 2
+  note: backfilled from mcts_bl_sem_v01--level-4--Qwen2.5-7B-GPTQ-Int4--qwen--d-20--bs-4--b-080--cfg-fa3a0c0a
+    (run_id 80by1b4f); scored 2026-07-09, pass@gb .8906±.0195 (already in
+    docs/exp-comparison.md sem-mcts-bl w_eff=100 table)
+- launcher: generate_mcts_sem.py
+  config_root: mcts_sem_v02_prm800k
+  overrides:
+    llm: qwen_math_1_5b
+    prm: qwen_prm
+    search.lam: 0.1
+    search.ds_alpha: 3.16
+    gen.agg_strategy: prod
+  trials: 2
+  feeds: []
+  group: sem-mcts
+  recorded: true
+  priority: 2
+  note: backfilled from mcts_sem_v02--level-4--Qwen2.5-Math-1.5B--qwen--d-20--bs-4--b-080--cfg-d5f27e0f
+    (run_id wixl51ql); scored 2026-07-09, pass@gb .8867±.0198 (already in
+    docs/exp-comparison.md agg_strategy comparison lam=0.1 w_eff=10 table)
