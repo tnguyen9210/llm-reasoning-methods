@@ -594,11 +594,11 @@
   trials: 2
   feeds: []
   group: sem-mcts-bl
-  recorded: false
+  recorded: true
   priority: 2
   note: backfilled from mcts_bl_sem_v01--level-4--Qwen2.5-Math-1.5B--qwen--d-20--bs-4--b-080--cfg-05b41daf
     (run_id x2t2cxx1); trials corrected 1->2 (run.num_trials=2 default, only 1 .done
-    at backfill time)
+    at backfill time); scored 2026-07-09, pass@gb .8555±.0220
 - launcher: generate_mcts_cnt.py
   config_root: mcts_cnt_prm800k
   overrides:
@@ -696,11 +696,11 @@
   trials: 2
   feeds: []
   group: sem-mcts-bl
-  recorded: false
+  recorded: true
   priority: 2
   note: backfilled from mcts_bl_sem_v01--level-4--Llama3.2-1B--qwen--d-20--bs-4--b-080--cfg-1c3aa934
     (run_id 11259dfh); trials corrected 1->2 (run.num_trials=2 default, only 1 .done
-    at backfill time)
+    at backfill time); scored 2026-07-09, pass@gb .5859±.0308
 - launcher: generate_mcts_cnt.py
   config_root: mcts_cnt_prm800k
   overrides:
@@ -749,10 +749,11 @@
   trials: 2
   feeds: []
   group: sem-mcts
-  recorded: false
+  recorded: true
   priority: 2
   note: backfilled from mcts_sem_v02--level-4--Llama3.2-3B--qwen--d-20--bs-4--b-080--cfg-26404f30
-    (run_id k6mikl4b)
+    (run_id k6mikl4b); scored 2026-07-09, pass@gb .7617±.0267 (already in
+    docs/exp-comparison.md embeds_strategy x scope sweep table)
 - launcher: generate_mcts_sem.py
   config_root: mcts_bl_sem_v01_prm800k
   overrides:
@@ -763,11 +764,11 @@
   trials: 2
   feeds: []
   group: sem-mcts-bl
-  recorded: false
+  recorded: true
   priority: 2
   note: backfilled from mcts_bl_sem_v01--level-4--Qwen2.5-3B--qwen--d-20--bs-4--b-080--cfg-291dc3a4
     (run_id 2gfmsfwp); trials corrected 1->2 (run.num_trials=2 default, only 1 .done
-    at backfill time)
+    at backfill time); scored 2026-07-09, pass@gb .8320±.0234
 - launcher: generate_mcts_sem.py
   config_root: mcts_sem_v02_prm800k
   overrides:
@@ -778,10 +779,11 @@
   trials: 2
   feeds: []
   group: sem-mcts
-  recorded: false
+  recorded: true
   priority: 2
   note: backfilled from mcts_sem_v02--level-4--Qwen2.5-3B--qwen--d-20--bs-4--b-080--cfg-2d349d4e
-    (run_id okvdvw33)
+    (run_id okvdvw33); scored 2026-07-09, pass@gb .8750±.0207 (already in
+    docs/exp-comparison.md agg_strategy w_eff=100 table)
 - launcher: generate_mcts_cnt.py
   config_root: mcts_cnt_prm800k
   overrides:
@@ -818,11 +820,11 @@
   trials: 2
   feeds: []
   group: sem-mcts-bl
-  recorded: false
+  recorded: true
   priority: 2
   note: backfilled from mcts_bl_sem_v01--level-4--Qwen2.5-Math-1.5B--qwen--d-20--bs-4--b-080--cfg-365d29ac
     (run_id hu6zxhjd); trials corrected 1->2 (run.num_trials=2 default, only 1 .done
-    at backfill time)
+    at backfill time); scored 2026-07-09, pass@gb .8320±.0234
 - launcher: generate_mcts_cnt.py
   config_root: mcts_cnt_prm800k
   overrides:
@@ -857,10 +859,11 @@
   trials: 2
   feeds: []
   group: sem-mcts
-  recorded: false
+  recorded: true
   priority: 2
   note: backfilled from mcts_sem_v02--level-4--Llama3.2-1B--qwen--d-20--bs-4--b-080--cfg-3c7d4fe6
-    (run_id ncl65erd)
+    (run_id ncl65erd); scored 2026-07-09, pass@gb .6172±.0304 (already in
+    docs/exp-comparison.md lam/ds_alpha joint sweep llama-1b table)
 - launcher: generate_mcts_sem.py
   config_root: mcts_sem_v02_prm800k
   overrides:
@@ -870,10 +873,11 @@
   trials: 2
   feeds: []
   group: sem-mcts
-  recorded: false
+  recorded: true
   priority: 2
   note: backfilled from mcts_sem_v02--level-4--Llama3.2-1B--qwen--d-20--bs-4--b-080--cfg-3e17aad4
-    (run_id yc6jjwd0)
+    (run_id yc6jjwd0); scored 2026-07-09, pass@gb .6133±.0305 (already in
+    docs/exp-comparison.md lam/ds_alpha joint sweep llama-1b table)
 - launcher: generate_mcts_sem.py
   config_root: mcts_sem_v02_prm800k
   overrides:
@@ -897,11 +901,11 @@
   trials: 2
   feeds: []
   group: sem-mcts-bl
-  recorded: false
+  recorded: true
   priority: 2
   note: backfilled from mcts_bl_sem_v01--level-4--Qwen2.5-3B--qwen--d-20--bs-4--b-080--cfg-432be82e
     (run_id b6i8ch3v); trials corrected 1->2 (run.num_trials=2 default, only 1 .done
-    at backfill time)
+    at backfill time); scored 2026-07-09, pass@gb .8477±.0225
 - launcher: generate_mcts_cnt.py
   config_root: mcts_cnt_prm800k
   overrides:
@@ -966,10 +970,11 @@
   trials: 2
   feeds: []
   group: sem-mcts
-  recorded: false
+  recorded: true
   priority: 2
   note: backfilled from mcts_sem_v02--level-4--Qwen2.5-Math-1.5B--qwen--d-20--bs-4--b-080--cfg-57003287
-    (run_id ikse2p6t)
+    (run_id ikse2p6t); scored 2026-07-09, pass@gb .8672±.0213 (already in
+    docs/exp-comparison.md lam/ds_alpha joint sweep qwen-math-1.5b table)
 - launcher: generate_mcts_sem.py
   config_root: mcts_sem_v02_prm800k
   overrides:
@@ -980,10 +985,11 @@
   trials: 2
   feeds: []
   group: sem-mcts
-  recorded: false
+  recorded: true
   priority: 2
   note: backfilled from mcts_sem_v02--level-4--Qwen2.5-Math-1.5B--qwen--d-20--bs-4--b-080--cfg-5a58a0b7
-    (run_id gefqemm3)
+    (run_id gefqemm3); scored 2026-07-09, pass@gb .8867±.0198 (already in
+    docs/exp-comparison.md lam/ds_alpha joint sweep qwen-math-1.5b table)
 - launcher: generate_mcts_sem.py
   config_root: mcts_sem_v02_prm800k
   overrides:
@@ -995,10 +1001,11 @@
   trials: 2
   feeds: []
   group: sem-mcts
-  recorded: false
+  recorded: true
   priority: 2
   note: backfilled from mcts_sem_v02--level-4--Llama3.2-3B--qwen--d-20--bs-4--b-080--cfg-5b443cc1
-    (run_id 3p9ltai4)
+    (run_id 3p9ltai4); scored 2026-07-09, pass@gb .7695±.0264 (already in
+    docs/exp-comparison.md embeds_strategy x scope sweep table)
 - launcher: generate_mcts_sem.py
   config_root: mcts_sem_v02_prm800k
   overrides:
@@ -1010,10 +1017,11 @@
   trials: 2
   feeds: []
   group: sem-mcts
-  recorded: false
+  recorded: true
   priority: 2
   note: backfilled from mcts_sem_v02--level-4--Llama3.2-3B--qwen--d-20--bs-4--b-080--cfg-6286b2ef
-    (run_id 1h6cd3au)
+    (run_id 1h6cd3au); scored 2026-07-09, pass@gb .7539±.0270 (already in
+    docs/exp-comparison.md embeds_strategy x scope sweep table)
 - launcher: generate_mcts_sem.py
   config_root: mcts_sem_v02_prm800k
   overrides:
@@ -1112,10 +1120,11 @@
   trials: 2
   feeds: []
   group: sem-mcts
-  recorded: false
+  recorded: true
   priority: 2
   note: backfilled from mcts_sem_v02--level-4--Llama3.2-1B--qwen--d-20--bs-4--b-080--cfg-953fff79
-    (run_id 5wwrv272)
+    (run_id 5wwrv272); scored 2026-07-09, pass@gb .5938±.0308 (already in
+    docs/exp-comparison.md lam/ds_alpha joint sweep llama-1b table)
 - launcher: generate_mcts_bl_cnt_v01.py
   config_root: mcts_bl_cnt_v01_prm800k
   overrides:
@@ -1160,10 +1169,11 @@
   trials: 2
   feeds: []
   group: sem-mcts
-  recorded: false
+  recorded: true
   priority: 2
   note: backfilled from mcts_sem_v02--level-4--Llama3.2-3B--qwen--d-20--bs-4--b-080--cfg-a99c090a
-    (run_id tzgjckmm)
+    (run_id tzgjckmm); scored 2026-07-09, pass@gb .7773±.0261 (already in
+    docs/exp-comparison.md embeds_strategy x scope sweep table)
 - launcher: generate_mcts_cnt.py
   config_root: mcts_cnt_prm800k
   overrides:
@@ -1203,10 +1213,11 @@
   trials: 2
   feeds: []
   group: sem-mcts
-  recorded: false
+  recorded: true
   priority: 2
   note: backfilled from mcts_sem_v02--level-4--Qwen2.5-Math-1.5B--qwen--d-20--bs-4--b-080--cfg-af1f6f2e
-    (run_id fvtvd9hj)
+    (run_id fvtvd9hj); scored 2026-07-09, pass@gb .9023±.0186 (already in
+    docs/exp-comparison.md agg_strategy table)
 - launcher: generate_mcts_sem.py
   config_root: mcts_sem_v02_prm800k
   overrides:
@@ -1230,10 +1241,11 @@
   trials: 2
   feeds: []
   group: sem-mcts
-  recorded: false
+  recorded: true
   priority: 2
   note: backfilled from mcts_sem_v02--level-4--Qwen2.5-3B--qwen--d-20--bs-4--b-080--cfg-afd11edc
-    (run_id 4xtvcqlh)
+    (run_id 4xtvcqlh); scored 2026-07-09, pass@gb .8438±.0227 (already in
+    docs/exp-comparison.md agg_strategy w_eff=10 table)
 - launcher: generate_mcts_sem.py
   config_root: mcts_sem_v02_prm800k
   overrides:
@@ -1243,10 +1255,11 @@
   trials: 2
   feeds: []
   group: sem-mcts
-  recorded: false
+  recorded: true
   priority: 2
   note: backfilled from mcts_sem_v02--level-4--Llama3.2-1B--qwen--d-20--bs-4--b-080--cfg-b12fd984
-    (run_id s6ud58ix)
+    (run_id s6ud58ix); scored 2026-07-09, pass@gb .6094±.0306 (already in
+    docs/exp-comparison.md lam/ds_alpha joint sweep llama-1b table)
 - launcher: generate_mcts_cnt.py
   config_root: mcts_cnt_prm800k
   overrides:
@@ -1327,10 +1340,11 @@
   trials: 2
   feeds: []
   group: sem-mcts
-  recorded: false
+  recorded: true
   priority: 2
   note: backfilled from mcts_sem_v02--level-4--Qwen2.5-Math-1.5B--qwen--d-20--bs-4--b-080--cfg-bf22ecf8
-    (run_id vjczoukn)
+    (run_id vjczoukn); scored 2026-07-09, pass@gb .8633±.0215 (already in
+    docs/exp-comparison.md lam/ds_alpha joint sweep table)
 - launcher: generate_mcts_bl_cnt_v01.py
   config_root: mcts_bl_cnt_v01_prm800k
   overrides:
@@ -1338,10 +1352,11 @@
   trials: 2
   feeds: []
   group: cnt-mcts-bl
-  recorded: false
+  recorded: true
   priority: 2
   note: backfilled from mcts_bl_cnt_v01--level-4--Llama3.2-1B--qwen--d-20--bs-4--b-080--cfg-c055d98b
-    (run_id ok5kmv0q)
+    (run_id ok5kmv0q); scored 2026-07-09, pass@gb .4414±.0311 (already in
+    docs/exp-comparison.md cnt-mcts-bl model family table)
 - launcher: generate_mcts_sem.py
   config_root: mcts_sem_v02_prm800k
   overrides:
@@ -1427,11 +1442,11 @@
   trials: 2
   feeds: []
   group: sem-mcts-bl
-  recorded: false
+  recorded: true
   priority: 2
   note: backfilled from mcts_bl_sem_v01--level-4--Llama3.2-1B--qwen--d-20--bs-4--b-080--cfg-ecb51fef
     (run_id vat9uzl5); trials corrected 1->2 (run.num_trials=2 default, only 1 .done
-    at backfill time)
+    at backfill time); scored 2026-07-09, pass@gb .5195±.0313
 - launcher: generate_mcts_sem.py
   config_root: mcts_sem_v02_prm800k
   overrides:
@@ -1442,10 +1457,11 @@
   trials: 2
   feeds: []
   group: sem-mcts
-  recorded: false
+  recorded: true
   priority: 2
   note: backfilled from mcts_sem_v02--level-4--Llama3.2-3B--qwen--d-20--bs-4--b-080--cfg-f5167568
-    (run_id sjpxkjy6)
+    (run_id sjpxkjy6); scored 2026-07-09, pass@gb .7227±.0280 (already in
+    docs/exp-comparison.md lam/ds_alpha joint sweep llama-3b table)
 - launcher: generate_mcts_sem.py
   config_root: mcts_sem_v02_prm800k
   overrides:
@@ -1468,10 +1484,11 @@
   trials: 2
   feeds: []
   group: sem-mcts
-  recorded: false
+  recorded: true
   priority: 2
   note: backfilled from mcts_sem_v02--level-4--Llama3.2-3B--qwen--d-20--bs-4--b-080--cfg-f9915052
-    (run_id ck5c2n09)
+    (run_id ck5c2n09); scored 2026-07-09, pass@gb .7305±.0278 (already in
+    docs/exp-comparison.md lam/ds_alpha joint sweep llama-3b table)
 - launcher: generate_mcts_sem.py
   config_root: mcts_sem_v02_prm800k
   overrides:
@@ -1480,10 +1497,11 @@
   trials: 2
   feeds: []
   group: sem-mcts
-  recorded: false
+  recorded: true
   priority: 2
   note: backfilled from mcts_sem_v02--level-4--Llama3.2-1B--qwen--d-20--bs-4--b-080--cfg-f9e8eb8b
-    (run_id do56sykw)
+    (run_id do56sykw); scored 2026-07-09, pass@gb .6289±.0303 (already in
+    docs/exp-comparison.md lam/ds_alpha joint sweep llama-1b table)
 - launcher: generate_mcts_cnt.py
   config_root: mcts_cnt_prm800k
   overrides:
@@ -1506,10 +1524,11 @@
   trials: 2
   feeds: []
   group: sem-mcts
-  recorded: false
+  recorded: true
   priority: 2
   note: backfilled from mcts_sem_v02--level-4--Llama3.2-3B--qwen--d-20--bs-4--b-080--cfg-fc47bef8
-    (run_id durd587z)
+    (run_id durd587z); scored 2026-07-09, pass@gb .7422±.0274 (already in
+    docs/exp-comparison.md lam/ds_alpha joint sweep llama-3b table)
 - launcher: generate_mcts_sem.py
   config_root: mcts_bl_sem_v01_prm800k
   overrides:
@@ -1520,8 +1539,8 @@
   trials: 2
   feeds: []
   group: sem-mcts-bl
-  recorded: false
+  recorded: true
   priority: 2
   note: backfilled from mcts_bl_sem_v01--level-4--Qwen2.5-7B-GPTQ-Int4--qwen--d-20--bs-4--b-080--cfg-fe3325af
     (run_id xc7rd2nt); trials corrected 1->2 (run.num_trials=2 default, only 1 .done
-    at backfill time)
+    at backfill time); scored 2026-07-09, pass@gb .9102±.0179

@@ -30,6 +30,7 @@ import wandb
 from utils import metrics
 from utils.configs import (
     ExpConfig, BoNConfig, MCTSCntConfig, BLMCTSCntConfig,
+    BLMCTSCntV02Config, BLMCTSSemConfig,
     MCTSSemV01Config, MCTSSemV02Config, resolve_result_dir,
     load_wandb_run_id,
 )
@@ -44,8 +45,14 @@ cs.store(group="search", name="mcts_cnt_schema", node=MCTSCntConfig)
 cs.store(
     group="search", name="mcts_bl_cnt_v01_schema", node=BLMCTSCntConfig,
 )
+cs.store(
+    group="search", name="mcts_bl_cnt_v02_schema", node=BLMCTSCntV02Config,
+)
 cs.store(group="search", name="mcts_sem_v01_schema", node=MCTSSemV01Config)
 cs.store(group="search", name="mcts_sem_v02_schema", node=MCTSSemV02Config)
+cs.store(
+    group="search", name="mcts_bl_sem_v01_schema", node=BLMCTSSemConfig,
+)
 
 
 @hydra.main(

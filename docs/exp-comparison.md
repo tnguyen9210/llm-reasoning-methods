@@ -955,14 +955,14 @@ instead of one wide sparse grid.)
 | llama-1b | qwen | 1.0 | 1 | 1 | 2 | scored | .5781<br>±.0309 | .5078<br>±.0313 | .4883<br>±.0313 | .4805<br>±.0313 | — |
 | llama-1b | qwen | 0.1 | 0.316 | 1 | 2 | scored | .6016<br>±.0307 | .5391<br>±.0312 | .5352<br>±.0312 | .5000<br>±.0313 | — |
 | llama-1b | qwen | 0.01 | 0.1 | 1 | 2 | scored | .6094<br>±.0306 | .5391<br>±.0312 | .5039<br>±.0313 | .4727<br>±.0313 | — |
-| llama-1b | qwen | 1.0 | 3.0 | 3.0 | 2 | scored | .6172<br>±.0304 | .5391<br>±.0312 | .5117<br>±.0313 | .4727<br>±.0313 | — |
-| llama-1b | qwen | 0.1 | 0.949 | 3.0 | 2 | scored | .6133<br>±.0305 | .5195<br>±.0313 | .5312<br>±.0312 | .4961<br>±.0313 | — |
-| llama-1b | qwen | 0.01 | 0.3 | 3.0 | 2 | scored | .5938<br>±.0308 | .5508<br>±.0311 | .5234<br>±.0313 | .4688<br>±.0312 | — |
+| llama-1b | qwen | 1.0 | 3.0 | 3.0 | 2 | scored | .6172<br>±.0304 | .5391<br>±.0312 | .5117<br>±.0313 | .4727<br>±.0313 | 3.74 |
+| llama-1b | qwen | 0.1 | 0.949 | 3.0 | 2 | scored | .6133<br>±.0305 | .5195<br>±.0313 | .5312<br>±.0312 | .4961<br>±.0313 | 3.82 |
+| llama-1b | qwen | 0.01 | 0.3 | 3.0 | 2 | scored | .5938<br>±.0308 | .5508<br>±.0311 | .5234<br>±.0313 | .4688<br>±.0312 | 3.77 |
 | llama-1b | qwen | **1.0** | **10** | **10** | **2** | **scored (step 1)** | **.6172<br>±.0304** | **.5273<br>±.0313** | **.4766<br>±.0313** | **.4375<br>±.0311** | — |
 | llama-1b | qwen | 0.1 | 3.16 | 10 | 2 | scored | .6133<br>±.0305 | .5156<br>±.0313 | .4766<br>±.0313 | .4375<br>±.0311 | — |
 | llama-1b | qwen | **0.01** | **1.0** | **10** | **2** | **scored (step 1)** | **.6250<br>±.0303** | **.5469<br>±.0312** | **.5039<br>±.0313** | **.4648<br>±.0312** | — |
-| llama-1b | qwen | 1.0 | 100 | 100 | 2 | scored | .6289<br>±.0303 | .5312<br>±.0312 | .4375<br>±.0311 | .3438<br>±.0297 | — |
-| llama-1b | qwen | 0.1 | 31.6 | 100 | 2 | scored | .6094<br>±.0306 | .5117<br>±.0313 | .4531<br>±.0312 | .4219<br>±.0309 | — |
+| llama-1b | qwen | 1.0 | 100 | 100 | 2 | scored | .6289<br>±.0303 | .5312<br>±.0312 | .4375<br>±.0311 | .3438<br>±.0297 | 3.93 |
+| llama-1b | qwen | 0.1 | 31.6 | 100 | 2 | scored | .6094<br>±.0306 | .5117<br>±.0313 | .4531<br>±.0312 | .4219<br>±.0309 | 3.90 |
 | llama-1b | qwen | 0.01 | 10 | 100 | 2 | scored (see qwen-PRM ds_alpha=10 above) | .6211<br>±.0304 | .5352<br>±.0312 | .4844<br>±.0313 | .4258<br>±.0310 | 3.75 |
 
 > **Analysis.** Step 1 done: `w_eff=10` at `lam=1.0`
@@ -1035,9 +1035,9 @@ instead of one wide sparse grid.)
 | llama-3b | qwen | 1.0 | 1 | 1 | 2 | scored | .7109<br>±.0284 | .6406<br>±.0300 | .6328<br>±.0302 | .6328<br>±.0302 | — |
 | llama-3b | qwen | 0.1 | 0.316 | 1 | 2 | scored | .7109<br>±.0284 | .6641<br>±.0296 | .6562<br>±.0297 | .6484<br>±.0299 | — |
 | llama-3b | qwen | 0.01 | 0.1 | 1 | 2 | scored | .7266<br>±.0279 | .6680<br>±.0295 | .6602<br>±.0297 | .6484<br>±.0299 | — |
-| llama-3b | qwen | 1.0 | 3.0 | 3.0 | 2 | scored | .7227<br>±.0280 | .6523<br>±.0298 | .6484<br>±.0299 | .6367<br>±.0301 | — |
-| llama-3b | qwen | 0.1 | 0.949 | 3.0 | 2 | scored | .7422<br>±.0274 | .6758<br>±.0293 | .6680<br>±.0295 | .6602<br>±.0297 | — |
-| llama-3b | qwen | 0.01 | 0.3 | 3.0 | 2 | scored | .7305<br>±.0278 | .6641<br>±.0296 | .6836<br>±.0291 | .6602<br>±.0297 | — |
+| llama-3b | qwen | 1.0 | 3.0 | 3.0 | 2 | scored | .7227<br>±.0280 | .6523<br>±.0298 | .6484<br>±.0299 | .6367<br>±.0301 | 4.90 |
+| llama-3b | qwen | 0.1 | 0.949 | 3.0 | 2 | scored | .7422<br>±.0274 | .6758<br>±.0293 | .6680<br>±.0295 | .6602<br>±.0297 | 4.97 |
+| llama-3b | qwen | 0.01 | 0.3 | 3.0 | 2 | scored | .7305<br>±.0278 | .6641<br>±.0296 | .6836<br>±.0291 | .6602<br>±.0297 | 4.92 |
 | llama-3b | qwen | **1.0** | **10** | **10** | **2** | **scored (step 1)** | **.7422<br>±.0274** | **.6562<br>±.0297** | **.6445<br>±.0300** | **.6211<br>±.0304** | — |
 | llama-3b | qwen | 0.1 | 3.16 | 10 | 2 | scored | .7578<br>±.0268 | .6719<br>±.0294 | .6602<br>±.0297 | .6289<br>±.0303 | — |
 | llama-3b | qwen | **0.01** | **1.0** | **10** | **2** | **scored (step 1)** | **.7500<br>±.0271** | **.6562<br>±.0297** | **.6562<br>±.0297** | **.6523<br>±.0298** | — |
@@ -1087,9 +1087,9 @@ instead of one wide sparse grid.)
 | llm | prm | lam | ds_alpha | w_eff | trials | status | pass@gb | naive@gb | wei@gb | maj@gb | hr/trial |
 |---|---|---|---|---|---|---|---|---|---|---|---|
 | qwen-math-1.5b | qwen | 0.01 | 1.0 | 10 | 2 | scored | .8633<br>±.0215 | .7852<br>±.0257 | .7695<br>±.0264 | .7695<br>±.0264 | 3.94 |
-| qwen-math-1.5b | qwen | 0.1 | 3.16 | 10 | 2 | scored | .8867<br>±.0198 | .7930<br>±.0254 | .7578<br>±.0268 | .7500<br>±.0271 | — |
+| qwen-math-1.5b | qwen | 0.1 | 3.16 | 10 | 2 | scored | .8867<br>±.0198 | .7930<br>±.0254 | .7578<br>±.0268 | .7500<br>±.0271 | 4.02 |
 | qwen-math-1.5b | qwen | 0.01 | 10 | 100 | 2 | scored (see qwen-PRM ds_alpha=10 above) | .8789<br>±.0204 | .7969<br>±.0252 | .7891<br>±.0255 | .7695<br>±.0264 | 3.98 |
-| qwen-math-1.5b | qwen | 0.1 | 31.6 | 100 | 2 | scored | .8672<br>±.0213 | .7891<br>±.0255 | .7656<br>±.0265 | .7422<br>±.0274 | — |
+| qwen-math-1.5b | qwen | 0.1 | 31.6 | 100 | 2 | scored | .8672<br>±.0213 | .7891<br>±.0255 | .7656<br>±.0265 | .7422<br>±.0274 | 3.92 |
 
 > **Analysis.** Both `lam=0.1` cells (w_eff=10: .8867, w_eff=100:
 > .8672) are within ~1 SEM of the `lam=0.01, w_eff=100` baseline
@@ -1523,19 +1523,28 @@ instead of one wide sparse grid.)
 
 | llm | trials | status | pass@gb | naive@gb | wei@gb | maj@gb | hr/trial |
 |---|---|---|---|---|---|---|---|
-| llama-1b fp16 | — | planned | — | — | — | — | — |
+| llama-1b fp16 | 2 | scored | .5195<br>±.0313 | .4219<br>±.0309 | .3242<br>±.0293 | .2422<br>±.0268 | 5.18 |
 | llama-3b fp16 | — | planned | — | — | — | — | — |
 | llama-3b gptq | — | planned | — | — | — | — | — |
-| qwen-3b fp16 | — | planned | — | — | — | — | — |
+| qwen-3b fp16 | 2 | scored | .8320<br>±.0234 | .6836<br>±.0291 | .6484<br>±.0299 | .6016<br>±.0307 | 5.19 |
 | qwen-3b gptq-int4 | — | planned | — | — | — | — | — |
 | qwen-7b gptq-int4 | — | planned | — | — | — | — | — |
-| qwen-math-1.5b fp16 | — | planned | — | — | — | — | — |
+| qwen-math-1.5b fp16 | 2 | scored | .8320<br>±.0234 | .6992<br>±.0287 | .6445<br>±.0300 | .6484<br>±.0299 | 4.19 |
 
-> **Analysis.** No data yet.
-> **Limitations / follow-up:** all 7 cells are new; none queued
-> in `experiments.yaml`. `lam`/`ds_alpha`/`ds_alpha_schedule`
-> are fixed at one point (`w_eff=100`, `global` schedule) —
-> no sweep along any of those axes yet for this algorithm.
+> **Analysis.** 3 of 7 cells now scored (2026-07-09): llama-1b .5195,
+> qwen-3b .8320, qwen-math-1.5b .8320. Comparing to the `w_eff=10`
+> table below at the same 3 models (.5859, .8477, .8555 — see below),
+> the higher diversity weight (`w_eff=100`) scores lower on every one
+> of the 3 shared models so far — consistent with
+> [ds-alpha-diversity-bonus-plateau.md](findings/exp-findings/ds-alpha-diversity-bonus-plateau.md)'s
+> finding that turning the diversity bonus on matters but pushing its
+> magnitude past `ds_alpha≈10` (`w_eff≈32` at `lam=0.1`) does not help
+> further and may hurt on the frontier-selection (bl_sem) variant
+> specifically — this hadn't been checked for bl_sem before.
+> **Limitations / follow-up:** llama-3b fp16/gptq, qwen-3b gptq-int4,
+> qwen-7b gptq-int4 still unqueued in `experiments.yaml`. `lam`/
+> `ds_alpha_schedule` are fixed at one point (`global` schedule) — no
+> sweep along those axes yet for this algorithm.
 
 #### model family, size, quantization comparison (qwen PRM, w_eff=10)
 > **Compares:** same 7-model/quant grid as the `w_eff=100` table
@@ -1556,22 +1565,28 @@ instead of one wide sparse grid.)
 
 | llm | trials | status | pass@gb | naive@gb | wei@gb | maj@gb | hr/trial |
 |---|---|---|---|---|---|---|---|
-| llama-1b fp16 | — | planned | — | — | — | — | — |
-| llama-3b fp16 | — | planned | — | — | — | — | — |
+| llama-1b fp16 | 2 | scored | .5859<br>±.0308 | .5078<br>±.0313 | .4766<br>±.0313 | .4336<br>±.0310 | 4.57 |
+| llama-3b fp16 | — | running | — | — | — | — | — |
 | llama-3b gptq | — | planned | — | — | — | — | — |
-| qwen-3b fp16 | — | planned | — | — | — | — | — |
+| qwen-3b fp16 | 2 | scored | .8477<br>±.0225 | .7734<br>±.0262 | .7461<br>±.0273 | .7422<br>±.0274 | 5.25 |
 | qwen-3b gptq-int4 | — | planned | — | — | — | — | — |
-| qwen-7b gptq-int4 | — | planned | — | — | — | — | — |
-| qwen-math-1.5b fp16 | — | planned | — | — | — | — | — |
+| qwen-7b gptq-int4 | 2 | scored | .9102<br>±.0179 | .8008<br>±.0250 | .8008<br>±.0250 | .7930<br>±.0254 | 4.23 |
+| qwen-math-1.5b fp16 | 2 | scored | .8555<br>±.0220 | .7734<br>±.0262 | .7461<br>±.0273 | .7383<br>±.0275 | 4.15 |
 
-> **Analysis.** No data yet.
-> **Limitations / follow-up:** all 7 cells are new; none queued
-> in `experiments.yaml`. Per
-> [ds-alpha-diversity-bonus-plateau.md](findings/exp-findings/ds-alpha-diversity-bonus-plateau.md),
-> `w_eff=10` is right at the plateau's onset (in sem_v02's
-> rlhflow-PRM data) — the two tables together are a cheap probe
-> for whether bl_sem's plateau sits in the same place, not a
-> replacement for a real sweep.
+> **Analysis.** 4 of 7 cells now scored (2026-07-09): llama-1b .5859,
+> qwen-3b .8477, qwen-7b-gptq-int4 .9102, qwen-math-1.5b .8555.
+> llama-3b fp16 is currently running (in progress as of this check).
+> Comparing to the `w_eff=100` table above at the 3 shared models,
+> `w_eff=10` scores higher on all 3 (.5859 vs .5195 llama-1b, .8477 vs
+> .8320 qwen-3b, .8555 vs .8320 qwen-math-1.5b) — consistent with
+> [ds-alpha-diversity-bonus-plateau.md](findings/exp-findings/ds-alpha-diversity-bonus-plateau.md)'s
+> plateau-onset framing: `w_eff=10` (right at the plateau's onset in
+> sem_v02's rlhflow-PRM data) outperforms `w_eff=100` (well past it)
+> here too, so bl_sem's plateau appears to sit in a similar place, at
+> least directionally on these first data points.
+> **Limitations / follow-up:** llama-3b gptq, qwen-3b gptq-int4 still
+> unqueued; llama-3b fp16 in flight. Not yet a full 7-cell grid or a
+> real `w_eff` sweep — just two coarse points.
 
 ## Tuning tables [gen_budget=160, 320, …] *(future)*
 > Add a new `## Tuning tables [gen_budget=N]` section, then
