@@ -13,10 +13,15 @@ active (a PUCT-vs-KUBE comparison at matched gen_budget).
 
 Algorithm
     Initialize completion_list = [], leaf_nodes = [root], gen_cnt = 0
-    t = 0  (global clock: one tick per frontier selection)
+    t = 0  (frontier clock: one tick per selection; only feeds the
+            bonus when kube_schedule="global")
     While gen_cnt < gen_budget:
         t += 1
-        selected_node = argmax_{x in leaf_nodes} kube_density(x, t)
+        residual = gen_budget - gen_cnt
+        candidates = {x in leaf_nodes : x terminal
+                      or cost(x) <= residual}   (if kube_affordable;
+                      falls back to all of leaf_nodes if empty)
+        selected_node = argmax_{x in candidates} kube_density(x, t)
         Remove selected_node from leaf_nodes
         If selected_node.is_terminal:
             Backprop: update_recursive(selected_node.q_value(), root)
@@ -35,19 +40,50 @@ Algorithm
 Selection criterion (Fractional KUBE, Tran-Thanh et al. arXiv:1204.1909
 sec. 3.3 — see the reference implementation in the sibling `budget-mab`
 repo, src/algorithms.py::FractionalKUBE):
-    density(x) = (q_value(x) + kube_c*sqrt(log(1+t)/visit_count(x)))
-                 / cost(x)
+    density(x) = (q_value(x) + bonus(x)) / cost(x)
     cost(x) = max_depth - depth(x)   (remaining generations to reach
               the depth limit — the MCTS analogue of an arm's fixed
               pull price in the bandit abstraction; nodes closer to
               max_depth are "cheaper" to finish)
-    t = number of frontier selections so far (global clock, shared by
-        every node on the frontier — see
-        docs/decisions/global-vs-local-exploration-schedule.md for why
-        a global clock is the correct choice for a flat, globally-
-        shared frontier, same reasoning as BLMCTSSemConfig's
-        ds_alpha_schedule="global")
+    bonus(x) — two schedules, selected by the kube_schedule knob:
+      "parent" (default):
+          kube_c * sqrt(log(parent_visits(x)) / visits(x))
+          UCT-style local clock: each parent's children form their
+          own bandit instance, so the parent's visit count is that
+          bandit's elapsed time. This is exactly v01's PUCT bonus,
+          so v02 differs from v01 only by the cost division —
+          the PUCT-vs-KUBE ablation is a single-factor comparison.
+          Frontier nodes keep visits == 1 for life (born with one
+          update, removed from the frontier on first selection),
+          so per-node discrimination comes entirely from
+          parent_visits, which grows as terminal backprops flow
+          through a branch.
+      "global":
+          kube_c * sqrt(log(1 + t) / visits(x))
+          t = number of frontier selections so far, shared by
+          every node — faithful to KUBE's flat-bandit clock, but
+          with visits == 1 across the frontier the bonus is a
+          frontier-wide constant: no per-node discrimination, it
+          only tilts the depth/cost tradeoff as t grows. Kept as
+          an ablatable schedule — see docs/decisions-log.md
+          (2026-07-09, kube_schedule entry) and
+          docs/decisions/global-vs-local-exploration-schedule.md.
     q_value = value_sum / visit_count  (running mean, same as v01)
+
+    Affordability (kube_affordable, default true): the argmax is
+    restricted to nodes whose cost fits the remaining generation
+    budget, mirroring Fractional KUBE's feasibility step (the paper
+    argmaxes over affordable arms only; budget-mab restricts before
+    the argmax for the same reason). Terminal nodes consume no
+    generations and are always eligible; if nothing is affordable
+    the filter relaxes to the full frontier, since cost is a
+    worst-case bound (EOS can finish a path early). See
+    docs/decisions/kube-affordability-restriction.md.
+
+    Constant note: the paper's bonus is sqrt(2*ln(t)/n); the 2 is
+    folded into the tunable kube_c here, the same convention v01's
+    cpuct uses for UCT's constant. kube_c = 2.0 is a starting point,
+    not the literal sqrt(2).
 
     Nodes at cost(x) <= 0 (already at max_depth) get density = -inf so
     they are never selected over a node that can still make progress
@@ -136,21 +172,41 @@ class MCTSNode(BaseNode):
             return
         self.parent.update_recursive(value, start_node)
 
-    def kube_density(self, max_depth: int, kube_c: float, t: int) -> float:
+    def kube_density(
+        self, max_depth: int, kube_c: float, t: int, schedule: str,
+    ) -> float:
         """Fractional-KUBE index: (q_value + UCB bonus) / cost.
 
         cost = max_depth - depth; nodes at or past max_depth get
         density = -inf (guard — should already be terminal).
+        Bonus clock per `schedule`: "parent" uses the parent's
+        visit count (UCT-style local bandit; root, having no
+        parent, gets clock 1 → bonus 0, matching v01's puct());
+        "global" uses the frontier clock t. A zero clock or zero
+        visits yields bonus 0.0 (not inf), same as v01's puct() —
+        an unvisited node scores on q_value alone rather than
+        forcing uniform exploration of every new node, which the
+        small gen_budget can't afford. Module docstring has the
+        full rationale.
         """
         cost = max_depth - self.depth
         if cost <= 0:
             return -float("inf")
         q = self.q_value() if self.visit_count() > 0 else 0.0
         visits = self.visit_count()
-        if visits == 0:
-            bonus = float("inf")
+        if schedule == "parent":
+            clock = self.parent.visit_count() if self.parent else 1
+        elif schedule == "global":
+            clock = 1 + t
         else:
-            bonus = kube_c * np.sqrt(np.log(1 + t) / visits)
+            raise ValueError(
+                f"unknown kube_schedule: {schedule!r} "
+                "(expected 'parent' or 'global')"
+            )
+        if clock == 0 or visits == 0:
+            bonus = 0.0
+        else:
+            bonus = kube_c * np.sqrt(np.log(clock) / visits)
         return (q + bonus) / cost
 
     def __repr__(self):
@@ -245,23 +301,46 @@ class MCTS(BaseTree):
 
     # ----- Selection ------------------------------------------------- #
 
-    def select_child_from_list(self, nodes: List[Any], t: int):
+    def select_child_from_list(
+        self, nodes: List[Any], t: int, residual: int,
+    ):
         """Pick the node with highest fractional-KUBE density from an
         arbitrary list, uniform random tie-break.
 
-        density(x) = (q_value(x) + kube_c*sqrt(log(1+t)/visits(x)))
-                     / (max_depth - depth(x))
-        t is the global clock (frontier selections so far), shared by
-        every node — see the module docstring.
+        density(x) = (q_value(x) + bonus(x)) / (max_depth - depth(x))
+        bonus clock follows config.search.kube_schedule: "parent"
+        (UCT-style, parent visit count) or "global" (frontier clock
+        t) — see the module docstring.
+
+        If config.search.kube_affordable, first restrict to nodes
+        whose worst-case completion cost fits the residual
+        generation budget — Fractional KUBE's feasibility step,
+        applied BEFORE the argmax so the ranking among affordable
+        nodes is preserved (restricting after discards it; see
+        budget-mab docs/issues.md). Terminal nodes consume no
+        generations and are always eligible. If no node is
+        affordable, relax to the full set rather than stopping:
+        cost is a worst-case bound (EOS can finish a path early),
+        so the remaining budget can still buy completions.
         """
         max_depth = self.config.search.max_depth
         kube_c = self.config.search.kube_c
+        schedule = self.config.search.kube_schedule
+
+        if self.config.search.kube_affordable:
+            affordable = [
+                node for node in nodes
+                if node.is_terminal
+                or max_depth - node.depth <= residual
+            ]
+            if affordable:
+                nodes = affordable
 
         best_value = -float("inf")
         best_nodes: List[Any] = []
 
         for node in nodes:
-            density = node.kube_density(max_depth, kube_c, t)
+            density = node.kube_density(max_depth, kube_c, t, schedule)
             if density == best_value:
                 best_nodes.append(node)
             elif density > best_value:
@@ -411,15 +490,22 @@ def mcts_search(question, agent, config, llm_vllm, prm):
             break
 
         # Select leaf with highest fractional-KUBE density across the
-        # entire frontier. t is the global clock: one tick per
-        # selection, shared by every node (see module docstring).
+        # entire frontier. t only feeds the bonus when
+        # kube_schedule="global"; the default "parent" schedule uses
+        # each node's parent visit count (see module docstring).
+        # residual = generations left, for the affordability filter.
         t += 1
-        selected = agent.select_child_from_list(leaf_nodes, t)
+        residual = config.search.gen_budget - gen_cnt
+        selected = agent.select_child_from_list(leaf_nodes, t, residual)
         leaf_nodes.remove(selected)
 
+        selected_density = selected.kube_density(
+            config.search.max_depth, config.search.kube_c, t,
+            config.search.kube_schedule,
+        )
         logging.fatal(
             f"selected = {selected.tag}  "
-            f"density={selected.kube_density(config.search.max_depth, config.search.kube_c, t):.4f}  "
+            f"density={selected_density:.4f}  "
             f"q={selected.q_value():.4f}  "
             f"nvisit={selected.visit_count()}"
         )

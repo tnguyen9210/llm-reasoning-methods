@@ -15,3 +15,6 @@ negative_reward: 0
 num_phases: 1000
 gen_budget: 80           # total generations across the full run
 kube_c: 2.0
+kube_schedule: parent    # "parent" (UCT-style) | "global" (KUBE clock)
+kube_affordable: true    # KUBE feasibility step: argmax over nodes
+                         # whose cost fits the remaining gen budget
