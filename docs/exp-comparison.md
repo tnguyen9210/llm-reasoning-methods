@@ -739,14 +739,15 @@ instead of one wide sparse grid.)
 > `last` rows at both checkpoints reuse already-scored cells from
 > the `lam / ds_alpha joint sweep (v02, llama-3b)` table (same
 > `lam=0.1, ds_alpha` pairs, same fixed config) — no new run. The
-> `avg` rows at both checkpoints are new and queued.
+> `avg` rows at both checkpoints are new; both now run and scored
+> (2026-07-08/09).
 >
 > **`lam=0.01` addendum (2026-07-08):** same two `w_eff` checkpoints
 > at the table's default `lam=0.01` (`w_eff=10 → ds_alpha=1.0`,
 > `w_eff=100 → ds_alpha=10`). The `last` rows reuse already-scored
 > cells from the `lam / ds_alpha joint sweep (v02, llama-3b)` table
 > (`cfg-23f6c64a`, `cfg-baa5b18e`) — no new run. The `avg` rows are
-> new and queued.
+> new; both now run and scored (2026-07-08/09).
 
 | strategy | scope | lam | ds_alpha | w_eff | trials | status | pass@gb | naive@gb | wei@gb | maj@gb | hr/trial |
 |---|---|---|---|---|---|---|---|---|---|---|---|
@@ -756,31 +757,33 @@ instead of one wide sparse grid.)
 | last | full | 0.1 | 3.16 | 10 | 2 | scored (see lam/ds_alpha joint sweep) | .7578<br>±.0268 | .6719<br>±.0294 | .6602<br>±.0297 | .6289<br>±.0303 | — |
 | last | full | 0.1 | 31.6 | 100 | 2 | scored (see lam/ds_alpha joint sweep) | .7812<br>±.0259 | .6562<br>±.0297 | .6211<br>±.0304 | .5938<br>±.0308 | — |
 | avg | full | 0.01 | 100 | 1000 | — | planned | — | — | — | — | — |
-| avg | full | 0.01 | 1.0 | 10 | — | planned | — | — | — | — | — |
-| avg | full | 0.01 | 10 | 100 | — | planned | — | — | — | — | — |
-| avg | full | 0.1 | 3.16 | 10 | — | planned | — | — | — | — | — |
-| avg | full | 0.1 | 31.6 | 100 | — | planned | — | — | — | — | — |
+| avg | full | 0.01 | 1.0 | 10 | 2 | scored | .7617<br>±.0267 | .6523<br>±.0298 | .6445<br>±.0300 | .6484<br>±.0299 | — |
+| avg | full | 0.01 | 10 | 100 | 2 | scored | .7773<br>±.0261 | .6719<br>±.0294 | .6484<br>±.0299 | .6328<br>±.0302 | — |
+| avg | full | 0.1 | 3.16 | 10 | 2 | scored | .7695<br>±.0264 | .6641<br>±.0296 | .6641<br>±.0296 | .6211<br>±.0304 | — |
+| avg | full | 0.1 | 31.6 | 100 | 2 | scored | .7539<br>±.0270 | .6641<br>±.0296 | .6328<br>±.0302 | .6172<br>±.0304 | — |
 | last | response | — | — | — | — | blocked | — | — | — | — | — |
 | avg | response | — | — | — | — | blocked | — | — | — | — | — |
 
-> **Analysis.** No new data yet for `avg`. `last`×`full` is fully
-> covered at all four `w_eff` checkpoints tested so far (1000, 10,
-> 100 at both `lam=0.01` and `lam=0.1`) via reuse — no new runs
-> needed for `last`. The five new `avg`×`full` cells (default
-> `lam=0.01,ds_alpha=100` plus the `w_eff∈{10,100}` checkpoints at
-> both `lam=0.01` and `lam=0.1`) are the genuinely new+runnable work
-> here — the key read is whether mean-pooling changes pass@gb vs.
-> the last-token default at matched `w_eff`, and whether that answer
-> is consistent across `w_eff` levels and across `lam` the way
-> `last` already is.
-> **Limitations / follow-up:** 5 of 12 cells are genuinely
-> new+runnable (`avg`×`full` at all `w_eff`/`lam` checkpoints,
-> queued — `experiments.yaml` group `sem-mcts`, feeds
-> `sem-mcts/embeds-strategy-scope`). The two `response` rows are
-> blocked on PRM-source `response_start_idx` support; queue them
-> once the v02 core handles `embeds_scope=response` for
-> `embeds_source=prm`. A v01 (policy-embeds) version of this table
-> would unblock the `response` axis, since v01 supports it.
+> **Analysis (updated 2026-07-09).** 4 of 5 `avg`×`full` cells now
+> scored (only the default point `lam=0.01,ds_alpha=100,w_eff=1000`
+> remains unrun). At matched `lam`/`w_eff`, `avg` vs. `last`:
+> `lam=0.01,w_eff=10`: .7617 vs .7500 (+.0117); `lam=0.01,w_eff=100`:
+> .7773 vs .7695 (+.0078); `lam=0.1,w_eff=10`: .7695 vs .7578
+> (+.0117) — three checkpoints show `avg` a hair above `last`, all
+> well inside 1 SEM (~.027), i.e. not distinguishable from noise at
+> n=2 trials. `lam=0.1,w_eff=100` is the outlier: `avg` .7539 vs.
+> `last` .7812 (**-.0273**, right at 1 SEM) — the one checkpoint
+> where the two pooling strategies visibly diverge; worth a repeat
+> run before treating it as a real effect rather than variance.
+> **Limitations / follow-up:** n=2 trials/cell throughout — the
+> `lam=0.1,w_eff=100` divergence is the one cell worth re-running at
+> higher n to confirm before drawing a conclusion. The default point
+> (`lam=0.01,ds_alpha=100,w_eff=1000`) is still `planned`. The two
+> `response` rows are blocked on PRM-source `response_start_idx`
+> support; queue them once the v02 core handles
+> `embeds_scope=response` for `embeds_source=prm`. A v01
+> (policy-embeds) version of this table would unblock the `response`
+> axis, since v01 supports it.
 
 #### ds_alpha sweep (v02)
 > **Compares:** `ds_alpha`, the diversity-bonus weight in
