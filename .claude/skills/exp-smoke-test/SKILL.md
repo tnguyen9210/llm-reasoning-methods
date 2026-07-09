@@ -107,7 +107,7 @@ specific level: `data.level=4`.
 | cnt-mcts | `generate_mcts_cnt.py` | `mcts_cnt_prm800k` |
 | sem-mcts v01 | `generate_mcts_sem.py` | `mcts_sem_v01_prm800k` |
 | sem-mcts v02 | `generate_mcts_sem.py` | `mcts_sem_v02_prm800k` |
-| bl-cnt v01 | `generate_mcts_bl_cnt_v01.py` | (its root config) |
+| bl-cnt v01/v02/v03 | `generate_mcts_bl_cnt.py` | `mcts_bl_cnt_v0N_prm800k` |
 
 Per-model template is baked into `conf/llm/*.yaml` (qwen
 native, llama custom) — don't pass `use_custom_template` when
