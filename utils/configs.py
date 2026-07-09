@@ -258,15 +258,37 @@ class BLMCTSCntV02Config(SearchConfig):
     (arXiv:1204.1909 sec. 3.3), as implemented as the reference in the
     sibling `budget-mab` repo (`src/algorithms.py::FractionalKUBE`):
 
-        density_i = (q_value_i + kube_c*sqrt(log(1+t)/visits_i)) / cost_i
+        density_i = (q_value_i + bonus_i) / cost_i
         cost_i = max_depth - depth_i   (remaining generations to reach
                                          the depth limit; the MCTS
                                          analogue of an arm's fixed
                                          pull price in budget-mab)
-        t = number of frontier selections so far (global clock; same
-            schedule as BLMCTSSemConfig's ds_alpha_schedule="global",
-            since the frontier is a flat, globally-shared arm set —
-            see docs/decisions/global-vs-local-exploration-schedule.md)
+        bonus_i — selected by kube_schedule:
+          "parent" (default):
+              kube_c*sqrt(log(parent_visits_i)/visits_i)
+              UCT-style local clock — exactly v01's PUCT bonus, so
+              v02 differs from v01 only by the cost division
+              (single-factor PUCT-vs-KUBE ablation). Frontier nodes
+              keep visits == 1 for life, so discrimination comes
+              from parent_visits, grown by terminal backprops.
+          "global":
+              kube_c*sqrt(log(1+t)/visits_i), t = frontier
+              selections so far — faithful to KUBE's flat-bandit
+              clock, but a frontier-wide constant when visits == 1
+              (no per-node discrimination; only tilts the
+              depth/cost tradeoff as t grows). Kept as an ablation
+              arm — docs/decisions-log.md (2026-07-09) and
+              docs/decisions/global-vs-local-exploration-schedule.md.
+
+    kube_affordable (default True) mirrors Fractional KUBE's
+    feasibility step: the argmax is restricted, before ranking, to
+    nodes whose cost_i fits the remaining generation budget.
+    Terminal nodes consume no generations and are always eligible;
+    an empty affordable set relaxes to the full frontier (cost_i is
+    a worst-case bound — EOS can finish a path early). With it on,
+    v01-vs-v02 compares the full KUBE package; kube_affordable=false
+    is the middle arm isolating cost normalization alone. See
+    docs/decisions/kube-affordability-restriction.md.
 
     An earlier version of this file used a static depth-decay bonus
     (beta * (1 - ((max_depth-depth)/max_depth)**alpha), no UCB term at
@@ -277,11 +299,57 @@ class BLMCTSCntV02Config(SearchConfig):
     num_phases: int = 1000
     gen_budget: int = 80          # total generations across the run
     kube_c: float = 2.0            # UCB exploration coefficient
+    kube_schedule: str = "parent"  # "parent" | "global" (see above)
+    kube_affordable: bool = True   # restrict argmax to affordable
+                                   # nodes (KUBE feasibility step)
 
     # PRM forward-pass micro-batch *inside* the search loop (distinct
     # from prm.score_batch_size, which scores the final dataset). Kept
     # small because in-loop scoring is per-candidate-set. Mirrors
     # BLMCTSCntConfig.prm_batch_size.
+    prm_batch_size: int = 1
+
+
+@dataclass
+class BLMCTSCntV03Config(SearchConfig):
+    """Count-based MCTS with depth-shaping knapsack frontier selection.
+
+    Sibling of BLMCTSCntV02Config (Fractional KUBE): same knapsack-
+    style objective and cost mapping, but the UCB confidence bonus is
+    replaced with a fixed depth-preference function — there is no
+    visit-count/exploration term of any kind. A deliberately
+    different theoretical basis from v02 (no bandit/regret
+    guarantee), not a refinement of it — see
+    docs/decisions/depth-shaping-knapsack-bonus.md.
+
+        density_i = (q_value_i + depth_beta*f_a(depth_frac_i)) / cost_i
+        cost_i = max_depth - depth_i        (same mapping as v01/v02)
+        depth_frac_i = depth_i / max_depth  (0 at root, 1 at max_depth)
+        f_a(z) = 1 - z**depth_alpha
+            f_a(0)=1 (root, max bonus), f_a(1)=0 (max_depth, no
+            bonus) — monotonically prefers shallower nodes. (Indexed
+            on depth_frac, NOT on the cost fraction
+            (max_depth-depth)/max_depth — the latter inverts the
+            direction and rewards deep nodes instead; see the
+            decision doc for the sign check.)
+
+    kube_affordable (default True): identical feasibility-restriction
+    semantics to BLMCTSCntV02Config — same knapsack constraint, only
+    the per-arm value term differs. See
+    docs/decisions/kube-affordability-restriction.md.
+    """
+    method: str = "mcts_bl_cnt_v03"
+    num_phases: int = 1000
+    gen_budget: int = 80            # total generations across the run
+    depth_beta: float = 2.0         # depth-bonus coefficient
+    depth_alpha: float = 1.0        # depth-bonus exponent
+    kube_affordable: bool = True    # restrict argmax to affordable
+                                    # nodes (knapsack feasibility step)
+
+    # PRM forward-pass micro-batch *inside* the search loop (distinct
+    # from prm.score_batch_size, which scores the final dataset). Kept
+    # small because in-loop scoring is per-candidate-set. Mirrors
+    # BLMCTSCntV02Config.prm_batch_size.
     prm_batch_size: int = 1
 
 

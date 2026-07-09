@@ -14,6 +14,71 @@ scaffold, it also gets a standalone file in [decisions/](decisions/);
 the log entry then carries a one-line pointer to it rather than
 repeating the full writeup.
 
+## 2026-07-09 — Search: new `mcts_bl_cnt_v03` — depth-shaping knapsack bonus, no UCB/exploration term
+
+**Context/decision:** proposed replacing v02's UCB bonus with a
+fixed depth-preference function, `f_a(z)=1-z^alpha`, under the same
+fractional-knapsack objective/cost constraint — the same shape that
+was in the original pre-rewrite v02, removed earlier today for
+lacking a UCB/visit-count term. As written the exponent was indexed
+on the wrong fraction: `z=(d_max-d_i)/d_max` (cost fraction) gives
+`f_a=0` at the root and `f_a=1` at max depth, rewarding deep nodes —
+inverted from the stated goal of encouraging shallow exploration.
+Fixed by indexing `f_a` on the depth fraction `d_i/d_max` instead (0
+at root → max bonus, 1 at max depth → no bonus). Implemented as a
+new sibling, `mcts_bl_cnt_search_v03_00_00.py`
+(`BLMCTSCntV03Config`: `depth_beta`, `depth_alpha`,
+`kube_affordable`), not folded into v02 — `f_a` is a deterministic,
+evidence-blind function of tree position with no confidence-bound
+guarantee, so mixing it into v02's PUCT-vs-KUBE ablation would
+muddy what that comparison tests. v01/v02/v03 now form a clean
+three-way comparison (PUCT / evidence-based UCB bonus / fixed
+depth-shaping bonus) sharing the same cost mapping and affordability
+restriction. Full writeup:
+[decisions/depth-shaping-knapsack-bonus.md](decisions/depth-shaping-knapsack-bonus.md).
+
+## 2026-07-09 — Search: KUBE alignment audit — `(q+bonus)/cost` confirmed against paper + budget-mab; affordability restriction added (`kube_affordable`)
+
+**Context/decision:** audited `kube_density` against the paper's
+Eq. 9 (read from `budget-mab/paper.pdf` directly) and
+`budget-mab/src/algorithms.py::FractionalKUBE`. The `(q+bonus)/cost`
+form is confirmed correct — the paper divides both the mean and the
+confidence bonus by cost. Two gaps surfaced: (1) the paper's
+`sqrt(2·ln t/n)` constant is folded into `kube_c` (documented as
+fine — same convention as v01's `cpuct`); (2) the feasibility step
+was missing — the paper/reference restrict the argmax to arms
+affordable under the residual budget *before* ranking, we ranked the
+whole frontier. Fixed via set-restriction in
+`select_child_from_list`, gated by new
+`BLMCTSCntV02Config.kube_affordable` (default `true`): terminal
+nodes always eligible (they cost no generations), empty affordable
+set relaxes to the full frontier (cost is a worst-case bound; EOS
+can finish early), `false` kept as the middle arm isolating cost
+normalization from feasibility filtering. Full audit and rationale
+in
+[decisions/kube-affordability-restriction.md](decisions/kube-affordability-restriction.md).
+
+## 2026-07-09 — Search: `mcts_bl_cnt_v02` bonus clock made configurable (`kube_schedule`), default switched from global `t` to parent visits
+
+**Context/decision:** the entry below chose a global-clock UCB bonus
+for v02 by analogy to `mcts_bl_sem_v01`'s `ds_alpha_schedule=
+"global"`; re-deriving it for KUBE's specific frontier lifecycle
+showed the analogy doesn't hold (every node has `visit_count()==1` at
+comparison time, so the global-clock bonus is a frontier-wide
+constant with no per-node discrimination). Reframing as a tree-search
+question — UCT is UCB1 re-instantiated per parent, not a different
+bonus — showed the fix is to index the clock by `parent_visits`
+instead, which also restores real per-node discrimination under
+short-tree/frequent-terminal dynamics and turns the v01-vs-v02
+comparison into a single-factor (cost-normalization-only) ablation.
+New `BLMCTSCntV02Config.kube_schedule: "parent"|"global"`, default
+`"parent"`; `"global"` kept as an explicit ablation arm. (Also fixed
+in passing: the zero-visit case used `bonus=inf`, forcing exhaustive
+exploration of every new node before any q_value-informed comparison
+— unaffordable under a small `gen_budget`; now `bonus=0.0`, matching
+v01's `puct()`.) Full discussion and derivation in
+[decisions/kube-bonus-schedule.md](decisions/kube-bonus-schedule.md).
+
 ## 2026-07-09 — Search, Refactor: `mcts_bl_cnt_v02` rewritten to match budget-mab's actual Fractional KUBE; infra aligned with v01
 
 **Context:** `core/mcts_bl_cnt_search_v02_00_00.py` predated the
@@ -504,7 +569,10 @@ Full mechanism + current coverage across all 5 MCTS variants:
 **Context:** the three launchers
 ([generate_mcts_cnt.py](../generate_mcts_cnt.py),
 [generate_mcts_sem.py](../generate_mcts_sem.py),
-[generate_mcts_bl_cnt_v01.py](../generate_mcts_bl_cnt_v01.py))
+[generate_mcts_bl_cnt.py](../generate_mcts_bl_cnt.py) — at the
+time of this entry, `generate_mcts_bl_cnt_v01.py`; merged with
+its v02/v03 siblings into one launcher 2026-07-09, see that
+day's "launchers merged" entry)
 write `manifest.json` twice per run — once before `wandb.init`
 and once after (the run-id lifecycle from the 2026-06-21 "fold
 run-id into manifest" decision below). The original ordering
