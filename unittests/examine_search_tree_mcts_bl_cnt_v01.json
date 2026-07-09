@@ -1,0 +1,3752 @@
+{
+ "tag": "0",
+ "depth": 0,
+ "phase": 0,
+ "gen_cnt": 0,
+ "n": 1,
+ "q": 0.0,
+ "is_terminal": false,
+ "is_completed": false,
+ "step_text": "",
+ "children": [
+  {
+   "tag": "0.1",
+   "depth": 1,
+   "phase": 0,
+   "gen_cnt": 1,
+   "n": 1,
+   "q": 0.070556640625,
+   "is_terminal": false,
+   "is_completed": false,
+   "step_text": "## Step 1: The direction vectors of the lines can be obtained from the coefficients of x, y, and z in the given equations.\nThe first line has direction vectors $\\vec{d}_1 = (3, -2, 0)$ and the second line has direction vectors $\\vec{d}_2 = (6, 1, 4)$.\n\n",
+   "children": []
+  },
+  {
+   "tag": "0.2",
+   "depth": 1,
+   "phase": 0,
+   "gen_cnt": 1,
+   "n": 1,
+   "q": 0.751953125,
+   "is_terminal": false,
+   "is_completed": false,
+   "step_text": "## Step 1: Identify the equations of the lines\nThe first equation is $2x = 3y = -z$, which can be written as $\\frac{x}{2} = \\frac{y}{3} = \\frac{-z}{1}$. This gives the direction ratios of the first line as (2, 3, -1).\n\n",
+   "children": [
+    {
+     "tag": "0.2.1",
+     "depth": 2,
+     "phase": 1,
+     "gen_cnt": 2,
+     "n": 1,
+     "q": 0.615234375,
+     "is_terminal": false,
+     "is_completed": false,
+     "step_text": "## Step 2: Identify the equations of the second line\nThe second equation is $6x = -y = -4z$, which can be written as $\\frac{x}{6} = \\frac{-y}{-1} = \\frac{-4z}{1}$. This gives the direction ratios of the second line as (6, 1, -4).\n\n",
+     "children": []
+    },
+    {
+     "tag": "0.2.2",
+     "depth": 2,
+     "phase": 1,
+     "gen_cnt": 2,
+     "n": 1,
+     "q": 0.810546875,
+     "is_terminal": false,
+     "is_completed": false,
+     "step_text": "## Step 2: Identify the second equation\nThe second equation is $6x = -y = -4z$, which can be written as $\\frac{x}{6} = \\frac{-y}{1} = \\frac{-4z}{1}$. This gives the direction ratios of the second line as (6, -1, -4).\n\n",
+     "children": [
+      {
+       "tag": "0.2.2.1",
+       "depth": 3,
+       "phase": 2,
+       "gen_cnt": 3,
+       "n": 1,
+       "q": 0.931640625,
+       "is_terminal": false,
+       "is_completed": false,
+       "step_text": "## Step 3: Calculate the angle between the lines\nTo find the angle between the two lines, we can use the dot product formula:\n\n",
+       "children": []
+      },
+      {
+       "tag": "0.2.2.2",
+       "depth": 3,
+       "phase": 2,
+       "gen_cnt": 3,
+       "n": 1,
+       "q": 0.943359375,
+       "is_terminal": false,
+       "is_completed": false,
+       "step_text": "## Step 3: Calculate the angle between the lines using the dot product formula\nThe angle $\\theta$ between two lines with direction ratios (a, b, c) and (d, e, f) is given by the formula $\\cos \\theta = \\frac{ad + be + cf}{\\sqrt{a^2 + b^2 + c^2} \\sqrt{d^2 + e^2 + f^2}}$. Applying this formula with (a, b, c) = (2, 3, -1) and (d, e, f) = (6, -1, -4) yields $\\cos \\theta = \\frac{(2)(6) + (3)(-1) + (-1)(-4)}{\\sqrt{(2)^2 + (3)^2 + (-1)^2} \\sqrt{(6)^2 + (-1)^2 + (-4)^2}}$.\n\n",
+       "children": []
+      },
+      {
+       "tag": "0.2.2.3",
+       "depth": 3,
+       "phase": 2,
+       "gen_cnt": 3,
+       "n": 1,
+       "q": 0.403564453125,
+       "is_terminal": false,
+       "is_completed": false,
+       "step_text": "## Step 3: Determine the angle between the lines\nThe angle between two lines with direction ratios (a, b, c) and (d, e, f) can be found using the formula $\\cos{\\theta} = \\frac{(a \\times d) + (b \\times e) + (c \\times f)}{\\sqrt{(a^2 + b^2 + c^2) \\times (d^2 + e^2 + f^2)} \\times \\sqrt{2}}$.\n\n",
+       "children": []
+      },
+      {
+       "tag": "0.2.2.4",
+       "depth": 3,
+       "phase": 2,
+       "gen_cnt": 3,
+       "n": 1,
+       "q": 0.943359375,
+       "is_terminal": false,
+       "is_completed": false,
+       "step_text": "## Step 3: Calculate the angle between the lines using the dot product formula\nThe formula to find the angle $\\theta$ between two lines with direction ratios $\\mathbf{a}$ and $\\mathbf{b}$ is given by $\\cos \\theta = \\frac{\\mathbf{a} \\cdot \\mathbf{b}}{\\|\\mathbf{a}\\| \\|\\mathbf{b}\\|}$. In this case, the direction ratios of the first line are (2, 3, -1) and of the second line are (6, -1, -4).\n\n",
+       "children": [
+        {
+         "tag": "0.2.2.4.1",
+         "depth": 4,
+         "phase": 3,
+         "gen_cnt": 4,
+         "n": 1,
+         "q": 0.99072265625,
+         "is_terminal": false,
+         "is_completed": false,
+         "step_text": "## Step 4: Compute the dot product of the direction ratios\nThe dot product is given by $(2)(6) + (3)(-1) + (-1)(-4) = 12 - 3 + 4 = 13$.\n\n",
+         "children": [
+          {
+           "tag": "0.2.2.4.1.1",
+           "depth": 5,
+           "phase": 4,
+           "gen_cnt": 5,
+           "n": 1,
+           "q": 0.99365234375,
+           "is_terminal": false,
+           "is_completed": false,
+           "step_text": "## Step 5: Compute the magnitudes of the direction ratios\nThe magnitude of the direction ratios of the first line is $\\sqrt{(2)^2 + (3)^2 + (-1)^2} = \\sqrt{4 + 9 + 1} = \\sqrt{14}$.\n\n",
+           "children": [
+            {
+             "tag": "0.2.2.4.1.1.1",
+             "depth": 6,
+             "phase": 11,
+             "gen_cnt": 12,
+             "n": 1,
+             "q": 0.994140625,
+             "is_terminal": false,
+             "is_completed": false,
+             "step_text": "## Step 6: Compute the magnitudes of the second direction ratios\nThe magnitude of the direction ratios of the second line is $\\sqrt{(6)^2 + (-1)^2 + (-4)^2} = \\sqrt{36 + 1 + 16} = \\sqrt{53}$.\n\n",
+             "children": [
+              {
+               "tag": "0.2.2.4.1.1.1.1",
+               "depth": 7,
+               "phase": 13,
+               "gen_cnt": 14,
+               "n": 1,
+               "q": 0.994140625,
+               "is_terminal": false,
+               "is_completed": false,
+               "step_text": "## Step 7: Use the formula for the angle between two lines\nThe formula for the angle $\\theta$ between the two lines is $\\cos \\theta = \\frac{13}{\\sqrt{14}\\sqrt{53}}$.\n\n",
+               "children": [
+                {
+                 "tag": "0.2.2.4.1.1.1.1.1",
+                 "depth": 8,
+                 "phase": 15,
+                 "gen_cnt": 16,
+                 "n": 1,
+                 "q": 0.97412109375,
+                 "is_terminal": false,
+                 "is_completed": false,
+                 "step_text": "## Step 8: Calculate the value of $\\cos \\theta$\nWe can calculate $\\cos \\theta = \\frac{13}{\\sqrt{14}\\sqrt{53}} = \\frac{13}{\\sqrt{14 \\cdot 53}} = \\frac{13}{\\sqrt{742}}$.\n\n",
+                 "children": []
+                },
+                {
+                 "tag": "0.2.2.4.1.1.1.1.2",
+                 "depth": 8,
+                 "phase": 15,
+                 "gen_cnt": 16,
+                 "n": 1,
+                 "q": 0.947265625,
+                 "is_terminal": false,
+                 "is_completed": false,
+                 "step_text": "## Step 8: Calculate $\\cos \\theta$\n$\\cos \\theta = \\frac{13}{\\sqrt{14} \\cdot \\sqrt{53}} = \\frac{13}{\\sqrt{14 \\cdot 53}} = \\frac{13}{\\sqrt{741}}$.\n\n",
+                 "children": []
+                },
+                {
+                 "tag": "0.2.2.4.1.1.1.1.3",
+                 "depth": 8,
+                 "phase": 15,
+                 "gen_cnt": 16,
+                 "n": 1,
+                 "q": 0.921875,
+                 "is_terminal": false,
+                 "is_completed": false,
+                 "step_text": "## Step 8: Simplify the expression\n$\\cos \\theta = \\frac{13}{\\sqrt{14}\\sqrt{53}} = \\frac{13}{\\sqrt{14 \\cdot 53}} = \\frac{13}{\\sqrt{742}} = \\frac{13}{\\sqrt{2\\cdot 371}}$\n\n",
+                 "children": []
+                },
+                {
+                 "tag": "0.2.2.4.1.1.1.1.4",
+                 "depth": 8,
+                 "phase": 15,
+                 "gen_cnt": 16,
+                 "n": 1,
+                 "q": 0.9775390625,
+                 "is_terminal": false,
+                 "is_completed": false,
+                 "step_text": "## Step 8: Calculate $\\cos \\theta$\n$\\cos \\theta = \\frac{13}{\\sqrt{14}\\sqrt{53}}$.\n\n",
+                 "children": []
+                }
+               ]
+              },
+              {
+               "tag": "0.2.2.4.1.1.1.2",
+               "depth": 7,
+               "phase": 13,
+               "gen_cnt": 14,
+               "n": 1,
+               "q": 0.986328125,
+               "is_terminal": false,
+               "is_completed": false,
+               "step_text": "## Step 7: Substitute the results into the formula for the cosine of the angle\n$\\cos \\theta = \\frac{13}{\\sqrt{14} \\sqrt{53}} = \\frac{13}{\\sqrt{14 \\times 53}} = \\frac{13}{\\sqrt{742}}$.\n\n",
+               "children": [
+                {
+                 "tag": "0.2.2.4.1.1.1.2.1",
+                 "depth": 8,
+                 "phase": 70,
+                 "gen_cnt": 71,
+                 "n": 1,
+                 "q": 0.9755859375,
+                 "is_terminal": false,
+                 "is_completed": false,
+                 "step_text": "## Step 8: Convert the cosine of the angle to the angle itself\n$\\theta = \\cos^{-1} \\left(\\frac{13}{\\sqrt{742}}\\right)$.\n\n",
+                 "children": []
+                },
+                {
+                 "tag": "0.2.2.4.1.1.1.2.2",
+                 "depth": 8,
+                 "phase": 70,
+                 "gen_cnt": 71,
+                 "n": 1,
+                 "q": 0.978515625,
+                 "is_terminal": false,
+                 "is_completed": false,
+                 "step_text": "## Step 8: Calculate the angle $\\theta$ in degrees\n$\\theta = \\cos^{-1} \\left( \\frac{13}{\\sqrt{742}} \\right)$.\n\n",
+                 "children": []
+                },
+                {
+                 "tag": "0.2.2.4.1.1.1.2.3",
+                 "depth": 8,
+                 "phase": 70,
+                 "gen_cnt": 71,
+                 "n": 1,
+                 "q": 0.97607421875,
+                 "is_terminal": false,
+                 "is_completed": false,
+                 "step_text": "## Step 8: Calculate the value of the angle using the arccosine function\n$\\theta = \\arccos\\left(\\frac{13}{\\sqrt{742}}\\right)$.\n\n",
+                 "children": []
+                },
+                {
+                 "tag": "0.2.2.4.1.1.1.2.4",
+                 "depth": 8,
+                 "phase": 70,
+                 "gen_cnt": 71,
+                 "n": 1,
+                 "q": 0.83349609375,
+                 "is_terminal": false,
+                 "is_completed": false,
+                 "step_text": "## Step 8: Simplify the denominator\n$\\sqrt{742} = \\sqrt{2 \\times 37 \\times 13} = \\sqrt{2} \\times \\sqrt{37} \\times \\sqrt{13}$. Thus, $\\cos \\theta = \\frac{13}{\\sqrt{742}} = \\frac{13}{\\sqrt{2} \\times \\sqrt{37} \\times \\sqrt{13}} = \\frac{13}{\\sqrt{2 \\times 37 \\times 13}}$.\n\n",
+                 "children": []
+                }
+               ]
+              },
+              {
+               "tag": "0.2.2.4.1.1.1.3",
+               "depth": 7,
+               "phase": 13,
+               "gen_cnt": 14,
+               "n": 1,
+               "q": 0.9033203125,
+               "is_terminal": false,
+               "is_completed": false,
+               "step_text": "## Step 7: Calculate the angle between the lines\n$\\cos \\theta = \\frac{13}{\\sqrt{14} \\sqrt{53}} = \\frac{13}{\\sqrt{14 \\times 53}} = \\frac{13}{\\sqrt{742}} = \\frac{13}{\\sqrt{2 \\times 17 \\times 43}}$.\n\n",
+               "children": []
+              },
+              {
+               "tag": "0.2.2.4.1.1.1.4",
+               "depth": 7,
+               "phase": 13,
+               "gen_cnt": 14,
+               "n": 1,
+               "q": 0.99609375,
+               "is_terminal": false,
+               "is_completed": false,
+               "step_text": "## Step 7: Substitute the calculated values into the formula\n$\\cos \\theta = \\frac{13}{\\sqrt{14} \\sqrt{53}}$.\n\n",
+               "children": [
+                {
+                 "tag": "0.2.2.4.1.1.1.4.1",
+                 "depth": 8,
+                 "phase": 14,
+                 "gen_cnt": 15,
+                 "n": 1,
+                 "q": 0.91357421875,
+                 "is_terminal": false,
+                 "is_completed": false,
+                 "step_text": "## Step 8: Simplify the expression\n$\\cos \\theta = \\frac{13}{\\sqrt{14} \\sqrt{53}} = \\frac{13}{\\sqrt{14 \\cdot 53}} = \\frac{13}{\\sqrt{738}}$.\n\n",
+                 "children": []
+                },
+                {
+                 "tag": "0.2.2.4.1.1.1.4.2",
+                 "depth": 8,
+                 "phase": 14,
+                 "gen_cnt": 15,
+                 "n": 1,
+                 "q": 0.98974609375,
+                 "is_terminal": false,
+                 "is_completed": false,
+                 "step_text": "## Step 8: Simplify the expression\n$\\cos \\theta = \\frac{13}{\\sqrt{14 \\times 53}} = \\frac{13}{\\sqrt{742}}$.\n\n",
+                 "children": [
+                  {
+                   "tag": "0.2.2.4.1.1.1.4.2.1",
+                   "depth": 9,
+                   "phase": 24,
+                   "gen_cnt": 25,
+                   "n": 1,
+                   "q": 0.43408203125,
+                   "is_terminal": false,
+                   "is_completed": false,
+                   "step_text": "## Step 9: Calculate the value of $\\sin \\theta$\nFirst, find the value of $\\|\\mathbf{a}\\|$ and $\\|\\mathbf{b}\\|$. $\\|\\mathbf{a}\\| = \\sqrt{14}$ and $\\|\\mathbf{b}\\| = \\sqrt{53}$. Then, $\\sin \\theta = \\sqrt{1 - (\\cos \\theta)^2} = \\sqrt{1 - \\left( \\frac{13}{\\sqrt{742}} \\right)^2} = \\sqrt{1 - \\frac{169}{742}} = \\sqrt{\\frac{723}{742}}$.\n\n",
+                   "children": []
+                  },
+                  {
+                   "tag": "0.2.2.4.1.1.1.4.2.2",
+                   "depth": 9,
+                   "phase": 24,
+                   "gen_cnt": 25,
+                   "n": 1,
+                   "q": 0.94873046875,
+                   "is_terminal": false,
+                   "is_completed": false,
+                   "step_text": "## Step 9: Calculate the numerical value of the expression\n$\\cos \\theta = \\frac{13}{\\sqrt{742}} \\approx \\frac{13}{27.320115914844386}$.\n\n",
+                   "children": []
+                  },
+                  {
+                   "tag": "0.2.2.4.1.1.1.4.2.3",
+                   "depth": 9,
+                   "phase": 24,
+                   "gen_cnt": 25,
+                   "n": 1,
+                   "q": 0.6689453125,
+                   "is_terminal": false,
+                   "is_completed": false,
+                   "step_text": "## Step 9: Calculate the value of $\\cos \\theta$\n$\\cos \\theta = \\frac{13}{\\sqrt{742}} = \\frac{13}{\\sqrt{2 \\times 373}} = \\frac{13}{\\sqrt{2} \\sqrt{373}} = \\frac{13}{\\sqrt{2} \\sqrt{11 \\times 67}} = \\frac{13}{\\sqrt{2} \\sqrt{11} \\sqrt{67}} = \\frac{13}{\\sqrt{2} \\sqrt{11} \\sqrt{67}} \\times \\frac{\\sqrt{2}}{\\sqrt{2}} = \\frac{13\\sqrt{2}}{\\sqrt{2} \\times \\sqrt{11} \\times \\sqrt{67}} = \\frac{13}{\\sqrt{11} \\times \\sqrt{67}}$.\n\n",
+                   "children": []
+                  },
+                  {
+                   "tag": "0.2.2.4.1.1.1.4.2.4",
+                   "depth": 9,
+                   "phase": 24,
+                   "gen_cnt": 25,
+                   "n": 1,
+                   "q": 0.93359375,
+                   "is_terminal": false,
+                   "is_completed": false,
+                   "step_text": "## Step 9: Calculate the value of $\\sqrt{742}$\n$\\sqrt{742} \\approx 27.146$.\n\n",
+                   "children": []
+                  }
+                 ]
+                },
+                {
+                 "tag": "0.2.2.4.1.1.1.4.3",
+                 "depth": 8,
+                 "phase": 14,
+                 "gen_cnt": 15,
+                 "n": 1,
+                 "q": 0.72509765625,
+                 "is_terminal": false,
+                 "is_completed": false,
+                 "step_text": "## Step 8: Simplify the denominator\n$\\sqrt{14} \\sqrt{53} = \\sqrt{14 \\cdot 53} = \\sqrt{726}$.\n\n",
+                 "children": []
+                },
+                {
+                 "tag": "0.2.2.4.1.1.1.4.4",
+                 "depth": 8,
+                 "phase": 14,
+                 "gen_cnt": 15,
+                 "n": 1,
+                 "q": 0.72802734375,
+                 "is_terminal": false,
+                 "is_completed": false,
+                 "step_text": "## Step 8: Simplify the expression\n$\\cos \\theta = \\frac{13}{\\sqrt{14} \\sqrt{53}} = \\frac{13}{\\sqrt{14 \\times 53}} = \\frac{13}{\\sqrt{782}}$.\n\n",
+                 "children": []
+                }
+               ]
+              }
+             ]
+            },
+            {
+             "tag": "0.2.2.4.1.1.2",
+             "depth": 6,
+             "phase": 11,
+             "gen_cnt": 12,
+             "n": 1,
+             "q": 0.9970703125,
+             "is_terminal": false,
+             "is_completed": false,
+             "step_text": "## Step 6: Compute the magnitude of the direction ratios of the second line\nThe magnitude of the direction ratios of the second line is $\\sqrt{(6)^2 + (-1)^2 + (-4)^2} = \\sqrt{36 + 1 + 16} = \\sqrt{53}$.\n\n",
+             "children": [
+              {
+               "tag": "0.2.2.4.1.1.2.1",
+               "depth": 7,
+               "phase": 12,
+               "gen_cnt": 13,
+               "n": 1,
+               "q": 0.98486328125,
+               "is_terminal": false,
+               "is_completed": false,
+               "step_text": "## Step 7: Compute $\\cos \\theta$ using the formula\n$\\cos \\theta = \\frac{13}{\\sqrt{14}\\sqrt{53}} = \\frac{13}{\\sqrt{14 \\cdot 53}} = \\frac{13}{\\sqrt{742}}$.\n\n",
+               "children": []
+              },
+              {
+               "tag": "0.2.2.4.1.1.2.2",
+               "depth": 7,
+               "phase": 12,
+               "gen_cnt": 13,
+               "n": 1,
+               "q": 0.80322265625,
+               "is_terminal": false,
+               "is_completed": false,
+               "step_text": "## Step 7: Calculate the cosine of the angle between the lines\n$\\cos \\theta = \\frac{13}{\\sqrt{14}\\sqrt{53}} = \\frac{13}{\\sqrt{14 \\times 53}} = \\frac{13}{\\sqrt{738}} \\approx \\frac{13}{27.419}$.\n\n",
+               "children": []
+              },
+              {
+               "tag": "0.2.2.4.1.1.2.3",
+               "depth": 7,
+               "phase": 12,
+               "gen_cnt": 13,
+               "n": 1,
+               "q": 0.99169921875,
+               "is_terminal": false,
+               "is_completed": false,
+               "step_text": "## Step 7: Use the formula for the angle between two lines\nNow, we can use the formula $\\cos \\theta = \\frac{\\mathbf{a} \\cdot \\mathbf{b}}{\\|\\mathbf{a}\\| \\|\\mathbf{b}\\|}$ with the dot product from step 4, the magnitudes from steps 5 and 6, to find the cosine of the angle between the two lines.\n\n",
+               "children": [
+                {
+                 "tag": "0.2.2.4.1.1.2.3.1",
+                 "depth": 8,
+                 "phase": 20,
+                 "gen_cnt": 21,
+                 "n": 1,
+                 "q": 0.98583984375,
+                 "is_terminal": false,
+                 "is_completed": false,
+                 "step_text": "## Step 8: Calculate the cosine of the angle\n$\\cos \\theta = \\frac{13}{\\sqrt{14} \\sqrt{53}} = \\frac{13}{\\sqrt{14 \\times 53}} = \\frac{13}{\\sqrt{742}}$\n\n",
+                 "children": [
+                  {
+                   "tag": "0.2.2.4.1.1.2.3.1.1",
+                   "depth": 9,
+                   "phase": 77,
+                   "gen_cnt": 78,
+                   "n": 1,
+                   "q": 0.9765625,
+                   "is_terminal": false,
+                   "is_completed": false,
+                   "step_text": "## Step 9: Calculate the value of the angle\n$\\theta = \\cos^{-1}\\left(\\frac{13}{\\sqrt{742}}\\right)$\n\n",
+                   "children": []
+                  },
+                  {
+                   "tag": "0.2.2.4.1.1.2.3.1.2",
+                   "depth": 9,
+                   "phase": 77,
+                   "gen_cnt": 78,
+                   "n": 1,
+                   "q": 0.9794921875,
+                   "is_terminal": false,
+                   "is_completed": false,
+                   "step_text": "## Step 9: Calculate $\\theta$ using the arccos function\n$\\theta = \\cos^{-1}\\left(\\frac{13}{\\sqrt{742}}\\right)$\n\n",
+                   "children": []
+                  },
+                  {
+                   "tag": "0.2.2.4.1.1.2.3.1.3",
+                   "depth": 9,
+                   "phase": 77,
+                   "gen_cnt": 78,
+                   "n": 1,
+                   "q": 0.978515625,
+                   "is_terminal": false,
+                   "is_completed": false,
+                   "step_text": "## Step 9: Solve for the angle\n$\\theta = \\cos^{-1}\\left(\\frac{13}{\\sqrt{742}}\\right)$.\n\n",
+                   "children": []
+                  },
+                  {
+                   "tag": "0.2.2.4.1.1.2.3.1.4",
+                   "depth": 9,
+                   "phase": 77,
+                   "gen_cnt": 78,
+                   "n": 1,
+                   "q": 0.98291015625,
+                   "is_terminal": false,
+                   "is_completed": false,
+                   "step_text": "## Step 9: Find the angle using the inverse cosine function\nTo find the angle $\\theta$, we take the inverse cosine (arccos) of $\\frac{13}{\\sqrt{742}}$.\n\n",
+                   "children": []
+                  }
+                 ]
+                },
+                {
+                 "tag": "0.2.2.4.1.1.2.3.2",
+                 "depth": 8,
+                 "phase": 20,
+                 "gen_cnt": 21,
+                 "n": 1,
+                 "q": 0.98046875,
+                 "is_terminal": false,
+                 "is_completed": false,
+                 "step_text": "## Step 8: Substitute the values and solve for the angle\n$\\cos \\theta = \\frac{13}{\\sqrt{14} \\sqrt{53}} = \\frac{13}{\\sqrt{14 \\cdot 53}} = \\frac{13}{\\sqrt{742}}$\n\n",
+                 "children": []
+                },
+                {
+                 "tag": "0.2.2.4.1.1.2.3.3",
+                 "depth": 8,
+                 "phase": 20,
+                 "gen_cnt": 21,
+                 "n": 1,
+                 "q": 0.88232421875,
+                 "is_terminal": false,
+                 "is_completed": false,
+                 "step_text": "## Step 8: Calculate $\\cos \\theta$\n$\\cos \\theta = \\frac{13}{\\sqrt{14} \\sqrt{53}} = \\frac{13}{\\sqrt{14*53}} = \\frac{13}{\\sqrt{738}}$.\n\n",
+                 "children": []
+                },
+                {
+                 "tag": "0.2.2.4.1.1.2.3.4",
+                 "depth": 8,
+                 "phase": 20,
+                 "gen_cnt": 21,
+                 "n": 1,
+                 "q": 0.99072265625,
+                 "is_terminal": false,
+                 "is_completed": false,
+                 "step_text": "$\\cos \\theta = \\frac{13}{\\sqrt{14} \\sqrt{53}}$.\n\n",
+                 "children": [
+                  {
+                   "tag": "0.2.2.4.1.1.2.3.4.1",
+                   "depth": 9,
+                   "phase": 21,
+                   "gen_cnt": 22,
+                   "n": 1,
+                   "q": 0.56982421875,
+                   "is_terminal": false,
+                   "is_completed": false,
+                   "step_text": "## Step 8: Simplify the expression for the cosine of the angle\nSimplify the denominator: $\\sqrt{14} \\sqrt{53} = \\sqrt{14 \\cdot 53} = \\sqrt{538}$.\n\n",
+                   "children": []
+                  },
+                  {
+                   "tag": "0.2.2.4.1.1.2.3.4.2",
+                   "depth": 9,
+                   "phase": 21,
+                   "gen_cnt": 22,
+                   "n": 1,
+                   "q": 0.98193359375,
+                   "is_terminal": false,
+                   "is_completed": false,
+                   "step_text": "## Step 8: Simplify the expression for the cosine of the angle\n$\\cos \\theta = \\frac{13}{\\sqrt{14} \\sqrt{53}} = \\frac{13}{\\sqrt{14 \\cdot 53}} = \\frac{13}{\\sqrt{742}}$.\n\n",
+                   "children": []
+                  },
+                  {
+                   "tag": "0.2.2.4.1.1.2.3.4.3",
+                   "depth": 9,
+                   "phase": 21,
+                   "gen_cnt": 22,
+                   "n": 1,
+                   "q": 0.98193359375,
+                   "is_terminal": false,
+                   "is_completed": false,
+                   "step_text": "## Step 8: Simplify the expression\nSimplifying the expression in step 7 gives:\n\n",
+                   "children": []
+                  },
+                  {
+                   "tag": "0.2.2.4.1.1.2.3.4.4",
+                   "depth": 9,
+                   "phase": 21,
+                   "gen_cnt": 22,
+                   "n": 1,
+                   "q": 0.87890625,
+                   "is_terminal": false,
+                   "is_completed": false,
+                   "step_text": "## Step 8: Simplify the expression\n$\\cos \\theta = \\frac{13}{\\sqrt{14} \\sqrt{53}} = \\frac{13}{\\sqrt{14 \\cdot 53}} = \\frac{13}{\\sqrt{754}}$.\n\n",
+                   "children": []
+                  }
+                 ]
+                }
+               ]
+              },
+              {
+               "tag": "0.2.2.4.1.1.2.4",
+               "depth": 7,
+               "phase": 12,
+               "gen_cnt": 13,
+               "n": 1,
+               "q": 0.9853515625,
+               "is_terminal": false,
+               "is_completed": false,
+               "step_text": "## Step 7: Calculate the cosine of the angle between the lines\nThe cosine of the angle $\\theta$ is given by $\\cos \\theta = \\frac{13}{\\sqrt{14} \\sqrt{53}} = \\frac{13}{\\sqrt{14 \\cdot 53}} = \\frac{13}{\\sqrt{742}}$.\n\n",
+               "children": []
+              }
+             ]
+            },
+            {
+             "tag": "0.2.2.4.1.1.3",
+             "depth": 6,
+             "phase": 11,
+             "gen_cnt": 12,
+             "n": 1,
+             "q": 0.9765625,
+             "is_terminal": false,
+             "is_completed": false,
+             "step_text": "## Step 6: Calculate the dot product\nThe dot product is 13.\n\n",
+             "children": []
+            }
+           ]
+          },
+          {
+           "tag": "0.2.2.4.1.2",
+           "depth": 5,
+           "phase": 4,
+           "gen_cnt": 5,
+           "n": 1,
+           "q": 0.99658203125,
+           "is_terminal": false,
+           "is_completed": false,
+           "step_text": "## Step 5: Compute the magnitude of the direction ratios of the first line\nThe magnitude of the first line is given by $\\sqrt{(2)^2 + (3)^2 + (-1)^2} = \\sqrt{4 + 9 + 1} = \\sqrt{14}$.\n\n",
+           "children": [
+            {
+             "tag": "0.2.2.4.1.2.1",
+             "depth": 6,
+             "phase": 5,
+             "gen_cnt": 6,
+             "n": 1,
+             "q": 0.998046875,
+             "is_terminal": false,
+             "is_completed": false,
+             "step_text": "## Step 6: Compute the magnitude of the direction ratios of the second line\nThe magnitude of the second line is given by $\\sqrt{(6)^2 + (-1)^2 + (-4)^2} = \\sqrt{36 + 1 + 16} = \\sqrt{53}$.\n\n",
+             "children": [
+              {
+               "tag": "0.2.2.4.1.2.1.1",
+               "depth": 7,
+               "phase": 6,
+               "gen_cnt": 7,
+               "n": 1,
+               "q": 0.99658203125,
+               "is_terminal": false,
+               "is_completed": false,
+               "step_text": "## Step 7: Substitute the computed values into the formula for $\\cos \\theta$\nNow, we have $\\cos \\theta = \\frac{13}{\\sqrt{14} \\cdot \\sqrt{53}}$.\n\n",
+               "children": [
+                {
+                 "tag": "0.2.2.4.1.2.1.1.1",
+                 "depth": 8,
+                 "phase": 7,
+                 "gen_cnt": 8,
+                 "n": 1,
+                 "q": 0.990234375,
+                 "is_terminal": false,
+                 "is_completed": false,
+                 "step_text": "## Step 8: Simplify the expression for $\\cos \\theta$\n$\\cos \\theta = \\frac{13}{\\sqrt{14 \\cdot 53}} = \\frac{13}{\\sqrt{742}}$.\n\n",
+                 "children": [
+                  {
+                   "tag": "0.2.2.4.1.2.1.1.1.1",
+                   "depth": 9,
+                   "phase": 22,
+                   "gen_cnt": 23,
+                   "n": 1,
+                   "q": 0.98388671875,
+                   "is_terminal": false,
+                   "is_completed": false,
+                   "step_text": "## Step 9: Find the value of $\\theta$ in degrees\nTo find the angle in degrees, we need to take the inverse cosine (arccos) of the above expression and then convert it from radians to degrees.\n\n",
+                   "children": []
+                  },
+                  {
+                   "tag": "0.2.2.4.1.2.1.1.1.2",
+                   "depth": 9,
+                   "phase": 22,
+                   "gen_cnt": 23,
+                   "n": 1,
+                   "q": 0.984375,
+                   "is_terminal": false,
+                   "is_completed": false,
+                   "step_text": "## Step 9: Solve for $\\theta$ by taking the inverse cosine (arccos) of both sides\nTo find the angle $\\theta$, we take the arccos of both sides, which gives us $\\theta = \\arccos \\left( \\frac{13}{\\sqrt{742}} \\right)$.\n\n",
+                   "children": []
+                  },
+                  {
+                   "tag": "0.2.2.4.1.2.1.1.1.3",
+                   "depth": 9,
+                   "phase": 22,
+                   "gen_cnt": 23,
+                   "n": 1,
+                   "q": 0.98291015625,
+                   "is_terminal": false,
+                   "is_completed": false,
+                   "step_text": "## Step 9: Find the value of $\\theta$ using the arccosine function\n$\\theta = \\cos^{-1}\\left(\\frac{13}{\\sqrt{742}}\\right)$.\n\n",
+                   "children": []
+                  },
+                  {
+                   "tag": "0.2.2.4.1.2.1.1.1.4",
+                   "depth": 9,
+                   "phase": 22,
+                   "gen_cnt": 23,
+                   "n": 1,
+                   "q": 0.9853515625,
+                   "is_terminal": false,
+                   "is_completed": false,
+                   "step_text": "## Step 9: Find the angle $\\theta$ using the inverse cosine function\n$\\theta = \\cos^{-1} \\left( \\frac{13}{\\sqrt{742}} \\right)$.\n\n",
+                   "children": []
+                  }
+                 ]
+                },
+                {
+                 "tag": "0.2.2.4.1.2.1.1.2",
+                 "depth": 8,
+                 "phase": 7,
+                 "gen_cnt": 8,
+                 "n": 1,
+                 "q": 0.986328125,
+                 "is_terminal": false,
+                 "is_completed": false,
+                 "step_text": "## Step 8: Simplify the expression for $\\cos \\theta$\n$\\cos \\theta = \\frac{13}{\\sqrt{14} \\cdot \\sqrt{53}} = \\frac{13}{\\sqrt{14 \\cdot 53}} = \\frac{13}{\\sqrt{742}}$.\n\n",
+                 "children": [
+                  {
+                   "tag": "0.2.2.4.1.2.1.1.2.1",
+                   "depth": 9,
+                   "phase": 71,
+                   "gen_cnt": 72,
+                   "n": 1,
+                   "q": 0.90869140625,
+                   "is_terminal": false,
+                   "is_completed": false,
+                   "step_text": "## Step 9: Evaluate the expression for $\\cos \\theta$\n$\\cos \\theta = \\frac{13}{\\sqrt{742}} \\approx \\frac{13}{27.5} \\approx 0.472$ (rounded to 3 decimal places).\n\n",
+                   "children": []
+                  },
+                  {
+                   "tag": "0.2.2.4.1.2.1.1.2.2",
+                   "depth": 9,
+                   "phase": 71,
+                   "gen_cnt": 72,
+                   "n": 1,
+                   "q": 0.91943359375,
+                   "is_terminal": false,
+                   "is_completed": false,
+                   "step_text": "## Step 9: Calculate the value of $\\sqrt{742}$\n$\\sqrt{742} \\approx 27.28$.\n\n",
+                   "children": []
+                  },
+                  {
+                   "tag": "0.2.2.4.1.2.1.1.2.3",
+                   "depth": 9,
+                   "phase": 71,
+                   "gen_cnt": 72,
+                   "n": 1,
+                   "q": 0.89892578125,
+                   "is_terminal": false,
+                   "is_completed": false,
+                   "step_text": "## Step 9: Calculate $\\sqrt{742}$\n$\\sqrt{742} \\approx 27.3139$.\n\n",
+                   "children": []
+                  },
+                  {
+                   "tag": "0.2.2.4.1.2.1.1.2.4",
+                   "depth": 9,
+                   "phase": 71,
+                   "gen_cnt": 72,
+                   "n": 1,
+                   "q": 0.845703125,
+                   "is_terminal": false,
+                   "is_completed": false,
+                   "step_text": "## Step 9: Calculate the value of $\\sqrt{742}$\n$\\sqrt{742} \\approx 27.1$.\n\n",
+                   "children": []
+                  }
+                 ]
+                },
+                {
+                 "tag": "0.2.2.4.1.2.1.1.3",
+                 "depth": 8,
+                 "phase": 7,
+                 "gen_cnt": 8,
+                 "n": 1,
+                 "q": 0.9892578125,
+                 "is_terminal": false,
+                 "is_completed": false,
+                 "step_text": "## Step 8: Simplify the expression\n$\\cos \\theta = \\frac{13}{\\sqrt{14 \\cdot 53}} = \\frac{13}{\\sqrt{742}}$\n\n",
+                 "children": [
+                  {
+                   "tag": "0.2.2.4.1.2.1.1.3.1",
+                   "depth": 9,
+                   "phase": 50,
+                   "gen_cnt": 51,
+                   "n": 1,
+                   "q": 0.978515625,
+                   "is_terminal": false,
+                   "is_completed": false,
+                   "step_text": "## Step 9: Compute the value of $\\theta$\nTo find the angle $\\theta$, we take the inverse cosine (arccos) of both sides: $\\theta = \\cos^{-1} \\left( \\frac{13}{\\sqrt{742}} \\right)$.\n\n",
+                   "children": []
+                  },
+                  {
+                   "tag": "0.2.2.4.1.2.1.1.3.2",
+                   "depth": 9,
+                   "phase": 50,
+                   "gen_cnt": 51,
+                   "n": 1,
+                   "q": 0.9541015625,
+                   "is_terminal": false,
+                   "is_completed": false,
+                   "step_text": "## Step 9: Rationalize the denominator\n$\\cos \\theta = \\frac{13}{\\sqrt{742}} \\cdot \\frac{\\sqrt{742}}{\\sqrt{742}} = \\frac{13\\sqrt{742}}{742}$\n\n",
+                   "children": []
+                  },
+                  {
+                   "tag": "0.2.2.4.1.2.1.1.3.3",
+                   "depth": 9,
+                   "phase": 50,
+                   "gen_cnt": 51,
+                   "n": 1,
+                   "q": 0.95751953125,
+                   "is_terminal": false,
+                   "is_completed": false,
+                   "step_text": "## Step 9: Rationalize the denominator\n$\\cos \\theta = \\frac{13}{\\sqrt{742}} \\cdot \\frac{\\sqrt{742}}{\\sqrt{742}} = \\frac{13 \\sqrt{742}}{742}$\n\n",
+                   "children": []
+                  },
+                  {
+                   "tag": "0.2.2.4.1.2.1.1.3.4",
+                   "depth": 9,
+                   "phase": 50,
+                   "gen_cnt": 51,
+                   "n": 1,
+                   "q": 0.9306640625,
+                   "is_terminal": false,
+                   "is_completed": false,
+                   "step_text": "## Step 9: Evaluate the square root in the denominator\n$\\sqrt{742} \\approx 27.165$\n\n",
+                   "children": []
+                  }
+                 ]
+                },
+                {
+                 "tag": "0.2.2.4.1.2.1.1.4",
+                 "depth": 8,
+                 "phase": 7,
+                 "gen_cnt": 8,
+                 "n": 1,
+                 "q": 0.78515625,
+                 "is_terminal": false,
+                 "is_completed": false,
+                 "step_text": "## Step 8: Simplify the expression\n$\\cos \\theta = \\frac{13}{\\sqrt{14} \\cdot \\sqrt{53}} = \\frac{13}{\\sqrt{14 \\cdot 53}} = \\frac{13}{\\sqrt{746}} = \\frac{13}{\\sqrt{2 \\cdot 37 \\cdot 13}} = \\frac{13}{\\sqrt{2 \\cdot 37}} = \\frac{13}{\\sqrt{2} \\cdot \\sqrt{37}} = \\frac{13}{\\sqrt{2} \\cdot \\sqrt{37}} = \\frac{13}{\\sqrt{2 \\cdot 37}} = \\frac{13}{\\sqrt{2} \\cdot \\sqrt{37}} = \\frac{13}{\\sqrt{2 \\cdot 37}} = \\frac{13}{\\sqrt{2} \\cdot \\sqrt{37}} = \\frac{13}{\\sqrt{2 \\cdot 37}} = \\frac{13}{\\sqrt{2} \\cdot \\sqrt{37}}$\n\n",
+                 "children": []
+                }
+               ]
+              },
+              {
+               "tag": "0.2.2.4.1.2.1.2",
+               "depth": 7,
+               "phase": 6,
+               "gen_cnt": 7,
+               "n": 1,
+               "q": 0.90869140625,
+               "is_terminal": false,
+               "is_completed": false,
+               "step_text": "## Step 7: Calculate the cosine of the angle between the lines\n$\\cos \\theta = \\frac{13}{\\sqrt{14}\\sqrt{53}} = \\frac{13}{\\sqrt{14 \\cdot 53}} = \\frac{13}{\\sqrt{740}} = \\frac{13}{\\sqrt{4 \\cdot 185}} = \\frac{13}{2\\sqrt{185}}$.\n\n",
+               "children": []
+              },
+              {
+               "tag": "0.2.2.4.1.2.1.3",
+               "depth": 7,
+               "phase": 6,
+               "gen_cnt": 7,
+               "n": 1,
+               "q": 0.89306640625,
+               "is_terminal": false,
+               "is_completed": false,
+               "step_text": "## Step 7: Calculate the cosine of the angle between the lines\n$\\cos \\theta = \\frac{13}{\\sqrt{14} \\sqrt{53}} = \\frac{13}{\\sqrt{14 \\cdot 53}} = \\frac{13}{\\sqrt{738}}$.\n\n",
+               "children": []
+              },
+              {
+               "tag": "0.2.2.4.1.2.1.4",
+               "depth": 7,
+               "phase": 6,
+               "gen_cnt": 7,
+               "n": 1,
+               "q": 0.98779296875,
+               "is_terminal": false,
+               "is_completed": false,
+               "step_text": "## Step 7: Substitute the computed values into the formula to find the angle\n$\\cos \\theta = \\frac{13}{\\sqrt{14} \\sqrt{53}} = \\frac{13}{\\sqrt{14 \\cdot 53}} = \\frac{13}{\\sqrt{742}}$.\n\n",
+               "children": [
+                {
+                 "tag": "0.2.2.4.1.2.1.4.1",
+                 "depth": 8,
+                 "phase": 52,
+                 "gen_cnt": 53,
+                 "n": 1,
+                 "q": 0.49609375,
+                 "is_terminal": false,
+                 "is_completed": false,
+                 "step_text": "## Step 8: Find the angle\n$\\theta = \\cos^{-1} \\left( \\frac{13}{\\sqrt{742}} \\right) \\approx \\cos^{-1} (0.88) \\approx 25.02^{\\circ}$\n\n",
+                 "children": []
+                },
+                {
+                 "tag": "0.2.2.4.1.2.1.4.2",
+                 "depth": 8,
+                 "phase": 52,
+                 "gen_cnt": 53,
+                 "n": 1,
+                 "q": 0.9853515625,
+                 "is_terminal": false,
+                 "is_completed": false,
+                 "step_text": "## Step 8: Take the inverse cosine (arccos) of both sides\n$\\theta = \\cos^{-1} \\left( \\frac{13}{\\sqrt{742}} \\right)$.\n\n",
+                 "children": []
+                },
+                {
+                 "tag": "0.2.2.4.1.2.1.4.3",
+                 "depth": 8,
+                 "phase": 52,
+                 "gen_cnt": 53,
+                 "n": 1,
+                 "q": 0.9833984375,
+                 "is_terminal": false,
+                 "is_completed": false,
+                 "step_text": "## Step 8: Simplify the expression for $\\cos \\theta$\n$\\cos \\theta = \\frac{13}{\\sqrt{742}}$.\n\n",
+                 "children": []
+                },
+                {
+                 "tag": "0.2.2.4.1.2.1.4.4",
+                 "depth": 8,
+                 "phase": 52,
+                 "gen_cnt": 53,
+                 "n": 1,
+                 "q": 0.970703125,
+                 "is_terminal": false,
+                 "is_completed": false,
+                 "step_text": "## Step 8: Compute the value of $\\cos \\theta$\n$\\cos \\theta = \\frac{13}{\\sqrt{742}} \\approx 0.873$.\n\n",
+                 "children": []
+                }
+               ]
+              }
+             ]
+            }
+           ]
+          },
+          {
+           "tag": "0.2.2.4.1.3",
+           "depth": 5,
+           "phase": 4,
+           "gen_cnt": 5,
+           "n": 1,
+           "q": 0.99365234375,
+           "is_terminal": false,
+           "is_completed": false,
+           "step_text": "## Step 5: Compute the magnitudes of the direction ratios\nThe magnitude of the first direction ratio vector is $\\sqrt{(2)^2 + (3)^2 + (-1)^2} = \\sqrt{4 + 9 + 1} = \\sqrt{14}$.\n\n",
+           "children": [
+            {
+             "tag": "0.2.2.4.1.3.1",
+             "depth": 6,
+             "phase": 16,
+             "gen_cnt": 17,
+             "n": 1,
+             "q": 0.99755859375,
+             "is_terminal": false,
+             "is_completed": false,
+             "step_text": "## Step 6: Compute the magnitude of the second direction ratio vector\nThe magnitude of the second direction ratio vector is $\\sqrt{(6)^2 + (-1)^2 + (-4)^2} = \\sqrt{36 + 1 + 16} = \\sqrt{53}$.\n\n",
+             "children": [
+              {
+               "tag": "0.2.2.4.1.3.1.1",
+               "depth": 7,
+               "phase": 17,
+               "gen_cnt": 18,
+               "n": 1,
+               "q": 0.9111328125,
+               "is_terminal": false,
+               "is_completed": false,
+               "step_text": "## Step 7: Substitute the dot product and magnitudes into the formula for $\\cos \\theta$\nSubstituting into the formula, we get $\\cos \\theta = \\frac{13}{\\sqrt{14} \\cdot \\sqrt{53}} = \\frac{13}{\\sqrt{14 \\cdot 53}} = \\frac{13}{\\sqrt{738}}$.\n\n",
+               "children": []
+              },
+              {
+               "tag": "0.2.2.4.1.3.1.2",
+               "depth": 7,
+               "phase": 17,
+               "gen_cnt": 18,
+               "n": 1,
+               "q": 0.9951171875,
+               "is_terminal": false,
+               "is_completed": false,
+               "step_text": "## Step 7: Calculate the angle between the lines\nThe angle $\\theta$ between the lines can be calculated using the formula: $\\cos \\theta = \\frac{13}{\\sqrt{14} \\sqrt{53}}$.\n\n",
+               "children": [
+                {
+                 "tag": "0.2.2.4.1.3.1.2.1",
+                 "depth": 8,
+                 "phase": 18,
+                 "gen_cnt": 19,
+                 "n": 1,
+                 "q": 0.98291015625,
+                 "is_terminal": false,
+                 "is_completed": false,
+                 "step_text": "## Step 8: Simplify the expression for $\\cos \\theta$\n$\\sqrt{14} \\sqrt{53} = \\sqrt{14*53} = \\sqrt{742}$. Thus, $\\cos \\theta = \\frac{13}{\\sqrt{742}}$.\n\n",
+                 "children": []
+                },
+                {
+                 "tag": "0.2.2.4.1.3.1.2.2",
+                 "depth": 8,
+                 "phase": 18,
+                 "gen_cnt": 19,
+                 "n": 1,
+                 "q": 0.96484375,
+                 "is_terminal": false,
+                 "is_completed": false,
+                 "step_text": "## Step 8: Solve for the angle $\\theta$\nWe need to solve for $\\theta$ in the equation $\\cos \\theta = \\frac{13}{\\sqrt{14} \\sqrt{53}}$. Rearranging the equation to isolate $\\cos \\theta$, we get: $\\cos \\theta = \\frac{13}{\\sqrt{14} \\sqrt{53}}$.\n\n",
+                 "children": []
+                },
+                {
+                 "tag": "0.2.2.4.1.3.1.2.3",
+                 "depth": 8,
+                 "phase": 18,
+                 "gen_cnt": 19,
+                 "n": 1,
+                 "q": 0.95849609375,
+                 "is_terminal": false,
+                 "is_completed": false,
+                 "step_text": "## Step 8: Calculate the value of the angle\n$\\cos \\theta = \\frac{13}{\\sqrt{14} \\sqrt{53}}$ can be simplified to $\\cos \\theta = \\frac{13}{\\sqrt{14 \\times 53}} = \\frac{13}{\\sqrt{742}}$. Now, we will solve for $\\theta$: $\\theta = \\cos^{-1} \\left(\\frac{13}{\\sqrt{742}}\\right)$\n\n",
+                 "children": []
+                },
+                {
+                 "tag": "0.2.2.4.1.3.1.2.4",
+                 "depth": 8,
+                 "phase": 18,
+                 "gen_cnt": 19,
+                 "n": 1,
+                 "q": 0.96923828125,
+                 "is_terminal": false,
+                 "is_completed": false,
+                 "step_text": "## Step 8: Simplify the expression\n$\\cos \\theta = \\frac{13}{\\sqrt{14} \\sqrt{53}} = \\frac{13}{\\sqrt{14 \\cdot 53}} = \\frac{13}{\\sqrt{741}}$.\n\n",
+                 "children": []
+                }
+               ]
+              },
+              {
+               "tag": "0.2.2.4.1.3.1.3",
+               "depth": 7,
+               "phase": 17,
+               "gen_cnt": 18,
+               "n": 1,
+               "q": 0.98828125,
+               "is_terminal": false,
+               "is_completed": false,
+               "step_text": "## Step 7: Plug the computed values into the formula for the angle\n$\\cos \\theta = \\frac{13}{\\sqrt{14} \\sqrt{53}} = \\frac{13}{\\sqrt{14 \\cdot 53}} = \\frac{13}{\\sqrt{742}}$\n\n",
+               "children": [
+                {
+                 "tag": "0.2.2.4.1.3.1.3.1",
+                 "depth": 8,
+                 "phase": 51,
+                 "gen_cnt": 52,
+                 "n": 1,
+                 "q": 0.9833984375,
+                 "is_terminal": false,
+                 "is_completed": false,
+                 "step_text": "## Step 8: Find the angle using the inverse cosine function\n$\\theta = \\cos^{-1}\\left(\\frac{13}{\\sqrt{742}}\\right)$\n\n",
+                 "children": []
+                },
+                {
+                 "tag": "0.2.2.4.1.3.1.3.2",
+                 "depth": 8,
+                 "phase": 51,
+                 "gen_cnt": 52,
+                 "n": 1,
+                 "q": 0.955078125,
+                 "is_terminal": false,
+                 "is_completed": false,
+                 "step_text": "## Step 8: Solve for the angle $\\theta$\nTo find the angle $\\theta$, we take the inverse cosine (arccos) of both sides: $\\theta = \\arccos \\left(\\frac{13}{\\sqrt{742}}\\right)$. We can evaluate this expression.\n\n",
+                 "children": []
+                },
+                {
+                 "tag": "0.2.2.4.1.3.1.3.3",
+                 "depth": 8,
+                 "phase": 51,
+                 "gen_cnt": 52,
+                 "n": 1,
+                 "q": 0.97216796875,
+                 "is_terminal": false,
+                 "is_completed": false,
+                 "step_text": "## Step 8: Simplify the fraction\n$\\theta = \\arccos\\left(\\frac{13}{\\sqrt{742}}\\right)$\n\n",
+                 "children": []
+                },
+                {
+                 "tag": "0.2.2.4.1.3.1.3.4",
+                 "depth": 8,
+                 "phase": 51,
+                 "gen_cnt": 52,
+                 "n": 1,
+                 "q": 0.84814453125,
+                 "is_terminal": false,
+                 "is_completed": false,
+                 "step_text": "## Step 8: Simplify the fraction\n$\\frac{13}{\\sqrt{742}} = \\frac{13}{\\sqrt{2 \\cdot 37 \\cdot 13}} = \\frac{13}{\\sqrt{2 \\cdot 37}}$\n\n",
+                 "children": []
+                }
+               ]
+              },
+              {
+               "tag": "0.2.2.4.1.3.1.4",
+               "depth": 7,
+               "phase": 17,
+               "gen_cnt": 18,
+               "n": 1,
+               "q": 0.994140625,
+               "is_terminal": false,
+               "is_completed": false,
+               "step_text": "## Step 7: Substitute the values into the formula for the angle between two lines\nNow we can find the angle $\\theta$ between the two lines using the formula: $\\cos \\theta = \\frac{13}{\\sqrt{14} \\cdot \\sqrt{53}}$.\n\n",
+               "children": [
+                {
+                 "tag": "0.2.2.4.1.3.1.4.1",
+                 "depth": 8,
+                 "phase": 19,
+                 "gen_cnt": 20,
+                 "n": 1,
+                 "q": 0.9638671875,
+                 "is_terminal": false,
+                 "is_completed": false,
+                 "step_text": "## Step 8: Simplify the expression\nWe can simplify the expression by calculating the product of the magnitudes: $\\frac{13}{\\sqrt{14} \\cdot \\sqrt{53}} = \\frac{13}{\\sqrt{14 \\cdot 53}} = \\frac{13}{\\sqrt{740}}$.\n\n",
+                 "children": []
+                },
+                {
+                 "tag": "0.2.2.4.1.3.1.4.2",
+                 "depth": 8,
+                 "phase": 19,
+                 "gen_cnt": 20,
+                 "n": 1,
+                 "q": 0.98583984375,
+                 "is_terminal": false,
+                 "is_completed": false,
+                 "step_text": "## Step 8: Simplify the expression for cosine\n$\\cos \\theta = \\frac{13}{\\sqrt{14} \\cdot \\sqrt{53}} = \\frac{13}{\\sqrt{14 \\cdot 53}} = \\frac{13}{\\sqrt{742}}$.\n\n",
+                 "children": [
+                  {
+                   "tag": "0.2.2.4.1.3.1.4.2.1",
+                   "depth": 9,
+                   "phase": 79,
+                   "gen_cnt": 80,
+                   "n": 1,
+                   "q": 0.9775390625,
+                   "is_terminal": false,
+                   "is_completed": false,
+                   "step_text": "## Step 9: Find the value of the angle $\\theta$\nTo find the angle $\\theta$, we take the inverse cosine (arccos) of $\\frac{13}{\\sqrt{742}}$ and convert it to degrees.\n\n",
+                   "children": []
+                  },
+                  {
+                   "tag": "0.2.2.4.1.3.1.4.2.2",
+                   "depth": 9,
+                   "phase": 79,
+                   "gen_cnt": 80,
+                   "n": 1,
+                   "q": 0.810546875,
+                   "is_terminal": false,
+                   "is_completed": false,
+                   "step_text": "## Step 9: Calculate the value of the square root in the denominator\n$\\sqrt{742} = \\sqrt{2 \\cdot 37 \\cdot 13} = \\sqrt{2} \\cdot \\sqrt{37} \\cdot \\sqrt{13}$.\n\n",
+                   "children": []
+                  },
+                  {
+                   "tag": "0.2.2.4.1.3.1.4.2.3",
+                   "depth": 9,
+                   "phase": 79,
+                   "gen_cnt": 80,
+                   "n": 1,
+                   "q": 0.97705078125,
+                   "is_terminal": false,
+                   "is_completed": false,
+                   "step_text": "## Step 9: Calculate the value of the angle using the inverse cosine function\n$\\theta = \\arccos \\left( \\frac{13}{\\sqrt{742}} \\right)$.\n\n",
+                   "children": []
+                  },
+                  {
+                   "tag": "0.2.2.4.1.3.1.4.2.4",
+                   "depth": 9,
+                   "phase": 79,
+                   "gen_cnt": 80,
+                   "n": 1,
+                   "q": 0.81982421875,
+                   "is_terminal": false,
+                   "is_completed": false,
+                   "step_text": "## Step 9: Square the cosine value and take the inverse cosine to find the angle in degrees\n$\\cos \\theta = \\frac{13}{\\sqrt{742}} \\implies \\cos \\theta = 0.9109 \\implies \\theta = \\cos^{-1}(0.9109)$.\n\n",
+                   "children": []
+                  }
+                 ]
+                },
+                {
+                 "tag": "0.2.2.4.1.3.1.4.3",
+                 "depth": 8,
+                 "phase": 19,
+                 "gen_cnt": 20,
+                 "n": 1,
+                 "q": 0.990234375,
+                 "is_terminal": false,
+                 "is_completed": false,
+                 "step_text": "## Step 8: Simplify the expression for $\\cos \\theta$\n$\\cos \\theta = \\frac{13}{\\sqrt{14 \\cdot 53}} = \\frac{13}{\\sqrt{742}}$.\n\n",
+                 "children": [
+                  {
+                   "tag": "0.2.2.4.1.3.1.4.3.1",
+                   "depth": 9,
+                   "phase": 23,
+                   "gen_cnt": 24,
+                   "n": 1,
+                   "q": 0.982421875,
+                   "is_terminal": false,
+                   "is_completed": false,
+                   "step_text": "## Step 9: Calculate the value of $\\theta$ using the inverse cosine function\nWe need to find the angle $\\theta$ by taking the inverse cosine (arccos) of $\\frac{13}{\\sqrt{742}}$.\n\n",
+                   "children": []
+                  },
+                  {
+                   "tag": "0.2.2.4.1.3.1.4.3.2",
+                   "depth": 9,
+                   "phase": 23,
+                   "gen_cnt": 24,
+                   "n": 1,
+                   "q": 0.982421875,
+                   "is_terminal": false,
+                   "is_completed": false,
+                   "step_text": "## Step 9: Find the angle $\\theta$ using $\\cos^{-1}$\nTo find the angle $\\theta$, we need to take the inverse cosine (arccos) of both sides: $\\theta = \\cos^{-1}\\left(\\frac{13}{\\sqrt{742}}\\right)$.\n\n",
+                   "children": []
+                  },
+                  {
+                   "tag": "0.2.2.4.1.3.1.4.3.3",
+                   "depth": 9,
+                   "phase": 23,
+                   "gen_cnt": 24,
+                   "n": 1,
+                   "q": 0.8974609375,
+                   "is_terminal": false,
+                   "is_completed": false,
+                   "step_text": "## Step 9: Calculate the value of $\\cos \\theta$\n$\\cos \\theta \\approx \\frac{13}{\\sqrt{742}} \\approx 0.85$.\n\n",
+                   "children": []
+                  },
+                  {
+                   "tag": "0.2.2.4.1.3.1.4.3.4",
+                   "depth": 9,
+                   "phase": 23,
+                   "gen_cnt": 24,
+                   "n": 1,
+                   "q": 0.97998046875,
+                   "is_terminal": false,
+                   "is_completed": false,
+                   "step_text": "## Step 9: Find the angle $\\theta$ in degrees\n$\\theta = \\cos^{-1}\\left( \\frac{13}{\\sqrt{742}} \\right)$.\n\n",
+                   "children": []
+                  }
+                 ]
+                },
+                {
+                 "tag": "0.2.2.4.1.3.1.4.4",
+                 "depth": 8,
+                 "phase": 19,
+                 "gen_cnt": 20,
+                 "n": 1,
+                 "q": 0.92724609375,
+                 "is_terminal": false,
+                 "is_completed": false,
+                 "step_text": "## Step 8: Simplify the expression\nThis expression can be simplified to $\\cos \\theta = \\frac{13}{\\sqrt{14 \\cdot 53}} = \\frac{13}{\\sqrt{738}}$.\n\n",
+                 "children": []
+                }
+               ]
+              }
+             ]
+            }
+           ]
+          },
+          {
+           "tag": "0.2.2.4.1.4",
+           "depth": 5,
+           "phase": 4,
+           "gen_cnt": 5,
+           "n": 1,
+           "q": 0.99560546875,
+           "is_terminal": false,
+           "is_completed": false,
+           "step_text": "## Step 5: Compute the magnitudes of the direction ratios\nThe magnitude of the first direction ratio is $\\sqrt{(2)^2 + (3)^2 + (-1)^2} = \\sqrt{4 + 9 + 1} = \\sqrt{14}$.\nThe magnitude of the second direction ratio is $\\sqrt{(6)^2 + (-1)^2 + (-4)^2} = \\sqrt{36 + 1 + 16} = \\sqrt{53}$.\n\n",
+           "children": [
+            {
+             "tag": "0.2.2.4.1.4.1",
+             "depth": 6,
+             "phase": 8,
+             "gen_cnt": 9,
+             "n": 1,
+             "q": 0.98486328125,
+             "is_terminal": false,
+             "is_completed": false,
+             "step_text": "## Step 6: Substitute the values into the formula for the angle\n$\\cos \\theta = \\frac{13}{\\sqrt{14} \\sqrt{53}} = \\frac{13}{\\sqrt{14 \\cdot 53}} = \\frac{13}{\\sqrt{742}}$.\n\n",
+             "children": []
+            },
+            {
+             "tag": "0.2.2.4.1.4.2",
+             "depth": 6,
+             "phase": 8,
+             "gen_cnt": 9,
+             "n": 1,
+             "q": 0.99560546875,
+             "is_terminal": false,
+             "is_completed": false,
+             "step_text": "## Step 6: Substitute the computed values into the formula\n$\\cos \\theta = \\frac{13}{\\sqrt{14} \\sqrt{53}}$\n\n",
+             "children": [
+              {
+               "tag": "0.2.2.4.1.4.2.1",
+               "depth": 7,
+               "phase": 9,
+               "gen_cnt": 10,
+               "n": 1,
+               "q": 0.986328125,
+               "is_terminal": false,
+               "is_completed": false,
+               "step_text": "## Step 7: Simplify the expression\n$\\cos \\theta = \\frac{13}{\\sqrt{14} \\sqrt{53}} = \\frac{13}{\\sqrt{14 \\times 53}} = \\frac{13}{\\sqrt{742}}$\n\n",
+               "children": [
+                {
+                 "tag": "0.2.2.4.1.4.2.1.1",
+                 "depth": 8,
+                 "phase": 69,
+                 "gen_cnt": 70,
+                 "n": 1,
+                 "q": 0.98583984375,
+                 "is_terminal": false,
+                 "is_completed": false,
+                 "step_text": "## Step 8: Rationalize the denominator if necessary\nIn this case, it's not necessary to rationalize the denominator.\n\n",
+                 "children": [
+                  {
+                   "tag": "0.2.2.4.1.4.2.1.1.1",
+                   "depth": 9,
+                   "phase": 76,
+                   "gen_cnt": 77,
+                   "n": 1,
+                   "q": 0.97412109375,
+                   "is_terminal": false,
+                   "is_completed": false,
+                   "step_text": "## Step 9: Find the value of $\\theta$ using the inverse cosine function\n$\\theta = \\arccos\\left(\\frac{13}{\\sqrt{742}}\\right)$\n\n",
+                   "children": []
+                  },
+                  {
+                   "tag": "0.2.2.4.1.4.2.1.1.2",
+                   "depth": 9,
+                   "phase": 76,
+                   "gen_cnt": 77,
+                   "n": 1,
+                   "q": 0.9423828125,
+                   "is_terminal": false,
+                   "is_completed": false,
+                   "step_text": "## Step 9: Find the value of $\\theta$\nSince $\\cos \\theta = \\frac{13}{\\sqrt{742}}$, we can use a calculator to find the value of $\\theta$ in radians: $\\theta = \\cos^{-1} \\left( \\frac{13}{\\sqrt{742}} \\right)$.\n\n",
+                   "children": []
+                  },
+                  {
+                   "tag": "0.2.2.4.1.4.2.1.1.3",
+                   "depth": 9,
+                   "phase": 76,
+                   "gen_cnt": 77,
+                   "n": 1,
+                   "q": 0.98486328125,
+                   "is_terminal": false,
+                   "is_completed": false,
+                   "step_text": "## Step 9: Find the angle $\\theta$\nWe need to find the angle whose cosine is $\\frac{13}{\\sqrt{742}}$.\n\n",
+                   "children": []
+                  },
+                  {
+                   "tag": "0.2.2.4.1.4.2.1.1.4",
+                   "depth": 9,
+                   "phase": 76,
+                   "gen_cnt": 77,
+                   "n": 1,
+                   "q": 0.9794921875,
+                   "is_terminal": false,
+                   "is_completed": false,
+                   "step_text": "## Step 9: Take the inverse cosine of both sides to find $\\theta$\n$\\theta = \\cos^{-1} \\left(\\frac{13}{\\sqrt{742}}\\right)$\n\n",
+                   "children": []
+                  }
+                 ]
+                },
+                {
+                 "tag": "0.2.2.4.1.4.2.1.2",
+                 "depth": 8,
+                 "phase": 69,
+                 "gen_cnt": 70,
+                 "n": 1,
+                 "q": 0.9736328125,
+                 "is_terminal": false,
+                 "is_completed": false,
+                 "step_text": "## Step 8: Calculate the value of $\\theta$\nTo find the angle $\\theta$, we take the inverse cosine (arccos) of both sides, $\\theta = \\arccos\\left(\\frac{13}{\\sqrt{742}}\\right)$.\n\n",
+                 "children": []
+                },
+                {
+                 "tag": "0.2.2.4.1.4.2.1.3",
+                 "depth": 8,
+                 "phase": 69,
+                 "gen_cnt": 70,
+                 "n": 1,
+                 "q": 0.98291015625,
+                 "is_terminal": false,
+                 "is_completed": false,
+                 "step_text": "## Step 8: Find the angle using the inverse cosine function\n$\\theta = \\cos^{-1} \\left( \\frac{13}{\\sqrt{742}} \\right)$\n\n",
+                 "children": []
+                },
+                {
+                 "tag": "0.2.2.4.1.4.2.1.4",
+                 "depth": 8,
+                 "phase": 69,
+                 "gen_cnt": 70,
+                 "n": 1,
+                 "q": 0.9150390625,
+                 "is_terminal": false,
+                 "is_completed": false,
+                 "step_text": "## Step 8: Rationalize the denominator if needed\n$\\cos \\theta = \\frac{13}{\\sqrt{742}} = \\frac{13}{\\sqrt{2 \\times 37 \\times 13}} = \\frac{13}{\\sqrt{2} \\times \\sqrt{37 \\times 13}} = \\frac{13}{\\sqrt{2} \\times \\sqrt{37} \\times \\sqrt{13}} = \\frac{13}{\\sqrt{2 \\times 37 \\times 13}}$\n\n",
+                 "children": []
+                }
+               ]
+              },
+              {
+               "tag": "0.2.2.4.1.4.2.2",
+               "depth": 7,
+               "phase": 9,
+               "gen_cnt": 10,
+               "n": 1,
+               "q": 0.98974609375,
+               "is_terminal": false,
+               "is_completed": false,
+               "step_text": "## Step 7: Simplify the denominator\n$\\sqrt{14} \\sqrt{53} = \\sqrt{14 \\cdot 53} = \\sqrt{742}$.\n\n",
+               "children": [
+                {
+                 "tag": "0.2.2.4.1.4.2.2.1",
+                 "depth": 8,
+                 "phase": 25,
+                 "gen_cnt": 26,
+                 "n": 1,
+                 "q": 0.9951171875,
+                 "is_terminal": false,
+                 "is_completed": false,
+                 "step_text": "## Step 8: Substitute the simplified denominator back into the formula\n$\\cos \\theta = \\frac{13}{\\sqrt{742}}$\n\n",
+                 "children": [
+                  {
+                   "tag": "0.2.2.4.1.4.2.2.1.1",
+                   "depth": 9,
+                   "phase": 26,
+                   "gen_cnt": 27,
+                   "n": 1,
+                   "q": 0.98583984375,
+                   "is_terminal": false,
+                   "is_completed": false,
+                   "step_text": "## Step 9: To find the angle in degrees, take the inverse cosine of both sides\n$\\theta = \\cos^{-1} \\left(\\frac{13}{\\sqrt{742}}\\right)$.\n\n",
+                   "children": [
+                    {
+                     "tag": "0.2.2.4.1.4.2.2.1.1.1",
+                     "depth": 10,
+                     "phase": 75,
+                     "gen_cnt": 76,
+                     "n": 1,
+                     "q": 0.947265625,
+                     "is_terminal": false,
+                     "is_completed": false,
+                     "step_text": "## Step 10: Compute the inverse cosine\n$\\theta \\approx \\cos^{-1}(0.8503)$.\n\n",
+                     "children": []
+                    },
+                    {
+                     "tag": "0.2.2.4.1.4.2.2.1.1.2",
+                     "depth": 10,
+                     "phase": 75,
+                     "gen_cnt": 76,
+                     "n": 1,
+                     "q": 0.95458984375,
+                     "is_terminal": false,
+                     "is_completed": false,
+                     "step_text": "## Step 10: Evaluate the inverse cosine\nEvaluating $\\cos^{-1} \\left(\\frac{13}{\\sqrt{742}}\\right)$ gives the angle in radians. To convert it to degrees, we multiply by $\\frac{180}{\\pi}$.\n\n",
+                     "children": []
+                    },
+                    {
+                     "tag": "0.2.2.4.1.4.2.2.1.1.3",
+                     "depth": 10,
+                     "phase": 75,
+                     "gen_cnt": 76,
+                     "n": 1,
+                     "q": 0.96875,
+                     "is_terminal": false,
+                     "is_completed": false,
+                     "step_text": "## Step 10: Evaluate the inverse cosine of the expression\n$\\theta \\approx \\cos^{-1}(0.854)$\n\n",
+                     "children": []
+                    },
+                    {
+                     "tag": "0.2.2.4.1.4.2.2.1.1.4",
+                     "depth": 10,
+                     "phase": 75,
+                     "gen_cnt": 76,
+                     "n": 1,
+                     "q": 0.9580078125,
+                     "is_terminal": false,
+                     "is_completed": false,
+                     "step_text": "## Step 10: Evaluate $\\cos^{-1} \\left(\\frac{13}{\\sqrt{742}}\\right)$ to find the angle in degrees\nLet's calculate this value to get the angle.\n\n",
+                     "children": []
+                    }
+                   ]
+                  },
+                  {
+                   "tag": "0.2.2.4.1.4.2.2.1.2",
+                   "depth": 9,
+                   "phase": 26,
+                   "gen_cnt": 27,
+                   "n": 1,
+                   "q": 0.97509765625,
+                   "is_terminal": false,
+                   "is_completed": false,
+                   "step_text": "## Step 9: Calculate the value of $\\theta$\nTo find the angle in degrees, we take the inverse cosine (arccos) of $\\frac{13}{\\sqrt{742}}$. This gives us the angle in radians.\n\n",
+                   "children": []
+                  },
+                  {
+                   "tag": "0.2.2.4.1.4.2.2.1.3",
+                   "depth": 9,
+                   "phase": 26,
+                   "gen_cnt": 27,
+                   "n": 1,
+                   "q": 0.845703125,
+                   "is_terminal": false,
+                   "is_completed": false,
+                   "step_text": "## Step 9: Evaluate the expression\n$\\cos \\theta = \\frac{13}{\\sqrt{742}} = \\frac{13}{\\sqrt{2 \\cdot 37}} = \\frac{13}{\\sqrt{2} \\sqrt{37}} = \\frac{13}{\\sqrt{2} \\sqrt{37}} = \\frac{13 \\sqrt{37}}{\\sqrt{2 \\cdot 37}} = \\frac{13 \\sqrt{37}}{\\sqrt{2} \\sqrt{37}}$\n\n",
+                   "children": []
+                  },
+                  {
+                   "tag": "0.2.2.4.1.4.2.2.1.4",
+                   "depth": 9,
+                   "phase": 26,
+                   "gen_cnt": 27,
+                   "n": 1,
+                   "q": 0.95458984375,
+                   "is_terminal": false,
+                   "is_completed": false,
+                   "step_text": "## Step 9: Rationalize the denominator\n$\\cos \\theta = \\frac{13}{\\sqrt{742}} \\cdot \\frac{\\sqrt{742}}{\\sqrt{742}} = \\frac{13\\sqrt{742}}{742}$\n\n",
+                   "children": []
+                  }
+                 ]
+                },
+                {
+                 "tag": "0.2.2.4.1.4.2.2.2",
+                 "depth": 8,
+                 "phase": 25,
+                 "gen_cnt": 26,
+                 "n": 1,
+                 "q": 0.99462890625,
+                 "is_terminal": false,
+                 "is_completed": false,
+                 "step_text": "## Step 8: Substitute the simplified denominator into the formula\n$\\cos \\theta = \\frac{13}{\\sqrt{742}}$\n\n",
+                 "children": [
+                  {
+                   "tag": "0.2.2.4.1.4.2.2.2.1",
+                   "depth": 9,
+                   "phase": 27,
+                   "gen_cnt": 28,
+                   "n": 1,
+                   "q": 0.90869140625,
+                   "is_terminal": false,
+                   "is_completed": false,
+                   "step_text": "## Step 9: Rationalize the denominator\n$\\cos \\theta = \\frac{13}{\\sqrt{742}} = \\frac{13}{\\sqrt{2 \\cdot 371}} = \\frac{13}{\\sqrt{2} \\cdot \\sqrt{371}} = \\frac{13}{\\sqrt{2} \\cdot \\sqrt{371}} = \\frac{13}{\\sqrt{742}} = \\frac{13}{\\sqrt{2 \\cdot 371}}$\n\n",
+                   "children": []
+                  },
+                  {
+                   "tag": "0.2.2.4.1.4.2.2.2.2",
+                   "depth": 9,
+                   "phase": 27,
+                   "gen_cnt": 28,
+                   "n": 1,
+                   "q": 0.82421875,
+                   "is_terminal": false,
+                   "is_completed": false,
+                   "step_text": "## Step 9: Rationalize the denominator (optional)\nSince $\\sqrt{742} = \\sqrt{2 \\cdot 13 \\cdot 17} \\approx 27.26$, we can rationalize the denominator by multiplying the numerator and denominator by this value:\n$\\cos \\theta = \\frac{13}{\\sqrt{742}} \\cdot \\frac{\\sqrt{742}}{\\sqrt{742}} \\approx \\frac{13\\sqrt{742}}{742}$.\n\n",
+                   "children": []
+                  },
+                  {
+                   "tag": "0.2.2.4.1.4.2.2.2.3",
+                   "depth": 9,
+                   "phase": 27,
+                   "gen_cnt": 28,
+                   "n": 1,
+                   "q": 0.955078125,
+                   "is_terminal": false,
+                   "is_completed": false,
+                   "step_text": "## Step 9: Rationalize the denominator\n$\\cos \\theta = \\frac{13}{\\sqrt{742}} \\cdot \\frac{\\sqrt{742}}{\\sqrt{742}} = \\frac{13\\sqrt{742}}{742}$\n\n",
+                   "children": []
+                  },
+                  {
+                   "tag": "0.2.2.4.1.4.2.2.2.4",
+                   "depth": 9,
+                   "phase": 27,
+                   "gen_cnt": 28,
+                   "n": 1,
+                   "q": 0.97265625,
+                   "is_terminal": false,
+                   "is_completed": false,
+                   "step_text": "## Step 9: To find the angle in degrees, we can take the inverse cosine (arccosine) of this value\nWe will use a calculator to find the arccosine of $\\frac{13}{\\sqrt{742}}$.\n\n",
+                   "children": []
+                  }
+                 ]
+                }
+               ]
+              },
+              {
+               "tag": "0.2.2.4.1.4.2.3",
+               "depth": 7,
+               "phase": 9,
+               "gen_cnt": 10,
+               "n": 1,
+               "q": 0.90966796875,
+               "is_terminal": false,
+               "is_completed": false,
+               "step_text": "## Step 7: Simplify the expression\n$\\cos \\theta = \\frac{13}{\\sqrt{14} \\sqrt{53}} = \\frac{13}{\\sqrt{14 \\times 53}} = \\frac{13}{\\sqrt{738}}$\n\n",
+               "children": []
+              },
+              {
+               "tag": "0.2.2.4.1.4.2.4",
+               "depth": 7,
+               "phase": 9,
+               "gen_cnt": 10,
+               "n": 1,
+               "q": 0.98681640625,
+               "is_terminal": false,
+               "is_completed": false,
+               "step_text": "## Step 7: Simplify the expression for $\\cos \\theta$\n$\\cos \\theta = \\frac{13}{\\sqrt{14} \\sqrt{53}} = \\frac{13}{\\sqrt{14 \\times 53}} = \\frac{13}{\\sqrt{742}}$\n\n",
+               "children": [
+                {
+                 "tag": "0.2.2.4.1.4.2.4.1",
+                 "depth": 8,
+                 "phase": 65,
+                 "gen_cnt": 66,
+                 "n": 1,
+                 "q": 0.98095703125,
+                 "is_terminal": false,
+                 "is_completed": false,
+                 "step_text": "## Step 8: Calculate the value of $\\theta$\n$\\theta = \\cos^{-1} \\left( \\frac{13}{\\sqrt{742}} \\right)$\n\n",
+                 "children": []
+                },
+                {
+                 "tag": "0.2.2.4.1.4.2.4.2",
+                 "depth": 8,
+                 "phase": 65,
+                 "gen_cnt": 66,
+                 "n": 1,
+                 "q": 0.96337890625,
+                 "is_terminal": false,
+                 "is_completed": false,
+                 "step_text": "## Step 8: Calculate the numerical value of $\\cos \\theta$\n$\\cos \\theta = \\frac{13}{\\sqrt{742}} \\approx \\frac{13}{27.185}$\n\n",
+                 "children": []
+                },
+                {
+                 "tag": "0.2.2.4.1.4.2.4.3",
+                 "depth": 8,
+                 "phase": 65,
+                 "gen_cnt": 66,
+                 "n": 1,
+                 "q": 0.88720703125,
+                 "is_terminal": false,
+                 "is_completed": false,
+                 "step_text": "## Step 8: Calculate the value of $\\cos \\theta$\n$\\cos \\theta = \\frac{13}{\\sqrt{742}} = \\frac{13}{\\sqrt{2 \\times 373}} = \\frac{13}{\\sqrt{2} \\times \\sqrt{373}} = \\frac{13}{\\sqrt{2} \\times \\sqrt{11 \\times 37}}$\n\n",
+                 "children": []
+                },
+                {
+                 "tag": "0.2.2.4.1.4.2.4.4",
+                 "depth": 8,
+                 "phase": 65,
+                 "gen_cnt": 66,
+                 "n": 1,
+                 "q": 0.98095703125,
+                 "is_terminal": false,
+                 "is_completed": false,
+                 "step_text": "## Step 8: Find the value of $\\theta$ using the inverse cosine function\n$\\theta = \\cos^{-1} \\left( \\frac{13}{\\sqrt{742}} \\right)$\n\n",
+                 "children": []
+                }
+               ]
+              }
+             ]
+            },
+            {
+             "tag": "0.2.2.4.1.4.3",
+             "depth": 6,
+             "phase": 8,
+             "gen_cnt": 9,
+             "n": 1,
+             "q": 0.99462890625,
+             "is_terminal": false,
+             "is_completed": false,
+             "step_text": "## Step 6: Substitute the computed values into the formula for the angle between the lines\n$\\cos \\theta = \\frac{13}{\\sqrt{14} \\sqrt{53}}$.\n\n",
+             "children": [
+              {
+               "tag": "0.2.2.4.1.4.3.1",
+               "depth": 7,
+               "phase": 10,
+               "gen_cnt": 11,
+               "n": 1,
+               "q": 0.9033203125,
+               "is_terminal": false,
+               "is_completed": false,
+               "step_text": "## Step 7: Simplify the expression\n$\\cos \\theta = \\frac{13}{\\sqrt{14} \\sqrt{53}} = \\frac{13}{\\sqrt{14 \\cdot 53}} = \\frac{13}{\\sqrt{738}}$\n\n",
+               "children": []
+              },
+              {
+               "tag": "0.2.2.4.1.4.3.2",
+               "depth": 7,
+               "phase": 10,
+               "gen_cnt": 11,
+               "n": 1,
+               "q": 0.546875,
+               "is_terminal": false,
+               "is_completed": false,
+               "step_text": "## Step 7: Simplify the fraction in the denominator\n$\\sqrt{14} \\sqrt{53} = \\sqrt{14 \\times 53} = \\sqrt{726} = \\sqrt{2 \\times 3^2 \\times 13 \\times 19} = 3\\sqrt{2 \\times 13 \\times 19} = 3\\sqrt{494}$.\n\n",
+               "children": []
+              },
+              {
+               "tag": "0.2.2.4.1.4.3.3",
+               "depth": 7,
+               "phase": 10,
+               "gen_cnt": 11,
+               "n": 1,
+               "q": 0.982421875,
+               "is_terminal": false,
+               "is_completed": false,
+               "step_text": "## Step 7: Simplify the expression\n$\\cos \\theta = \\frac{13}{\\sqrt{14} \\sqrt{53}} = \\frac{13}{\\sqrt{14 \\cdot 53}} = \\frac{13}{\\sqrt{742}}$.\n\n",
+               "children": []
+              },
+              {
+               "tag": "0.2.2.4.1.4.3.4",
+               "depth": 7,
+               "phase": 10,
+               "gen_cnt": 11,
+               "n": 1,
+               "q": 0.90478515625,
+               "is_terminal": false,
+               "is_completed": false,
+               "step_text": "## Step 7: Simplify the expression\n$\\cos \\theta = \\frac{13}{\\sqrt{14 \\cdot 53}} = \\frac{13}{\\sqrt{738}}$\n\n",
+               "children": []
+              }
+             ]
+            },
+            {
+             "tag": "0.2.2.4.1.4.4",
+             "depth": 6,
+             "phase": 8,
+             "gen_cnt": 9,
+             "n": 1,
+             "q": 0.9775390625,
+             "is_terminal": false,
+             "is_completed": false,
+             "step_text": "## Step 6: Apply the formula to find the cosine of the angle\nPlugging the dot product and the magnitudes into the formula gives $\\cos \\theta = \\frac{13}{\\sqrt{14} \\cdot \\sqrt{53}} = \\frac{13}{\\sqrt{14 \\cdot 53}}$.\n\n",
+             "children": []
+            }
+           ]
+          }
+         ]
+        },
+        {
+         "tag": "0.2.2.4.2",
+         "depth": 4,
+         "phase": 3,
+         "gen_cnt": 4,
+         "n": 1,
+         "q": 0.9697265625,
+         "is_terminal": false,
+         "is_completed": false,
+         "step_text": "## Step 4: Find the dot product of the direction ratios\nThe dot product of the direction ratios of the first line is $(2)(6) + (3)(-1) + (-1)(-4) = 12 - 3 + 4 = 13$.\n\n",
+         "children": []
+        },
+        {
+         "tag": "0.2.2.4.3",
+         "depth": 4,
+         "phase": 3,
+         "gen_cnt": 4,
+         "n": 1,
+         "q": 0.96923828125,
+         "is_terminal": false,
+         "is_completed": false,
+         "step_text": "## Step 4: Compute the dot product of the direction ratios of the two lines\nThe dot product of the direction ratios of the first line is $(2)(6) + (3)(-1) + (-1)(-4) = 12 - 3 + 4 = 13$.\n\n",
+         "children": []
+        },
+        {
+         "tag": "0.2.2.4.4",
+         "depth": 4,
+         "phase": 3,
+         "gen_cnt": 4,
+         "n": 1,
+         "q": 0.98974609375,
+         "is_terminal": false,
+         "is_completed": false,
+         "step_text": "## Step 4: Compute the dot product of the direction ratios\nThe dot product of the direction ratios of the first line and the second line is $(2)(6) + (3)(-1) + (-1)(-4) = 12 - 3 + 4 = 13$.\n\n",
+         "children": [
+          {
+           "tag": "0.2.2.4.4.1",
+           "depth": 5,
+           "phase": 28,
+           "gen_cnt": 29,
+           "n": 1,
+           "q": 0.99658203125,
+           "is_terminal": false,
+           "is_completed": false,
+           "step_text": "## Step 5: Compute the magnitude of the direction ratios of the first line\nThe magnitude of the direction ratios of the first line is $\\sqrt{(2)^2 + (3)^2 + (-1)^2} = \\sqrt{4 + 9 + 1} = \\sqrt{14}$.\n\n",
+           "children": [
+            {
+             "tag": "0.2.2.4.4.1.1",
+             "depth": 6,
+             "phase": 30,
+             "gen_cnt": 31,
+             "n": 1,
+             "q": 0.99755859375,
+             "is_terminal": false,
+             "is_completed": false,
+             "step_text": "## Step 6: Compute the magnitude of the direction ratios of the second line\nThe magnitude of the direction ratios of the second line is $\\sqrt{(6)^2 + (-1)^2 + (-4)^2} = \\sqrt{36 + 1 + 16} = \\sqrt{53}$.\n\n",
+             "children": [
+              {
+               "tag": "0.2.2.4.4.1.1.1",
+               "depth": 7,
+               "phase": 31,
+               "gen_cnt": 32,
+               "n": 1,
+               "q": 0.98681640625,
+               "is_terminal": false,
+               "is_completed": false,
+               "step_text": "## Step 7: Substitute the computed values into the formula\nNow substitute the values of the dot product and the magnitudes into the formula to find $\\cos \\theta = \\frac{13}{\\sqrt{14} \\sqrt{53}} = \\frac{13}{\\sqrt{14 \\times 53}} = \\frac{13}{\\sqrt{742}}$.\n\n",
+               "children": [
+                {
+                 "tag": "0.2.2.4.4.1.1.1.1",
+                 "depth": 8,
+                 "phase": 67,
+                 "gen_cnt": 68,
+                 "n": 1,
+                 "q": 0.77734375,
+                 "is_terminal": false,
+                 "is_completed": false,
+                 "step_text": "## Step 8: Calculate the angle in degrees using the inverse cosine function\nTo find the angle $\\theta$, take the inverse cosine (arccos) of the value obtained: $\\theta = \\cos^{-1} \\left( \\frac{13}{\\sqrt{742}} \\right)$. Using a calculator, we find that $\\theta \\approx \\cos^{-1}(0.7021) \\approx 43.01^{\\circ}$.\n\n",
+                 "children": []
+                },
+                {
+                 "tag": "0.2.2.4.4.1.1.1.2",
+                 "depth": 8,
+                 "phase": 67,
+                 "gen_cnt": 68,
+                 "n": 1,
+                 "q": 0.978515625,
+                 "is_terminal": false,
+                 "is_completed": false,
+                 "step_text": "## Step 8: Find the value of $\\theta$ using the inverse cosine function\nTo find the angle $\\theta$, take the inverse cosine (arccos) of both sides: $\\theta = \\arccos\\left(\\frac{13}{\\sqrt{742}}\\right)$.\n\n",
+                 "children": []
+                },
+                {
+                 "tag": "0.2.2.4.4.1.1.1.3",
+                 "depth": 8,
+                 "phase": 67,
+                 "gen_cnt": 68,
+                 "n": 1,
+                 "q": 0.94970703125,
+                 "is_terminal": false,
+                 "is_completed": false,
+                 "step_text": "## Step 8: Calculate the value of $\\cos \\theta$\n$\\cos \\theta = \\frac{13}{\\sqrt{742}} \\approx \\frac{13}{27.018} \\approx 0.4801$.\n\n",
+                 "children": []
+                },
+                {
+                 "tag": "0.2.2.4.4.1.1.1.4",
+                 "depth": 8,
+                 "phase": 67,
+                 "gen_cnt": 68,
+                 "n": 1,
+                 "q": 0.9208984375,
+                 "is_terminal": false,
+                 "is_completed": false,
+                 "step_text": "## Step 8: Calculate the value of $\\frac{13}{\\sqrt{742}}$\n$\\frac{13}{\\sqrt{742}} \\approx \\frac{13}{26.85} \\approx 0.4833$.\n\n",
+                 "children": []
+                }
+               ]
+              },
+              {
+               "tag": "0.2.2.4.4.1.1.2",
+               "depth": 7,
+               "phase": 31,
+               "gen_cnt": 32,
+               "n": 1,
+               "q": 0.98583984375,
+               "is_terminal": false,
+               "is_completed": false,
+               "step_text": "## Step 7: Plug the values into the formula for the angle\nUsing the formula $\\cos \\theta = \\frac{\\mathbf{a} \\cdot \\mathbf{b}}{\\|\\mathbf{a}\\| \\|\\mathbf{b}\\|}$, we get $\\cos \\theta = \\frac{13}{\\sqrt{14} \\sqrt{53}} = \\frac{13}{\\sqrt{14 \\cdot 53}} = \\frac{13}{\\sqrt{742}}$.\n\n",
+               "children": [
+                {
+                 "tag": "0.2.2.4.4.1.1.2.1",
+                 "depth": 8,
+                 "phase": 78,
+                 "gen_cnt": 79,
+                 "n": 1,
+                 "q": 0.64404296875,
+                 "is_terminal": false,
+                 "is_completed": false,
+                 "step_text": "## Step 8: Find the angle in degrees\nThe angle $\\theta$ in radians is $\\cos^{-1} \\left( \\frac{13}{\\sqrt{742}} \\right) \\approx 0.98$ radians. To convert it to degrees, we multiply by $\\frac{180}{\\pi}$: $\\left(0.98 \\cdot \\frac{180}{\\pi} \\right)^\\circ \\approx 56.0^\\circ$.\n\n",
+                 "children": []
+                },
+                {
+                 "tag": "0.2.2.4.4.1.1.2.2",
+                 "depth": 8,
+                 "phase": 78,
+                 "gen_cnt": 79,
+                 "n": 1,
+                 "q": 0.80078125,
+                 "is_terminal": false,
+                 "is_completed": false,
+                 "step_text": "## Step 8: Calculate the value of $\\theta$\n$\\theta = \\cos^{-1} \\left(\\frac{13}{\\sqrt{742}}\\right) \\approx \\cos^{-1}(0.8524) \\approx 31.0^{\\circ}$\n\n",
+                 "children": []
+                },
+                {
+                 "tag": "0.2.2.4.4.1.1.2.3",
+                 "depth": 8,
+                 "phase": 78,
+                 "gen_cnt": 79,
+                 "n": 1,
+                 "q": 0.96923828125,
+                 "is_terminal": false,
+                 "is_completed": false,
+                 "step_text": "## Step 8: Find the angle in degrees\nWe now find the angle $\\theta$ by taking the inverse cosine (arccosine) of $\\frac{13}{\\sqrt{742}}$. We have $\\theta = \\arccos{\\left(\\frac{13}{\\sqrt{742}}\\right)}$.\n\n",
+                 "children": []
+                },
+                {
+                 "tag": "0.2.2.4.4.1.1.2.4",
+                 "depth": 8,
+                 "phase": 78,
+                 "gen_cnt": 79,
+                 "n": 1,
+                 "q": 0.87060546875,
+                 "is_terminal": false,
+                 "is_completed": false,
+                 "step_text": "## Step 8: Simplify the denominator and calculate the cosine\n$\\sqrt{742} = \\sqrt{2 \\cdot 37 \\cdot 13} = \\sqrt{2} \\cdot \\sqrt{37} \\cdot \\sqrt{13}$, so $\\cos \\theta = \\frac{13}{\\sqrt{742}} = \\frac{13}{\\sqrt{2} \\cdot \\sqrt{37} \\cdot \\sqrt{13}} = \\frac{13}{\\sqrt{2 \\cdot 37 \\cdot 13}} = \\frac{13}{\\sqrt{742}}$.\n\n",
+                 "children": []
+                }
+               ]
+              },
+              {
+               "tag": "0.2.2.4.4.1.1.3",
+               "depth": 7,
+               "phase": 31,
+               "gen_cnt": 32,
+               "n": 1,
+               "q": 0.9951171875,
+               "is_terminal": false,
+               "is_completed": false,
+               "step_text": "## Step 7: Calculate the cosine of the angle between the lines\nSubstitute the computed values into the formula for the cosine of the angle between the lines: $\\cos \\theta = \\frac{13}{\\sqrt{14} \\cdot \\sqrt{53}}$.\n\n",
+               "children": [
+                {
+                 "tag": "0.2.2.4.4.1.1.3.1",
+                 "depth": 8,
+                 "phase": 33,
+                 "gen_cnt": 34,
+                 "n": 1,
+                 "q": 0.88232421875,
+                 "is_terminal": false,
+                 "is_completed": false,
+                 "step_text": "## Step 8: Find the angle between the lines\nSimplify the expression for $\\cos \\theta$ to obtain the value of $\\cos \\theta$, which can then be used to find the angle $\\theta$. $\\cos \\theta = \\frac{13}{\\sqrt{14} \\cdot \\sqrt{53}} = \\frac{13}{\\sqrt{14 \\cdot 53}} = \\frac{13}{\\sqrt{738}}$.\n\n",
+                 "children": []
+                },
+                {
+                 "tag": "0.2.2.4.4.1.1.3.2",
+                 "depth": 8,
+                 "phase": 33,
+                 "gen_cnt": 34,
+                 "n": 1,
+                 "q": 0.984375,
+                 "is_terminal": false,
+                 "is_completed": false,
+                 "step_text": "## Step 8: Simplify the expression for the cosine of the angle\nSimplify the expression: $\\cos \\theta = \\frac{13}{\\sqrt{14} \\cdot \\sqrt{53}} = \\frac{13}{\\sqrt{14 \\cdot 53}} = \\frac{13}{\\sqrt{742}}$.\n\n",
+                 "children": []
+                },
+                {
+                 "tag": "0.2.2.4.4.1.1.3.3",
+                 "depth": 8,
+                 "phase": 33,
+                 "gen_cnt": 34,
+                 "n": 1,
+                 "q": 0.9873046875,
+                 "is_terminal": false,
+                 "is_completed": false,
+                 "step_text": "## Step 8: Simplify the denominator of the formula for the cosine of the angle between the lines\n$\\sqrt{14} \\cdot \\sqrt{53} = \\sqrt{14 \\cdot 53} = \\sqrt{742}$.\n\n",
+                 "children": [
+                  {
+                   "tag": "0.2.2.4.4.1.1.3.3.1",
+                   "depth": 9,
+                   "phase": 56,
+                   "gen_cnt": 57,
+                   "n": 1,
+                   "q": 0.99267578125,
+                   "is_terminal": false,
+                   "is_completed": false,
+                   "step_text": "## Step 9: Calculate the value of the cosine of the angle between the lines\n$\\cos \\theta = \\frac{13}{\\sqrt{742}}$.\n\n",
+                   "children": [
+                    {
+                     "tag": "0.2.2.4.4.1.1.3.3.1.1",
+                     "depth": 10,
+                     "phase": 58,
+                     "gen_cnt": 59,
+                     "n": 1,
+                     "q": 0.9228515625,
+                     "is_terminal": false,
+                     "is_completed": false,
+                     "step_text": "## Step 10: Rationalize the denominator\nTo rationalize the denominator, multiply the numerator and denominator by $\\sqrt{742}$: $\\cos \\theta = \\frac{13\\sqrt{742}}{742}$.\n\n",
+                     "children": []
+                    },
+                    {
+                     "tag": "0.2.2.4.4.1.1.3.3.1.2",
+                     "depth": 10,
+                     "phase": 58,
+                     "gen_cnt": 59,
+                     "n": 1,
+                     "q": 0.98291015625,
+                     "is_terminal": false,
+                     "is_completed": false,
+                     "step_text": "## Step 10: Calculate the value of the angle between the lines\n$\\theta = \\cos^{-1}\\left(\\frac{13}{\\sqrt{742}}\\right)$\n\n",
+                     "children": []
+                    },
+                    {
+                     "tag": "0.2.2.4.4.1.1.3.3.1.3",
+                     "depth": 10,
+                     "phase": 58,
+                     "gen_cnt": 59,
+                     "n": 1,
+                     "q": 0.98388671875,
+                     "is_terminal": false,
+                     "is_completed": false,
+                     "step_text": "## Step 10: Find the angle between the lines using the inverse cosine function\nThe angle between the lines is given by $\\theta = \\cos^{-1}\\left(\\frac{13}{\\sqrt{742}}\\right)$.\n\n",
+                     "children": []
+                    },
+                    {
+                     "tag": "0.2.2.4.4.1.1.3.3.1.4",
+                     "depth": 10,
+                     "phase": 58,
+                     "gen_cnt": 59,
+                     "n": 1,
+                     "q": 0.9833984375,
+                     "is_terminal": false,
+                     "is_completed": false,
+                     "step_text": "## Step 10: Find the angle between the lines\nTo find the angle $\\theta$ in degrees, take the inverse cosine (arccos) of $\\frac{13}{\\sqrt{742}}$.\n\n",
+                     "children": []
+                    }
+                   ]
+                  },
+                  {
+                   "tag": "0.2.2.4.4.1.1.3.3.2",
+                   "depth": 9,
+                   "phase": 56,
+                   "gen_cnt": 57,
+                   "n": 1,
+                   "q": 0.9921875,
+                   "is_terminal": false,
+                   "is_completed": false,
+                   "step_text": "## Step 9: Simplify the formula for the cosine of the angle between the lines\n$\\cos \\theta = \\frac{13}{\\sqrt{742}}$.\n\n",
+                   "children": [
+                    {
+                     "tag": "0.2.2.4.4.1.1.3.3.2.1",
+                     "depth": 10,
+                     "phase": 59,
+                     "gen_cnt": 60,
+                     "n": 1,
+                     "q": 0.98779296875,
+                     "is_terminal": false,
+                     "is_completed": false,
+                     "step_text": "## Step 10: Calculate the angle between the lines using the inverse cosine function\n$\\theta = \\cos^{-1} \\left(\\frac{13}{\\sqrt{742}}\\right)$.\n\n",
+                     "children": [
+                      {
+                       "tag": "0.2.2.4.4.1.1.3.3.2.1.1",
+                       "depth": 11,
+                       "phase": 61,
+                       "gen_cnt": 62,
+                       "n": 1,
+                       "q": 0.947265625,
+                       "is_terminal": false,
+                       "is_completed": false,
+                       "step_text": "## Step 11: Evaluate $\\cos^{-1} \\left(\\frac{13}{\\sqrt{742}}\\right)$\n$\\theta = \\cos^{-1} \\left(\\frac{13}{\\sqrt{742}}\\right) \\approx \\cos^{-1}(0.887)$.\n\n",
+                       "children": []
+                      },
+                      {
+                       "tag": "0.2.2.4.4.1.1.3.3.2.1.2",
+                       "depth": 11,
+                       "phase": 61,
+                       "gen_cnt": 62,
+                       "n": 1,
+                       "q": 0.4765625,
+                       "is_terminal": false,
+                       "is_completed": false,
+                       "step_text": "## Step 11: Evaluate the inverse cosine of the result from step 10\nEvaluating the inverse cosine function, we get $\\theta \\approx 121.87$ degrees.\n\n",
+                       "children": []
+                      },
+                      {
+                       "tag": "0.2.2.4.4.1.1.3.3.2.1.3",
+                       "depth": 11,
+                       "phase": 61,
+                       "gen_cnt": 62,
+                       "n": 1,
+                       "q": 0.9365234375,
+                       "is_terminal": false,
+                       "is_completed": false,
+                       "step_text": "## Step 11: Convert the angle from radians to degrees\nSince the angle will be in radians, we need to convert it to degrees by multiplying by $\\frac{180}{\\pi}$.\n\n",
+                       "children": []
+                      },
+                      {
+                       "tag": "0.2.2.4.4.1.1.3.3.2.1.4",
+                       "depth": 11,
+                       "phase": 61,
+                       "gen_cnt": 62,
+                       "n": 1,
+                       "q": 0.2568359375,
+                       "is_terminal": false,
+                       "is_completed": false,
+                       "step_text": "## Step 11: Evaluate $\\cos^{-1} \\left(\\frac{13}{\\sqrt{742}}\\right)$\n$\\theta = \\cos^{-1} \\left(\\frac{13}{\\sqrt{742}}\\right) \\approx 20.52^\\circ$.\n\n",
+                       "children": []
+                      }
+                     ]
+                    },
+                    {
+                     "tag": "0.2.2.4.4.1.1.3.3.2.2",
+                     "depth": 10,
+                     "phase": 59,
+                     "gen_cnt": 60,
+                     "n": 1,
+                     "q": 0.9111328125,
+                     "is_terminal": false,
+                     "is_completed": false,
+                     "step_text": "## Step 10: Calculate the value of the cosine of the angle between the lines\nTo simplify the calculation, we can express the cosine as a decimal value. $\\cos \\theta = \\frac{13}{\\sqrt{742}} \\approx \\frac{13}{27.212} \\approx 0.471$.\n\n",
+                     "children": []
+                    },
+                    {
+                     "tag": "0.2.2.4.4.1.1.3.3.2.3",
+                     "depth": 10,
+                     "phase": 59,
+                     "gen_cnt": 60,
+                     "n": 1,
+                     "q": 0.98779296875,
+                     "is_terminal": false,
+                     "is_completed": false,
+                     "step_text": "## Step 10: Calculate the angle between the lines using the inverse cosine function\n$\\theta = \\cos^{-1} \\left( \\frac{13}{\\sqrt{742}} \\right)$.\n\n",
+                     "children": [
+                      {
+                       "tag": "0.2.2.4.4.1.1.3.3.2.3.1",
+                       "depth": 11,
+                       "phase": 62,
+                       "gen_cnt": 63,
+                       "n": 1,
+                       "q": 0.93896484375,
+                       "is_terminal": false,
+                       "is_completed": false,
+                       "step_text": "## Step 11: Evaluate the inverse cosine expression\nEvaluate the expression to find the angle in radians. We must convert this value to degrees since the problem asks for it.\n\n",
+                       "children": []
+                      },
+                      {
+                       "tag": "0.2.2.4.4.1.1.3.3.2.3.2",
+                       "depth": 11,
+                       "phase": 62,
+                       "gen_cnt": 63,
+                       "n": 1,
+                       "q": 0.4921875,
+                       "is_terminal": false,
+                       "is_completed": false,
+                       "step_text": "## Step 11: Convert the angle from radians to degrees\n$\\theta = \\cos^{-1} \\left( \\frac{13}{\\sqrt{742}} \\right) \\cdot \\frac{180^\\circ}{\\pi} \\approx 65.61^\\circ$.\n\n",
+                       "children": []
+                      },
+                      {
+                       "tag": "0.2.2.4.4.1.1.3.3.2.3.3",
+                       "depth": 11,
+                       "phase": 62,
+                       "gen_cnt": 63,
+                       "n": 1,
+                       "q": 0.83740234375,
+                       "is_terminal": false,
+                       "is_completed": false,
+                       "step_text": "## Step 11: Evaluate $\\cos^{-1} \\left( \\frac{13}{\\sqrt{742}} \\right)$\nEvaluating $\\cos^{-1} \\left( \\frac{13}{\\sqrt{742}} \\right)$ gives the angle in radians, approximately 1.247 radians.\n\n",
+                       "children": []
+                      },
+                      {
+                       "tag": "0.2.2.4.4.1.1.3.3.2.3.4",
+                       "depth": 11,
+                       "phase": 62,
+                       "gen_cnt": 63,
+                       "n": 1,
+                       "q": 0.63720703125,
+                       "is_terminal": false,
+                       "is_completed": false,
+                       "step_text": "## Step 11: Evaluate the inverse cosine function to find the angle between the lines\n$\\theta \\approx \\cos^{-1} \\left( \\frac{13}{\\sqrt{742}} \\right) \\approx \\cos^{-1} \\left( 0.816 \\right) \\approx 34.656$ degrees.\n\n",
+                       "children": []
+                      }
+                     ]
+                    },
+                    {
+                     "tag": "0.2.2.4.4.1.1.3.3.2.4",
+                     "depth": 10,
+                     "phase": 59,
+                     "gen_cnt": 60,
+                     "n": 1,
+                     "q": 0.78271484375,
+                     "is_terminal": false,
+                     "is_completed": false,
+                     "step_text": "## Step 10: Convert the cosine value to a decimal or simplified fraction to prepare for finding the angle in degrees\nTo convert to a decimal, divide 13 by $\\sqrt{742}$. Let's approximate $\\sqrt{742} \\approx 27.2$, then $\\cos \\theta \\approx \\frac{13}{27.2} \\approx 0.477$. To convert to a simplified fraction, multiply the numerator and denominator by 2 to eliminate the approximation in the decimal: $\\frac{13}{27.2} = \\frac{26}{54.4} = \\frac{13}{27.2}$. Since this calculation has been approximated, we'll find the angle with the exact fraction for precision.\n\n",
+                     "children": []
+                    }
+                   ]
+                  },
+                  {
+                   "tag": "0.2.2.4.4.1.1.3.3.3",
+                   "depth": 9,
+                   "phase": 56,
+                   "gen_cnt": 57,
+                   "n": 1,
+                   "q": 0.99365234375,
+                   "is_terminal": false,
+                   "is_completed": false,
+                   "step_text": "## Step 9: Substitute the simplified denominator into the formula for the cosine of the angle between the lines\n$\\cos \\theta = \\frac{13}{\\sqrt{742}}$.\n\n",
+                   "children": [
+                    {
+                     "tag": "0.2.2.4.4.1.1.3.3.3.1",
+                     "depth": 10,
+                     "phase": 57,
+                     "gen_cnt": 58,
+                     "n": 1,
+                     "q": 0.740234375,
+                     "is_terminal": false,
+                     "is_completed": false,
+                     "step_text": "## Step 10: Calculate the value of $\\cos \\theta$\n$\\cos \\theta = \\frac{13}{\\sqrt{742}} = \\frac{13}{\\sqrt{2 \\cdot 353}} = \\frac{13}{\\sqrt{2} \\cdot \\sqrt{353}} = \\frac{13}{\\sqrt{2} \\cdot \\sqrt{11^2 \\cdot 31}} = \\frac{13}{\\sqrt{2} \\cdot 11 \\cdot \\sqrt{31}} = \\frac{13}{11 \\cdot \\sqrt{2} \\cdot \\sqrt{31}}$.\n\n",
+                     "children": []
+                    },
+                    {
+                     "tag": "0.2.2.4.4.1.1.3.3.3.2",
+                     "depth": 10,
+                     "phase": 57,
+                     "gen_cnt": 58,
+                     "n": 1,
+                     "q": 0.958984375,
+                     "is_terminal": false,
+                     "is_completed": false,
+                     "step_text": "## Step 10: Calculate the value of $\\cos \\theta$\n$\\cos \\theta = \\frac{13}{\\sqrt{742}} \\approx \\frac{13}{27.2923} \\approx 0.4735$.\n\n",
+                     "children": []
+                    },
+                    {
+                     "tag": "0.2.2.4.4.1.1.3.3.3.3",
+                     "depth": 10,
+                     "phase": 57,
+                     "gen_cnt": 58,
+                     "n": 1,
+                     "q": 0.98681640625,
+                     "is_terminal": false,
+                     "is_completed": false,
+                     "step_text": "## Step 10: Calculate the angle $\\theta$ using the inverse cosine function\n$\\theta = \\cos^{-1} \\left(\\frac{13}{\\sqrt{742}}\\right)$.\n\n",
+                     "children": [
+                      {
+                       "tag": "0.2.2.4.4.1.1.3.3.3.3.1",
+                       "depth": 11,
+                       "phase": 66,
+                       "gen_cnt": 67,
+                       "n": 1,
+                       "q": 0.9443359375,
+                       "is_terminal": false,
+                       "is_completed": false,
+                       "step_text": "## Step 11: Evaluate the inverse cosine of the expression to find the angle $\\theta$ in radians\nUsing a calculator to find the inverse cosine: $\\theta \\approx \\cos^{-1} \\left( \\frac{13}{\\sqrt{742}} \\right) \\approx \\cos^{-1}(0.80236334)$.\n\n",
+                       "children": []
+                      },
+                      {
+                       "tag": "0.2.2.4.4.1.1.3.3.3.3.2",
+                       "depth": 11,
+                       "phase": 66,
+                       "gen_cnt": 67,
+                       "n": 1,
+                       "q": 0.9638671875,
+                       "is_terminal": false,
+                       "is_completed": false,
+                       "step_text": "## Step 11: Evaluate the inverse cosine\n$\\theta \\approx \\cos^{-1}(0.85213003)$.\n\n",
+                       "children": []
+                      },
+                      {
+                       "tag": "0.2.2.4.4.1.1.3.3.3.3.3",
+                       "depth": 11,
+                       "phase": 66,
+                       "gen_cnt": 67,
+                       "n": 1,
+                       "q": 0.966796875,
+                       "is_terminal": false,
+                       "is_completed": false,
+                       "step_text": "## Step 11: Convert the result from radians to degrees\n$\\theta \\approx \\cos^{-1} \\left(\\frac{13}{\\sqrt{742}}\\right) \\cdot \\frac{180}{\\pi}$.\n\n",
+                       "children": []
+                      },
+                      {
+                       "tag": "0.2.2.4.4.1.1.3.3.3.3.4",
+                       "depth": 11,
+                       "phase": 66,
+                       "gen_cnt": 67,
+                       "n": 1,
+                       "q": 0.1602783203125,
+                       "is_terminal": false,
+                       "is_completed": false,
+                       "step_text": "## Step 11: Convert the result to degrees\n$\\theta \\approx \\cos^{-1} \\left(\\frac{13}{\\sqrt{742}}\\right) \\cdot \\frac{180}{\\pi}$. Using a calculator to find the inverse cosine and then converting to degrees, we get $\\theta \\approx \\cos^{-1} (0.7602) \\cdot \\frac{180}{\\pi} \\approx 0.6104 \\cdot 53.130 \\approx 32.1^{\\circ}$.\n\n",
+                       "children": []
+                      }
+                     ]
+                    },
+                    {
+                     "tag": "0.2.2.4.4.1.1.3.3.3.4",
+                     "depth": 10,
+                     "phase": 57,
+                     "gen_cnt": 58,
+                     "n": 1,
+                     "q": 0.98291015625,
+                     "is_terminal": false,
+                     "is_completed": false,
+                     "step_text": "## Step 10: Calculate the angle between the lines in degrees\nThe angle between the lines is given by $\\theta = \\cos^{-1} \\left(\\frac{13}{\\sqrt{742}}\\right)$.\n\n",
+                     "children": []
+                    }
+                   ]
+                  },
+                  {
+                   "tag": "0.2.2.4.4.1.1.3.3.4",
+                   "depth": 9,
+                   "phase": 56,
+                   "gen_cnt": 57,
+                   "n": 1,
+                   "q": 0.98974609375,
+                   "is_terminal": false,
+                   "is_completed": false,
+                   "step_text": "## Step 9: Simplify the fraction\n$\\cos \\theta = \\frac{13}{\\sqrt{742}}$.\n\n",
+                   "children": [
+                    {
+                     "tag": "0.2.2.4.4.1.1.3.3.4.1",
+                     "depth": 10,
+                     "phase": 60,
+                     "gen_cnt": 61,
+                     "n": 1,
+                     "q": 0.9501953125,
+                     "is_terminal": false,
+                     "is_completed": false,
+                     "step_text": "## Step 10: Rationalize the denominator\n$\\cos \\theta = \\frac{13}{\\sqrt{742}} \\cdot \\frac{\\sqrt{742}}{\\sqrt{742}} = \\frac{13\\sqrt{742}}{742}$.\n\n",
+                     "children": []
+                    },
+                    {
+                     "tag": "0.2.2.4.4.1.1.3.3.4.2",
+                     "depth": 10,
+                     "phase": 60,
+                     "gen_cnt": 61,
+                     "n": 1,
+                     "q": 0.85595703125,
+                     "is_terminal": false,
+                     "is_completed": false,
+                     "step_text": "## Step 10: Calculate the angle between the lines in degrees\n$\\theta = \\cos^{-1}\\left(\\frac{13}{\\sqrt{742}}\\right) \\approx \\cos^{-1}(0.8529) \\approx 34.0^\\circ$.\n\n",
+                     "children": []
+                    },
+                    {
+                     "tag": "0.2.2.4.4.1.1.3.3.4.3",
+                     "depth": 10,
+                     "phase": 60,
+                     "gen_cnt": 61,
+                     "n": 1,
+                     "q": 0.76904296875,
+                     "is_terminal": false,
+                     "is_completed": false,
+                     "step_text": "## Step 10: Calculate the value of $\\cos \\theta$\n$\\cos \\theta = \\frac{13}{\\sqrt{742}} = \\frac{13}{\\sqrt{2 \\cdot 353}} = \\frac{13}{\\sqrt{2} \\cdot \\sqrt{353}} = \\frac{13}{\\sqrt{2} \\cdot \\sqrt{11 \\cdot 31}} = \\frac{13}{\\sqrt{2} \\cdot \\sqrt{11} \\cdot \\sqrt{31}}$.\n\n",
+                     "children": []
+                    },
+                    {
+                     "tag": "0.2.2.4.4.1.1.3.3.4.4",
+                     "depth": 10,
+                     "phase": 60,
+                     "gen_cnt": 61,
+                     "n": 1,
+                     "q": 0.76611328125,
+                     "is_terminal": false,
+                     "is_completed": false,
+                     "step_text": "## Step 10: Calculate the value of the cosine of the angle between the lines\n$\\cos \\theta = \\frac{13}{\\sqrt{742}} = \\frac{13}{\\sqrt{2^2 \\cdot 37}} = \\frac{13}{2\\sqrt{37}} = \\frac{13}{2\\sqrt{37}} \\cdot \\frac{\\sqrt{37}}{\\sqrt{37}} = \\frac{13\\sqrt{37}}{2\\cdot 37}$.\n\n",
+                     "children": []
+                    }
+                   ]
+                  }
+                 ]
+                },
+                {
+                 "tag": "0.2.2.4.4.1.1.3.4",
+                 "depth": 8,
+                 "phase": 33,
+                 "gen_cnt": 34,
+                 "n": 1,
+                 "q": 0.98974609375,
+                 "is_terminal": false,
+                 "is_completed": false,
+                 "step_text": "## Step 8: Simplify the denominator\nThe denominator can be simplified as $\\sqrt{14} \\cdot \\sqrt{53} = \\sqrt{14 \\cdot 53} = \\sqrt{742}$.\n\n",
+                 "children": [
+                  {
+                   "tag": "0.2.2.4.4.1.1.3.4.1",
+                   "depth": 9,
+                   "phase": 42,
+                   "gen_cnt": 43,
+                   "n": 1,
+                   "q": 0.994140625,
+                   "is_terminal": false,
+                   "is_completed": false,
+                   "step_text": "## Step 9: Calculate the value of cosine of the angle\nSubstitute the simplified denominator into the formula: $\\cos \\theta = \\frac{13}{\\sqrt{742}}$.\n\n",
+                   "children": [
+                    {
+                     "tag": "0.2.2.4.4.1.1.3.4.1.1",
+                     "depth": 10,
+                     "phase": 45,
+                     "gen_cnt": 46,
+                     "n": 1,
+                     "q": 0.96923828125,
+                     "is_terminal": false,
+                     "is_completed": false,
+                     "step_text": "## Step 10: Calculate the angle in degrees\nUsing the inverse cosine function, we can find the angle $\\theta$: $\\theta = \\cos^{-1}\\left(\\frac{13}{\\sqrt{742}}\\right)$. The angle can be found using a calculator.\n\n",
+                     "children": []
+                    },
+                    {
+                     "tag": "0.2.2.4.4.1.1.3.4.1.2",
+                     "depth": 10,
+                     "phase": 45,
+                     "gen_cnt": 46,
+                     "n": 1,
+                     "q": 0.98291015625,
+                     "is_terminal": false,
+                     "is_completed": false,
+                     "step_text": "## Step 10: Find the angle using the inverse cosine function\nThe angle $\\theta$ is the inverse cosine of the value calculated in step 9: $\\theta = \\cos^{-1}\\left(\\frac{13}{\\sqrt{742}}\\right)$.\n\n",
+                     "children": []
+                    },
+                    {
+                     "tag": "0.2.2.4.4.1.1.3.4.1.3",
+                     "depth": 10,
+                     "phase": 45,
+                     "gen_cnt": 46,
+                     "n": 1,
+                     "q": 0.88720703125,
+                     "is_terminal": false,
+                     "is_completed": false,
+                     "step_text": "## Step 10: Calculate the value of the angle in degrees\nThe angle $\\theta$ in radians is given by $\\theta = \\cos^{-1}\\left(\\frac{13}{\\sqrt{742}}\\right)$. The angle in degrees can be found using the conversion factor: $\\theta = \\frac{\\pi}{180} \\cdot \\theta$.\n\n",
+                     "children": []
+                    },
+                    {
+                     "tag": "0.2.2.4.4.1.1.3.4.1.4",
+                     "depth": 10,
+                     "phase": 45,
+                     "gen_cnt": 46,
+                     "n": 1,
+                     "q": 0.98388671875,
+                     "is_terminal": false,
+                     "is_completed": false,
+                     "step_text": "## Step 10: Calculate the angle between the lines\nTake the inverse cosine (arccos) of both sides of the equation: $\\theta = \\cos^{-1} \\left( \\frac{13}{\\sqrt{742}} \\right)$.\n\n",
+                     "children": []
+                    }
+                   ]
+                  },
+                  {
+                   "tag": "0.2.2.4.4.1.1.3.4.2",
+                   "depth": 9,
+                   "phase": 42,
+                   "gen_cnt": 43,
+                   "n": 1,
+                   "q": 0.99462890625,
+                   "is_terminal": false,
+                   "is_completed": false,
+                   "step_text": "## Step 9: Calculate the cosine of the angle\n$\\cos \\theta = \\frac{13}{\\sqrt{742}}$.\n\n",
+                   "children": [
+                    {
+                     "tag": "0.2.2.4.4.1.1.3.4.2.1",
+                     "depth": 10,
+                     "phase": 44,
+                     "gen_cnt": 45,
+                     "n": 1,
+                     "q": 0.9873046875,
+                     "is_terminal": false,
+                     "is_completed": false,
+                     "step_text": "## Step 10: Find the angle using the inverse cosine function\nThe angle $\\theta$ is given by $\\theta = \\cos^{-1} \\left( \\frac{13}{\\sqrt{742}} \\right)$.\n\n",
+                     "children": [
+                      {
+                       "tag": "0.2.2.4.4.1.1.3.4.2.1.1",
+                       "depth": 11,
+                       "phase": 64,
+                       "gen_cnt": 65,
+                       "n": 1,
+                       "q": 0.59619140625,
+                       "is_terminal": false,
+                       "is_completed": false,
+                       "step_text": "## Step 11: Evaluate the inverse cosine\nThe inverse cosine of $\\left( \\frac{13}{\\sqrt{742}} \\right)$ is approximately 55.024 degrees.\n\n",
+                       "children": []
+                      },
+                      {
+                       "tag": "0.2.2.4.4.1.1.3.4.2.1.2",
+                       "depth": 11,
+                       "phase": 64,
+                       "gen_cnt": 65,
+                       "n": 1,
+                       "q": 0.20947265625,
+                       "is_terminal": false,
+                       "is_completed": false,
+                       "step_text": "## Step 11: Evaluate the inverse cosine\n$\\theta = \\cos^{-1} \\left( \\frac{13}{\\sqrt{742}} \\right) \\approx \\cos^{-1} (0.902)$, which is approximately $18.42^\\circ$.\n\n",
+                       "children": []
+                      },
+                      {
+                       "tag": "0.2.2.4.4.1.1.3.4.2.1.3",
+                       "depth": 11,
+                       "phase": 64,
+                       "gen_cnt": 65,
+                       "n": 1,
+                       "q": 0.97607421875,
+                       "is_terminal": false,
+                       "is_completed": false,
+                       "step_text": "## Step 11: Convert the angle from radians to degrees\nThe angle in degrees is given by $\\theta = \\cos^{-1} \\left( \\frac{13}{\\sqrt{742}} \\right) \\cdot \\frac{180}{\\pi}$.\n\n",
+                       "children": []
+                      },
+                      {
+                       "tag": "0.2.2.4.4.1.1.3.4.2.1.4",
+                       "depth": 11,
+                       "phase": 64,
+                       "gen_cnt": 65,
+                       "n": 1,
+                       "q": 0.72802734375,
+                       "is_terminal": false,
+                       "is_completed": false,
+                       "step_text": "## Step 11: Evaluate the inverse cosine\n$\\theta \\approx \\cos^{-1} (0.8787) \\approx 29.87^\\circ$.\n\n",
+                       "children": []
+                      }
+                     ]
+                    },
+                    {
+                     "tag": "0.2.2.4.4.1.1.3.4.2.2",
+                     "depth": 10,
+                     "phase": 44,
+                     "gen_cnt": 45,
+                     "n": 1,
+                     "q": 0.98974609375,
+                     "is_terminal": false,
+                     "is_completed": false,
+                     "step_text": "## Step 10: Calculate the angle\n$\\theta = \\arccos \\left(\\frac{13}{\\sqrt{742}}\\right)$.\n\n",
+                     "children": [
+                      {
+                       "tag": "0.2.2.4.4.1.1.3.4.2.2.1",
+                       "depth": 11,
+                       "phase": 47,
+                       "gen_cnt": 48,
+                       "n": 1,
+                       "q": 0.9697265625,
+                       "is_terminal": false,
+                       "is_completed": false,
+                       "step_text": "## Step 11: Convert the angle to degrees\nThe angle in radians is $\\theta = \\arccos \\left(\\frac{13}{\\sqrt{742}}\\right)$. To convert it to degrees, we multiply by $\\frac{180}{\\pi}$.\n\n",
+                       "children": []
+                      },
+                      {
+                       "tag": "0.2.2.4.4.1.1.3.4.2.2.2",
+                       "depth": 11,
+                       "phase": 47,
+                       "gen_cnt": 48,
+                       "n": 1,
+                       "q": 0.98095703125,
+                       "is_terminal": false,
+                       "is_completed": false,
+                       "step_text": "## Step 11: Convert the angle to degrees\n$\\theta_{degrees} = \\theta \\cdot \\frac{180}{\\pi}$.\n\n",
+                       "children": []
+                      },
+                      {
+                       "tag": "0.2.2.4.4.1.1.3.4.2.2.3",
+                       "depth": 11,
+                       "phase": 47,
+                       "gen_cnt": 48,
+                       "n": 1,
+                       "q": 0.98046875,
+                       "is_terminal": false,
+                       "is_completed": false,
+                       "step_text": "## Step 11: Convert the angle to degrees\n$\\theta_{degrees} = \\arccos \\left(\\frac{13}{\\sqrt{742}}\\right) \\cdot \\frac{180}{\\pi}$.\n\n",
+                       "children": []
+                      },
+                      {
+                       "tag": "0.2.2.4.4.1.1.3.4.2.2.4",
+                       "depth": 11,
+                       "phase": 47,
+                       "gen_cnt": 48,
+                       "n": 1,
+                       "q": 0.86865234375,
+                       "is_terminal": false,
+                       "is_completed": false,
+                       "step_text": "## Step 11: Convert the angle from radians to degrees if necessary. However, the answer is requested in a very specific format that implies a numerical value directly without stating the need for conversion to degrees. Therefore, we calculate the numerical value of the angle in degrees directly.\n\n",
+                       "children": []
+                      }
+                     ]
+                    },
+                    {
+                     "tag": "0.2.2.4.4.1.1.3.4.2.3",
+                     "depth": 10,
+                     "phase": 44,
+                     "gen_cnt": 45,
+                     "n": 1,
+                     "q": 0.9873046875,
+                     "is_terminal": false,
+                     "is_completed": false,
+                     "step_text": "## Step 10: Find the angle using the arccosine function\nTo find the angle $\\theta$, use the arccosine function: $\\theta = \\arccos \\left( \\frac{13}{\\sqrt{742}} \\right)$.\n\n",
+                     "children": [
+                      {
+                       "tag": "0.2.2.4.4.1.1.3.4.2.3.1",
+                       "depth": 11,
+                       "phase": 63,
+                       "gen_cnt": 64,
+                       "n": 1,
+                       "q": 0.93994140625,
+                       "is_terminal": false,
+                       "is_completed": false,
+                       "step_text": "## Step 11: Evaluate $\\arccos \\left( \\frac{13}{\\sqrt{742}} \\right)$\n$\\arccos \\left( \\frac{13}{\\sqrt{742}} \\right) \\approx \\arccos(0.9799)$.\n\n",
+                       "children": []
+                      },
+                      {
+                       "tag": "0.2.2.4.4.1.1.3.4.2.3.2",
+                       "depth": 11,
+                       "phase": 63,
+                       "gen_cnt": 64,
+                       "n": 1,
+                       "q": 0.97265625,
+                       "is_terminal": false,
+                       "is_completed": false,
+                       "step_text": "## Step 11: Convert the result to degrees\n$\\theta \\approx \\arccos \\left( \\frac{13}{\\sqrt{742}} \\right) \\times \\frac{180}{\\pi}$.\n\n",
+                       "children": []
+                      },
+                      {
+                       "tag": "0.2.2.4.4.1.1.3.4.2.3.3",
+                       "depth": 11,
+                       "phase": 63,
+                       "gen_cnt": 64,
+                       "n": 1,
+                       "q": 0.9326171875,
+                       "is_terminal": false,
+                       "is_completed": false,
+                       "step_text": "## Step 11: Convert the angle from radians to degrees\nTo convert the angle from radians to degrees, multiply it by $\\frac{180}{\\pi}$: $\\theta_{degrees} = \\theta_{radians} \\cdot \\frac{180}{\\pi}$.\n\n",
+                       "children": []
+                      },
+                      {
+                       "tag": "0.2.2.4.4.1.1.3.4.2.3.4",
+                       "depth": 11,
+                       "phase": 63,
+                       "gen_cnt": 64,
+                       "n": 1,
+                       "q": 0.79052734375,
+                       "is_terminal": false,
+                       "is_completed": false,
+                       "step_text": "## Step 11: Calculate the numerical value of the angle in degrees\nEvaluate $\\theta$ in degrees: $\\theta \\approx \\arccos \\left( \\frac{13}{\\sqrt{742}} \\right) \\cdot \\frac{180}{\\pi} \\approx \\arccos(0.6243) \\cdot \\frac{180}{\\pi} \\approx 51.497$ degrees.\n\n",
+                       "children": []
+                      }
+                     ]
+                    },
+                    {
+                     "tag": "0.2.2.4.4.1.1.3.4.2.4",
+                     "depth": 10,
+                     "phase": 44,
+                     "gen_cnt": 45,
+                     "n": 1,
+                     "q": 0.98583984375,
+                     "is_terminal": false,
+                     "is_completed": false,
+                     "step_text": "## Step 10: Calculate the angle\nThe angle $\\theta$ can be found by taking the inverse cosine (arccos) of the value calculated in step 9: $\\theta = \\arccos \\left( \\frac{13}{\\sqrt{742}} \\right)$.\n\n",
+                     "children": [
+                      {
+                       "tag": "0.2.2.4.4.1.1.3.4.2.4.1",
+                       "depth": 11,
+                       "phase": 72,
+                       "gen_cnt": 73,
+                       "n": 1,
+                       "q": 0.9111328125,
+                       "is_terminal": false,
+                       "is_completed": false,
+                       "step_text": "## Step 11: Convert the cosine value to degrees\nTo convert the cosine value to degrees, multiply it by $180^\\circ/\\pi$: $\\theta = \\arccos \\left( \\frac{13}{\\sqrt{742}} \\right) \\cdot \\frac{180^\\circ}{\\pi}$.\n\n",
+                       "children": []
+                      },
+                      {
+                       "tag": "0.2.2.4.4.1.1.3.4.2.4.2",
+                       "depth": 11,
+                       "phase": 72,
+                       "gen_cnt": 73,
+                       "n": 1,
+                       "q": 0.96533203125,
+                       "is_terminal": false,
+                       "is_completed": false,
+                       "step_text": "## Step 11: Convert the angle to degrees\nTo convert the angle to degrees, multiply by $\\frac{180}{\\pi}$: $\\theta_{\\text{degrees}} = \\arccos \\left( \\frac{13}{\\sqrt{742}} \\right) \\cdot \\frac{180}{\\pi}$.\n\n",
+                       "children": []
+                      },
+                      {
+                       "tag": "0.2.2.4.4.1.1.3.4.2.4.3",
+                       "depth": 11,
+                       "phase": 72,
+                       "gen_cnt": 73,
+                       "n": 1,
+                       "q": 0.7216796875,
+                       "is_terminal": false,
+                       "is_completed": false,
+                       "step_text": "## Step 11: Convert the angle from radians to degrees\nSince the angle in radians is $\\theta = \\arccos \\left( \\frac{13}{\\sqrt{742}} \\right) \\approx 0.8499$ radians, we can convert it to degrees by multiplying by $\\frac{180}{\\pi}$: $\\theta \\approx 0.8499 \\cdot \\frac{180}{\\pi} \\approx 48.59^{\\circ}$.\n\n",
+                       "children": []
+                      },
+                      {
+                       "tag": "0.2.2.4.4.1.1.3.4.2.4.4",
+                       "depth": 11,
+                       "phase": 72,
+                       "gen_cnt": 73,
+                       "n": 1,
+                       "q": 0.69287109375,
+                       "is_terminal": false,
+                       "is_completed": false,
+                       "step_text": "## Step 11: Use a calculator to find the angle in degrees\n$\\theta \\approx \\arccos \\left( \\frac{13}{\\sqrt{742}} \\right) \\approx \\arccos(0.9523) \\approx 17.47^\\circ$.\n\n",
+                       "children": []
+                      }
+                     ]
+                    }
+                   ]
+                  },
+                  {
+                   "tag": "0.2.2.4.4.1.1.3.4.3",
+                   "depth": 9,
+                   "phase": 42,
+                   "gen_cnt": 43,
+                   "n": 1,
+                   "q": 0.99169921875,
+                   "is_terminal": false,
+                   "is_completed": false,
+                   "step_text": "## Step 9: Simplify the fraction\n$\\cos \\theta = \\frac{13}{\\sqrt{742}}$.\n\n",
+                   "children": [
+                    {
+                     "tag": "0.2.2.4.4.1.1.3.4.3.1",
+                     "depth": 10,
+                     "phase": 46,
+                     "gen_cnt": 47,
+                     "n": 1,
+                     "q": 0.978515625,
+                     "is_terminal": false,
+                     "is_completed": false,
+                     "step_text": "## Step 10: Calculate the value of the angle in degrees\nThe angle $\\theta$ can be found by taking the inverse cosine (arccos) of the result from the previous step: $\\theta = \\arccos \\left( \\frac{13}{\\sqrt{742}} \\right)$.\n\n",
+                     "children": []
+                    },
+                    {
+                     "tag": "0.2.2.4.4.1.1.3.4.3.2",
+                     "depth": 10,
+                     "phase": 46,
+                     "gen_cnt": 47,
+                     "n": 1,
+                     "q": 0.90576171875,
+                     "is_terminal": false,
+                     "is_completed": false,
+                     "step_text": "## Step 10: To find the angle in degrees, multiply by $\\frac{180}{\\pi}$\nThe angle in degrees is given by $\\theta = \\cos^{-1}\\left(\\frac{13}{\\sqrt{742}}\\right) \\cdot \\frac{180}{\\pi}$.\n\n",
+                     "children": []
+                    },
+                    {
+                     "tag": "0.2.2.4.4.1.1.3.4.3.3",
+                     "depth": 10,
+                     "phase": 46,
+                     "gen_cnt": 47,
+                     "n": 1,
+                     "q": 0.91259765625,
+                     "is_terminal": false,
+                     "is_completed": false,
+                     "step_text": "## Step 10: Rationalize the denominator\nTo rationalize the denominator, multiply both the numerator and denominator by $\\sqrt{742}$, resulting in $\\cos \\theta = \\frac{13 \\sqrt{742}}{\\sqrt{742} \\cdot \\sqrt{742}} = \\frac{13 \\sqrt{742}}{742}$.\n\n",
+                     "children": []
+                    },
+                    {
+                     "tag": "0.2.2.4.4.1.1.3.4.3.4",
+                     "depth": 10,
+                     "phase": 46,
+                     "gen_cnt": 47,
+                     "n": 1,
+                     "q": 0.9072265625,
+                     "is_terminal": false,
+                     "is_completed": false,
+                     "step_text": "## Step 10: Rationalize the denominator\nTo rationalize the denominator, we multiply the numerator and denominator by $\\sqrt{742}$. This gives $\\cos \\theta = \\frac{13 \\cdot \\sqrt{742}}{\\sqrt{742} \\cdot \\sqrt{742}} = \\frac{13\\sqrt{742}}{742}$.\n\n",
+                     "children": []
+                    }
+                   ]
+                  },
+                  {
+                   "tag": "0.2.2.4.4.1.1.3.4.4",
+                   "depth": 9,
+                   "phase": 42,
+                   "gen_cnt": 43,
+                   "n": 1,
+                   "q": 0.9951171875,
+                   "is_terminal": false,
+                   "is_completed": false,
+                   "step_text": "## Step 9: Calculate the cosine of the angle\nSubstitute the simplified denominator into the formula: $\\cos \\theta = \\frac{13}{\\sqrt{742}}$.\n\n",
+                   "children": [
+                    {
+                     "tag": "0.2.2.4.4.1.1.3.4.4.1",
+                     "depth": 10,
+                     "phase": 43,
+                     "gen_cnt": 44,
+                     "n": 1,
+                     "q": 0.98291015625,
+                     "is_terminal": false,
+                     "is_completed": false,
+                     "step_text": "## Step 10: Calculate the angle\nThe angle $\\theta$ can be found by taking the inverse cosine (arccos) of $\\frac{13}{\\sqrt{742}}$: $\\theta = \\arccos \\left( \\frac{13}{\\sqrt{742}} \\right)$.\n\n",
+                     "children": []
+                    },
+                    {
+                     "tag": "0.2.2.4.4.1.1.3.4.4.2",
+                     "depth": 10,
+                     "phase": 43,
+                     "gen_cnt": 44,
+                     "n": 1,
+                     "q": 0.98193359375,
+                     "is_terminal": false,
+                     "is_completed": false,
+                     "step_text": "## Step 10: Calculate the angle\nTo find the angle in degrees, take the inverse cosine (arccos) of both sides: $\\theta = \\arccos \\left(\\frac{13}{\\sqrt{742}}\\right)$.\n\n",
+                     "children": []
+                    },
+                    {
+                     "tag": "0.2.2.4.4.1.1.3.4.4.3",
+                     "depth": 10,
+                     "phase": 43,
+                     "gen_cnt": 44,
+                     "n": 1,
+                     "q": 0.85205078125,
+                     "is_terminal": false,
+                     "is_completed": false,
+                     "step_text": "## Step 10: Calculate the value of the cosine\n$\\cos \\theta = \\frac{13}{\\sqrt{742}} = \\frac{13}{\\sqrt{2 \\cdot 371}} = \\frac{13}{\\sqrt{2} \\cdot \\sqrt{371}} = \\frac{13}{\\sqrt{2} \\cdot \\sqrt{371}} = \\frac{13}{\\sqrt{2} \\cdot \\sqrt{11 \\cdot 37}} = \\frac{13}{\\sqrt{2} \\cdot \\sqrt{11} \\cdot \\sqrt{37}} = \\frac{13}{\\sqrt{2} \\cdot \\sqrt{11} \\cdot \\sqrt{37}} = \\frac{13}{\\sqrt{742}}$.\n\n",
+                     "children": []
+                    },
+                    {
+                     "tag": "0.2.2.4.4.1.1.3.4.4.4",
+                     "depth": 10,
+                     "phase": 43,
+                     "gen_cnt": 44,
+                     "n": 1,
+                     "q": 0.9609375,
+                     "is_terminal": false,
+                     "is_completed": false,
+                     "step_text": "## Step 10: Calculate the value of the cosine of the angle\n$\\cos \\theta \\approx \\frac{13}{26.97} \\approx 0.4819$.\n\n",
+                     "children": []
+                    }
+                   ]
+                  }
+                 ]
+                }
+               ]
+              },
+              {
+               "tag": "0.2.2.4.4.1.1.4",
+               "depth": 7,
+               "phase": 31,
+               "gen_cnt": 32,
+               "n": 1,
+               "q": 0.96337890625,
+               "is_terminal": false,
+               "is_completed": false,
+               "step_text": "## Step 7: Use the dot product formula to find $\\cos \\theta$\nNow we can use the formula from Step 3: $\\cos \\theta = \\frac{13}{\\sqrt{14} \\sqrt{53}}$. To simplify, multiply the numerator and denominator by $\\sqrt{14} \\sqrt{53}$.\n\n",
+               "children": []
+              }
+             ]
+            }
+           ]
+          },
+          {
+           "tag": "0.2.2.4.4.2",
+           "depth": 5,
+           "phase": 28,
+           "gen_cnt": 29,
+           "n": 1,
+           "q": 0.9970703125,
+           "is_terminal": false,
+           "is_completed": false,
+           "step_text": "## Step 5: Calculate the magnitudes of the direction ratios\nThe magnitude of the direction ratios of the first line is $\\sqrt{2^2 + 3^2 + (-1)^2} = \\sqrt{4 + 9 + 1} = \\sqrt{14}$. The magnitude of the direction ratios of the second line is $\\sqrt{6^2 + (-1)^2 + (-4)^2} = \\sqrt{36 + 1 + 16} = \\sqrt{53}$.\n\n",
+           "children": [
+            {
+             "tag": "0.2.2.4.4.2.1",
+             "depth": 6,
+             "phase": 29,
+             "gen_cnt": 30,
+             "n": 1,
+             "q": 0.99609375,
+             "is_terminal": false,
+             "is_completed": false,
+             "step_text": "## Step 6: Substitute the values into the formula to find the cosine of the angle\nSubstituting the calculated values into the formula gives $\\cos \\theta = \\frac{13}{\\sqrt{14}\\sqrt{53}}$.\n\n",
+             "children": [
+              {
+               "tag": "0.2.2.4.4.2.1.1",
+               "depth": 7,
+               "phase": 32,
+               "gen_cnt": 33,
+               "n": 1,
+               "q": 0.9873046875,
+               "is_terminal": false,
+               "is_completed": false,
+               "step_text": "## Step 7: Simplify the expression for the cosine of the angle\nWe can simplify the expression by noting that $\\sqrt{14}\\sqrt{53} = \\sqrt{14 \\times 53} = \\sqrt{742}$. Therefore, $\\cos \\theta = \\frac{13}{\\sqrt{742}}$.\n\n",
+               "children": [
+                {
+                 "tag": "0.2.2.4.4.2.1.1.1",
+                 "depth": 8,
+                 "phase": 55,
+                 "gen_cnt": 56,
+                 "n": 1,
+                 "q": 0.9814453125,
+                 "is_terminal": false,
+                 "is_completed": false,
+                 "step_text": "## Step 8: Calculate the angle using the inverse cosine function\nTo find the angle $\\theta$, we take the inverse cosine (arccosine) of both sides, giving $\\theta = \\cos^{-1}\\left(\\frac{13}{\\sqrt{742}}\\right)$.\n\n",
+                 "children": []
+                },
+                {
+                 "tag": "0.2.2.4.4.2.1.1.2",
+                 "depth": 8,
+                 "phase": 55,
+                 "gen_cnt": 56,
+                 "n": 1,
+                 "q": 0.9833984375,
+                 "is_terminal": false,
+                 "is_completed": false,
+                 "step_text": "## Step 8: Find the angle using the inverse cosine function\nTo find the angle $\\theta$, we take the inverse cosine (arccos) of $\\frac{13}{\\sqrt{742}}$.\n\n",
+                 "children": []
+                },
+                {
+                 "tag": "0.2.2.4.4.2.1.1.3",
+                 "depth": 8,
+                 "phase": 55,
+                 "gen_cnt": 56,
+                 "n": 1,
+                 "q": 0.9306640625,
+                 "is_terminal": false,
+                 "is_completed": false,
+                 "step_text": "## Step 8: Calculate the value of the cosine of the angle\n$\\cos \\theta = \\frac{13}{\\sqrt{742}} \\approx \\frac{13}{27.197} \\approx 0.483$.\n\n",
+                 "children": []
+                },
+                {
+                 "tag": "0.2.2.4.4.2.1.1.4",
+                 "depth": 8,
+                 "phase": 55,
+                 "gen_cnt": 56,
+                 "n": 1,
+                 "q": 0.9794921875,
+                 "is_terminal": false,
+                 "is_completed": false,
+                 "step_text": "## Step 8: Calculate the angle $\\theta$\nTo find the angle $\\theta$, we take the inverse cosine (arccosine) of both sides: $\\theta = \\arccos \\left(\\frac{13}{\\sqrt{742}}\\right)$.\n\n",
+                 "children": []
+                }
+               ]
+              },
+              {
+               "tag": "0.2.2.4.4.2.1.2",
+               "depth": 7,
+               "phase": 32,
+               "gen_cnt": 33,
+               "n": 1,
+               "q": 0.8056640625,
+               "is_terminal": false,
+               "is_completed": false,
+               "step_text": "## Step 7: Simplify the expression for the cosine of the angle\nSimplifying the expression gives $\\cos \\theta = \\frac{13}{\\sqrt{14}\\sqrt{53}} = \\frac{13}{\\sqrt{14 \\times 53}} = \\frac{13}{\\sqrt{942}}$.\n\n",
+               "children": []
+              },
+              {
+               "tag": "0.2.2.4.4.2.1.3",
+               "depth": 7,
+               "phase": 32,
+               "gen_cnt": 33,
+               "n": 1,
+               "q": 0.96826171875,
+               "is_terminal": false,
+               "is_completed": false,
+               "step_text": "## Step 7: Simplify the expression for the cosine of the angle\nThe expression can be simplified by rationalizing the denominator: $\\cos \\theta = \\frac{13}{\\sqrt{14}\\sqrt{53}} = \\frac{13}{\\sqrt{14*53}} = \\frac{13}{\\sqrt{742}}$.\n\n",
+               "children": []
+              },
+              {
+               "tag": "0.2.2.4.4.2.1.4",
+               "depth": 7,
+               "phase": 32,
+               "gen_cnt": 33,
+               "n": 1,
+               "q": 0.95849609375,
+               "is_terminal": false,
+               "is_completed": false,
+               "step_text": "## Step 7: Simplify the expression\n$\\cos \\theta = \\frac{13}{\\sqrt{14}\\sqrt{53}} = \\frac{13}{\\sqrt{14 \\cdot 53}} = \\frac{13}{\\sqrt{14 \\cdot 53}} = \\frac{13}{\\sqrt{742}}$.\n\n",
+               "children": []
+              }
+             ]
+            },
+            {
+             "tag": "0.2.2.4.4.2.2",
+             "depth": 6,
+             "phase": 29,
+             "gen_cnt": 30,
+             "n": 1,
+             "q": 0.71875,
+             "is_terminal": false,
+             "is_completed": false,
+             "step_text": "## Step 6: Calculate $\\cos \\theta$\n$\\cos \\theta = \\frac{13}{\\sqrt{14}\\sqrt{53}} = \\frac{13}{\\sqrt{14 \\cdot 53}} = \\frac{13}{\\sqrt{726}} = \\frac{13}{\\sqrt{6 \\cdot 11 \\cdot 13}} = \\frac{13}{\\sqrt{6 \\cdot 11 \\cdot 13}} = \\frac{13}{\\sqrt{6 \\cdot 11 \\cdot 13}}$.\n\n",
+             "children": []
+            },
+            {
+             "tag": "0.2.2.4.4.2.3",
+             "depth": 6,
+             "phase": 29,
+             "gen_cnt": 30,
+             "n": 1,
+             "q": 0.85791015625,
+             "is_terminal": false,
+             "is_completed": false,
+             "step_text": "## Step 6: Substitute the values into the formula to find $\\cos \\theta$\n$\\cos \\theta = \\frac{13}{\\sqrt{14}\\sqrt{53}} = \\frac{13}{\\sqrt{14 \\times 53}} = \\frac{13}{\\sqrt{738}} = \\frac{13}{27.287}$\n\n",
+             "children": []
+            },
+            {
+             "tag": "0.2.2.4.4.2.4",
+             "depth": 6,
+             "phase": 29,
+             "gen_cnt": 30,
+             "n": 1,
+             "q": 0.9697265625,
+             "is_terminal": false,
+             "is_completed": false,
+             "step_text": "## Step 6: Plug in the values into the formula and solve for $\\cos \\theta$\nSubstituting the values into the formula, we get $\\cos \\theta = \\frac{13}{\\sqrt{14} \\cdot \\sqrt{53}} = \\frac{13}{\\sqrt{14 \\cdot 53}}$.\n\n",
+             "children": []
+            }
+           ]
+          },
+          {
+           "tag": "0.2.2.4.4.3",
+           "depth": 5,
+           "phase": 28,
+           "gen_cnt": 29,
+           "n": 1,
+           "q": 0.9931640625,
+           "is_terminal": false,
+           "is_completed": false,
+           "step_text": "## Step 5: Compute the magnitudes of the direction ratios\nThe magnitude of the direction ratios of the first line is $\\sqrt{(2)^2 + (3)^2 + (-1)^2} = \\sqrt{4 + 9 + 1} = \\sqrt{14}$.\n\n",
+           "children": [
+            {
+             "tag": "0.2.2.4.4.3.1",
+             "depth": 6,
+             "phase": 34,
+             "gen_cnt": 35,
+             "n": 1,
+             "q": 0.99658203125,
+             "is_terminal": false,
+             "is_completed": false,
+             "step_text": "## Step 6: Compute the magnitude of the direction ratios of the second line\nThe magnitude of the direction ratios of the second line is $\\sqrt{(6)^2 + (-1)^2 + (-4)^2} = \\sqrt{36 + 1 + 16} = \\sqrt{53}$.\n\n",
+             "children": [
+              {
+               "tag": "0.2.2.4.4.3.1.1",
+               "depth": 7,
+               "phase": 37,
+               "gen_cnt": 38,
+               "n": 1,
+               "q": 0.9892578125,
+               "is_terminal": false,
+               "is_completed": false,
+               "step_text": "## Step 7: Calculate the cosine of the angle between the lines\n$\\cos \\theta = \\frac{13}{\\sqrt{14} \\sqrt{53}} = \\frac{13}{\\sqrt{14 \\cdot 53}} = \\frac{13}{\\sqrt{742}}$\n\n",
+               "children": [
+                {
+                 "tag": "0.2.2.4.4.3.1.1.1",
+                 "depth": 8,
+                 "phase": 49,
+                 "gen_cnt": 50,
+                 "n": 1,
+                 "q": 0.9765625,
+                 "is_terminal": false,
+                 "is_completed": false,
+                 "step_text": "## Step 8: Calculate the angle\nThe angle is $\\theta = \\cos^{-1} \\left( \\frac{13}{\\sqrt{742}} \\right)$.\n\n",
+                 "children": []
+                },
+                {
+                 "tag": "0.2.2.4.4.3.1.1.2",
+                 "depth": 8,
+                 "phase": 49,
+                 "gen_cnt": 50,
+                 "n": 1,
+                 "q": 0.33447265625,
+                 "is_terminal": false,
+                 "is_completed": false,
+                 "step_text": "## Step 8: Calculate the angle in degrees\n$\\theta = \\cos^{-1} \\left( \\frac{13}{\\sqrt{742}} \\right) \\approx \\cos^{-1}(0.891499)$\n$\\theta \\approx 34.7^{\\circ}$\n\n",
+                 "children": []
+                },
+                {
+                 "tag": "0.2.2.4.4.3.1.1.3",
+                 "depth": 8,
+                 "phase": 49,
+                 "gen_cnt": 50,
+                 "n": 1,
+                 "q": 0.984375,
+                 "is_terminal": false,
+                 "is_completed": false,
+                 "step_text": "## Step 8: Calculate the angle between the lines\n$\\theta = \\cos^{-1} \\left(\\frac{13}{\\sqrt{742}}\\right)$\n\n",
+                 "children": []
+                },
+                {
+                 "tag": "0.2.2.4.4.3.1.1.4",
+                 "depth": 8,
+                 "phase": 49,
+                 "gen_cnt": 50,
+                 "n": 1,
+                 "q": 0.9775390625,
+                 "is_terminal": false,
+                 "is_completed": false,
+                 "step_text": "## Step 8: Find the angle using the inverse cosine function\nThe angle $\\theta = \\cos^{-1} \\left(\\frac{13}{\\sqrt{742}}\\right)$.\n\n",
+                 "children": []
+                }
+               ]
+              },
+              {
+               "tag": "0.2.2.4.4.3.1.2",
+               "depth": 7,
+               "phase": 37,
+               "gen_cnt": 38,
+               "n": 1,
+               "q": 0.98486328125,
+               "is_terminal": false,
+               "is_completed": false,
+               "step_text": "## Step 7: Calculate the angle between the lines\n$\\cos \\theta = \\frac{13}{\\sqrt{14} \\sqrt{53}} = \\frac{13}{\\sqrt{14 \\times 53}} = \\frac{13}{\\sqrt{742}}$.\n\n",
+               "children": []
+              },
+              {
+               "tag": "0.2.2.4.4.3.1.3",
+               "depth": 7,
+               "phase": 37,
+               "gen_cnt": 38,
+               "n": 1,
+               "q": 0.99609375,
+               "is_terminal": false,
+               "is_completed": false,
+               "step_text": "## Step 7: Substitute the values into the formula for the angle between the lines\n$\\cos \\theta = \\frac{13}{\\sqrt{14} \\sqrt{53}}$\n\n",
+               "children": [
+                {
+                 "tag": "0.2.2.4.4.3.1.3.1",
+                 "depth": 8,
+                 "phase": 38,
+                 "gen_cnt": 39,
+                 "n": 1,
+                 "q": 0.74609375,
+                 "is_terminal": false,
+                 "is_completed": false,
+                 "step_text": "## Step 8: Simplify the expression for the angle between the lines\nTo simplify the expression, we need to rationalize the denominator, which involves multiplying both the numerator and denominator by $\\sqrt{14} \\sqrt{53}$. This results in: $\\cos \\theta = \\frac{13}{\\sqrt{14} \\sqrt{53}} \\times \\frac{\\sqrt{14} \\sqrt{53}}{\\sqrt{14} \\sqrt{53}} = \\frac{13\\sqrt{14} \\sqrt{53}}{14 \\times 53}$.\n\n",
+                 "children": []
+                },
+                {
+                 "tag": "0.2.2.4.4.3.1.3.2",
+                 "depth": 8,
+                 "phase": 38,
+                 "gen_cnt": 39,
+                 "n": 1,
+                 "q": 0.98681640625,
+                 "is_terminal": false,
+                 "is_completed": false,
+                 "step_text": "## Step 8: Simplify the expression\n$\\cos \\theta = \\frac{13}{\\sqrt{14} \\sqrt{53}} = \\frac{13}{\\sqrt{14 \\cdot 53}} = \\frac{13}{\\sqrt{742}}$\n\n",
+                 "children": [
+                  {
+                   "tag": "0.2.2.4.4.3.1.3.2.1",
+                   "depth": 9,
+                   "phase": 68,
+                   "gen_cnt": 69,
+                   "n": 1,
+                   "q": 0.84375,
+                   "is_terminal": false,
+                   "is_completed": false,
+                   "step_text": "## Step 9: Identify the values of $\\sin \\theta$\nTo find the angle between the lines, we also need to find the value of $\\sin \\theta$. The value of $\\sin \\theta$ can be calculated using the formula $\\sin \\theta = \\frac{\\mathbf{a} \\cdot \\mathbf{b}}{\\|\\mathbf{a}\\| \\|\\mathbf{b}\\|}$.\n\n",
+                   "children": []
+                  },
+                  {
+                   "tag": "0.2.2.4.4.3.1.3.2.2",
+                   "depth": 9,
+                   "phase": 68,
+                   "gen_cnt": 69,
+                   "n": 1,
+                   "q": 0.9306640625,
+                   "is_terminal": false,
+                   "is_completed": false,
+                   "step_text": "## Step 9: Calculate the value of $\\sqrt{742}$\n$\\sqrt{742} \\approx 27.26$\n\n",
+                   "children": []
+                  },
+                  {
+                   "tag": "0.2.2.4.4.3.1.3.2.3",
+                   "depth": 9,
+                   "phase": 68,
+                   "gen_cnt": 69,
+                   "n": 1,
+                   "q": 0.88427734375,
+                   "is_terminal": false,
+                   "is_completed": false,
+                   "step_text": "## Step 9: Rationalize the denominator\n$\\cos \\theta = \\frac{13}{\\sqrt{742}} = \\frac{13}{\\sqrt{2 \\cdot 373}} = \\frac{13}{\\sqrt{2} \\cdot \\sqrt{373}} = \\frac{13}{\\sqrt{2} \\cdot \\sqrt{11 \\cdot 37}} = \\frac{13}{\\sqrt{2} \\cdot \\sqrt{11} \\cdot \\sqrt{37}} = \\frac{13}{\\sqrt{2 \\cdot 11 \\cdot 37}} = \\frac{13}{\\sqrt{742}} = \\frac{13}{\\sqrt{2 \\cdot 11 \\cdot 37}}$\n\n",
+                   "children": []
+                  },
+                  {
+                   "tag": "0.2.2.4.4.3.1.3.2.4",
+                   "depth": 9,
+                   "phase": 68,
+                   "gen_cnt": 69,
+                   "n": 1,
+                   "q": 0.9443359375,
+                   "is_terminal": false,
+                   "is_completed": false,
+                   "step_text": "## Step 9: Calculate the square root in the denominator\n$\\sqrt{742} \\approx 27.258$\n\n",
+                   "children": []
+                  }
+                 ]
+                },
+                {
+                 "tag": "0.2.2.4.4.3.1.3.3",
+                 "depth": 8,
+                 "phase": 38,
+                 "gen_cnt": 39,
+                 "n": 1,
+                 "q": 0.982421875,
+                 "is_terminal": false,
+                 "is_completed": false,
+                 "step_text": "## Step 8: Simplify the fraction on the right side of the equation\n$\\cos \\theta = \\frac{13}{\\sqrt{14} \\sqrt{53}} = \\frac{13}{\\sqrt{14 \\cdot 53}} = \\frac{13}{\\sqrt{742}}$\n\n",
+                 "children": []
+                },
+                {
+                 "tag": "0.2.2.4.4.3.1.3.4",
+                 "depth": 8,
+                 "phase": 38,
+                 "gen_cnt": 39,
+                 "n": 1,
+                 "q": 0.984375,
+                 "is_terminal": false,
+                 "is_completed": false,
+                 "step_text": "## Step 8: Simplify the expression for the angle between the lines\n$\\cos \\theta = \\frac{13}{\\sqrt{14} \\sqrt{53}} = \\frac{13}{\\sqrt{14 \\cdot 53}} = \\frac{13}{\\sqrt{742}}$\n\n",
+                 "children": []
+                }
+               ]
+              },
+              {
+               "tag": "0.2.2.4.4.3.1.4",
+               "depth": 7,
+               "phase": 37,
+               "gen_cnt": 38,
+               "n": 1,
+               "q": 0.403564453125,
+               "is_terminal": false,
+               "is_completed": false,
+               "step_text": "## Step 7: Calculate the angle between the lines\n$\\cos \\theta = \\frac{13}{\\sqrt{14} \\times \\sqrt{53}} = \\frac{13}{\\sqrt{14 \\times 53}} = \\frac{13}{\\sqrt{742}}$. Therefore, $\\theta = \\cos^{-1}\\left(\\frac{13}{\\sqrt{742}}\\right)$. $\\theta \\approx 14.0^\\circ$.\n\n",
+               "children": []
+              }
+             ]
+            },
+            {
+             "tag": "0.2.2.4.4.3.2",
+             "depth": 6,
+             "phase": 34,
+             "gen_cnt": 35,
+             "n": 1,
+             "q": 0.99658203125,
+             "is_terminal": false,
+             "is_completed": false,
+             "step_text": "## Step 6: Compute the magnitudes of the direction ratios of the second line\nThe magnitude of the direction ratios of the second line is $\\sqrt{(6)^2 + (-1)^2 + (-4)^2} = \\sqrt{36 + 1 + 16} = \\sqrt{53}$.\n\n",
+             "children": [
+              {
+               "tag": "0.2.2.4.4.3.2.1",
+               "depth": 7,
+               "phase": 35,
+               "gen_cnt": 36,
+               "n": 1,
+               "q": 0.953125,
+               "is_terminal": false,
+               "is_completed": false,
+               "step_text": "## Step 7: Substitute the values into the formula and calculate the cosine of the angle\nSubstituting the calculated values into the formula, we get $\\cos \\theta = \\frac{13}{\\sqrt{14} \\sqrt{53}}$. To simplify, we note that $\\sqrt{14} \\sqrt{53} = \\sqrt{14 \\times 53} = \\sqrt{737}$.\n\n",
+               "children": []
+              },
+              {
+               "tag": "0.2.2.4.4.3.2.2",
+               "depth": 7,
+               "phase": 35,
+               "gen_cnt": 36,
+               "n": 1,
+               "q": 0.99658203125,
+               "is_terminal": false,
+               "is_completed": false,
+               "step_text": "## Step 7: Calculate $\\cos \\theta$\n$\\cos \\theta = \\frac{13}{\\sqrt{14} \\sqrt{53}}$.\n\n",
+               "children": [
+                {
+                 "tag": "0.2.2.4.4.3.2.2.1",
+                 "depth": 8,
+                 "phase": 36,
+                 "gen_cnt": 37,
+                 "n": 1,
+                 "q": 0.982421875,
+                 "is_terminal": false,
+                 "is_completed": false,
+                 "step_text": "## Step 8: Simplify the expression for $\\cos \\theta$\n$\\cos \\theta = \\frac{13}{\\sqrt{14} \\sqrt{53}} = \\frac{13}{\\sqrt{14 \\cdot 53}} = \\frac{13}{\\sqrt{742}}$.\n\n",
+                 "children": []
+                },
+                {
+                 "tag": "0.2.2.4.4.3.2.2.2",
+                 "depth": 8,
+                 "phase": 36,
+                 "gen_cnt": 37,
+                 "n": 1,
+                 "q": 0.98046875,
+                 "is_terminal": false,
+                 "is_completed": false,
+                 "step_text": "## Step 8: Simplify the fraction\n$\\cos \\theta = \\frac{13}{\\sqrt{14} \\sqrt{53}} = \\frac{13}{\\sqrt{14 \\cdot 53}} = \\frac{13}{\\sqrt{742}}$.\n\n",
+                 "children": []
+                },
+                {
+                 "tag": "0.2.2.4.4.3.2.2.3",
+                 "depth": 8,
+                 "phase": 36,
+                 "gen_cnt": 37,
+                 "n": 1,
+                 "q": 0.98583984375,
+                 "is_terminal": false,
+                 "is_completed": false,
+                 "step_text": "## Step 8: Simplify the expression\n$\\cos \\theta = \\frac{13}{\\sqrt{14 \\cdot 53}} = \\frac{13}{\\sqrt{742}}$.\n\n",
+                 "children": [
+                  {
+                   "tag": "0.2.2.4.4.3.2.2.3.1",
+                   "depth": 9,
+                   "phase": 73,
+                   "gen_cnt": 74,
+                   "n": 1,
+                   "q": 0.381103515625,
+                   "is_terminal": false,
+                   "is_completed": false,
+                   "step_text": "## Step 9: Calculate the value of $\\theta$ in degrees\n$\\theta = \\cos^{-1} (\\frac{13}{\\sqrt{742}})$. Since $\\sqrt{742} \\approx 27.32$, $\\theta \\approx \\cos^{-1} (0.4786) \\approx 78.03$ degrees.\n\n",
+                   "children": []
+                  },
+                  {
+                   "tag": "0.2.2.4.4.3.2.2.3.2",
+                   "depth": 9,
+                   "phase": 73,
+                   "gen_cnt": 74,
+                   "n": 1,
+                   "q": 0.9775390625,
+                   "is_terminal": false,
+                   "is_completed": false,
+                   "step_text": "## Step 9: Calculate the value of $\\theta$\nTo find the angle $\\theta$, we take the inverse cosine (arccos) of $\\frac{13}{\\sqrt{742}}$.\n\n",
+                   "children": []
+                  },
+                  {
+                   "tag": "0.2.2.4.4.3.2.2.3.3",
+                   "depth": 9,
+                   "phase": 73,
+                   "gen_cnt": 74,
+                   "n": 1,
+                   "q": 0.98193359375,
+                   "is_terminal": false,
+                   "is_completed": false,
+                   "step_text": "## Step 9: Calculate the angle $\\theta$ in degrees\n$\\theta = \\cos^{-1} \\left( \\frac{13}{\\sqrt{742}} \\right)$.\n\n",
+                   "children": []
+                  },
+                  {
+                   "tag": "0.2.2.4.4.3.2.2.3.4",
+                   "depth": 9,
+                   "phase": 73,
+                   "gen_cnt": 74,
+                   "n": 1,
+                   "q": 0.9599609375,
+                   "is_terminal": false,
+                   "is_completed": false,
+                   "step_text": "## Step 9: Calculate the value of $\\theta$\nSince $\\theta$ is the angle between the lines, $\\cos \\theta$ gives the cosine of this angle. The angle $\\theta$ can be found by taking the arccos of both sides of the equation: $\\theta = \\arccos \\left(\\frac{13}{\\sqrt{742}}\\right)$.\n\n",
+                   "children": []
+                  }
+                 ]
+                },
+                {
+                 "tag": "0.2.2.4.4.3.2.2.4",
+                 "depth": 8,
+                 "phase": 36,
+                 "gen_cnt": 37,
+                 "n": 1,
+                 "q": 0.9873046875,
+                 "is_terminal": false,
+                 "is_completed": false,
+                 "step_text": "## Step 8: Simplify $\\cos \\theta$\n$\\cos \\theta = \\frac{13}{\\sqrt{14 \\times 53}} = \\frac{13}{\\sqrt{742}}$.\n\n",
+                 "children": [
+                  {
+                   "tag": "0.2.2.4.4.3.2.2.4.1",
+                   "depth": 9,
+                   "phase": 54,
+                   "gen_cnt": 55,
+                   "n": 1,
+                   "q": 0.98193359375,
+                   "is_terminal": false,
+                   "is_completed": false,
+                   "step_text": "## Step 9: Calculate the value of $\\theta$\n$\\theta = \\cos^{-1} \\left(\\frac{13}{\\sqrt{742}}\\right)$.\n\n",
+                   "children": []
+                  },
+                  {
+                   "tag": "0.2.2.4.4.3.2.2.4.2",
+                   "depth": 9,
+                   "phase": 54,
+                   "gen_cnt": 55,
+                   "n": 1,
+                   "q": 0.98486328125,
+                   "is_terminal": false,
+                   "is_completed": false,
+                   "step_text": "## Step 9: Calculate $\\theta$\n$\\theta = \\cos^{-1} (\\frac{13}{\\sqrt{742}})$.\n\n",
+                   "children": []
+                  },
+                  {
+                   "tag": "0.2.2.4.4.3.2.2.4.3",
+                   "depth": 9,
+                   "phase": 54,
+                   "gen_cnt": 55,
+                   "n": 1,
+                   "q": 0.97705078125,
+                   "is_terminal": false,
+                   "is_completed": false,
+                   "step_text": "## Step 9: Solve for $\\theta$\nTo find the angle $\\theta$ in degrees, take the inverse cosine of both sides: $\\theta = \\cos^{-1} \\left(\\frac{13}{\\sqrt{742}}\\right)$.\n\n",
+                   "children": []
+                  },
+                  {
+                   "tag": "0.2.2.4.4.3.2.2.4.4",
+                   "depth": 9,
+                   "phase": 54,
+                   "gen_cnt": 55,
+                   "n": 1,
+                   "q": 0.9853515625,
+                   "is_terminal": false,
+                   "is_completed": false,
+                   "step_text": "## Step 9: Calculate the angle $\\theta$\n$\\theta = \\cos^{-1} \\left( \\frac{13}{\\sqrt{742}} \\right)$.\n\n",
+                   "children": []
+                  }
+                 ]
+                }
+               ]
+              },
+              {
+               "tag": "0.2.2.4.4.3.2.3",
+               "depth": 7,
+               "phase": 35,
+               "gen_cnt": 36,
+               "n": 1,
+               "q": 0.85595703125,
+               "is_terminal": false,
+               "is_completed": false,
+               "step_text": "## Step 7: Calculate the cosine of the angle between the lines\n$\\cos \\theta = \\frac{13}{\\sqrt{14} \\cdot \\sqrt{53}} = \\frac{13}{\\sqrt{14 \\cdot 53}} = \\frac{13}{\\sqrt{746}} \\approx 0.7038$.\n\n",
+               "children": []
+              },
+              {
+               "tag": "0.2.2.4.4.3.2.4",
+               "depth": 7,
+               "phase": 35,
+               "gen_cnt": 36,
+               "n": 1,
+               "q": 0.98779296875,
+               "is_terminal": false,
+               "is_completed": false,
+               "step_text": "## Step 7: Calculate the cosine of the angle between the lines\n$\\cos \\theta = \\frac{13}{\\sqrt{14} \\cdot \\sqrt{53}} = \\frac{13}{\\sqrt{14 \\cdot 53}} = \\frac{13}{\\sqrt{742}}$\n\n",
+               "children": [
+                {
+                 "tag": "0.2.2.4.4.3.2.4.1",
+                 "depth": 8,
+                 "phase": 53,
+                 "gen_cnt": 54,
+                 "n": 1,
+                 "q": 0.98046875,
+                 "is_terminal": false,
+                 "is_completed": false,
+                 "step_text": "## Step 8: Find the angle $\\theta$ in degrees\n$\\theta = \\cos^{-1} \\left( \\frac{13}{\\sqrt{742}} \\right)$\n\n",
+                 "children": []
+                },
+                {
+                 "tag": "0.2.2.4.4.3.2.4.2",
+                 "depth": 8,
+                 "phase": 53,
+                 "gen_cnt": 54,
+                 "n": 1,
+                 "q": 0.96142578125,
+                 "is_terminal": false,
+                 "is_completed": false,
+                 "step_text": "## Step 8: Convert the cosine value to an angle\nWe now find the angle by taking the inverse cosine of $\\frac{13}{\\sqrt{742}}$. $\\theta = \\cos^{-1} \\left(\\frac{13}{\\sqrt{742}}\\right)$.\n\n",
+                 "children": []
+                },
+                {
+                 "tag": "0.2.2.4.4.3.2.4.3",
+                 "depth": 8,
+                 "phase": 53,
+                 "gen_cnt": 54,
+                 "n": 1,
+                 "q": 0.982421875,
+                 "is_terminal": false,
+                 "is_completed": false,
+                 "step_text": "## Step 8: Calculate the angle between the lines\n$\\theta = \\cos^{-1}\\left(\\frac{13}{\\sqrt{742}}\\right)$\n\n",
+                 "children": []
+                },
+                {
+                 "tag": "0.2.2.4.4.3.2.4.4",
+                 "depth": 8,
+                 "phase": 53,
+                 "gen_cnt": 54,
+                 "n": 1,
+                 "q": 0.9775390625,
+                 "is_terminal": false,
+                 "is_completed": false,
+                 "step_text": "## Step 8: Find the angle $\\theta$\nTo find the angle $\\theta$, we take the inverse cosine (arccosine) of both sides: $\\theta = \\arccos\\left(\\frac{13}{\\sqrt{742}}\\right)$.\n\n",
+                 "children": []
+                }
+               ]
+              }
+             ]
+            },
+            {
+             "tag": "0.2.2.4.4.3.3",
+             "depth": 6,
+             "phase": 34,
+             "gen_cnt": 35,
+             "n": 1,
+             "q": 0.99267578125,
+             "is_terminal": false,
+             "is_completed": false,
+             "step_text": "## Step 6: Compute the magnitude of the direction ratios\nThe magnitude of the direction ratios of the second line is $\\sqrt{(6)^2 + (-1)^2 + (-4)^2} = \\sqrt{36 + 1 + 16} = \\sqrt{53}$.\n\n",
+             "children": [
+              {
+               "tag": "0.2.2.4.4.3.3.1",
+               "depth": 7,
+               "phase": 39,
+               "gen_cnt": 40,
+               "n": 1,
+               "q": 0.98388671875,
+               "is_terminal": false,
+               "is_completed": false,
+               "step_text": "## Step 7: Plug in the values into the formula\n$\\cos \\theta = \\frac{13}{\\sqrt{14}\\sqrt{53}} = \\frac{13}{\\sqrt{14 \\times 53}} = \\frac{13}{\\sqrt{742}}$.\n\n",
+               "children": []
+              },
+              {
+               "tag": "0.2.2.4.4.3.3.2",
+               "depth": 7,
+               "phase": 39,
+               "gen_cnt": 40,
+               "n": 1,
+               "q": 0.54296875,
+               "is_terminal": false,
+               "is_completed": false,
+               "step_text": "## Step 7: Calculate $\\cos \\theta$\n$\\cos \\theta = \\frac{13}{\\sqrt{14}\\sqrt{53}} = \\frac{13}{\\sqrt{14 \\cdot 53}} = \\frac{13}{\\sqrt{586}} = \\frac{13}{\\sqrt{2 \\cdot 13 \\cdot 17}} = \\frac{13}{\\sqrt{2 \\cdot 13 \\cdot 17}}$\n\n",
+               "children": []
+              },
+              {
+               "tag": "0.2.2.4.4.3.3.3",
+               "depth": 7,
+               "phase": 39,
+               "gen_cnt": 40,
+               "n": 1,
+               "q": 0.99365234375,
+               "is_terminal": false,
+               "is_completed": false,
+               "step_text": "## Step 7: Substitute the values into the formula for finding the angle\nSubstituting the computed values into the formula, we have $\\cos \\theta = \\frac{13}{\\sqrt{14} \\cdot \\sqrt{53}}$.\n\n",
+               "children": [
+                {
+                 "tag": "0.2.2.4.4.3.3.3.1",
+                 "depth": 8,
+                 "phase": 41,
+                 "gen_cnt": 42,
+                 "n": 1,
+                 "q": 0.98193359375,
+                 "is_terminal": false,
+                 "is_completed": false,
+                 "step_text": "## Step 8: Simplify the expression\n$\\cos \\theta = \\frac{13}{\\sqrt{14} \\cdot \\sqrt{53}} = \\frac{13}{\\sqrt{14 \\cdot 53}} = \\frac{13}{\\sqrt{742}}$.\n\n",
+                 "children": []
+                },
+                {
+                 "tag": "0.2.2.4.4.3.3.3.2",
+                 "depth": 8,
+                 "phase": 41,
+                 "gen_cnt": 42,
+                 "n": 1,
+                 "q": 0.97119140625,
+                 "is_terminal": false,
+                 "is_completed": false,
+                 "step_text": "## Step 8: Simplify the expression for $\\cos \\theta$\nWe can simplify the expression by canceling out the square roots: $\\cos \\theta = \\frac{13}{\\sqrt{14} \\cdot \\sqrt{53}} = \\frac{13}{\\sqrt{14 \\cdot 53}} = \\frac{13}{\\sqrt{742}}$.\n\n",
+                 "children": []
+                },
+                {
+                 "tag": "0.2.2.4.4.3.3.3.3",
+                 "depth": 8,
+                 "phase": 41,
+                 "gen_cnt": 42,
+                 "n": 1,
+                 "q": 0.8291015625,
+                 "is_terminal": false,
+                 "is_completed": false,
+                 "step_text": "## Step 8: Calculate the value of cosine of the angle\n$\\cos \\theta = \\frac{13}{\\sqrt{14} \\cdot \\sqrt{53}} = \\frac{13}{\\sqrt{14 \\cdot 53}} = \\frac{13}{\\sqrt{738}} = \\frac{13}{27.395}$.\n\n",
+                 "children": []
+                },
+                {
+                 "tag": "0.2.2.4.4.3.3.3.4",
+                 "depth": 8,
+                 "phase": 41,
+                 "gen_cnt": 42,
+                 "n": 1,
+                 "q": 0.9794921875,
+                 "is_terminal": false,
+                 "is_completed": false,
+                 "step_text": "## Step 8: Calculate $\\cos \\theta$\n$\\cos \\theta = \\frac{13}{\\sqrt{14} \\cdot \\sqrt{53}} = \\frac{13}{\\sqrt{14 \\cdot 53}} = \\frac{13}{\\sqrt{742}}$.\n\n",
+                 "children": []
+                }
+               ]
+              },
+              {
+               "tag": "0.2.2.4.4.3.3.4",
+               "depth": 7,
+               "phase": 39,
+               "gen_cnt": 40,
+               "n": 1,
+               "q": 0.99560546875,
+               "is_terminal": false,
+               "is_completed": false,
+               "step_text": "## Step 7: Substitute the values into the formula\n$\\cos \\theta = \\frac{13}{\\sqrt{14} \\sqrt{53}}$\n\n",
+               "children": [
+                {
+                 "tag": "0.2.2.4.4.3.3.4.1",
+                 "depth": 8,
+                 "phase": 40,
+                 "gen_cnt": 41,
+                 "n": 1,
+                 "q": 0.984375,
+                 "is_terminal": false,
+                 "is_completed": false,
+                 "step_text": "## Step 8: Simplify the fraction\n$\\cos \\theta = \\frac{13}{\\sqrt{14} \\sqrt{53}} = \\frac{13}{\\sqrt{14 \\cdot 53}} = \\frac{13}{\\sqrt{742}}$\n\n",
+                 "children": []
+                },
+                {
+                 "tag": "0.2.2.4.4.3.3.4.2",
+                 "depth": 8,
+                 "phase": 40,
+                 "gen_cnt": 41,
+                 "n": 1,
+                 "q": 0.98974609375,
+                 "is_terminal": false,
+                 "is_completed": false,
+                 "step_text": "## Step 8: Simplify the expression\n$\\cos \\theta = \\frac{13}{\\sqrt{14 \\cdot 53}} = \\frac{13}{\\sqrt{742}}$\n\n",
+                 "children": [
+                  {
+                   "tag": "0.2.2.4.4.3.3.4.2.1",
+                   "depth": 9,
+                   "phase": 48,
+                   "gen_cnt": 49,
+                   "n": 1,
+                   "q": 0.95166015625,
+                   "is_terminal": false,
+                   "is_completed": false,
+                   "step_text": "## Step 9: Use a calculator to find the value of the expression\n$\\cos \\theta \\approx \\frac{13}{\\sqrt{742}} \\approx \\frac{13}{26.916}$\n\n",
+                   "children": []
+                  },
+                  {
+                   "tag": "0.2.2.4.4.3.3.4.2.2",
+                   "depth": 9,
+                   "phase": 48,
+                   "gen_cnt": 49,
+                   "n": 1,
+                   "q": 0.95849609375,
+                   "is_terminal": false,
+                   "is_completed": false,
+                   "step_text": "## Step 9: Calculate the numerical value\n$\\cos \\theta = \\frac{13}{\\sqrt{742}} \\approx \\frac{13}{27.33598} \\approx 0.477$\n\n",
+                   "children": []
+                  },
+                  {
+                   "tag": "0.2.2.4.4.3.3.4.2.3",
+                   "depth": 9,
+                   "phase": 48,
+                   "gen_cnt": 49,
+                   "n": 1,
+                   "q": 0.9423828125,
+                   "is_terminal": false,
+                   "is_completed": false,
+                   "step_text": "## Step 9: Calculate the value\n$\\cos \\theta = \\frac{13}{\\sqrt{742}} \\approx \\frac{13}{27.3139} \\approx 0.4796$\n\n",
+                   "children": []
+                  },
+                  {
+                   "tag": "0.2.2.4.4.3.3.4.2.4",
+                   "depth": 9,
+                   "phase": 48,
+                   "gen_cnt": 49,
+                   "n": 1,
+                   "q": 0.966796875,
+                   "is_terminal": false,
+                   "is_completed": false,
+                   "step_text": "## Step 9: Find the value of $\\cos \\theta$\nTo find $\\theta$, we need to find $\\cos^{-1} \\left( \\frac{13}{\\sqrt{742}} \\right)$.\n\n",
+                   "children": []
+                  }
+                 ]
+                },
+                {
+                 "tag": "0.2.2.4.4.3.3.4.3",
+                 "depth": 8,
+                 "phase": 40,
+                 "gen_cnt": 41,
+                 "n": 1,
+                 "q": 0.98583984375,
+                 "is_terminal": false,
+                 "is_completed": false,
+                 "step_text": "## Step 8: Simplify the expression\n$\\cos \\theta = \\frac{13}{\\sqrt{14} \\sqrt{53}} = \\frac{13}{\\sqrt{14 \\times 53}} = \\frac{13}{\\sqrt{742}}$\n\n",
+                 "children": [
+                  {
+                   "tag": "0.2.2.4.4.3.3.4.3.1",
+                   "depth": 9,
+                   "phase": 74,
+                   "gen_cnt": 75,
+                   "n": 1,
+                   "q": 0.8916015625,
+                   "is_terminal": false,
+                   "is_completed": false,
+                   "step_text": "## Step 9: Rationalize the denominator\n$\\cos \\theta = \\frac{13}{\\sqrt{742}} = \\frac{13}{\\sqrt{2 \\times 371}} = \\frac{13}{\\sqrt{2} \\times \\sqrt{371}} = \\frac{13}{\\sqrt{2} \\times \\sqrt{371}} = \\frac{13}{\\sqrt{2} \\times \\sqrt{371}} = \\frac{13}{\\sqrt{2} \\times \\sqrt{371}} = \\frac{13}{\\sqrt{2} \\times \\sqrt{371}}$\n\n",
+                   "children": []
+                  },
+                  {
+                   "tag": "0.2.2.4.4.3.3.4.3.2",
+                   "depth": 9,
+                   "phase": 74,
+                   "gen_cnt": 75,
+                   "n": 1,
+                   "q": 0.9443359375,
+                   "is_terminal": false,
+                   "is_completed": false,
+                   "step_text": "## Step 9: Calculate the value\n$\\cos \\theta \\approx \\frac{13}{26.018} \\approx 0.5052$\n\n",
+                   "children": []
+                  },
+                  {
+                   "tag": "0.2.2.4.4.3.3.4.3.3",
+                   "depth": 9,
+                   "phase": 74,
+                   "gen_cnt": 75,
+                   "n": 1,
+                   "q": 0.96435546875,
+                   "is_terminal": false,
+                   "is_completed": false,
+                   "step_text": "## Step 9: Calculate the numerical value\n$\\cos \\theta = \\frac{13}{\\sqrt{742}} \\approx \\frac{13}{27.3139}$\n\n",
+                   "children": []
+                  },
+                  {
+                   "tag": "0.2.2.4.4.3.3.4.3.4",
+                   "depth": 9,
+                   "phase": 74,
+                   "gen_cnt": 75,
+                   "n": 1,
+                   "q": 0.9580078125,
+                   "is_terminal": false,
+                   "is_completed": false,
+                   "step_text": "## Step 9: Rationalize the denominator\n$\\cos \\theta = \\frac{13}{\\sqrt{742}} \\times \\frac{\\sqrt{742}}{\\sqrt{742}} = \\frac{13\\sqrt{742}}{742}$\n\n",
+                   "children": []
+                  }
+                 ]
+                }
+               ]
+              }
+             ]
+            }
+           ]
+          }
+         ]
+        }
+       ]
+      }
+     ]
+    },
+    {
+     "tag": "0.2.3",
+     "depth": 2,
+     "phase": 1,
+     "gen_cnt": 2,
+     "n": 1,
+     "q": 0.615234375,
+     "is_terminal": false,
+     "is_completed": false,
+     "step_text": "## Step 2: Identify the equations of the lines\nThe second equation is $6x = -y = -4z$, which can be written as $\\frac{x}{6} = \\frac{-y}{-4} = \\frac{-z}{1}$. This gives the direction ratios of the second line as (6, 4, -1).\n\n",
+     "children": []
+    },
+    {
+     "tag": "0.2.4",
+     "depth": 2,
+     "phase": 1,
+     "gen_cnt": 2,
+     "n": 1,
+     "q": 0.5888671875,
+     "is_terminal": false,
+     "is_completed": false,
+     "step_text": "## Step 2: Identify the equations of the lines\nThe second equation is $6x = -y = -4z$, which can be written as $\\frac{x}{6} = \\frac{y}{-1} = \\frac{-z}{-4}$.\n\n",
+     "children": []
+    }
+   ]
+  },
+  {
+   "tag": "0.3",
+   "depth": 1,
+   "phase": 0,
+   "gen_cnt": 1,
+   "n": 1,
+   "q": 0.4111328125,
+   "is_terminal": false,
+   "is_completed": false,
+   "step_text": "## Step 1: Identify the direction vectors of the lines.\nThe direction vector of the first line is (2, 3, -1) and the direction vector of the second line is (6, -1, -4).\n\n",
+   "children": []
+  },
+  {
+   "tag": "0.4",
+   "depth": 1,
+   "phase": 0,
+   "gen_cnt": 1,
+   "n": 1,
+   "q": 0.1561279296875,
+   "is_terminal": false,
+   "is_completed": false,
+   "step_text": "## Step 1: Identify the direction vectors of the lines.\nTo find the angle between the two lines, we first need to identify their direction vectors. For the first line, the direction vector is given by \\(\\vec{v}_1 = \\langle 2, 3, -1 \\rangle\\), since these are the coefficients of \\(x\\), \\(y\\), and \\(z\\) in the equation \\(2x = 3y = -z\\). For the second line, the direction vector is given by \\(\\vec{v}_2 = \\langle 6, 1, 4 \\rangle\\), since these are the coefficients of \\(x\\), \\(y\\), and \\(z\\) in the equation \\(6x = -y = -4z\\).\n\n",
+   "children": []
+  }
+ ]
+}

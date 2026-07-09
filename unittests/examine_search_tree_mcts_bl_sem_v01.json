@@ -1,0 +1,3512 @@
+{
+ "tag": "0",
+ "depth": 0,
+ "phase": 0,
+ "gen_cnt": 0,
+ "n": 6,
+ "q": 0.4239298502604167,
+ "is_terminal": false,
+ "is_completed": false,
+ "step_text": "",
+ "children": [
+  {
+   "tag": "0.1",
+   "depth": 1,
+   "phase": 0,
+   "gen_cnt": 1,
+   "n": 1,
+   "q": 0.070556640625,
+   "is_terminal": false,
+   "is_completed": false,
+   "step_text": "## Step 1: The direction vectors of the lines can be obtained from the coefficients of x, y, and z in the given equations.\nThe first line has direction vectors $\\vec{d}_1 = (3, -2, 0)$ and the second line has direction vectors $\\vec{d}_2 = (6, 1, 4)$.\n\n",
+   "children": [
+    {
+     "tag": "0.1.1",
+     "depth": 2,
+     "phase": 2,
+     "gen_cnt": 3,
+     "n": 1,
+     "q": 0.52734375,
+     "is_terminal": false,
+     "is_completed": false,
+     "step_text": "## Step 2: To find the angle between the lines, we can use the dot product formula for two vectors $\\vec{a}$ and $\\vec{b}$: $\\vec{a} \\cdot \\vec{b} = |\\vec{a}| |\\vec{b}| \\cos \\theta$, where $\\theta$ is the angle between the vectors.\nFirst, we find the magnitudes of the direction vectors $\\vec{d}_1$ and $\\vec{d}_2$:\n$|\\vec{d}_1| = \\sqrt{3^2 + (-2)^2 + 0^2} = \\sqrt{9 + 4} = \\sqrt{13}$.\n$|\\vec{d}_2| = \\sqrt{6^2 + 1^2 + 4^2} = \\sqrt{36 + 1 + 16} = \\sqrt{53}$.\n\n",
+     "children": []
+    },
+    {
+     "tag": "0.1.2",
+     "depth": 2,
+     "phase": 2,
+     "gen_cnt": 3,
+     "n": 1,
+     "q": 0.51953125,
+     "is_terminal": false,
+     "is_completed": false,
+     "step_text": "## Step 2: Calculate the dot product of the direction vectors of the two lines.\nThe dot product $\\vec{d}_1 \\cdot \\vec{d}_2 = (3)(6) + (-2)(1) + (0)(4) = 18 - 2 + 0 = 16$.\n\n",
+     "children": []
+    },
+    {
+     "tag": "0.1.3",
+     "depth": 2,
+     "phase": 2,
+     "gen_cnt": 3,
+     "n": 1,
+     "q": 0.437744140625,
+     "is_terminal": false,
+     "is_completed": false,
+     "step_text": "## Step 2: To find the angle between the lines, we can use the dot product formula between the direction vectors.\nThe formula for finding the angle $\\theta$ between two vectors $\\vec{u}$ and $\\vec{v}$ is given by $\\cos{\\theta} = \\frac{\\vec{u} \\cdot \\vec{v}}{\\|\\vec{u}\\| \\|\\vec{v}\\|}$, where $\\cdot$ represents the dot product and $\\|\\|$ represents the magnitude of the vector.\n\n",
+     "children": []
+    },
+    {
+     "tag": "0.1.4",
+     "depth": 2,
+     "phase": 2,
+     "gen_cnt": 3,
+     "n": 1,
+     "q": 0.388671875,
+     "is_terminal": false,
+     "is_completed": false,
+     "step_text": "## Step 2: To find the angle between the two lines, we can use the dot product formula.\nThe dot product of two vectors $\\vec{a} = (a_1, a_2, a_3)$ and $\\vec{b} = (b_1, b_2, b_3)$ is given by the formula: $\\vec{a} \\cdot \\vec{b} = a_1b_1 + a_2b_2 + a_3b_3$.\n\n",
+     "children": []
+    }
+   ]
+  },
+  {
+   "tag": "0.2",
+   "depth": 1,
+   "phase": 0,
+   "gen_cnt": 1,
+   "n": 6,
+   "q": 0.54925537109375,
+   "is_terminal": false,
+   "is_completed": false,
+   "step_text": "## Step 1: Identify the equations of the lines\nThe first equation is $2x = 3y = -z$, which can be written as $\\frac{x}{2} = \\frac{y}{3} = \\frac{-z}{1}$. This gives the direction ratios of the first line as (2, 3, -1).\n\n",
+   "children": [
+    {
+     "tag": "0.2.1",
+     "depth": 2,
+     "phase": 1,
+     "gen_cnt": 2,
+     "n": 1,
+     "q": 0.615234375,
+     "is_terminal": false,
+     "is_completed": false,
+     "step_text": "## Step 2: Identify the equations of the second line\nThe second equation is $6x = -y = -4z$, which can be written as $\\frac{x}{6} = \\frac{-y}{-1} = \\frac{-4z}{1}$. This gives the direction ratios of the second line as (6, 1, -4).\n\n",
+     "children": []
+    },
+    {
+     "tag": "0.2.2",
+     "depth": 2,
+     "phase": 1,
+     "gen_cnt": 2,
+     "n": 1,
+     "q": 0.810546875,
+     "is_terminal": false,
+     "is_completed": false,
+     "step_text": "## Step 2: Identify the second equation\nThe second equation is $6x = -y = -4z$, which can be written as $\\frac{x}{6} = \\frac{-y}{1} = \\frac{-4z}{1}$. This gives the direction ratios of the second line as (6, -1, -4).\n\n",
+     "children": []
+    },
+    {
+     "tag": "0.2.3",
+     "depth": 2,
+     "phase": 1,
+     "gen_cnt": 2,
+     "n": 3,
+     "q": 0.6061197916666666,
+     "is_terminal": false,
+     "is_completed": false,
+     "step_text": "## Step 2: Identify the equations of the lines\nThe second equation is $6x = -y = -4z$, which can be written as $\\frac{x}{6} = \\frac{-y}{-4} = \\frac{-z}{1}$. This gives the direction ratios of the second line as (6, 4, -1).\n\n",
+     "children": [
+      {
+       "tag": "0.2.3.1",
+       "depth": 3,
+       "phase": 48,
+       "gen_cnt": 46,
+       "n": 1,
+       "q": 0.4921875,
+       "is_terminal": false,
+       "is_completed": false,
+       "step_text": "## Step 3: Determine the normal vectors of the lines\nThe normal vector to the first line is $\\mathbf{n_1} = (\\frac{2}{-1}, \\frac{3}{1}, \\frac{-1}{1}) = (-2, 3, -1)$.\n\n",
+       "children": [
+        {
+         "tag": "0.2.3.1.1",
+         "depth": 4,
+         "phase": 49,
+         "gen_cnt": 47,
+         "n": 1,
+         "q": 0.69287109375,
+         "is_terminal": false,
+         "is_completed": false,
+         "step_text": "## Step 4: Determine the normal vector to the second line\nThe normal vector to the second line is $\\mathbf{n_2} = (\\frac{6}{-1}, \\frac{4}{-1}, \\frac{-1}{-1}) = (-6, -4, 1)$.\n\n",
+         "children": []
+        },
+        {
+         "tag": "0.2.3.1.2",
+         "depth": 4,
+         "phase": 49,
+         "gen_cnt": 47,
+         "n": 1,
+         "q": 0.69580078125,
+         "is_terminal": false,
+         "is_completed": false,
+         "step_text": "## Step 4: Determine the normal vector to the second line\nThe normal vector to the second line is $\\mathbf{n_2} = (\\frac{6}{-1}, \\frac{4}{1}, \\frac{-1}{1}) = (-6, 4, -1)$.\n\n",
+         "children": []
+        },
+        {
+         "tag": "0.2.3.1.3",
+         "depth": 4,
+         "phase": 49,
+         "gen_cnt": 47,
+         "n": 1,
+         "q": 0.708984375,
+         "is_terminal": false,
+         "is_completed": false,
+         "step_text": "## Step 4: Determine the normal vector of the second line\nThe normal vector to the second line is $\\mathbf{n_2} = (\\frac{6}{-1}, \\frac{4}{-1}, \\frac{-1}{1}) = (-6, -4, -1)$.\n\n",
+         "children": [
+          {
+           "tag": "0.2.3.1.3.1",
+           "depth": 5,
+           "phase": 78,
+           "gen_cnt": 74,
+           "n": 1,
+           "q": 0.8916015625,
+           "is_terminal": false,
+           "is_completed": false,
+           "step_text": "## Step 5: Calculate the dot product of the two normal vectors\nThe dot product of $\\mathbf{n_1}$ and $\\mathbf{n_2}$ is $(-2)(-6)+(3)(-4)+(-1)(-1)=12-12+1=1$.\n\n",
+           "children": []
+          },
+          {
+           "tag": "0.2.3.1.3.2",
+           "depth": 5,
+           "phase": 78,
+           "gen_cnt": 74,
+           "n": 1,
+           "q": 0.8759765625,
+           "is_terminal": false,
+           "is_completed": false,
+           "step_text": "## Step 5: Compute the dot product of the normal vectors\n$\\mathbf{n_1} \\cdot \\mathbf{n_2} = (-2)(-6) + (3)(-4) + (-1)(-1) = 12 - 12 + 1 = 1$.\n\n",
+           "children": []
+          },
+          {
+           "tag": "0.2.3.1.3.3",
+           "depth": 5,
+           "phase": 78,
+           "gen_cnt": 74,
+           "n": 1,
+           "q": 0.87744140625,
+           "is_terminal": false,
+           "is_completed": false,
+           "step_text": "## Step 5: Calculate the dot product of the normal vectors\n$\\mathbf{n_1} \\cdot \\mathbf{n_2} = (-2)(-6) + (3)(-4) + (-1)(-1) = 12 - 12 + 1 = 1$.\n\n",
+           "children": []
+          },
+          {
+           "tag": "0.2.3.1.3.4",
+           "depth": 5,
+           "phase": 78,
+           "gen_cnt": 74,
+           "n": 1,
+           "q": 0.740234375,
+           "is_terminal": false,
+           "is_completed": false,
+           "step_text": "## Step 5: Use the dot product formula to calculate the cosine of the angle $\\theta$ between the two lines\n$\\cos{\\theta} = \\frac{\\mathbf{n_1} \\cdot \\mathbf{n_2}}{||\\mathbf{n_1}||\\,||\\mathbf{n_2}||}$\n\n",
+           "children": []
+          }
+         ]
+        }
+       ]
+      },
+      {
+       "tag": "0.2.3.2",
+       "depth": 3,
+       "phase": 48,
+       "gen_cnt": 46,
+       "n": 3,
+       "q": 0.70068359375,
+       "is_terminal": false,
+       "is_completed": false,
+       "step_text": "## Step 3: Calculate the angle between the lines\nLet's denote the direction ratios of the first line as (a, b, c) and the direction ratios of the second line as (d, e, f). We have:\na = 2, b = 3, c = -1\nd = 6, e = 4, f = -1\n\n",
+       "children": [
+        {
+         "tag": "0.2.3.2.1",
+         "depth": 4,
+         "phase": 55,
+         "gen_cnt": 53,
+         "n": 2,
+         "q": 0.754638671875,
+         "is_terminal": false,
+         "is_completed": false,
+         "step_text": "## Step 4: Use the formula for the angle between two lines\nThe formula for the angle $\\theta$ between two lines with direction ratios (a, b, c) and (d, e, f) is:\ncos $\\theta$ = $\\frac{(a-d)(b-e) + (b-f)(c-d) + (c-e)(a-f)}{\\sqrt{a^2 + b^2 + c^2} \\sqrt{d^2 + e^2 + f^2}}$\n\n",
+         "children": [
+          {
+           "tag": "0.2.3.2.1.1",
+           "depth": 5,
+           "phase": 58,
+           "gen_cnt": 56,
+           "n": 2,
+           "q": 0.481689453125,
+           "is_terminal": false,
+           "is_completed": false,
+           "step_text": "## Step 5: Substitute the values and calculate\nSubstituting the values, we get:\ncos $\\theta$ = $\\frac{(2-6)(3-4) + (3-(-1))(-1-6) + (-1-4)(2-(-1))}{\\sqrt{2^2 + 3^2 + (-1)^2} \\sqrt{6^2 + 4^2 + (-1)^2}}$\ncos $\\theta$ = $\\frac{(-4)(-1) + (4)(-7) + (-5)(3)}{\\sqrt{29} \\sqrt{65}}$\ncos $\\theta$ = $\\frac{4 - 28 - 15}{\\sqrt{29} \\sqrt{65}}$\ncos $\\theta$ = $\\frac{-47}{\\sqrt{29} \\sqrt{65}}$\n\n",
+           "children": [
+            {
+             "tag": "0.2.3.2.1.1.1",
+             "depth": 6,
+             "phase": 60,
+             "gen_cnt": 57,
+             "n": 1,
+             "q": 0.763671875,
+             "is_terminal": false,
+             "is_completed": false,
+             "step_text": "## Step 6: Simplify the expression\nSimplifying the expression, we get:\ncos $\\theta$ = $\\frac{-47}{\\sqrt{29 \\cdot 65}}$\ncos $\\theta$ = $\\frac{-47}{\\sqrt{1885}}$\n\n",
+             "children": []
+            },
+            {
+             "tag": "0.2.3.2.1.1.2",
+             "depth": 6,
+             "phase": 60,
+             "gen_cnt": 57,
+             "n": 2,
+             "q": 0.5863037109375,
+             "is_terminal": false,
+             "is_completed": false,
+             "step_text": "## Step 6: Simplify the expression\nTo simplify the expression, we can multiply the numerator and denominator by $\\sqrt{29} \\sqrt{65}$:\ncos $\\theta$ = $\\frac{-47\\sqrt{29 \\sqrt{65}}}{\\sqrt{29} \\sqrt{65}}$\ncos $\\theta$ = $\\frac{-47\\sqrt{29 \\sqrt{65}}}{\\sqrt{29 \\cdot 65}}$\ncos $\\theta$ = $\\frac{-47\\sqrt{29 \\sqrt{65}}}{\\sqrt{29 \\cdot 65}}$\ncos $\\theta$ = $\\frac{-47\\sqrt{29 \\sqrt{65}}}{\\sqrt{29 \\cdot 65}}$\ncos $\\theta$ = $\\frac{-47\\sqrt{29 \\sqrt{65}}}{\\sqrt{29 \\cdot 65}}$\ncos $\\theta$ = $\\frac{-47\\sqrt{29^{1.7}}}{\\sqrt{29^{1.7}} \\cdot \\sqrt{65}}$\ncos $\\theta$ = $\\frac{-47\\sqrt{29^{1.7}}}{29^{1.7} \\cdot \\sqrt{65}}$\n\n",
+             "children": [
+              {
+               "tag": "0.2.3.2.1.1.2.1",
+               "depth": 7,
+               "phase": 61,
+               "gen_cnt": 58,
+               "n": 1,
+               "q": 0.47265625,
+               "is_terminal": false,
+               "is_completed": false,
+               "step_text": "## Step 7: Calculate the numerical value\nWe can calculate the numerical value of the expression using the value of $\\sqrt{29^{1.7}} \\approx 403.341$ and $\\sqrt{65} \\approx 8.062$.\ncos $\\theta$ = $\\frac{-47(403.341)}{29^{1.7} \\cdot 8.062}$\ncos $\\theta$ = $\\frac{-47(403.341)}{403.341 \\cdot 29^{1.7} \\cdot 8.062}$\ncos $\\theta$ = $\\frac{-19016}{2036814.0882}$\ncos $\\theta$ ≈ $-0.00935$\n\n",
+               "children": []
+              },
+              {
+               "tag": "0.2.3.2.1.1.2.2",
+               "depth": 7,
+               "phase": 61,
+               "gen_cnt": 58,
+               "n": 2,
+               "q": 0.66943359375,
+               "is_terminal": false,
+               "is_completed": false,
+               "step_text": "## Step 7: Calculate the square root of 29\nThe square root of 29 is approximately 5.385.\n\n",
+               "children": [
+                {
+                 "tag": "0.2.3.2.1.1.2.2.1",
+                 "depth": 8,
+                 "phase": 64,
+                 "gen_cnt": 61,
+                 "n": 1,
+                 "q": 0.72509765625,
+                 "is_terminal": false,
+                 "is_completed": false,
+                 "step_text": "## Step 8: Calculate the square root of 65\nThe square root of 65 is approximately 8.062.\n\n",
+                 "children": []
+                },
+                {
+                 "tag": "0.2.3.2.1.1.2.2.2",
+                 "depth": 8,
+                 "phase": 64,
+                 "gen_cnt": 61,
+                 "n": 1,
+                 "q": 0.70263671875,
+                 "is_terminal": false,
+                 "is_completed": false,
+                 "step_text": "## Step 8: Substitute the value of square root of 29 into the expression\ncos $\\theta$ = $\\frac{-47\\sqrt{29^{1.7}}}{29^{1.7} \\cdot \\sqrt{65}}$\ncos $\\theta$ = $\\frac{-47\\sqrt{5.385^{1.7}}}{29^{1.7} \\cdot \\sqrt{65}}$\n\n",
+                 "children": []
+                },
+                {
+                 "tag": "0.2.3.2.1.1.2.2.3",
+                 "depth": 8,
+                 "phase": 64,
+                 "gen_cnt": 61,
+                 "n": 2,
+                 "q": 0.70654296875,
+                 "is_terminal": false,
+                 "is_completed": false,
+                 "step_text": "## Step 8: Calculate the value of $\\sqrt{29^{1.7}}$\n$\\sqrt{29^{1.7}}$ = $\\sqrt{(29)^{1.7}}$ = $\\sqrt{29^{1.7}}$\n\n",
+                 "children": [
+                  {
+                   "tag": "0.2.3.2.1.1.2.2.3.1",
+                   "depth": 9,
+                   "phase": 65,
+                   "gen_cnt": 62,
+                   "n": 1,
+                   "q": 0.70263671875,
+                   "is_terminal": false,
+                   "is_completed": false,
+                   "step_text": "## Step 9: Substitute the calculated values into the formula\ncos $\\theta$ = $\\frac{-47\\sqrt{5.385 \\cdot 29^{1.7}}}{29^{1.7} \\cdot \\sqrt{65}}$\n\n",
+                   "children": []
+                  },
+                  {
+                   "tag": "0.2.3.2.1.1.2.2.3.2",
+                   "depth": 9,
+                   "phase": 65,
+                   "gen_cnt": 62,
+                   "n": 1,
+                   "q": 0.662109375,
+                   "is_terminal": false,
+                   "is_completed": false,
+                   "step_text": "## Step 9: Calculate the numerical value of $\\frac{-47\\sqrt{29^{1.7}}}{\\sqrt{29^{1.7} \\cdot 65}}$\n$\\frac{-47\\sqrt{29^{1.7}}}{\\sqrt{29^{1.7} \\cdot 65}}$ = $\\frac{-47\\sqrt{29^{1.7}}}{\\sqrt{29^{1.7} \\cdot 65}}$ = $\\frac{-47\\sqrt{29^{1.7}}}{\\sqrt{46553.7953}}$\n\n",
+                   "children": [
+                    {
+                     "tag": "0.2.3.2.1.1.2.2.3.2.1",
+                     "depth": 10,
+                     "phase": 79,
+                     "gen_cnt": 75,
+                     "n": 1,
+                     "q": 0.7578125,
+                     "is_terminal": false,
+                     "is_completed": false,
+                     "step_text": "## Step 10: Calculate the numerical value of $\\frac{-47\\sqrt{29^{1.7}}}{\\sqrt{46553.7953}}$\nThe numerical value of $\\frac{-47\\sqrt{29^{1.7}}}{\\sqrt{46553.7953}}$ is approximately -0.223\n\n",
+                     "children": [
+                      {
+                       "tag": "0.2.3.2.1.1.2.2.3.2.1.1",
+                       "depth": 11,
+                       "phase": 80,
+                       "gen_cnt": 76,
+                       "n": 1,
+                       "q": 0.87744140625,
+                       "is_terminal": false,
+                       "is_completed": false,
+                       "step_text": "## Step 11: Calculate the angle $\\theta$\n$\\theta$ = arccos(-0.223) degrees\n\n",
+                       "children": [
+                        {
+                         "tag": "0.2.3.2.1.1.2.2.3.2.1.1.1",
+                         "depth": 12,
+                         "phase": 84,
+                         "gen_cnt": 80,
+                         "n": 1,
+                         "q": 0.57763671875,
+                         "is_terminal": false,
+                         "is_completed": false,
+                         "step_text": "## Step 12: Calculate the numerical value of $\\theta$ in degrees\nThe numerical value of $\\theta$ in degrees is approximately 103.66 degrees.\n\n",
+                         "children": []
+                        },
+                        {
+                         "tag": "0.2.3.2.1.1.2.2.3.2.1.1.2",
+                         "depth": 12,
+                         "phase": 84,
+                         "gen_cnt": 80,
+                         "n": 1,
+                         "q": 0.19189453125,
+                         "is_terminal": false,
+                         "is_completed": false,
+                         "step_text": "## Step 12: Calculate the angle $\\theta$\nSince the angle is in radians, we need to convert it to degrees.\n$\\theta$ = arccos(-0.223) degrees\n$\\theta$ = 1.110 degrees\n$\\theta$ = 80.842 degrees\n\n",
+                         "children": []
+                        },
+                        {
+                         "tag": "0.2.3.2.1.1.2.2.3.2.1.1.3",
+                         "depth": 12,
+                         "phase": 84,
+                         "gen_cnt": 80,
+                         "n": 1,
+                         "q": 0.1602783203125,
+                         "is_terminal": true,
+                         "is_completed": true,
+                         "step_text": "The final answer is: $\\boxed{103.47}$",
+                         "children": []
+                        },
+                        {
+                         "tag": "0.2.3.2.1.1.2.2.3.2.1.1.4",
+                         "depth": 12,
+                         "phase": 84,
+                         "gen_cnt": 80,
+                         "n": 1,
+                         "q": 0.6689453125,
+                         "is_terminal": false,
+                         "is_completed": false,
+                         "step_text": "## Step 12: Calculate the numerical value of $\\theta$\nThe numerical value of $\\theta$ is approximately 103.00 degrees\n\n",
+                         "children": []
+                        }
+                       ]
+                      },
+                      {
+                       "tag": "0.2.3.2.1.1.2.2.3.2.1.2",
+                       "depth": 11,
+                       "phase": 80,
+                       "gen_cnt": 76,
+                       "n": 1,
+                       "q": 0.83984375,
+                       "is_terminal": false,
+                       "is_completed": false,
+                       "step_text": "## Step 11: Calculate the value of $\\sqrt{29 \\cdot 65}$\n$\\sqrt{29 \\cdot 65}$ = $\\sqrt{29 \\cdot 65}$\n\n",
+                       "children": []
+                      },
+                      {
+                       "tag": "0.2.3.2.1.1.2.2.3.2.1.3",
+                       "depth": 11,
+                       "phase": 80,
+                       "gen_cnt": 76,
+                       "n": 1,
+                       "q": 0.81298828125,
+                       "is_terminal": false,
+                       "is_completed": false,
+                       "step_text": "## Step 11: Calculate the numerical value of cos $\\theta$\nThe numerical value of cos $\\theta$ is approximately $\\frac{-0.223}{\\sqrt{29 \\cdot 65}}$ = $\\frac{-0.223}{\\sqrt{18895}}$ = $\\frac{-0.223}{137.73}$\n\n",
+                       "children": []
+                      },
+                      {
+                       "tag": "0.2.3.2.1.1.2.2.3.2.1.4",
+                       "depth": 11,
+                       "phase": 80,
+                       "gen_cnt": 76,
+                       "n": 1,
+                       "q": 0.70263671875,
+                       "is_terminal": false,
+                       "is_completed": false,
+                       "step_text": "## Step 11: Calculate the numerical value of the denominator\nThe numerical value of the denominator $\\sqrt{29^{1.7} \\cdot 65}$ is approximately 2202.414\n\n",
+                       "children": [
+                        {
+                         "tag": "0.2.3.2.1.1.2.2.3.2.1.4.1",
+                         "depth": 12,
+                         "phase": 81,
+                         "gen_cnt": 77,
+                         "n": 1,
+                         "q": 0.763671875,
+                         "is_terminal": false,
+                         "is_completed": false,
+                         "step_text": "## Step 12: Calculate the numerical value of $\\frac{-47\\sqrt{29^{1.7}}}{\\sqrt{46553.7953}}$\nThe numerical value of $\\frac{-47\\sqrt{29^{1.7}}}{\\sqrt{46553.7953}}$ is approximately -0.00105\n\n",
+                         "children": []
+                        },
+                        {
+                         "tag": "0.2.3.2.1.1.2.2.3.2.1.4.2",
+                         "depth": 12,
+                         "phase": 81,
+                         "gen_cnt": 77,
+                         "n": 1,
+                         "q": 0.7880859375,
+                         "is_terminal": false,
+                         "is_completed": false,
+                         "step_text": "## Step 12: Calculate the value of cos $\\theta$\ncos $\\theta$ = $\\frac{-47\\sqrt{29^{1.7}}}{\\sqrt{29^{1.7} \\cdot 65}}$ = $\\frac{-47\\sqrt{29^{1.7}}}{\\sqrt{46553.7953}}$ = $\\frac{-47\\sqrt{46553.7953}}{2202.414}$ = -0.223.\n\n",
+                         "children": [
+                          {
+                           "tag": "0.2.3.2.1.1.2.2.3.2.1.4.2.1",
+                           "depth": 13,
+                           "phase": 82,
+                           "gen_cnt": 78,
+                           "n": 1,
+                           "q": 0.63720703125,
+                           "is_terminal": false,
+                           "is_completed": false,
+                           "step_text": "## Step 13: Calculate the value of $\\theta$ in degrees\nSince cos $\\theta$ = -0.223, we can find the value of $\\theta$ in degrees using the inverse cosine function:\n$\\theta$ = arccos(-0.223)\n$\\theta$ = 109.162 degrees\n\n",
+                           "children": []
+                          },
+                          {
+                           "tag": "0.2.3.2.1.1.2.2.3.2.1.4.2.2",
+                           "depth": 13,
+                           "phase": 82,
+                           "gen_cnt": 78,
+                           "n": 1,
+                           "q": 0.51953125,
+                           "is_terminal": false,
+                           "is_completed": false,
+                           "step_text": "## Step 13: Find the angle between the lines using the inverse cosine function\nWe need to find the angle $\\theta$ such that cos $\\theta$ = -0.223.\n$\\theta$ = arccos(-0.223) = 103.1\n\n",
+                           "children": []
+                          },
+                          {
+                           "tag": "0.2.3.2.1.1.2.2.3.2.1.4.2.3",
+                           "depth": 13,
+                           "phase": 82,
+                           "gen_cnt": 78,
+                           "n": 1,
+                           "q": 0.422607421875,
+                           "is_terminal": false,
+                           "is_completed": false,
+                           "step_text": "## Step 13: Convert the cosine of the angle to the angle in degrees\nSince cos $\\theta$ = -0.223, we can use a calculator to find the angle in degrees using arccos(0.223) = 103.396 degrees, rounded to 3 decimal places. However, since we need to present the final answer, we keep the angle as is.\n\n",
+                           "children": []
+                          },
+                          {
+                           "tag": "0.2.3.2.1.1.2.2.3.2.1.4.2.4",
+                           "depth": 13,
+                           "phase": 82,
+                           "gen_cnt": 78,
+                           "n": 1,
+                           "q": 0.865234375,
+                           "is_terminal": false,
+                           "is_completed": false,
+                           "step_text": "## Step 13: Calculate the numerical value of $\\cos\\theta$\ncos $\\theta$ = -0.223\n\n",
+                           "children": []
+                          }
+                         ]
+                        },
+                        {
+                         "tag": "0.2.3.2.1.1.2.2.3.2.1.4.3",
+                         "depth": 12,
+                         "phase": 81,
+                         "gen_cnt": 77,
+                         "n": 1,
+                         "q": 0.85400390625,
+                         "is_terminal": false,
+                         "is_completed": false,
+                         "step_text": "## Step 12: Calculate the value of cos $\\theta$\ncos $\\theta$ = $\\frac{-47\\sqrt{29^{1.7}}}{\\sqrt{29^{1.7} \\cdot 65}}$ = $\\frac{-47\\sqrt{29^{1.7}}}{\\sqrt{46553.7953}}$ = -0.223\n\n",
+                         "children": []
+                        },
+                        {
+                         "tag": "0.2.3.2.1.1.2.2.3.2.1.4.4",
+                         "depth": 12,
+                         "phase": 81,
+                         "gen_cnt": 77,
+                         "n": 1,
+                         "q": 0.81982421875,
+                         "is_terminal": false,
+                         "is_completed": false,
+                         "step_text": "## Step 12: Calculate the final value of the denominator\nThe numerical value of the denominator is approximately 2202.414\n\n",
+                         "children": [
+                          {
+                           "tag": "0.2.3.2.1.1.2.2.3.2.1.4.4.1",
+                           "depth": 13,
+                           "phase": 83,
+                           "gen_cnt": 79,
+                           "n": 1,
+                           "q": 0.76904296875,
+                           "is_terminal": false,
+                           "is_completed": false,
+                           "step_text": "## Step 13: Calculate the value of cos $\\theta$\nThe value of cos $\\theta$ = $\\frac{-47\\sqrt{29^{1.7}}}{\\sqrt{29^{1.7} \\cdot 65}}$ = $\\frac{-47\\sqrt{29^{1.7}}}{\\sqrt{46553.7953}}$ = $\\frac{-47(-0.223)}{2202.414}$ = $\\frac{10.319}{2202.414}$ = 0.004699\n\n",
+                           "children": []
+                          },
+                          {
+                           "tag": "0.2.3.2.1.1.2.2.3.2.1.4.4.2",
+                           "depth": 13,
+                           "phase": 83,
+                           "gen_cnt": 79,
+                           "n": 1,
+                           "q": 0.77734375,
+                           "is_terminal": false,
+                           "is_completed": false,
+                           "step_text": "## Step 13: Calculate the final value of the expression\nThe final value of the expression is approximately $\\frac{-47\\sqrt{29^{1.7}}}{\\sqrt{29^{1.7} \\cdot 65}}$ = -0.013\n\n",
+                           "children": []
+                          },
+                          {
+                           "tag": "0.2.3.2.1.1.2.2.3.2.1.4.4.3",
+                           "depth": 13,
+                           "phase": 83,
+                           "gen_cnt": 79,
+                           "n": 1,
+                           "q": 0.8740234375,
+                           "is_terminal": false,
+                           "is_completed": false,
+                           "step_text": "## Step 13: Calculate the final value of cos $\\theta$\ncos $\\theta$ = -0.223/2202.414 $\\approx$ -0.0001\n\n",
+                           "children": []
+                          },
+                          {
+                           "tag": "0.2.3.2.1.1.2.2.3.2.1.4.4.4",
+                           "depth": 13,
+                           "phase": 83,
+                           "gen_cnt": 79,
+                           "n": 1,
+                           "q": 0.85791015625,
+                           "is_terminal": false,
+                           "is_completed": false,
+                           "step_text": "## Step 13: Calculate the final value of $\\cos \\theta$\n$\\cos \\theta$ = $\\frac{-47\\sqrt{29^{1.7}}}{\\sqrt{29^{1.7} \\cdot 65}}$ = $\\frac{-47\\sqrt{29^{1.7}}}{\\sqrt{46553.7953}}$ = -0.223\n\n",
+                           "children": []
+                          }
+                         ]
+                        }
+                       ]
+                      }
+                     ]
+                    },
+                    {
+                     "tag": "0.2.3.2.1.1.2.2.3.2.2",
+                     "depth": 10,
+                     "phase": 79,
+                     "gen_cnt": 75,
+                     "n": 1,
+                     "q": 0.74609375,
+                     "is_terminal": false,
+                     "is_completed": false,
+                     "step_text": "## Step 10: Approximate the numerical value\n$\\frac{-47\\sqrt{29^{1.7}}}{\\sqrt{46553.7953}}$ = $\\frac{-47\\sqrt{28,947.365}{\\sqrt{46553.7953}}$\n\n",
+                     "children": []
+                    },
+                    {
+                     "tag": "0.2.3.2.1.1.2.2.3.2.3",
+                     "depth": 10,
+                     "phase": 79,
+                     "gen_cnt": 75,
+                     "n": 1,
+                     "q": 0.7880859375,
+                     "is_terminal": false,
+                     "is_completed": false,
+                     "step_text": "## Step 10: Calculate the numerical value\n$\\frac{-47\\sqrt{29^{1.7}}}{\\sqrt{46553.7953}}$ = $\\frac{-47\\sqrt{29^{1.7}}}{\\sqrt{46553.7953}}$ = $\\frac{-47\\sqrt{29.323187}}{\\sqrt{46553.7953}}$\n\n",
+                     "children": []
+                    },
+                    {
+                     "tag": "0.2.3.2.1.1.2.2.3.2.4",
+                     "depth": 10,
+                     "phase": 79,
+                     "gen_cnt": 75,
+                     "n": 1,
+                     "q": 0.79052734375,
+                     "is_terminal": false,
+                     "is_completed": false,
+                     "step_text": "## Step 10: Divide the numerator by the denominator\n$\\frac{-47\\sqrt{29^{1.7}}}{\\sqrt{46553.7953}}$ = $\\frac{-47}{\\sqrt{46553.7953}}$\n\n",
+                     "children": []
+                    }
+                   ]
+                  },
+                  {
+                   "tag": "0.2.3.2.1.1.2.2.3.3",
+                   "depth": 9,
+                   "phase": 65,
+                   "gen_cnt": 62,
+                   "n": 2,
+                   "q": 0.699462890625,
+                   "is_terminal": false,
+                   "is_completed": false,
+                   "step_text": "## Step 9: Substitute the calculated values into the expression and simplify\nSubstituting the calculated values, we get:\ncos $\\theta$ = $\\frac{-47\\sqrt{29^{1.7}}}{29^{1.7} \\cdot \\sqrt{65}}$\ncos $\\theta$ = $\\frac{-47\\sqrt{29^{1.7}}}{29^{1.7} \\cdot \\sqrt{65}}$\ncos $\\theta$ = $\\frac{-47\\sqrt{29^{1.7}}}{29^{1.7} \\cdot \\sqrt{65}}$\ncos $\\theta$ = $\\frac{-47\\sqrt{29^{1.7}}}{29^{1.7} \\cdot \\sqrt{65}}$\ncos $\\theta$ = $\\frac{-47\\cdot 29^{0.7}}{29^{1.7} \\cdot 29^{0.5} \\cdot \\sqrt{65}}$\ncos $\\theta$ = $\\frac{-47\\cdot 29^{0.7}}{29^{1.7} \\cdot 29^{0.5} \\cdot \\sqrt{65}}$\ncos $\\theta$ = $\\frac{-47\\cdot 29^{0.7}}{29^{2} \\cdot \\sqrt{65}}$\ncos $\\theta$ = $\\frac{-47\\cdot 29^{0.7}}{29^{2} \\cdot \\sqrt{65}}$\ncos $\\theta$ = $\\frac{-47\\cdot 29^{0.7}}{29^{2} \\cdot \\sqrt{65}}$\ncos $\\theta$ = $\\frac{-47\\cdot 29^{0.7}}{29^{2} \\cdot \\sqrt{65}}$\ncos $\\theta$ = $\\frac{-47\\cdot 29^{0.7}}{29^{2} \\cdot \\sqrt{65}}$\ncos $\\theta$ = $\\frac{-47\\cdot 29^{0.7}}{29^{2} \\cdot \\sqrt{65}}$\ncos $\\theta$ = $\\frac{-47\\cdot 29^{0.7}}{29^{2} \\cdot \\sqrt{65}}$\ncos $\\theta$ = $\\frac{-47\\cdot 29^{0.7}}{29^{2} \\cdot \\sqrt{65}}$\ncos $\\theta$ = $\\frac{-47\\cdot 29^{0.7}}{29^{2} \\cdot \\sqrt{65}}$\ncos $\\theta$ = $\\frac{-47\\cdot 29^{0.7}}{29^{2} \\cdot \\sqrt{65}}$\ncos $\\theta$ = $\\frac{-47\\cdot 29^{0.7}}{29^{2} \\cdot \\sqrt{65}}$\n\n",
+                   "children": [
+                    {
+                     "tag": "0.2.3.2.1.1.2.2.3.3.1",
+                     "depth": 10,
+                     "phase": 66,
+                     "gen_cnt": 63,
+                     "n": 1,
+                     "q": 0.60400390625,
+                     "is_terminal": false,
+                     "is_completed": false,
+                     "step_text": "## Step 10: Simplify the expression\nTo calculate the value of cos $\\theta$, we need to calculate the value of $\\sqrt{29^{1.7}}$ first.\n$\\sqrt{29^{1.7}}$ = $\\sqrt{(29)^{1.7}}$ = $\\sqrt{29^{1.7}}$\n$\\sqrt{29^{1.7}}$ = $\\sqrt{29^{0.7} \\cdot 29^{0.7}}$ = $\\sqrt{29^{0.7} \\cdot (29)^{0.7}}$\n$\\sqrt{29^{1.7}}$ = $\\sqrt{(29^{0.7})^{2}}$ = $\\sqrt{(29^{0.7})^{2}}$\n$\\sqrt{29^{1.7}}$ = $29^{0.7}$\n$29^{0.7}$ = $\\sqrt{29^7}$\n$29^{0.7}$ = $\\sqrt{(29^{1.7})}$\n\n",
+                     "children": []
+                    },
+                    {
+                     "tag": "0.2.3.2.1.1.2.2.3.3.2",
+                     "depth": 10,
+                     "phase": 66,
+                     "gen_cnt": 63,
+                     "n": 1,
+                     "q": 0.740234375,
+                     "is_terminal": false,
+                     "is_completed": false,
+                     "step_text": "## Step 10: Calculate the value of $\\frac{47}{\\sqrt{29 \\cdot 65}}$\n$\\frac{47}{\\sqrt{29 \\cdot 65}}$ = $\\frac{47}{\\sqrt{29 \\cdot 65}}$\n\n",
+                     "children": []
+                    },
+                    {
+                     "tag": "0.2.3.2.1.1.2.2.3.3.3",
+                     "depth": 10,
+                     "phase": 66,
+                     "gen_cnt": 63,
+                     "n": 1,
+                     "q": 0.69921875,
+                     "is_terminal": false,
+                     "is_completed": false,
+                     "step_text": "## Step 10: Use the calculated values in the formula for the angle between two lines\nNow, let's use the calculated values in the formula for the angle between two lines:\n$\\cos \\theta$ = $\\frac{-47\\cdot 29^{0.7}}{29^{2} \\cdot \\sqrt{65}}$\n$\\cos \\theta$ = $\\frac{-47\\sqrt{29^{0.7}}}{29^{1.7} \\cdot \\sqrt{65}}$\n$\\cos \\theta$ = $\\frac{-47\\cdot 29^{0.7}}{29^{2} \\cdot \\sqrt{65}}$\n$\\cos \\theta$ = $\\frac{-47\\cdot \\sqrt{29 \\cdot 29^{0.7}}}{29^{2} \\cdot \\sqrt{65}}$\n$\\cos \\theta$ = $\\frac{-47\\cdot \\sqrt{29^{1.7}}}{29^{1.7} \\cdot \\sqrt{65}}$\n$\\cos \\theta$ = $\\frac{-47\\cdot \\sqrt{29^{1.7}}}{29^{1.7} \\cdot \\sqrt{65}}$\n\n",
+                     "children": []
+                    },
+                    {
+                     "tag": "0.2.3.2.1.1.2.2.3.3.4",
+                     "depth": 10,
+                     "phase": 66,
+                     "gen_cnt": 63,
+                     "n": 2,
+                     "q": 0.70654296875,
+                     "is_terminal": false,
+                     "is_completed": false,
+                     "step_text": "## Step 10: Calculate the value of $\\sqrt{29^{1.7}}$\nThe value of $\\sqrt{29^{1.7}}$ is approximately 0.573.\n\n",
+                     "children": [
+                      {
+                       "tag": "0.2.3.2.1.1.2.2.3.3.4.1",
+                       "depth": 11,
+                       "phase": 67,
+                       "gen_cnt": 64,
+                       "n": 2,
+                       "q": 0.73583984375,
+                       "is_terminal": false,
+                       "is_completed": false,
+                       "step_text": "## Step 11: Substitute the calculated values into the expression and simplify\nSubstituting the calculated values, we get:\ncos $\\theta$ = $\\frac{-47\\cdot 29^{0.7}}{29^{2} \\cdot \\sqrt{65}}$\ncos $\\theta$ = $\\frac{-47\\cdot 0.573}{841 \\cdot \\sqrt{65}}$\ncos $\\theta$ = $\\frac{-33.651}{841 \\cdot \\sqrt{65}}$\n\n",
+                       "children": [
+                        {
+                         "tag": "0.2.3.2.1.1.2.2.3.3.4.1.1",
+                         "depth": 12,
+                         "phase": 68,
+                         "gen_cnt": 65,
+                         "n": 2,
+                         "q": 0.823974609375,
+                         "is_terminal": false,
+                         "is_completed": false,
+                         "step_text": "## Step 12: Calculate the value of $\\sqrt{65}$\nThe value of $\\sqrt{65}$ is approximately 8.062.\n\n",
+                         "children": [
+                          {
+                           "tag": "0.2.3.2.1.1.2.2.3.3.4.1.1.1",
+                           "depth": 13,
+                           "phase": 69,
+                           "gen_cnt": 66,
+                           "n": 1,
+                           "q": 0.85986328125,
+                           "is_terminal": false,
+                           "is_completed": false,
+                           "step_text": "## Step 13: Substitute the calculated value into the expression and simplify\nSubstituting the calculated value, we get:\ncos $\\theta$ = $\\frac{-33.651}{841 \\cdot 8.062}$\ncos $\\theta$ = $\\frac{-33.651}{6826.186}$\ncos $\\theta$ = $\\frac{-33.651}{6826.186}$\n\n",
+                           "children": []
+                          },
+                          {
+                           "tag": "0.2.3.2.1.1.2.2.3.3.4.1.1.2",
+                           "depth": 13,
+                           "phase": 69,
+                           "gen_cnt": 66,
+                           "n": 1,
+                           "q": 0.9150390625,
+                           "is_terminal": false,
+                           "is_completed": false,
+                           "step_text": "## Step 13: Substitute the calculated values into the expression and simplify\nSubstituting the calculated values, we get:\ncos $\\theta$ = $\\frac{-33.651}{841 \\cdot 8.062}$\n\n",
+                           "children": []
+                          },
+                          {
+                           "tag": "0.2.3.2.1.1.2.2.3.3.4.1.1.3",
+                           "depth": 13,
+                           "phase": 69,
+                           "gen_cnt": 66,
+                           "n": 2,
+                           "q": 0.800048828125,
+                           "is_terminal": false,
+                           "is_completed": false,
+                           "step_text": "## Step 13: Substitute the calculated values into the expression and simplify\nSubstituting the calculated values, we get:\ncos $\\theta$ = $\\frac{-33.651}{841 \\cdot 8.062}$\ncos $\\theta$ = $\\frac{-33.651}{6817.482}$\ncos $\\theta$ = -0.005\n\n",
+                           "children": [
+                            {
+                             "tag": "0.2.3.2.1.1.2.2.3.3.4.1.1.3.1",
+                             "depth": 14,
+                             "phase": 70,
+                             "gen_cnt": 67,
+                             "n": 1,
+                             "q": 0.88232421875,
+                             "is_terminal": false,
+                             "is_completed": false,
+                             "step_text": "## Step 14: Find the angle using the inverse cosine function\nThe inverse cosine function is denoted as $\\cos^{-1}$ and returns the angle in radians. To convert it to degrees, we can multiply the angle in radians by $\\frac{180}{\\pi}$.\n\n",
+                             "children": []
+                            },
+                            {
+                             "tag": "0.2.3.2.1.1.2.2.3.3.4.1.1.3.2",
+                             "depth": 14,
+                             "phase": 70,
+                             "gen_cnt": 67,
+                             "n": 1,
+                             "q": 0.90576171875,
+                             "is_terminal": false,
+                             "is_completed": false,
+                             "step_text": "## Step 14: Find the value of $\\theta$ using the inverse cosine function\nUsing the inverse cosine function, we get:\n$\\theta$ = arccos(-0.005)\n\n",
+                             "children": []
+                            },
+                            {
+                             "tag": "0.2.3.2.1.1.2.2.3.3.4.1.1.3.3",
+                             "depth": 14,
+                             "phase": 70,
+                             "gen_cnt": 67,
+                             "n": 1,
+                             "q": 0.57763671875,
+                             "is_terminal": false,
+                             "is_completed": false,
+                             "step_text": "## Step 14: Calculate the angle $\\theta$ using the inverse cosine function\nUsing a calculator, we can find the angle $\\theta$:\n$\\theta$ = arccos(-0.005)\n$\\theta$ = 97.42\n\n",
+                             "children": [
+                              {
+                               "tag": "0.2.3.2.1.1.2.2.3.3.4.1.1.3.3.1",
+                               "depth": 15,
+                               "phase": 73,
+                               "gen_cnt": 69,
+                               "n": 1,
+                               "q": 0.7744140625,
+                               "is_terminal": false,
+                               "is_completed": false,
+                               "step_text": "## Step 15: Round the angle to the desired number of decimal places\nThe angle $\\theta$ is approximately 97.42°.\n\n",
+                               "children": []
+                              },
+                              {
+                               "tag": "0.2.3.2.1.1.2.2.3.3.4.1.1.3.3.2",
+                               "depth": 15,
+                               "phase": 73,
+                               "gen_cnt": 69,
+                               "n": 1,
+                               "q": 0.85009765625,
+                               "is_terminal": false,
+                               "is_completed": false,
+                               "step_text": "## Step 15: Round the answer to the nearest degree\nThe angle $\\theta$ is approximately 97 degrees.\n\n",
+                               "children": []
+                              },
+                              {
+                               "tag": "0.2.3.2.1.1.2.2.3.3.4.1.1.3.3.3",
+                               "depth": 15,
+                               "phase": 73,
+                               "gen_cnt": 69,
+                               "n": 1,
+                               "q": 0.56201171875,
+                               "is_terminal": false,
+                               "is_completed": false,
+                               "step_text": "## Step 15: Convert the angle from degrees to the required format\nSince the answer is required in the format of \"The final answer is $\\boxed{[answer]}$\", we should provide the angle in degrees. However, I must point out that the angle of -97.42 degrees is not the correct answer because the cosine function's range is [-1, 1] and the cosine of an angle is always between 0 and 1.\n\n",
+                               "children": [
+                                {
+                                 "tag": "0.2.3.2.1.1.2.2.3.3.4.1.1.3.3.3.1",
+                                 "depth": 16,
+                                 "phase": 74,
+                                 "gen_cnt": 70,
+                                 "n": 1,
+                                 "q": 0.751953125,
+                                 "is_terminal": false,
+                                 "is_completed": false,
+                                 "step_text": "Since the cosine of the angle is -0.005, the angle should be in the second quadrant where cosine values are negative. Using the inverse cosine function, we get:\n\n",
+                                 "children": []
+                                },
+                                {
+                                 "tag": "0.2.3.2.1.1.2.2.3.3.4.1.1.3.3.3.2",
+                                 "depth": 16,
+                                 "phase": 74,
+                                 "gen_cnt": 70,
+                                 "n": 1,
+                                 "q": 0.418701171875,
+                                 "is_terminal": true,
+                                 "is_completed": true,
+                                 "step_text": "The final answer is: $\\boxed{97.4}$",
+                                 "children": []
+                                },
+                                {
+                                 "tag": "0.2.3.2.1.1.2.2.3.3.4.1.1.3.3.3.3",
+                                 "depth": 16,
+                                 "phase": 74,
+                                 "gen_cnt": 70,
+                                 "n": 1,
+                                 "q": 0.52734375,
+                                 "is_terminal": false,
+                                 "is_completed": false,
+                                 "step_text": "Given the format requirement, I will round the angle to the nearest integer, which would be 97 degrees.\n\n",
+                                 "children": [
+                                  {
+                                   "tag": "0.2.3.2.1.1.2.2.3.3.4.1.1.3.3.3.3.1",
+                                   "depth": 17,
+                                   "phase": 75,
+                                   "gen_cnt": 71,
+                                   "n": 1,
+                                   "q": 0.79833984375,
+                                   "is_terminal": true,
+                                   "is_completed": true,
+                                   "step_text": "The final answer is: $\\boxed{97}$",
+                                   "children": []
+                                  },
+                                  {
+                                   "tag": "0.2.3.2.1.1.2.2.3.3.4.1.1.3.3.3.3.2",
+                                   "depth": 17,
+                                   "phase": 75,
+                                   "gen_cnt": 71,
+                                   "n": 1,
+                                   "q": 0.78515625,
+                                   "is_terminal": true,
+                                   "is_completed": true,
+                                   "step_text": "Therefore, the final answer is: $\\boxed{97}$",
+                                   "children": []
+                                  }
+                                 ]
+                                },
+                                {
+                                 "tag": "0.2.3.2.1.1.2.2.3.3.4.1.1.3.3.3.4",
+                                 "depth": 16,
+                                 "phase": 74,
+                                 "gen_cnt": 70,
+                                 "n": 1,
+                                 "q": 0.7490234375,
+                                 "is_terminal": false,
+                                 "is_completed": false,
+                                 "step_text": "To obtain the correct answer, we should take the inverse cosine (arccos) of the absolute value of the cosine of the angle, which is 0.005. This will give us an angle whose cosine is 0.005, and the angle will be in the range [-π/2, π/2].\n\n",
+                                 "children": []
+                                }
+                               ]
+                              },
+                              {
+                               "tag": "0.2.3.2.1.1.2.2.3.3.4.1.1.3.3.4",
+                               "depth": 15,
+                               "phase": 73,
+                               "gen_cnt": 69,
+                               "n": 1,
+                               "q": 0.2069091796875,
+                               "is_terminal": true,
+                               "is_completed": true,
+                               "step_text": "The final answer is: $\\boxed{97.42}$",
+                               "children": []
+                              }
+                             ]
+                            },
+                            {
+                             "tag": "0.2.3.2.1.1.2.2.3.3.4.1.1.3.4",
+                             "depth": 14,
+                             "phase": 70,
+                             "gen_cnt": 67,
+                             "n": 2,
+                             "q": 0.7119140625,
+                             "is_terminal": false,
+                             "is_completed": false,
+                             "step_text": "## Step 14: Find the angle using the inverse cosine function\nThe angle $\\theta$ is given by $\\theta$ = arccos(-0.005).\nTherefore, the angle $\\theta$ is approximately 99.234 degrees. However, we can also convert it to radians using the formula $\\theta$ (radians) = $\\theta$ (degrees) * $\\frac{\\pi}{180}$\n\n",
+                             "children": [
+                              {
+                               "tag": "0.2.3.2.1.1.2.2.3.3.4.1.1.3.4.1",
+                               "depth": 15,
+                               "phase": 71,
+                               "gen_cnt": 68,
+                               "n": 1,
+                               "q": 0.76904296875,
+                               "is_terminal": false,
+                               "is_completed": false,
+                               "step_text": "## Step 15: Find the angle in radians\n$\\theta$ (radians) = 99.234 * $\\frac{\\pi}{180}$\n$\\theta$ (radians) = 1.7556\n\n",
+                               "children": []
+                              },
+                              {
+                               "tag": "0.2.3.2.1.1.2.2.3.3.4.1.1.3.4.2",
+                               "depth": 15,
+                               "phase": 71,
+                               "gen_cnt": 68,
+                               "n": 1,
+                               "q": 0.85205078125,
+                               "is_terminal": false,
+                               "is_completed": false,
+                               "step_text": "## Step 15: Convert the angle to radians\n$\\theta$ (radians) = 99.234 * $\\frac{\\pi}{180}$\n\n",
+                               "children": []
+                              },
+                              {
+                               "tag": "0.2.3.2.1.1.2.2.3.3.4.1.1.3.4.3",
+                               "depth": 15,
+                               "phase": 71,
+                               "gen_cnt": 68,
+                               "n": 2,
+                               "q": 0.76904296875,
+                               "is_terminal": true,
+                               "is_completed": true,
+                               "step_text": "## Step 15: Convert the angle from degrees to radians\n$\\theta$ (radians) = 99.234 * $\\frac{\\pi}{180}$\n$\\theta$ (radians) = 1.759",
+                               "children": []
+                              },
+                              {
+                               "tag": "0.2.3.2.1.1.2.2.3.3.4.1.1.3.4.4",
+                               "depth": 15,
+                               "phase": 71,
+                               "gen_cnt": 68,
+                               "n": 1,
+                               "q": 0.7880859375,
+                               "is_terminal": false,
+                               "is_completed": false,
+                               "step_text": "## Step 15: Convert the angle from degrees to radians\nTherefore, the angle in radians is approximately 99.234 * $\\frac{\\pi}{180}$\n\n",
+                               "children": []
+                              }
+                             ]
+                            }
+                           ]
+                          },
+                          {
+                           "tag": "0.2.3.2.1.1.2.2.3.3.4.1.1.4",
+                           "depth": 13,
+                           "phase": 69,
+                           "gen_cnt": 66,
+                           "n": 1,
+                           "q": 0.85205078125,
+                           "is_terminal": false,
+                           "is_completed": false,
+                           "step_text": "## Step 13: Substitute the calculated values into the expression and simplify\nSubstituting the calculated values, we get:\ncos $\\theta$ = $\\frac{-33.651}{841 \\cdot 8.062}$\ncos $\\theta$ = $\\frac{-33.651}{6819.231}$\n\n",
+                           "children": []
+                          }
+                         ]
+                        },
+                        {
+                         "tag": "0.2.3.2.1.1.2.2.3.3.4.1.2",
+                         "depth": 12,
+                         "phase": 68,
+                         "gen_cnt": 65,
+                         "n": 1,
+                         "q": 0.83544921875,
+                         "is_terminal": false,
+                         "is_completed": false,
+                         "step_text": "## Step 12: Calculate the numerator and denominator separately\nNumerator: $-33.651$\nDenominator: $841 \\cdot \\sqrt{65}$\n\n",
+                         "children": []
+                        },
+                        {
+                         "tag": "0.2.3.2.1.1.2.2.3.3.4.1.3",
+                         "depth": 12,
+                         "phase": 68,
+                         "gen_cnt": 65,
+                         "n": 1,
+                         "q": 0.80078125,
+                         "is_terminal": false,
+                         "is_completed": false,
+                         "step_text": "## Step 12: Simplify the expression\nTo simplify the expression, we can multiply the numerator and denominator by $\\sqrt{65}$:\ncos $\\theta$ = $\\frac{-33.651\\sqrt{65}}{841 \\cdot \\sqrt{65}}$\ncos $\\theta$ = $\\frac{-33.651\\sqrt{65}}{841 \\cdot \\sqrt{65}}$\ncos $\\theta$ = $\\frac{-33.651}{841}$\ncos $\\theta$ = $\\frac{-33.651}{841}$\ncos $\\theta$ = $\\frac{-33.651}{841}$\ncos $\\theta$ = $\\frac{-33.651}{841}$\ncos $\\theta$ = $\\frac{-33.651}{841}$\ncos $\\theta$ = $\\frac{-33.651}{841}$\n\n",
+                         "children": []
+                        }
+                       ]
+                      },
+                      {
+                       "tag": "0.2.3.2.1.1.2.2.3.3.4.2",
+                       "depth": 11,
+                       "phase": 67,
+                       "gen_cnt": 64,
+                       "n": 1,
+                       "q": 0.76904296875,
+                       "is_terminal": false,
+                       "is_completed": false,
+                       "step_text": "## Step 11: Substitute the calculated value of $\\sqrt{29^{1.7}}$ into the expression and simplify\nSubstituting the calculated value of $\\sqrt{29^{1.7}}$ into the expression, we get:\ncos $\\theta$ = $\\frac{-47\\cdot 29^{0.7}}{29^{2} \\cdot \\sqrt{65}}$\ncos $\\theta$ = $\\frac{-47\\cdot 0.573}{29^{2} \\cdot \\sqrt{65}}$\ncos $\\theta$ = $\\frac{-47\\cdot 0.573}{29 \\cdot 29 \\cdot \\sqrt{65}}$\ncos $\\theta$ = $\\frac{-47\\cdot 0.573}{29^{2} \\cdot \\sqrt{65}}$\ncos $\\theta$ = $\\frac{-47\\cdot 0.573}{29^{2} \\cdot \\sqrt{65}}$\ncos $\\theta$ = $\\frac{-47\\cdot 0.573}{29^{2} \\cdot \\sqrt{65}}$\ncos $\\theta$ = $\\frac{-47\\cdot 0.573}{29^{2} \\cdot \\sqrt{65}}$\ncos $\\theta$ = $\\frac{-47\\cdot 0.573}{29^{2} \\cdot \\sqrt{65}}$\ncos $\\theta$ = $\\frac{-47\\cdot 0.573}{29^{2} \\cdot \\sqrt{65}}$\n\n",
+                       "children": []
+                      },
+                      {
+                       "tag": "0.2.3.2.1.1.2.2.3.3.4.3",
+                       "depth": 11,
+                       "phase": 67,
+                       "gen_cnt": 64,
+                       "n": 1,
+                       "q": 0.763671875,
+                       "is_terminal": false,
+                       "is_completed": false,
+                       "step_text": "## Step 11: Substitute the calculated values into the expression and simplify\nSubstituting the calculated values, we get:\ncos $\\theta$ = $\\frac{-47\\cdot 29^{0.7}}{29^{2} \\cdot \\sqrt{65}}$\ncos $\\theta$ = $\\frac{-47\\cdot 0.573}{29^{2} \\cdot \\sqrt{65}}$\n\n",
+                       "children": []
+                      },
+                      {
+                       "tag": "0.2.3.2.1.1.2.2.3.3.4.4",
+                       "depth": 11,
+                       "phase": 67,
+                       "gen_cnt": 64,
+                       "n": 1,
+                       "q": 0.69580078125,
+                       "is_terminal": false,
+                       "is_completed": false,
+                       "step_text": "## Step 11: Substitute the calculated value into the expression and simplify\nSubstituting the calculated value, we get:\ncos $\\theta$ = $\\frac{-47\\cdot 0.573}{29^{2} \\cdot \\sqrt{65}}$\ncos $\\theta$ = $\\frac{-47\\cdot 0.573}{29^{2} \\cdot \\sqrt{65}}$\ncos $\\theta$ = $\\frac{-47\\cdot 0.573}{29^{2} \\cdot \\sqrt{65}}$\ncos $\\theta$ = $\\frac{-47\\cdot 0.573}{29^{2} \\cdot \\sqrt{65}}$\ncos $\\theta$ = $\\frac{-47\\cdot 0.573}{29^{2} \\cdot \\sqrt{65}}$\ncos $\\theta$ = $\\frac{-47\\cdot 0.573}{29^{2} \\cdot \\sqrt{65}}$\ncos $\\theta$ = $\\frac{-47\\cdot 0.573}{29^{2} \\cdot \\sqrt{65}}$\ncos $\\theta$ = $\\frac{-47\\cdot 0.573}{29^{2} \\cdot \\sqrt{65}}$\ncos $\\theta$ = $\\frac{-47\\cdot 0.573}{29^{2} \\cdot \\sqrt{65}}$\ncos $\\theta$ = $\\frac{-47\\cdot 0.573}{(29)^{2} \\cdot \\sqrt{65}}$\ncos $\\theta$ = $\\frac{-47\\cdot 0.573}{29^{2} \\cdot \\sqrt{65}}$\ncos $\\theta$ = $\\frac{-47\\cdot 0.573}{(29)^{2} \\cdot \\sqrt{65}}$\ncos $\\theta$ = $\\frac{-47\\cdot 0.573}{(29)^{2} \\cdot \\sqrt{65}}$\ncos $\\theta$ = $\\frac{-47\\cdot 0.573}{(29)^{2} \\cdot \\sqrt{65}}$\ncos $\\theta$ = $\\frac{-47\\cdot 0.573}{(29)^{2} \\cdot \\sqrt{65}}$\ncos $\\theta$ = $\\frac{-47\\cdot 0.573}{(29)^{2} \\cdot \\sqrt{65}}$\ncos $\\theta$ = $\\frac{-47\\cdot 0.573}{(29)^{2} \\cdot \\sqrt{65}}$\ncos $\\theta$ = $\\frac{-47\\cdot 0.573}{(29)^{2} \\cdot \\sqrt{65}}$\ncos $\\theta$ = $\\frac{-47\\cdot 0.573}{(29)^{2} \\cdot \\sqrt{65}}$\n\n",
+                       "children": []
+                      }
+                     ]
+                    }
+                   ]
+                  },
+                  {
+                   "tag": "0.2.3.2.1.1.2.2.3.4",
+                   "depth": 9,
+                   "phase": 65,
+                   "gen_cnt": 62,
+                   "n": 1,
+                   "q": 0.7216796875,
+                   "is_terminal": false,
+                   "is_completed": false,
+                   "step_text": "## Step 9: Substitute the calculated values into the expression\ncos $\\theta$ = $\\frac{-47\\sqrt{29^{1.7}}}{29^{1.7} \\cdot \\sqrt{65}}$\ncos $\\theta$ = $\\frac{-47\\sqrt{29^{1.7}}}{29^{1.7} \\cdot \\sqrt{65}}$\nWe will keep it in this form for now and use it for further calculations.\n\n",
+                   "children": [
+                    {
+                     "tag": "0.2.3.2.1.1.2.2.3.4.1",
+                     "depth": 10,
+                     "phase": 76,
+                     "gen_cnt": 72,
+                     "n": 1,
+                     "q": 0.77978515625,
+                     "is_terminal": false,
+                     "is_completed": false,
+                     "step_text": "## Step 10: Simplify the expression for $\\cos \\theta$\n$\\cos \\theta$ = $\\frac{-47\\sqrt{29^{1.7}}}{\\sqrt{29^{1.7} \\cdot 65}}$\n$\\cos \\theta$ = $\\frac{-47\\sqrt{29^{1.7}}}{\\sqrt{29^{1.7 + 1.7} \\cdot 65}}$\n$\\cos \\theta$ = $\\frac{-47\\sqrt{29^{1.7}}}{\\sqrt{29^{3.4} \\cdot 65}}$\n$\\cos \\theta$ = $\\frac{-47\\sqrt{29^{1.7}}}{\\sqrt{29^{3.4} \\cdot 65}}$\n$\\cos \\theta$ = $\\frac{-47\\sqrt{29^{1.7}}}{\\sqrt{29^{3.4} \\cdot 65}}$\n$\\cos \\theta$ = $\\frac{-47\\sqrt{29^{1.7}}}{\\sqrt{29^{3.4} \\cdot 65}}$\n\n",
+                     "children": []
+                    },
+                    {
+                     "tag": "0.2.3.2.1.1.2.2.3.4.2",
+                     "depth": 10,
+                     "phase": 76,
+                     "gen_cnt": 72,
+                     "n": 1,
+                     "q": 0.78515625,
+                     "is_terminal": false,
+                     "is_completed": false,
+                     "step_text": "## Step 10: Take the reciprocal of the expression\nTo find $\\theta$, we take the reciprocal of the expression and use it to find the angle between the lines.\n\n",
+                     "children": []
+                    },
+                    {
+                     "tag": "0.2.3.2.1.1.2.2.3.4.3",
+                     "depth": 10,
+                     "phase": 76,
+                     "gen_cnt": 72,
+                     "n": 1,
+                     "q": 0.68603515625,
+                     "is_terminal": false,
+                     "is_completed": false,
+                     "step_text": "## Step 10: Calculate the values\ncos $\\theta$ = $\\frac{-47\\sqrt{29^{1.7}}}{\\sqrt{29 \\cdot 65}}$\ncos $\\theta$ = $\\frac{-47\\sqrt{29^{1.7}}}{29 \\cdot \\sqrt{65}}$\nTo calculate, we use $\\sqrt{29^{1.7}}$ $\\approx \\sqrt{29^{1.7}} \\approx 29^{1/1.7} \\approx 29^{0.588}$\n\n",
+                     "children": []
+                    },
+                    {
+                     "tag": "0.2.3.2.1.1.2.2.3.4.4",
+                     "depth": 10,
+                     "phase": 76,
+                     "gen_cnt": 72,
+                     "n": 1,
+                     "q": 0.76611328125,
+                     "is_terminal": false,
+                     "is_completed": false,
+                     "step_text": "## Step 10: Calculate the angle in degrees\nUsing the inverse cosine function, we can find the angle $\\theta$:\n$\\theta$ = arccos(cos $\\theta$)\n\n",
+                     "children": []
+                    }
+                   ]
+                  }
+                 ]
+                }
+               ]
+              },
+              {
+               "tag": "0.2.3.2.1.1.2.3",
+               "depth": 7,
+               "phase": 61,
+               "gen_cnt": 58,
+               "n": 1,
+               "q": 0.56982421875,
+               "is_terminal": false,
+               "is_completed": false,
+               "step_text": "## Step 7: Calculate the numerical value of the expression\nTo calculate the numerical value of the expression, we can use a calculator:\ncos $\\theta$ = $\\frac{-47\\sqrt{29^{1.7}}}{29^{1.7} \\cdot \\sqrt{65}}$\ncos $\\theta$ ≈ $\\frac{-47\\sqrt{841.526}}{841.526 \\cdot 8.06236509}$\ncos $\\theta$ ≈ $\\frac{-47\\sqrt{841.526}}{6881.0606852}$\ncos $\\theta$ ≈ $\\frac{-47 \\cdot 29.3376}{6881.0606852}$\ncos $\\theta$ ≈ $\\frac{-1409.41944}{6881.0606852}$\ncos $\\theta$ ≈ -0.20349435\n\n",
+               "children": [
+                {
+                 "tag": "0.2.3.2.1.1.2.3.1",
+                 "depth": 8,
+                 "phase": 62,
+                 "gen_cnt": 59,
+                 "n": 1,
+                 "q": 0.845703125,
+                 "is_terminal": false,
+                 "is_completed": false,
+                 "step_text": "## Step 8: Find the angle using the inverse cosine function\nUsing the inverse cosine function, we can find the angle $\\theta$:\n$\\theta$ = arccos(-0.20349435)\n\n",
+                 "children": []
+                },
+                {
+                 "tag": "0.2.3.2.1.1.2.3.2",
+                 "depth": 8,
+                 "phase": 62,
+                 "gen_cnt": 59,
+                 "n": 1,
+                 "q": 0.56591796875,
+                 "is_terminal": false,
+                 "is_completed": false,
+                 "step_text": "## Step 8: Find the angle\nUsing a calculator to find the angle $\\theta$ such that cos $\\theta$ = -0.20349435, we get:\n$\\theta$ ≈ arccos(-0.20349435)\n$\\theta$ ≈ 97.99°\n\n",
+                 "children": []
+                },
+                {
+                 "tag": "0.2.3.2.1.1.2.3.3",
+                 "depth": 8,
+                 "phase": 62,
+                 "gen_cnt": 59,
+                 "n": 1,
+                 "q": 0.79833984375,
+                 "is_terminal": false,
+                 "is_completed": false,
+                 "step_text": "## Step 8: Find the angle using the inverse cosine function\nUsing a calculator, we can find the angle $\\theta$ in radians:\n$\\theta$ = arccos(-0.20349435)\n$\\theta$ ≈ 1.21499749 radians\n\n",
+                 "children": [
+                  {
+                   "tag": "0.2.3.2.1.1.2.3.3.1",
+                   "depth": 9,
+                   "phase": 63,
+                   "gen_cnt": 60,
+                   "n": 1,
+                   "q": 0.392333984375,
+                   "is_terminal": false,
+                   "is_completed": false,
+                   "step_text": "## Step 9: Convert the angle from radians to degrees\nTo convert the angle from radians to degrees, we can multiply by $\\frac{180}{\\pi}$:\n$\\theta$ ≈ 1.21499749 radians\n$\\theta$ ≈ 1.21499749 \\* $\\frac{180}{\\pi}$\n$\\theta$ ≈ 68.89714241 degrees\n\n",
+                   "children": []
+                  },
+                  {
+                   "tag": "0.2.3.2.1.1.2.3.3.2",
+                   "depth": 9,
+                   "phase": 63,
+                   "gen_cnt": 60,
+                   "n": 1,
+                   "q": 0.763671875,
+                   "is_terminal": false,
+                   "is_completed": false,
+                   "step_text": "## Step 9: Convert the angle from radians to degrees\nTo convert the angle from radians to degrees, we can multiply by $\\frac{180}{\\pi}$:\n$\\theta$ ≈ 1.21499749 radians\n$\\theta$ ≈ 1.21499749 \\cdot \\frac{180}{\\pi}$\n$\\theta$ ≈ 69.8152166 degrees\n\n",
+                   "children": []
+                  },
+                  {
+                   "tag": "0.2.3.2.1.1.2.3.3.3",
+                   "depth": 9,
+                   "phase": 63,
+                   "gen_cnt": 60,
+                   "n": 1,
+                   "q": 0.7373046875,
+                   "is_terminal": false,
+                   "is_completed": false,
+                   "step_text": "## Step 9: Convert the angle to degrees\nTo convert the angle to degrees, we can multiply it by $\\frac{180}{\\pi}$:\n$\\theta$ ≈ 1.21499749 radians\n$\\theta$ ≈ 1.21499749 * $\\frac{180}{\\pi}$\n$\\theta$ ≈ 70.0 degrees\n\n",
+                   "children": []
+                  },
+                  {
+                   "tag": "0.2.3.2.1.1.2.3.3.4",
+                   "depth": 9,
+                   "phase": 63,
+                   "gen_cnt": 60,
+                   "n": 1,
+                   "q": 0.7431640625,
+                   "is_terminal": false,
+                   "is_completed": false,
+                   "step_text": "## Step 9: Convert the angle to degrees\nTo convert the angle to degrees, we can multiply the angle in radians by $\\frac{180}{\\pi}$:\n$\\theta$ ≈ 1.21499749 radians \\* $\\frac{180}{\\pi}$\n$\\theta$ ≈ 70.2255816 degrees\n\n",
+                   "children": []
+                  }
+                 ]
+                },
+                {
+                 "tag": "0.2.3.2.1.1.2.3.4",
+                 "depth": 8,
+                 "phase": 62,
+                 "gen_cnt": 59,
+                 "n": 1,
+                 "q": 0.8154296875,
+                 "is_terminal": false,
+                 "is_completed": false,
+                 "step_text": "## Step 8: Find the angle $\\theta$ in degrees\nTo find the angle $\\theta$ in degrees, we can take the inverse cosine (arccosine) of the calculated value:\n$\\theta$ = arccos(-0.20349435)\n\n",
+                 "children": []
+                }
+               ]
+              },
+              {
+               "tag": "0.2.3.2.1.1.2.4",
+               "depth": 7,
+               "phase": 61,
+               "gen_cnt": 58,
+               "n": 1,
+               "q": 0.5927734375,
+               "is_terminal": false,
+               "is_completed": false,
+               "step_text": "## Step 7: Simplify further\nSince $29 \\approx 29^{1.7}$\ncos $\\theta$ = $\\frac{-47\\sqrt{(29^{1.7})}}{29^{1.7} \\cdot \\sqrt{65}}$\nWe can ignore the $1.7$ in the exponent and just use $29^{1.7}$\ncos $\\theta$ = $\\frac{-47\\sqrt{29^{1.7}}}{29 \\sqrt{65}}$\n\n",
+               "children": []
+              }
+             ]
+            },
+            {
+             "tag": "0.2.3.2.1.1.3",
+             "depth": 6,
+             "phase": 60,
+             "gen_cnt": 57,
+             "n": 1,
+             "q": 0.70263671875,
+             "is_terminal": false,
+             "is_completed": false,
+             "step_text": "## Step 6: Simplify the numerator and denominator\ncos $\\theta$ = $\\frac{-47}{\\sqrt{29 \\cdot 65}}$\ncos $\\theta$ = $\\frac{-47}{\\sqrt{29 \\cdot 5 \\cdot 13}}$\ncos $\\theta$ = $\\frac{-47}{\\sqrt{29 \\cdot 5 \\cdot 13}}$\ncos $\\theta$ = $\\frac{-47}{\\sqrt{29 \\cdot 5 \\cdot 13}}$\n\n",
+             "children": []
+            },
+            {
+             "tag": "0.2.3.2.1.1.4",
+             "depth": 6,
+             "phase": 60,
+             "gen_cnt": 57,
+             "n": 1,
+             "q": 0.77197265625,
+             "is_terminal": false,
+             "is_completed": false,
+             "step_text": "## Step 6: Simplify the expression for cos $\\theta$\ncos $\\theta$ = $\\frac{-47}{\\sqrt{29} \\sqrt{65}}$\ncos $\\theta$ = $\\frac{-47}{\\sqrt{29 \\times 65}}$\ncos $\\theta$ = $\\frac{-47}{\\sqrt{1885}}$\n\n",
+             "children": []
+            }
+           ]
+          },
+          {
+           "tag": "0.2.3.2.1.2",
+           "depth": 5,
+           "phase": 58,
+           "gen_cnt": 56,
+           "n": 1,
+           "q": 0.83544921875,
+           "is_terminal": false,
+           "is_completed": false,
+           "step_text": "## Step 5: Plug in the values\nSubstituting the values, we get:\ncos $\\theta$ = $\\frac{(2-6)(3-4) + (3-(-1))(-1-6) + (-1-4)(2-(-1))}{\\sqrt{2^2 + 3^2 + (-1)^2} \\sqrt{6^2 + 4^2 + (-1)^2}}$\n\n",
+           "children": [
+            {
+             "tag": "0.2.3.2.1.2.1",
+             "depth": 6,
+             "phase": 77,
+             "gen_cnt": 73,
+             "n": 1,
+             "q": 0.92724609375,
+             "is_terminal": false,
+             "is_completed": false,
+             "step_text": "## Step 6: Simplify the expression\nSimplifying the expression, we get:\ncos $\\theta$ = $\\frac{(-4)(-1) + (4)(-7) + (-5)(3)}{\\sqrt{4 + 9 + 1} \\sqrt{36 + 16 + 1}}$\n\n",
+             "children": []
+            },
+            {
+             "tag": "0.2.3.2.1.2.2",
+             "depth": 6,
+             "phase": 77,
+             "gen_cnt": 73,
+             "n": 1,
+             "q": 0.9072265625,
+             "is_terminal": false,
+             "is_completed": false,
+             "step_text": "## Step 6: Simplify the expression\nSimplifying the expression, we get:\ncos $\\theta$ = $\\frac{(-4)(-1) + 4(-7) + (-5)(3)}{\\sqrt{4 + 9 + 1} \\sqrt{36 + 16 + 1}}$\n\n",
+             "children": []
+            },
+            {
+             "tag": "0.2.3.2.1.2.3",
+             "depth": 6,
+             "phase": 77,
+             "gen_cnt": 73,
+             "n": 1,
+             "q": 0.916015625,
+             "is_terminal": false,
+             "is_completed": false,
+             "step_text": "## Step 6: Simplify the expression\nSimplifying the expression, we get:\ncos $\\theta$ = $\\frac{(-4)(-1) + 4(-7) + (-5)(1)}{\\sqrt{4 + 9 + 1} \\sqrt{36 + 16 + 1}}$\ncos $\\theta$ = $\\frac{4 - 28 - 5}{\\sqrt{14} \\sqrt{53}}$\ncos $\\theta$ = $\\frac{-29}{\\sqrt{14} \\sqrt{53}}$\n\n",
+             "children": []
+            },
+            {
+             "tag": "0.2.3.2.1.2.4",
+             "depth": 6,
+             "phase": 77,
+             "gen_cnt": 73,
+             "n": 1,
+             "q": 0.46875,
+             "is_terminal": false,
+             "is_completed": false,
+             "step_text": "## Step 6: Simplify the expression\nSimplifying the expression, we get:\ncos $\\theta$ = $\\frac{(-4)(-1) + 4(-7) + (-5)(3)}{\\sqrt{29} \\sqrt{41}}$\ncos $\\theta$ = $\\frac{4 + 28 - 15}{\\sqrt{29} \\sqrt{41}}$\ncos $\\theta$ = $\\frac{27}{\\sqrt{29} \\sqrt{41}}$\ncos $\\theta$ = $\\frac{27}{\\sqrt{29} \\sqrt{41}}$\n\n",
+             "children": []
+            }
+           ]
+          },
+          {
+           "tag": "0.2.3.2.1.3",
+           "depth": 5,
+           "phase": 58,
+           "gen_cnt": 56,
+           "n": 1,
+           "q": 0.83544921875,
+           "is_terminal": false,
+           "is_completed": false,
+           "step_text": "## Step 5: Plug in the values\nSubstituting the values into the formula, we get:\ncos $\\theta$ = $\\frac{(2-6)(3-4) + (3-(-1))(-1-6) + (-1-4)(2-(-1))}{\\sqrt{2^2 + 3^2 + (-1)^2} \\sqrt{6^2 + 4^2 + (-1)^2}}$\ncos $\\theta$ = $\\frac{(-4)(-1) + 4(-7) + (-5)(1)}{\\sqrt{4 + 9 + 1} \\sqrt{36 + 16 + 1}}$\ncos $\\theta$ = $\\frac{4 - 28 - 5}{\\sqrt{14} \\sqrt{53}}$\ncos $\\theta$ = $\\frac{-29}{\\sqrt{14} \\sqrt{53}}$\n\n",
+           "children": []
+          },
+          {
+           "tag": "0.2.3.2.1.4",
+           "depth": 5,
+           "phase": 58,
+           "gen_cnt": 56,
+           "n": 1,
+           "q": 0.26904296875,
+           "is_terminal": false,
+           "is_completed": false,
+           "step_text": "## Step 5: Calculate the value of $\\cos\\theta$\nPlugging in the values into the formula, we get:\n$\\cos\\theta$ = $\\frac{(2-6)(3-4) + (3-(-1))(-1-6) + (-1-4)(2-(-1))}{\\sqrt{2^2 + 3^2 + (-1)^2} \\sqrt{6^2 + 4^2 + (-1)^2}}$\n= $\\frac{(-4)(-1) + 4(-7) + (-5)(3)}{\\sqrt{4 + 9 + 1} \\sqrt{36 + 16 + 1}}$\n= $\\frac{4 + 28 - 15}{\\sqrt{14} \\sqrt{53}}$\n= $\\frac{19}{\\sqrt{14} \\sqrt{53}}$\n\n",
+           "children": []
+          }
+         ]
+        },
+        {
+         "tag": "0.2.3.2.2",
+         "depth": 4,
+         "phase": 55,
+         "gen_cnt": 53,
+         "n": 1,
+         "q": 0.94482421875,
+         "is_terminal": false,
+         "is_completed": false,
+         "step_text": "The angle between the two lines is given by the formula:\ncos(θ) = (a*d + b*e + c*f) / (sqrt(a^2 + b^2 + c^2) * sqrt(d^2 + e^2 + f^2))\n\n",
+         "children": []
+        },
+        {
+         "tag": "0.2.3.2.3",
+         "depth": 4,
+         "phase": 55,
+         "gen_cnt": 53,
+         "n": 2,
+         "q": 0.465087890625,
+         "is_terminal": false,
+         "is_completed": false,
+         "step_text": "The angle between the lines can be calculated using the formula:\ncos(θ) = (a*d + b*e + c*f) / sqrt((a*d)^2 + (b*e)^2 + (c*f)^2)\ncos(θ) = (2*6 + 3*4 + (-1)*(-1)) / sqrt((2*6)^2 + (3*4)^2 + (-1)*(-1)^2)\ncos(θ) = (12 + 12 + 1) / sqrt(36 + 48 + 1)\ncos(θ) = 25 / sqrt(85)\ncos(θ) = 25 / 9.348\ncos(θ) = 2.666\n\n",
+         "children": [
+          {
+           "tag": "0.2.3.2.3.1",
+           "depth": 5,
+           "phase": 56,
+           "gen_cnt": 54,
+           "n": 1,
+           "q": 0.43408203125,
+           "is_terminal": false,
+           "is_completed": false,
+           "step_text": "## Step 4: Calculate the angle in degrees\nθ = arccos(2.666)\nθ ≈ 74.929\n\n",
+           "children": []
+          },
+          {
+           "tag": "0.2.3.2.3.2",
+           "depth": 5,
+           "phase": 56,
+           "gen_cnt": 54,
+           "n": 1,
+           "q": 0.418701171875,
+           "is_terminal": false,
+           "is_completed": false,
+           "step_text": "## Step 4: Find the angle\nθ = arccos(2.666) ≈ 49.002°\n\n",
+           "children": []
+          },
+          {
+           "tag": "0.2.3.2.3.3",
+           "depth": 5,
+           "phase": 56,
+           "gen_cnt": 54,
+           "n": 1,
+           "q": 0.3173828125,
+           "is_terminal": false,
+           "is_completed": false,
+           "step_text": "## Step 4: Find the angle in degrees\nθ = arccos(2.666)\nθ ≈ 65.6 degrees\n\n",
+           "children": []
+          },
+          {
+           "tag": "0.2.3.2.3.4",
+           "depth": 5,
+           "phase": 56,
+           "gen_cnt": 54,
+           "n": 2,
+           "q": 0.447509765625,
+           "is_terminal": false,
+           "is_completed": false,
+           "step_text": "## Step 4: Find the angle in degrees\nθ = arccos(2.666)\nθ ≈ 63.4\n\n",
+           "children": [
+            {
+             "tag": "0.2.3.2.3.4.1",
+             "depth": 6,
+             "phase": 57,
+             "gen_cnt": 55,
+             "n": 2,
+             "q": 0.43408203125,
+             "is_terminal": true,
+             "is_completed": true,
+             "step_text": "The final answer is: $\\boxed{63.4}$",
+             "children": []
+            }
+           ]
+          }
+         ]
+        },
+        {
+         "tag": "0.2.3.2.4",
+         "depth": 4,
+         "phase": 55,
+         "gen_cnt": 53,
+         "n": 1,
+         "q": 0.87744140625,
+         "is_terminal": false,
+         "is_completed": false,
+         "step_text": "Using the formula for the angle between two lines, we get:\n\\[\n\\cos{\\theta} = \\frac{ad + be - cf}{\\sqrt{a^2 + b^2 + c^2} \\cdot \\sqrt{d^2 + e^2 + f^2}}\n\\]\nSubstituting the values, we get:\n\\[\n\\cos{\\theta} = \\frac{(2)(6) + (3)(4) - (-1)(-1)}{\\sqrt{(2)^2 + (3)^2 + (-1)^2} \\cdot \\sqrt{(6)^2 + (4)^2 + (-1)^2}}\n\\]\n\n",
+         "children": []
+        }
+       ]
+      },
+      {
+       "tag": "0.2.3.3",
+       "depth": 3,
+       "phase": 48,
+       "gen_cnt": 46,
+       "n": 1,
+       "q": 0.86865234375,
+       "is_terminal": false,
+       "is_completed": false,
+       "step_text": "## Step 3: Find the direction vectors\nThe direction vectors of the two lines are (2, 3, -1) and (6, 4, -1).\n\n",
+       "children": []
+      },
+      {
+       "tag": "0.2.3.4",
+       "depth": 3,
+       "phase": 48,
+       "gen_cnt": 46,
+       "n": 1,
+       "q": 0.6689453125,
+       "is_terminal": false,
+       "is_completed": false,
+       "step_text": "## Step 3: Calculate the angle between the two lines using the dot product formula\nThe formula to calculate the angle $\\theta$ between two vectors $\\vec{a}$ and $\\vec{b}$ is given by $\\cos{\\theta} = \\frac{\\vec{a} \\cdot \\vec{b}}{\\|\\vec{a}\\|\\|\\vec{b}\\|}$. For the two lines, we can identify $\\vec{a} = (\\frac{2}{\\sqrt{2^2 + 3^2 + (-1)^2}}, \\frac{3}{\\sqrt{2^2 + 3^2 + (-1)^2}}, \\frac{-1}{\\sqrt{2^2 + 3^2 + (-1)^2}})$ and $\\vec{b} = (\\frac{6}{\\sqrt{6^2 + 4^2 + (-1)^2}}, \\frac{4}{\\sqrt{6^2 + 4^2 + (-1)^2}}, \\frac{-1}{\\sqrt{6^2 + 4^2 + (-1)^2}})$\n\n",
+       "children": [
+        {
+         "tag": "0.2.3.4.1",
+         "depth": 4,
+         "phase": 50,
+         "gen_cnt": 48,
+         "n": 1,
+         "q": 0.449462890625,
+         "is_terminal": false,
+         "is_completed": false,
+         "step_text": "## Step 4: Calculate the dot product of the two vectors\n$\\vec{a} \\cdot \\vec{b} = \\left(\\frac{2}{\\sqrt{14}}, \\frac{3}{\\sqrt{14}}, \\frac{-1}{\\sqrt{14}}\\right) \\cdot \\left(\\frac{6}{\\sqrt{61}}, \\frac{4}{\\sqrt{61}}, \\frac{-1}{\\sqrt{61}}\\right) = \\frac{12}{\\sqrt{14 \\cdot 61}} + \\frac{12}{\\sqrt{14 \\cdot 61}} - \\frac{3}{\\sqrt{14 \\cdot 61}}$\n\n",
+         "children": []
+        },
+        {
+         "tag": "0.2.3.4.2",
+         "depth": 4,
+         "phase": 50,
+         "gen_cnt": 48,
+         "n": 1,
+         "q": 0.77197265625,
+         "is_terminal": false,
+         "is_completed": false,
+         "step_text": "## Step 4: Compute the dot product of the two lines\n$\\vec{a} \\cdot \\vec{b} = (\\frac{2}{\\sqrt{2^2 + 3^2 + (-1)^2}})(\\frac{6}{\\sqrt{6^2 + 4^2 + (-1)^2}}) + (\\frac{3}{\\sqrt{2^2 + 3^2 + (-1)^2}})(\\frac{4}{\\sqrt{6^2 + 4^2 + (-1)^2}}) + (\\frac{-1}{\\sqrt{2^2 + 3^2 + (-1)^2}})(\\frac{-1}{\\sqrt{6^2 + 4^2 + (-1)^2}})$\n\n",
+         "children": []
+        },
+        {
+         "tag": "0.2.3.4.3",
+         "depth": 4,
+         "phase": 50,
+         "gen_cnt": 48,
+         "n": 1,
+         "q": 0.77734375,
+         "is_terminal": false,
+         "is_completed": false,
+         "step_text": "## Step 4: Calculate the dot product $\\vec{a} \\cdot \\vec{b}$\n$\\vec{a} \\cdot \\vec{b} = (\\frac{2}{\\sqrt{14}}, \\frac{3}{\\sqrt{14}}, \\frac{-1}{\\sqrt{14}}) \\cdot (\\frac{6}{\\sqrt{61}}, \\frac{4}{\\sqrt{61}}, \\frac{-1}{\\sqrt{61}}) = \\frac{12 + 12 - 1}{\\sqrt{14 \\cdot 61}} = \\frac{23}{\\sqrt{854}}$\n\n",
+         "children": [
+          {
+           "tag": "0.2.3.4.3.1",
+           "depth": 5,
+           "phase": 51,
+           "gen_cnt": 49,
+           "n": 1,
+           "q": 0.8173828125,
+           "is_terminal": false,
+           "is_completed": false,
+           "step_text": "## Step 5: Calculate the magnitude of $\\vec{a}$ and $\\vec{b}$\n$\\|\\vec{a}\\| = \\sqrt{\\frac{2^2 + 3^2 + (-1)^2}{14}} = \\sqrt{\\frac{14}{14}} = 1$\n$\\|\\vec{b}\\| = \\sqrt{\\frac{6^2 + 4^2 + (-1)^2}{61}} = \\sqrt{\\frac{36 + 16 + 1}{61}} = \\sqrt{\\frac{53}{61}}$\n\n",
+           "children": [
+            {
+             "tag": "0.2.3.4.3.1.1",
+             "depth": 6,
+             "phase": 53,
+             "gen_cnt": 51,
+             "n": 1,
+             "q": 0.45703125,
+             "is_terminal": false,
+             "is_completed": false,
+             "step_text": "## Step 6: Calculate $\\cos{\\theta}$\n$\\cos{\\theta} = \\frac{\\vec{a} \\cdot \\vec{b}}{\\|\\vec{a}\\|\\|\\vec{b}\\|} = \\frac{\\frac{23}{\\sqrt{854}}}{1 \\cdot \\sqrt{\\frac{53}{61}}} = \\frac{23}{\\sqrt{854} \\cdot \\sqrt{\\frac{53}{61}}} = \\frac{23}{\\sqrt{\\frac{854 \\cdot 61}{61 \\cdot 53}}} = \\frac{23}{\\sqrt{\\frac{51758}{3973}}} = \\frac{23}{\\sqrt{13.277}} = \\frac{23}{\\sqrt{13.277}} = \\frac{23}{\\sqrt{13.277}} \\cdot \\frac{\\sqrt{13.277}}{\\sqrt{13.277}} = \\frac{23\\sqrt{13.277}}{13.277} = \\frac{23\\sqrt{2606}}{28639}$\n\n",
+             "children": [
+              {
+               "tag": "0.2.3.4.3.1.1.1",
+               "depth": 7,
+               "phase": 54,
+               "gen_cnt": 52,
+               "n": 1,
+               "q": 0.611328125,
+               "is_terminal": false,
+               "is_completed": false,
+               "step_text": "## Step 7: Find the angle $\\theta$ in degrees\nSince $\\cos{\\theta} = \\frac{23\\sqrt{2606}}{28639}$, we can find the value of $\\theta$ by taking the inverse cosine (arccos) of both sides.\n$\\theta = \\arccos{\\frac{23\\sqrt{2606}}{28639}}$\n\n",
+               "children": []
+              },
+              {
+               "tag": "0.2.3.4.3.1.1.2",
+               "depth": 7,
+               "phase": 54,
+               "gen_cnt": 52,
+               "n": 1,
+               "q": 0.287841796875,
+               "is_terminal": false,
+               "is_completed": false,
+               "step_text": "## Step 7: Simplify and convert to degrees\nSubstituting the values, $\\cos{\\theta} = \\frac{23\\sqrt{2606}}{28639}$.\nTherefore, $\\theta = \\cos^{-1} \\left( \\frac{23\\sqrt{2606}}{28639} \\right)$. Using a calculator, we find $\\theta \\approx 30.1628$. Rounded to two decimal places, we get $\\theta \\approx 30.16^{\\circ}$.\n\n",
+               "children": []
+              },
+              {
+               "tag": "0.2.3.4.3.1.1.3",
+               "depth": 7,
+               "phase": 54,
+               "gen_cnt": 52,
+               "n": 1,
+               "q": 0.6689453125,
+               "is_terminal": false,
+               "is_completed": false,
+               "step_text": "## Step 7: Calculate the final value of $\\cos{\\theta}$\n$\\cos{\\theta} = \\frac{23\\sqrt{2606}}{28639}$\n\n",
+               "children": []
+              },
+              {
+               "tag": "0.2.3.4.3.1.1.4",
+               "depth": 7,
+               "phase": 54,
+               "gen_cnt": 52,
+               "n": 1,
+               "q": 0.615234375,
+               "is_terminal": false,
+               "is_completed": false,
+               "step_text": "## Step 7: Calculate the angle $\\theta$\n$\\theta = \\arccos{\\left( \\frac{23\\sqrt{2606}}{28639}\\right)}$\n\n",
+               "children": []
+              }
+             ]
+            },
+            {
+             "tag": "0.2.3.4.3.1.2",
+             "depth": 6,
+             "phase": 53,
+             "gen_cnt": 51,
+             "n": 1,
+             "q": 0.88232421875,
+             "is_terminal": false,
+             "is_completed": false,
+             "step_text": "## Step 6: Substitute the calculated values into the formula\n$\\cos{\\theta} = \\frac{\\frac{23}{\\sqrt{854}}}{(1)(\\sqrt{\\frac{53}{61}})} = \\frac{23}{\\sqrt{854} \\cdot \\sqrt{\\frac{53}{61}}}$\n\n",
+             "children": []
+            },
+            {
+             "tag": "0.2.3.4.3.1.3",
+             "depth": 6,
+             "phase": 53,
+             "gen_cnt": 51,
+             "n": 1,
+             "q": 0.73095703125,
+             "is_terminal": false,
+             "is_completed": false,
+             "step_text": "## Step 6: Calculate $\\cos{\\theta}$\n$\\cos{\\theta} = \\frac{\\frac{23}{\\sqrt{854}}}{1 \\cdot \\sqrt{\\frac{53}{61}}} = \\frac{23}{\\sqrt{854} \\cdot \\sqrt{\\frac{53}{61}}} = \\frac{23}{\\sqrt{854 \\cdot 53/61}} = \\frac{23}{\\sqrt{\\frac{45026}{61}}} = \\frac{23}{\\sqrt{742}}$\n\n",
+             "children": []
+            },
+            {
+             "tag": "0.2.3.4.3.1.4",
+             "depth": 6,
+             "phase": 53,
+             "gen_cnt": 51,
+             "n": 1,
+             "q": 0.80810546875,
+             "is_terminal": false,
+             "is_completed": false,
+             "step_text": "## Step 6: Plug in the values into the formula\n$\\cos{\\theta} = \\frac{\\frac{23}{\\sqrt{854}}}{1 \\cdot \\sqrt{\\frac{53}{61}}} = \\frac{23}{\\sqrt{854} \\cdot \\sqrt{\\frac{53}{61}}} = \\frac{23}{\\sqrt{\\frac{854 \\cdot 53}{61}}} = \\frac{23}{\\sqrt{\\frac{45278}{61}}} = \\frac{23}{\\sqrt{741.5135}} \\approx \\frac{23}{27.29545}$\n\n",
+             "children": []
+            }
+           ]
+          },
+          {
+           "tag": "0.2.3.4.3.2",
+           "depth": 5,
+           "phase": 51,
+           "gen_cnt": 49,
+           "n": 1,
+           "q": 0.88720703125,
+           "is_terminal": false,
+           "is_completed": false,
+           "step_text": "## Step 5: Calculate the magnitudes $\\|\\vec{a}\\|$ and $\\|\\vec{b}\\|$\n$\\|\\vec{a}\\| = \\sqrt{(\\frac{2}{\\sqrt{14}})^2 + (\\frac{3}{\\sqrt{14}})^2 + (\\frac{-1}{\\sqrt{14}})^2} = \\sqrt{\\frac{4 + 9 + 1}{14}} = \\sqrt{\\frac{14}{14}} = 1$\n$\\|\\vec{b}\\| = \\sqrt{(\\frac{6}{\\sqrt{61}})^2 + (\\frac{4}{\\sqrt{61}})^2 + (\\frac{-1}{\\sqrt{61}})^2} = \\sqrt{\\frac{36 + 16 + 1}{61}} = \\sqrt{\\frac{53}{61}}$\n\n",
+           "children": []
+          },
+          {
+           "tag": "0.2.3.4.3.3",
+           "depth": 5,
+           "phase": 51,
+           "gen_cnt": 49,
+           "n": 1,
+           "q": 0.87744140625,
+           "is_terminal": false,
+           "is_completed": false,
+           "step_text": "## Step 5: Calculate the magnitude of $\\vec{a}$ and $\\vec{b}$\n$\\|\\vec{a}\\| = \\sqrt{(\\frac{2}{\\sqrt{14}})^2 + (\\frac{3}{\\sqrt{14}})^2 + (\\frac{-1}{\\sqrt{14}})^2} = \\sqrt{\\frac{4 + 9 + 1}{14}} = \\sqrt{\\frac{14}{14}} = 1$\n$\\|\\vec{b}\\| = \\sqrt{(\\frac{6}{\\sqrt{61}})^2 + (\\frac{4}{\\sqrt{61}})^2 + (\\frac{-1}{\\sqrt{61}})^2} = \\sqrt{\\frac{36 + 16 + 1}{61}} = \\sqrt{\\frac{53}{61}}$\n\n",
+           "children": []
+          },
+          {
+           "tag": "0.2.3.4.3.4",
+           "depth": 5,
+           "phase": 51,
+           "gen_cnt": 49,
+           "n": 1,
+           "q": 0.89013671875,
+           "is_terminal": false,
+           "is_completed": false,
+           "step_text": "## Step 5: Calculate the magnitude of $\\vec{a}$ and $\\vec{b}$\n$\\|\\vec{a}\\| = \\sqrt{(\\frac{2}{\\sqrt{14}})^2 + (\\frac{3}{\\sqrt{14}})^2 + (\\frac{-1}{\\sqrt{14}})^2} = \\sqrt{\\frac{4 + 9 + 1}{14}} = \\sqrt{\\frac{14}{14}} = 1$\n\n",
+           "children": [
+            {
+             "tag": "0.2.3.4.3.4.1",
+             "depth": 6,
+             "phase": 52,
+             "gen_cnt": 50,
+             "n": 1,
+             "q": 0.92822265625,
+             "is_terminal": false,
+             "is_completed": false,
+             "step_text": "$\\|\\vec{b}\\| = \\sqrt{(\\frac{6}{\\sqrt{61}})^2 + (\\frac{4}{\\sqrt{61}})^2 + (\\frac{-1}{\\sqrt{61}})^2} = \\sqrt{\\frac{36 + 16 + 1}{61}} = \\sqrt{\\frac{53}{61}}$\n\n",
+             "children": []
+            }
+           ]
+          }
+         ]
+        },
+        {
+         "tag": "0.2.3.4.4",
+         "depth": 4,
+         "phase": 50,
+         "gen_cnt": 48,
+         "n": 1,
+         "q": 0.7490234375,
+         "is_terminal": false,
+         "is_completed": false,
+         "step_text": "## Step 4: Substitute the values of a and b into the formula\nWe calculate the dot product as $(\\frac{2}{\\sqrt{2^2 + 3^2 + (-1)^2}})(\\frac{6}{\\sqrt{6^2 + 4^2 + (-1)^2}}) + (\\frac{3}{\\sqrt{2^2 + 3^2 + (-1)^2}})(\\frac{4}{\\sqrt{6^2 + 4^2 + (-1)^2}}) + (\\frac{-1}{\\sqrt{2^2 + 3^2 + (-1)^2}})(\\frac{-1}{\\sqrt{6^2 + 4^2 + (-1)^2}})$\n\n",
+         "children": []
+        }
+       ]
+      }
+     ]
+    },
+    {
+     "tag": "0.2.4",
+     "depth": 2,
+     "phase": 1,
+     "gen_cnt": 2,
+     "n": 4,
+     "q": 0.482330322265625,
+     "is_terminal": false,
+     "is_completed": false,
+     "step_text": "## Step 2: Identify the equations of the lines\nThe second equation is $6x = -y = -4z$, which can be written as $\\frac{x}{6} = \\frac{y}{-1} = \\frac{-z}{-4}$.\n\n",
+     "children": [
+      {
+       "tag": "0.2.4.1",
+       "depth": 3,
+       "phase": 3,
+       "gen_cnt": 4,
+       "n": 2,
+       "q": 0.5872802734375,
+       "is_terminal": false,
+       "is_completed": false,
+       "step_text": "## Step 3: Determine the direction ratios of the second line\nThe direction ratios of the second line are (6, -1, 4).\n\n",
+       "children": [
+        {
+         "tag": "0.2.4.1.1",
+         "depth": 4,
+         "phase": 5,
+         "gen_cnt": 6,
+         "n": 2,
+         "q": 0.6397705078125,
+         "is_terminal": false,
+         "is_completed": false,
+         "step_text": "## Step 4: Calculate the angle between the lines\nTo find the angle between the lines, we can use the dot product of the direction vectors. The dot product is calculated as:\n$\\mathbf{u} \\cdot \\mathbf{v} = u_1v_1 + u_2v_2 + u_3v_3$\n\n",
+         "children": [
+          {
+           "tag": "0.2.4.1.1.1",
+           "depth": 5,
+           "phase": 6,
+           "gen_cnt": 7,
+           "n": 1,
+           "q": 0.355712890625,
+           "is_terminal": false,
+           "is_completed": false,
+           "step_text": "## Step 5: Calculate the dot product\nThe dot product of the direction vectors of the two lines is:\n$\\left(\\frac{2}{1}\\right)\\left(\\frac{6}{1}\\right) + \\left(\\frac{3}{1}\\right)\\left(\\frac{-1}{1}\\right) + \\left(\\frac{-1}{1}\\right)\\left(\\frac{4}{1}\\right) = \\frac{12}{1} - \\frac{3}{1} - \\frac{4}{1} = \\frac{-5}{1}$\n\n",
+           "children": [
+            {
+             "tag": "0.2.4.1.1.1.1",
+             "depth": 6,
+             "phase": 7,
+             "gen_cnt": 8,
+             "n": 1,
+             "q": 0.8740234375,
+             "is_terminal": false,
+             "is_completed": false,
+             "step_text": "## Step 6: Calculate the magnitudes of the direction vectors\nThe magnitude of the direction vector of the first line is:\n$\\sqrt{\\left(\\frac{2}{1}\\right)^2 + \\left(\\frac{3}{1}\\right)^2 + \\left(\\frac{-1}{1}\\right)^2} = \\sqrt{\\frac{4}{1} + \\frac{9}{1} + \\frac{1}{1}} = \\sqrt{\\frac{14}{1}} = \\sqrt{14}$\n\n",
+             "children": []
+            },
+            {
+             "tag": "0.2.4.1.1.1.2",
+             "depth": 6,
+             "phase": 7,
+             "gen_cnt": 8,
+             "n": 1,
+             "q": 0.8671875,
+             "is_terminal": false,
+             "is_completed": false,
+             "step_text": "## Step 6: Find the magnitudes of the direction vectors\nThe magnitude of the direction vector of the first line is:\n$\\sqrt{\\left(\\frac{2}{1}\\right)^2 + \\left(\\frac{3}{1}\\right)^2 + \\left(\\frac{-1}{1}\\right)^2} = \\sqrt{\\frac{4}{1} + \\frac{9}{1} + \\frac{1}{1}} = \\sqrt{\\frac{14}{1}} = \\sqrt{14}$\n\n",
+             "children": []
+            },
+            {
+             "tag": "0.2.4.1.1.1.3",
+             "depth": 6,
+             "phase": 7,
+             "gen_cnt": 8,
+             "n": 1,
+             "q": 0.85009765625,
+             "is_terminal": false,
+             "is_completed": false,
+             "step_text": "## Step 6: Calculate the magnitude of the direction vectors\nThe magnitude of the direction vector of the first line is:\n$\\sqrt{\\left(\\frac{2}{1}\\right)^2 + \\left(\\frac{3}{1}\\right)^2 + \\left(\\frac{-1}{1}\\right)^2} = \\sqrt{4 + 9 + 1} = \\sqrt{14}$\n\n",
+             "children": []
+            },
+            {
+             "tag": "0.2.4.1.1.1.4",
+             "depth": 6,
+             "phase": 7,
+             "gen_cnt": 8,
+             "n": 1,
+             "q": 0.89013671875,
+             "is_terminal": false,
+             "is_completed": false,
+             "step_text": "## Step 6: Calculate the magnitude of the first direction vector\nThe magnitude of the direction vector of the first line is:\n$\\sqrt{\\left(\\frac{2}{1}\\right)^2 + \\left(\\frac{3}{1}\\right)^2 + \\left(\\frac{-1}{1}\\right)^2} = \\sqrt{\\frac{4}{1} + \\frac{9}{1} + \\frac{1}{1}} = \\sqrt{\\frac{14}{1}} = \\sqrt{14}$\n\n",
+             "children": [
+              {
+               "tag": "0.2.4.1.1.1.4.1",
+               "depth": 7,
+               "phase": 8,
+               "gen_cnt": 9,
+               "n": 1,
+               "q": 0.88720703125,
+               "is_terminal": false,
+               "is_completed": false,
+               "step_text": "## Step 7: Calculate the magnitude of the second direction vector\nThe magnitude of the direction vector of the second line is:\n$\\sqrt{6^2 + (-1)^2 + 4^2} = \\sqrt{36 + 1 + 16} = \\sqrt{53}$\n\n",
+               "children": []
+              },
+              {
+               "tag": "0.2.4.1.1.1.4.2",
+               "depth": 7,
+               "phase": 8,
+               "gen_cnt": 9,
+               "n": 1,
+               "q": 0.92724609375,
+               "is_terminal": false,
+               "is_completed": false,
+               "step_text": "## Step 7: Calculate the magnitude of the second direction vector\nThe magnitude of the direction vector of the second line is:\n$\\sqrt{\\left(\\frac{6}{1}\\right)^2 + \\left(\\frac{-1}{1}\\right)^2 + \\left(\\frac{4}{1}\\right)^2} = \\sqrt{\\frac{36}{1} + \\frac{1}{1} + \\frac{16}{1}} = \\sqrt{\\frac{53}{1}} = \\sqrt{53}$\n\n",
+               "children": [
+                {
+                 "tag": "0.2.4.1.1.1.4.2.1",
+                 "depth": 8,
+                 "phase": 20,
+                 "gen_cnt": 20,
+                 "n": 1,
+                 "q": 0.865234375,
+                 "is_terminal": false,
+                 "is_completed": false,
+                 "step_text": "## Step 8: Calculate the cosine of the angle between the lines\nThe cosine of the angle between the lines is calculated as:\n$\\cos{\\theta} = \\frac{\\mathbf{u} \\cdot \\mathbf{v}}{\\|\\mathbf{u}\\|\\|\\mathbf{v}\\|} = \\frac{\\frac{-5}{1}}{\\sqrt{14}\\sqrt{53}} = \\frac{-5}{\\sqrt{14*53}} = \\frac{-5}{\\sqrt{738}}$\n\n",
+                 "children": []
+                },
+                {
+                 "tag": "0.2.4.1.1.1.4.2.2",
+                 "depth": 8,
+                 "phase": 20,
+                 "gen_cnt": 20,
+                 "n": 1,
+                 "q": 0.95458984375,
+                 "is_terminal": false,
+                 "is_completed": false,
+                 "step_text": "## Step 8: Calculate the cosine of the angle between the lines\nThe cosine of the angle between the lines is calculated as:\n$\\cos{\\theta} = \\frac{\\mathbf{u} \\cdot \\mathbf{v}}{|\\mathbf{u}||\\mathbf{v}|} = \\frac{\\frac{-5}{1}}{\\sqrt{14}\\sqrt{53}} = \\frac{\\frac{-5}{1}}{\\sqrt{14 \\cdot 53}} = \\frac{\\frac{-5}{1}}{\\sqrt{742}} = \\frac{-5}{\\sqrt{742}}$\n\n",
+                 "children": []
+                },
+                {
+                 "tag": "0.2.4.1.1.1.4.2.3",
+                 "depth": 8,
+                 "phase": 20,
+                 "gen_cnt": 20,
+                 "n": 1,
+                 "q": 0.91943359375,
+                 "is_terminal": false,
+                 "is_completed": false,
+                 "step_text": "## Step 8: Calculate the cosine of the angle between the lines\nUsing the formula $\\cos{\\theta} = \\frac{\\mathbf{u} \\cdot \\mathbf{v}}{\\| \\mathbf{u} \\| \\| \\mathbf{v} \\|}$, where $\\mathbf{u} = (\\frac{2}{1}, \\frac{3}{1}, \\frac{-1}{1})$ and $\\mathbf{v} = (\\frac{6}{1}, \\frac{-1}{1}, \\frac{4}{1})$.\n\n",
+                 "children": [
+                  {
+                   "tag": "0.2.4.1.1.1.4.2.3.1",
+                   "depth": 9,
+                   "phase": 21,
+                   "gen_cnt": 21,
+                   "n": 1,
+                   "q": 0.9755859375,
+                   "is_terminal": false,
+                   "is_completed": false,
+                   "step_text": "## Step 9: Substitute the values into the formula\n$\\cos{\\theta} = \\frac{\\frac{-5}{1}}{\\sqrt{14} \\sqrt{53}}$\n\n",
+                   "children": []
+                  },
+                  {
+                   "tag": "0.2.4.1.1.1.4.2.3.2",
+                   "depth": 9,
+                   "phase": 21,
+                   "gen_cnt": 21,
+                   "n": 1,
+                   "q": 0.943359375,
+                   "is_terminal": false,
+                   "is_completed": false,
+                   "step_text": "$\\cos{\\theta} = \\frac{\\frac{-5}{1}}{\\sqrt{14} \\sqrt{53}} = \\frac{\\frac{-5}{1}}{\\sqrt{14 \\times 53}} = \\frac{\\frac{-5}{1}}{\\sqrt{742}} = \\frac{-5}{\\sqrt{742}}$\n\n",
+                   "children": []
+                  },
+                  {
+                   "tag": "0.2.4.1.1.1.4.2.3.3",
+                   "depth": 9,
+                   "phase": 21,
+                   "gen_cnt": 21,
+                   "n": 1,
+                   "q": 0.962890625,
+                   "is_terminal": false,
+                   "is_completed": false,
+                   "step_text": "## Step 9: Substitute the values into the formula\n$\\cos{\\theta} = \\frac{\\frac{-5}{1}}{\\sqrt{14} \\sqrt{53}} = \\frac{-5}{\\sqrt{14 \\times 53}}$\n\n",
+                   "children": []
+                  },
+                  {
+                   "tag": "0.2.4.1.1.1.4.2.3.4",
+                   "depth": 9,
+                   "phase": 21,
+                   "gen_cnt": 21,
+                   "n": 1,
+                   "q": 0.78271484375,
+                   "is_terminal": false,
+                   "is_completed": false,
+                   "step_text": "$\\cos{\\theta} = \\frac{\\frac{12}{1} - \\frac{3}{1} - \\frac{4}{1}}{\\sqrt{14} \\sqrt{53}} = \\frac{\\frac{5}{1}}{\\sqrt{14} \\sqrt{53}} = \\frac{5}{\\sqrt{14} \\sqrt{53}} = \\frac{5}{\\sqrt{14 \\cdot 53}} = \\frac{5}{\\sqrt{738}}$\n\n",
+                   "children": []
+                  }
+                 ]
+                },
+                {
+                 "tag": "0.2.4.1.1.1.4.2.4",
+                 "depth": 8,
+                 "phase": 20,
+                 "gen_cnt": 20,
+                 "n": 1,
+                 "q": 0.95849609375,
+                 "is_terminal": false,
+                 "is_completed": false,
+                 "step_text": "## Step 8: Calculate the angle using the dot product formula\nThe angle $\\theta$ between the two lines is given by:\n$\\cos \\theta = \\frac{\\mathbf{u} \\cdot \\mathbf{v}}{\\|\\mathbf{u}\\|\\|\\mathbf{v}\\|} = \\frac{\\frac{-5}{1}}{\\sqrt{14} \\sqrt{53}} = \\frac{-5}{\\sqrt{14 \\cdot 53}} = \\frac{-5}{\\sqrt{742}}$\n\n",
+                 "children": []
+                }
+               ]
+              }
+             ]
+            }
+           ]
+          },
+          {
+           "tag": "0.2.4.1.1.2",
+           "depth": 5,
+           "phase": 6,
+           "gen_cnt": 7,
+           "n": 1,
+           "q": 0.9306640625,
+           "is_terminal": false,
+           "is_completed": false,
+           "step_text": "Let $\\mathbf{u} = \\begin{pmatrix} 2 \\\\ 3 \\\\ -1 \\end{pmatrix}$ and $\\mathbf{v} = \\begin{pmatrix} 6 \\\\ -1 \\\\ 4 \\end{pmatrix}$.\n\n",
+           "children": [
+            {
+             "tag": "0.2.4.1.1.2.1",
+             "depth": 6,
+             "phase": 39,
+             "gen_cnt": 37,
+             "n": 1,
+             "q": 0.97265625,
+             "is_terminal": false,
+             "is_completed": false,
+             "step_text": "## Step 5: Calculate the dot product\n$(2)(6) + (3)(-1) + (-1)(4) = 12 - 3 - 4 = 5$\n\n",
+             "children": []
+            },
+            {
+             "tag": "0.2.4.1.1.2.2",
+             "depth": 6,
+             "phase": 39,
+             "gen_cnt": 37,
+             "n": 1,
+             "q": 0.96630859375,
+             "is_terminal": false,
+             "is_completed": false,
+             "step_text": "Calculating the dot product:\n$\\begin{pmatrix} 2 \\\\ 3 \\\\ -1 \\end{pmatrix} \\cdot \\begin{pmatrix} 6 \\\\ -1 \\\\ 4 \\end{pmatrix} = (2)(6) + (3)(-1) + (-1)(4) = 12 - 3 - 4 = 5$\n\n",
+             "children": [
+              {
+               "tag": "0.2.4.1.1.2.2.1",
+               "depth": 7,
+               "phase": 40,
+               "gen_cnt": 38,
+               "n": 1,
+               "q": 0.98388671875,
+               "is_terminal": false,
+               "is_completed": false,
+               "step_text": "## Step 5: Calculate the magnitude of the direction vectors\nThe magnitude of the direction vector $\\mathbf{u}$ is calculated as:\n$\\sqrt{(2)^2 + (3)^2 + (-1)^2} = \\sqrt{4 + 9 + 1} = \\sqrt{14}$\n\n",
+               "children": []
+              },
+              {
+               "tag": "0.2.4.1.1.2.2.2",
+               "depth": 7,
+               "phase": 40,
+               "gen_cnt": 38,
+               "n": 1,
+               "q": 0.98974609375,
+               "is_terminal": false,
+               "is_completed": false,
+               "step_text": "## Step 5: Find the magnitudes of the direction vectors\nThe magnitude of $\\mathbf{u}$ is $\\sqrt{2^2+3^2+(-1)^2}=\\sqrt{4+9+1}=\\sqrt{14}$.\nThe magnitude of $\\mathbf{v}$ is $\\sqrt{6^2+(-1)^2+4^2}=\\sqrt{36+1+16}=\\sqrt{53}$.\n\n",
+               "children": []
+              },
+              {
+               "tag": "0.2.4.1.1.2.2.3",
+               "depth": 7,
+               "phase": 40,
+               "gen_cnt": 38,
+               "n": 1,
+               "q": 0.98828125,
+               "is_terminal": false,
+               "is_completed": false,
+               "step_text": "## Step 5: Calculate the magnitudes of the direction vectors\nThe magnitude of $\\mathbf{u}$ is calculated as:\n$|\\mathbf{u}| = \\sqrt{(2)^2 + (3)^2 + (-1)^2} = \\sqrt{4 + 9 + 1} = \\sqrt{14}$\n\n",
+               "children": []
+              },
+              {
+               "tag": "0.2.4.1.1.2.2.4",
+               "depth": 7,
+               "phase": 40,
+               "gen_cnt": 38,
+               "n": 1,
+               "q": 0.986328125,
+               "is_terminal": false,
+               "is_completed": false,
+               "step_text": "## Step 5: Calculate the magnitudes of the direction vectors\nThe magnitude of a vector $\\mathbf{a} = \\begin{pmatrix} a_1 \\\\ a_2 \\\\ a_3 \\end{pmatrix}$ is calculated as:\n$\\|\\mathbf{a}\\| = \\sqrt{a_1^2 + a_2^2 + a_3^2}$\n\n",
+               "children": [
+                {
+                 "tag": "0.2.4.1.1.2.2.4.1",
+                 "depth": 8,
+                 "phase": 41,
+                 "gen_cnt": 39,
+                 "n": 1,
+                 "q": 0.845703125,
+                 "is_terminal": false,
+                 "is_completed": false,
+                 "step_text": "For the first line, the magnitude is $\\sqrt{2^2 + 3^2 + (-1)^2} = \\sqrt{13}$.\n\n",
+                 "children": []
+                },
+                {
+                 "tag": "0.2.4.1.1.2.2.4.2",
+                 "depth": 8,
+                 "phase": 41,
+                 "gen_cnt": 39,
+                 "n": 1,
+                 "q": 0.99072265625,
+                 "is_terminal": false,
+                 "is_completed": false,
+                 "step_text": "Calculating the magnitude of $\\mathbf{u}$:\n$\\|\\mathbf{u}\\| = \\sqrt{(2)^2 + (3)^2 + (-1)^2} = \\sqrt{4 + 9 + 1} = \\sqrt{14}$\n\n",
+                 "children": [
+                  {
+                   "tag": "0.2.4.1.1.2.2.4.2.1",
+                   "depth": 9,
+                   "phase": 43,
+                   "gen_cnt": 41,
+                   "n": 1,
+                   "q": 0.99560546875,
+                   "is_terminal": false,
+                   "is_completed": false,
+                   "step_text": "Calculating the magnitude of $\\mathbf{v}$:\n$\\|\\mathbf{v}\\| = \\sqrt{(6)^2 + (-1)^2 + (4)^2} = \\sqrt{36 + 1 + 16} = \\sqrt{53}$\n\n",
+                   "children": []
+                  }
+                 ]
+                },
+                {
+                 "tag": "0.2.4.1.1.2.2.4.3",
+                 "depth": 8,
+                 "phase": 41,
+                 "gen_cnt": 39,
+                 "n": 1,
+                 "q": 0.98046875,
+                 "is_terminal": false,
+                 "is_completed": false,
+                 "step_text": "Let $\\mathbf{u} = \\begin{pmatrix} 2 \\\\ 3 \\\\ -1 \\end{pmatrix}$ and $\\mathbf{v} = \\begin{pmatrix} 6 \\\\ -1 \\\\ 4 \\end{pmatrix}$.\n\n",
+                 "children": []
+                },
+                {
+                 "tag": "0.2.4.1.1.2.2.4.4",
+                 "depth": 8,
+                 "phase": 41,
+                 "gen_cnt": 39,
+                 "n": 1,
+                 "q": 0.98974609375,
+                 "is_terminal": false,
+                 "is_completed": false,
+                 "step_text": "For $\\mathbf{u} = \\begin{pmatrix} 2 \\\\ 3 \\\\ -1 \\end{pmatrix}$:\n$\\|\\mathbf{u}\\| = \\sqrt{2^2 + 3^2 + (-1)^2} = \\sqrt{4 + 9 + 1} = \\sqrt{14}$\n\n",
+                 "children": [
+                  {
+                   "tag": "0.2.4.1.1.2.2.4.4.1",
+                   "depth": 9,
+                   "phase": 42,
+                   "gen_cnt": 40,
+                   "n": 1,
+                   "q": 0.9951171875,
+                   "is_terminal": false,
+                   "is_completed": false,
+                   "step_text": "For $\\mathbf{v} = \\begin{pmatrix} 6 \\\\ -1 \\\\ 4 \\end{pmatrix}$:\n$\\|\\mathbf{v}\\| = \\sqrt{6^2 + (-1)^2 + 4^2} = \\sqrt{36 + 1 + 16} = \\sqrt{53}$\n\n",
+                   "children": []
+                  }
+                 ]
+                }
+               ]
+              }
+             ]
+            },
+            {
+             "tag": "0.2.4.1.1.2.3",
+             "depth": 6,
+             "phase": 39,
+             "gen_cnt": 37,
+             "n": 1,
+             "q": 0.970703125,
+             "is_terminal": false,
+             "is_completed": false,
+             "step_text": "$\\mathbf{u} \\cdot \\mathbf{v} = (2)(6) + (3)(-1) + (-1)(4) = 12 - 3 - 4 = 5$\n\n",
+             "children": []
+            },
+            {
+             "tag": "0.2.4.1.1.2.4",
+             "depth": 6,
+             "phase": 39,
+             "gen_cnt": 37,
+             "n": 1,
+             "q": 0.96484375,
+             "is_terminal": false,
+             "is_completed": false,
+             "step_text": "## Step 5: Substitute the values into the dot product formula\n$(2)(6) + (3)(-1) + (-1)(4) = 12 - 3 - 4 = 5$\n\n",
+             "children": []
+            }
+           ]
+          },
+          {
+           "tag": "0.2.4.1.1.3",
+           "depth": 5,
+           "phase": 6,
+           "gen_cnt": 7,
+           "n": 2,
+           "q": 0.4398193359375,
+           "is_terminal": false,
+           "is_completed": false,
+           "step_text": "## Step 5: Plug in the values for the direction vectors\nFor the first line, the direction vector is $\\mathbf{u}_1 = \\left( \\frac{2}{3} \\right)\\mathbf{i} + \\left( \\frac{3}{3} \\right)\\mathbf{j} + \\left( \\frac{-1}{3} \\right)\\mathbf{k} = \\frac{2}{3}\\mathbf{i} + \\mathbf{j} - \\frac{1}{3}\\mathbf{k}$\nFor the second line, the direction vector is $\\mathbf{u}_2 = \\left( \\frac{6}{4} \\right)\\mathbf{i} + \\left( \\frac{-1}{4} \\right)\\mathbf{j} + \\left( \\frac{4}{4} \\right)\\mathbf{k} = \\frac{3}{2}\\mathbf{i} - \\frac{1}{4}\\mathbf{j} + 1\\mathbf{k}$\n\n",
+           "children": [
+            {
+             "tag": "0.2.4.1.1.3.1",
+             "depth": 6,
+             "phase": 9,
+             "gen_cnt": 10,
+             "n": 1,
+             "q": 0.89501953125,
+             "is_terminal": false,
+             "is_completed": false,
+             "step_text": "## Step 6: Calculate the dot product\n$\\mathbf{u}_1 \\cdot \\mathbf{u}_2 = \\left(\\frac{2}{3}\\right)\\left(\\frac{3}{2}\\right) + \\left(1\\right)\\left(-\\frac{1}{4}\\right) + \\left(-\\frac{1}{3}\\right)\\left(1\\right) = 1 - \\frac{1}{4} - \\frac{1}{3} = \\frac{12}{12} - \\frac{3}{12} - \\frac{4}{12} = \\frac{5}{12}$\n\n",
+             "children": []
+            },
+            {
+             "tag": "0.2.4.1.1.3.2",
+             "depth": 6,
+             "phase": 9,
+             "gen_cnt": 10,
+             "n": 1,
+             "q": 0.3310546875,
+             "is_terminal": false,
+             "is_completed": false,
+             "step_text": "## Step 6: Set up the dot product equation\nThe dot product of $\\mathbf{u}_1$ and $\\mathbf{u}_2$ is:\n$\\left( \\frac{2}{3} \\right)\\left( \\frac{3}{2} \\right) + (1)\\left( -\\frac{1}{4} \\right) + \\left( -\\frac{1}{3} \\right)(1) = \\frac{1}{2} - \\frac{1}{4} - \\frac{1}{3} = \\frac{6}{12} - \\frac{3}{12} - \\frac{4}{12} = \\frac{6 - 7 - 12}{12} = -\\frac{19}{12}$\n\n",
+             "children": []
+            },
+            {
+             "tag": "0.2.4.1.1.3.3",
+             "depth": 6,
+             "phase": 9,
+             "gen_cnt": 10,
+             "n": 1,
+             "q": 0.896484375,
+             "is_terminal": false,
+             "is_completed": false,
+             "step_text": "## Step 6: Calculate the dot product of the direction vectors\nThe dot product is calculated as:\n$\\left( \\frac{2}{3} \\right)\\left( \\frac{3}{2} \\right) + \\left( 1 \\right)\\left( -\\frac{1}{4} \\right) + \\left( -\\frac{1}{3} \\right)\\left( 1 \\right)$\n$= \\frac{6}{6} - \\frac{1}{4} - \\frac{1}{3}$\n$= 1 - \\frac{1}{4} - \\frac{1}{3}$\n$= \\frac{12}{12} - \\frac{3}{12} - \\frac{4}{12}$\n$= \\frac{5}{12}$\n\n",
+             "children": []
+            },
+            {
+             "tag": "0.2.4.1.1.3.4",
+             "depth": 6,
+             "phase": 9,
+             "gen_cnt": 10,
+             "n": 2,
+             "q": 0.4874267578125,
+             "is_terminal": false,
+             "is_completed": false,
+             "step_text": "## Step 6: Calculate the dot product\n$\\mathbf{u}_1 \\cdot \\mathbf{u}_2 = \\left( \\frac{2}{3} \\right)\\left( \\frac{3}{2} \\right) + \\left( 1 \\right)\\left( - \\frac{1}{4} \\right) + \\left( - \\frac{1}{3} \\right) \\left( 1 \\right)$\n$\\mathbf{u}_1 \\cdot \\mathbf{u}_2 = \\frac{6}{6} - \\frac{1}{4} - \\frac{1}{3} = 1 - \\frac{1}{4} - \\frac{1}{3}$\n$\\mathbf{u}_1 \\cdot \\mathbf{u}_2 = \\frac{57}{12} = \\frac{19}{4}$\n\n",
+             "children": [
+              {
+               "tag": "0.2.4.1.1.3.4.1",
+               "depth": 7,
+               "phase": 10,
+               "gen_cnt": 11,
+               "n": 1,
+               "q": 0.83740234375,
+               "is_terminal": false,
+               "is_completed": false,
+               "step_text": "## Step 7: Calculate the magnitudes of the direction vectors\nThe magnitude of $\\mathbf{u}_1$ is:\n$|\\mathbf{u}_1| = \\sqrt{\\left( \\frac{2}{3} \\right)^2 + 1^2 + \\left( - \\frac{1}{3} \\right)^2} = \\sqrt{\\frac{4}{9} + 1 + \\frac{1}{9}} = \\sqrt{\\frac{5}{9}} = \\frac{\\sqrt{5}}{3}$\nThe magnitude of $\\mathbf{u}_2$ is:\n$|\\mathbf{u}_2| = \\sqrt{\\left( \\frac{3}{2} \\right)^2 + \\left( - \\frac{1}{4} \\right)^2 + 1^2} = \\sqrt{\\frac{9}{4} + \\frac{1}{16} + 1} = \\sqrt{\\frac{121}{16}} = \\frac{11}{4}$\n\n",
+               "children": []
+              },
+              {
+               "tag": "0.2.4.1.1.3.4.2",
+               "depth": 7,
+               "phase": 10,
+               "gen_cnt": 11,
+               "n": 1,
+               "q": 0.8671875,
+               "is_terminal": false,
+               "is_completed": false,
+               "step_text": "## Step 7: Calculate the magnitude of the direction vectors\nThe magnitude of the direction vector $\\mathbf{u}_1$ is:\n$|\\mathbf{u}_1| = \\sqrt{\\left( \\frac{2}{3} \\right)^2 + \\left( 1 \\right)^2 + \\left( -\\frac{1}{3} \\right)^2} = \\sqrt{\\frac{4}{9} + 1 + \\frac{1}{9}} = \\sqrt{\\frac{26}{9}} = \\frac{\\sqrt{26}}{3}$\nThe magnitude of the direction vector $\\mathbf{u}_2$ is:\n$|\\mathbf{u}_2| = \\sqrt{\\left( \\frac{3}{2} \\right)^2 + \\left( -\\frac{1}{4} \\right)^2 + \\left( 1 \\right)^2} = \\sqrt{\\frac{9}{4} + \\frac{1}{16} + 1} = \\sqrt{\\frac{225}{16}} = \\frac{15}{4}$\n\n",
+               "children": []
+              },
+              {
+               "tag": "0.2.4.1.1.3.4.3",
+               "depth": 7,
+               "phase": 10,
+               "gen_cnt": 11,
+               "n": 2,
+               "q": 0.5491943359375,
+               "is_terminal": false,
+               "is_completed": false,
+               "step_text": "## Step 7: Calculate the magnitudes of the direction vectors\nThe magnitude of the first direction vector is:\n$|\\mathbf{u}_1| = \\sqrt{ \\left( \\frac{2}{3} \\right)^2 + 1^2 + \\left( - \\frac{1}{3} \\right)^2 }$\n$|\\mathbf{u}_1| = \\sqrt{ \\frac{4}{9} + 1 + \\frac{1}{9} }$\n$|\\mathbf{u}_1| = \\sqrt{ \\frac{5}{9} }$\nThe magnitude of the second direction vector is:\n$|\\mathbf{u}_2| = \\sqrt{ \\left( \\frac{3}{2} \\right)^2 + \\left( - \\frac{1}{4} \\right)^2 + 1^2 }$\n$|\\mathbf{u}_2| = \\sqrt{ \\frac{9}{4} + \\frac{1}{16} + 1 }$\n$|\\mathbf{u}_2| = \\sqrt{ \\frac{9}{4} + \\frac{1}{16} + \\frac{16}{16} }$\n$|\\mathbf{u}_2| = \\sqrt{ \\frac{9}{4} + \\frac{17}{16} }$\n$|\\mathbf{u}_2| = \\sqrt{ \\frac{144 + 17}{64} }$\n$|\\mathbf{u}_2| = \\sqrt{ \\frac{161}{64} }$\n\n",
+               "children": [
+                {
+                 "tag": "0.2.4.1.1.3.4.3.1",
+                 "depth": 8,
+                 "phase": 11,
+                 "gen_cnt": 12,
+                 "n": 1,
+                 "q": 0.89892578125,
+                 "is_terminal": false,
+                 "is_completed": false,
+                 "step_text": "## Step 8: Simplify the magnitudes of the direction vectors\n$|\\mathbf{u}_1| = \\sqrt{ \\frac{5}{9} } = \\frac{\\sqrt{5}}{3}$\n$|\\mathbf{u}_2| = \\sqrt{ \\frac{161}{64} } = \\frac{\\sqrt{161}}{8}$\n\n",
+                 "children": []
+                },
+                {
+                 "tag": "0.2.4.1.1.3.4.3.2",
+                 "depth": 8,
+                 "phase": 11,
+                 "gen_cnt": 12,
+                 "n": 1,
+                 "q": 0.8671875,
+                 "is_terminal": false,
+                 "is_completed": false,
+                 "step_text": "## Step 8: Plug in the values into the formula for the angle between two lines\n$\\cos \\theta = \\frac{\\mathbf{u}_1 \\cdot \\mathbf{u}_2}{|\\mathbf{u}_1||\\mathbf{u}_2|} = \\frac{\\frac{19}{4}}{\\sqrt{ \\frac{5}{9}} \\sqrt{ \\frac{161}{64} }}$\n\n",
+                 "children": []
+                },
+                {
+                 "tag": "0.2.4.1.1.3.4.3.3",
+                 "depth": 8,
+                 "phase": 11,
+                 "gen_cnt": 12,
+                 "n": 2,
+                 "q": 0.6031494140625,
+                 "is_terminal": false,
+                 "is_completed": false,
+                 "step_text": "## Step 8: Use the formula for the angle between two lines\nThe formula for the angle $\\theta$ between two lines with direction vectors $\\mathbf{u}_1$ and $\\mathbf{u}_2$ is:\n$\\cos{\\theta} = \\frac{\\mathbf{u}_1 \\cdot \\mathbf{u}_2}{|\\mathbf{u}_1| |\\mathbf{u}_2|}$\n\n",
+                 "children": [
+                  {
+                   "tag": "0.2.4.1.1.3.4.3.3.1",
+                   "depth": 9,
+                   "phase": 12,
+                   "gen_cnt": 13,
+                   "n": 2,
+                   "q": 0.5989990234375,
+                   "is_terminal": false,
+                   "is_completed": false,
+                   "step_text": "## Step 9: Calculate the cosine of the angle\n$\\cos{\\theta} = \\frac{\\frac{19}{4}}{\\sqrt{ \\frac{5}{9} } \\sqrt{ \\frac{161}{64} } }$\n$\\cos{\\theta} = \\frac{\\frac{19}{4}}{\\frac{\\sqrt{5}}{3}\\frac{\\sqrt{161}}{8}}$\n$\\cos{\\theta} = \\frac{\\frac{19}{4}}{\\frac{\\sqrt{805}}{24}}$\n$\\cos{\\theta} = \\frac{\\frac{19}{4}}{\\frac{\\sqrt{5}\\sqrt{161}}{24}}$\n$\\cos{\\theta} = \\frac{\\frac{19}{4}}{\\frac{\\sqrt{805}}{24}}$\n$\\cos{\\theta} = \\frac{19}{4} \\cdot \\frac{24}{\\sqrt{805}}$\n$\\cos{\\theta} = \\frac{456}{4\\sqrt{805}}$\n$\\cos{\\theta} = \\frac{114}{\\sqrt{805}}$\n\n",
+                   "children": [
+                    {
+                     "tag": "0.2.4.1.1.3.4.3.3.1.1",
+                     "depth": 10,
+                     "phase": 13,
+                     "gen_cnt": 14,
+                     "n": 1,
+                     "q": 0.85205078125,
+                     "is_terminal": false,
+                     "is_completed": false,
+                     "step_text": "## Step 10: Find the angle\n$\\theta = \\cos^{-1} \\left( \\frac{114}{\\sqrt{805}} \\right)$\n\n",
+                     "children": []
+                    },
+                    {
+                     "tag": "0.2.4.1.1.3.4.3.3.1.2",
+                     "depth": 10,
+                     "phase": 13,
+                     "gen_cnt": 14,
+                     "n": 1,
+                     "q": 0.8310546875,
+                     "is_terminal": false,
+                     "is_completed": false,
+                     "step_text": "## Step 10: Find the angle in degrees\nThe angle in degrees is calculated using the inverse cosine function:\n$\\theta = \\cos^{-1} \\left( \\frac{114}{\\sqrt{805}} \\right)$\n\n",
+                     "children": []
+                    },
+                    {
+                     "tag": "0.2.4.1.1.3.4.3.3.1.3",
+                     "depth": 10,
+                     "phase": 13,
+                     "gen_cnt": 14,
+                     "n": 2,
+                     "q": 0.5906982421875,
+                     "is_terminal": false,
+                     "is_completed": false,
+                     "step_text": "## Step 10: Calculate the angle in degrees\n$\\theta = \\arccos{\\left( \\frac{114}{\\sqrt{805}} \\right)}$\nTo find the angle in degrees, we need to evaluate $\\arccos{\\left( \\frac{114}{\\sqrt{805}} \\right)}$.\n\n",
+                     "children": [
+                      {
+                       "tag": "0.2.4.1.1.3.4.3.3.1.3.1",
+                       "depth": 11,
+                       "phase": 14,
+                       "gen_cnt": 15,
+                       "n": 1,
+                       "q": 0.12249755859375,
+                       "is_terminal": true,
+                       "is_completed": true,
+                       "step_text": "The final answer is: $\\boxed{86.234}$",
+                       "children": []
+                      },
+                      {
+                       "tag": "0.2.4.1.1.3.4.3.3.1.3.2",
+                       "depth": 11,
+                       "phase": 14,
+                       "gen_cnt": 15,
+                       "n": 2,
+                       "q": 0.352294921875,
+                       "is_terminal": true,
+                       "is_completed": true,
+                       "step_text": "The final answer is: $\\boxed{80.5}$",
+                       "children": []
+                      },
+                      {
+                       "tag": "0.2.4.1.1.3.4.3.3.1.3.3",
+                       "depth": 11,
+                       "phase": 14,
+                       "gen_cnt": 15,
+                       "n": 1,
+                       "q": 0.055816650390625,
+                       "is_terminal": true,
+                       "is_completed": true,
+                       "step_text": "The final answer is: $\\boxed{18.870}$",
+                       "children": []
+                      },
+                      {
+                       "tag": "0.2.4.1.1.3.4.3.3.1.3.4",
+                       "depth": 11,
+                       "phase": 14,
+                       "gen_cnt": 15,
+                       "n": 1,
+                       "q": 0.048126220703125,
+                       "is_terminal": true,
+                       "is_completed": true,
+                       "step_text": "The final answer is: $\\boxed{18.61}$",
+                       "children": []
+                      }
+                     ]
+                    },
+                    {
+                     "tag": "0.2.4.1.1.3.4.3.3.1.4",
+                     "depth": 10,
+                     "phase": 13,
+                     "gen_cnt": 14,
+                     "n": 1,
+                     "q": 0.85205078125,
+                     "is_terminal": false,
+                     "is_completed": false,
+                     "step_text": "## Step 10: Calculate the angle in degrees\n$\\theta = \\arccos\\left( \\frac{114}{\\sqrt{805}} \\right)$\n\n",
+                     "children": []
+                    }
+                   ]
+                  },
+                  {
+                   "tag": "0.2.4.1.1.3.4.3.3.2",
+                   "depth": 9,
+                   "phase": 12,
+                   "gen_cnt": 13,
+                   "n": 1,
+                   "q": 0.90185546875,
+                   "is_terminal": false,
+                   "is_completed": false,
+                   "step_text": "## Step 9: Plug in the values into the formula\n$\\cos{\\theta} = \\frac{\\frac{19}{4}}{\\left( \\sqrt{ \\frac{5}{9} } \\right) \\left( \\sqrt{ \\frac{161}{64} } \\right)}$\n\n",
+                   "children": []
+                  },
+                  {
+                   "tag": "0.2.4.1.1.3.4.3.3.3",
+                   "depth": 9,
+                   "phase": 12,
+                   "gen_cnt": 13,
+                   "n": 1,
+                   "q": 0.8740234375,
+                   "is_terminal": false,
+                   "is_completed": false,
+                   "step_text": "## Step 9: Plug in the values\n$\\cos{\\theta} = \\frac{\\frac{19}{4}}{\\frac{5}{3} \\sqrt{ \\frac{161}{64} } }$\n$\\cos{\\theta} = \\frac{\\frac{19}{4}}{\\frac{5}{3} \\frac{41}{8} }$\n$\\cos{\\theta} = \\frac{\\frac{19}{4}}{\\frac{205}{24}}$\n$\\cos{\\theta} = \\frac{19}{4} \\cdot \\frac{24}{205}$\n$\\cos{\\theta} = \\frac{456}{820}$\n$\\cos{\\theta} = \\frac{114}{205}$\n\n",
+                   "children": []
+                  },
+                  {
+                   "tag": "0.2.4.1.1.3.4.3.3.4",
+                   "depth": 9,
+                   "phase": 12,
+                   "gen_cnt": 13,
+                   "n": 1,
+                   "q": 0.9150390625,
+                   "is_terminal": false,
+                   "is_completed": false,
+                   "step_text": "## Step 9: Substitute the calculated values into the formula\n$\\cos{\\theta} = \\frac{\\frac{19}{4}}{\\sqrt{ \\frac{5}{9} } \\sqrt{ \\frac{161}{64} } }$\n\n",
+                   "children": []
+                  }
+                 ]
+                },
+                {
+                 "tag": "0.2.4.1.1.3.4.3.4",
+                 "depth": 8,
+                 "phase": 11,
+                 "gen_cnt": 12,
+                 "n": 1,
+                 "q": 0.79052734375,
+                 "is_terminal": false,
+                 "is_completed": false,
+                 "step_text": "## Step 8: Calculate the cosine of the angle between the lines\n$\\cos{\\theta} = \\frac{\\mathbf{u}_1 \\cdot \\mathbf{u}_2}{|\\mathbf{u}_1| |\\mathbf{u}_2|}$\n$\\cos{\\theta} = \\frac{\\frac{19}{4}}{\\left( \\sqrt{ \\frac{5}{9} } \\right)\\left( \\sqrt{ \\frac{161}{64} } \\right)}$\n$\\cos{\\theta} = \\frac{\\frac{19}{4}}{\\frac{\\sqrt{5 \\cdot 161}}{9 \\cdot 8}}$\n$\\cos{\\theta} = \\frac{\\frac{19}{4}}{\\frac{\\sqrt{805}}{72}}$\n\n",
+                 "children": []
+                }
+               ]
+              },
+              {
+               "tag": "0.2.4.1.1.3.4.4",
+               "depth": 7,
+               "phase": 10,
+               "gen_cnt": 11,
+               "n": 1,
+               "q": 0.76904296875,
+               "is_terminal": false,
+               "is_completed": false,
+               "step_text": "## Step 7: Calculate the magnitudes of the direction vectors\n$|\\mathbf{u}_1| = \\sqrt{\\left( \\frac{2}{3} \\right)^2 + \\left( 1 \\right)^2 + \\left( - \\frac{1}{3} \\right)^2} = \\sqrt{\\frac{4}{9} + 1 + \\frac{1}{9}} = \\sqrt{\\frac{8}{9}} = \\frac{2\\sqrt{2}}{3}$\n$|\\mathbf{u}_2| = \\sqrt{\\left( \\frac{3}{2} \\right)^2 + \\left( - \\frac{1}{4} \\right)^2 + \\left( 1 \\right)^2} = \\sqrt{\\frac{9}{4} + \\frac{1}{16} + 1} = \\sqrt{\\frac{9}{4} + \\frac{1}{16} + \\frac{16}{16}} = \\sqrt{\\frac{9 \\cdot 4}{4 \\cdot 4} + \\frac{16}{16}} = \\sqrt{\\frac{36}{16} + 1} = \\sqrt{\\frac{36}{16} + \\frac{16}{16}} = \\sqrt{\\frac{52}{16}} = \\frac{\\sqrt{52}}{4}$\n\n",
+               "children": [
+                {
+                 "tag": "0.2.4.1.1.3.4.4.1",
+                 "depth": 8,
+                 "phase": 17,
+                 "gen_cnt": 17,
+                 "n": 1,
+                 "q": 0.86328125,
+                 "is_terminal": false,
+                 "is_completed": false,
+                 "step_text": "## Step 8: Use the dot product formula to find the angle\n$\\mathbf{u}_1 \\cdot \\mathbf{u}_2 = |\\mathbf{u}_1||\\mathbf{u}_2|\\cos{\\theta}$\n$\\frac{19}{4} = \\left( \\frac{2\\sqrt{2}}{3} \\right)\\left( \\frac{\\sqrt{52}}{4} \\right)\\cos{\\theta}$\n$\\frac{19}{4} = \\frac{\\sqrt{52}}{6}\\cos{\\theta}$\n\n",
+                 "children": [
+                  {
+                   "tag": "0.2.4.1.1.3.4.4.1.1",
+                   "depth": 9,
+                   "phase": 18,
+                   "gen_cnt": 18,
+                   "n": 1,
+                   "q": 0.79296875,
+                   "is_terminal": false,
+                   "is_completed": false,
+                   "step_text": "## Step 9: Solve for $\\cos{\\theta}$\n$\\cos{\\theta} = \\frac{\\frac{19}{4}}{\\frac{\\sqrt{52}}{6}} = \\frac{\\frac{19}{4}}{\\frac{\\sqrt{52}}{6}}$\n$\\cos{\\theta} = \\frac{19}{4} \\cdot \\frac{6}{\\sqrt{52}}$\n$\\cos{\\theta} = \\frac{19 \\cdot 6}{4 \\cdot \\sqrt{52}} = \\frac{114}{4 \\cdot \\sqrt{52}} = \\frac{114}{4 \\cdot 2\\sqrt{13}} = \\frac{57}{2\\sqrt{13}}$\n\n",
+                   "children": []
+                  },
+                  {
+                   "tag": "0.2.4.1.1.3.4.4.1.2",
+                   "depth": 9,
+                   "phase": 18,
+                   "gen_cnt": 18,
+                   "n": 1,
+                   "q": 0.90185546875,
+                   "is_terminal": false,
+                   "is_completed": false,
+                   "step_text": "## Step 9: Solve for the angle\n$\\cos{\\theta} = \\frac{\\frac{19}{4}}{\\frac{\\sqrt{52}}{6}} = \\frac{19}{4} \\cdot \\frac{6}{\\sqrt{52}} = \\frac{114}{4\\sqrt{52}} = \\frac{57}{2\\sqrt{52}} = \\frac{57}{2\\sqrt{4 \\cdot 13}} = \\frac{57}{2 \\cdot 2 \\sqrt{13}} = \\frac{57}{4\\sqrt{13}}$\n\n",
+                   "children": []
+                  },
+                  {
+                   "tag": "0.2.4.1.1.3.4.4.1.3",
+                   "depth": 9,
+                   "phase": 18,
+                   "gen_cnt": 18,
+                   "n": 1,
+                   "q": 0.77978515625,
+                   "is_terminal": false,
+                   "is_completed": false,
+                   "step_text": "## Step 9: Solve for $\\theta$\n$\\cos{\\theta} = \\frac{19}{4} \\cdot \\frac{6}{\\sqrt{52}} = \\frac{114}{4\\sqrt{52}} = \\frac{57}{2\\sqrt{13}}$\n$\\theta = \\cos^{-1}\\left( \\frac{57}{2\\sqrt{13}} \\right)$\n\n",
+                   "children": []
+                  },
+                  {
+                   "tag": "0.2.4.1.1.3.4.4.1.4",
+                   "depth": 9,
+                   "phase": 18,
+                   "gen_cnt": 18,
+                   "n": 1,
+                   "q": 0.77734375,
+                   "is_terminal": false,
+                   "is_completed": false,
+                   "step_text": "## Step 9: Solve for $\\theta$\n$\\cos{\\theta} = \\frac{\\frac{19}{4}}{\\frac{\\sqrt{52}}{6}} = \\frac{19}{4} \\cdot \\frac{6}{\\sqrt{52}} = \\frac{114}{4\\sqrt{52}} = \\frac{114}{4\\cdot 2\\sqrt{13}} = \\frac{57}{2\\sqrt{13}}$\n$\\theta = \\cos^{-1}\\left( \\frac{57}{2\\sqrt{13}} \\right)$\n\n",
+                   "children": []
+                  }
+                 ]
+                },
+                {
+                 "tag": "0.2.4.1.1.3.4.4.2",
+                 "depth": 8,
+                 "phase": 17,
+                 "gen_cnt": 17,
+                 "n": 1,
+                 "q": 0.85009765625,
+                 "is_terminal": false,
+                 "is_completed": false,
+                 "step_text": "## Step 8: Calculate the angle between the lines\n$\\cos \\theta = \\mathbf{u}_1 \\cdot \\mathbf{u}_2 / |\\mathbf{u}_1| |\\mathbf{u}_2| = \\frac{\\frac{19}{4}}{\\frac{2\\sqrt{2}}{3} \\cdot \\frac{\\sqrt{52}}{4}} = \\frac{\\frac{19}{4}}{\\frac{\\sqrt{104}}{6}} = \\frac{19}{4} \\cdot \\frac{6}{\\sqrt{104}} = \\frac{19}{4} \\cdot \\frac{6}{2\\sqrt{26}} = \\frac{19}{4} \\cdot \\frac{3}{\\sqrt{26}}$\n\n",
+                 "children": []
+                },
+                {
+                 "tag": "0.2.4.1.1.3.4.4.3",
+                 "depth": 8,
+                 "phase": 17,
+                 "gen_cnt": 17,
+                 "n": 1,
+                 "q": 0.8974609375,
+                 "is_terminal": false,
+                 "is_completed": false,
+                 "step_text": "## Step 8: Calculate the cosine of the angle between the lines\n$\\cos \\theta = \\frac{\\mathbf{u}_1 \\cdot \\mathbf{u}_2}{|\\mathbf{u}_1| |\\mathbf{u}_2|}$\n\n",
+                 "children": [
+                  {
+                   "tag": "0.2.4.1.1.3.4.4.3.1",
+                   "depth": 9,
+                   "phase": 45,
+                   "gen_cnt": 43,
+                   "n": 1,
+                   "q": 0.9111328125,
+                   "is_terminal": false,
+                   "is_completed": false,
+                   "step_text": "## Step 9: Plug in the values for the dot product and the magnitudes of the direction vectors\n$\\cos \\theta = \\frac{\\frac{19}{4}}{\\left( \\frac{2\\sqrt{2}}{3} \\right) \\left( \\frac{\\sqrt{52}}{4} \\right)}$\n\n",
+                   "children": []
+                  },
+                  {
+                   "tag": "0.2.4.1.1.3.4.4.3.2",
+                   "depth": 9,
+                   "phase": 45,
+                   "gen_cnt": 43,
+                   "n": 1,
+                   "q": 0.91845703125,
+                   "is_terminal": false,
+                   "is_completed": false,
+                   "step_text": "## Step 9: Plug in the values\n$\\cos \\theta = \\frac{\\frac{19}{4}}{\\left( \\frac{2\\sqrt{2}}{3} \\right) \\left( \\frac{\\sqrt{52}}{4} \\right)}$\n\n",
+                   "children": []
+                  },
+                  {
+                   "tag": "0.2.4.1.1.3.4.4.3.3",
+                   "depth": 9,
+                   "phase": 45,
+                   "gen_cnt": 43,
+                   "n": 1,
+                   "q": 0.916015625,
+                   "is_terminal": false,
+                   "is_completed": false,
+                   "step_text": "## Step 9: Plug in the values for the dot product and magnitudes\n$\\cos \\theta = \\frac{\\frac{19}{4}}{\\left( \\frac{2\\sqrt{2}}{3} \\right) \\left( \\frac{\\sqrt{52}}{4} \\right)}$\n\n",
+                   "children": []
+                  },
+                  {
+                   "tag": "0.2.4.1.1.3.4.4.3.4",
+                   "depth": 9,
+                   "phase": 45,
+                   "gen_cnt": 43,
+                   "n": 1,
+                   "q": 0.8056640625,
+                   "is_terminal": false,
+                   "is_completed": false,
+                   "step_text": "## Step 9: Calculate the cosine of the angle\n$\\cos \\theta = \\frac{\\frac{19}{4}}{\\left( \\frac{2\\sqrt{2}}{3} \\right) \\left( \\frac{\\sqrt{52}}{4} \\right)} = \\frac{\\frac{19}{4}}{\\left( \\frac{2\\sqrt{2}}{3} \\right) \\left( \\frac{\\sqrt{52}}{4} \\right)} = \\frac{\\frac{19}{4}}{\\left( \\frac{2\\sqrt{2}}{3} \\right) \\left( \\frac{\\sqrt{4 \\cdot 13}}{2} \\right)} = \\frac{\\frac{19}{4}}{\\left( \\frac{\\sqrt{2} \\cdot \\sqrt{4 \\cdot 13}}{3} \\right)} = \\frac{\\frac{19}{4}}{\\left( \\frac{\\sqrt{2} \\cdot 2\\sqrt{13}}{3} \\right)} = \\frac{\\frac{19}{4}}{\\left( \\frac{2\\sqrt{26}}{3} \\right)} = \\frac{19}{4} \\cdot \\frac{3}{2\\sqrt{26}} = \\frac{19}{8\\sqrt{26}} = \\frac{19\\sqrt{26}}{8 \\cdot 26} = \\frac{19\\sqrt{26}}{208}$\n\n",
+                   "children": [
+                    {
+                     "tag": "0.2.4.1.1.3.4.4.3.4.1",
+                     "depth": 10,
+                     "phase": 46,
+                     "gen_cnt": 44,
+                     "n": 1,
+                     "q": 0.83544921875,
+                     "is_terminal": false,
+                     "is_completed": false,
+                     "step_text": "## Step 10: Calculate the angle in degrees\n$\\theta = \\arccos \\left( \\frac{19\\sqrt{26}}{208} \\right)$\n\n",
+                     "children": []
+                    },
+                    {
+                     "tag": "0.2.4.1.1.3.4.4.3.4.2",
+                     "depth": 10,
+                     "phase": 46,
+                     "gen_cnt": 44,
+                     "n": 1,
+                     "q": 0.77734375,
+                     "is_terminal": false,
+                     "is_completed": false,
+                     "step_text": "## Step 10: Calculate the value of the angle in degrees\nSince $\\cos \\theta = \\frac{19\\sqrt{26}}{208}$, the value of $\\theta$ in radians can be calculated using the inverse cosine function:\n$\\theta = \\cos^{-1}\\left( \\frac{19\\sqrt{26}}{208} \\right)$\nSince the value is positive and less than $\\frac{\\pi}{2}$, $\\theta$ is the acute angle between the two lines.\n\n",
+                     "children": []
+                    },
+                    {
+                     "tag": "0.2.4.1.1.3.4.4.3.4.3",
+                     "depth": 10,
+                     "phase": 46,
+                     "gen_cnt": 44,
+                     "n": 1,
+                     "q": 0.62255859375,
+                     "is_terminal": false,
+                     "is_completed": false,
+                     "step_text": "## Step 10: Convert the cosine of the angle to degrees\n$\\cos \\theta = \\frac{19\\sqrt{26}}{208} = \\frac{19 \\cdot 5.1}{208} \\approx \\frac{98.9}{208} \\approx 0.470$\n\n",
+                     "children": [
+                      {
+                       "tag": "0.2.4.1.1.3.4.4.3.4.3.1",
+                       "depth": 11,
+                       "phase": 47,
+                       "gen_cnt": 45,
+                       "n": 1,
+                       "q": 0.5546875,
+                       "is_terminal": false,
+                       "is_completed": false,
+                       "step_text": "## Step 11: Find the angle in degrees\n$\\theta = \\cos^{-1} \\left( 0.470 \\right) \\approx 53.13$ degrees\n\n",
+                       "children": []
+                      },
+                      {
+                       "tag": "0.2.4.1.1.3.4.4.3.4.3.2",
+                       "depth": 11,
+                       "phase": 47,
+                       "gen_cnt": 45,
+                       "n": 1,
+                       "q": 0.71240234375,
+                       "is_terminal": false,
+                       "is_completed": false,
+                       "step_text": "## Step 11: Calculate the angle in degrees\n$\\theta = \\arccos(\\cos \\theta) = \\arccos(0.470) \\approx 63.4^\\circ$\n\n",
+                       "children": []
+                      },
+                      {
+                       "tag": "0.2.4.1.1.3.4.4.3.4.3.3",
+                       "depth": 11,
+                       "phase": 47,
+                       "gen_cnt": 45,
+                       "n": 1,
+                       "q": 0.84814453125,
+                       "is_terminal": false,
+                       "is_completed": false,
+                       "step_text": "## Step 11: Solve for the angle in degrees\n$\\theta = \\cos^{-1} \\left( \\frac{19\\sqrt{26}}{208} \\right)$\n\n",
+                       "children": []
+                      },
+                      {
+                       "tag": "0.2.4.1.1.3.4.4.3.4.3.4",
+                       "depth": 11,
+                       "phase": 47,
+                       "gen_cnt": 45,
+                       "n": 1,
+                       "q": 0.57763671875,
+                       "is_terminal": false,
+                       "is_completed": false,
+                       "step_text": "## Step 11: Find the angle in degrees\n$\\theta = \\arccos \\left( \\frac{19\\sqrt{26}}{208} \\right) \\approx 74.9291^\\circ$\n\n",
+                       "children": []
+                      }
+                     ]
+                    },
+                    {
+                     "tag": "0.2.4.1.1.3.4.4.3.4.4",
+                     "depth": 10,
+                     "phase": 46,
+                     "gen_cnt": 44,
+                     "n": 1,
+                     "q": 0.85009765625,
+                     "is_terminal": false,
+                     "is_completed": false,
+                     "step_text": "## Step 10: Calculate the angle using the inverse cosine\n$\\theta = \\cos^{-1} \\left( \\frac{19\\sqrt{26}}{208} \\right)$\n\n",
+                     "children": []
+                    }
+                   ]
+                  }
+                 ]
+                },
+                {
+                 "tag": "0.2.4.1.1.3.4.4.4",
+                 "depth": 8,
+                 "phase": 17,
+                 "gen_cnt": 17,
+                 "n": 1,
+                 "q": 0.87060546875,
+                 "is_terminal": false,
+                 "is_completed": false,
+                 "step_text": "## Step 8: Calculate the cosine of the angle between the lines\n$\\cos \\theta = \\frac{\\mathbf{u}_1 \\cdot \\mathbf{u}_2}{|\\mathbf{u}_1||\\mathbf{u}_2|} = \\frac{\\frac{19}{4}}{\\frac{2\\sqrt{2}}{3} \\cdot \\frac{\\sqrt{52}}{4}} = \\frac{\\frac{19}{4}}{\\frac{\\sqrt{2} \\cdot \\sqrt{52}}{6}} = \\frac{\\frac{19}{4}}{\\frac{\\sqrt{104}}{6}} = \\frac{\\frac{19}{4}}{\\frac{\\sqrt{4} \\cdot \\sqrt{26}}{6}} = \\frac{\\frac{19}{4}}{\\frac{2 \\sqrt{26}}{6}} = \\frac{\\frac{19}{4}}{\\frac{ \\sqrt{26}}{3}} = \\frac{19}{4} \\cdot \\frac{3}{ \\sqrt{26}} = \\frac{57}{4\\sqrt{26}}$\n\n",
+                 "children": []
+                }
+               ]
+              }
+             ]
+            }
+           ]
+          },
+          {
+           "tag": "0.2.4.1.1.4",
+           "depth": 5,
+           "phase": 6,
+           "gen_cnt": 7,
+           "n": 1,
+           "q": 0.93994140625,
+           "is_terminal": false,
+           "is_completed": false,
+           "step_text": "where $\\mathbf{u} = (2, 3, -1)$ and $\\mathbf{v} = (6, -1, 4).$\n\n",
+           "children": []
+          }
+         ]
+        },
+        {
+         "tag": "0.2.4.1.2",
+         "depth": 4,
+         "phase": 5,
+         "gen_cnt": 6,
+         "n": 1,
+         "q": 0.90966796875,
+         "is_terminal": false,
+         "is_completed": false,
+         "step_text": "## Step 4: Calculate the angle between the lines\nTo find the angle between the two lines, we need to calculate the dot product of their direction ratios and divide by the product of the lengths of the direction ratios.\n\n",
+         "children": []
+        },
+        {
+         "tag": "0.2.4.1.3",
+         "depth": 4,
+         "phase": 5,
+         "gen_cnt": 6,
+         "n": 1,
+         "q": 0.9638671875,
+         "is_terminal": false,
+         "is_completed": false,
+         "step_text": "## Step 4: Calculate the dot product of the direction ratios of the two lines\nThe dot product of the direction ratios of the two lines is $(2)(6) + (3)(-1) + (-1)(4) = 12 - 3 - 4 = 5$.\n\n",
+         "children": [
+          {
+           "tag": "0.2.4.1.3.1",
+           "depth": 5,
+           "phase": 16,
+           "gen_cnt": 16,
+           "n": 1,
+           "q": 0.98876953125,
+           "is_terminal": false,
+           "is_completed": false,
+           "step_text": "## Step 5: Calculate the magnitude of the direction ratios of the first line\nThe magnitude of the direction ratios of the first line is $\\sqrt{(2)^2 + (3)^2 + (-1)^2} = \\sqrt{4 + 9 + 1} = \\sqrt{14}$.\n\n",
+           "children": []
+          },
+          {
+           "tag": "0.2.4.1.3.2",
+           "depth": 5,
+           "phase": 16,
+           "gen_cnt": 16,
+           "n": 1,
+           "q": 0.98974609375,
+           "is_terminal": false,
+           "is_completed": false,
+           "step_text": "## Step 5: Calculate the magnitude of the direction ratios of the first line\nThe magnitude of the direction ratios of the first line is $\\sqrt{2^2 + 3^2 + (-1)^2} = \\sqrt{4 + 9 + 1} = \\sqrt{14}$.\n\n",
+           "children": []
+          },
+          {
+           "tag": "0.2.4.1.3.3",
+           "depth": 5,
+           "phase": 16,
+           "gen_cnt": 16,
+           "n": 1,
+           "q": 0.98876953125,
+           "is_terminal": false,
+           "is_completed": false,
+           "step_text": "## Step 5: Calculate the magnitudes of the direction ratios of the two lines\nThe magnitude of the direction ratios of the first line is $\\sqrt{(2)^2 + (3)^2 + (-1)^2} = \\sqrt{4 + 9 + 1} = \\sqrt{14}$.\n\n",
+           "children": [
+            {
+             "tag": "0.2.4.1.3.3.1",
+             "depth": 6,
+             "phase": 19,
+             "gen_cnt": 19,
+             "n": 1,
+             "q": 0.994140625,
+             "is_terminal": false,
+             "is_completed": false,
+             "step_text": "## Step 6: Calculate the magnitude of the direction ratios of the second line\nThe magnitude of the direction ratios of the second line is $\\sqrt{(6)^2 + (-1)^2 + (4)^2} = \\sqrt{36 + 1 + 16} = \\sqrt{53}$.\n\n",
+             "children": []
+            }
+           ]
+          }
+         ]
+        },
+        {
+         "tag": "0.2.4.1.4",
+         "depth": 4,
+         "phase": 5,
+         "gen_cnt": 6,
+         "n": 1,
+         "q": 0.93994140625,
+         "is_terminal": false,
+         "is_completed": false,
+         "step_text": "## Step 4: Calculate the angle between the two lines using the dot product formula\nThe angle $\\theta$ between the two lines is given by $\\cos \\theta = \\frac{\\mathbf{d}_1 \\cdot \\mathbf{d}_2}{\\|\\mathbf{d}_1\\| \\|\\mathbf{d}_2\\|}$, where $\\mathbf{d}_1$ and $\\mathbf{d}_2$ are the direction ratios of the two lines.\n\n",
+         "children": []
+        }
+       ]
+      },
+      {
+       "tag": "0.2.4.2",
+       "depth": 3,
+       "phase": 3,
+       "gen_cnt": 4,
+       "n": 3,
+       "q": 0.4120686848958333,
+       "is_terminal": false,
+       "is_completed": false,
+       "step_text": "## Step 3: Find the direction ratios of the second line\nThe direction ratios of the second line can be found directly from the equation as (6, -1, 0).\n\n",
+       "children": [
+        {
+         "tag": "0.2.4.2.1",
+         "depth": 4,
+         "phase": 22,
+         "gen_cnt": 22,
+         "n": 1,
+         "q": 0.69921875,
+         "is_terminal": false,
+         "is_completed": false,
+         "step_text": "## Step 4: Calculate the angle between the lines using the dot product formula\nThe angle $\\theta$ between two vectors $\\mathbf{a}$ and $\\mathbf{b}$ is given by $\\mathbf{a} \\cdot \\mathbf{b} = |\\mathbf{a}| |\\mathbf{b}| \\cos \\theta$.\n\n",
+         "children": []
+        },
+        {
+         "tag": "0.2.4.2.2",
+         "depth": 4,
+         "phase": 22,
+         "gen_cnt": 22,
+         "n": 1,
+         "q": 0.740234375,
+         "is_terminal": false,
+         "is_completed": false,
+         "step_text": "## Step 4: Calculate the angle between the two lines using the dot product\nThe angle $\\theta$ between two lines with direction ratios $(a_1, b_1, c_1)$ and $(a_2, b_2, c_2)$ can be calculated using the formula $\\cos{\\theta} = \\frac{a_1a_2+b_1b_2+c_1c_2}{\\sqrt{(a_1)^2+(b_1)^2+(c_1)^2}\\sqrt{(a_2)^2+(b_2)^2+(c_2)^2}}$.\n\n",
+         "children": []
+        },
+        {
+         "tag": "0.2.4.2.3",
+         "depth": 4,
+         "phase": 22,
+         "gen_cnt": 22,
+         "n": 3,
+         "q": 0.5710856119791666,
+         "is_terminal": false,
+         "is_completed": false,
+         "step_text": "## Step 4: Use the direction ratios to find the angle between the lines\nLet $\\vec{u} = (2, 3, -1)$ and $\\vec{v} = (6, -1, 0)$ be the direction ratios of the lines. Then the angle $\\theta$ between the two lines can be found using the dot product formula for two vectors:\n\n",
+         "children": [
+          {
+           "tag": "0.2.4.2.3.1",
+           "depth": 5,
+           "phase": 23,
+           "gen_cnt": 23,
+           "n": 1,
+           "q": 0.896484375,
+           "is_terminal": false,
+           "is_completed": false,
+           "step_text": "$\\cos{\\theta} = \\frac{\\vec{u} \\cdot \\vec{v}}{\\|\\vec{u}\\| \\|\\vec{v}\\|}$\n\n",
+           "children": []
+          },
+          {
+           "tag": "0.2.4.2.3.2",
+           "depth": 5,
+           "phase": 23,
+           "gen_cnt": 23,
+           "n": 1,
+           "q": 0.85009765625,
+           "is_terminal": false,
+           "is_completed": false,
+           "step_text": "$\\vec{u} \\cdot \\vec{v} = |\\vec{u}| |\\vec{v}| \\cos{\\theta}$\n\n",
+           "children": []
+          },
+          {
+           "tag": "0.2.4.2.3.3",
+           "depth": 5,
+           "phase": 23,
+           "gen_cnt": 23,
+           "n": 3,
+           "q": 0.4613850911458333,
+           "is_terminal": false,
+           "is_completed": false,
+           "step_text": "$\\cos \\theta = \\frac{\\vec{u} \\cdot \\vec{v}}{||\\vec{u}|| \\cdot ||\\vec{v}||} = \\frac{(2)(6) + (3)(-1) + (-1)(0)}{\\sqrt{4^2 + 3^2 + (-1)^2} \\sqrt{6^2 + (-1)^2} } = \\frac{12 - 3}{\\sqrt{25 + 10} \\sqrt{36 + 1} } = \\frac{9}{\\sqrt{35} \\sqrt{37} }$\n\n",
+           "children": [
+            {
+             "tag": "0.2.4.2.3.3.1",
+             "depth": 6,
+             "phase": 24,
+             "gen_cnt": 24,
+             "n": 1,
+             "q": 0.67236328125,
+             "is_terminal": false,
+             "is_completed": false,
+             "step_text": "## Step 5: Find the value of $\\theta$\nTo find $\\theta$, we take the inverse cosine (arccosine) of the value we found in step 4.\n\n",
+             "children": []
+            },
+            {
+             "tag": "0.2.4.2.3.3.2",
+             "depth": 6,
+             "phase": 24,
+             "gen_cnt": 24,
+             "n": 1,
+             "q": 0.751953125,
+             "is_terminal": false,
+             "is_completed": false,
+             "step_text": "## Step 5: Find the angle using inverse cosine\n$\\theta = \\cos^{-1} \\left( \\frac{9}{\\sqrt{35} \\sqrt{37} } \\right)$\n\n",
+             "children": []
+            },
+            {
+             "tag": "0.2.4.2.3.3.3",
+             "depth": 6,
+             "phase": 24,
+             "gen_cnt": 24,
+             "n": 2,
+             "q": 0.8369140625,
+             "is_terminal": false,
+             "is_completed": false,
+             "step_text": "## Step 5: Calculate the angle in degrees\nThe angle $\\theta$ is then $\\theta = \\arccos \\left( \\frac{9}{\\sqrt{35} \\sqrt{37} } \\right)$\n\n",
+             "children": [
+              {
+               "tag": "0.2.4.2.3.3.3.1",
+               "depth": 7,
+               "phase": 27,
+               "gen_cnt": 26,
+               "n": 2,
+               "q": 0.794189453125,
+               "is_terminal": false,
+               "is_completed": false,
+               "step_text": "## Step 6: Simplify the arccos expression\nWe can simplify the expression by rewriting the square roots as 9 * sqrt(35) / sqrt(37)\n\n",
+               "children": [
+                {
+                 "tag": "0.2.4.2.3.3.3.1.1",
+                 "depth": 8,
+                 "phase": 28,
+                 "gen_cnt": 27,
+                 "n": 2,
+                 "q": 0.677490234375,
+                 "is_terminal": false,
+                 "is_completed": false,
+                 "step_text": "## Step 7:  Calculate the inverse cosine (cos^-1) of the result of step 6.\ncos^-1 (9 * sqrt(35) / sqrt(37)) = 71 degrees\n\n",
+                 "children": [
+                  {
+                   "tag": "0.2.4.2.3.3.3.1.1.1",
+                   "depth": 9,
+                   "phase": 29,
+                   "gen_cnt": 28,
+                   "n": 2,
+                   "q": 0.955078125,
+                   "is_terminal": true,
+                   "is_completed": true,
+                   "step_text": "The final answer is: $\\boxed{71}$",
+                   "children": []
+                  }
+                 ]
+                },
+                {
+                 "tag": "0.2.4.2.3.3.3.1.2",
+                 "depth": 8,
+                 "phase": 28,
+                 "gen_cnt": 27,
+                 "n": 1,
+                 "q": 0.79833984375,
+                 "is_terminal": false,
+                 "is_completed": false,
+                 "step_text": "## Step 7: Calculate the arccos\n$\\theta = \\arccos \\left( \\frac{9 \\sqrt{35}}{\\sqrt{35 \\cdot 37}} \\right) = \\arccos \\left( \\frac{9}{\\sqrt{37}} \\right)$\n\n",
+                 "children": []
+                },
+                {
+                 "tag": "0.2.4.2.3.3.3.1.3",
+                 "depth": 8,
+                 "phase": 28,
+                 "gen_cnt": 27,
+                 "n": 1,
+                 "q": 0.8291015625,
+                 "is_terminal": false,
+                 "is_completed": false,
+                 "step_text": "## Step 7: Simplify the arccos expression\n$\\theta = \\arccos \\left( \\frac{9 \\sqrt{35}}{\\sqrt{35} \\sqrt{37}} \\right) = \\arccos \\left( \\frac{9}{\\sqrt{37}} \\right)$\n\n",
+                 "children": [
+                  {
+                   "tag": "0.2.4.2.3.3.3.1.3.1",
+                   "depth": 9,
+                   "phase": 31,
+                   "gen_cnt": 29,
+                   "n": 1,
+                   "q": 0.23095703125,
+                   "is_terminal": false,
+                   "is_completed": false,
+                   "step_text": "## Step 8: Use the arccos expression to calculate the angle in degrees\n$\\theta = \\arccos \\left( \\frac{9}{\\sqrt{37}} \\right) \\approx 6.73^{\\circ}$\n\n",
+                   "children": []
+                  },
+                  {
+                   "tag": "0.2.4.2.3.3.3.1.3.2",
+                   "depth": 9,
+                   "phase": 31,
+                   "gen_cnt": 29,
+                   "n": 1,
+                   "q": 0.7373046875,
+                   "is_terminal": false,
+                   "is_completed": false,
+                   "step_text": "## Step 8: Calculate the arccos expression\nThe value of $\\arccos \\left( \\frac{9}{\\sqrt{37}} \\right)$ is approximately 0.3588 radians.\n\n",
+                   "children": []
+                  },
+                  {
+                   "tag": "0.2.4.2.3.3.3.1.3.3",
+                   "depth": 9,
+                   "phase": 31,
+                   "gen_cnt": 29,
+                   "n": 1,
+                   "q": 0.845703125,
+                   "is_terminal": false,
+                   "is_completed": false,
+                   "step_text": "## Step 8: Convert the arccos expression to degrees\nThe final angle $\\theta$ in degrees is given by the calculation of $\\theta = \\arccos \\left( \\frac{9}{\\sqrt{37}} \\right)$ in degrees.\n\n",
+                   "children": []
+                  },
+                  {
+                   "tag": "0.2.4.2.3.3.3.1.3.4",
+                   "depth": 9,
+                   "phase": 31,
+                   "gen_cnt": 29,
+                   "n": 1,
+                   "q": 0.87890625,
+                   "is_terminal": false,
+                   "is_completed": false,
+                   "step_text": "## Step 8: Convert to degrees\nWe will use degrees for the final answer.\n\n",
+                   "children": [
+                    {
+                     "tag": "0.2.4.2.3.3.3.1.3.4.1",
+                     "depth": 10,
+                     "phase": 32,
+                     "gen_cnt": 30,
+                     "n": 1,
+                     "q": 0.6259765625,
+                     "is_terminal": false,
+                     "is_completed": false,
+                     "step_text": "## Step 9: Calculate the angle in degrees\n$\\theta = \\arccos \\left( \\frac{9}{\\sqrt{37}} \\right) \\approx \\arccos(0.2617) \\approx 74.929^{\\circ}$\n\n",
+                     "children": []
+                    },
+                    {
+                     "tag": "0.2.4.2.3.3.3.1.3.4.2",
+                     "depth": 10,
+                     "phase": 32,
+                     "gen_cnt": 30,
+                     "n": 1,
+                     "q": 0.22265625,
+                     "is_terminal": false,
+                     "is_completed": false,
+                     "step_text": "## Step 9: Calculate the final answer\n$\\theta = \\arccos \\left( \\frac{9}{\\sqrt{37}} \\right)$ =  55.88 degrees.\n\n",
+                     "children": [
+                      {
+                       "tag": "0.2.4.2.3.3.3.1.3.4.2.1",
+                       "depth": 11,
+                       "phase": 33,
+                       "gen_cnt": 31,
+                       "n": 1,
+                       "q": 0.1259765625,
+                       "is_terminal": true,
+                       "is_completed": true,
+                       "step_text": "The final answer is: $\\boxed{55.88}$",
+                       "children": []
+                      },
+                      {
+                       "tag": "0.2.4.2.3.3.3.1.3.4.2.2",
+                       "depth": 11,
+                       "phase": 33,
+                       "gen_cnt": 31,
+                       "n": 1,
+                       "q": 0.55810546875,
+                       "is_terminal": false,
+                       "is_completed": false,
+                       "step_text": "## Step 10: Round the answer\nThe angle between the lines in degrees is approximately  55.88 degrees.\n\n",
+                       "children": []
+                      }
+                     ]
+                    },
+                    {
+                     "tag": "0.2.4.2.3.3.3.1.3.4.3",
+                     "depth": 10,
+                     "phase": 32,
+                     "gen_cnt": 30,
+                     "n": 1,
+                     "q": 0.51171875,
+                     "is_terminal": false,
+                     "is_completed": false,
+                     "step_text": "## Step 9: Calculate the final value\n$\\theta = \\arccos \\left( \\frac{9}{\\sqrt{37}} \\right) \\approx 82.08^{\\circ}$\n\n",
+                     "children": []
+                    },
+                    {
+                     "tag": "0.2.4.2.3.3.3.1.3.4.4",
+                     "depth": 10,
+                     "phase": 32,
+                     "gen_cnt": 30,
+                     "n": 1,
+                     "q": 0.76611328125,
+                     "is_terminal": false,
+                     "is_completed": false,
+                     "step_text": "## Step 9: Evaluate the arccos expression\n$\\theta \\approx \\arccos (0.26132) \\approx 74.929$\n\n",
+                     "children": []
+                    }
+                   ]
+                  }
+                 ]
+                },
+                {
+                 "tag": "0.2.4.2.3.3.3.1.4",
+                 "depth": 8,
+                 "phase": 28,
+                 "gen_cnt": 27,
+                 "n": 1,
+                 "q": 0.79052734375,
+                 "is_terminal": false,
+                 "is_completed": false,
+                 "step_text": "## Step 7: Rewrite the arccos expression\n$\\theta = \\arccos \\left( \\frac{9\\sqrt{35}}{\\sqrt{35}\\sqrt{37}} \\right)$\n\n",
+                 "children": []
+                }
+               ]
+              },
+              {
+               "tag": "0.2.4.2.3.3.3.2",
+               "depth": 7,
+               "phase": 27,
+               "gen_cnt": 26,
+               "n": 1,
+               "q": 0.85400390625,
+               "is_terminal": false,
+               "is_completed": false,
+               "step_text": "## Step 6: Evaluate the arccos\nEvaluating the expression gives $\\theta = \\arccos \\left( \\frac{9}{\\sqrt{35} \\sqrt{37} } \\right) = \\arccos \\left( \\frac{9}{\\sqrt{1295}} \\right)$\n\n",
+               "children": []
+              },
+              {
+               "tag": "0.2.4.2.3.3.3.3",
+               "depth": 7,
+               "phase": 27,
+               "gen_cnt": 26,
+               "n": 1,
+               "q": 0.83349609375,
+               "is_terminal": false,
+               "is_completed": false,
+               "step_text": "## Step 6: Simplify the expression for $\\theta$\n$\\theta = \\arccos \\left( \\frac{9}{\\sqrt{35} \\sqrt{37} } \\right) = \\arccos \\left( \\frac{9}{\\sqrt{1295}} \\right)$\n\n",
+               "children": []
+              },
+              {
+               "tag": "0.2.4.2.3.3.3.4",
+               "depth": 7,
+               "phase": 27,
+               "gen_cnt": 26,
+               "n": 1,
+               "q": 0.441650390625,
+               "is_terminal": false,
+               "is_completed": false,
+               "step_text": "## Step 6: Use a calculator to find the angle\n$\\theta \\approx \\arccos \\left( \\frac{9}{\\sqrt{35} \\sqrt{37} } \\right) \\approx 0.34458$ radians or 19.924 degrees\n\n",
+               "children": [
+                {
+                 "tag": "0.2.4.2.3.3.3.4.1",
+                 "depth": 8,
+                 "phase": 44,
+                 "gen_cnt": 42,
+                 "n": 1,
+                 "q": 0.1175537109375,
+                 "is_terminal": true,
+                 "is_completed": true,
+                 "step_text": "The final answer is: $\\boxed{19.924}$",
+                 "children": []
+                },
+                {
+                 "tag": "0.2.4.2.3.3.3.4.2",
+                 "depth": 8,
+                 "phase": 44,
+                 "gen_cnt": 42,
+                 "n": 1,
+                 "q": 0.6259765625,
+                 "is_terminal": false,
+                 "is_completed": false,
+                 "step_text": "## Step 7: Round the angle to 4 decimal places\n$\\theta \\approx 0.3446$ radians or 19.925 degrees\n\n",
+                 "children": []
+                }
+               ]
+              }
+             ]
+            },
+            {
+             "tag": "0.2.4.2.3.3.4",
+             "depth": 6,
+             "phase": 24,
+             "gen_cnt": 24,
+             "n": 2,
+             "q": 0.13623046875,
+             "is_terminal": false,
+             "is_completed": false,
+             "step_text": "## Step 5: Calculate the value of the angle\nThe angle $\\theta$ is then $\\theta = \\cos ^{-1} \\left(\\frac{9}{\\sqrt{35} \\sqrt{37} }\\right)$, which can be simplified to $\\theta = \\cos ^{-1} \\left(\\frac{9}{\\sqrt{35} \\sqrt{37} }\\right) \\approx 28.97^{\\circ}$\n\n",
+             "children": [
+              {
+               "tag": "0.2.4.2.3.3.4.1",
+               "depth": 7,
+               "phase": 25,
+               "gen_cnt": 25,
+               "n": 2,
+               "q": 0.0330810546875,
+               "is_terminal": true,
+               "is_completed": true,
+               "step_text": "The final answer is: $\\boxed{28.97}$",
+               "children": []
+              },
+              {
+               "tag": "0.2.4.2.3.3.4.2",
+               "depth": 7,
+               "phase": 25,
+               "gen_cnt": 25,
+               "n": 1,
+               "q": 0.77197265625,
+               "is_terminal": false,
+               "is_completed": false,
+               "step_text": "## Step 6: Round the answer to two decimal places\nRounded to two decimal places, the angle is $\\theta \\approx 29.00^{\\circ}$.\n\n",
+               "children": []
+              }
+             ]
+            }
+           ]
+          },
+          {
+           "tag": "0.2.4.2.3.4",
+           "depth": 5,
+           "phase": 23,
+           "gen_cnt": 23,
+           "n": 1,
+           "q": 0.888671875,
+           "is_terminal": false,
+           "is_completed": false,
+           "step_text": "$\\cos{\\theta} = \\frac{\\vec{u} \\cdot \\vec{v}}{|\\vec{u}| |\\vec{v}|}$\n\n",
+           "children": []
+          }
+         ]
+        },
+        {
+         "tag": "0.2.4.2.4",
+         "depth": 4,
+         "phase": 22,
+         "gen_cnt": 22,
+         "n": 1,
+         "q": 0.69287109375,
+         "is_terminal": false,
+         "is_completed": false,
+         "step_text": "## Step 4: Determine the angle between the lines\nThe angle between the lines can be found using the dot product formula: $\\mathbf{a} \\cdot \\mathbf{b} = |\\mathbf{a}| |\\mathbf{b}| \\cos(\\theta)$, where $\\mathbf{a}$ and $\\mathbf{b}$ are the direction ratios of the two lines.\n\n",
+         "children": []
+        }
+       ]
+      },
+      {
+       "tag": "0.2.4.3",
+       "depth": 3,
+       "phase": 3,
+       "gen_cnt": 4,
+       "n": 1,
+       "q": 0.60400390625,
+       "is_terminal": false,
+       "is_completed": false,
+       "step_text": "## Step 3: Find the direction vectors of the lines\nThe direction vectors of the first line are (2, 3, -1) and the direction vector of the second line is (6, -1, 4).\n\n",
+       "children": []
+      },
+      {
+       "tag": "0.2.4.4",
+       "depth": 3,
+       "phase": 3,
+       "gen_cnt": 4,
+       "n": 1,
+       "q": 0.73388671875,
+       "is_terminal": false,
+       "is_completed": false,
+       "step_text": "## Step 3: Perpendicularity condition for lines\nTwo lines are perpendicular if the dot product of their direction vectors is equal to zero.\n\n",
+       "children": [
+        {
+         "tag": "0.2.4.4.1",
+         "depth": 4,
+         "phase": 4,
+         "gen_cnt": 5,
+         "n": 1,
+         "q": 0.67919921875,
+         "is_terminal": false,
+         "is_completed": false,
+         "step_text": "## Step 4: Direction vectors of the lines\nDirection vector of the first line is $\\mathbf{d}_1 = \\langle 2, 3, -1 \\rangle$ and direction vector of the second line is $\\mathbf{d}_2 = \\langle 6, -1, 4 \\rangle$.\n\n",
+         "children": []
+        },
+        {
+         "tag": "0.2.4.4.2",
+         "depth": 4,
+         "phase": 4,
+         "gen_cnt": 5,
+         "n": 1,
+         "q": 0.64794921875,
+         "is_terminal": false,
+         "is_completed": false,
+         "step_text": "## Step 4: Compute the direction vectors\nThe direction vectors of the two lines are (2, 3, -1) and (6, -1, 4) respectively.\n\n",
+         "children": []
+        },
+        {
+         "tag": "0.2.4.4.3",
+         "depth": 4,
+         "phase": 4,
+         "gen_cnt": 5,
+         "n": 1,
+         "q": 0.70263671875,
+         "is_terminal": false,
+         "is_completed": false,
+         "step_text": "## Step 4: Find the direction vectors of the lines\nThe direction vector of the first line is $\\mathbf{d_1} = \\begin{pmatrix} 2 \\\\ 3 \\\\ -1 \\end{pmatrix}$ and the direction vector of the second line is $\\mathbf{d_2} = \\begin{pmatrix} 6 \\\\ -1 \\\\ 4 \\end{pmatrix}$.\n\n",
+         "children": []
+        },
+        {
+         "tag": "0.2.4.4.4",
+         "depth": 4,
+         "phase": 4,
+         "gen_cnt": 5,
+         "n": 1,
+         "q": 0.61865234375,
+         "is_terminal": false,
+         "is_completed": false,
+         "step_text": "## Step 4: Calculate the direction vectors of both lines\nThe direction vector of the first line is $\\vec{v}_1 = (2, 3, -1)$ and the direction vector of the second line is $\\vec{v}_2 = (6, -1, 4)$.\n\n",
+         "children": []
+        }
+       ]
+      }
+     ]
+    }
+   ]
+  },
+  {
+   "tag": "0.3",
+   "depth": 1,
+   "phase": 0,
+   "gen_cnt": 1,
+   "n": 1,
+   "q": 0.4111328125,
+   "is_terminal": false,
+   "is_completed": false,
+   "step_text": "## Step 1: Identify the direction vectors of the lines.\nThe direction vector of the first line is (2, 3, -1) and the direction vector of the second line is (6, -1, -4).\n\n",
+   "children": []
+  },
+  {
+   "tag": "0.4",
+   "depth": 1,
+   "phase": 0,
+   "gen_cnt": 1,
+   "n": 1,
+   "q": 0.1561279296875,
+   "is_terminal": false,
+   "is_completed": false,
+   "step_text": "## Step 1: Identify the direction vectors of the lines.\nTo find the angle between the two lines, we first need to identify their direction vectors. For the first line, the direction vector is given by \\(\\vec{v}_1 = \\langle 2, 3, -1 \\rangle\\), since these are the coefficients of \\(x\\), \\(y\\), and \\(z\\) in the equation \\(2x = 3y = -z\\). For the second line, the direction vector is given by \\(\\vec{v}_2 = \\langle 6, 1, 4 \\rangle\\), since these are the coefficients of \\(x\\), \\(y\\), and \\(z\\) in the equation \\(6x = -y = -4z\\).\n\n",
+   "children": [
+    {
+     "tag": "0.4.1",
+     "depth": 2,
+     "phase": 34,
+     "gen_cnt": 32,
+     "n": 1,
+     "q": 0.71875,
+     "is_terminal": false,
+     "is_completed": false,
+     "step_text": "## Step 2: Calculate the dot product of the direction vectors.\nTo find the angle between the two lines, we need to calculate the dot product of their direction vectors. The dot product is calculated as follows:\n\\[\n\\vec{v}_1 \\cdot \\vec{v}_2 = (2)(6) + (3)(1) + (-1)(4) = 12 + 3 - 4 = 11\n\\]\n\n",
+     "children": [
+      {
+       "tag": "0.4.1.1",
+       "depth": 3,
+       "phase": 35,
+       "gen_cnt": 33,
+       "n": 1,
+       "q": 0.94482421875,
+       "is_terminal": false,
+       "is_completed": false,
+       "step_text": "## Step 3: Calculate the magnitudes of the direction vectors.\nNext, we need to calculate the magnitudes (lengths) of the direction vectors. The magnitude of a vector \\(\\vec{v} = \\langle a, b, c \\rangle\\) is given by:\n\\[\n|\\vec{v}| = \\sqrt{a^2 + b^2 + c^2}\n\\]\nFor \\(\\vec{v}_1\\), the magnitude is:\n\\[\n|\\vec{v}_1| = \\sqrt{(2)^2 + (3)^2 + (-1)^2} = \\sqrt{4 + 9 + 1} = \\sqrt{14}\n\\]\nFor \\(\\vec{v}_2\\), the magnitude is:\n\\[\n|\\vec{v}_2| = \\sqrt{(6)^2 + (1)^2 + (4)^2} = \\sqrt{36 + 1 + 16} = \\sqrt{53}\n\\]\n\n",
+       "children": []
+      },
+      {
+       "tag": "0.4.1.2",
+       "depth": 3,
+       "phase": 35,
+       "gen_cnt": 33,
+       "n": 1,
+       "q": 0.91845703125,
+       "is_terminal": false,
+       "is_completed": false,
+       "step_text": "## Step 3: Calculate the magnitudes of the direction vectors.\nNext, we need to find the magnitudes (lengths) of the direction vectors. The magnitude of a vector \\(\\vec{v} = \\langle a, b, c \\rangle\\) is given by \\(|\\vec{v}| = \\sqrt{a^2 + b^2 + c^2}\\). So, for \\(\\vec{v}_1\\):\n\\[\n|\\vec{v}_1| = \\sqrt{(2)^2 + (3)^2 + (-1)^2} = \\sqrt{4 + 9 + 1} = \\sqrt{14}\n\\]\nAnd for \\(\\vec{v}_2\\):\n\\[\n|\\vec{v}_2| = \\sqrt{(6)^2 + (1)^2 + (4)^2} = \\sqrt{36 + 1 + 16} = \\sqrt{53}\n\\]\n\n",
+       "children": [
+        {
+         "tag": "0.4.1.2.1",
+         "depth": 4,
+         "phase": 36,
+         "gen_cnt": 34,
+         "n": 1,
+         "q": 0.91943359375,
+         "is_terminal": false,
+         "is_completed": false,
+         "step_text": "## Step 4: Find the cosine of the angle between the lines.\nUsing the formula for the dot product that involves the cosine of the angle between two vectors, \\(\\vec{v}_1 \\cdot \\vec{v}_2 = |\\vec{v}_1| |\\vec{v}_2| \\cos(\\theta)\\), we can find \\(\\cos(\\theta)\\). Rearranging for \\(\\cos(\\theta)\\), we get:\n\\[\n\\cos(\\theta) = \\frac{\\vec{v}_1 \\cdot \\vec{v}_2}{|\\vec{v}_1| |\\vec{v}_2|}\n\\]\nPlugging in the values we found:\n\\[\n\\cos(\\theta) = \\frac{11}{\\sqrt{14} \\sqrt{53}} = \\frac{11}{\\sqrt{14 \\cdot 53}} = \\frac{11}{\\sqrt{742}}\n\\]\n\n",
+         "children": []
+        },
+        {
+         "tag": "0.4.1.2.2",
+         "depth": 4,
+         "phase": 36,
+         "gen_cnt": 34,
+         "n": 1,
+         "q": 0.71533203125,
+         "is_terminal": false,
+         "is_completed": false,
+         "step_text": "## Step 4: Find the cosine of the angle using the dot product formula.\nThe formula to find the cosine of the angle \\(\\theta\\) between two vectors \\(\\vec{a}\\) and \\(\\vec{b}\\) is given by:\n\\[\n\\cos(\\theta) = \\frac{\\vec{a} \\cdot \\vec{b}}{|\\vec{a}| |\\vec{b}|}\n\\]\nSubstituting the calculated values:\n\\[\n\\cos(\\theta) = \\frac{11}{\\sqrt{14} \\sqrt{53}} = \\frac{11}{\\sqrt{14 \\cdot 53}} = \\frac{11}{\\sqrt{738}} = \\frac{11}{27.018} \\approx 0.406\n\\]\n\n",
+         "children": [
+          {
+           "tag": "0.4.1.2.2.1",
+           "depth": 5,
+           "phase": 37,
+           "gen_cnt": 35,
+           "n": 1,
+           "q": 0.67578125,
+           "is_terminal": false,
+           "is_completed": false,
+           "step_text": "## Step 5: Find the angle using the inverse cosine function.\nTo find the angle \\(\\theta\\) in radians, we take the inverse cosine (arccos) of \\(0.406\\):\n\\[\n\\theta = \\arccos(0.406) \\approx 1.19 \\text{ radians}\n\\]\nTo convert radians to degrees, we multiply by \\(\\frac{180}{\\pi}\\):\n\\[\n\\theta \\approx 1.19 \\times \\frac{180}{\\pi} \\approx 68.81 \\text{ degrees}\n\\]\n\n",
+           "children": []
+          },
+          {
+           "tag": "0.4.1.2.2.2",
+           "depth": 5,
+           "phase": 37,
+           "gen_cnt": 35,
+           "n": 1,
+           "q": 0.64404296875,
+           "is_terminal": false,
+           "is_completed": false,
+           "step_text": "## Step 5: Calculate the angle using the inverse cosine function.\nTo find the angle \\(\\theta\\) in degrees, we use the inverse cosine (arccos) function on the result from step 4:\n\\[\n\\theta = \\arccos(0.406) \\approx 74.929^{\\circ}\n\\]\n\n",
+           "children": []
+          },
+          {
+           "tag": "0.4.1.2.2.3",
+           "depth": 5,
+           "phase": 37,
+           "gen_cnt": 35,
+           "n": 1,
+           "q": 0.662109375,
+           "is_terminal": false,
+           "is_completed": false,
+           "step_text": "## Step 5: Calculate the angle in degrees.\nFinally, we can find the angle \\(\\theta\\) in degrees using the inverse cosine function:\n\\[\n\\theta = \\cos^{-1}(0.406) \\approx 74.929^\\circ\n\\]\n\n",
+           "children": [
+            {
+             "tag": "0.4.1.2.2.3.1",
+             "depth": 6,
+             "phase": 38,
+             "gen_cnt": 36,
+             "n": 1,
+             "q": 0.037322998046875,
+             "is_terminal": true,
+             "is_completed": true,
+             "step_text": "The final answer is: $\\boxed{74.929}$",
+             "children": []
+            }
+           ]
+          },
+          {
+           "tag": "0.4.1.2.2.4",
+           "depth": 5,
+           "phase": 37,
+           "gen_cnt": 35,
+           "n": 1,
+           "q": 0.287841796875,
+           "is_terminal": false,
+           "is_completed": false,
+           "step_text": "## Step 5: Calculate the angle in degrees.\nFinally, to find the angle \\(\\theta\\) in degrees, we take the inverse cosine (arccos) of the calculated value:\n\\[\n\\theta = \\arccos(0.406)\n\\]\nUsing a calculator to find the arccos of 0.406 gives us an angle in radians. Converting that to degrees:\n\\[\n\\theta \\approx \\arccos(0.406) \\cdot \\frac{180}{\\pi} \\approx 1.19 \\, \\text{degrees}\n\\]\n\n",
+           "children": []
+          }
+         ]
+        },
+        {
+         "tag": "0.4.1.2.3",
+         "depth": 4,
+         "phase": 36,
+         "gen_cnt": 34,
+         "n": 1,
+         "q": 0.90576171875,
+         "is_terminal": false,
+         "is_completed": false,
+         "step_text": "## Step 4: Calculate the cosine of the angle between the lines.\nUsing the dot product and the magnitudes of the vectors, we can calculate the cosine of the angle \\(\\theta\\) between the lines using the formula:\n\\[\n\\cos(\\theta) = \\frac{\\vec{v}_1 \\cdot \\vec{v}_2}{|\\vec{v}_1||\\vec{v}_2|}\n\\]\nSubstituting the calculated values:\n\\[\n\\cos(\\theta) = \\frac{11}{\\sqrt{14}\\sqrt{53}} = \\frac{11}{\\sqrt{14 \\cdot 53}} = \\frac{11}{\\sqrt{742}}\n\\]\n\n",
+         "children": []
+        },
+        {
+         "tag": "0.4.1.2.4",
+         "depth": 4,
+         "phase": 36,
+         "gen_cnt": 34,
+         "n": 1,
+         "q": 0.56982421875,
+         "is_terminal": false,
+         "is_completed": false,
+         "step_text": "## Step 4: Calculate the cosine of the angle between the lines.\nUsing the formula \\(\\cos(\\theta) = \\frac{\\vec{v}_1 \\cdot \\vec{v}_2}{|\\vec{v}_1||\\vec{v}_2|}\\), we can calculate the cosine of the angle between the two lines:\n\\[\n\\cos(\\theta) = \\frac{11}{\\sqrt{14}\\sqrt{53}} = \\frac{11}{\\sqrt{14 \\cdot 53}} = \\frac{11}{\\sqrt{738}} = \\frac{11}{27.33} \\approx 0.4017\n\\]\n\n",
+         "children": []
+        }
+       ]
+      },
+      {
+       "tag": "0.4.1.3",
+       "depth": 3,
+       "phase": 35,
+       "gen_cnt": 33,
+       "n": 1,
+       "q": 0.9423828125,
+       "is_terminal": false,
+       "is_completed": false,
+       "step_text": "## Step 3: Calculate the magnitude of each direction vector.\nNext, we need to calculate the magnitude of each direction vector. The magnitude of a vector \\(\\vec{v} = \\langle a, b, c \\rangle\\) is given by:\n\\[\n\\|\\vec{v}\\| = \\sqrt{a^2 + b^2 + c^2}\n\\]\nSo, the magnitude of \\(\\vec{v}_1\\) is:\n\\[\n\\|\\vec{v}_1\\| = \\sqrt{(2)^2 + (3)^2 + (-1)^2} = \\sqrt{4 + 9 + 1} = \\sqrt{14}\n\\]\nAnd the magnitude of \\(\\vec{v}_2\\) is:\n\\[\n\\|\\vec{v}_2\\| = \\sqrt{(6)^2 + (1)^2 + (4)^2} = \\sqrt{36 + 1 + 16} = \\sqrt{53}\n\\]\n\n",
+       "children": []
+      },
+      {
+       "tag": "0.4.1.4",
+       "depth": 3,
+       "phase": 35,
+       "gen_cnt": 33,
+       "n": 1,
+       "q": 0.92626953125,
+       "is_terminal": false,
+       "is_completed": false,
+       "step_text": "## Step 3: Calculate the magnitudes of the direction vectors.\nNext, we need to calculate the magnitudes of the direction vectors.\n\\[\n\\|\\vec{v}_1\\| = \\sqrt{(2)^2 + (3)^2 + (-1)^2} = \\sqrt{4 + 9 + 1} = \\sqrt{14}\n\\]\n\\[\n\\|\\vec{v}_2\\| = \\sqrt{(6)^2 + (1)^2 + (4)^2} = \\sqrt{36 + 1 + 16} = \\sqrt{53}\n\\]\n\n",
+       "children": []
+      }
+     ]
+    },
+    {
+     "tag": "0.4.2",
+     "depth": 2,
+     "phase": 34,
+     "gen_cnt": 32,
+     "n": 1,
+     "q": 0.69921875,
+     "is_terminal": false,
+     "is_completed": false,
+     "step_text": "## Step 2: Use the dot product formula to find the angle between the lines.\nThe angle \\(\\theta\\) between two vectors \\(\\vec{v}_1 = \\langle a_1, b_1, c_1 \\rangle\\) and \\(\\vec{v}_2 = \\langle a_2, b_2, c_2 \\rangle\\) is given by the formula \\(\\cos \\theta = \\frac{\\vec{v}_1 \\cdot \\vec{v}_2}{\\|\\vec{v}_1\\| \\|\\vec{v}_2\\|}\\), where \\(\\cdot\\) denotes the dot product and \\(\\|\\vec{v}\\|\\) denotes the magnitude of vector \\(\\vec{v}\\).\n\n",
+     "children": []
+    },
+    {
+     "tag": "0.4.3",
+     "depth": 2,
+     "phase": 34,
+     "gen_cnt": 32,
+     "n": 1,
+     "q": 0.79833984375,
+     "is_terminal": false,
+     "is_completed": false,
+     "step_text": "## Step 2: Calculate the dot product of the direction vectors.\nThe dot product of two vectors \\(\\vec{v}_1 = \\langle a_1, b_1, c_1 \\rangle\\) and \\(\\vec{v}_2 = \\langle a_2, b_2, c_2 \\rangle\\) is given by \\(\\vec{v}_1 \\cdot \\vec{v}_2 = a_1a_2 + b_1b_2 + c_1c_2\\). Using this formula, we can calculate the dot product of \\(\\vec{v}_1\\) and \\(\\vec{v}_2\\): \\(\\langle 2, 3, -1 \\rangle \\cdot \\langle 6, 1, 4 \\rangle = (2)(6) + (3)(1) + (-1)(4) = 12 + 3 - 4 = 11\\).\n\n",
+     "children": []
+    },
+    {
+     "tag": "0.4.4",
+     "depth": 2,
+     "phase": 34,
+     "gen_cnt": 32,
+     "n": 1,
+     "q": 0.72802734375,
+     "is_terminal": false,
+     "is_completed": false,
+     "step_text": "## Step 2: Calculate the dot product of the direction vectors.\nThe dot product of two vectors \\(\\vec{a} = \\langle a_1, a_2, a_3 \\rangle\\) and \\(\\vec{b} = \\langle b_1, b_2, b_3 \\rangle\\) is given by \\(\\vec{a} \\cdot \\vec{b} = a_1b_1 + a_2b_2 + a_3b_3\\). Therefore, the dot product of \\(\\vec{v}_1\\) and \\(\\vec{v}_2\\) is \\(\\langle 2, 3, -1 \\rangle \\cdot \\langle 6, 1, 4 \\rangle = (2)(6) + (3)(1) + (-1)(4) = 12 + 3 - 4 = 11\\).\n\n",
+     "children": []
+    }
+   ]
+  }
+ ]
+}
