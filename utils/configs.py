@@ -247,6 +247,45 @@ class BLMCTSCntConfig(SearchConfig):
 
 
 @dataclass
+class BLMCTSCntV02Config(SearchConfig):
+    """Count-based MCTS with fractional-KUBE frontier selection.
+
+    Frontier counterpart of MCTSCntConfig, exactly as BLMCTSCntConfig
+    is but with the leaf-selection index replaced: instead of PUCT
+    (q_value + cpuct*sqrt(log(parent_visits)/visits)), selects by
+    fractional-KUBE density — a UCB index divided by remaining cost —
+    following Tran-Thanh et al.'s Fractional KUBE
+    (arXiv:1204.1909 sec. 3.3), as implemented as the reference in the
+    sibling `budget-mab` repo (`src/algorithms.py::FractionalKUBE`):
+
+        density_i = (q_value_i + kube_c*sqrt(log(1+t)/visits_i)) / cost_i
+        cost_i = max_depth - depth_i   (remaining generations to reach
+                                         the depth limit; the MCTS
+                                         analogue of an arm's fixed
+                                         pull price in budget-mab)
+        t = number of frontier selections so far (global clock; same
+            schedule as BLMCTSSemConfig's ds_alpha_schedule="global",
+            since the frontier is a flat, globally-shared arm set —
+            see docs/decisions/global-vs-local-exploration-schedule.md)
+
+    An earlier version of this file used a static depth-decay bonus
+    (beta * (1 - ((max_depth-depth)/max_depth)**alpha), no UCB term at
+    all) that didn't match budget-mab's actual FractionalKUBE — see
+    docs/decisions-log.md (2026-07-09) for the correction.
+    """
+    method: str = "mcts_bl_cnt_v02"
+    num_phases: int = 1000
+    gen_budget: int = 80          # total generations across the run
+    kube_c: float = 2.0            # UCB exploration coefficient
+
+    # PRM forward-pass micro-batch *inside* the search loop (distinct
+    # from prm.score_batch_size, which scores the final dataset). Kept
+    # small because in-loop scoring is per-candidate-set. Mirrors
+    # BLMCTSCntConfig.prm_batch_size.
+    prm_batch_size: int = 1
+
+
+@dataclass
 class MCTSSemV01Config(SearchConfig):
     """Semantic (embedding-diversity) MCTS — v01 baseline.
 

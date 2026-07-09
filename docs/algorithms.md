@@ -56,7 +56,18 @@ Budget-limited best-first MCTS: an explicit `leaf_nodes` frontier with
 global leaf selection, instead of CNT-MCTS's phase-based root-to-leaf
 walks.
 - **v01** — PUCT leaf selection.
-- **v02** — KUBE (fractional-knapsack) density-based leaf selection.
+- **v02** — Fractional KUBE density-based leaf selection, following
+  Tran-Thanh et al. arXiv:1204.1909 sec. 3.3 (reference implementation:
+  the sibling `budget-mab` repo's `src/algorithms.py::FractionalKUBE`).
+  `density(x) = (q_value(x) + kube_c*sqrt(log(1+t)/visits(x))) /
+  cost(x)`, `cost(x) = max_depth - depth(x)` (the MCTS analogue of an
+  arm's fixed pull price), `t` = frontier selections so far (global
+  clock, same schedule choice as BL-Sem-MCTS's `ds_alpha_schedule=
+  "global"`). Config: `utils/configs.py::BLMCTSCntV02Config`
+  (`kube_c`, default 2.0). Rewritten 2026-07-09 to match budget-mab's
+  actual FractionalKUBE (a UCB index over cost) — an earlier version
+  used a static depth-decay bonus with no UCB/visit-count term at all;
+  see `docs/decisions-log.md` (2026-07-09).
 
 Both are maintained in parallel for a PUCT-vs-KUBE comparison.
 

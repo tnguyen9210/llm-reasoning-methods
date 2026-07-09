@@ -156,3 +156,36 @@ fit-LLM+PRM-on-32GB question (M4): fp16 LLM + fp16 PRM sums to
 30.7 GB (Qwen2.5-7B + Qwen2.5-Math-PRM-7B), leaving ~1.3 GB
 for KV cache — extremely tight. int4 LLM + fp16 PRM gives
 21.7 GB, leaving ~10 GB for KV cache — a workable margin.
+
+## Single-question trace: cnt-mcts-bl vs sem-mcts-bl
+
+**Notebook:** `unittests/examine_search_trace_v1.ipynb`  
+**Date:** 2026-07-09  
+**Hardware:** Tesla V100S-PCIE-32GB  
+**Env:** py311 (vllm 0.18.1, torch 2.10.0+cu126)  
+**Model:** Llama3.2-1B-Instruct, `llm_prm` (embeds source for
+sem)  
+**Config:** MATH level-4 question 0 ("angle between two lines"),
+`gen_budget=80`, `TRIAL_IDX=0` (seed 100000), single trial, one
+question — a qualitative smoke comparison, not a scored
+benchmark.
+
+| Method | search time (s) | completions | last phase | phase_depths | nodes@max_depth |
+|--------|------------------|-------------|------------|--------------|------------------|
+| mcts_bl_cnt_v01 (cpuct=2.0) | 153.5 | 0 | 79 | [] | 0 |
+| mcts_bl_sem_v01 (ds_alpha=100, lam=0.01, schedule=global) | 276.7 | 16 | 84 | [11, 7, 9, 6, 15] | 0 |
+
+**Takeaway:** On this single question, `mcts_bl_cnt_v01`
+exhausted its full 80-generation budget without producing a
+single completion — consistent with the ~18% zero-completion
+rate documented in `docs/findings/` for the frontier + PUCT
+combination. `mcts_bl_sem_v01` (frontier selection + semantic
+diversity bonus) reached 16 completions at varied depths
+(6–17) on the identical question/budget/seed, at roughly 1.8×
+the wall-clock cost (276.7s vs 153.5s) — the added cost comes
+from the diversity term's embedding + covariance-fold
+machinery on every selection. This is one question, one trial;
+not a substitute for the scored pass@gb comparisons in
+`docs/exp-comparison.md`, but a concrete illustration of why
+bl_cnt's zero-completion issue motivated exploring bl_sem as an
+alternative frontier-selection strategy.

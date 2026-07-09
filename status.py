@@ -47,7 +47,7 @@ from hydra.core.config_store import ConfigStore
 
 from utils.configs import (
     ExpConfig, MCTSCntConfig, MCTSSemV01Config, MCTSSemV02Config,
-    BLMCTSCntConfig, BLMCTSSemConfig,
+    BLMCTSCntConfig, BLMCTSCntV02Config, BLMCTSSemConfig,
     config_hash, config_name, level_dir, results_root, MANIFEST_FILE,
 )
 
@@ -75,6 +75,9 @@ _cs.store(group="search", name="mcts_sem_v01_schema", node=MCTSSemV01Config)
 _cs.store(group="search", name="mcts_sem_v02_schema", node=MCTSSemV02Config)
 _cs.store(
     group="search", name="mcts_bl_cnt_v01_schema", node=BLMCTSCntConfig,
+)
+_cs.store(
+    group="search", name="mcts_bl_cnt_v02_schema", node=BLMCTSCntV02Config,
 )
 _cs.store(
     group="search", name="mcts_bl_sem_v01_schema", node=BLMCTSSemConfig,
@@ -218,6 +221,7 @@ _METHOD_TO_ROOT = {
     "mcts_sem_v01": "mcts_sem_v01_prm800k",
     "mcts_sem_v02": "mcts_sem_v02_prm800k",
     "mcts_bl_cnt_v01": "mcts_bl_cnt_v01_prm800k",
+    "mcts_bl_cnt_v02": "mcts_bl_cnt_v02_prm800k",
     "mcts_bl_sem_v01": "mcts_bl_sem_v01_prm800k",
 }
 
@@ -227,6 +231,7 @@ _METHOD_TO_LAUNCHER = {
     "mcts_sem_v01": "generate_mcts_sem.py",
     "mcts_sem_v02": "generate_mcts_sem.py",
     "mcts_bl_cnt_v01": "generate_mcts_bl_cnt_v01.py",
+    "mcts_bl_cnt_v02": "generate_mcts_bl_cnt_v02.py",
     "mcts_bl_sem_v01": "generate_mcts_sem.py",
 }
 
@@ -241,6 +246,7 @@ _METHOD_TO_GROUP = {
     "mcts_sem_v01": "sem-mcts",
     "mcts_sem_v02": "sem-mcts",
     "mcts_bl_cnt_v01": "cnt-mcts-bl",
+    "mcts_bl_cnt_v02": "cnt-mcts-bl",
     "mcts_bl_sem_v01": "sem-mcts-bl",
 }
 

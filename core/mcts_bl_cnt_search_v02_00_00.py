@@ -1,14 +1,22 @@
 """
-Budget-Limited MCTS with KUBE-based leaf selection (count-based, no embeddings).
+Budget-Limited MCTS with best-first leaf selection (fractional-KUBE,
+no embeddings).
 
-Identical to v01_00_00 except the leaf selection criterion: instead of
-PUCT, uses a relaxed KUBE (fractional knapsack) objective that trades off
-reward estimate against depth-adjusted cost.
+Key difference from mcts_bl_cnt_search_v01_00_00: leaf selection uses
+a fractional-KUBE density index instead of PUCT. Everything else
+(frontier bookkeeping, expansion, backprop, output shape) is
+identical — see that module's docstring for the shared algorithm
+skeleton.
+
+Sibling variant: mcts_bl_cnt_search_v01_00_00.py uses PUCT. Both are
+active (a PUCT-vs-KUBE comparison at matched gen_budget).
 
 Algorithm
     Initialize completion_list = [], leaf_nodes = [root], gen_cnt = 0
+    t = 0  (global clock: one tick per frontier selection)
     While gen_cnt < gen_budget:
-        selected_node = kube_select(leaf_nodes)
+        t += 1
+        selected_node = argmax_{x in leaf_nodes} kube_density(x, t)
         Remove selected_node from leaf_nodes
         If selected_node.is_terminal:
             Backprop: update_recursive(selected_node.q_value(), root)
@@ -22,18 +30,32 @@ Algorithm
                     add to completion_list
                 if not completed and depth >= max_depth:
                     mark terminal, score = negative_reward
-            Add all children to leaf_nodes
+            Add non-terminal children to leaf_nodes
 
-KUBE selection (relaxed/fractional variant):
-    Solves the knapsack objective:
-        max  sum_i m_i * (mu_hat_i + beta * f_a((d_max - d_i) / d_max))
-        s.t. sum_i m_i * (d_max - d_i) <= B
-    where f_a(z) = 1 - z^alpha, B = remaining gen_budget,
-    d_max = config.max_depth, d_i = node depth.
-    Fractional relaxation: select the single arm with highest
-    density = (mu_hat_i + beta * f_a(...)) / (d_max - d_i).
+Selection criterion (Fractional KUBE, Tran-Thanh et al. arXiv:1204.1909
+sec. 3.3 — see the reference implementation in the sibling `budget-mab`
+repo, src/algorithms.py::FractionalKUBE):
+    density(x) = (q_value(x) + kube_c*sqrt(log(1+t)/visit_count(x)))
+                 / cost(x)
+    cost(x) = max_depth - depth(x)   (remaining generations to reach
+              the depth limit — the MCTS analogue of an arm's fixed
+              pull price in the bandit abstraction; nodes closer to
+              max_depth are "cheaper" to finish)
+    t = number of frontier selections so far (global clock, shared by
+        every node on the frontier — see
+        docs/decisions/global-vs-local-exploration-schedule.md for why
+        a global clock is the correct choice for a flat, globally-
+        shared frontier, same reasoning as BLMCTSSemConfig's
+        ds_alpha_schedule="global")
+    q_value = value_sum / visit_count  (running mean, same as v01)
 
-Variant lineage: docs/algorithms.md.
+    Nodes at cost(x) <= 0 (already at max_depth) get density = -inf so
+    they are never selected over a node that can still make progress
+    (they should already be terminal by construction, but this guards
+    against a boundary case at exactly max_depth).
+
+Variant lineage: docs/algorithms.md, docs/decisions-log.md (2026-07-09
+correction from an earlier depth-decay-only, non-UCB density formula).
 """
 
 import random
@@ -114,17 +136,22 @@ class MCTSNode(BaseNode):
             return
         self.parent.update_recursive(value, start_node)
 
-    def puct(self, cpuct=2) -> float:
-        if not self.parent:
-            return 0.0
+    def kube_density(self, max_depth: int, kube_c: float, t: int) -> float:
+        """Fractional-KUBE index: (q_value + UCB bonus) / cost.
+
+        cost = max_depth - depth; nodes at or past max_depth get
+        density = -inf (guard — should already be terminal).
+        """
+        cost = max_depth - self.depth
+        if cost <= 0:
+            return -float("inf")
         q = self.q_value() if self.visit_count() > 0 else 0.0
-        parent_visits = self.parent.visit_count()
         visits = self.visit_count()
-        if parent_visits == 0 or visits == 0:
-            u = 0.0
+        if visits == 0:
+            bonus = float("inf")
         else:
-            u = cpuct * np.sqrt(np.log(parent_visits) / visits)
-        return q + u
+            bonus = kube_c * np.sqrt(np.log(1 + t) / visits)
+        return (q + bonus) / cost
 
     def __repr__(self):
         return (
@@ -147,6 +174,9 @@ class BaseTree(BaseModel):
     def __init__(self, **kwargs) -> None:
         super().__init__(**kwargs)
         self.root = self.create_root()
+        # Seed root with one update so visit_count >= 1 from the start;
+        # prevents the visit_count==0 bonus special case from
+        # triggering on the wrong iteration.
         self.root.update(0)
 
     def create_root(self):
@@ -160,10 +190,11 @@ class BaseTree(BaseModel):
 
 
 class MCTS(BaseTree):
-    """MCTS with PUCT selection.
+    """MCTS with fractional-KUBE selection.
 
     Holds `completed_nodes` (EOS/length-terminated leaves) and the
-    algorithm methods: `expand_node`, `select_child`, `backprop`.
+    algorithm methods: `expand_node`, `select_child_from_list`,
+    `backprop`.
     """
     completed_nodes: List[Type[BaseNode]] = []
     cnt_node_max_depth: int = 0
@@ -198,9 +229,9 @@ class MCTS(BaseTree):
             new_node.is_terminal = True
             self.completed_nodes.append(new_node)
 
-        if not new_node.is_terminal and new_node.depth >= self.config.max_depth:
+        if not new_node.is_terminal and new_node.depth >= self.config.search.max_depth:
             new_node.is_terminal = True
-            candidate_score = self.config.negative_reward
+            candidate_score = self.config.search.negative_reward
             self.cnt_node_max_depth += 1
 
         new_node.update(candidate_score)
@@ -214,63 +245,23 @@ class MCTS(BaseTree):
 
     # ----- Selection ------------------------------------------------- #
 
-    def select_child(self, node, from_root: bool = False):
-        """Pick the child with the highest PUCT value, uniform
-        random tie-break. Returns None if no children.
+    def select_child_from_list(self, nodes: List[Any], t: int):
+        """Pick the node with highest fractional-KUBE density from an
+        arbitrary list, uniform random tie-break.
+
+        density(x) = (q_value(x) + kube_c*sqrt(log(1+t)/visits(x)))
+                     / (max_depth - depth(x))
+        t is the global clock (frontier selections so far), shared by
+        every node — see the module docstring.
         """
-        best_value = -float("inf")
-        best_childs: List[Any] = []
-
-        for child_node in node.children:
-            puct_value = child_node.puct(cpuct=self.config.cpuct)
-            if puct_value == best_value:
-                best_childs.append(child_node)
-            elif puct_value > best_value:
-                best_value = puct_value
-                best_childs = [child_node]
-
-            logging.fatal(f"{child_node.tag}")
-            logging.fatal(f"   q-value = {child_node.q_value():0.4f}")
-            logging.fatal(f"   u-value = {puct_value - child_node.q_value():0.4f}")
-            logging.fatal(f"   puct = {puct_value:0.4f}")
-            logging.fatal(f"   nvisit = {child_node.visit_count():0.2f}")
-            logging.fatal(f"   parent.nvisit = {node.visit_count():0.2f}")
-            logging.fatal(f"   is_terminal = {child_node.is_terminal}")
-
-        if not best_childs:
-            return None
-        selected_node = random.choice(best_childs)
-        logging.fatal(f"selected_child = {selected_node.tag}")
-        return selected_node
-
-    def select_child_from_list(self, nodes: List[Any]):
-        """Pick leaf with highest KUBE density from an arbitrary list,
-        uniform random tie-break.
-
-        Fractional-KUBE selection:
-            density_i = (mu_hat_i + beta * f_a(z_i)) / cost_i
-            where z_i = (d_max - d_i) / d_max
-                  f_a(z) = 1 - z^alpha
-                  cost_i = d_max - d_i  (shallower nodes cost more)
-        Tie-break: uniform random among co-maximal nodes.
-        """
-        d_max = self.config.max_depth
-        beta = self.config.kube_beta
-        alpha = self.config.kube_alpha
+        max_depth = self.config.search.max_depth
+        kube_c = self.config.search.kube_c
 
         best_value = -float("inf")
         best_nodes: List[Any] = []
 
         for node in nodes:
-            cost = d_max - node.depth
-            if cost <= 0:
-                # At max depth — assign lowest priority.
-                density = -float("inf")
-            else:
-                z = cost / d_max          # (d_max - d_i) / d_max
-                f_a = 1.0 - z ** alpha
-                density = (node.q_value() + beta * f_a) / cost
-
+            density = node.kube_density(max_depth, kube_c, t)
             if density == best_value:
                 best_nodes.append(node)
             elif density > best_value:
@@ -280,8 +271,9 @@ class MCTS(BaseTree):
             logging.fatal(f"{node.tag}")
             logging.fatal(f"   q-value = {node.q_value():0.4f}")
             logging.fatal(f"   depth = {node.depth}")
-            logging.fatal(f"   cost = {cost}")
+            logging.fatal(f"   cost = {max_depth - node.depth}")
             logging.fatal(f"   density = {density:.4f}")
+            logging.fatal(f"   nvisit = {node.visit_count():0.2f}")
             logging.fatal(f"   is_terminal = {node.is_terminal}")
 
         selected_node = random.choice(best_nodes)
@@ -307,7 +299,8 @@ def _generate_candidates(
     `current_node`. Returns (candidate_infos, candidate_scores).
 
     Two model calls per invocation:
-      1. `generate_k_steps` produces `config.batch_size` continuations.
+      1. `generate_k_steps` produces `config.search.batch_size`
+         continuations.
       2. `prm.score` scores each unique candidate text.
     """
     current_text = current_node.state["text"]
@@ -320,19 +313,21 @@ def _generate_candidates(
     # of emitting EOS (docs/findings/coding-findings/
     # library-version-trajectory-completeness.md, 2026-06-11).
     current_text_clean = current_text.removesuffix("\n\n")
-    current_convs = [build_conv(question, current_text_clean, config.system_prompt)]
+    current_convs = [build_conv(question, current_text_clean, config.gen.system_prompt)]
     current_templated = tokenizer.apply_chat_template(
         current_convs,
         add_generation_prompt=current_node.depth == 0,
         continue_final_message=current_node.depth > 0,
-        date_string=config.date_string,
+        date_string=config.gen.date_string,
         tokenize=False,
     )
     if current_text.endswith("\n\n"):
         current_templated = [t + "\n\n" for t in current_templated]
-    current_templated = current_templated * config.batch_size
+    current_templated = current_templated * config.search.batch_size
 
-    lookahead = 0 if d == config.max_depth - 1 else config.lookahead
+    lookahead = (
+        0 if d == config.search.max_depth - 1 else config.search.lookahead
+    )
     llm_outputs = generate_k_steps(
         current_templated, lookahead, llm_vllm, sampling_params, 1
     )
@@ -353,13 +348,14 @@ def _generate_candidates(
         for output in candidate_infos
     ]
     candidate_scores = prm.score(
-        [question], [cand_texts], batch_size=4
+        [question], [cand_texts],
+        batch_size=config.search.prm_batch_size,
     )
     # score returns [question][answer][step]; one question here, so
     # candidate_scores[0] is a list of candidates, each a per-step
     # score list. Aggregate each candidate's step list to a scalar.
     candidate_scores = [
-        aggregate_scores(cand_scores, config.agg_strategy)
+        aggregate_scores(cand_scores, config.gen.agg_strategy)
         for cand_scores in candidate_scores[0]
     ]
     logging.error(f"candidate_scores = {candidate_scores}")
@@ -374,19 +370,28 @@ def _generate_candidates(
 def mcts_search(question, agent, config, llm_vllm, prm):
     """Run budget-limited best-first MCTS on a single `question`.
 
-    Outer loop: `config.num_phases` iterations (safety cap).
-    Each iteration selects one leaf globally by PUCT and either
-    backprops (if terminal) or expands (otherwise).
+    Outer loop: `config.search.num_phases` iterations (safety cap).
+    Each iteration selects one leaf globally by fractional-KUBE
+    density and either backprops (if terminal) or expands (otherwise).
     Only expansions charge gen_cnt.
     """
     tokenizer = llm_vllm.get_tokenizer()
-    if config.custom_chat_template is not None:
-        tokenizer.chat_template = config.custom_chat_template
+    # Template selection (mirrors generate_bon / bon_search): default
+    # is the model's NATIVE chat template — each model's own
+    # in-distribution format, avoiding the cross-model confound (see
+    # docs/decisions/chat-template-per-family.md).
+    # llm.use_custom_template defaults True (custom) for Llama; Qwen
+    # YAML groups set it False (native) — see
+    # LLMConfig.use_custom_template. Either way the trailing "\n\n"
+    # step separator is preserved by the strip-and-reappend in
+    # _generate_candidates.
+    if config.llm.use_custom_template:
+        tokenizer.chat_template = config.gen.custom_chat_template
 
     sampling_params = SamplingParams(
-        temperature=config.temperature,
-        max_tokens=config.max_tokens,
-        top_p=config.top_p,
+        temperature=config.gen.temperature,
+        max_tokens=config.gen.max_tokens,
+        top_p=config.gen.top_p,
         stop=["\n\n"],
         include_stop_str_in_output=True,
         n=1,
@@ -394,31 +399,35 @@ def mcts_search(question, agent, config, llm_vllm, prm):
 
     gen_cnt = 0
     p = 0
-    ndepths_arr: List[int] = []
+    t = 0
+    phase_depths: List[int] = []
     leaf_nodes: List[Any] = [agent.root]
 
-    for p in range(config.num_phases):
+    for p in range(config.search.num_phases):
         logging.fatal(f"\n-> p = {p}")
 
         if not leaf_nodes:
             logging.fatal("leaf_nodes is empty — stopping.")
             break
 
-        # Select leaf with highest KUBE density across the entire frontier.
-        selected = agent.select_child_from_list(leaf_nodes)
+        # Select leaf with highest fractional-KUBE density across the
+        # entire frontier. t is the global clock: one tick per
+        # selection, shared by every node (see module docstring).
+        t += 1
+        selected = agent.select_child_from_list(leaf_nodes, t)
         leaf_nodes.remove(selected)
 
         logging.fatal(
             f"selected = {selected.tag}  "
+            f"density={selected.kube_density(config.search.max_depth, config.search.kube_c, t):.4f}  "
             f"q={selected.q_value():.4f}  "
-            f"depth={selected.depth}  "
             f"nvisit={selected.visit_count()}"
         )
 
         if selected.is_terminal:
             logging.fatal(f"selected.is_terminal = True")
             agent.backprop(selected)
-            ndepths_arr.append(selected.depth)
+            phase_depths.append(selected.depth)
         else:
             gen_cnt += 1
             infos, scores = _generate_candidates(
@@ -430,7 +439,7 @@ def mcts_search(question, agent, config, llm_vllm, prm):
                 leaf_nodes.append(child)
 
         logging.fatal(f"gen_cnt = {gen_cnt}")
-        if gen_cnt >= config.gen_budget:
+        if gen_cnt >= config.search.gen_budget:
             logging.fatal("run out of budget!")
             break
 
@@ -440,19 +449,19 @@ def mcts_search(question, agent, config, llm_vllm, prm):
         seen.setdefault(node.state["text"], idx)
 
     completions: List[str] = []
-    c_depths: List[int] = []
-    c_phases: List[int] = []
-    c_gen_cnts: List[int] = []
+    comp_depth: List[int] = []
+    comp_phase: List[int] = []
+    comp_gen: List[int] = []
     for i in seen.values():
         node = agent.completed_nodes[i]
         completions.append(node.state["text"])
-        c_depths.append(node.depth)
-        c_phases.append(node.phase)
-        c_gen_cnts.append(node.gen_cnt)
+        comp_depth.append(node.depth)
+        comp_phase.append(node.phase)
+        comp_gen.append(node.gen_cnt)
 
     return (
-        completions, c_depths, c_phases, c_gen_cnts,
-        gen_cnt, p, ndepths_arr, agent.cnt_node_max_depth,
+        completions, comp_depth, comp_phase, comp_gen,
+        gen_cnt, p, phase_depths, agent.cnt_node_max_depth,
     )
 
 
@@ -463,14 +472,14 @@ def _search(batch_of_questions, config, trial_idx, llm_vllm, prm):
     Returns a defaultdict of per-question lists aligned to `q_idx`.
     """
     n = len(batch_of_questions)
-    all_completions = [[] for _ in range(n)]
-    all_c_depths = [[] for _ in range(n)]
-    all_c_phases = [[] for _ in range(n)]
-    all_c_gen_cnts = [[] for _ in range(n)]
-    all_gen_cnts = [[] for _ in range(n)]
-    all_last_phases = [[] for _ in range(n)]
-    all_ndepths_arr = [[] for _ in range(n)]
-    all_cnt_max_depth = [[] for _ in range(n)]
+    batch_completions = [[] for _ in range(n)]
+    batch_comp_depth = [[] for _ in range(n)]
+    batch_comp_phase = [[] for _ in range(n)]
+    batch_comp_gen = [[] for _ in range(n)]
+    batch_q_total_gens = [[] for _ in range(n)]
+    batch_q_last_phase = [[] for _ in range(n)]
+    batch_phase_depths = [[] for _ in range(n)]
+    batch_q_nodes_max_depth = [[] for _ in range(n)]
 
     for q_idx, question in enumerate(batch_of_questions):
         seed = 100_000 + trial_idx
@@ -481,26 +490,39 @@ def _search(batch_of_questions, config, trial_idx, llm_vllm, prm):
 
         agent = MCTS(config=config, question=question)
         (
-            completions, c_depths, c_phases, c_gen_cnts,
-            gen_cnt, last_phase, ndepths_arr, cnt_max_depth,
+            completions, comp_depth, comp_phase, comp_gen,
+            q_total_gens, q_last_phase, phase_depths,
+            q_nodes_max_depth,
         ) = mcts_search(question, agent, config, llm_vllm, prm)
 
-        all_completions[q_idx] = completions
-        all_c_depths[q_idx] = c_depths
-        all_c_phases[q_idx] = c_phases
-        all_c_gen_cnts[q_idx] = c_gen_cnts
-        all_gen_cnts[q_idx] = gen_cnt
-        all_last_phases[q_idx] = last_phase
-        all_ndepths_arr[q_idx] = ndepths_arr
-        all_cnt_max_depth[q_idx] = cnt_max_depth
+        batch_completions[q_idx] = completions
+        batch_comp_depth[q_idx] = comp_depth
+        batch_comp_phase[q_idx] = comp_phase
+        batch_comp_gen[q_idx] = comp_gen
+        batch_q_total_gens[q_idx] = q_total_gens
+        batch_q_last_phase[q_idx] = q_last_phase
+        batch_phase_depths[q_idx] = phase_depths
+        batch_q_nodes_max_depth[q_idx] = q_nodes_max_depth
 
+    # Output keys use scope prefixes: comp_* = per completion,
+    # q_* = per-question scalar, phase_* = per-question array
+    # over phases.
     results: Dict[str, Any] = defaultdict(list)
-    results["completions"] = all_completions
-    results["c_depths"] = all_c_depths
-    results["c_phases"] = all_c_phases
-    results["c_gen_cnts"] = all_c_gen_cnts
-    results["gen_cnts"] = all_gen_cnts
-    results["last_phases"] = all_last_phases
-    results["ndepths_arr"] = all_ndepths_arr
-    results["cnt_max_depth"] = all_cnt_max_depth
+    results["completions"] = batch_completions
+    # comp_depth: per completion, tree depth at which it finished.
+    results["comp_depth"] = batch_comp_depth
+    # comp_phase: per completion, MCTS phase it finished in.
+    results["comp_phase"] = batch_comp_phase
+    # comp_gen: per completion, generation count when it finished.
+    results["comp_gen"] = batch_comp_gen
+    # q_total_gens: per question, total generations used (budget).
+    results["q_total_gens"] = batch_q_total_gens
+    # q_last_phase: per question, final MCTS phase index reached.
+    results["q_last_phase"] = batch_q_last_phase
+    # phase_depths: per question, depth of the selected leaf on each
+    # phase that backprops (not appended on an expand phase — this
+    # frontier-based search has no fixed root-to-leaf walk per phase).
+    results["phase_depths"] = batch_phase_depths
+    # q_nodes_max_depth: per question, # nodes that hit max depth.
+    results["q_nodes_max_depth"] = batch_q_nodes_max_depth
     return results

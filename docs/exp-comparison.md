@@ -1458,23 +1458,37 @@ instead of one wide sparse grid.)
 | llama-1b fp16 | 2 | scored | .4414<br>±.0311 | .4297<br>±.0310 | .3984<br>±.0307 | .3789<br>±.0304 | 2.12 |
 | llama-3b fp16 | — | planned | — | — | — | — | — |
 | llama-3b gptq | — | planned | — | — | — | — | — |
-| qwen-3b fp16 | — | planned | — | — | — | — | — |
+| qwen-3b fp16 | 2 | scored | .6445<br>±.0300 | .6328<br>±.0302 | .6172<br>±.0304 | .6094<br>±.0306 | 3.50 |
 | qwen-3b gptq-int4 | — | planned | — | — | — | — | — |
-| qwen-7b gptq-int4 | — | planned | — | — | — | — | — |
-| qwen-math-1.5b fp16 | — | planned | — | — | — | — | — |
+| qwen-7b gptq-int4 | 2 | scored | .8125<br>±.0244 | .7578<br>±.0268 | .7461<br>±.0273 | .7422<br>±.0274 | 2.78 |
+| qwen-math-1.5b fp16 | 2 | scored | .6836<br>±.0291 | .6562<br>±.0297 | .6602<br>±.0297 | .6562<br>±.0297 | 2.75 |
 
-> **Analysis.** llama-1b now scored (2026-07-09) — pass@gb .4414,
-> well below cnt-mcts's llama-1b/qwen-PRM cell (.6367, see the
-> `cnt-mcts` model family/size/quantization (qwen PRM) table
-> above); consistent with the earlier (now-removed) rlhflow-PRM
-> finding that bl_cnt underperformed cnt-mcts at this budget on
-> shared models. Single data point — not yet a trend across the
-> grid.
-> **Limitations / follow-up:** 6 of 7 cells still new/unqueued
-> in `experiments.yaml`. Priority depends on whether bl_cnt_v01
-> is still an active comparison target vs. cnt-mcts — check
-> `llm-reasoning-mcts-bl-exp-todo` before launching the rest of
-> the sweep.
+> **Analysis.** 4 of 7 cells now scored (2026-07-09): llama-1b
+> .4414, qwen-3b fp16 .6445, qwen-7b gptq-int4 .8125,
+> qwen-math-1.5b fp16 .6836. Every scored bl_cnt cell trails its
+> cnt-mcts counterpart at the same model/qwen-PRM config (llama-1b
+> .6367, qwen-3b .8789, qwen-7b gptq-int4 .9102, qwen-math-1.5b
+> .8906 — see the `cnt-mcts` model family/size/quantization
+> (qwen PRM) table above) — the gap ranges from -.0964
+> (qwen-math-1.5b) to -.2344 (qwen-3b fp16), consistently large
+> and one-directional across all 4 models tested so far, not
+> just the llama-1b point noted previously. This is consistent
+> with the earlier (now-removed) rlhflow-PRM finding and with
+> the ~18% zero-completion rate documented for bl_cnt_v01 at this
+> budget (see `docs/findings/` and the single-question trace in
+> `docs/benchmarks.md` — the same question produced 0 completions
+> for bl_cnt_v01 at b=80): a frontier-selection run that exhausts
+> its budget without completing loses all credit for that
+> question, which plausibly explains bl_cnt's across-the-board
+> pass@gb deficit against cnt-mcts's depth-first-with-backup
+> selection.
+> **Limitations / follow-up:** llama-3b fp16, llama-3b gptq, and
+> qwen-3b gptq-int4 still unqueued in `experiments.yaml`. Given
+> the now-4-model consistent underperformance, worth deciding
+> whether to (a) finish the remaining 3 cells anyway for a
+> complete grid, or (b) prioritize investigating/fixing the
+> zero-completion issue before spending more budget on bl_cnt_v01
+> sweeps — check `llm-reasoning-mcts-bl-exp-todo`.
 
 ### sem-mcts-bl
 > knobs: model family/size/quantization (this table); lam,

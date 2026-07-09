@@ -1047,11 +1047,11 @@
   trials: 2
   feeds: []
   group: cnt-mcts-bl
-  recorded: false
+  recorded: true
   priority: 2
   note: backfilled from mcts_bl_cnt_v01--level-4--Qwen2.5-3B--qwen--d-20--bs-4--b-080--cfg-7cfae464
     (run_id xc5goyz6); trials corrected 1->2 (run.num_trials=2 default, only 1 .done
-    at backfill time)
+    at backfill time); scored 2026-07-09, pass@gb .6445±.0300
 - launcher: generate_mcts_cnt.py
   config_root: mcts_cnt_prm800k
   overrides:
@@ -1124,10 +1124,10 @@
   trials: 2
   feeds: []
   group: cnt-mcts-bl
-  recorded: false
+  recorded: true
   priority: 2
   note: backfilled from mcts_bl_cnt_v01--level-4--Qwen2.5-7B-GPTQ-Int4--qwen--d-20--bs-4--b-080--cfg-97761fb2
-    (run_id boteurbn)
+    (run_id boteurbn); scored 2026-07-09, pass@gb .8125±.0244
 - launcher: generate_mcts_cnt.py
   config_root: mcts_cnt_prm800k
   overrides: {}
@@ -1146,10 +1146,10 @@
   trials: 2
   feeds: []
   group: cnt-mcts-bl
-  recorded: false
+  recorded: true
   priority: 2
   note: backfilled from mcts_bl_cnt_v01--level-4--Qwen2.5-Math-1.5B--qwen--d-20--bs-4--b-080--cfg-a50732cb
-    (run_id qbhlzqch)
+    (run_id qbhlzqch); scored 2026-07-09, pass@gb .6836±.0291
 - launcher: generate_mcts_sem.py
   config_root: mcts_sem_v02_prm800k
   overrides:

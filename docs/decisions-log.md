@@ -14,6 +14,61 @@ scaffold, it also gets a standalone file in [decisions/](decisions/);
 the log entry then carries a one-line pointer to it rather than
 repeating the full writeup.
 
+## 2026-07-09 — Search, Refactor: `mcts_bl_cnt_v02` rewritten to match budget-mab's actual Fractional KUBE; infra aligned with v01
+
+**Context:** `core/mcts_bl_cnt_search_v02_00_00.py` predated the
+infra-alignment pass v01 got in commit `646629c` (flat `config.*`
+access instead of `config.search.*`/`config.gen.*`, mismatched output
+key names, hardcoded `prm.score(..., batch_size=4)`, a launcher with
+no `manifest.json`/`.done` markers/resume/timing-sidecar/scoring
+step). Its "KUBE" selection was also a hand-rolled static depth-decay
+heuristic — `(q_value + beta*(1-((max_depth-depth)/max_depth)**alpha))
+/ (max_depth-depth)` — with no UCB/exploration-bonus term and no
+visit-count dependence at all, which does not match Tran-Thanh et
+al.'s Fractional KUBE (arXiv:1204.1909 sec. 3.3) or the reference
+implementation in the sibling `budget-mab` repo
+(`src/algorithms.py::FractionalKUBE`: `density = (mean + UCB
+confidence bonus) / cost`, restricted to affordable arms).
+
+**Decision:** rewrote `mcts_bl_cnt_search_v02_00_00.py`,
+`generate_mcts_bl_cnt_v02.py`, and the config
+(`utils/configs.py::BLMCTSCntV02Config`, `conf/search/
+mcts_bl_cnt_v02.yaml`, `conf/mcts_bl_cnt_v02_prm800k.yaml`) to mirror
+v01's infra exactly, changing only the selection formula:
+
+    density(x) = (q_value(x) + kube_c*sqrt(log(1+t)/visits(x)))
+                 / cost(x)
+    cost(x) = max_depth - depth(x)
+
+- **Cost** stays `max_depth - depth` (the existing intuition: shallower
+  nodes have more remaining generations to reach the depth limit — the
+  MCTS analogue of an arm's fixed pull price in the bandit
+  abstraction). Confirmed with Tuan rather than switching to a
+  cost-per-expansion=1 mapping (which would have collapsed
+  FractionalKUBE to plain UCB1 over the frontier).
+- **UCB bonus** added with the **global-time schedule**
+  (`t` = frontier selections so far, shared by every node), the same
+  choice as `mcts_bl_sem_v01`'s `ds_alpha_schedule="global"` — the
+  frontier is a flat, globally-shared arm set in both algorithms, so
+  the same schedule reasoning applies (see
+  [decisions/global-vs-local-exploration-schedule.md](decisions/global-vs-local-exploration-schedule.md)).
+- The exploration coefficient is named `kube_c`, not reusing bl_cnt
+  v01's `cpuct`, so config diffs/tables don't imply the two formulas
+  are the same (density-with-UCB-then-divide-by-cost vs. additive
+  PUCT bonus) when they aren't.
+- `kube_beta`/`kube_alpha`/the `f_a(z)` depth-decay term are dropped
+  entirely — no longer part of the design, not just renamed.
+- Smoke-tested (llama-1b, qwen PRM, 2 questions, b=80): ran clean,
+  33 and 45 completions respectively — a strong contrast with v01's
+  0-completion result on the same budget/question-1 config (see
+  `docs/benchmarks.md`, 2026-07-09 trace comparison), though this is
+  one smoke run, not a scored comparison.
+
+**Why:** the goal was for v02 to actually be "the fractional-KUBE
+variant, following the design from the mab-budget repo" — before this
+rewrite it was neither infra-aligned with its own sibling nor a
+faithful KUBE implementation by its own reference.
+
 ## 2026-07-08 — Search: PUCT's local per-parent clock is not a fairness gap to fix, in either direction
 
 **Context:** follow-on to the `mcts_bl_sem_v01` entry below. Two
