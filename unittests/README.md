@@ -34,6 +34,7 @@ result inspection. GPU column: Y = requires GPU, N = CPU-only.
 | `examine_llm_generation_templates_llama_v1.ipynb` | How chat-template choice (native vs. custom) affects what Llama 3B *generates* under vLLM, in fresh-from-question vs. continue-from-step settings | Y |
 | `examine_llm_generation_templates_qwen_v1.ipynb` | How chat-template choice (native vs. custom) affects what Qwen 3B *generates* under vLLM, in fresh-from-question vs. continue-from-step settings | Y |
 | `examine_llm_sys_prompt_v1.ipynb` | System-prompt format and behavior per LLM (currently the shared `GenConfig.system_prompt`) | N |
+| `examine_search_trace_v1.ipynb` | Step-by-step trace of one search method (mcts_cnt / mcts_bl_cnt_v01 / mcts_sem_v02) on a single question: live selection/generation trace via the cores' own logging, then post-hoc run summary, ASCII search-tree dump, completed nodes, per-step PRM re-score | Y |
 | `examine_completions_log_probs_v1.ipynb` | Per-step log-probabilities and perplexities of generated completions | Y |
 | `examine_completions_prm_scores_v1.ipynb` | PRM scores across completion steps; correctness correlation | Y |
 | `examine_prm_scores_rlhflow_v1.ipynb` | Inspect Llama3.1-8B-PRM-Deepseek-Data per-step scores inline (marker-token approach) on flamingo + correct/wrong examples | Y |
