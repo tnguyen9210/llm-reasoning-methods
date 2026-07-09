@@ -1092,8 +1092,9 @@ instead of one wide sparse grid.)
 
 | llm | prm | lam | ds_alpha | w_eff | trials | status | pass@gb | naive@gb | wei@gb | maj@gb | hr/trial |
 |---|---|---|---|---|---|---|---|---|---|---|---|
-| qwen-math-1.5b | qwen | 0.01 | 10 | 100 | 2 | scored (see qwen-PRM ds_alpha=10 above) | .8789<br>±.0204 | .7969<br>±.0252 | .7891<br>±.0255 | .7695<br>±.0264 | 3.98 |
+| qwen-math-1.5b | qwen | 0.01 | 1.0 | 10 | — | planned | — | — | — | — | — |
 | qwen-math-1.5b | qwen | 0.1 | 3.16 | 10 | 2 | scored | .8867<br>±.0198 | .7930<br>±.0254 | .7578<br>±.0268 | .7500<br>±.0271 | — |
+| qwen-math-1.5b | qwen | 0.01 | 10 | 100 | 2 | scored (see qwen-PRM ds_alpha=10 above) | .8789<br>±.0204 | .7969<br>±.0252 | .7891<br>±.0255 | .7695<br>±.0264 | 3.98 |
 | qwen-math-1.5b | qwen | 0.1 | 31.6 | 100 | 2 | scored | .8672<br>±.0213 | .7891<br>±.0255 | .7656<br>±.0265 | .7422<br>±.0274 | — |
 
 > **Analysis.** Both `lam=0.1` cells (w_eff=10: .8867, w_eff=100:
@@ -1105,10 +1106,15 @@ instead of one wide sparse grid.)
 > stays flat across all four @gb metrics between `w_eff=10` and
 > `w_eff=100` — no sign of the same weighted/majority-vote
 > degradation at high diversity weight for this model.
-> **Limitations / follow-up:** no `lam=1.0` arm run for this model,
-> so this isn't a full step-1 replication (only one `lam` value
-> tested per `w_eff`) — treat as a spot-check, not confirmation.
-> Completing the `lam=1.0` arm at `w_eff=10` and `100` would make
+> **Limitations / follow-up:** the `w_eff=10, lam=0.01` cell
+> (`ds_alpha=1.0`) is still not started — needed to directly match
+> `w_eff=10, lam=0.1` (.8867) the way the other two models' step-1
+> checks matched `lam=0.01` against `lam=1.0`. No `lam=1.0` arm run
+> for this model either, so this isn't a full step-1 replication
+> (only one non-baseline `lam` value tested per `w_eff`) — treat as a
+> spot-check, not confirmation. Completing the `lam=1.0` arm at
+> `w_eff=10` and `100`, plus the `lam=0.01, w_eff=10` cell above,
+> would make
 > this a proper step-1 check like the other two tables.
 
 #### model family, size, quantization comparison
