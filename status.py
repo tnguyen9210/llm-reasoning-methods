@@ -47,6 +47,7 @@ from hydra.core.config_store import ConfigStore
 
 from utils.configs import (
     ExpConfig, MCTSCntConfig, MCTSSemV01Config, MCTSSemV02Config,
+    BLMCTSCntConfig, BLMCTSSemConfig,
     config_hash, config_name, level_dir, results_root, MANIFEST_FILE,
 )
 
@@ -72,6 +73,12 @@ _cs.store(name="exp_schema", node=ExpConfig)
 _cs.store(group="search", name="mcts_cnt_schema", node=MCTSCntConfig)
 _cs.store(group="search", name="mcts_sem_v01_schema", node=MCTSSemV01Config)
 _cs.store(group="search", name="mcts_sem_v02_schema", node=MCTSSemV02Config)
+_cs.store(
+    group="search", name="mcts_bl_cnt_v01_schema", node=BLMCTSCntConfig,
+)
+_cs.store(
+    group="search", name="mcts_bl_sem_v01_schema", node=BLMCTSSemConfig,
+)
 
 
 def compose_cfg(config_root, overrides):
@@ -204,12 +211,14 @@ def scan_result_manifests():
 
 # method= -> the root config file each launcher defaults to. Backfilled
 # entries need a config_root so status.py can re-compose them; map by
-# the recorded method. (Only sem/cnt families are in scope here.)
+# the recorded method.
 _METHOD_TO_ROOT = {
     "mcts_cnt": "mcts_cnt_prm800k",
     "mcts_cnt_v01": "mcts_cnt_prm800k",
     "mcts_sem_v01": "mcts_sem_v01_prm800k",
     "mcts_sem_v02": "mcts_sem_v02_prm800k",
+    "mcts_bl_cnt_v01": "mcts_bl_cnt_v01_prm800k",
+    "mcts_bl_sem_v01": "mcts_bl_sem_v01_prm800k",
 }
 
 _METHOD_TO_LAUNCHER = {
@@ -217,6 +226,22 @@ _METHOD_TO_LAUNCHER = {
     "mcts_cnt_v01": "generate_mcts_cnt.py",
     "mcts_sem_v01": "generate_mcts_sem.py",
     "mcts_sem_v02": "generate_mcts_sem.py",
+    "mcts_bl_cnt_v01": "generate_mcts_bl_cnt_v01.py",
+    "mcts_bl_sem_v01": "generate_mcts_sem.py",
+}
+
+# method= -> the `group:` label used by docs/exp-comparison.md's `###`
+# subsection names, so --group filtering and backfilled entries agree
+# with the doc. A plain `startswith("mcts_sem")` guess (the old
+# behavior) misclassifies mcts_bl_sem_v01 as "sem-mcts" -- explicit
+# per-method mapping avoids that.
+_METHOD_TO_GROUP = {
+    "mcts_cnt": "cnt-mcts",
+    "mcts_cnt_v01": "cnt-mcts",
+    "mcts_sem_v01": "sem-mcts",
+    "mcts_sem_v02": "sem-mcts",
+    "mcts_bl_cnt_v01": "cnt-mcts-bl",
+    "mcts_bl_sem_v01": "sem-mcts-bl",
 }
 
 # Group SELECTOR maps: a manifest records resolved *values*, not which
@@ -334,8 +359,7 @@ def backfill(queue):
             "overrides": overrides,
             "trials": n_done or 1,
             "feeds": [],
-            "group": "sem-mcts" if method.startswith("mcts_sem")
-            else "cnt-mcts",
+            "group": _METHOD_TO_GROUP.get(method, "cnt-mcts"),
             "recorded": False,
             "_backfilled_from": os.path.basename(rdir),
             "_config_hash": h,
