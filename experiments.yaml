@@ -1590,3 +1590,164 @@
   note: backfilled from mcts_sem_v02--level-4--Qwen2.5-Math-1.5B--qwen--d-20--bs-4--b-080--cfg-d5f27e0f
     (run_id wixl51ql); scored 2026-07-09, pass@gb .8867±.0198 (already in
     docs/exp-comparison.md agg_strategy comparison lam=0.1 w_eff=10 table)
+- launcher: generate_mcts_bl_cnt.py
+  config_root: mcts_bl_cnt_v02_prm800k
+  overrides:
+    prm: qwen_prm
+  trials: 2
+  feeds: []
+  group: cnt-mcts-bl
+  recorded: true
+  priority: 2
+  note: backfilled from mcts_bl_cnt_v02--level-4--Llama3.2-1B--qwen--d-20--bs-4--b-080--cfg-4586b6a1
+    (run_id 5hlr1c61); scored 2026-07-09, pass@gb .5586±.0311 (in
+    docs/exp-comparison.md cnt-mcts-bl-v02 model family/size/quantization table)
+- launcher: generate_mcts_bl_cnt.py
+  config_root: mcts_bl_cnt_v02_prm800k
+  overrides:
+    llm: llama_3b
+    prm: qwen_prm
+  trials: 2
+  feeds: []
+  group: cnt-mcts-bl
+  recorded: true
+  priority: 2
+  note: backfilled from mcts_bl_cnt_v02--level-4--Llama3.2-3B--qwen--d-20--bs-4--b-080--cfg-55643f02
+    (run_id rwqjq7fl); scored 2026-07-09, pass@gb .7305±.0278 (in
+    docs/exp-comparison.md cnt-mcts-bl-v02 model family/size/quantization table)
+- launcher: generate_mcts_bl_cnt.py
+  config_root: mcts_bl_cnt_v02_prm800k
+  overrides:
+    llm: qwen_3b
+    prm: qwen_prm
+  trials: 2
+  feeds: []
+  group: cnt-mcts-bl
+  recorded: true
+  priority: 2
+  note: backfilled from mcts_bl_cnt_v02--level-4--Qwen2.5-3B--qwen--d-20--bs-4--b-080--cfg-e1360dda
+    (run_id vimdoh1b); scored 2026-07-09, pass@gb .8320±.0234 (in
+    docs/exp-comparison.md cnt-mcts-bl-v02 model family/size/quantization table)
+- launcher: generate_mcts_bl_cnt.py
+  config_root: mcts_bl_cnt_v02_prm800k
+  overrides:
+    llm: qwen_7b_gptq_int4
+    prm: qwen_prm
+  trials: 2
+  feeds: []
+  group: cnt-mcts-bl
+  recorded: true
+  priority: 2
+  note: backfilled from mcts_bl_cnt_v02--level-4--Qwen2.5-7B-GPTQ-Int4--qwen--d-20--bs-4--b-080--cfg-0ef9c289
+    (run_id a0nlicyf); scored 2026-07-09, pass@gb .8750±.0207 (in
+    docs/exp-comparison.md cnt-mcts-bl-v02 model family/size/quantization table)
+- launcher: generate_mcts_bl_cnt.py
+  config_root: mcts_bl_cnt_v02_prm800k
+  overrides:
+    llm: qwen_math_1_5b
+    prm: qwen_prm
+  trials: 2
+  feeds: []
+  group: cnt-mcts-bl
+  recorded: true
+  priority: 2
+  note: backfilled from mcts_bl_cnt_v02--level-4--Qwen2.5-Math-1.5B--qwen--d-20--bs-4--b-080--cfg-497d2e67
+    (run_id ub5wqvva); scored 2026-07-09, pass@gb .8359±.0232 (in
+    docs/exp-comparison.md cnt-mcts-bl-v02 model family/size/quantization table)
+- launcher: generate_mcts_bl_cnt.py
+  config_root: mcts_bl_cnt_v03_prm800k
+  overrides:
+    prm: qwen_prm
+  trials: 2
+  feeds: []
+  group: cnt-mcts-bl
+  recorded: true
+  priority: 2
+  note: backfilled from mcts_bl_cnt_v03--level-4--Llama3.2-1B--qwen--d-20--bs-4--b-080--cfg-8dda8957
+    (run_id 3yyni5fn); scored 2026-07-09, pass@gb .5742±.0310 (in
+    docs/exp-comparison.md cnt-mcts-bl-v03 model family/size/quantization table)
+- launcher: generate_mcts_bl_cnt.py
+  config_root: mcts_bl_cnt_v03_prm800k
+  overrides:
+    llm: llama_3b
+    prm: qwen_prm
+  trials: 2
+  feeds: []
+  group: cnt-mcts-bl
+  recorded: true
+  priority: 2
+  note: backfilled from mcts_bl_cnt_v03--level-4--Llama3.2-3B--qwen--d-20--bs-4--b-080--cfg-3978c92d
+    (run_id kl22af6y); scored 2026-07-09, pass@gb .7227±.0280 (in
+    docs/exp-comparison.md cnt-mcts-bl-v03 model family/size/quantization table)
+- launcher: generate_mcts_bl_cnt.py
+  config_root: mcts_bl_cnt_v03_prm800k
+  overrides:
+    llm: qwen_3b
+    prm: qwen_prm
+  trials: 2
+  feeds: []
+  group: cnt-mcts-bl
+  recorded: true
+  priority: 2
+  note: backfilled from mcts_bl_cnt_v03--level-4--Qwen2.5-3B--qwen--d-20--bs-4--b-080--cfg-e1311880
+    (run_id asn77q7e); scored 2026-07-09, pass@gb .8164±.0242 (in
+    docs/exp-comparison.md cnt-mcts-bl-v03 model family/size/quantization table)
+- launcher: generate_mcts_bl_cnt.py
+  config_root: mcts_bl_cnt_v03_prm800k
+  overrides:
+    llm: qwen_7b_gptq_int4
+    prm: qwen_prm
+  trials: 2
+  feeds: []
+  group: cnt-mcts-bl
+  recorded: true
+  priority: 2
+  note: backfilled from mcts_bl_cnt_v03--level-4--Qwen2.5-7B-GPTQ-Int4--qwen--d-20--bs-4--b-080--cfg-4a99b754
+    (run_id g0jll3ts); scored 2026-07-09, pass@gb .9023±.0186 (in
+    docs/exp-comparison.md cnt-mcts-bl-v03 model family/size/quantization table)
+- launcher: generate_mcts_bl_cnt.py
+  config_root: mcts_bl_cnt_v03_prm800k
+  overrides:
+    llm: qwen_math_1_5b
+    prm: qwen_prm
+  trials: 2
+  feeds: []
+  group: cnt-mcts-bl
+  recorded: true
+  priority: 2
+  note: backfilled from mcts_bl_cnt_v03--level-4--Qwen2.5-Math-1.5B--qwen--d-20--bs-4--b-080--cfg-12183f3b
+    (run_id i8qyv1gv); scored 2026-07-09, pass@gb .8164±.0242 (in
+    docs/exp-comparison.md cnt-mcts-bl-v03 model family/size/quantization table)
+- launcher: generate_mcts_sem.py
+  config_root: mcts_bl_sem_v01_prm800k
+  overrides:
+    llm: qwen_3b_gptq_int4
+    prm: qwen_prm
+    search.lam: 0.1
+    search.ds_alpha: 3.16
+  trials: 2
+  feeds: []
+  group: sem-mcts-bl
+  recorded: true
+  priority: 2
+  note: backfilled from mcts_bl_sem_v01--level-4--Qwen2.5-3B-GPTQ-Int4--qwen--d-20--bs-4--b-080--cfg-7a516838
+    (run_id ic5ixmjt); scored 2026-07-09, pass@gb .8086±.0246 (in
+    docs/exp-comparison.md sem-mcts-bl w_eff=10 table)
+- launcher: generate_mcts_sem.py
+  config_root: mcts_bl_sem_v01_prm800k
+  overrides:
+    llm: llama_3b
+    prm: qwen_prm
+    search.lam: 0.1
+    search.ds_alpha: 3.16
+  trials: 2
+  feeds: []
+  group: sem-mcts-bl
+  recorded: false
+  priority: 2
+  note: FAILED -- two incomplete attempts at w_eff=10, llama-3b fp16. First
+    attempt (config-hash 0f06296f, run_id 2goolnzd) produced 0/2 trials on
+    disk. Retry (config-hash 3ca318f6, run_id yf562ig8) produced only 1/2
+    trials (compute_stats.py reported trial 1 as missing/skipped); not
+    scored, needs a clean rerun. recorded is false until a run completes
+    both trials.

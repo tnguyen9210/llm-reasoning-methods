@@ -66,19 +66,23 @@ instead of one wide sparse grid.)
 > One table per model, one row per algorithm — pulled directly from
 > each algorithm's own "model family, size, quantization comparison
 > (qwen PRM)" table above/below (`cnt-mcts (updated)`, `sem-mcts`,
-> `cnt-mcts-bl-v01`, `cnt-mcts-bl-v02`, `sem-mcts-bl-v01`). All rows
-> fixed at b=80, bs-4, d-20, agg_strategy=`last`, tmpl=model-family
-> default (native for Qwen, custom for Llama), prm=qwen. `cnt-mcts`
-> row is method=`mcts_cnt_v01` (the post-`_split_steps`-fix table,
-> not the older pre-fix `mcts_cnt` section). `sem-mcts` row is
-> `mcts_sem_v02` (PRM embeds), `ds_alpha=100` (w_eff not applicable —
-> that knob is bl_sem-specific). `sem-mcts-bl-v01` row uses the
-> `w_eff=100` table (more complete than `w_eff=10` at time of
-> writing: 5/7 vs. 4/7 cells scored); see that algorithm's own
-> section for the `w_eff=10` comparison point. `cnt-mcts-bl-v02` left
-> blank throughout — no runs yet (see `docs/decisions/
-> kube-bonus-schedule.md` / `kube-affordability-restriction.md` for
-> the algorithm; not yet queued in `experiments.yaml`).
+> `cnt-mcts-bl-v01`, `cnt-mcts-bl-v02`, `cnt-mcts-bl-v03`,
+> `sem-mcts-bl-v01`). All rows fixed at b=80, bs-4, d-20,
+> agg_strategy=`last`, tmpl=model-family default (native for Qwen,
+> custom for Llama), prm=qwen. `cnt-mcts` row is method=`mcts_cnt_v01`
+> (the post-`_split_steps`-fix table, not the older pre-fix
+> `mcts_cnt` section). `sem-mcts` row is `mcts_sem_v02` (PRM embeds),
+> `ds_alpha=100` (w_eff not applicable — that knob is bl_sem-specific).
+> `sem-mcts-bl-v01` row uses the `w_eff=100` table (more complete than
+> `w_eff=10` at time of writing: 5/7 vs. 4/7 cells scored); see that
+> algorithm's own section for the `w_eff=10` comparison point.
+> `cnt-mcts-bl-v02` (Fractional KUBE) and `cnt-mcts-bl-v03`
+> (depth-shaping) are each filled at 5 of 7 models as of 2026-07-09
+> (see `docs/decisions/kube-bonus-schedule.md` /
+> `kube-affordability-restriction.md` and
+> `docs/decisions/depth-shaping-knapsack-bonus.md` for the
+> algorithms); llama-3b gptq and qwen-3b gptq-int4 still unqueued for
+> both.
 
 **llama-1b fp16**
 
@@ -87,7 +91,8 @@ instead of one wide sparse grid.)
 | cnt-mcts | 2 | scored | .6367<br>±.0301 | .5352<br>±.0312 | .4961<br>±.0313 | .4531<br>±.0312 | 2.38 |
 | sem-mcts | 2 | scored | .6133<br>±.0305 | .4961<br>±.0313 | .4492<br>±.0311 | .3906<br>±.0306 | 3.90 |
 | cnt-mcts-bl-v01 | 2 | scored | .4414<br>±.0311 | .4297<br>±.0310 | .3984<br>±.0307 | .3789<br>±.0304 | 2.12 |
-| cnt-mcts-bl-v02 | — | planned | — | — | — | — | — |
+| cnt-mcts-bl-v02 | 2 | scored | .5586<br>±.0311 | .5117<br>±.0313 | .4688<br>±.0312 | .4531<br>±.0312 | 2.30 |
+| cnt-mcts-bl-v03 | 2 | scored | .5742<br>±.0310 | .5430<br>±.0312 | .5117<br>±.0313 | .4883<br>±.0313 | 2.21 |
 | sem-mcts-bl-v01 | 2 | scored | .5195<br>±.0313 | .4219<br>±.0309 | .3242<br>±.0293 | .2422<br>±.0268 | 5.18 |
 
 **llama-3b fp16**
@@ -97,8 +102,9 @@ instead of one wide sparse grid.)
 | cnt-mcts | 2 | scored | .7656<br>±.0265 | .6758<br>±.0293 | .6523<br>±.0298 | .6445<br>±.0300 | 4.02 |
 | sem-mcts | 2 | scored | .7656<br>±.0265 | .6562<br>±.0297 | .6289<br>±.0303 | .6016<br>±.0307 | 5.43 |
 | cnt-mcts-bl-v01 | — | planned | — | — | — | — | — |
-| cnt-mcts-bl-v02 | — | planned | — | — | — | — | — |
-| sem-mcts-bl-v01 | — | planned | — | — | — | — | — |
+| cnt-mcts-bl-v02 | 2 | scored | .7305<br>±.0278 | .6602<br>±.0297 | .6367<br>±.0301 | .6211<br>±.0304 | 3.55 |
+| cnt-mcts-bl-v03 | 2 | scored | .7227<br>±.0280 | .6680<br>±.0295 | .6758<br>±.0293 | .6445<br>±.0300 | 3.25 |
+| sem-mcts-bl-v01 | — | failed | — | — | — | — | — |
 
 **llama-3b gptq**
 
@@ -108,6 +114,7 @@ instead of one wide sparse grid.)
 | sem-mcts | 2 | scored | .7148<br>±.0283 | .6094<br>±.0306 | .5625<br>±.0311 | .5078<br>±.0313 | 4.45 |
 | cnt-mcts-bl-v01 | — | planned | — | — | — | — | — |
 | cnt-mcts-bl-v02 | — | planned | — | — | — | — | — |
+| cnt-mcts-bl-v03 | — | planned | — | — | — | — | — |
 | sem-mcts-bl-v01 | — | planned | — | — | — | — | — |
 
 **qwen-3b fp16**
@@ -117,7 +124,8 @@ instead of one wide sparse grid.)
 | cnt-mcts | 2 | scored | .8789<br>±.0204 | .7461<br>±.0273 | .7695<br>±.0264 | .7617<br>±.0267 | 3.76 |
 | sem-mcts | 2 | scored (pre-fix backup) | .8750<br>±.0207 | .7734<br>±.0262 | .7461<br>±.0273 | .7227<br>±.0280 | 5.00 |
 | cnt-mcts-bl-v01 | 2 | scored | .6445<br>±.0300 | .6328<br>±.0302 | .6172<br>±.0304 | .6094<br>±.0306 | 3.50 |
-| cnt-mcts-bl-v02 | — | planned | — | — | — | — | — |
+| cnt-mcts-bl-v02 | 2 | scored | .8320<br>±.0234 | .7617<br>±.0267 | .7422<br>±.0274 | .7344<br>±.0277 | 3.31 |
+| cnt-mcts-bl-v03 | 2 | scored | .8164<br>±.0242 | .7539<br>±.0270 | .7461<br>±.0273 | .7344<br>±.0277 | 3.00 |
 | sem-mcts-bl-v01 | 2 | scored | .8320<br>±.0234 | .6836<br>±.0291 | .6484<br>±.0299 | .6016<br>±.0307 | 5.19 |
 
 **qwen-3b gptq-int4**
@@ -128,6 +136,7 @@ instead of one wide sparse grid.)
 | sem-mcts | 2 | scored | .7930<br>±.0254 | .6953<br>±.0288 | .6953<br>±.0288 | .6875<br>±.0290 | 3.87 |
 | cnt-mcts-bl-v01 | — | planned | — | — | — | — | — |
 | cnt-mcts-bl-v02 | — | planned | — | — | — | — | — |
+| cnt-mcts-bl-v03 | — | planned | — | — | — | — | — |
 | sem-mcts-bl-v01 | 2 | scored | .7422<br>±.0274 | .6133<br>±.0305 | .5625<br>±.0311 | .5273<br>±.0313 | 4.18 |
 
 **qwen-7b gptq-int4**
@@ -137,7 +146,8 @@ instead of one wide sparse grid.)
 | cnt-mcts | 2 | scored | .9102<br>±.0179 | .8086<br>±.0246 | .8164<br>±.0242 | .8008<br>±.0250 | 3.11 |
 | sem-mcts | 2 | scored | .9375<br>±.0152 | .8164<br>±.0242 | .8086<br>±.0246 | .8047<br>±.0248 | 4.20 |
 | cnt-mcts-bl-v01 | 2 | scored | .8125<br>±.0244 | .7578<br>±.0268 | .7461<br>±.0273 | .7422<br>±.0274 | 2.78 |
-| cnt-mcts-bl-v02 | — | planned | — | — | — | — | — |
+| cnt-mcts-bl-v02 | 2 | scored | .8750<br>±.0207 | .7930<br>±.0254 | .7852<br>±.0257 | .7656<br>±.0265 | 2.58 |
+| cnt-mcts-bl-v03 | 2 | scored | .9023<br>±.0186 | .8281<br>±.0236 | .8320<br>±.0234 | .8203<br>±.0240 | 2.43 |
 | sem-mcts-bl-v01 | 2 | scored | .8906<br>±.0195 | .7500<br>±.0271 | .7109<br>±.0284 | .6953<br>±.0288 | 4.15 |
 
 **qwen-math-1.5b fp16**
@@ -147,7 +157,8 @@ instead of one wide sparse grid.)
 | cnt-mcts | 2 | scored | .8906<br>±.0195 | .8008<br>±.0250 | .8047<br>±.0248 | .7891<br>±.0255 | 2.84 |
 | sem-mcts | 2 | scored (pre-fix backup) | .8750<br>±.0207 | .7969<br>±.0252 | .7734<br>±.0262 | .7578<br>±.0268 | 3.96 |
 | cnt-mcts-bl-v01 | 2 | scored | .6836<br>±.0291 | .6562<br>±.0297 | .6602<br>±.0297 | .6562<br>±.0297 | 2.75 |
-| cnt-mcts-bl-v02 | — | planned | — | — | — | — | — |
+| cnt-mcts-bl-v02 | 2 | scored | .8359<br>±.0232 | .7773<br>±.0261 | .7617<br>±.0267 | .7695<br>±.0264 | 2.71 |
+| cnt-mcts-bl-v03 | 2 | scored | .8164<br>±.0242 | .7422<br>±.0274 | .7461<br>±.0273 | .7461<br>±.0273 | 2.58 |
 | sem-mcts-bl-v01 | 2 | scored | .8320<br>±.0234 | .6992<br>±.0287 | .6445<br>±.0300 | .6484<br>±.0299 | 4.19 |
 
 > **Analysis.** Across the 5 models with cnt-mcts-bl-v01 data
@@ -162,16 +173,45 @@ instead of one wide sparse grid.)
 > section above) — a frontier search that exhausts budget without
 > completing a path loses all credit for that question, and bl_sem's
 > diversity bonus may be mitigating that failure mode somewhat where
-> bl_cnt's plain PUCT does not. `cnt-mcts-bl-v02` (Fractional KUBE)
-> has no runs yet at any model — once queued, it directly tests
-> whether cost-aware selection (KUBE's density-over-cost) closes this
-> gap without needing sem's diversity bonus.
-> **Limitations / follow-up:** llama-3b (both fp16 and gptq) and
-> qwen-3b-gptq-int4 have no bl_cnt-v01/bl_cnt-v02/bl_sem-v01 data at
-> all yet — only the cnt-mcts/sem-mcts columns are filled for those
-> 3 models. `cnt-mcts-bl-v02` is empty across the board; queuing even
-> one model there would let the KUBE-vs-PUCT-vs-sem three-way
-> comparison begin.
+> bl_cnt's plain PUCT does not.
+> `cnt-mcts-bl-v02` (Fractional KUBE) is now filled at 5 of 7
+> models (2026-07-09) and confirms this: cost-aware density
+> selection substantially closes the frontier-vs-phase-based gap
+> that cnt-mcts-bl-v01 showed. v02 beats v01 at every shared model
+> (llama-1b .5586 vs .4414, qwen-3b .8320 vs .6445, qwen-7b-gptq-int4
+> .8750 vs .8125, qwen-math-1.5b .8359 vs .6836) and lands close to
+> (though still slightly behind) cnt-mcts/sem-mcts at the same
+> models — e.g. qwen-7b-gptq-int4: cnt-mcts .9102, sem-mcts .9375,
+> cnt-mcts-bl-v02 .8750, a ~.05-.06 gap versus bl_cnt_v01's ~.10 gap
+> at the same model. This supports the hypothesis above: KUBE's
+> cost-normalized `(q+bonus)/cost` density discounts
+> expensive-to-finish nodes rather than treating them as equally
+> attractive regardless of remaining budget, mitigating (not fully
+> closing) the budget-exhaustion failure mode without needing sem's
+> diversity bonus.
+> `cnt-mcts-bl-v03` (fixed depth-shaping bonus, no exploration term)
+> is also now filled at the same 5 models and tells a similar story:
+> it beats v01 at every shared model (llama-1b .5742 vs .4414,
+> qwen-3b .8164 vs .6445, qwen-7b-gptq-int4 .9023 vs .8125,
+> qwen-math-1.5b .8164 vs .6836) and is competitive with v02 — edging
+> it out at 3 of 4 directly-shared models (llama-1b .5742 vs .5586,
+> qwen-7b-gptq-int4 .9023 vs .8750; qwen-math-1.5b .8164 vs .8359 is
+> the one exception, -.0195) — despite having no confidence-bound or
+> regret guarantee behind its bonus. That a fixed, visit-count-free
+> depth preference matches or beats an evidence-based UCB bonus at
+> this single budget point is a useful negative result on how much
+> the exploration term actually buys here, though it says nothing
+> about behavior off this budget or across a `depth_beta`/
+> `depth_alpha` sweep, which doesn't exist yet.
+> **Limitations / follow-up:** llama-3b gptq and qwen-3b-gptq-int4
+> still have no bl_cnt-v01/bl_cnt-v02/bl_cnt-v03 data;
+> qwen-3b-gptq-int4's sem-mcts-bl-v01 cell reuses the `w_eff=100`
+> point (see the `sem-mcts-bl` section's own w_eff=10 table for a
+> lower-diversity comparison point at .8086, now also scored).
+> llama-3b fp16's sem-mcts-bl-v01 cell is marked failed: two
+> attempts both fell short of 2/2 trials (config-hashes `0f06296f`
+> 0/2 and `3ca318f6` 1/2) and need a clean rerun before this cell
+> can fill.
 
 ---
 
@@ -1644,31 +1684,33 @@ instead of one wide sparse grid.)
 
 | llm | trials | status | pass@gb | naive@gb | wei@gb | maj@gb | hr/trial |
 |---|---|---|---|---|---|---|---|
-| llama-1b fp16 | — | planned | — | — | — | — | — |
-| llama-3b fp16 | — | planned | — | — | — | — | — |
+| llama-1b fp16 | 2 | scored | .5586<br>±.0311 | .5117<br>±.0313 | .4688<br>±.0312 | .4531<br>±.0312 | 2.30 |
+| llama-3b fp16 | 2 | scored | .7305<br>±.0278 | .6602<br>±.0297 | .6367<br>±.0301 | .6211<br>±.0304 | 3.55 |
 | llama-3b gptq | — | planned | — | — | — | — | — |
-| qwen-3b fp16 | — | planned | — | — | — | — | — |
+| qwen-3b fp16 | 2 | scored | .8320<br>±.0234 | .7617<br>±.0267 | .7422<br>±.0274 | .7344<br>±.0277 | 3.31 |
 | qwen-3b gptq-int4 | — | planned | — | — | — | — | — |
-| qwen-7b gptq-int4 | — | planned | — | — | — | — | — |
-| qwen-math-1.5b fp16 | — | planned | — | — | — | — | — |
+| qwen-7b gptq-int4 | 2 | scored | .8750<br>±.0207 | .7930<br>±.0254 | .7852<br>±.0257 | .7656<br>±.0265 | 2.58 |
+| qwen-math-1.5b fp16 | 2 | scored | .8359<br>±.0232 | .7773<br>±.0261 | .7617<br>±.0267 | .7695<br>±.0264 | 2.71 |
 
-> **Analysis.** No cells scored yet. v02 has a complete launcher
-> + config (aligned with v01's infra 2026-07-09) and was smoke-
-> tested earlier today, but the entire real-run grid is still
-> unqueued in `experiments.yaml`. Once populated, the primary
-> read is v01-vs-v02 at matched gen_budget: does an
-> evidence-based UCB bonus (v02, `kube_schedule=parent` — grows
-> with `parent_visits` as terminal backprops accumulate) beat
-> v01's PUCT on the same cost mapping, given they differ only in
-> cost normalization (`(q+bonus)/cost` vs. PUCT's
-> `q+bonus` with no cost division)? A secondary read once cell 1
-> exists: whether v02 shares v01's zero-completion issue at this
-> budget (see the `cnt-mcts-bl-v01` Analysis note above) or
-> whether cost-normalized selection mitigates it.
-> **Limitations / follow-up:** entire grid unqueued in
-> `experiments.yaml`. No `kube_c`/`kube_schedule`/
-> `kube_affordable` sweep yet — every row will be the same fixed
-> point until one exists.
+> **Analysis.** 5 of 7 cells now scored (2026-07-09): llama-1b
+> .5586, llama-3b fp16 .7305, qwen-3b fp16 .8320, qwen-7b
+> gptq-int4 .8750, qwen-math-1.5b .8359. Comparing to v01's
+> equivalent table above at the 4 shared models (llama-1b, qwen-3b
+> fp16, qwen-7b gptq-int4, qwen-math-1.5b), v02 (fractional-KUBE
+> density) beats v01 (PUCT) on every one: +.1172 (llama-1b, .5586
+> vs .4414), +.1875 (qwen-3b, .8320 vs .6445), +.0625 (qwen-7b
+> gptq-int4, .8750 vs .8125), +.1523 (qwen-math-1.5b, .8359 vs
+> .6836) — consistent, one-directional, and the opposite sign of
+> the bl_cnt-vs-cnt gap noted above. Plausibly the cost-normalized
+> `(q+bonus)/cost` density (v02) is less prone to the
+> budget-exhaustion / zero-completion failure mode than PUCT's
+> `q+bonus` (v01), since density naturally discounts deep/
+> expensive-to-finish nodes rather than treating them as equally
+> attractive regardless of remaining budget.
+> **Limitations / follow-up:** llama-3b gptq and qwen-3b
+> gptq-int4 still unqueued in `experiments.yaml`. No
+> `kube_c`/`kube_schedule`/`kube_affordable` sweep yet — every row
+> is the same fixed point until one exists.
 
 ### cnt-mcts-bl-v03
 > knobs: template, depth_beta, depth_alpha (bs-4, d-20 fixed).
@@ -1699,31 +1741,35 @@ instead of one wide sparse grid.)
 
 | llm | trials | status | pass@gb | naive@gb | wei@gb | maj@gb | hr/trial |
 |---|---|---|---|---|---|---|---|
-| llama-1b fp16 | — | planned | — | — | — | — | — |
-| llama-3b fp16 | — | planned | — | — | — | — | — |
+| llama-1b fp16 | 2 | scored | .5742<br>±.0310 | .5430<br>±.0312 | .5117<br>±.0313 | .4883<br>±.0313 | 2.21 |
+| llama-3b fp16 | 2 | scored | .7227<br>±.0280 | .6680<br>±.0295 | .6758<br>±.0293 | .6445<br>±.0300 | 3.25 |
 | llama-3b gptq | — | planned | — | — | — | — | — |
-| qwen-3b fp16 | — | planned | — | — | — | — | — |
+| qwen-3b fp16 | 2 | scored | .8164<br>±.0242 | .7539<br>±.0270 | .7461<br>±.0273 | .7344<br>±.0277 | 3.00 |
 | qwen-3b gptq-int4 | — | planned | — | — | — | — | — |
-| qwen-7b gptq-int4 | — | planned | — | — | — | — | — |
-| qwen-math-1.5b fp16 | — | planned | — | — | — | — | — |
+| qwen-7b gptq-int4 | 2 | scored | .9023<br>±.0186 | .8281<br>±.0236 | .8320<br>±.0234 | .8203<br>±.0240 | 2.43 |
+| qwen-math-1.5b fp16 | 2 | scored | .8164<br>±.0242 | .7422<br>±.0274 | .7461<br>±.0273 | .7461<br>±.0273 | 2.58 |
 
-> **Analysis.** No cells scored yet — 2026-07-09 smoke test
-> (llama-1b, 2 questions, offline) confirmed the launcher runs
-> end-to-end and produces coherent trajectories (see
-> `docs/decisions/depth-shaping-knapsack-bonus.md` and the
-> commit introducing `mcts_bl_cnt_search_v03_00_00.py`), but that
-> run was throwaway (`results/smoketest/`, not tracked) and isn't
-> reflected here. One qualitative note from the smoke test worth
-> tracking once real runs land: on the harder of the two smoke
-> questions, budget exhaustion concentrated at `max_depth` (a
-> large `q_nodes_max_depth`) rather than early completions —
-> plausibly the depth-shaping bonus pulling selection back toward
-> shallow nodes on questions the model doesn't resolve quickly.
-> Worth watching whether this shows up as a completion-rate
-> deficit similar to bl_cnt_v01's, once this grid is populated.
-> **Limitations / follow-up:** entire grid unqueued in
-> `experiments.yaml`. No depth_beta/depth_alpha sweep yet — every
-> row will be the same fixed point until one exists.
+> **Analysis.** 5 of 7 cells now scored (2026-07-09): llama-1b
+> .5742, llama-3b fp16 .7227, qwen-3b fp16 .8164, qwen-7b
+> gptq-int4 .9023, qwen-math-1.5b .8164. Comparing to v01's
+> equivalent table above at the 4 shared models, v03
+> (depth-shaping bonus, no exploration term) also beats v01
+> (PUCT) on every one: +.1328 (llama-1b, .5742 vs .4414), +.1719
+> (qwen-3b, .8164 vs .6445), +.0898 (qwen-7b gptq-int4, .9023 vs
+> .8125), +.1328 (qwen-math-1.5b, .8164 vs .6836) — same
+> direction and similar magnitude to v02's gap over v01 above.
+> v03 also edges out v02 on 3 of 4 shared models (llama-1b .5742
+> vs .5586, qwen-7b gptq-int4 .9023 vs .8750, qwen-math-1.5b
+> .8164 vs .8359 is the one exception, a small -.0195 dip), so
+> the smoke-test worry about depth-shaping concentrating budget
+> exhaustion at `max_depth` doesn't show up as a pass@gb deficit
+> here — if anything, a fixed depth preference does at least as
+> well as an evidence-based UCB bonus at this budget, though with
+> no regret guarantee to fall back on off-distribution.
+> **Limitations / follow-up:** llama-3b gptq and qwen-3b
+> gptq-int4 still unqueued in `experiments.yaml`. No
+> depth_beta/depth_alpha sweep yet — every row is the same fixed
+> point until one exists.
 
 ### sem-mcts-bl
 > knobs: model family/size/quantization (this table); lam,
@@ -1801,26 +1847,31 @@ instead of one wide sparse grid.)
 | llm | trials | status | pass@gb | naive@gb | wei@gb | maj@gb | hr/trial |
 |---|---|---|---|---|---|---|---|
 | llama-1b fp16 | 2 | scored | .5859<br>±.0308 | .5078<br>±.0313 | .4766<br>±.0313 | .4336<br>±.0310 | 4.57 |
-| llama-3b fp16 | — | running | — | — | — | — | — |
+| llama-3b fp16 | 1/2 | failed | — | — | — | — | — |
 | llama-3b gptq | — | planned | — | — | — | — | — |
 | qwen-3b fp16 | 2 | scored | .8477<br>±.0225 | .7734<br>±.0262 | .7461<br>±.0273 | .7422<br>±.0274 | 5.25 |
-| qwen-3b gptq-int4 | — | planned | — | — | — | — | — |
+| qwen-3b gptq-int4 | 2 | scored | .8086<br>±.0246 | .7266<br>±.0279 | .7031<br>±.0286 | .6992<br>±.0287 | 4.05 |
 | qwen-7b gptq-int4 | 2 | scored | .9102<br>±.0179 | .8008<br>±.0250 | .8008<br>±.0250 | .7930<br>±.0254 | 4.23 |
 | qwen-math-1.5b fp16 | 2 | scored | .8555<br>±.0220 | .7734<br>±.0262 | .7461<br>±.0273 | .7383<br>±.0275 | 4.15 |
 
-> **Analysis.** 4 of 7 cells now scored (2026-07-09): llama-1b .5859,
-> qwen-3b .8477, qwen-7b-gptq-int4 .9102, qwen-math-1.5b .8555.
-> llama-3b fp16 is currently running (in progress as of this check).
-> Comparing to the `w_eff=100` table above at the 3 shared models,
-> `w_eff=10` scores higher on all 3 (.5859 vs .5195 llama-1b, .8477 vs
-> .8320 qwen-3b, .8555 vs .8320 qwen-math-1.5b) — consistent with
+> **Analysis.** 5 of 7 cells now scored (2026-07-09): llama-1b .5859,
+> qwen-3b .8477, qwen-3b-gptq-int4 .8086, qwen-7b-gptq-int4 .9102,
+> qwen-math-1.5b .8555. Comparing to the `w_eff=100` table above at
+> the 4 shared models, `w_eff=10` scores higher on all 4 (.5859 vs
+> .5195 llama-1b, .8477 vs .8320 qwen-3b, .8086 vs .7422
+> qwen-3b-gptq-int4, .8555 vs .8320 qwen-math-1.5b) — consistent with
 > [ds-alpha-diversity-bonus-plateau.md](findings/exp-findings/ds-alpha-diversity-bonus-plateau.md)'s
 > plateau-onset framing: `w_eff=10` (right at the plateau's onset in
 > sem_v02's rlhflow-PRM data) outperforms `w_eff=100` (well past it)
 > here too, so bl_sem's plateau appears to sit in a similar place, at
 > least directionally on these first data points.
-> **Limitations / follow-up:** llama-3b gptq, qwen-3b gptq-int4 still
-> unqueued; llama-3b fp16 in flight. Not yet a full 7-cell grid or a
+> **Limitations / follow-up:** llama-3b fp16 has two failed attempts
+> so far — a first with 0/2 trials completed (run `2goolnzd`,
+> config-hash `0f06296f`) and a retry with only 1/2 trials completed
+> (run `yf562ig8`, config-hash `3ca318f6`, `missing trials, skipped:
+> [1]` in compute_stats output) — needs a clean rerun before this
+> cell can be filled. llama-3b gptq, qwen-3b gptq-int4 (now filled)
+> still leaves llama-3b gptq unqueued. Not yet a full 7-cell grid or a
 > real `w_eff` sweep — just two coarse points.
 
 ## Tuning tables [gen_budget=160, 320, …] *(future)*
