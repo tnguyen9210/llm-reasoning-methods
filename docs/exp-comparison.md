@@ -1927,6 +1927,100 @@ instead of one wide sparse grid.)
 > differ from the b=80 table at once; a matched-PRM b=320 row
 > would isolate the budget effect alone.
 
+### sem-mcts
+
+#### model family comparison (b=320, qwen PRM, lam=0.1, w_eff=10)
+> **Compares:** the same 7-model family/size/quantization sweep
+> as the `[gen_budget=80]` sem-mcts (qwen PRM) table above, but
+> at `search.gen_budget=320` (4× the b=80 budget) and at
+> `lam=0.1, ds_alpha=3.16` (`w_eff = ds_alpha/sqrt(lam) = 10`)
+> instead of that table's default point (`lam=0.01,
+> ds_alpha=100`, i.e. `w_eff=1000`). Three axes move at once
+> relative to that b=80 table — budget, lam, and ds_alpha — so
+> this isn't a clean isolation of any one of them; paired with
+> the `w_eff=100` table below (same budget, same lam, 10×
+> ds_alpha) it does isolate `w_eff` at b=320.
+>
+> **Fixed:** method=`mcts_sem_v02` (PRM embeds), prm=qwen, bs-4,
+> d-20, b=320, prm_batch_size=1, `ds_alpha_schedule=global`
+> (default), `cov_update=sm`, `embeds_dim=512`/
+> `embeds_proj=sparse` (defaults), tmpl=model-family default
+> (native for Qwen, custom for Llama). **lam=0.1, ds_alpha=3.16**
+> (`w_eff=10` — see
+> [decisions/tuning-semantic-score-weights-and-lambda.md](decisions/tuning-semantic-score-weights-and-lambda.md)'s
+> `lam=0.1` row, same point used by the `sem-mcts-bl` w_eff=10
+> table).
+>
+> ⚠️ Entirely `planned` — no runs yet. Budget=320 is a 4×
+> generation-count increase over the b=80 table; expect roughly
+> 4× the per-trial wall-clock of the corresponding b=80/w_eff=10
+> row (see the `sem-mcts-bl` w_eff=10 table's hr/trial column for
+> a rough b=80 reference point at this lam/ds_alpha, though that's
+> the bl_sem frontier variant, not phase-based sem-mcts).
+>
+> **W&B:** none yet (no runs exist).
+
+| llm | prm | trials | status | pass@gb | naive@gb | wei@gb | maj@gb | hr/trial |
+|---|---|---|---|---|---|---|---|---|
+| llama-1b fp16 | qwen | — | planned | — | — | — | — | — |
+| llama-3b fp16 | qwen | — | planned | — | — | — | — | — |
+| llama-3b gptq | qwen | — | planned | — | — | — | — | — |
+| qwen-3b fp16 | qwen | — | planned | — | — | — | — | — |
+| qwen-3b gptq-int4 | qwen | — | planned | — | — | — | — | — |
+| qwen-7b gptq-int4 | qwen | — | planned | — | — | — | — | — |
+| qwen-math-1.5b fp16 | qwen | — | planned | — | — | — | — | — |
+
+> **Analysis.** No data yet — nothing to take away. Once
+> filled, the key read (paired with the `w_eff=100` table below)
+> is whether the `w_eff` ordering seen in `sem-mcts-bl` at b=80
+> (`w_eff=10` beating `w_eff=100` at every shared model — see
+> `ds-alpha-diversity-bonus-plateau.md`) also holds for
+> phase-based sem-mcts at a 4× larger budget, or whether more
+> search budget shifts the plateau's onset.
+> **Limitations / follow-up:** all 7 cells are planned. Three
+> axes (budget, lam, ds_alpha) differ from the b=80 default-point
+> table above at once; no matched-budget b=80 row at this exact
+> `lam=0.1, w_eff=10` point exists for sem-mcts (only for
+> `sem-mcts-bl`), so a clean single-axis isolation isn't possible
+> yet.
+
+#### model family comparison (b=320, qwen PRM, lam=0.1, w_eff=100)
+> **Compares:** identical setup to the `w_eff=10` table above,
+> at `ds_alpha=31.6` instead of `3.16` (10× the diversity
+> weight, same `lam=0.1`) — the b=320 counterpart of the
+> `sem-mcts-bl` w_eff=100 table, and the paired point needed to
+> isolate `w_eff` alone at this budget.
+>
+> **Fixed:** identical to the `w_eff=10` table above (method=
+> `mcts_sem_v02`, prm=qwen, bs-4, d-20, b=320, prm_batch_size=1,
+> `ds_alpha_schedule=global`, `cov_update=sm`,
+> `embeds_dim=512`/`embeds_proj=sparse`, tmpl=model-family
+> default) except the diversity weight. **lam=0.1,
+> ds_alpha=31.6** (`w_eff=100`).
+>
+> ⚠️ Entirely `planned` — no runs yet. Same 4× wall-clock
+> expectation vs. b=80 as the `w_eff=10` table above.
+>
+> **W&B:** none yet (no runs exist).
+
+| llm | prm | trials | status | pass@gb | naive@gb | wei@gb | maj@gb | hr/trial |
+|---|---|---|---|---|---|---|---|---|
+| llama-1b fp16 | qwen | — | planned | — | — | — | — | — |
+| llama-3b fp16 | qwen | — | planned | — | — | — | — | — |
+| llama-3b gptq | qwen | — | planned | — | — | — | — | — |
+| qwen-3b fp16 | qwen | — | planned | — | — | — | — | — |
+| qwen-3b gptq-int4 | qwen | — | planned | — | — | — | — | — |
+| qwen-7b gptq-int4 | qwen | — | planned | — | — | — | — | — |
+| qwen-math-1.5b fp16 | qwen | — | planned | — | — | — | — | — |
+
+> **Analysis.** No data yet — nothing to take away. See the
+> `w_eff=10` table above for the primary comparison question
+> once both are filled.
+> **Limitations / follow-up:** all 7 cells are planned. Same
+> caveats as the `w_eff=10` table above (three axes moved at
+> once vs. the b=80 default-point table; no matched b=80 row at
+> this exact point for sem-mcts).
+
 ---
 
 ## Run log (newest first)
