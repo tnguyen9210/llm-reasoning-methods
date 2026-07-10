@@ -62,6 +62,119 @@ instead of one wide sparse grid.)
 
 ---
 
+## Cross-algorithm summary (qwen PRM)
+> One table per model, one row per algorithm — pulled directly from
+> each algorithm's own "model family, size, quantization comparison
+> (qwen PRM)" table above/below (`cnt-mcts (updated)`, `sem-mcts`,
+> `cnt-mcts-bl-v01`, `cnt-mcts-bl-v02`, `sem-mcts-bl-v01`). All rows
+> fixed at b=80, bs-4, d-20, agg_strategy=`last`, tmpl=model-family
+> default (native for Qwen, custom for Llama), prm=qwen. `cnt-mcts`
+> row is method=`mcts_cnt_v01` (the post-`_split_steps`-fix table,
+> not the older pre-fix `mcts_cnt` section). `sem-mcts` row is
+> `mcts_sem_v02` (PRM embeds), `ds_alpha=100` (w_eff not applicable —
+> that knob is bl_sem-specific). `sem-mcts-bl-v01` row uses the
+> `w_eff=100` table (more complete than `w_eff=10` at time of
+> writing: 5/7 vs. 4/7 cells scored); see that algorithm's own
+> section for the `w_eff=10` comparison point. `cnt-mcts-bl-v02` left
+> blank throughout — no runs yet (see `docs/decisions/
+> kube-bonus-schedule.md` / `kube-affordability-restriction.md` for
+> the algorithm; not yet queued in `experiments.yaml`).
+
+**llama-1b fp16**
+
+| algorithm | trials | status | pass@gb | naive@gb | wei@gb | maj@gb | hr/trial |
+|---|---|---|---|---|---|---|---|
+| cnt-mcts | 2 | scored | .6367<br>±.0301 | .5352<br>±.0312 | .4961<br>±.0313 | .4531<br>±.0312 | 2.38 |
+| sem-mcts | 2 | scored | .6133<br>±.0305 | .4961<br>±.0313 | .4492<br>±.0311 | .3906<br>±.0306 | 3.90 |
+| cnt-mcts-bl-v01 | 2 | scored | .4414<br>±.0311 | .4297<br>±.0310 | .3984<br>±.0307 | .3789<br>±.0304 | 2.12 |
+| cnt-mcts-bl-v02 | — | planned | — | — | — | — | — |
+| sem-mcts-bl-v01 | 2 | scored | .5195<br>±.0313 | .4219<br>±.0309 | .3242<br>±.0293 | .2422<br>±.0268 | 5.18 |
+
+**llama-3b fp16**
+
+| algorithm | trials | status | pass@gb | naive@gb | wei@gb | maj@gb | hr/trial |
+|---|---|---|---|---|---|---|---|
+| cnt-mcts | 2 | scored | .7656<br>±.0265 | .6758<br>±.0293 | .6523<br>±.0298 | .6445<br>±.0300 | 4.02 |
+| sem-mcts | 2 | scored | .7656<br>±.0265 | .6562<br>±.0297 | .6289<br>±.0303 | .6016<br>±.0307 | 5.43 |
+| cnt-mcts-bl-v01 | — | planned | — | — | — | — | — |
+| cnt-mcts-bl-v02 | — | planned | — | — | — | — | — |
+| sem-mcts-bl-v01 | — | planned | — | — | — | — | — |
+
+**llama-3b gptq**
+
+| algorithm | trials | status | pass@gb | naive@gb | wei@gb | maj@gb | hr/trial |
+|---|---|---|---|---|---|---|---|
+| cnt-mcts | 2 | scored | .7148<br>±.0283 | .6055<br>±.0306 | .5781<br>±.0309 | .5625<br>±.0311 | 2.85 |
+| sem-mcts | 2 | scored | .7148<br>±.0283 | .6094<br>±.0306 | .5625<br>±.0311 | .5078<br>±.0313 | 4.45 |
+| cnt-mcts-bl-v01 | — | planned | — | — | — | — | — |
+| cnt-mcts-bl-v02 | — | planned | — | — | — | — | — |
+| sem-mcts-bl-v01 | — | planned | — | — | — | — | — |
+
+**qwen-3b fp16**
+
+| algorithm | trials | status | pass@gb | naive@gb | wei@gb | maj@gb | hr/trial |
+|---|---|---|---|---|---|---|---|
+| cnt-mcts | 2 | scored | .8789<br>±.0204 | .7461<br>±.0273 | .7695<br>±.0264 | .7617<br>±.0267 | 3.76 |
+| sem-mcts | 2 | scored (pre-fix backup) | .8750<br>±.0207 | .7734<br>±.0262 | .7461<br>±.0273 | .7227<br>±.0280 | 5.00 |
+| cnt-mcts-bl-v01 | 2 | scored | .6445<br>±.0300 | .6328<br>±.0302 | .6172<br>±.0304 | .6094<br>±.0306 | 3.50 |
+| cnt-mcts-bl-v02 | — | planned | — | — | — | — | — |
+| sem-mcts-bl-v01 | 2 | scored | .8320<br>±.0234 | .6836<br>±.0291 | .6484<br>±.0299 | .6016<br>±.0307 | 5.19 |
+
+**qwen-3b gptq-int4**
+
+| algorithm | trials | status | pass@gb | naive@gb | wei@gb | maj@gb | hr/trial |
+|---|---|---|---|---|---|---|---|
+| cnt-mcts | 2 | scored | .8320<br>±.0234 | .7031<br>±.0286 | .7109<br>±.0284 | .6914<br>±.0289 | 2.68 |
+| sem-mcts | 2 | scored | .7930<br>±.0254 | .6953<br>±.0288 | .6953<br>±.0288 | .6875<br>±.0290 | 3.87 |
+| cnt-mcts-bl-v01 | — | planned | — | — | — | — | — |
+| cnt-mcts-bl-v02 | — | planned | — | — | — | — | — |
+| sem-mcts-bl-v01 | 2 | scored | .7422<br>±.0274 | .6133<br>±.0305 | .5625<br>±.0311 | .5273<br>±.0313 | 4.18 |
+
+**qwen-7b gptq-int4**
+
+| algorithm | trials | status | pass@gb | naive@gb | wei@gb | maj@gb | hr/trial |
+|---|---|---|---|---|---|---|---|
+| cnt-mcts | 2 | scored | .9102<br>±.0179 | .8086<br>±.0246 | .8164<br>±.0242 | .8008<br>±.0250 | 3.11 |
+| sem-mcts | 2 | scored | .9375<br>±.0152 | .8164<br>±.0242 | .8086<br>±.0246 | .8047<br>±.0248 | 4.20 |
+| cnt-mcts-bl-v01 | 2 | scored | .8125<br>±.0244 | .7578<br>±.0268 | .7461<br>±.0273 | .7422<br>±.0274 | 2.78 |
+| cnt-mcts-bl-v02 | — | planned | — | — | — | — | — |
+| sem-mcts-bl-v01 | 2 | scored | .8906<br>±.0195 | .7500<br>±.0271 | .7109<br>±.0284 | .6953<br>±.0288 | 4.15 |
+
+**qwen-math-1.5b fp16**
+
+| algorithm | trials | status | pass@gb | naive@gb | wei@gb | maj@gb | hr/trial |
+|---|---|---|---|---|---|---|---|
+| cnt-mcts | 2 | scored | .8906<br>±.0195 | .8008<br>±.0250 | .8047<br>±.0248 | .7891<br>±.0255 | 2.84 |
+| sem-mcts | 2 | scored (pre-fix backup) | .8750<br>±.0207 | .7969<br>±.0252 | .7734<br>±.0262 | .7578<br>±.0268 | 3.96 |
+| cnt-mcts-bl-v01 | 2 | scored | .6836<br>±.0291 | .6562<br>±.0297 | .6602<br>±.0297 | .6562<br>±.0297 | 2.75 |
+| cnt-mcts-bl-v02 | — | planned | — | — | — | — | — |
+| sem-mcts-bl-v01 | 2 | scored | .8320<br>±.0234 | .6992<br>±.0287 | .6445<br>±.0300 | .6484<br>±.0299 | 4.19 |
+
+> **Analysis.** Across the 5 models with cnt-mcts-bl-v01 data
+> (llama-1b, qwen-3b, qwen-3b-gptq-int4 partial, qwen-7b-gptq-int4,
+> qwen-math-1.5b), the ranking is consistently **cnt-mcts ≳ sem-mcts
+> > sem-mcts-bl-v01 > cnt-mcts-bl-v01** on pass@gb — both frontier
+> (best-first) variants trail their phase-based counterparts, and
+> cnt-mcts-bl-v01 trails sem-mcts-bl-v01 at every model where both
+> are scored (e.g. qwen-7b-gptq-int4: .8125 vs. .8906; qwen-math-1.5b:
+> .6836 vs. .8320). This is consistent with bl_cnt_v01's documented
+> ~18% zero-completion rate at this budget (see the `cnt-mcts-bl-v01`
+> section above) — a frontier search that exhausts budget without
+> completing a path loses all credit for that question, and bl_sem's
+> diversity bonus may be mitigating that failure mode somewhat where
+> bl_cnt's plain PUCT does not. `cnt-mcts-bl-v02` (Fractional KUBE)
+> has no runs yet at any model — once queued, it directly tests
+> whether cost-aware selection (KUBE's density-over-cost) closes this
+> gap without needing sem's diversity bonus.
+> **Limitations / follow-up:** llama-3b (both fp16 and gptq) and
+> qwen-3b-gptq-int4 have no bl_cnt-v01/bl_cnt-v02/bl_sem-v01 data at
+> all yet — only the cnt-mcts/sem-mcts columns are filled for those
+> 3 models. `cnt-mcts-bl-v02` is empty across the board; queuing even
+> one model there would let the KUBE-vs-PUCT-vs-sem three-way
+> comparison begin.
+
+---
+
 ## Algorithm name ↔ code mapping
 > Row labels are conceptual names; `method=` is what
 > `config_name()` emits into
@@ -1441,117 +1554,6 @@ instead of one wide sparse grid.)
 > half is v01. Launching v01 at these three model/template combos
 > (matched trial count to the v02 rows already on hand) would
 > complete this comparison in one batch.
-
-## Cross-algorithm summary (qwen PRM)
-> One table per model, one row per algorithm — pulled directly from
-> each algorithm's own "model family, size, quantization comparison
-> (qwen PRM)" table above/below (`cnt-mcts (updated)`, `sem-mcts`,
-> `cnt-mcts-bl-v01`, `cnt-mcts-bl-v02`, `sem-mcts-bl-v01`). All rows
-> fixed at b=80, bs-4, d-20, agg_strategy=`last`, tmpl=model-family
-> default (native for Qwen, custom for Llama), prm=qwen. `cnt-mcts`
-> row is method=`mcts_cnt_v01` (the post-`_split_steps`-fix table,
-> not the older pre-fix `mcts_cnt` section). `sem-mcts` row is
-> `mcts_sem_v02` (PRM embeds), `ds_alpha=100` (w_eff not applicable —
-> that knob is bl_sem-specific). `sem-mcts-bl-v01` row uses the
-> `w_eff=100` table (more complete than `w_eff=10` at time of
-> writing: 5/7 vs. 4/7 cells scored); see that algorithm's own
-> section for the `w_eff=10` comparison point. `cnt-mcts-bl-v02` left
-> blank throughout — no runs yet (see `docs/decisions/
-> kube-bonus-schedule.md` / `kube-affordability-restriction.md` for
-> the algorithm; not yet queued in `experiments.yaml`).
-
-**llama-1b fp16**
-
-| algorithm | trials | status | pass@gb | naive@gb | wei@gb | maj@gb | hr/trial |
-|---|---|---|---|---|---|---|---|
-| cnt-mcts | 2 | scored | .6367<br>±.0301 | .5352<br>±.0312 | .4961<br>±.0313 | .4531<br>±.0312 | 2.38 |
-| sem-mcts | 2 | scored | .6133<br>±.0305 | .4961<br>±.0313 | .4492<br>±.0311 | .3906<br>±.0306 | 3.90 |
-| cnt-mcts-bl-v01 | 2 | scored | .4414<br>±.0311 | .4297<br>±.0310 | .3984<br>±.0307 | .3789<br>±.0304 | 2.12 |
-| cnt-mcts-bl-v02 | — | planned | — | — | — | — | — |
-| sem-mcts-bl-v01 | 2 | scored | .5195<br>±.0313 | .4219<br>±.0309 | .3242<br>±.0293 | .2422<br>±.0268 | 5.18 |
-
-**llama-3b fp16**
-
-| algorithm | trials | status | pass@gb | naive@gb | wei@gb | maj@gb | hr/trial |
-|---|---|---|---|---|---|---|---|
-| cnt-mcts | 2 | scored | .7656<br>±.0265 | .6758<br>±.0293 | .6523<br>±.0298 | .6445<br>±.0300 | 4.02 |
-| sem-mcts | 2 | scored | .7656<br>±.0265 | .6562<br>±.0297 | .6289<br>±.0303 | .6016<br>±.0307 | 5.43 |
-| cnt-mcts-bl-v01 | — | planned | — | — | — | — | — |
-| cnt-mcts-bl-v02 | — | planned | — | — | — | — | — |
-| sem-mcts-bl-v01 | — | planned | — | — | — | — | — |
-
-**llama-3b gptq**
-
-| algorithm | trials | status | pass@gb | naive@gb | wei@gb | maj@gb | hr/trial |
-|---|---|---|---|---|---|---|---|
-| cnt-mcts | 2 | scored | .7148<br>±.0283 | .6055<br>±.0306 | .5781<br>±.0309 | .5625<br>±.0311 | 2.85 |
-| sem-mcts | 2 | scored | .7148<br>±.0283 | .6094<br>±.0306 | .5625<br>±.0311 | .5078<br>±.0313 | 4.45 |
-| cnt-mcts-bl-v01 | — | planned | — | — | — | — | — |
-| cnt-mcts-bl-v02 | — | planned | — | — | — | — | — |
-| sem-mcts-bl-v01 | — | planned | — | — | — | — | — |
-
-**qwen-3b fp16**
-
-| algorithm | trials | status | pass@gb | naive@gb | wei@gb | maj@gb | hr/trial |
-|---|---|---|---|---|---|---|---|
-| cnt-mcts | 2 | scored | .8789<br>±.0204 | .7461<br>±.0273 | .7695<br>±.0264 | .7617<br>±.0267 | 3.76 |
-| sem-mcts | 2 | scored (pre-fix backup) | .8750<br>±.0207 | .7734<br>±.0262 | .7461<br>±.0273 | .7227<br>±.0280 | 5.00 |
-| cnt-mcts-bl-v01 | 2 | scored | .6445<br>±.0300 | .6328<br>±.0302 | .6172<br>±.0304 | .6094<br>±.0306 | 3.50 |
-| cnt-mcts-bl-v02 | — | planned | — | — | — | — | — |
-| sem-mcts-bl-v01 | 2 | scored | .8320<br>±.0234 | .6836<br>±.0291 | .6484<br>±.0299 | .6016<br>±.0307 | 5.19 |
-
-**qwen-3b gptq-int4**
-
-| algorithm | trials | status | pass@gb | naive@gb | wei@gb | maj@gb | hr/trial |
-|---|---|---|---|---|---|---|---|
-| cnt-mcts | 2 | scored | .8320<br>±.0234 | .7031<br>±.0286 | .7109<br>±.0284 | .6914<br>±.0289 | 2.68 |
-| sem-mcts | 2 | scored | .7930<br>±.0254 | .6953<br>±.0288 | .6953<br>±.0288 | .6875<br>±.0290 | 3.87 |
-| cnt-mcts-bl-v01 | — | planned | — | — | — | — | — |
-| cnt-mcts-bl-v02 | — | planned | — | — | — | — | — |
-| sem-mcts-bl-v01 | 2 | scored | .7422<br>±.0274 | .6133<br>±.0305 | .5625<br>±.0311 | .5273<br>±.0313 | 4.18 |
-
-**qwen-7b gptq-int4**
-
-| algorithm | trials | status | pass@gb | naive@gb | wei@gb | maj@gb | hr/trial |
-|---|---|---|---|---|---|---|---|
-| cnt-mcts | 2 | scored | .9102<br>±.0179 | .8086<br>±.0246 | .8164<br>±.0242 | .8008<br>±.0250 | 3.11 |
-| sem-mcts | 2 | scored | .9375<br>±.0152 | .8164<br>±.0242 | .8086<br>±.0246 | .8047<br>±.0248 | 4.20 |
-| cnt-mcts-bl-v01 | 2 | scored | .8125<br>±.0244 | .7578<br>±.0268 | .7461<br>±.0273 | .7422<br>±.0274 | 2.78 |
-| cnt-mcts-bl-v02 | — | planned | — | — | — | — | — |
-| sem-mcts-bl-v01 | 2 | scored | .8906<br>±.0195 | .7500<br>±.0271 | .7109<br>±.0284 | .6953<br>±.0288 | 4.15 |
-
-**qwen-math-1.5b fp16**
-
-| algorithm | trials | status | pass@gb | naive@gb | wei@gb | maj@gb | hr/trial |
-|---|---|---|---|---|---|---|---|
-| cnt-mcts | 2 | scored | .8906<br>±.0195 | .8008<br>±.0250 | .8047<br>±.0248 | .7891<br>±.0255 | 2.84 |
-| sem-mcts | 2 | scored (pre-fix backup) | .8750<br>±.0207 | .7969<br>±.0252 | .7734<br>±.0262 | .7578<br>±.0268 | 3.96 |
-| cnt-mcts-bl-v01 | 2 | scored | .6836<br>±.0291 | .6562<br>±.0297 | .6602<br>±.0297 | .6562<br>±.0297 | 2.75 |
-| cnt-mcts-bl-v02 | — | planned | — | — | — | — | — |
-| sem-mcts-bl-v01 | 2 | scored | .8320<br>±.0234 | .6992<br>±.0287 | .6445<br>±.0300 | .6484<br>±.0299 | 4.19 |
-
-> **Analysis.** Across the 5 models with cnt-mcts-bl-v01 data
-> (llama-1b, qwen-3b, qwen-3b-gptq-int4 partial, qwen-7b-gptq-int4,
-> qwen-math-1.5b), the ranking is consistently **cnt-mcts ≳ sem-mcts
-> > sem-mcts-bl-v01 > cnt-mcts-bl-v01** on pass@gb — both frontier
-> (best-first) variants trail their phase-based counterparts, and
-> cnt-mcts-bl-v01 trails sem-mcts-bl-v01 at every model where both
-> are scored (e.g. qwen-7b-gptq-int4: .8125 vs. .8906; qwen-math-1.5b:
-> .6836 vs. .8320). This is consistent with bl_cnt_v01's documented
-> ~18% zero-completion rate at this budget (see the `cnt-mcts-bl-v01`
-> section above) — a frontier search that exhausts budget without
-> completing a path loses all credit for that question, and bl_sem's
-> diversity bonus may be mitigating that failure mode somewhat where
-> bl_cnt's plain PUCT does not. `cnt-mcts-bl-v02` (Fractional KUBE)
-> has no runs yet at any model — once queued, it directly tests
-> whether cost-aware selection (KUBE's density-over-cost) closes this
-> gap without needing sem's diversity bonus.
-> **Limitations / follow-up:** llama-3b (both fp16 and gptq) and
-> qwen-3b-gptq-int4 have no bl_cnt-v01/bl_cnt-v02/bl_sem-v01 data at
-> all yet — only the cnt-mcts/sem-mcts columns are filled for those
-> 3 models. `cnt-mcts-bl-v02` is empty across the board; queuing even
-> one model there would let the KUBE-vs-PUCT-vs-sem three-way
-> comparison begin.
 
 ### cnt-mcts-bl-v01
 > knobs: template, cpuct (bs-4, d-20 fixed). method=`mcts_bl_cnt_v01`.
