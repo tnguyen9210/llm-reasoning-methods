@@ -417,3 +417,121 @@
 - note: qwenmath15b jobs (23166089/090/091/092, launched 13:53, expected_hr=7) still running at 95%+ / 24.5 GiB — exceeding estimate
 - launched: none
 - queue: 12 running, 10 planned remain
+
+## 2026-07-12 22:00
+- pool: 12 jobs (0 excluded, 0 pruned, 0 added)
+- idle: none — all 12 busy (96–100%, 24.5+ GiB)
+- note: qwenmath15b jobs (23166089/090/091/092) now ~8h in (launched 13:53), still active
+- launched: none
+- queue: 12 running, 10 planned remain
+
+## 2026-07-12 22:45
+- pool: 12 jobs (0 excluded, 0 pruned, 0 added)
+- idle: none — all 12 busy (97–100%, 24.5+ GiB)
+- note: qwenmath15b jobs (23166089/090/091/092) ~9h in, still at full load — expected_hr=7 underestimate at level-5
+- launched: none
+- queue: 12 running, 10 planned remain
+
+## 2026-07-12 23:30
+- pool: 12 jobs (0 excluded, 0 pruned, 0 added)
+- idle: none — all 12 busy (95–100%, 24.5+ GiB)
+- note: qwenmath15b jobs (23166089/090/091/092) ~9.6h in, still active
+- launched: none
+- queue: 12 running, 10 planned remain
+
+## 2026-07-13 00:15
+- pool: 12 jobs (0 excluded, 0 pruned, 0 added)
+- idle (0%/0MiB): 23166089 (r5u35n1, ~61.8h), 23166090 (r5u35n1, ~61.8h), 23166091 (r5u37n1, ~61.8h), 23166092 (r5u37n1, ~61.8h) — qwenmath15b runs completed (~10.4h actual vs 7h estimate)
+- busy: 22840187, 22852888, 22868129, 23166029, 23166031, 23166076, 23166077, 22866623
+- launched: cnt-mcts-l5-qwen7b-gptq      -> 23166089/r5u35n1 (pid 346127)
+- launched: sem-mcts-l5-llama1b-lam1.0-weff1 -> 23166090/r5u35n1 (pid 346188)
+- launched: sem-mcts-l5-qwenmath15b-lam0.1-weff100  -> 23166091/r5u37n1 (pid 346249)
+- launched: sem-mcts-l5-qwenmath15b-lam0.01-weff100 -> 23166092/r5u37n1 (pid 346326)
+- note: queue.yaml edits completed in subsequent cycle (01:00) after interruption
+- queue: 12 -> 16 running, 10 -> 6 planned remain
+
+## 2026-07-13 01:00
+- pool: 12 jobs (0 excluded, 0 pruned, 0 added)
+- idle: none — all 12 busy (98–100%, 24.5+ GiB)
+- note: confirmed 00:15 launches active on 23166089/090/091/092
+- launched: none
+- queue: 16 running, 6 planned remain
+
+## 2026-07-13 01:45
+- pool: 12 jobs (0 excluded, 0 pruned, 0 added)
+- idle: none — all 12 busy (94–100%, 24.5+ GiB)
+- launched: none
+- queue: 16 running, 6 planned remain
+
+## 2026-07-13 02:30
+- pool: 12 jobs (0 excluded, 0 pruned, 0 added)
+- not-idle (0% util, memory held): 22868129 (24644 MiB) — memory clause fails
+- busy: all other 11 jobs (95–100%, 24.5+ GiB)
+- launched: none
+- queue: 16 running, 6 planned remain
+
+## 2026-07-13 03:15
+- pool: 12 jobs (0 excluded, 0 pruned, 0 added)
+- idle: none — all 12 busy (82–100%, 24.5+ GiB)
+- launched: none
+- queue: 16 running, 6 planned remain
+
+## 2026-07-13 04:00
+- pool: 12 jobs (0 excluded, 0 pruned, 0 added)
+- idle: none — all 12 busy (93–100%, 24.5+ GiB)
+- launched: none
+- queue: 16 running, 6 planned remain
+
+## 2026-07-13 04:10 (manual, Tuan-requested)
+- pool: 12 jobs, unchanged from prior snapshot (0 excluded, 0
+  pruned, 0 added)
+- idle (0%/0MiB): 7 of 12 — 22840187 (14.2h), 22852888 (27.4h),
+  22868129 (41.5h), 23166029 (57.5h), 23166031 (57.5h), 23166077
+  (57.6h), 22866623 (32.2h) — a lot finished overnight
+- launched all 6 remaining planned entries (full
+  sem-mcts-l5-qwen7bgptq w_eff=10/100 block, clearing the queue):
+  - lam1.0-weff10  -> 22840187/r5u35n1 (pid 365466)
+  - lam0.1-weff10  -> 22852888/r5u09n1 (pid 365467)
+  - lam0.01-weff10 -> 22868129/r5u03n1 (pid 365468)
+  - lam1.0-weff100 -> 23166029/r5u03n1 (pid 365469)
+  - lam0.1-weff100 -> 23166031/r5u09n1 (pid 365470)
+  - lam0.01-weff100-> 23166077/r5u35n1 (pid 365471)
+- skipped: 22866623 — idle but no planned entries left to pair
+  with it after the above 6
+- queue: 16 -> 22 running, 6 -> 0 planned remain (queue fully
+  drained)
+
+## 2026-07-13 04:45
+- pool: 12 jobs (0 excluded, 0 pruned, 0 added)
+- idle (0%/0MiB): 22866623 (r5u11n1, 31.8h) —
+  sem-mcts-l5-llama3b-lam0.1-weff100 finished (~15.1h, expected 13h)
+- busy: 11 of 12 (89–100%, 24.5–25.9 GiB) — all qwen7bgptq
+  runs from 04:10 active
+- launched: none (0 planned entries in queue)
+- queue: 22 running, 0 planned
+
+## 2026-07-13 05:30
+- pool: 12 jobs (0 excluded, 0 pruned, 0 added)
+- queue empty (22 running, 0 planned) — skipped probing
+- launched: none
+- queue: 22 running, 0 planned
+
+## 2026-07-13 06:15
+- pool: 12 jobs (0 excluded, 0 pruned, 0 added)
+- queue empty (22 running, 0 planned) — skipped probing
+- launched: none
+- queue: 22 running, 0 planned
+
+## 2026-07-13 07:00
+- pool: 12 jobs (0 excluded, 0 pruned, 0 added)
+- idle (0%/0MiB): 23166076 (r5u11n1, 55.0h), 22866623 (r5u11n1,
+  29.6h) — llama3b-lam0.1-weff1000 and llama3b-lam0.1-weff100
+  finished
+- not-idle (0% util, 25522 MiB memory): 23166089 (r5u35n1) —
+  memory clause fails
+- busy: 9 of 12 (95–100%, 24.5+ GiB)
+- launched: sem-mcts-qwen3b-lam0.1-weff10-aggmin ->
+  23166076/r5u11n1 (pid 429072)
+- launched: sem-mcts-qwen3b-lam0.1-weff10-aggprod ->
+  22866623/r5u11n1 (pid 429182)
+- queue: 22 -> 24 running, 6 -> 4 planned remain

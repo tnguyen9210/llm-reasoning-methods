@@ -1901,61 +1901,69 @@ instead of one wide sparse grid.)
 ### cnt-mcts
 
 #### model family comparison (b=320, qwen PRM)
-> **Compares:** the same 7-model family/size/quantization sweep
-> as the `[gen_budget=80]` table above, but at
-> `search.gen_budget=320` (4× the b=80 budget) with
-> `prm=qwen_prm` instead of the b=80 table's default
+> **Compares:** a 5-model family/size sweep (llama-1b, llama-3b
+> fp16, qwen-3b fp16, qwen-7b gptq-int4, qwen-math-1.5b — GPTQ
+> variants llama-3b gptq and qwen-3b gptq-int4 excluded, out of
+> scope for this table) at `search.gen_budget=320` (4× the b=80
+> budget) with `prm=qwen_prm` instead of the b=80 table's default
 > `llama_prm`. Two axes change at once — budget and PRM — so
 > this table isn't a clean isolation of either; it answers
-> "does the b=80 ranking across model family/size/quantization
-> hold at a much larger search budget under qwen scoring," not
-> "what does budget alone do." A matched-PRM (llama) b=320 row
-> per model would be needed to separate the two effects.
+> "does the b=80 ranking across model family/size hold at a much
+> larger search budget under qwen scoring," not "what does budget
+> alone do." A matched-PRM (llama) b=320 row per model would be
+> needed to separate the two effects.
 >
 > **Fixed:** cpuct=2.0, bs-4, d-20, b=320, prm=qwen,
 > tmpl=model-family default (native for Qwen, custom for Llama).
 >
-> ⚠️ Entirely `planned` — no runs yet. Budget=320 is a 4×
-> generation-count increase over the b=80 table; expect roughly
-> 4× the per-trial wall-clock of the corresponding b=80 row
-> (e.g. qwen-7b gptq-int4 was 3.21 hr/trial at b=80).
+> ✅ All 5 cells scored (2026-07-13), via `method=mcts_cnt_v01`
+> (post-fix). Budget=320 is a 4× generation-count increase over
+> the b=80 table — confirmed roughly 3-5× the b=80 per-trial
+> wall-clock (e.g. qwen-7b gptq-int4 was 3.21 hr/trial at b=80,
+> now 9.91 hr/trial at b=320).
 >
-> **W&B:** none yet (no runs exist).
+> **W&B:** llama-1b `qlsp5tx6`, llama-3b `f32gf4ld`, qwen-3b
+> `n1mez9rc`, qwen-7b gptq-int4 `4sm44tcf`, qwen-math-1.5b
+> `uss9vu4b`.
 
 | llm | prm | trials | status | pass@gb | naive@gb | wei@gb | maj@gb | hr/trial |
 |---|---|---|---|---|---|---|---|---|
-| llama-1b fp16 | qwen | — | planned | — | — | — | — | — |
-| llama-3b fp16 | qwen | — | planned | — | — | — | — | — |
-| llama-3b gptq | qwen | — | planned | — | — | — | — | — |
-| qwen-3b fp16 | qwen | — | planned | — | — | — | — | — |
-| qwen-3b gptq-int4 | qwen | — | planned | — | — | — | — | — |
-| qwen-7b gptq-int4 | qwen | — | planned | — | — | — | — | — |
-| qwen-math-1.5b fp16 | qwen | — | planned | — | — | — | — | — |
+| llama-1b fp16 | qwen | 2 | scored | .7539<br>±.0270 | .5820<br>±.0309 | .5195<br>±.0313 | .4688<br>±.0312 | 9.39 |
+| llama-3b fp16 | qwen | 2 | scored | .8711<br>±.0210 | .6875<br>±.0290 | .6758<br>±.0293 | .6523<br>±.0298 | 15.49 |
+| qwen-3b fp16 | qwen | 2 | scored | .9297<br>±.0160 | .8125<br>±.0244 | .7734<br>±.0262 | .7539<br>±.0270 | 14.44 |
+| qwen-7b gptq-int4 | qwen | 2 | scored | .9492<br>±.0137 | .7969<br>±.0252 | .8203<br>±.0240 | .8047<br>±.0248 | 9.91 |
+| qwen-math-1.5b fp16 | qwen | 2 | scored | .9453<br>±.0142 | .7891<br>±.0255 | .7969<br>±.0252 | .7891<br>±.0255 | 11.01 |
 
-> **Analysis.** No data yet — nothing to take away. Once
-> filled, the key read is whether the b=80 table's ranking
-> (qwen-7b gptq-int4 best, GPTQ trading accuracy for speed)
-> holds at b=320, and whether qwen-PRM scoring shifts the
-> absolute levels relative to the b=80/llama-PRM table.
-> **Limitations / follow-up:** all 7 cells are planned (see
-> `experiments.yaml`, group `cnt-mcts`, feeds
-> `cnt-mcts/model-family-b320-qwen`). Budget and PRM both
-> differ from the b=80 table at once; a matched-PRM b=320 row
-> would isolate the budget effect alone.
+> **Analysis.** 5/5 cells scored. The b=80 ranking holds
+> qualitatively: qwen-7b gptq-int4 is again the top pass@gb
+> (.9492), llama-1b again the weakest (.7539) — model-family/size
+> effects survive the 4× budget increase. Notably, absolute
+> pass@gb rises across the board vs. the b=80/qwen-PRM table (e.g.
+> llama-1b .7539 here vs its b=80 qwen-PRM row), consistent with
+> more search budget helping regardless of model. hr/trial scales
+> super-linearly for the two 3B-class models (llama-3b 15.49,
+> qwen-3b 14.44 — both ~4.7-4.8× their b=80 figures) but sub-4×
+> for qwen-7b gptq-int4 (9.91, ~3.1×) and qwen-math-1.5b (11.01);
+> GPTQ's speed advantage narrows at b=320 relative to fp16 3B.
+> **Limitations / follow-up:** budget and PRM both differ from the
+> b=80 table at once; a matched-PRM b=320 row would isolate the
+> budget effect alone.
 
 ### sem-mcts
 
 #### model family comparison (b=320, qwen PRM, lam=0.1, w_eff=10)
-> **Compares:** the same 7-model family/size/quantization sweep
-> as the `[gen_budget=80]` sem-mcts (qwen PRM) table above, but
-> at `search.gen_budget=320` (4× the b=80 budget) and at
-> `lam=0.1, ds_alpha=3.16` (`w_eff = ds_alpha/sqrt(lam) = 10`)
-> instead of that table's default point (`lam=0.01,
-> ds_alpha=100`, i.e. `w_eff=1000`). Three axes move at once
-> relative to that b=80 table — budget, lam, and ds_alpha — so
-> this isn't a clean isolation of any one of them; paired with
-> the `w_eff=100` table below (same budget, same lam, 10×
-> ds_alpha) it does isolate `w_eff` at b=320.
+> **Compares:** a 5-model family/size sweep (llama-1b, llama-3b
+> fp16, qwen-3b fp16, qwen-7b gptq-int4, qwen-math-1.5b — GPTQ
+> variants llama-3b gptq and qwen-3b gptq-int4 excluded, out of
+> scope for this table) as the `[gen_budget=80]` sem-mcts (qwen
+> PRM) table above, but at `search.gen_budget=320` (4× the b=80
+> budget) and at `lam=0.1, ds_alpha=3.16` (`w_eff =
+> ds_alpha/sqrt(lam) = 10`) instead of that table's default point
+> (`lam=0.01, ds_alpha=100`, i.e. `w_eff=1000`). Three axes move
+> at once relative to that b=80 table — budget, lam, and
+> ds_alpha — so this isn't a clean isolation of any one of them;
+> paired with the `w_eff=100` table below (same budget, same lam,
+> 10× ds_alpha) it does isolate `w_eff` at b=320.
 >
 > **Fixed:** method=`mcts_sem_v02` (PRM embeds), prm=qwen, bs-4,
 > d-20, b=320, prm_batch_size=1, `ds_alpha_schedule=global`
@@ -1967,45 +1975,46 @@ instead of one wide sparse grid.)
 > `lam=0.1` row, same point used by the `sem-mcts-bl` w_eff=10
 > table).
 >
-> ⚠️ Entirely `planned` — no runs yet. Budget=320 is a 4×
-> generation-count increase over the b=80 table; expect roughly
-> 4× the per-trial wall-clock of the corresponding b=80/w_eff=10
-> row (see the `sem-mcts-bl` w_eff=10 table's hr/trial column for
-> a rough b=80 reference point at this lam/ds_alpha, though that's
-> the bl_sem frontier variant, not phase-based sem-mcts).
+> ✅ All 5 cells scored (2026-07-13). Budget=320 is a 4×
+> generation-count increase over the b=80 table; per-trial
+> wall-clock landed at roughly 5-9× the b=80/w_eff=10 figures
+> (well above the naive 4× expectation — see Analysis).
 >
-> **W&B:** none yet (no runs exist).
+> **W&B:** llama-1b `pzu1ri27`, llama-3b `mek0jor8`, qwen-3b
+> `pw6som82`, qwen-7b gptq-int4 `q6yjispf`, qwen-math-1.5b
+> `lywharje`.
 
 | llm | prm | trials | status | pass@gb | naive@gb | wei@gb | maj@gb | hr/trial |
 |---|---|---|---|---|---|---|---|---|
-| llama-1b fp16 | qwen | — | planned | — | — | — | — | — |
-| llama-3b fp16 | qwen | — | planned | — | — | — | — | — |
-| llama-3b gptq | qwen | — | planned | — | — | — | — | — |
-| qwen-3b fp16 | qwen | — | planned | — | — | — | — | — |
-| qwen-3b gptq-int4 | qwen | — | planned | — | — | — | — | — |
-| qwen-7b gptq-int4 | qwen | — | planned | — | — | — | — | — |
-| qwen-math-1.5b fp16 | qwen | — | planned | — | — | — | — | — |
+| llama-1b fp16 | qwen | 2 | scored | .7383<br>±.0275 | .5898<br>±.0308 | .5508<br>±.0311 | .5195<br>±.0313 | 13.38 |
+| llama-3b fp16 | qwen | 2 | scored | .8438<br>±.0227 | .6875<br>±.0290 | .6797<br>±.0292 | .6797<br>±.0292 | 16.54 |
+| qwen-3b fp16 | qwen | 2 | scored | .9219<br>±.0168 | .7812<br>±.0259 | .7773<br>±.0261 | .7656<br>±.0265 | 18.02 |
+| qwen-7b gptq-int4 | qwen | 2 | scored | .9336<br>±.0156 | .8242<br>±.0238 | .7891<br>±.0255 | .7812<br>±.0259 | 9.77 |
+| qwen-math-1.5b fp16 | qwen | 2 | scored | .9375<br>±.0152 | .8125<br>±.0244 | .8320<br>±.0234 | .8242<br>±.0238 | 15.35 |
 
-> **Analysis.** No data yet — nothing to take away. Once
-> filled, the key read (paired with the `w_eff=100` table below)
-> is whether the `w_eff` ordering seen in `sem-mcts-bl` at b=80
-> (`w_eff=10` beating `w_eff=100` at every shared model — see
-> `ds-alpha-diversity-bonus-plateau.md`) also holds for
-> phase-based sem-mcts at a 4× larger budget, or whether more
-> search budget shifts the plateau's onset.
-> **Limitations / follow-up:** all 7 cells are planned. Three
-> axes (budget, lam, ds_alpha) differ from the b=80 default-point
-> table above at once; no matched-budget b=80 row at this exact
-> `lam=0.1, w_eff=10` point exists for sem-mcts (only for
-> `sem-mcts-bl`), so a clean single-axis isolation isn't possible
-> yet.
+> **Analysis.** 5/5 cells scored. Model-family/size ranking holds:
+> qwen-7b gptq-int4 and qwen-math-1.5b lead pass@gb (.9336/.9375),
+> llama-1b again weakest (.7383). hr/trial did not scale as the
+> naive 4× estimate suggested — qwen-3b (18.02) and llama-3b
+> (16.54) are close to 5× their expected b=80 figures, while
+> qwen-7b gptq-int4 (9.77) stays well under 4×, again showing
+> GPTQ's relative speed advantage widening rather than narrowing
+> at this budget/lam point (contrast with the cnt-mcts b=320 table
+> above, where GPTQ's edge narrowed).
+> **Limitations / follow-up:** three axes (budget, lam, ds_alpha)
+> differ from the b=80 default-point table above at once; no
+> matched-budget b=80 row at this exact `lam=0.1, w_eff=10` point
+> exists for sem-mcts (only for `sem-mcts-bl`), so a clean
+> single-axis isolation isn't possible yet.
 
 #### model family comparison (b=320, qwen PRM, lam=0.1, w_eff=100)
-> **Compares:** identical setup to the `w_eff=10` table above,
-> at `ds_alpha=31.6` instead of `3.16` (10× the diversity
-> weight, same `lam=0.1`) — the b=320 counterpart of the
-> `sem-mcts-bl` w_eff=100 table, and the paired point needed to
-> isolate `w_eff` alone at this budget.
+> **Compares:** identical setup to the `w_eff=10` table above
+> (same 5-model scope — GPTQ variants llama-3b gptq and qwen-3b
+> gptq-int4 excluded, out of scope for this table), at
+> `ds_alpha=31.6` instead of `3.16` (10× the diversity weight,
+> same `lam=0.1`) — the b=320 counterpart of the `sem-mcts-bl`
+> w_eff=100 table, and the paired point needed to isolate `w_eff`
+> alone at this budget.
 >
 > **Fixed:** identical to the `w_eff=10` table above (method=
 > `mcts_sem_v02`, prm=qwen, bs-4, d-20, b=320, prm_batch_size=1,
@@ -2023,16 +2032,14 @@ instead of one wide sparse grid.)
 |---|---|---|---|---|---|---|---|---|
 | llama-1b fp16 | qwen | — | planned | — | — | — | — | — |
 | llama-3b fp16 | qwen | — | planned | — | — | — | — | — |
-| llama-3b gptq | qwen | — | planned | — | — | — | — | — |
 | qwen-3b fp16 | qwen | — | planned | — | — | — | — | — |
-| qwen-3b gptq-int4 | qwen | — | planned | — | — | — | — | — |
 | qwen-7b gptq-int4 | qwen | — | planned | — | — | — | — | — |
 | qwen-math-1.5b fp16 | qwen | — | planned | — | — | — | — | — |
 
 > **Analysis.** No data yet — nothing to take away. See the
 > `w_eff=10` table above for the primary comparison question
 > once both are filled.
-> **Limitations / follow-up:** all 7 cells are planned. Same
+> **Limitations / follow-up:** all 5 cells are planned. Same
 > caveats as the `w_eff=10` table above (three axes moved at
 > once vs. the b=80 default-point table; no matched b=80 row at
 > this exact point for sem-mcts).

@@ -26,7 +26,12 @@
     python generate_mcts_cnt.py --config-name mcts_cnt_prm800k
     llm=qwen_7b_gptq_int4 prm=qwen_prm data.level=5
   expected_hr: 8
-  status: planned
+  status: running
+  launch:
+    job_id: 23166089
+    node: r5u35n1
+    pid: 346127
+    at: 2026-07-13 00:15
 
 
 # level-5 sem-mcts (mcts_sem_v02) lam/ds_alpha joint sweep,
@@ -41,7 +46,12 @@
     llm=llama_1b prm=qwen_prm search.lam=1.0 search.ds_alpha=1
     data.level=5
   expected_hr: 9
-  status: planned
+  status: running
+  launch:
+    job_id: 23166090
+    node: r5u35n1
+    pid: 346188
+    at: 2026-07-13 00:15
 
 
 # level-5 sem-mcts (mcts_sem_v02) lam/ds_alpha joint sweep,
@@ -216,7 +226,12 @@
     llm=qwen_math_1_5b prm=qwen_prm search.lam=0.1 search.ds_alpha=31.6
     data.level=5
   expected_hr: 7
-  status: planned
+  status: running
+  launch:
+    job_id: 23166091
+    node: r5u37n1
+    pid: 346249
+    at: 2026-07-13 00:15
 
 - id: sem-mcts-l5-qwenmath15b-lam0.01-weff100
   command: >
@@ -224,7 +239,12 @@
     llm=qwen_math_1_5b prm=qwen_prm search.lam=0.01 search.ds_alpha=10
     data.level=5
   expected_hr: 7
-  status: planned
+  status: running
+  launch:
+    job_id: 23166092
+    node: r5u37n1
+    pid: 346326
+    at: 2026-07-13 00:15
 
 - id: sem-mcts-l5-qwen7bgptq-lam1.0-weff10
   command: >
@@ -232,7 +252,12 @@
     llm=qwen_7b_gptq_int4 prm=qwen_prm search.lam=1.0
     search.ds_alpha=10 data.level=5
   expected_hr: 8
-  status: planned
+  status: running
+  launch:
+    job_id: 22840187
+    node: r5u35n1
+    pid: 365466
+    at: 2026-07-13 04:10
 
 - id: sem-mcts-l5-qwen7bgptq-lam0.1-weff10
   command: >
@@ -240,7 +265,12 @@
     llm=qwen_7b_gptq_int4 prm=qwen_prm search.lam=0.1
     search.ds_alpha=3.16 data.level=5
   expected_hr: 8
-  status: planned
+  status: running
+  launch:
+    job_id: 22852888
+    node: r5u09n1
+    pid: 365467
+    at: 2026-07-13 04:10
 
 - id: sem-mcts-l5-qwen7bgptq-lam0.01-weff10
   command: >
@@ -248,7 +278,12 @@
     llm=qwen_7b_gptq_int4 prm=qwen_prm search.lam=0.01
     search.ds_alpha=1.0 data.level=5
   expected_hr: 8
-  status: planned
+  status: running
+  launch:
+    job_id: 22868129
+    node: r5u03n1
+    pid: 365468
+    at: 2026-07-13 04:10
 
 - id: sem-mcts-l5-qwen7bgptq-lam1.0-weff100
   command: >
@@ -256,7 +291,12 @@
     llm=qwen_7b_gptq_int4 prm=qwen_prm search.lam=1.0
     search.ds_alpha=100 data.level=5
   expected_hr: 8
-  status: planned
+  status: running
+  launch:
+    job_id: 23166029
+    node: r5u03n1
+    pid: 365469
+    at: 2026-07-13 04:10
 
 - id: sem-mcts-l5-qwen7bgptq-lam0.1-weff100
   command: >
@@ -264,7 +304,12 @@
     llm=qwen_7b_gptq_int4 prm=qwen_prm search.lam=0.1
     search.ds_alpha=31.6 data.level=5
   expected_hr: 8
-  status: planned
+  status: running
+  launch:
+    job_id: 23166031
+    node: r5u09n1
+    pid: 365470
+    at: 2026-07-13 04:10
 
 - id: sem-mcts-l5-qwen7bgptq-lam0.01-weff100
   command: >
@@ -272,4 +317,83 @@
     llm=qwen_7b_gptq_int4 prm=qwen_prm search.lam=0.01
     search.ds_alpha=10 data.level=5
   expected_hr: 8
+  status: running
+  launch:
+    job_id: 23166077
+    node: r5u35n1
+    pid: 365471
+    at: 2026-07-13 04:10
+
+# level-4 agg_strategy comparison (lam=0.1, w_eff=10) — 2 missing
+# qwen-3b cells; docs/exp-comparison.md "agg_strategy comparison
+# (qwen-3b, qwen-math-1.5b, lam=0.1, w_eff=10)". qwen-3b/last and
+# both qwen-math-1.5b rows at this w_eff are already scored; these
+# are the only 2 unrun cells in that table. No data.level override
+# (level-4 is the default).
+- id: sem-mcts-qwen3b-lam0.1-weff10-aggmin
+  command: >
+    python generate_mcts_sem.py --config-name mcts_sem_v02_prm800k
+    llm=qwen_3b prm=qwen_prm search.lam=0.1 search.ds_alpha=3.16
+    gen.agg_strategy=min
+  expected_hr: 6
+  status: running
+  launch:
+    job_id: 23166076
+    node: r5u11n1
+    pid: 429072
+    at: 2026-07-13 07:00
+
+- id: sem-mcts-qwen3b-lam0.1-weff10-aggprod
+  command: >
+    python generate_mcts_sem.py --config-name mcts_sem_v02_prm800k
+    llm=qwen_3b prm=qwen_prm search.lam=0.1 search.ds_alpha=3.16
+    gen.agg_strategy=prod
+  expected_hr: 6
+  status: running
+  launch:
+    job_id: 22866623
+    node: r5u11n1
+    pid: 429182
+    at: 2026-07-13 07:00
+
+# level-4 agg_strategy comparison (lam=0.1, w_eff=100) — 2 missing
+# qwen-math-1.5b cells; docs/exp-comparison.md "agg_strategy
+# comparison (qwen-3b, qwen-math-1.5b, lam=0.1, w_eff=100)". Both
+# last rows already scored; these are the only 2 unrun cells for
+# this model in that table. No data.level override (level-4 is
+# the default).
+- id: sem-mcts-qwenmath15b-lam0.1-weff100-aggmin
+  command: >
+    python generate_mcts_sem.py --config-name mcts_sem_v02_prm800k
+    llm=qwen_math_1_5b prm=qwen_prm search.lam=0.1
+    search.ds_alpha=31.6 gen.agg_strategy=min
+  expected_hr: 5
+  status: planned
+
+- id: sem-mcts-qwenmath15b-lam0.1-weff100-aggprod
+  command: >
+    python generate_mcts_sem.py --config-name mcts_sem_v02_prm800k
+    llm=qwen_math_1_5b prm=qwen_prm search.lam=0.1
+    search.ds_alpha=31.6 gen.agg_strategy=prod
+  expected_hr: 5
+  status: planned
+
+# level-4 agg_strategy comparison (lam=0.1, w_eff=100) — 2 missing
+# qwen-3b cells; same table as above. last row already scored;
+# these are the only 2 unrun cells for this model in that table.
+# No data.level override (level-4 is the default).
+- id: sem-mcts-qwen3b-lam0.1-weff100-aggmin
+  command: >
+    python generate_mcts_sem.py --config-name mcts_sem_v02_prm800k
+    llm=qwen_3b prm=qwen_prm search.lam=0.1 search.ds_alpha=31.6
+    gen.agg_strategy=min
+  expected_hr: 6
+  status: planned
+
+- id: sem-mcts-qwen3b-lam0.1-weff100-aggprod
+  command: >
+    python generate_mcts_sem.py --config-name mcts_sem_v02_prm800k
+    llm=qwen_3b prm=qwen_prm search.lam=0.1 search.ds_alpha=31.6
+    gen.agg_strategy=prod
+  expected_hr: 6
   status: planned
