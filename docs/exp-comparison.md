@@ -208,9 +208,12 @@ instead of one wide sparse grid.)
 > qwen-3b-gptq-int4's sem-mcts-bl-v01 cell reuses the `w_eff=100`
 > point (see the `sem-mcts-bl` section's own w_eff=10 table for a
 > lower-diversity comparison point at .8086, now also scored).
-> llama-3b fp16's sem-mcts-bl-v01 cell is marked failed: two
-> attempts both fell short of 2/2 trials (config-hashes `0f06296f`
-> 0/2 and `3ca318f6` 1/2) and need a clean rerun before this cell
+> llama-3b fp16's sem-mcts-bl-v01 cell is marked failed: the
+> w_eff=100 run this row reads from (`0f06296f`, 0/2 trials)
+> crashed on a vLLM `max_model_len=5000` context overflow — the
+> search has no prompt-length guard — and the sibling w_eff=10
+> cell (`3ca318f6`, 1/2) died the same way; both need a length
+> guard (or a larger max_model_len) plus a rerun before this cell
 > can fill.
 
 ---
@@ -1805,7 +1808,7 @@ instead of one wide sparse grid.)
 | llm | trials | status | pass@gb | naive@gb | wei@gb | maj@gb | hr/trial |
 |---|---|---|---|---|---|---|---|
 | llama-1b fp16 | 2 | scored | .5195<br>±.0313 | .4219<br>±.0309 | .3242<br>±.0293 | .2422<br>±.0268 | 5.18 |
-| llama-3b fp16 | — | planned | — | — | — | — | — |
+| llama-3b fp16 | 0/2 | failed | — | — | — | — | — |
 | llama-3b gptq | — | planned | — | — | — | — | — |
 | qwen-3b fp16 | 2 | scored | .8320<br>±.0234 | .6836<br>±.0291 | .6484<br>±.0299 | .6016<br>±.0307 | 5.19 |
 | qwen-3b gptq-int4 | 2 | scored | .7422<br>±.0274 | .6133<br>±.0305 | .5625<br>±.0311 | .5273<br>±.0313 | 4.18 |
@@ -1822,10 +1825,17 @@ instead of one wide sparse grid.)
 > magnitude past `ds_alpha≈10` (`w_eff≈32` at `lam=0.1`) does not help
 > further and may hurt on the frontier-selection (bl_sem) variant
 > specifically — this hadn't been checked for bl_sem before.
-> **Limitations / follow-up:** llama-3b fp16/gptq still unqueued in
-> `experiments.yaml`. `lam`/`ds_alpha_schedule` are fixed at one
-> point (`global` schedule) — no sweep along those axes yet for this
-> algorithm.
+> **Limitations / follow-up:** llama-3b fp16 FAILED (config-hash
+> `0f06296f`, run `2goolnzd`): crashed during trial 0 with vLLM's
+> "decoder prompt (length 5000) ... longer than the maximum model
+> length of 5000" — a deep frontier path filled llama_3b's
+> `max_model_len=5000` and the search has no context-length guard,
+> so the unhandled ValueError killed the trial (0/2 on disk, empty
+> result dir). Same root cause as the w_eff=10 llama-3b failure
+> below; needs a length guard (or larger max_model_len) before
+> rerunning. llama-3b gptq still unqueued. `lam`/
+> `ds_alpha_schedule` are fixed at one point (`global` schedule) —
+> no sweep along those axes yet for this algorithm.
 
 #### model family, size, quantization comparison (qwen PRM, w_eff=10)
 > **Compares:** same 7-model/quant grid as the `w_eff=100` table
@@ -1865,14 +1875,20 @@ instead of one wide sparse grid.)
 > sem_v02's rlhflow-PRM data) outperforms `w_eff=100` (well past it)
 > here too, so bl_sem's plateau appears to sit in a similar place, at
 > least directionally on these first data points.
-> **Limitations / follow-up:** llama-3b fp16 has two failed attempts
-> so far — a first with 0/2 trials completed (run `2goolnzd`,
-> config-hash `0f06296f`) and a retry with only 1/2 trials completed
-> (run `yf562ig8`, config-hash `3ca318f6`, `missing trials, skipped:
-> [1]` in compute_stats output) — needs a clean rerun before this
-> cell can be filled. llama-3b gptq, qwen-3b gptq-int4 (now filled)
-> still leaves llama-3b gptq unqueued. Not yet a full 7-cell grid or a
-> real `w_eff` sweep — just two coarse points.
+> **Limitations / follow-up:** llama-3b fp16 FAILED (config-hash
+> `3ca318f6`, run `yf562ig8`): trial 0 completed (6.19 hr) but
+> trial 1 crashed mid-search with vLLM's "decoder prompt (length
+> 5000) ... longer than the maximum model length of 5000" — a deep
+> frontier path filled llama_3b's `max_model_len=5000` and the
+> search has no context-length guard, so the unhandled ValueError
+> killed the trial (1/2 on disk, `missing trials, skipped: [1]` in
+> compute_stats). The w_eff=100 llama-3b cell above (`0f06296f`,
+> run `2goolnzd`, 0/2) died the same way ~80s after launch of the
+> same sweep — same root cause, one failure per cell, NOT two
+> attempts at one cell (earlier note here said otherwise). Needs a
+> length guard (or larger max_model_len) before rerunning. llama-3b
+> gptq still unqueued. Not yet a full 7-cell grid or a real `w_eff`
+> sweep — just two coarse points.
 
 ## Tuning tables [gen_budget=160, 320, …] *(future)*
 > Add a new `## Tuning tables [gen_budget=N]` section, then

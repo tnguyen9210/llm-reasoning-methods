@@ -1,0 +1,29 @@
+# orchestration/jobs.yaml — SLURM allocations the orchestrator
+# may use. Design: docs/decisions/hpc-idle-gpu-orchestration.md
+#
+# AUTO-MAINTAINED: the `jobs:` list is rewritten at every
+# 15-minute cycle from `squeue -u tnguyen9210` (running-state GPU
+# jobs) — expired/pending/vanished entries pruned, new
+# allocations added. Manual edits to `jobs:` will be overwritten.
+#
+# `exclude:` is the one manual control and IS preserved across
+# refreshes: add a job id here to keep that session off-limits
+# (e.g. a notebook you are about to use interactively, whose GPU
+# would otherwise look idle and get claimed).
+
+exclude: []
+
+# snapshot 2026-07-12 21:15
+jobs:
+  - 22840187   # r5u35n1   (~21.4h remaining)
+  - 22852888   # r5u09n1   (~34.6h remaining)
+  - 22868129   # r5u03n1   (~48.7h remaining)
+  - 23166029   # r5u03n1   (~64.7h remaining)
+  - 23166031   # r5u09n1   (~64.7h remaining)
+  - 23166089   # r5u35n1   (~64.8h remaining)
+  - 23166090   # r5u35n1   (~64.8h remaining)
+  - 23166091   # r5u37n1   (~64.8h remaining)
+  - 23166092   # r5u37n1   (~64.8h remaining)
+  - 23166076   # r5u11n1   (~64.7h remaining)
+  - 23166077   # r5u35n1   (~64.7h remaining)
+  - 22866623   # r5u11n1   (~39.3h remaining)

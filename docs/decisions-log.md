@@ -14,6 +14,50 @@ scaffold, it also gets a standalone file in [decisions/](decisions/);
 the log entry then carries a one-line pointer to it rather than
 repeating the full writeup.
 
+## 2026-07-10 — Infra: idle-GPU experiment orchestration — 15-min cycle, queue.yaml + auto-refreshed jobs.yaml (designed, not yet armed)
+
+**Context/decision:** recurring system that launches queued
+experiments onto idle GPUs inside existing SLURM jupyter
+allocations, generalizing the manual flow validated today
+(`srun --jobid=<id> --overlap nvidia-smi` idle probe →
+`nohup srun --overlap <launcher> &` launch; first run: level-5
+llama-1b cnt-mcts, W&B `05lky8bc`). Three files under
+`orchestration/`: `queue.yaml` (thin user-curated queue, drained
+top-first; orchestrator only flips planned→running + writes a
+launch block; deliberately NOT `experiments.yaml`, which stays
+the append-only ledger), `jobs.yaml` (auto-refreshed each cycle
+from squeue, with a persistent `exclude:` list as the manual
+override), and `log.md` (append-only audit). Idle ⇔ 0% util AND
+0 MiB. Walltime guard via `expected_hr`. Explicitly out of scope
+per Tuan: success/failure monitoring, retries, completion
+marking (manual verification; W&B is the run log). Scheduler:
+CronCreate `*/15` if it runs locally, else system crontab +
+headless `claude -p`. Supersedes the SSH-based multi-node
+orchestrator vault todo for SLURM clusters. Full writeup:
+[decisions/hpc-idle-gpu-orchestration.md](decisions/hpc-idle-gpu-orchestration.md).
+
+## 2026-07-10 — Search: context-length overflow = terminality — guard decided after llama-3b bl_sem crashes (implementation pending)
+
+**Context/decision:** both `mcts_bl_sem_v01` llama-3b fp16 cells
+(w_eff=100 `0f06296f`/`2goolnzd` 0/2 trials; w_eff=10
+`3ca318f6`/`yf562ig8` 1/2) crashed with vLLM's "decoder prompt
+(length 5000) ... longer than the maximum model length of 5000" —
+a deep frontier path filled `max_model_len` and nothing in the
+stack checks prompt length (`generate_k_steps` submits unchecked;
+no per-question try/except), so one over-long path killed each
+trial. Token-length analysis across the w_eff=10 grid showed the
+exposure is Llama-specific (5–7 near-cap questions per trial for
+llama-1b/-3b vs ≤1 for every qwen model) and amplified by the
+frontier protocol (the phase-based `mcts_sem_v02` counterpart
+completed 2/2 with one near-cap question). Decided: treat context
+exhaustion exactly like `max_depth` — a terminality condition
+(backprop + drop from frontier) in every search variant — plus a
+per-question try/except in the launcher as containment; rejected
+raising `max_model_len` (moves the cliff, costs V100 KV memory,
+silently changes the experiment). Not yet implemented; both
+llama-3b cells rerun after it lands. Full writeup:
+[decisions/context-length-overflow-guard.md](decisions/context-length-overflow-guard.md).
+
 ## 2026-07-09 — Search: new `mcts_bl_cnt_v03` — depth-shaping knapsack bonus, no UCB/exploration term
 
 **Context/decision:** proposed replacing v02's UCB bonus with a

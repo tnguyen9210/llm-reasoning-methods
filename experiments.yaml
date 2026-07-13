@@ -1745,9 +1745,373 @@
   group: sem-mcts-bl
   recorded: false
   priority: 2
-  note: FAILED -- two incomplete attempts at w_eff=10, llama-3b fp16. First
-    attempt (config-hash 0f06296f, run_id 2goolnzd) produced 0/2 trials on
-    disk. Retry (config-hash 3ca318f6, run_id yf562ig8) produced only 1/2
-    trials (compute_stats.py reported trial 1 as missing/skipped); not
-    scored, needs a clean rerun. recorded is false until a run completes
-    both trials.
+  note: FAILED -- w_eff=10 llama-3b fp16 cell (config-hash 3ca318f6, run_id
+    yf562ig8). Trial 0 completed (6.19h); trial 1 crashed mid-search with
+    vLLM "decoder prompt (length 5000) ... longer than the maximum model
+    length of 5000" -- a deep frontier path accumulated question+steps up
+    to llama_3b's max_model_len=5000 and generate_k_steps has no context-
+    length guard, so the unhandled ValueError killed the whole trial. 1/2
+    trials on disk; not scored; needs a rerun after a length guard (or a
+    larger max_model_len). recorded is false until 2/2 trials complete.
+- launcher: generate_mcts_sem.py
+  config_root: mcts_bl_sem_v01_prm800k
+  overrides:
+    llm: llama_3b
+    prm: qwen_prm
+    search.lam: 0.1
+    search.ds_alpha: 31.6
+  trials: 2
+  feeds: []
+  group: sem-mcts-bl
+  recorded: false
+  priority: 2
+  note: FAILED -- w_eff=100 llama-3b fp16 cell (config-hash 0f06296f, run_id
+    2goolnzd). Crashed during trial 0 with the same vLLM max_model_len=5000
+    context-overflow ValueError as the w_eff=10 cell (3ca318f6); 0/2 trials,
+    result dir empty. Same root cause, same fix needed; launched 80s before
+    the w_eff=10 run as part of the same sweep (earlier bookkeeping wrongly
+    called these two attempts at one cell). recorded is false until 2/2
+    trials complete.
+- launcher: generate_mcts_cnt.py
+  config_root: mcts_cnt_prm800k
+  overrides:
+    prm: qwen_prm
+    data.level: 5
+  trials: 2
+  feeds: [level5-cnt-model-family-qwen]
+  group: cnt-mcts
+  recorded: true
+  priority: 2
+  note: level-5 llama-1b fp16, cfg-0f003563, run_id 05lky8bc; pass@gb
+    .3619±.0294 (docs/exp-comparison-level5.md "model family, size,
+    quantization comparison (qwen PRM)")
+- launcher: generate_mcts_cnt.py
+  config_root: mcts_cnt_prm800k
+  overrides:
+    llm: llama_3b
+    prm: qwen_prm
+    data.level: 5
+  trials: 2
+  feeds: [level5-cnt-model-family-qwen]
+  group: cnt-mcts
+  recorded: true
+  priority: 2
+  note: level-5 llama-3b fp16, cfg-2785219b, run_id grfdicia; pass@gb
+    .5522±.0304 (docs/exp-comparison-level5.md "model family, size,
+    quantization comparison (qwen PRM)")
+- launcher: generate_mcts_cnt.py
+  config_root: mcts_cnt_prm800k
+  overrides:
+    llm: qwen_3b
+    prm: qwen_prm
+    data.level: 5
+  trials: 2
+  feeds: [level5-cnt-model-family-qwen]
+  group: cnt-mcts
+  recorded: true
+  priority: 2
+  note: level-5 qwen-3b fp16, cfg-0daecfca, run_id wns54ql3; pass@gb
+    .6978±.0281 (docs/exp-comparison-level5.md "model family, size,
+    quantization comparison (qwen PRM)")
+- launcher: generate_mcts_cnt.py
+  config_root: mcts_cnt_prm800k
+  overrides:
+    llm: qwen_math_1_5b
+    prm: qwen_prm
+    data.level: 5
+  trials: 2
+  feeds: [level5-cnt-model-family-qwen]
+  group: cnt-mcts
+  recorded: true
+  priority: 2
+  note: level-5 qwen-math-1.5b fp16, cfg-3eb8c1ee, run_id 43zjzxmj; pass@gb
+    .7575±.0262 (docs/exp-comparison-level5.md "model family, size,
+    quantization comparison (qwen PRM)")
+- launcher: generate_mcts_sem.py
+  config_root: mcts_sem_v02_prm800k
+  overrides:
+    llm: llama_1b
+    prm: qwen_prm
+    search.lam: 0.1
+    search.ds_alpha: 0.316
+    data.level: 5
+  trials: 2
+  feeds: [level5-sem-lam-dsalpha-llama1b]
+  group: sem-mcts
+  recorded: true
+  priority: 2
+  note: level-5 llama-1b w_eff=1 lam=0.1, cfg-9a5a5377, run_id incpahob;
+    pass@gb .2910±.0278 (docs/exp-comparison-level5.md "lam / ds_alpha
+    joint sweep (v02, llama-1b, step 1 done)")
+- launcher: generate_mcts_sem.py
+  config_root: mcts_sem_v02_prm800k
+  overrides:
+    llm: llama_1b
+    prm: qwen_prm
+    search.lam: 0.01
+    search.ds_alpha: 0.1
+    data.level: 5
+  trials: 2
+  feeds: [level5-sem-lam-dsalpha-llama1b]
+  group: sem-mcts
+  recorded: true
+  priority: 2
+  note: level-5 llama-1b w_eff=1 lam=0.01, cfg-8f81ed9d, run_id c7n1fujb;
+    pass@gb .2985±.0280 (docs/exp-comparison-level5.md "lam / ds_alpha
+    joint sweep (v02, llama-1b, step 1 done)")
+- launcher: generate_mcts_sem.py
+  config_root: mcts_sem_v02_prm800k
+  overrides:
+    llm: llama_1b
+    prm: qwen_prm
+    search.lam: 1.0
+    search.ds_alpha: 3.0
+    data.level: 5
+  trials: 2
+  feeds: [level5-sem-lam-dsalpha-llama1b]
+  group: sem-mcts
+  recorded: true
+  priority: 2
+  note: level-5 llama-1b w_eff=3 lam=1.0, cfg-370ebb8c, run_id 7oz77f9z;
+    pass@gb .3507±.0292 (docs/exp-comparison-level5.md "lam / ds_alpha
+    joint sweep (v02, llama-1b, step 1 done)")
+- launcher: generate_mcts_sem.py
+  config_root: mcts_sem_v02_prm800k
+  overrides:
+    llm: llama_1b
+    prm: qwen_prm
+    search.lam: 0.1
+    search.ds_alpha: 0.949
+    data.level: 5
+  trials: 2
+  feeds: [level5-sem-lam-dsalpha-llama1b]
+  group: sem-mcts
+  recorded: true
+  priority: 2
+  note: level-5 llama-1b w_eff=3 lam=0.1, cfg-eb5eaadc, run_id azzutwjt;
+    pass@gb .3433±.0291 (docs/exp-comparison-level5.md "lam / ds_alpha
+    joint sweep (v02, llama-1b, step 1 done)")
+- launcher: generate_mcts_sem.py
+  config_root: mcts_sem_v02_prm800k
+  overrides:
+    llm: llama_1b
+    prm: qwen_prm
+    search.lam: 0.01
+    search.ds_alpha: 0.3
+    data.level: 5
+  trials: 2
+  feeds: [level5-sem-lam-dsalpha-llama1b]
+  group: sem-mcts
+  recorded: true
+  priority: 2
+  note: level-5 llama-1b w_eff=3 lam=0.01, cfg-127e3f8f, run_id e4rzqcd8;
+    pass@gb .3321±.0288 (docs/exp-comparison-level5.md "lam / ds_alpha
+    joint sweep (v02, llama-1b, step 1 done)")
+- launcher: generate_mcts_sem.py
+  config_root: mcts_sem_v02_prm800k
+  overrides:
+    llm: llama_1b
+    prm: qwen_prm
+    search.lam: 1.0
+    search.ds_alpha: 10
+    data.level: 5
+  trials: 2
+  feeds: [level5-sem-lam-dsalpha-llama1b]
+  group: sem-mcts
+  recorded: true
+  priority: 2
+  note: level-5 llama-1b w_eff=10 lam=1.0 (step-1 cell), cfg-c89b788b,
+    run_id 1ba4zs5d; pass@gb .3582±.0293 (docs/exp-comparison-level5.md
+    "lam / ds_alpha joint sweep (v02, llama-1b, step 1 done)")
+- launcher: generate_mcts_sem.py
+  config_root: mcts_sem_v02_prm800k
+  overrides:
+    llm: llama_1b
+    prm: qwen_prm
+    search.lam: 0.1
+    search.ds_alpha: 3.16
+    data.level: 5
+  trials: 2
+  feeds: [level5-sem-lam-dsalpha-llama1b]
+  group: sem-mcts
+  recorded: true
+  priority: 2
+  note: level-5 llama-1b w_eff=10 lam=0.1, cfg-cb6a22b8, run_id yoid6063;
+    pass@gb .3433±.0291 (docs/exp-comparison-level5.md "lam / ds_alpha
+    joint sweep (v02, llama-1b, step 1 done)")
+- launcher: generate_mcts_sem.py
+  config_root: mcts_sem_v02_prm800k
+  overrides:
+    llm: llama_1b
+    prm: qwen_prm
+    search.lam: 0.01
+    search.ds_alpha: 1.0
+    data.level: 5
+  trials: 2
+  feeds: [level5-sem-lam-dsalpha-llama1b]
+  group: sem-mcts
+  recorded: true
+  priority: 2
+  note: level-5 llama-1b w_eff=10 lam=0.01 (step-1 cell), cfg-219d2c64,
+    run_id tdyxh9sr; pass@gb .3209±.0286 (docs/exp-comparison-level5.md
+    "lam / ds_alpha joint sweep (v02, llama-1b, step 1 done)")
+- launcher: generate_mcts_sem.py
+  config_root: mcts_sem_v02_prm800k
+  overrides:
+    llm: llama_1b
+    prm: qwen_prm
+    search.lam: 1.0
+    search.ds_alpha: 100
+    data.level: 5
+  trials: 2
+  feeds: [level5-sem-lam-dsalpha-llama1b]
+  group: sem-mcts
+  recorded: true
+  priority: 2
+  note: level-5 llama-1b w_eff=100 lam=1.0, cfg-6463962b, run_id ct714lg5;
+    pass@gb .3284±.0287 (docs/exp-comparison-level5.md "lam / ds_alpha
+    joint sweep (v02, llama-1b, step 1 done)")
+- launcher: generate_mcts_sem.py
+  config_root: mcts_sem_v02_prm800k
+  overrides:
+    llm: llama_1b
+    prm: qwen_prm
+    search.lam: 0.1
+    search.ds_alpha: 31.6
+    data.level: 5
+  trials: 2
+  feeds: [level5-sem-lam-dsalpha-llama1b]
+  group: sem-mcts
+  recorded: true
+  priority: 2
+  note: level-5 llama-1b w_eff=100 lam=0.1, cfg-cd1b91dd, run_id o9uydfa9;
+    pass@gb .2910±.0278 (docs/exp-comparison-level5.md "lam / ds_alpha
+    joint sweep (v02, llama-1b, step 1 done)")
+- launcher: generate_mcts_sem.py
+  config_root: mcts_sem_v02_prm800k
+  overrides:
+    llm: llama_1b
+    prm: qwen_prm
+    search.lam: 0.01
+    search.ds_alpha: 10
+    data.level: 5
+  trials: 2
+  feeds: [level5-sem-lam-dsalpha-llama1b]
+  group: sem-mcts
+  recorded: true
+  priority: 2
+  note: level-5 llama-1b w_eff=100 lam=0.01, cfg-e0ea7604, run_id 2sd0cen5;
+    pass@gb .3433±.0291 (docs/exp-comparison-level5.md "lam / ds_alpha
+    joint sweep (v02, llama-1b, step 1 done)")
+- launcher: generate_mcts_sem.py
+  config_root: mcts_sem_v02_prm800k
+  overrides:
+    llm: llama_3b
+    prm: qwen_prm
+    search.lam: 1.0
+    search.ds_alpha: 1
+    data.level: 5
+  trials: 2
+  feeds: [level5-sem-lam-dsalpha-llama3b]
+  group: sem-mcts
+  recorded: true
+  priority: 2
+  note: level-5 llama-3b w_eff=1 lam=1.0, cfg-d4d3ebd9, run_id t7nydxhi;
+    pass@gb .5336±.0305 (docs/exp-comparison-level5.md "lam / ds_alpha
+    joint sweep (v02, llama-3b, step 1 done)")
+- launcher: generate_mcts_sem.py
+  config_root: mcts_sem_v02_prm800k
+  overrides:
+    llm: llama_3b
+    prm: qwen_prm
+    search.lam: 0.1
+    search.ds_alpha: 0.316
+    data.level: 5
+  trials: 2
+  feeds: [level5-sem-lam-dsalpha-llama3b]
+  group: sem-mcts
+  recorded: true
+  priority: 2
+  note: level-5 llama-3b w_eff=1 lam=0.1, cfg-8633d244, run_id ehl59qs2;
+    pass@gb .5299±.0305 (docs/exp-comparison-level5.md "lam / ds_alpha
+    joint sweep (v02, llama-3b, step 1 done)")
+- launcher: generate_mcts_sem.py
+  config_root: mcts_sem_v02_prm800k
+  overrides:
+    llm: llama_3b
+    prm: qwen_prm
+    search.lam: 0.01
+    search.ds_alpha: 0.1
+    data.level: 5
+  trials: 2
+  feeds: [level5-sem-lam-dsalpha-llama3b]
+  group: sem-mcts
+  recorded: true
+  priority: 2
+  note: level-5 llama-3b w_eff=1 lam=0.01, cfg-d1086f9f, run_id 5tw616kl;
+    pass@gb .5261±.0306 (docs/exp-comparison-level5.md "lam / ds_alpha
+    joint sweep (v02, llama-3b, step 1 done)")
+- launcher: generate_mcts_sem.py
+  config_root: mcts_sem_v02_prm800k
+  overrides:
+    llm: llama_3b
+    prm: qwen_prm
+    search.lam: 1.0
+    search.ds_alpha: 3.0
+    data.level: 5
+  trials: 2
+  feeds: [level5-sem-lam-dsalpha-llama3b]
+  group: sem-mcts
+  recorded: true
+  priority: 2
+  note: level-5 llama-3b w_eff=3 lam=1.0, cfg-3978d10e, run_id 3o3aontb;
+    pass@gb .5336±.0305 (docs/exp-comparison-level5.md "lam / ds_alpha
+    joint sweep (v02, llama-3b, step 1 done)")
+- launcher: generate_mcts_sem.py
+  config_root: mcts_sem_v02_prm800k
+  overrides:
+    llm: llama_3b
+    prm: qwen_prm
+    search.lam: 0.1
+    search.ds_alpha: 0.949
+    data.level: 5
+  trials: 2
+  feeds: [level5-sem-lam-dsalpha-llama3b]
+  group: sem-mcts
+  recorded: true
+  priority: 2
+  note: level-5 llama-3b w_eff=3 lam=0.1, cfg-0d6680fe, run_id wkalmt6q;
+    pass@gb .5336±.0305 (docs/exp-comparison-level5.md "lam / ds_alpha
+    joint sweep (v02, llama-3b, step 1 done)")
+- launcher: generate_mcts_sem.py
+  config_root: mcts_sem_v02_prm800k
+  overrides:
+    llm: llama_3b
+    prm: qwen_prm
+    search.lam: 0.01
+    search.ds_alpha: 0.3
+    data.level: 5
+  trials: 2
+  feeds: [level5-sem-lam-dsalpha-llama3b]
+  group: sem-mcts
+  recorded: true
+  priority: 2
+  note: level-5 llama-3b w_eff=3 lam=0.01, cfg-d8bfa8d9, run_id efj0azle;
+    pass@gb .5261±.0306 (docs/exp-comparison-level5.md "lam / ds_alpha
+    joint sweep (v02, llama-3b, step 1 done)")
+- launcher: generate_mcts_sem.py
+  config_root: mcts_sem_v02_prm800k
+  overrides:
+    llm: llama_3b
+    prm: qwen_prm
+    search.lam: 1.0
+    search.ds_alpha: 10
+    data.level: 5
+  trials: 2
+  feeds: [level5-sem-lam-dsalpha-llama3b]
+  group: sem-mcts
+  recorded: true
+  priority: 2
+  note: level-5 llama-3b w_eff=10 lam=1.0 (step-1 cell), cfg-a3b6f8d8,
+    run_id ooplo2yt; pass@gb .5373±.0305 (docs/exp-comparison-level5.md
+    "lam / ds_alpha joint sweep (v02, llama-3b, step 1 done)")

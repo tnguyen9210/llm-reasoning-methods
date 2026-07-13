@@ -22,3 +22,6 @@ zlogs/
 # Claude Code: commit shared skills, ignore machine-local state
 .claude/settings.local.json
 .claude/scheduled_tasks.lock
+
+# Orchestrator: commit the queue/skill, ignore live debug output
+orchestration/cron_output.log
