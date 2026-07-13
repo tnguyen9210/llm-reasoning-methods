@@ -64,10 +64,10 @@ instead of one wide sparse grid.)
 
 ---
 
-## Cross-algorithm summary (qwen PRM)
+## Cross-algorithm summary (QwenPRM)
 > One table per model, one row per algorithm — pulled directly from
 > each algorithm's own "model family, size, quantization comparison
-> (qwen PRM)" table above/below (`cnt-mcts`, `sem-mcts`,
+> (QwenPRM)" table above/below (`cnt-mcts`, `sem-mcts`,
 > `cnt-mcts-bl-v01`, `cnt-mcts-bl-v02`, `cnt-mcts-bl-v03`,
 > `sem-mcts-bl-v01`). All rows fixed at b=80, bs-4, d-20,
 > agg_strategy=`last`, tmpl=model-family default (native for Qwen,
@@ -146,89 +146,6 @@ instead of one wide sparse grid.)
 
 ---
 
-## Algorithm name ↔ code mapping
-> Row labels are conceptual names; `method=` is what
-> `config_name()` emits into
-> `results/<dataset>/<method>--level-N--...--b-NNN--.../`.
-
-| Concept | Code `method=` | Core module | Status |
-|---|---|---|---|
-| cnt-mcts | `mcts_cnt_v01` | `mcts_cnt_search_v01_00_00` | runnable, no level-5 runs yet |
-| sem-mcts (PRM) | `mcts_sem_v02` | `mcts_sem_search_v02_00_00` | runnable, no level-5 runs yet |
-| sem-mcts (policy) | `mcts_sem_v01` | `mcts_sem_search_v01_00_00` | runnable, no level-5 runs yet |
-| cnt-mcts-bl v01 | `mcts_bl_cnt_v01` | `mcts_bl_cnt_search_v01_00_00` | runnable, no level-5 runs yet |
-| cnt-mcts-bl v02 | `mcts_bl_cnt_v02` | `mcts_bl_cnt_search_v02_00_00` | runnable, no level-5 runs yet |
-| cnt-mcts-bl v03 | `mcts_bl_cnt_v03` | `mcts_bl_cnt_search_v03_00_00` | runnable, no level-5 runs yet |
-| sem-mcts-bl | `mcts_bl_sem_v01` | `mcts_bl_sem_search_v01_00_00` | runnable, no level-5 runs yet |
-
-> Every sem-mcts row elsewhere in this doc is **v02** (PRM-sourced
-> embeddings) — v01 (policy-sourced, via a 2nd vLLM pooling
-> engine) is wired up on `ExpConfig` but has no runs yet. v01 vs.
-> v02 is a clean embedding-*source* ablation on the same
-> diversity algorithm; v02 additionally supports
-> `embeds_proj=none|sparse` (sparse = JL projection to 512-dim,
-> ~2.5x faster) and `cov_update=exact|sherman_morrison`.
-> `mcts_bl_cnt_v02` has a launcher + config now (previously
-> flat/unmigrated) but hasn't been run. `mcts_bl_cnt_v03`
-> (2026-07-09) is a sibling of v02 sharing the same knapsack
-> skeleton/cost mapping/affordability step, but replaces v02's
-> UCB confidence bonus with a fixed depth-preference function
-> (`depth_beta`/`depth_alpha`, no visit-count term) — see
-> `docs/decisions/depth-shaping-knapsack-bonus.md`. Smoke-tested
-> only so far, no real runs. `sem-mcts-bl`
-> (`mcts_bl_sem_v01`) is now implemented (2026-07-08) — best-
-> first frontier selection with sem's diversity-adjusted value,
-> run from `generate_mcts_sem.py`, `algo=mcts_bl_sem_v01` — but
-> has no runs yet.
-
-## Summary — results per (algorithm, model, budget)
-> The cross-model / cross-algorithm comparison: one row per
-> algorithm × model × budget, showing the metrics of its
-> **best overall config by pass@gb** — template, cpuct, and
-> any other tuning knob are all on equal footing here; this
-> row is whichever config in the tuning tables below scored
-> highest, not a template-specific pick (full per-knob detail
-> lives in those tables). Read down a model to compare
-> algorithms, or across models under one algorithm. Dataset =
-> PRM800K level-5, bs-4 d-20. Trials = scored trials.
-
-| algorithm | model | budget | trials | pass@gb | naive@gb | wei@gb | maj@gb |
-|---|---|---|---|---|---|---|---|
-| cnt-mcts | — | 80 | — | *planned (no level-5 runs yet)* | — | — | — |
-| sem-mcts (PRM) | — | 80 | — | *planned (no level-5 runs yet)* | — | — | — |
-| sem-mcts (policy) | — | 80 | — | *planned (no level-5 runs yet)* | — | — | — |
-| cnt-mcts-bl-v01 | — | 80 | — | *planned (no level-5 runs yet)* | — | — | — |
-| cnt-mcts-bl-v02 | — | 80 | — | *planned (no level-5 runs yet)* | — | — | — |
-| cnt-mcts-bl-v03 | — | 80 | — | *planned (no level-5 runs yet)* | — | — | — |
-| sem-mcts-bl | — | 80 | — | *planned (no level-5 runs yet)* | — | — | — |
-
-> Winning config per row (cpuct fixed at 2.0 throughout — no
-> sweep yet, so template is the only knob currently in play;
-> see tuning tables for the full grid): cnt-mcts — llama-1b
-> **custom** (.648 > native .566, the only model with both
-> scored); llama-3b **custom** (.744 > native .732, both
-> now scored); qwen-3b **native** (only scored);
-> qwen-math-1.5b **native** (custom is scored at .894 over 2
-> trials but template-bug — see tuning table; not a valid
-> winner yet).
-> `sem-mcts (policy)`/`cnt-mcts-bl-v01`/`sem-mcts-bl` — no runs yet.
->
-> **What the numbers say (budget 80):**
-> - Within cnt, model size/family dominates template: both
->   Qwen models hit .879 pass@gb, well above Llama
->   (.648/.744).
-> - **Custom now beats native on both Llama sizes** (1B:
->   .648 > .566; 3B: .744 > .732) — but the 3B Qwen custom
->   run (`mcts_cnt--level-5--Qwen2.5-Math-1.5B--tmpl-custom`)
->   is producing malformed/leaking completions from a
->   template bug (custom_chat_template is hardcoded to Llama
->   3.1's tokens and gets force-applied to Qwen's tokenizer
->   too — `llm-reasoning-mcts-exp-todo` Track 1), so the
->   "custom wins" trend may not hold once that's fixed and
->   Qwen's custom numbers are comparable.
-
----
-
 ## Tuning tables [gen_budget=80]
 > Hierarchy: `### <algorithm>` → `##### <model family + size>`
 > → a table whose rows are configs (template × cpuct …).
@@ -249,63 +166,8 @@ instead of one wide sparse grid.)
 > pre-fix runs, so that section is dropped here — `mcts_cnt_v01` is
 > the only cnt-mcts entry point for this level.)
 
-#### custom vs native template comparison
 
-| llm | tmpl | trials | status | pass@gb | naive@gb | wei@gb | maj@gb | hr/trial |
-|---|---|---|---|---|---|---|---|---|
-| llama-1b | custom | — | planned | — | — | — | — | — |
-| llama-1b | native | — | planned | — | — | — | — | — |
-
-| llm | tmpl | trials | status | pass@gb | naive@gb | wei@gb | maj@gb | hr/trial |
-|---|---|---|---|---|---|---|---|---|
-| llama-3b | custom | — | planned | — | — | — | — | — |
-| llama-3b | native | — | planned | — | — | — | — | — |
-
-| llm | tmpl | trials | status | pass@gb | naive@gb | wei@gb | maj@gb | hr/trial |
-|---|---|---|---|---|---|---|---|---|
-| qwen-3b | native | — | planned | — | — | — | — | — |
-
-| llm | tmpl | trials | status | pass@gb | naive@gb | wei@gb | maj@gb | hr/trial |
-|---|---|---|---|---|---|---|---|---|
-| qwen-math-1.5b | custom | — | planned | — | — | — | — | — |
-| qwen-math-1.5b | native | — | planned | — | — | — | — | — |
-
-| llm | tmpl | trials | status | pass@gb | naive@gb | wei@gb | maj@gb | hr/trial |
-|---|---|---|---|---|---|---|---|---|
-| qwen-7b gptq-int4 | custom | — | planned | — | — | — | — | — |
-| qwen-7b gptq-int4 | native | — | planned | — | — | — | — | — |
-
-#### prm_batch_size sweep
-
-| prm | prm_bs | trials | status | pass@gb | hr/trial | peak GPU mem (GB) |
-|---|---|---|---|---|---|---|
-| rlhflow | 1 | — | planned | — | — | — |
-| rlhflow | 2 | — | planned | — | — | — |
-| rlhflow | 4 | — | planned | — | — | — |
-| qwen | 1 | — | planned | — | — | — |
-| qwen | 4 | — | planned | — | — | — |
-
-#### rlhflow vs qwen PRM comparison
-
-| llm | prm | prmbs | trials | status | pass@gb | naive@gb | wei@gb | maj@gb | hr/trial |
-|---|---|---|---|---|---|---|---|---|---|
-| llama-1b | rlhflow | 1 | — | planned | — | — | — | — | — |
-| llama-1b | qwen | 1 | — | planned | — | — | — | — | — |
-| llama-3b | rlhflow | — | — | planned | — | — | — | — | — |
-| llama-3b | qwen | 1 | — | planned | — | — | — | — | — |
-| qwen-3b | rlhflow | — | — | planned | — | — | — | — | — |
-| qwen-3b | qwen | 1 | — | planned | — | — | — | — | — |
-| qwen-math-1.5b | rlhflow | — | — | planned | — | — | — | — | — |
-| qwen-math-1.5b | qwen | 1 | — | planned | — | — | — | — | — |
-
-#### enforce_eager comparison
-
-| llm | prm | enforce_eager | trials | status | pass@gb | naive@gb | wei@gb | maj@gb | hr/trial |
-|---|---|---|---|---|---|---|---|---|---|
-| llama-3b | rlhflow | False (default) | — | planned | — | — | — | — | — |
-| llama-3b | rlhflow | True | — | planned | — | — | — | — | — |
-
-#### model family, size, quantization comparison
+#### model family, size, quantization comparison (RLHFlowPRM)
 > **Fixed:** method=`mcts_cnt_v01`, prm=rlhflow, agg_strategy=
 > `last`, cpuct=2.0, bs-4, d-20, b=80, prm_batch_size=1 (default —
 > every row uses the same default, so fp16/GPTQ runtimes are
@@ -342,7 +204,7 @@ instead of one wide sparse grid.)
 > [findings/coding-findings/compute-stats-sympy-hang.md](findings/coding-findings/compute-stats-sympy-hang.md)
 > for the full write-up.
 
-#### model family, size, quantization comparison (qwen PRM)
+#### model family, size, quantization comparison (QwenPRM)
 > **Fixed:** method=`mcts_cnt_v01`, prm=qwen, agg_strategy=
 > `last`, cpuct=2.0, bs-4, d-20, b=80, prm_batch_size=1 (default,
 > matched across every row — same rationale as the rlhflow
@@ -378,45 +240,14 @@ instead of one wide sparse grid.)
 
 | llm | prm | agg_strategy | trials | status | pass@gb | naive@gb | wei@gb | maj@gb | hr/trial |
 |---|---|---|---|---|---|---|---|---|---|
-| qwen-3b | rlhflow | min | — | planned | — | — | — | — | — |
-| qwen-3b | rlhflow | prod | — | planned | — | — | — | — | — |
-| qwen-3b | rlhflow | last | — | planned | — | — | — | — | — |
 | qwen-3b | qwen | min | — | planned | — | — | — | — | — |
 | qwen-3b | qwen | prod | — | planned | — | — | — | — | — |
 | qwen-3b | qwen | last | — | planned | — | — | — | — | — |
-| qwen-math-1.5b | rlhflow | min | — | planned | — | — | — | — | — |
-| qwen-math-1.5b | rlhflow | prod | — | planned | — | — | — | — | — |
-| qwen-math-1.5b | rlhflow | last | — | planned | — | — | — | — | — |
 | qwen-math-1.5b | qwen | min | — | planned | — | — | — | — | — |
 | qwen-math-1.5b | qwen | prod | — | planned | — | — | — | — | — |
 | qwen-math-1.5b | qwen | last | — | planned | — | — | — | — | — |
 
-> **Analysis (both models).**
-> pass@gb is flat within ~1-2 SEM across all three strategies for
-> both PRMs and both models (qwen-math-1.5b rlhflow: .879/.891/
-> .910; qwen: .887/.871/.891 — qwen-3b rlhflow: .863/.848/.840;
-> qwen: .887/.840/.879) — at n=2 trials, no strategy wins
-> outright on the headline metric. naive@gb is where the two PRMs
-> diverge, but only **one direction clears noise**: under
-> rlhflow, `min` is clearly worst and replicates at both sizes
-> (qwen-math-1.5b: .684 vs `last`'s .770, an 8.6pt gap against a
-> ~2.9pt SEM; qwen-3b: .637 vs `prod`'s .703, a 6.6pt gap against
-> a ~3.0pt SEM — both outside 2 SEM). Under qwen, `min` numerically
-> edges out `last` at both sizes (qwen-math-1.5b: .813 vs .801,
-> +1.2pt; qwen-3b: .797 vs .746, +5.1pt) but neither gap clears
-> even 1 SEM (~2.5-2.7pt) — **not distinguishable from noise at
-> n=2 trials**, so "qwen favors min" is not yet a supportable
-> claim, only "rlhflow clearly penalizes min" is. hr/trial is flat
-> across strategies within each PRM (~3.7-4.0hr for qwen-3b vs
-> ~2.8-2.9hr for qwen-math-1.5b — model-size gap dominates over
-> any agg_strategy effect), as expected — aggregation is a
-> scoring-time choice, not a generation-time one.
-> **Limitations / follow-up:** n=2 trials only per cell; the
-> rlhflow `min`-penalty is the one finding here that clears noise
-> and replicates across model sizes. The qwen-side gap needs more
-> trials before claiming a direction at all.
-
-### sem-mcts
+### sem-mcts (v02)
 > **Runnable as of 2026-06-18** (rename + migration landed).
 > Two methods = two embedding sources: `mcts_sem_v01` (policy
 > embeds, 2nd vLLM engine) and `mcts_sem_v02` (PRM embeds, no
@@ -430,46 +261,8 @@ instead of one wide sparse grid.)
 > a ds_alpha/ds_beta-weighted diversity bonus on later visits;
 > see `core/mcts_sem_search_v02_00_00.py:select_child`).
 
-#### embeds_proj × cov_update sweep (v02)
-> **Compares:** a 2×2-per-model grid instead of two single-knob
-> sweeps. `embeds_proj`: `none` feeds the PRM's raw 4096-dim
-> hidden state into the covariance bonus; `sparse512` JL-projects
-> it to 512 first (~2.5× speed win, accuracy cost untested).
-> `cov_update`: `exact` recomputes V^-1 each step;
-> `sherman_morrison` (sm) updates it incrementally
-> (path-identical to exact, proven; the question here is whether
-> that holds at scale). pass@gb should match within noise across
-> cov_update (same path) but may differ across embeds_proj (lossy
-> projection); hr/trial is the throughput axis.
->
-> **Fixed:** method=`mcts_sem_v02` (proj/cov_update don't exist
-> on v01), bs-4, d-20, b=80.
->
-> ⚠️ both `none×sm` rows run at `prm_batch_size=2`, not the
-> sparse512×sm default-prmbs (prmbs-1) row — not directly
-> comparable on throughput. A separate n=1 `sparse512×sm` run at
-> `prm_batch_size=2` (W&B `ttsp0a0g`) was dropped from this table
-> — prm_bs doesn't affect accuracy per the prm_batch_size sweep
-> above, and n=1 added no comparable signal over the n=2 row.
->
-> **W&B:** none yet (no level-5 runs).
 
-| llm | proj | cov_update | trials | status | pass@gb | hr/trial |
-|---|---|---|---|---|---|---|
-| llama-1b | none | exact | — | planned | — | — |
-| llama-1b | none | sm (prmbs-2) | — | planned | — | — |
-| llama-1b | sparse512 | exact | — | planned | — | — |
-| llama-1b | sparse512 | sm | — | planned | — | — |
-| qwen-math-1.5b | none | exact | — | planned | — | — |
-| qwen-math-1.5b | none | sm (prmbs-2) | — | planned | — | — |
-| qwen-math-1.5b | sparse512 | exact | — | planned | — | — |
-| qwen-math-1.5b | sparse512 | sm | — | planned | — | — |
-
-> **Analysis.** No level-5 data yet — nothing to take away.
-> **Limitations / follow-up:** entire table planned; launch is
-> the level-4 counterpart's command plus `data.level=5`.
-
-#### embeds_strategy × scope sweep (v02, qwen PRM)
+#### embeds_strategy × scope sweep (QwenPRM)
 > **Compares:** how the PRM hidden state is pooled into the
 > covariance bonus — `embeds_strategy` (`last` = final-token
 > hidden state vs. `avg` = mean over tokens) crossed with
@@ -526,104 +319,13 @@ instead of one wide sparse grid.)
 | last | response | — | — | — | — | planned | — | — | — | — | — |
 | avg | response | — | — | — | — | planned | — | — | — | — | — |
 
-> **Analysis (updated 2026-07-09).** 4 of 5 `avg`×`full` cells now
-> scored (only the default point `lam=0.01,ds_alpha=100,w_eff=1000`
-> remains unrun). At matched `lam`/`w_eff`, `avg` vs. `last`:
-> `lam=0.01,w_eff=10`: .7617 vs .7500 (+.0117); `lam=0.01,w_eff=100`:
-> .7773 vs .7695 (+.0078); `lam=0.1,w_eff=10`: .7695 vs .7578
-> (+.0117) — three checkpoints show `avg` a hair above `last`, all
-> well inside 1 SEM (~.027), i.e. not distinguishable from noise at
-> n=2 trials. `lam=0.1,w_eff=100` is the outlier: `avg` .7539 vs.
-> `last` .7812 (**-.0273**, right at 1 SEM) — the one checkpoint
-> where the two pooling strategies visibly diverge; worth a repeat
-> run before treating it as a real effect rather than variance.
-> **Limitations / follow-up:** n=2 trials/cell throughout — the
-> `lam=0.1,w_eff=100` divergence is the one cell worth re-running at
-> higher n to confirm before drawing a conclusion. The default point
-> (`lam=0.01,ds_alpha=100,w_eff=1000`) is still `planned`. The two
-> `response` rows are blocked on PRM-source `response_start_idx`
-> support; queue them once the v02 core handles
-> `embeds_scope=response` for `embeds_source=prm`. A v01
-> (policy-embeds) version of this table would unblock the `response`
-> axis, since v01 supports it.
+> **Limitations / follow-up:** the two `response` rows are blocked
+> on PRM-source `response_start_idx` support; queue them once the
+> v02 core handles `embeds_scope=response` for `embeds_source=prm`.
+> A v01 (policy-embeds) version of this table would unblock the
+> `response` axis, since v01 supports it.
 
-#### ds_alpha sweep (v02)
-> **Compares:** `ds_alpha`, the diversity-bonus weight in
-> `q_val = ds_beta*score + ds_alpha*diversity` (scaled by
-> `sqrt(log(1 + parent_visits))` on subsequent visits; see
-> `core/mcts_sem_search_v01_00_00.py:_select_by_diversity`).
-> `ds_alpha=0` collapses selection to pure q-value (no diversity
-> bonus at any visit count) — a useful lower-bound check against
-> cnt-mcts-style greedy selection. Default is `100.0`
-> (`utils/configs.py:MCTSSemV01Config`).
->
-> **Fixed:** tmpl=model-family default, bs-4, d-20, b=80,
-> proj=sparse512, cov_update=sm, prm=rlhflow, ds_beta=1.0,
-> prm_batch_size=1.
->
-> ⚠️ All cells are 2 trials at prmbs-1 — treat as preliminary
-> (SEMs are wide at n=2), but the grid is now complete and
-> internally consistent (same proj=sparse512/cov=sm/prmbs-1
-> across every row).
->
-> **W&B:** none yet (no level-5 runs).
-
-| llm | ds_alpha | trials | status | pass@gb | naive@gb | wei@gb | maj@gb | hr/trial |
-|---|---|---|---|---|---|---|---|---|
-| llama-1b | 0 | — | planned | — | — | — | — | — |
-| llama-1b | 10 | — | planned | — | — | — | — | — |
-| llama-1b | 100 (default) | — | planned | — | — | — | — | — |
-| llama-1b | 1000 | — | planned | — | — | — | — | — |
-| llama-3b | 10 | — | planned | — | — | — | — | — |
-| llama-3b | 100 (default) | — | planned | — | — | — | — | — |
-| llama-3b | 1000 | — | planned | — | — | — | — | — |
-| qwen-math-1.5b | 0 | — | planned | — | — | — | — | — |
-| qwen-math-1.5b | 10 | — | planned | — | — | — | — | — |
-| qwen-math-1.5b | 100 (default) | — | planned | — | — | — | — | — |
-| qwen-math-1.5b | 1000 | — | planned | — | — | — | — | — |
-
-> **Analysis.** No level-5 data yet — nothing to take away.
-> **Limitations / follow-up:** entire table planned; launch is
-> the level-4 counterpart's command plus `data.level=5`.
-
-#### ds_alpha sweep (v02, qwen PRM)
-> **Compares:** the same `ds_alpha` diversity-bonus sweep as the
-> table above, but with `prm=qwen` (Qwen-Math-7B-PRM) as the
-> scoring model instead of `prm=rlhflow` (Llama-8B-PRM). Reading
-> this table against the rlhflow one isolates whether the
-> `ds_alpha` behavior (the "bonus helps, magnitude past ~10
-> doesn't" shape) is robust to the choice of PRM, or specific to
-> rlhflow scoring. `ds_alpha=0` is omitted here — the lower-bound
-> check is already covered in the rlhflow table; this sweep
-> focuses on the on-bonus range (10/100/1000).
->
-> **Fixed:** tmpl=model-family default, bs-4, d-20, b=80,
-> proj=sparse512, cov_update=sm, prm=qwen, ds_beta=1.0,
-> prm_batch_size=1.
->
-> ⚠️ 9/9 cells scored (2 trials each) as of 2026-07-07 — llama-3b
-> ds_alpha=1000 completed and is filled in below. `hr/trial` read
-> from each run's `timing_state.json` (`avg_time_per_trial_hr`).
->
-> **W&B:** none yet (no level-5 runs).
-
-| llm | ds_alpha | trials | status | pass@gb | naive@gb | wei@gb | maj@gb | hr/trial |
-|---|---|---|---|---|---|---|---|---|
-| llama-1b | 10 | — | planned | — | — | — | — | — |
-| llama-1b | 100 (default) | — | planned | — | — | — | — | — |
-| llama-1b | 1000 | — | planned | — | — | — | — | — |
-| llama-3b | 10 | — | planned | — | — | — | — | — |
-| llama-3b | 100 (default) | — | planned | — | — | — | — | — |
-| llama-3b | 1000 | — | planned | — | — | — | — | — |
-| qwen-math-1.5b | 10 | — | planned | — | — | — | — | — |
-| qwen-math-1.5b | 100 (default) | — | planned | — | — | — | — | — |
-| qwen-math-1.5b | 1000 | — | planned | — | — | — | — | — |
-
-> **Analysis.** No level-5 data yet — nothing to take away.
-> **Limitations / follow-up:** entire table planned; launch is
-> the level-4 counterpart's command plus `data.level=5`.
-
-#### lam / ds_alpha joint sweep (v02, llama-1b, step 1 done)
+#### lam / ds_alpha joint sweep (llama-1b)
 > **Compares:** whether `lam` (the ridge constant setting `V`'s
 > initial scale, `V_0 = lam*I`) and `ds_alpha` are truly redundant
 > along the derived invariant `w_eff = ds_alpha/sqrt(lam)`, or
@@ -700,7 +402,7 @@ instead of one wide sparse grid.)
 > **Limitations / follow-up:** n=2 trials is preliminary (wide
 > SEMs); `w_eff=0` and `w_eff=0.1, lam=1.0` still pending.
 
-#### lam / ds_alpha joint sweep (v02, llama-3b, step 1 done)
+#### lam / ds_alpha joint sweep (llama-3b)
 > **Compares:** the same `lam`/`ds_alpha` joint-tuning question as
 > the llama-1b table above, on llama-3b. **This is the table queued
 > to run first** — llama-3b has no existing `ds_alpha=0` baseline
@@ -746,27 +448,31 @@ instead of one wide sparse grid.)
 | llama-3b | qwen | 0.1 | 0.949 | 3.0 | 2 | scored | .5336<br>±.0305 | .4440<br>±.0304 | .4254<br>±.0303 | .4142<br>±.0301 | 6.60 |
 | llama-3b | qwen | 0.01 | 0.3 | 3.0 | 2 | scored | .5261<br>±.0306 | .4403<br>±.0304 | .4216<br>±.0302 | .4030<br>±.0300 | 6.52 |
 | llama-3b | qwen | **1.0** | **10** | **10** | 2 | scored | .5373<br>±.0305 | .4142<br>±.0301 | .3731<br>±.0296 | .3545<br>±.0293 | 6.98 |
-| llama-3b | qwen | 0.1 | 3.16 | 10 | — | planned | — | — | — | — | — |
-| llama-3b | qwen | **0.01** | **1.0** | **10** | — | planned | — | — | — | — | — |
-| llama-3b | qwen | 1.0 | 100 | 100 | — | planned | — | — | — | — | — |
-| llama-3b | qwen | 0.1 | 31.6 | 100 | — | planned | — | — | — | — | — |
-| llama-3b | qwen | 0.01 | 10 | 100 | — | planned | — | — | — | — | — |
-| llama-3b | qwen | 1.0 | 1000 | 1000 | — | planned | — | — | — | — | — |
-| llama-3b | qwen | 0.1 | 316.2 | 1000 | — | planned | — | — | — | — | — |
-| llama-3b | qwen | 0.01 | 100 | 1000 | — | planned | — | — | — | — | — |
+| llama-3b | qwen | 0.1 | 3.16 | 10 | 2 | scored | .5597<br>±.0304 | .4366<br>±.0304 | .4067<br>±.0301 | .3769<br>±.0297 | 6.95 |
+| llama-3b | qwen | **0.01** | **1.0** | **10** | 2 | scored | .5784<br>±.0302 | .4403<br>±.0304 | .4291<br>±.0303 | .3881<br>±.0298 | 6.93 |
+| llama-3b | qwen | 1.0 | 100 | 100 | 2 | scored | .5560<br>±.0304 | .4067<br>±.0301 | .3433<br>±.0291 | .3209<br>±.0286 | 6.98 |
+| llama-3b | qwen | 0.1 | 31.6 | 100 | 2 | scored | .5634<br>±.0304 | .4291<br>±.0303 | .3694<br>±.0295 | .3358<br>±.0289 | 7.06 |
+| llama-3b | qwen | 0.01 | 10 | 100 | 2 | scored | .5485<br>±.0305 | .4328<br>±.0303 | .3619<br>±.0294 | .3321<br>±.0288 | 6.99 |
+| llama-3b | qwen | 1.0 | 1000 | 1000 | 2 | scored | .5485<br>±.0305 | .4216<br>±.0302 | .3507<br>±.0292 | .3060<br>±.0282 | 6.92 |
+| llama-3b | qwen | 0.1 | 316.2 | 1000 | 2 | scored | .5410<br>±.0305 | .3843<br>±.0298 | .3321<br>±.0288 | .2985<br>±.0280 | 7.26 |
+| llama-3b | qwen | 0.01 | 100 | 1000 | 2 | scored | .5896<br>±.0301 | .4104<br>±.0301 | .3694<br>±.0295 | .3358<br>±.0289 | 7.00 |
 
-> **Analysis.** 7/21 cells scored (2 trials each). All three
+> **Analysis.** 15/21 cells scored (2 trials each). All three
 > `w_eff=1` and `w_eff=3` rows land tightly clustered (pass@gb
 > .526–.534) — no `lam`-dependence signal yet, consistent with the
-> llama-1b table. `w_eff=10, lam=1.0` (.5373) also close to the
-> `w_eff=1/3` cluster rather than showing a distinct drop; the
-> `lam=0.01` half of the step-1 pair is still running (queued for
-> a GPU), so the step-1 lam-comparison is not yet resolvable.
-> **Limitations / follow-up:** 14/21 cells still running or
-> queued — the `w_eff=10/100/1000` blocks and the `w_eff=0`
-> gap-closer are the remaining GPU-time-heavy tail.
+> llama-1b table. The `w_eff=10` step-1 pair is now fully
+> resolved: `lam=1.0` .5373 vs `lam=0.01` .5784 — a real gap this
+> time, favoring low `lam`. That direction holds through
+> `w_eff=100` (`lam=1.0` .5560 vs `lam=0.01` .5485, roughly flat)
+> and strengthens at `w_eff=1000` (`lam=1.0` .5485 vs `lam=0.01`
+> .5896, the widest lam-driven spread yet in this table) — tentative
+> read: as `w_eff` grows, lower `lam` increasingly outperforms.
+> **Limitations / follow-up:** 7/21 cells still running or
+> queued — the `w_eff=0.1/0.3` on-ramp rows (6) and the `w_eff=0`
+> gap-closer (1) are the remaining tail; only 2 trials/cell so the
+> lam-driven spreads above are suggestive, not conclusive.
 
-#### lam / ds_alpha joint sweep (v02, qwen-math-1.5b)
+#### lam / ds_alpha joint sweep (qwen-math-1.5b)
 > **Compares:** the same `lam`/`ds_alpha` joint-tuning question as
 > the llama-1b/llama-3b tables above, on qwen-math-1.5b. `w_eff ∈
 > {0.1, 0.3, 3.0}` fill in the on-ramp below `w_eff=1`, same
@@ -810,7 +516,7 @@ instead of one wide sparse grid.)
 > **Limitations / follow-up:** entire table planned; launch is
 > the level-4 counterpart's command plus `data.level=5`.
 
-#### lam / ds_alpha joint sweep (v02, qwen-7b gptq-int4)
+#### lam / ds_alpha joint sweep (qwen-7b gptq-int4)
 > **Compares:** the same `lam`/`ds_alpha` joint-tuning question as
 > the llama-1b/llama-3b/qwen-math-1.5b tables above, on qwen-7b
 > gptq-int4. `w_eff ∈ {0.1, 0.3, 3.0}` fill in the on-ramp below
@@ -854,7 +560,7 @@ instead of one wide sparse grid.)
 > **Limitations / follow-up:** entire table planned; launch is
 > the level-4 counterpart's command plus `data.level=5`.
 
-#### model family, size, quantization comparison
+#### model family, size, quantization comparison (RLHFlowPRM)
 > **Compares:** model family, size, and quantization jointly —
 > same shape as cnt-mcts's table above, for cross-method
 > comparability.
@@ -884,7 +590,7 @@ instead of one wide sparse grid.)
 > **Limitations / follow-up:** entire table planned; launch is
 > the level-4 counterpart's command plus `data.level=5`.
 
-#### model family, size, quantization comparison (qwen PRM)
+#### model family, size, quantization comparison (QwenPRM)
 > **Compares:** the same 7-model family/size/quantization sweep
 > as the sem table above, but scored with `prm=qwen`
 > (Qwen-Math-7B-PRM) instead of the default `prm=rlhflow`
@@ -921,41 +627,6 @@ instead of one wide sparse grid.)
 > **Limitations / follow-up:** entire table planned; launch is
 > the level-4 counterpart's command plus `data.level=5`.
 
-#### rlhflow vs qwen PRM comparison
-> **Compares:** `prm.kind` (Llama-8B-PRM "rlhflow" vs
-> Qwen-Math-7B-PRM "qwen") — the *scoring* model, not the policy
-> LLM. Scoring-side counterpart to the cnt-mcts table of the same
-> name. Unlike that table, all three models here (llama-1b,
-> llama-3b, qwen-math-1.5b) have a scored qwen-PRM run, since
-> v02's `embeds_source=prm` sweep already produced qwen-PRM
-> generations at every model.
->
-> **Fixed:** tmpl=model-family default, bs-4, d-20, b=80,
-> proj=sparse512, cov=sm, ds_alpha=100.0, ds_beta=1.0 (sem-mcts has
-> no `cpuct` — selection is q-value-only on first visit, then a
-> ds_alpha/ds_beta-weighted diversity bonus on later visits; see
-> `core/mcts_sem_search_v02_00_00.py:select_child`).
->
-> ⚠️ `prm_batch_size` differs by row (llama-1b/llama-3b rlhflow
-> rows use whatever prmbs the original v02 sweep ran at; every
-> other row, including qwen-math-1.5b rlhflow, is prmbs-1) —
-> doesn't affect accuracy per the prm_batch_size sweep (cnt-mcts,
-> above), so left as-is rather than re-run.
->
-> **W&B:** none yet (no level-5 runs).
-
-| llm | prm | prmbs | trials | status | pass@gb | naive@gb | wei@gb | maj@gb | hr/trial |
-|---|---|---|---|---|---|---|---|---|---|
-| llama-1b | rlhflow | 4 | — | planned | — | — | — | — | — |
-| llama-1b | qwen | 1 | — | planned | — | — | — | — | — |
-| llama-3b | rlhflow | 1 | — | planned | — | — | — | — | — |
-| llama-3b | qwen | 1 | — | planned | — | — | — | — | — |
-| qwen-math-1.5b | rlhflow | 1 | — | planned | — | — | — | — | — |
-| qwen-math-1.5b | qwen | 1 | — | planned | — | — | — | — | — |
-
-> **Analysis.** No level-5 data yet — nothing to take away.
-> **Limitations / follow-up:** entire table planned; launch is
-> the level-4 counterpart's command plus `data.level=5`.
 
 #### agg_strategy comparison (qwen-3b, qwen-math-1.5b)
 > **Compares:** `gen.agg_strategy` (`"min"` | `"prod"` | `"last"` —
@@ -974,15 +645,9 @@ instead of one wide sparse grid.)
 
 | llm | prm | agg_strategy | trials | status | pass@gb | naive@gb | wei@gb | maj@gb | hr/trial |
 |---|---|---|---|---|---|---|---|---|---|
-| qwen-3b | rlhflow | min | — | planned | — | — | — | — | — |
-| qwen-3b | rlhflow | prod | — | planned | — | — | — | — | — |
-| qwen-3b | rlhflow | last | — | planned | — | — | — | — | — |
 | qwen-3b | qwen | min | — | planned | — | — | — | — | — |
 | qwen-3b | qwen | prod | — | planned | — | — | — | — | — |
 | qwen-3b | qwen | last | — | planned | — | — | — | — | — |
-| qwen-math-1.5b | rlhflow | min | — | planned | — | — | — | — | — |
-| qwen-math-1.5b | rlhflow | prod | — | planned | — | — | — | — | — |
-| qwen-math-1.5b | rlhflow | last | — | planned | — | — | — | — | — |
 | qwen-math-1.5b | qwen | min | — | planned | — | — | — | — | — |
 | qwen-math-1.5b | qwen | prod | — | planned | — | — | — | — | — |
 | qwen-math-1.5b | qwen | last | — | planned | — | — | — | — | — |
@@ -1001,15 +666,9 @@ instead of one wide sparse grid.)
 
 | llm | prm | agg_strategy | trials | status | pass@gb | naive@gb | wei@gb | maj@gb | hr/trial |
 |---|---|---|---|---|---|---|---|---|---|
-| qwen-3b | rlhflow | min | — | planned | — | — | — | — | — |
-| qwen-3b | rlhflow | prod | — | planned | — | — | — | — | — |
-| qwen-3b | rlhflow | last | — | planned | — | — | — | — | — |
 | qwen-3b | qwen | min | — | planned | — | — | — | — | — |
 | qwen-3b | qwen | prod | — | planned | — | — | — | — | — |
 | qwen-3b | qwen | last | — | planned | — | — | — | — | — |
-| qwen-math-1.5b | rlhflow | min | — | planned | — | — | — | — | — |
-| qwen-math-1.5b | rlhflow | prod | — | planned | — | — | — | — | — |
-| qwen-math-1.5b | rlhflow | last | — | planned | — | — | — | — | — |
 | qwen-math-1.5b | qwen | min | — | planned | — | — | — | — | — |
 | qwen-math-1.5b | qwen | prod | — | planned | — | — | — | — | — |
 | qwen-math-1.5b | qwen | last | — | planned | — | — | — | — | — |
@@ -1029,15 +688,9 @@ instead of one wide sparse grid.)
 
 | llm | prm | agg_strategy | trials | status | pass@gb | naive@gb | wei@gb | maj@gb | hr/trial |
 |---|---|---|---|---|---|---|---|---|---|
-| qwen-3b | rlhflow | min | — | planned | — | — | — | — | — |
-| qwen-3b | rlhflow | prod | — | planned | — | — | — | — | — |
-| qwen-3b | rlhflow | last | — | planned | — | — | — | — | — |
 | qwen-3b | qwen | min | — | planned | — | — | — | — | — |
 | qwen-3b | qwen | prod | — | planned | — | — | — | — | — |
 | qwen-3b | qwen | last | — | planned | — | — | — | — | — |
-| qwen-math-1.5b | rlhflow | min | — | planned | — | — | — | — | — |
-| qwen-math-1.5b | rlhflow | prod | — | planned | — | — | — | — | — |
-| qwen-math-1.5b | rlhflow | last | — | planned | — | — | — | — | — |
 | qwen-math-1.5b | qwen | min | — | planned | — | — | — | — | — |
 | qwen-math-1.5b | qwen | prod | — | planned | — | — | — | — | — |
 | qwen-math-1.5b | qwen | last | — | planned | — | — | — | — | — |
@@ -1046,46 +699,6 @@ instead of one wide sparse grid.)
 > **Limitations / follow-up:** entire table planned; launch is
 > the level-4 counterpart's command plus `data.level=5`.
 
-#### LLM vs PRM embeds comparison
-> **Compares:** the diversity-embedding *source* — v01 sources
-> from the policy LLM (2nd vLLM engine); v02 sources from the
-> PRM. One table per model, at matched template, for the
-> head-to-head the project exists for.
->
-> **Fixed:** bs-4, d-20, b=80, ds_alpha/ds_beta/lam at v0{1,2}
-> defaults. llama-1b/llama-3b use tmpl=custom (match cnt-mcts at
-> those models); qwen-math-1.5b uses tmpl=native (cnt-mcts
-> Qwen-Math custom has the template bug — match the clean native
-> cnt row, 2 trials, for comparability).
->
-> ⚠️ **v01 has zero runs of any kind** (see
-> [[Algorithm name ↔ code mapping]] above) — every row in all
-> three tables below is `planned`. This comparison cannot be made
-> yet.
->
-> **W&B:** none yet (no level-5 runs).
-
-##### llama-1b
-| method | tmpl | trials | status | pass@gb |
-|---|---|---|---|---|
-| sem v01 (policy) | custom | — | planned | — |
-| sem v02 (PRM) | custom | — | planned | — |
-
-##### llama-3b
-| method | tmpl | trials | status | pass@gb |
-|---|---|---|---|---|
-| sem v01 (policy) | custom | — | planned | — |
-| sem v02 (PRM) | custom | — | planned | — |
-
-##### qwen-math-1.5b
-| method | tmpl | trials | status | pass@gb |
-|---|---|---|---|---|
-| sem v01 (policy) | native | — | planned | — |
-| sem v02 (PRM) | native | — | planned | — |
-
-> **Analysis.** No level-5 data yet — nothing to take away.
-> **Limitations / follow-up:** entire table planned; launch is
-> the level-4 counterpart's command plus `data.level=5`.
 
 ### cnt-mcts-bl-v01
 > knobs: template, cpuct (bs-4, d-20 fixed). method=`mcts_bl_cnt_v01`.
@@ -1097,7 +710,7 @@ instead of one wide sparse grid.)
 > `llm-reasoning-mcts-bl-exp-todo` on whether to keep it,
 > replace it, or remove it.)
 
-#### model family, size, quantization comparison (qwen PRM)
+#### model family, size, quantization comparison (QwenPRM)
 > **Compares:** model family, size, and quantization jointly —
 > same 7-model/quant grid as cnt-mcts's equivalent
 > table above, so a direct bl_cnt-vs-cnt read is possible once
@@ -1135,7 +748,7 @@ instead of one wide sparse grid.)
 > `docs/decisions/kube-affordability-restriction.md` for the
 > algorithm and its schedule/feasibility design.
 
-#### model family, size, quantization comparison (qwen PRM)
+#### model family, size, quantization comparison (QwenPRM)
 > **Compares:** model family, size, and quantization jointly —
 > same 7-model/quant grid as cnt-mcts-bl-v01's equivalent table
 > above, so a direct v01-vs-v02 (PUCT-vs-KUBE) read is possible
@@ -1176,7 +789,7 @@ instead of one wide sparse grid.)
 > depth fraction, not cost fraction, so it favors shallow nodes
 > as intended).
 
-#### model family, size, quantization comparison (qwen PRM)
+#### model family, size, quantization comparison (QwenPRM)
 > **Compares:** model family, size, and quantization jointly —
 > same 7-model/quant grid as cnt-mcts-bl-v01's equivalent table
 > above, so a direct bl_cnt-v01-vs-v03 (and, once v02 has runs,
@@ -1212,7 +825,7 @@ instead of one wide sparse grid.)
 > ("BL-Sem-MCTS") and `docs/decisions-log.md` (2026-07-08) for
 > the algorithm and its `ds_alpha_schedule` design.
 
-#### model family, size, quantization comparison (qwen PRM, w_eff=100)
+#### model family, size, quantization comparison (QwenPRM, w_eff=100)
 > **Compares:** model family, size, and quantization jointly —
 > same 7-model/quant grid as cnt-mcts-bl-v01's equivalent table
 > above, so a direct bl_sem-vs-bl_cnt read is possible once both
@@ -1243,7 +856,7 @@ instead of one wide sparse grid.)
 > **Limitations / follow-up:** entire table planned; launch is
 > the level-4 counterpart's command plus `data.level=5`.
 
-#### model family, size, quantization comparison (qwen PRM, w_eff=10)
+#### model family, size, quantization comparison (QwenPRM, w_eff=10)
 > **Compares:** same 7-model/quant grid as the `w_eff=100` table
 > above, at one order of magnitude lower effective diversity
 > weight — the two tables together give a first (coarse) read on
@@ -1282,7 +895,7 @@ instead of one wide sparse grid.)
 
 ### cnt-mcts
 
-#### model family comparison (b=320, qwen PRM)
+#### model family comparison (b=320, QwenPRM)
 > **Compares:** the same 7-model family/size/quantization sweep
 > as the `[gen_budget=80]` table above, but at
 > `search.gen_budget=320` (4× the b=80 budget) with
@@ -1318,9 +931,9 @@ instead of one wide sparse grid.)
 
 ### sem-mcts
 
-#### model family comparison (b=320, qwen PRM, lam=0.1, w_eff=10)
+#### model family comparison (b=320, QwenPRM, lam=0.1, w_eff=10)
 > **Compares:** the same 7-model family/size/quantization sweep
-> as the `[gen_budget=80]` sem-mcts (qwen PRM) table above, but
+> as the `[gen_budget=80]` sem-mcts (QwenPRM) table above, but
 > at `search.gen_budget=320` (4× the b=80 budget) and at
 > `lam=0.1, ds_alpha=3.16` (`w_eff = ds_alpha/sqrt(lam) = 10`)
 > instead of that table's default point (`lam=0.01,
@@ -1361,7 +974,7 @@ instead of one wide sparse grid.)
 > **Limitations / follow-up:** entire table planned; launch is
 > the level-4 counterpart's command plus `data.level=5`.
 
-#### model family comparison (b=320, qwen PRM, lam=0.1, w_eff=100)
+#### model family comparison (b=320, QwenPRM, lam=0.1, w_eff=100)
 > **Compares:** identical setup to the `w_eff=10` table above,
 > at `ds_alpha=31.6` instead of `3.16` (10× the diversity
 > weight, same `lam=0.1`) — the b=320 counterpart of the
@@ -1404,8 +1017,8 @@ instead of one wide sparse grid.)
 - Does sem-UCT beat cnt-UCT at matched budget? (needs
   sem-mcts runnable)
 - Does the BL frontier protocol beat phase-based walks?
-  (cnt-mcts-bl-v01 vs cnt-mcts @80, qwen PRM — no runs yet, see
-  `#### model family, size, quantization comparison (qwen PRM)`
+  (cnt-mcts-bl-v01 vs cnt-mcts @80, QwenPRM — no runs yet, see
+  `#### model family, size, quantization comparison (QwenPRM)`
   under `### cnt-mcts-bl-v01`)
 - Custom vs native template: consistent across algorithms?
 - cpuct sensitivity: same optimum across algorithms? (no
