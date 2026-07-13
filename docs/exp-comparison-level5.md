@@ -16,51 +16,35 @@ verdict — the views none of the per-algorithm tracks give.
 **This is a living log, not a milestone doc.** No `progress: N/M`;
 "done" isn't a state here.
 
-## Structure (why it's shaped this way)
+## Structure and use
 Two activities, two shapes:
 - **Tuning *within* an algorithm, at a given budget and
-  model** → small, algorithm-specific grid of its own knobs
-  (template, cpuct, embeds-strategy…). One
-  `## Tuning tables [gen_budget=N]` section per budget →
-  nested `### algorithm` → `##### model` (or an `llm` column
-  when several model tables share one comparison), so each
-  table is just the config rows for one (budget, algorithm,
-  model) cell. Different algorithms show different columns —
-  no forced shared schema.
+  model** → a `## Tuning tables [gen_budget=N]` section per
+  budget → nested `### algorithm` → `##### model` (or an `llm`
+  column when several model tables share one comparison), so
+  each table is just the config rows for one (budget,
+  algorithm, model) cell. Different algorithms show different
+  columns — no forced shared schema. `gen_budget`, algorithm,
+  and model are subsection levels, not columns, since model
+  size drives the GPU constraints and scaling behavior you're
+  tuning around; larger budgets need less tuning, so those
+  sections are sparser.
+  → **Plan/run:** add a config row here; log hypothesis +
+  follow-up in the Run log.
 - **Comparing *across* algorithms at a fixed budget** →
-  sparse, one row per algorithm × model. The **Summary**
-  table (your fixed columns), one row per algorithm × model
-  × budget.
-
-`gen_budget` is a top-level tuning-tables section; algorithm
-and model are *subsection* levels within it, not columns —
-model gets its own level (or column, for grouped comparisons)
-because its GPU constraints (cf. the trial-loop OOM) and
-scaling behavior are what you tune around. The
-within-algorithm scaling curve (80→160→320) is read by
-scanning one algorithm/model across the `gen_budget=N` tuning
-sections; the cross-algorithm-per-budget cut lives in the
-Summary. (Larger budgets need less tuning, so those sections
-will be sparser — the nesting keeps that asymmetry clean
-instead of one wide sparse grid.)
-
-## How to use
-- **Plan/run** → add a config row under the matching
-  `## Tuning tables [gen_budget=N]` → `### algorithm` →
-  `##### model`; log hypothesis + follow-up in the Run log.
-- **A config wins at a budget** → promote it to the Summary
-  as that (algorithm, model, budget)'s best config, linking
-  back to the tuning row.
-- **Metrics**: tuning tables carry pass@gb only (terse);
-  the Summary carries the full set (pass/naive/weighted/
-  maj@gb). Everything else (depth, ncomps, timing) stays in
-  W&B / the result dir, linked.
-- **Best-config rule:** best-scoring row *at that budget*,
-  same LLM/level/trials, picked across **all tuning knobs
-  jointly** (template, cpuct, …) — not "best template" with
-  other knobs held fixed. Don't promote a config from a
-  different budget or LLM into a Summary row — that breaks
-  the comparison.
+  the sparse **Summary** table, one row per algorithm × model
+  × budget, carrying the full metric set (pass/naive/weighted/
+  maj@gb) — tuning tables carry pass@gb only. Everything else
+  (depth, ncomps, timing) stays in W&B / the result dir,
+  linked. The within-algorithm scaling curve (80→160→320) is
+  read by scanning the `gen_budget=N` sections; the
+  cross-algorithm-per-budget cut lives here.
+  → **A config wins at a budget:** promote it to the Summary
+  as that (algorithm, model, budget)'s best config — picked
+  across **all tuning knobs jointly** (template, cpuct, …), not
+  "best template" with other knobs held fixed — linking back to
+  the tuning row. Don't promote a config from a different
+  budget or LLM into a Summary row; that breaks the comparison.
 
 ---
 
@@ -75,15 +59,13 @@ instead of one wide sparse grid.)
 > (the only cnt-mcts entry point at this level — see the
 > `### cnt-mcts` section above). `sem-mcts` row is `mcts_sem_v02` (PRM embeds),
 > `ds_alpha=100` (w_eff not applicable — that knob is bl_sem-specific).
-> `sem-mcts-bl-v01` row uses the `w_eff=100` table (more complete than
-> `w_eff=10` at time of writing: 5/7 vs. 4/7 cells scored); see that
+> `sem-mcts-bl-v01` row uses the `w_eff=100` table; see that
 > algorithm's own section for the `w_eff=10` comparison point.
 > `cnt-mcts-bl-v02` (Fractional KUBE) and `cnt-mcts-bl-v03`
-> (depth-shaping) are each filled at 5 of 7 models as of 2026-07-09
-> (see `docs/decisions/kube-bonus-schedule.md` /
+> (depth-shaping) — see `docs/decisions/kube-bonus-schedule.md` /
 > `kube-affordability-restriction.md` and
 > `docs/decisions/depth-shaping-knapsack-bonus.md` for the
-> algorithms).
+> algorithms.
 
 **llama-1b fp16**
 
@@ -156,23 +138,11 @@ instead of one wide sparse grid.)
 > (expected sparser — less tuning at high budget).
 
 ### cnt-mcts
-> method=`mcts_cnt_v01`, post-`PRM._split_steps` fix (2026-07-06 —
-> see
-> [findings/coding-findings/prm-step-split-trailing-separator.md](findings/coding-findings/prm-step-split-trailing-separator.md)
-> and `docs/decisions-log.md`), which affected `agg_strategy="last"`
-> scoring for non-terminal candidates in every table below. (The
-> level-4 doc also carries the older pre-fix `mcts_cnt` section for
-> comparison against already-scored data; level 5 has no scored
-> pre-fix runs, so that section is dropped here — `mcts_cnt_v01` is
-> the only cnt-mcts entry point for this level.)
-
 
 #### model family, size, quantization comparison (RLHFlowPRM)
 > **Fixed:** method=`mcts_cnt_v01`, prm=rlhflow, agg_strategy=
-> `last`, cpuct=2.0, bs-4, d-20, b=80, prm_batch_size=1 (default —
-> every row uses the same default, so fp16/GPTQ runtimes are
-> directly comparable), tmpl=model-family
-> default (native for Qwen, custom for Llama).
+> `last`, cpuct=2.0, bs-4, d-20, b=80, prm_batch_size=1,
+> tmpl=model-family default (native for Qwen, custom for Llama).
 >
 > **W&B:** none yet (no level-5 runs).
 
@@ -184,33 +154,12 @@ instead of one wide sparse grid.)
 | qwen-7b gptq-int4 | — | planned | — | — | — | — | — |
 | qwen-math-1.5b fp16 | — | planned | — | — | — | — | — |
 
-> **Fixed a real `compute_stats.py` hang while filling this row.**
-> `qwen-3b gptq-int4` (rlhflow) reproducibly hung — bisected to one
-> record (`test/precalculus/920.json`, a matrix-power question)
-> whose model completion boxed a whole equation instead of a value;
-> comparing it via `sympy` hung so hard that `signal.alarm`
-> (`utils/metrics.py::run_with_timeout`/`_grade_pred`) couldn't
-> interrupt it — signals only fire between Python bytecode
-> instructions, and the stuck call was in `sympy`'s C-level code.
-> Fixed by passing `timeout=True` to `grader2.math_equal` at both
-> call sites, routing symbolic comparison through `grader2.py`'s
-> already-existing (but previously unused by `metrics.py`) hard-kill
-> subprocess path (`call_with_timeout`/`symbolic_equal_process`,
-> `multiprocessing.Process.terminate()`) instead of in-process
-> comparison. Verified: the poison record now resolves in ~1-10s
-> instead of hanging forever; both trial files replayed clean
-> end-to-end; the real `compute_stats.py` invocation for this cell
-> now completes in ~1 minute. See
-> [findings/coding-findings/compute-stats-sympy-hang.md](findings/coding-findings/compute-stats-sympy-hang.md)
-> for the full write-up.
-
 #### model family, size, quantization comparison (QwenPRM)
 > **Fixed:** method=`mcts_cnt_v01`, prm=qwen, agg_strategy=
-> `last`, cpuct=2.0, bs-4, d-20, b=80, prm_batch_size=1 (default,
-> matched across every row — same rationale as the rlhflow
-> table above), tmpl=model-family default (native for Qwen,
-> custom for Llama). Companion to the rlhflow-PRM table above;
-> same 7 model/quant configs, different scoring PRM.
+> `last`, cpuct=2.0, bs-4, d-20, b=80, prm_batch_size=1,
+> tmpl=model-family default (native for Qwen, custom for Llama).
+> Companion to the rlhflow-PRM table above; same 7 model/quant
+> configs, different scoring PRM.
 >
 > **W&B:** llama-1b `05lky8bc`, llama-3b `grfdicia`, qwen-3b
 > `wns54ql3`, qwen-math-1.5b `43zjzxmj`.
@@ -227,13 +176,8 @@ instead of one wide sparse grid.)
 > **Compares:** `gen.agg_strategy` (`"min"` | `"prod"` | `"last"` —
 > `core/scoring.py::aggregate_scores`) — how a candidate's
 > per-step PRM scores collapse to one scalar. `"last"` is every
-> other table's fixed default; `"min"` and `"prod"` are
-> implemented but not yet reported anywhere in this doc. Prompted
-> by the `_split_steps` fix (`agg="last"`-specific bug, see
-> `### cnt-mcts` header above) — `"min"` in particular
-> is a useful cross-check since it's structurally less exposed to
-> that bug (a holistic bogus score rarely wins a min() over a
-> trajectory with a genuinely bad step).
+> other table's fixed default; `"min"` and `"prod"` aren't yet
+> reported anywhere in this doc.
 >
 > **Fixed:** method=`mcts_cnt_v01`, cpuct=2.0, bs-4, d-20, b=80,
 > tmpl=model-family default (native for both models here).
@@ -248,19 +192,6 @@ instead of one wide sparse grid.)
 | qwen-math-1.5b | qwen | last | — | planned | — | — | — | — | — |
 
 ### sem-mcts (v02)
-> **Runnable as of 2026-06-18** (rename + migration landed).
-> Two methods = two embedding sources: `mcts_sem_v01` (policy
-> embeds, 2nd vLLM engine) and `mcts_sem_v02` (PRM embeds, no
-> 2nd engine). knobs beyond template: ds_alpha, ds_beta,
-> lam, embeds_strategy (last/avg), embeds_normalize, and for
-> v02 embeds_proj (none/sparse, dim 512) + cov_update
-> (exact/sherman_morrison). Defaults in conf/search/mcts_sem_v0*.
-> Run v01 and v02 at matched model/level/trials vs. cnt-mcts —
-> the comparison the project exists for. sem-mcts has no
-> `cpuct` knob (selection is q-value-only on first visit, then
-> a ds_alpha/ds_beta-weighted diversity bonus on later visits;
-> see `core/mcts_sem_search_v02_00_00.py:select_child`).
-
 
 #### embeds_strategy × scope sweep (QwenPRM)
 > **Compares:** how the PRM hidden state is pooled into the
@@ -276,48 +207,25 @@ instead of one wide sparse grid.)
 > proj=sparse512, cov_update=sm, ds_beta=1.0.
 >
 > ⚠️ `embeds_scope=response` is **not supported on v02** (PRM
-> source): `_extract_embeds` computes `response_start_idx`
-> with the generator tokenizer, which doesn't apply to PRM
-> hidden states, so the core raises for that combination (see
-> `core/mcts_sem_search_v02_00_00.py:227`). The two `response`
-> rows are therefore **blocked** — shown for completeness but
-> not runnable until that fix lands; they are NOT queued in
-> `experiments.yaml`. `last`×`full` is the v02 default config
-> and is already done (it's the qwen-PRM llama-3b default run,
-> W&B `kbwjqw96`-family — same cfg as the ds_alpha=100 cell).
+> source) — the two `response` rows are **blocked**, 
+> shown for completeness. 
+> See [embeds-scope-design.md](decisions/embeds-scope-design.md) 
+> for the full explanation.
 >
 > **W&B:** none yet (no level-5 runs).
->
-> **`lam=0.1` addendum (2026-07-08):** two extra `w_eff` checkpoints
-> per strategy, at `lam=0.1` (`w_eff = ds_alpha/sqrt(lam)`, so
-> `w_eff=10 → ds_alpha=3.16`, `w_eff=100 → ds_alpha=31.6`). The
-> `last` rows at both checkpoints reuse already-scored cells from
-> the `lam / ds_alpha joint sweep (v02, llama-3b)` table (same
-> `lam=0.1, ds_alpha` pairs, same fixed config) — no new run. The
-> `avg` rows at both checkpoints are new; both now run and scored
-> (2026-07-08/09).
->
-> **`lam=0.01` addendum (2026-07-08):** same two `w_eff` checkpoints
-> at the table's default `lam=0.01` (`w_eff=10 → ds_alpha=1.0`,
-> `w_eff=100 → ds_alpha=10`). The `last` rows reuse already-scored
-> cells from the `lam / ds_alpha joint sweep (v02, llama-3b)` table
-> (`cfg-23f6c64a`, `cfg-baa5b18e`) — no new run. The `avg` rows are
-> new; both now run and scored (2026-07-08/09).
 
-| strategy | scope | lam | ds_alpha | w_eff | trials | status | pass@gb | naive@gb | wei@gb | maj@gb | hr/trial |
-|---|---|---|---|---|---|---|---|---|---|---|---|
-| last | full | 0.01 | 100 | 1000 | — | planned | — | — | — | — | — |
-| last | full | 0.01 | 1.0 | 10 | — | planned | — | — | — | — | — |
-| last | full | 0.01 | 10 | 100 | — | planned | — | — | — | — | — |
-| last | full | 0.1 | 3.16 | 10 | — | planned | — | — | — | — | — |
-| last | full | 0.1 | 31.6 | 100 | — | planned | — | — | — | — | — |
-| avg | full | 0.01 | 100 | 1000 | — | planned | — | — | — | — | — |
-| avg | full | 0.01 | 1.0 | 10 | — | planned | — | — | — | — | — |
-| avg | full | 0.01 | 10 | 100 | — | planned | — | — | — | — | — |
-| avg | full | 0.1 | 3.16 | 10 | — | planned | — | — | — | — | — |
-| avg | full | 0.1 | 31.6 | 100 | — | planned | — | — | — | — | — |
-| last | response | — | — | — | — | planned | — | — | — | — | — |
-| avg | response | — | — | — | — | planned | — | — | — | — | — |
+| llm | prm | strategy | scope | lam | ds_alpha | w_eff | trials | status | pass@gb | naive@gb | wei@gb | maj@gb | hr/trial |
+|---|---|---|---|---|---|---|---|---|---|---|---|---|---|
+| llama-3b | qwen | last | full | 0.01 | 1.0 | 10 | — | planned | — | — | — | — | — |
+| llama-3b | qwen | last | full | 0.01 | 10 | 100 | — | planned | — | — | — | — | — |
+| llama-3b | qwen | last | full | 0.1 | 3.16 | 10 | — | planned | — | — | — | — | — |
+| llama-3b | qwen | last | full | 0.1 | 31.6 | 100 | — | planned | — | — | — | — | — |
+| llama-3b | qwen | avg | full | 0.01 | 1.0 | 10 | — | planned | — | — | — | — | — |
+| llama-3b | qwen | avg | full | 0.01 | 10 | 100 | — | planned | — | — | — | — | — |
+| llama-3b | qwen | avg | full | 0.1 | 3.16 | 10 | — | planned | — | — | — | — | — |
+| llama-3b | qwen | avg | full | 0.1 | 31.6 | 100 | — | planned | — | — | — | — | — |
+| llama-3b | qwen | last | response | — | — | — | — | planned | — | — | — | — | — |
+| llama-3b | qwen | avg | response | — | — | — | — | planned | — | — | — | — | — |
 
 > **Limitations / follow-up:** the two `response` rows are blocked
 > on PRM-source `response_start_idx` support; queue them once the
@@ -326,48 +234,30 @@ instead of one wide sparse grid.)
 > `response` axis, since v01 supports it.
 
 #### lam / ds_alpha joint sweep (llama-1b)
-> **Compares:** whether `lam` (the ridge constant setting `V`'s
-> initial scale, `V_0 = lam*I`) and `ds_alpha` are truly redundant
-> along the derived invariant `w_eff = ds_alpha/sqrt(lam)`, or
-> whether `lam`'s second role (controlling how fast `V_inv` adapts
-> as embeddings accumulate) has an independent effect on pass@gb.
-> The two `ds_alpha sweep (v02)` tables above only ever tested
-> `lam=0.01`; this table holds `w_eff` fixed across rows and varies
-> `lam`/`ds_alpha` jointly, filling in `w_eff` values below the
-> confirmed plateau (`w_eff≥100`, i.e. `ds_alpha≥10` at `lam=0.01`)
-> that have never been tested. `w_eff ∈ {0.1, 0.3, 3.0}` extend the
-> grid below `w_eff=1` — the existing plateau finding only shows
-> *that* a switch happens somewhere in `(0, 100)`, not the shape of
-> the on-ramp; these log-spaced points (matching the existing
-> `{0.316, 3.16, 31.6}` spacing at `lam=0.1`) probe whether the
-> switch is sharp near `w_eff≈1` or a gradual ramp from `w_eff=0`.
+> **Compares:** whether `lam` and `ds_alpha` affect selection
+> primarily through the effective diversity weight
+> `w_eff = ds_alpha / sqrt(lam)`, or whether `lam` also has
+> an independent effect on pass@gb. `lam` sets the initial
+> ridge scale, `V_0 = lam * I`, and determines how quickly
+> `V_inv` changes as embeddings accumulate.
+>
+> For each `w_eff` checkpoint, the table varies `lam` and
+> `ds_alpha` jointly while keeping `w_eff` fixed. Stable
+> results within a checkpoint would support `w_eff` as the
+> main tuning variable. Differences would indicate a separate
+> adaptation-rate effect from `lam`.
+>
+> The `w_eff = 0` row provides the no-diversity baseline.
+> The `0.1` and `0.3` checkpoints probe the on-ramp below
+> `w_eff = 1`, while `3` fills the interval between `1` and
+> `10`. Together with the higher checkpoints, these values
+> test whether pass@gb rises gradually from zero, changes
+> sharply near `w_eff ≈ 1`, and eventually reaches the known
+> plateau near `w_eff = 100`.
 >
 > **Fixed:** tmpl=model-family default, bs-4, d-20, b=80,
 > proj=sparse512, cov_update=sm, prm=qwen, ds_beta=1.0,
-> prm_batch_size=1, llm=llama-1b. Queued *after* the llama-3b table
-> below, which is the one actually running first.
->
-> See
-> [tuning-semantic-score-weights-and-lambda.md](decisions/tuning-semantic-score-weights-and-lambda.md)
-> for the `w_eff` derivation and the full 5-step tuning procedure
-> this table is step 1/2 of. **Step 1** is the two bolded cells
-> below (`w_eff=10`, matched across `lam=1.0` and `lam=0.01`) — if
-> their pass@gb/naive@gb agree within SEM, `lam`'s independent role
-> is negligible and the remaining cells collapse to a 1D sweep over
-> `w_eff` at one fixed `lam` (skip the rest of the grid); if they
-> disagree outside SEM, run the full grid.
->
-> ✅ Step 1 done (2026-07-08); every `w_eff∈{1,3,10,100}` row across
-> all three `lam` values scored via `compute_stats.py` as of
-> 2026-07-08 — no `experiments.yaml` entries were added for these runs
-> (launched and generated directly; see below). Under `prm=qwen`,
-> llama-1b still has **no existing `ds_alpha=0` (w_eff=0) baseline**
-> (the qwen-PRM `ds_alpha sweep (v02, qwen PRM)` table above only has
-> 10/100/1000 for llama-1b; only the *rlhflow* table has a llama-1b
-> `ds_alpha=0` row) — that row is still not started, and neither are
-> the `w_eff∈{0.1,0.3}` on-ramp cells. The `w_eff=100, lam=0.01` row
-> reuses the already-scored llama-1b `ds_alpha=10` cell from the
-> qwen-PRM sweep table.
+> prm_batch_size=1, llm=llama-1b.
 
 | llm | prm | lam | ds_alpha | w_eff | trials | status | pass@gb | naive@gb | wei@gb | maj@gb | hr/trial |
 |---|---|---|---|---|---|---|---|---|---|---|---|
@@ -404,33 +294,11 @@ instead of one wide sparse grid.)
 
 #### lam / ds_alpha joint sweep (llama-3b)
 > **Compares:** the same `lam`/`ds_alpha` joint-tuning question as
-> the llama-1b table above, on llama-3b. **This is the table queued
-> to run first** — llama-3b has no existing `ds_alpha=0` baseline
-> under either PRM (closing that gap and running step 1 happen in
-> the same pass), and its result determines how much of the llama-1b
-> table (and any later cross-check per procedure step 5) is worth
-> running. `w_eff ∈ {0.1, 0.3, 3.0}` fill in the on-ramp below
-> `w_eff=1`, same rationale as the llama-1b table above.
+> the llama-1b table above, on llama-3b.
 >
 > **Fixed:** tmpl=model-family default, bs-4, d-20, b=80,
 > proj=sparse512, cov_update=sm, prm=qwen, ds_beta=1.0,
 > prm_batch_size=1, llm=llama-3b.
->
-> See
-> [tuning-semantic-score-weights-and-lambda.md](decisions/tuning-semantic-score-weights-and-lambda.md)
-> for the `w_eff` derivation and 5-step procedure. **Step 1** is the
-> two bolded cells below (`w_eff=10`); the `w_eff=0` cell closes the
-> pre-existing llama-3b `ds_alpha=0` gap (neither PRM had this row
-> before) and is independent of the step-1 outcome, so it's fine to
-> launch alongside step 1 rather than wait.
->
-> ✅ Step 1 done (2026-07-08) — both step-1 cells generated 2026-07-07
-> and scored via `compute_stats.py` 2026-07-08 (no `experiments.yaml`
-> entries added; launched and generated directly). The `w_eff=0` gap-
-> closer (`lam=0.01, ds_alpha=0`) is still not generated. Launch
-> command used: `generate_mcts_sem.py --config-name
-> mcts_sem_v02_prm800k llm=llama_3b prm=qwen_prm
-> search.lam=<lam> search.ds_alpha=<ds_alpha> search.ds_beta=1.0`.
 
 | llm | prm | lam | ds_alpha | w_eff | trials | status | pass@gb | naive@gb | wei@gb | maj@gb | hr/trial |
 |---|---|---|---|---|---|---|---|---|---|---|---|
@@ -474,21 +342,11 @@ instead of one wide sparse grid.)
 
 #### lam / ds_alpha joint sweep (qwen-math-1.5b)
 > **Compares:** the same `lam`/`ds_alpha` joint-tuning question as
-> the llama-1b/llama-3b tables above, on qwen-math-1.5b. `w_eff ∈
-> {0.1, 0.3, 3.0}` fill in the on-ramp below `w_eff=1`, same
-> rationale as those tables; `lam=0.01, ds_alpha=0` closes the
-> pre-existing qwen-math-1.5b `ds_alpha=0` gap under `prm=qwen`
-> (the `ds_alpha sweep (v02, qwen PRM)` table above only has
-> 10/100/1000 for this model).
+> the llama-1b/llama-3b tables above, on qwen-math-1.5b.
 >
 > **Fixed:** tmpl=model-family default (native), bs-4, d-20, b=80,
 > proj=sparse512, cov_update=sm, prm=qwen, ds_beta=1.0,
 > prm_batch_size=1, llm=qwen-math-1.5b.
->
-> See
-> [tuning-semantic-score-weights-and-lambda.md](decisions/tuning-semantic-score-weights-and-lambda.md)
-> for the `w_eff` derivation and 5-step procedure. **Step 1** is the
-> two bolded cells below (`w_eff=10`).
 
 | llm | prm | lam | ds_alpha | w_eff | trials | status | pass@gb | naive@gb | wei@gb | maj@gb | hr/trial |
 |---|---|---|---|---|---|---|---|---|---|---|---|
@@ -519,20 +377,11 @@ instead of one wide sparse grid.)
 #### lam / ds_alpha joint sweep (qwen-7b gptq-int4)
 > **Compares:** the same `lam`/`ds_alpha` joint-tuning question as
 > the llama-1b/llama-3b/qwen-math-1.5b tables above, on qwen-7b
-> gptq-int4. `w_eff ∈ {0.1, 0.3, 3.0}` fill in the on-ramp below
-> `w_eff=1`, same rationale as those tables; `lam=0.01, ds_alpha=0`
-> closes the pre-existing qwen-7b gptq-int4 `ds_alpha=0` gap under
-> `prm=qwen` (the `ds_alpha sweep (v02, qwen PRM)` table above has
-> no qwen-7b row at all).
+> gptq-int4.
 >
 > **Fixed:** tmpl=model-family default, bs-4, d-20, b=80,
 > proj=sparse512, cov_update=sm, prm=qwen, ds_beta=1.0,
 > prm_batch_size=1, llm=qwen-7b gptq-int4.
->
-> See
-> [tuning-semantic-score-weights-and-lambda.md](decisions/tuning-semantic-score-weights-and-lambda.md)
-> for the `w_eff` derivation and 5-step procedure. **Step 1** is the
-> two bolded cells below (`w_eff=10`).
 
 | llm | prm | lam | ds_alpha | w_eff | trials | status | pass@gb | naive@gb | wei@gb | maj@gb | hr/trial |
 |---|---|---|---|---|---|---|---|---|---|---|---|
@@ -567,14 +416,7 @@ instead of one wide sparse grid.)
 >
 > **Fixed:** bs-4, d-20, b=80, tmpl=model-family default,
 > method=`mcts_sem_v02` (PRM embeds), `embeds_proj=sparse512`,
-> `cov_update=sherman_morrison` (sm) — the project's default path
-> (path-identical to exact, proven, see decisions-log.md).
->
-> ⚠️ `prm_batch_size` differs by row (1 for llama-3b/gptq/qwen-3b/
-> qwen-3b-gptq-int4/qwen-7b-gptq-int4; 2 for llama-1b/
-> qwen-math-1.5b — no prmbs-1+rlhflow run exists yet for those
-> two), so hr/trial isn't perfectly apples-to-apples across every
-> row.
+> `cov_update=sherman_morrison` (sm).
 >
 > **W&B:** none yet (no level-5 runs).
 
@@ -591,27 +433,16 @@ instead of one wide sparse grid.)
 > the level-4 counterpart's command plus `data.level=5`.
 
 #### model family, size, quantization comparison (QwenPRM)
-> **Compares:** the same 7-model family/size/quantization sweep
-> as the sem table above, but scored with `prm=qwen`
+> **Compares:** the same 5-model family/size/quantization sweep
+> as the RLHFlowPRM table above, but scored with `prm=qwen`
 > (Qwen-Math-7B-PRM) instead of the default `prm=rlhflow`
-> (Llama-8B-PRM). Read against that table, it isolates whether
-> the model-family ranking (and the GPTQ accuracy/speed
-> tradeoff) is robust to the PRM, or specific to rlhflow
-> scoring.
+> (Llama-8B-PRM).
 >
 > **Fixed:** method=`mcts_sem_v02` (PRM embeds), prm=qwen,
 > bs-4, d-20, b=80, tmpl=model-family default (native for Qwen,
 > custom for Llama), `embeds_proj=sparse512`,
 > `cov_update=sherman_morrison` (sm), ds_alpha=100, ds_beta=1.0,
 > prm_batch_size=1.
->
-> ⚠️ All 7 cells scored as of 2026-07-07. **qwen-3b fp16**
-> (`cfg-77cae091`) and **qwen-math-1.5b fp16** (`cfg-7a4be169`)
-> are read from the pre-fix `--prefix-backup` copies (numbers
-> below), not the in-progress precautionary regen described in
-> `docs/decisions-log.md` (2026-07-07 entry) — that regen is expected
-> to reproduce these exact numbers (verified no-op at existing
-> hashes); re-check this row once it lands and is diffed.
 >
 > **W&B:** none yet (no level-5 runs).
 
@@ -632,12 +463,7 @@ instead of one wide sparse grid.)
 > **Compares:** `gen.agg_strategy` (`"min"` | `"prod"` | `"last"` —
 > `core/scoring.py::aggregate_scores`) — how a candidate's
 > per-step PRM scores collapse to one scalar. Scoring-side
-> counterpart to the cnt-mcts table of the same name. Note:
-> sem-mcts's `_generate_candidates` already strips the trailing
-> `"\n\n"` before calling `prm.score` (verified — the embed and
-> score paths share the same cleaned `candidate_texts`), so unlike
-> cnt-mcts this table isn't tied to the `_split_steps` fix; it's a
-> fresh sweep, not a rerun.
+> counterpart to the cnt-mcts table of the same name.
 >
 > **Fixed:** method=`mcts_sem_v02`, bs-4, d-20, b=80,
 > tmpl=model-family default (native for both models here),
@@ -701,27 +527,16 @@ instead of one wide sparse grid.)
 
 
 ### cnt-mcts-bl-v01
-> knobs: template, cpuct (bs-4, d-20 fixed). method=`mcts_bl_cnt_v01`.
-> No cpuct sweep yet — every row is the default 2.0. Same
-> selection rule as cnt-mcts: the Summary above promotes
-> whichever row scores highest on **pass@gb** across all
-> knobs jointly. (`num_phases` cap exists but isn't a tuned
-> knob yet — open backlog question in
-> `llm-reasoning-mcts-bl-exp-todo` on whether to keep it,
-> replace it, or remove it.)
 
 #### model family, size, quantization comparison (QwenPRM)
 > **Compares:** model family, size, and quantization jointly —
-> same 7-model/quant grid as cnt-mcts's equivalent
+> same 5-model/quant grid as cnt-mcts's equivalent
 > table above, so a direct bl_cnt-vs-cnt read is possible once
-> both are filled. All 7 cells are new for bl_cnt_v01 with the
-> qwen PRM.
+> both are filled.
 >
 > **Fixed:** method=`mcts_bl_cnt_v01`, prm=qwen, agg_strategy=
-> `last`, cpuct=2.0, bs-4, d-20, b=80, prm_batch_size=1 (the
-> new default — see `generate_mcts_bl_cnt.py`/
-> `BLMCTSCntConfig` alignment fix), tmpl=model-family default
-> (native for Qwen, custom for Llama).
+> `last`, cpuct=2.0, bs-4, d-20, b=80, prm_batch_size=1,
+> tmpl=model-family default (native for Qwen, custom for Llama).
 
 | llm | trials | status | pass@gb | naive@gb | wei@gb | maj@gb | hr/trial |
 |---|---|---|---|---|---|---|---|
@@ -736,31 +551,18 @@ instead of one wide sparse grid.)
 > the level-4 counterpart's command plus `data.level=5`.
 
 ### cnt-mcts-bl-v02
-> knobs: template, kube_c, kube_schedule, kube_affordable (bs-4,
-> d-20 fixed). method=`mcts_bl_cnt_v02`. No kube_c sweep yet —
-> every row is the default (kube_c=2.0, kube_schedule=parent,
-> kube_affordable=true). Same best-first frontier as
-> cnt-mcts-bl-v01, but selects by fractional-KUBE density (a UCB
-> confidence bonus divided by remaining cost) instead of PUCT,
-> following Tran-Thanh et al. arXiv:1204.1909 sec. 3.3. See
-> `docs/algorithms.md` ("BL-MCTS") and
-> `docs/decisions/kube-bonus-schedule.md` /
-> `docs/decisions/kube-affordability-restriction.md` for the
-> algorithm and its schedule/feasibility design.
 
 #### model family, size, quantization comparison (QwenPRM)
 > **Compares:** model family, size, and quantization jointly —
-> same 7-model/quant grid as cnt-mcts-bl-v01's equivalent table
+> same 5-model/quant grid as cnt-mcts-bl-v01's equivalent table
 > above, so a direct v01-vs-v02 (PUCT-vs-KUBE) read is possible
-> once filled. All 7 cells are new for bl_cnt_v02.
+> once filled.
 >
 > **Fixed:** method=`mcts_bl_cnt_v02`, prm=qwen, agg_strategy=
-> `last`, kube_c=2.0, kube_schedule=parent (default — UCT-style
-> local clock, matches v01's PUCT bonus so the v01-vs-v02
-> comparison isolates cost normalization; see
-> `docs/decisions/kube-bonus-schedule.md`), kube_affordable=true
-> (default), bs-4, d-20, b=80, prm_batch_size=1, tmpl=model-family
-> default (native for Qwen, custom for Llama).
+> `last`, kube_c=2.0, kube_schedule=parent, kube_affordable=true,
+> bs-4, d-20, b=80, prm_batch_size=1, tmpl=model-family default
+> (native for Qwen, custom for Llama). See
+> `docs/decisions/kube-bonus-schedule.md` for the schedule choice.
 
 | llm | trials | status | pass@gb | naive@gb | wei@gb | maj@gb | hr/trial |
 |---|---|---|---|---|---|---|---|
@@ -775,26 +577,13 @@ instead of one wide sparse grid.)
 > the level-4 counterpart's command plus `data.level=5`.
 
 ### cnt-mcts-bl-v03
-> knobs: template, depth_beta, depth_alpha (bs-4, d-20 fixed).
-> method=`mcts_bl_cnt_v03`. No depth_beta/depth_alpha sweep yet —
-> every row is the default (depth_beta=2.0, depth_alpha=1.0).
-> Sibling of cnt-mcts-bl-v01 (PUCT) and cnt-mcts-bl-v02
-> (Fractional KUBE): same best-first frontier / knapsack-style
-> selection and cost mapping as both, but the leaf-selection
-> bonus is a fixed depth-preference function instead of a
-> confidence bound — no visit-count/exploration term, no
-> bandit/regret guarantee. See `docs/algorithms.md` ("BL-MCTS")
-> and `docs/decisions/depth-shaping-knapsack-bonus.md` for the
-> algorithm and the sign-correction note (`f_a` is indexed on
-> depth fraction, not cost fraction, so it favors shallow nodes
-> as intended).
 
 #### model family, size, quantization comparison (QwenPRM)
 > **Compares:** model family, size, and quantization jointly —
-> same 7-model/quant grid as cnt-mcts-bl-v01's equivalent table
+> same 5-model/quant grid as cnt-mcts-bl-v01's equivalent table
 > above, so a direct bl_cnt-v01-vs-v03 (and, once v02 has runs,
 > a three-way PUCT/KUBE/depth-shaping) read is possible once
-> filled. All 7 cells are new for bl_cnt_v03.
+> filled.
 >
 > **Fixed:** method=`mcts_bl_cnt_v03`, prm=qwen, agg_strategy=
 > `last`, depth_beta=2.0, depth_alpha=1.0, kube_affordable=true
@@ -814,22 +603,12 @@ instead of one wide sparse grid.)
 > the level-4 counterpart's command plus `data.level=5`.
 
 ### sem-mcts-bl
-> knobs: model family/size/quantization (this table); lam,
-> ds_alpha, ds_alpha_schedule not yet swept — every row below
-> is the same fixed point. method=`mcts_bl_sem_v01`
-> (`core/mcts_bl_sem_search_v01_00_00.py`), best-first frontier
-> selection with the sem family's diversity-adjusted value
-> (frontier counterpart of sem-mcts v02, as cnt-mcts-bl-v01 is to
-> cnt-mcts). Run from `generate_mcts_sem.py`,
-> `algo=mcts_bl_sem_v01`. See `docs/algorithms.md`
-> ("BL-Sem-MCTS") and `docs/decisions-log.md` (2026-07-08) for
-> the algorithm and its `ds_alpha_schedule` design.
 
 #### model family, size, quantization comparison (QwenPRM, w_eff=100)
 > **Compares:** model family, size, and quantization jointly —
-> same 7-model/quant grid as cnt-mcts-bl-v01's equivalent table
+> same 5-model/quant grid as cnt-mcts-bl-v01's equivalent table
 > above, so a direct bl_sem-vs-bl_cnt read is possible once both
-> are filled. All 7 cells are new.
+> are filled.
 >
 > **Fixed:** method=`mcts_bl_sem_v01`, prm=qwen (both scoring
 > AND diversity embeds — `embeds_source=prm` is the schema
@@ -857,7 +636,7 @@ instead of one wide sparse grid.)
 > the level-4 counterpart's command plus `data.level=5`.
 
 #### model family, size, quantization comparison (QwenPRM, w_eff=10)
-> **Compares:** same 7-model/quant grid as the `w_eff=100` table
+> **Compares:** same 5-model/quant grid as the `w_eff=100` table
 > above, at one order of magnitude lower effective diversity
 > weight — the two tables together give a first (coarse) read on
 > whether the model-family ranking is sensitive to `w_eff` for
@@ -896,7 +675,7 @@ instead of one wide sparse grid.)
 ### cnt-mcts
 
 #### model family comparison (b=320, QwenPRM)
-> **Compares:** the same 7-model family/size/quantization sweep
+> **Compares:** the same 5-model family/size/quantization sweep
 > as the `[gen_budget=80]` table above, but at
 > `search.gen_budget=320` (4× the b=80 budget) with
 > `prm=qwen_prm` instead of the b=80 table's default
@@ -932,7 +711,7 @@ instead of one wide sparse grid.)
 ### sem-mcts
 
 #### model family comparison (b=320, QwenPRM, lam=0.1, w_eff=10)
-> **Compares:** the same 7-model family/size/quantization sweep
+> **Compares:** the same 5-model family/size/quantization sweep
 > as the `[gen_budget=80]` sem-mcts (QwenPRM) table above, but
 > at `search.gen_budget=320` (4× the b=80 budget) and at
 > `lam=0.1, ds_alpha=3.16` (`w_eff = ds_alpha/sqrt(lam) = 10`)
@@ -1006,29 +785,3 @@ instead of one wide sparse grid.)
 > the level-4 counterpart's command plus `data.level=5`.
 
 ---
-
-## Run log (newest first)
-> One dated block per run/comparison: hypothesis → result →
-> follow-up. Append-only; newest at top.
-
-*(empty — no level-5 runs yet)*
-
-## Standing comparison questions
-- Does sem-UCT beat cnt-UCT at matched budget? (needs
-  sem-mcts runnable)
-- Does the BL frontier protocol beat phase-based walks?
-  (cnt-mcts-bl-v01 vs cnt-mcts @80, QwenPRM — no runs yet, see
-  `#### model family, size, quantization comparison (QwenPRM)`
-  under `### cnt-mcts-bl-v01`)
-- Custom vs native template: consistent across algorithms?
-- cpuct sensitivity: same optimum across algorithms? (no
-  sweep for any algorithm yet)
-- Does the cnt/sem (or BL) gap hold as gen_budget grows
-  80→160→320? (the cross-budget question the Summary exists
-  to answer)
-
-## Links & connections
-- Findings: [findings/exp-findings/prm-batch-size-throughput-memory.md](../findings/exp-findings/prm-batch-size-throughput-memory.md) —
-  prm_bs sweep throughput/memory result + why the pass@gb
-  gap isn't statistically real
-- Findings index: [findings/README.md](../findings/README.md)
