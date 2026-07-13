@@ -2023,26 +2023,36 @@ instead of one wide sparse grid.)
 > default) except the diversity weight. **lam=0.1,
 > ds_alpha=31.6** (`w_eff=100`).
 >
-> ⚠️ Entirely `planned` — no runs yet. Same 4× wall-clock
-> expectation vs. b=80 as the `w_eff=10` table above.
+> ⚠️ 2 of 5 cells scored (2026-07-13): llama-1b and
+> qwen-math-1.5b. No result dir exists yet for llama-3b, qwen-3b,
+> or qwen-7b gptq-int4 at this exact `lam=0.1, ds_alpha=31.6,
+> b=320` point — those 3 remain genuinely unrun, not a recording
+> gap.
 >
-> **W&B:** none yet (no runs exist).
+> **W&B:** llama-1b `ufv99olb`, qwen-math-1.5b `a2i0we44`.
 
 | llm | prm | trials | status | pass@gb | naive@gb | wei@gb | maj@gb | hr/trial |
 |---|---|---|---|---|---|---|---|---|
-| llama-1b fp16 | qwen | — | planned | — | — | — | — | — |
+| llama-1b fp16 | qwen | 2 | scored | .7148<br>±.0283 | .5508<br>±.0311 | .4492<br>±.0311 | .4375<br>±.0311 | 16.18 |
 | llama-3b fp16 | qwen | — | planned | — | — | — | — | — |
 | qwen-3b fp16 | qwen | — | planned | — | — | — | — | — |
 | qwen-7b gptq-int4 | qwen | — | planned | — | — | — | — | — |
-| qwen-math-1.5b fp16 | qwen | — | planned | — | — | — | — | — |
+| qwen-math-1.5b fp16 | qwen | 2 | scored | .9453<br>±.0142 | .8242<br>±.0238 | .7773<br>±.0261 | .7773<br>±.0261 | 15.23 |
 
-> **Analysis.** No data yet — nothing to take away. See the
-> `w_eff=10` table above for the primary comparison question
-> once both are filled.
-> **Limitations / follow-up:** all 5 cells are planned. Same
-> caveats as the `w_eff=10` table above (three axes moved at
-> once vs. the b=80 default-point table; no matched b=80 row at
-> this exact point for sem-mcts).
+> **Analysis.** 2/5 cells scored. Comparing to the `w_eff=10`
+> table for the models with both points: llama-1b pass@gb drops
+> from .7383 (w_eff=10) to .7148 (w_eff=100) — a small decline
+> consistent with the `sem-mcts-bl` finding that `w_eff=10`
+> outperforms `w_eff=100`. qwen-math-1.5b is essentially flat
+> (.9375 → .9453, within SEM), suggesting this model's pass@gb is
+> already saturated and insensitive to the diversity weight at
+> b=320. Too few models filled to confirm the plateau pattern
+> generally.
+> **Limitations / follow-up:** llama-3b, qwen-3b, and qwen-7b
+> gptq-int4 still need a launch at this operating point. Same
+> caveats as the `w_eff=10` table above (three axes moved at once
+> vs. the b=80 default-point table; no matched b=80 row at this
+> exact point for sem-mcts).
 
 ---
 
