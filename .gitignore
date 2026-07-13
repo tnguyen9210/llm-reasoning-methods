@@ -23,5 +23,5 @@ zlogs/
 .claude/settings.local.json
 .claude/scheduled_tasks.lock
 
-# Orchestrator: commit the queue/skill, ignore live debug output
-orchestration/cron_output.log
+# Orchestrator: local-only, not pushed (Tuan's request 2026-07-13)
+orchestration/
