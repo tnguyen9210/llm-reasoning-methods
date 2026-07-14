@@ -162,14 +162,15 @@ Two activities, two shapes:
 > configs, different scoring PRM.
 >
 > **W&B:** llama-1b `05lky8bc`, llama-3b `grfdicia`, qwen-3b
-> `wns54ql3`, qwen-math-1.5b `43zjzxmj`.
+> `wns54ql3`, qwen-7b gptq-int4 `hrfcyqx4`, qwen-math-1.5b
+> `43zjzxmj`.
 
 | llm | trials | status | pass@gb | naive@gb | wei@gb | maj@gb | hr/trial |
 |---|---|---|---|---|---|---|---|
 | llama-1b fp16 | 2 | scored | .3619<br>±.0294 | .2724<br>±.0272 | .2127<br>±.0250 | .1903<br>±.0240 | 2.98 |
 | llama-3b fp16 | 2 | scored | .5522<br>±.0304 | .4291<br>±.0303 | .4104<br>±.0301 | .3619<br>±.0294 | 5.13 |
 | qwen-3b fp16 | 2 | scored | .6978<br>±.0281 | .5896<br>±.0301 | .5896<br>±.0301 | .5410<br>±.0305 | 4.63 |
-| qwen-7b gptq-int4 | — | planned | — | — | — | — | — |
+| qwen-7b gptq-int4 | 2 | scored | .7537<br>±.0264 | .6157<br>±.0298 | .5784<br>±.0302 | .5634<br>±.0304 | 4.19 |
 | qwen-math-1.5b fp16 | 2 | scored | .7575<br>±.0262 | .6418<br>±.0293 | .6455<br>±.0293 | .6269<br>±.0296 | 3.37 |
 
 #### agg_strategy comparison (qwen-3b, qwen-math-1.5b)
@@ -268,7 +269,7 @@ Two activities, two shapes:
 | llama-1b | qwen | 1.0 | 0.3 | 0.3 | — | planned | — | — | — | — | — |
 | llama-1b | qwen | 0.1 | 0.0949 | 0.3 | — | planned | — | — | — | — | — |
 | llama-1b | qwen | 0.01 | 0.03 | 0.3 | — | planned | — | — | — | — | — |
-| llama-1b | qwen | 1.0 | 1 | 1 | — | planned | — | — | — | — | — |
+| llama-1b | qwen | 1.0 | 1 | 1 | 2 | scored | .3358<br>±.0289 | .2649<br>±.0270 | .2575<br>±.0268 | .2313<br>±.0258 | 4.94 |
 | llama-1b | qwen | 0.1 | 0.316 | 1 | 2 | scored | .2910<br>±.0278 | .2537<br>±.0266 | .2239<br>±.0255 | .2052<br>±.0247 | 4.82 |
 | llama-1b | qwen | 0.01 | 0.1 | 1 | 2 | scored | .2985<br>±.0280 | .2425<br>±.0262 | .2313<br>±.0258 | .2127<br>±.0250 | 4.98 |
 | llama-1b | qwen | 1.0 | 3.0 | 3.0 | 2 | scored | .3507<br>±.0292 | .2799<br>±.0275 | .2500<br>±.0265 | .2239<br>±.0255 | 4.97 |
@@ -281,14 +282,17 @@ Two activities, two shapes:
 | llama-1b | qwen | 0.1 | 31.6 | 100 | 2 | scored | .2910<br>±.0278 | .2201<br>±.0254 | .1903<br>±.0240 | .1567<br>±.0222 | 4.82 |
 | llama-1b | qwen | 0.01 | 10 | 100 | 2 | scored | .3433<br>±.0291 | .2537<br>±.0266 | .1978<br>±.0244 | .1679<br>±.0229 | 4.85 |
 
-> **Analysis.** 11/18 cells scored (2 trials each); `lam=1.0,
+> **Analysis.** 12/19 cells scored (2 trials each); `lam=1.0,
 > ds_alpha=0.1` (w_eff=0.1) and the `ds_alpha=0` (w_eff=0)
 > gap-closer remain — the `w_eff=0.1` failure is a launch attempt
 > that died before `wandb.init` on 2026-07-11 and was re-queued.
 > Step 1 pair (`w_eff=10`, `lam=1.0` vs `lam=0.01`): pass@gb .3582
 > vs .3209 — within SEM (±.029/±.029), consistent with `lam`
 > having no strong independent effect at this level, matching the
-> level-4 finding.
+> level-4 finding. `w_eff=1` (`lam=1.0` .3358) sits above both
+> `lam=0.1`/`lam=0.01` rows at the same checkpoint (.2910/.2985),
+> a wider spread than the step-1 pair shows — worth another look
+> once the `w_eff=0.1` cell lands and fills out the low end.
 > **Limitations / follow-up:** n=2 trials is preliminary (wide
 > SEMs); `w_eff=0` and `w_eff=0.1, lam=1.0` still pending.
 
@@ -363,16 +367,25 @@ Two activities, two shapes:
 | qwen-math-1.5b | qwen | 1.0 | 3.0 | 3.0 | — | planned | — | — | — | — | — |
 | qwen-math-1.5b | qwen | 0.1 | 0.949 | 3.0 | — | planned | — | — | — | — | — |
 | qwen-math-1.5b | qwen | 0.01 | 0.3 | 3.0 | — | planned | — | — | — | — | — |
-| qwen-math-1.5b | qwen | **1.0** | **10** | **10** | — | planned | — | — | — | — | — |
-| qwen-math-1.5b | qwen | 0.1 | 3.16 | 10 | — | planned | — | — | — | — | — |
-| qwen-math-1.5b | qwen | **0.01** | **1.0** | **10** | — | planned | — | — | — | — | — |
-| qwen-math-1.5b | qwen | 1.0 | 100 | 100 | — | planned | — | — | — | — | — |
-| qwen-math-1.5b | qwen | 0.1 | 31.6 | 100 | — | planned | — | — | — | — | — |
-| qwen-math-1.5b | qwen | 0.01 | 10 | 100 | — | planned | — | — | — | — | — |
+| qwen-math-1.5b | qwen | **1.0** | **10** | **10** | 2 | scored | .7425<br>±.0268 | .6381<br>±.0294 | .6157<br>±.0298 | .6082<br>±.0299 | 4.85 |
+| qwen-math-1.5b | qwen | 0.1 | 3.16 | 10 | 2 | scored | .7015<br>±.0280 | .6119<br>±.0298 | .5970<br>±.0300 | .5821<br>±.0302 | 4.81 |
+| qwen-math-1.5b | qwen | **0.01** | **1.0** | **10** | 2 | scored | .7500<br>±.0265 | .6343<br>±.0295 | .6157<br>±.0298 | .6007<br>±.0300 | 4.79 |
+| qwen-math-1.5b | qwen | 1.0 | 100 | 100 | 2 | scored | .6866<br>±.0284 | .5970<br>±.0300 | .5709<br>±.0303 | .5410<br>±.0305 | 4.75 |
+| qwen-math-1.5b | qwen | 0.1 | 31.6 | 100 | 2 | scored | .7164<br>±.0276 | .6082<br>±.0299 | .6007<br>±.0300 | .5933<br>±.0301 | 4.76 |
+| qwen-math-1.5b | qwen | 0.01 | 10 | 100 | 2 | scored | .7164<br>±.0276 | .5896<br>±.0301 | .5746<br>±.0303 | .5597<br>±.0304 | 4.83 |
 
-> **Analysis.** No level-5 data yet — nothing to take away.
-> **Limitations / follow-up:** entire table planned; launch is
-> the level-4 counterpart's command plus `data.level=5`.
+> **Analysis.** 6/19 cells scored (2 trials each). Step-1 pair
+> (`w_eff=10`, `lam=1.0` vs `lam=0.01`): pass@gb .7425 vs .7500 —
+> within SEM (±.027/±.027), no strong `lam` effect at this
+> checkpoint. `lam=0.1` sits between them at .7015, noticeably
+> lower than both — the widest spread in this table so far,
+> though still within ~1 SEM of either endpoint. `w_eff=100`
+> shows a similar pattern (`lam=1.0` .6866 vs `lam=0.01`/`lam=0.1`
+> both ~.716) — `lam=1.0` trending lowest at both checkpoints.
+> **Limitations / follow-up:** 13/19 cells still unrun — the
+> `w_eff=1/3` blocks, the `w_eff=0.1/0.3` on-ramp, and the
+> `w_eff=0` gap-closer; only 2 trials/cell so the `lam=1.0`
+> low-trend above is suggestive, not conclusive.
 
 #### lam / ds_alpha joint sweep (qwen-7b gptq-int4)
 > **Compares:** the same `lam`/`ds_alpha` joint-tuning question as
@@ -398,16 +411,22 @@ Two activities, two shapes:
 | qwen-7b gptq-int4 | qwen | 1.0 | 3.0 | 3.0 | — | planned | — | — | — | — | — |
 | qwen-7b gptq-int4 | qwen | 0.1 | 0.949 | 3.0 | — | planned | — | — | — | — | — |
 | qwen-7b gptq-int4 | qwen | 0.01 | 0.3 | 3.0 | — | planned | — | — | — | — | — |
-| qwen-7b gptq-int4 | qwen | **1.0** | **10** | **10** | — | planned | — | — | — | — | — |
-| qwen-7b gptq-int4 | qwen | 0.1 | 3.16 | 10 | — | planned | — | — | — | — | — |
-| qwen-7b gptq-int4 | qwen | **0.01** | **1.0** | **10** | — | planned | — | — | — | — | — |
-| qwen-7b gptq-int4 | qwen | 1.0 | 100 | 100 | — | planned | — | — | — | — | — |
-| qwen-7b gptq-int4 | qwen | 0.1 | 31.6 | 100 | — | planned | — | — | — | — | — |
-| qwen-7b gptq-int4 | qwen | 0.01 | 10 | 100 | — | planned | — | — | — | — | — |
+| qwen-7b gptq-int4 | qwen | **1.0** | **10** | **10** | 2 | scored | .7575<br>±.0262 | .6007<br>±.0300 | .5858<br>±.0301 | .5672<br>±.0303 | 5.10 |
+| qwen-7b gptq-int4 | qwen | 0.1 | 3.16 | 10 | 2 | scored | .7761<br>±.0255 | .6231<br>±.0297 | .5933<br>±.0301 | .5858<br>±.0301 | 5.48 |
+| qwen-7b gptq-int4 | qwen | **0.01** | **1.0** | **10** | 2 | scored | .7687<br>±.0258 | .6231<br>±.0297 | .6194<br>±.0297 | .6119<br>±.0298 | 5.42 |
+| qwen-7b gptq-int4 | qwen | 1.0 | 100 | 100 | 2 | scored | .7761<br>±.0255 | .6157<br>±.0298 | .5299<br>±.0305 | .5299<br>±.0305 | 5.41 |
+| qwen-7b gptq-int4 | qwen | 0.1 | 31.6 | 100 | 2 | scored | .7799<br>±.0254 | .6119<br>±.0298 | .5560<br>±.0304 | .5336<br>±.0305 | 5.43 |
+| qwen-7b gptq-int4 | qwen | 0.01 | 10 | 100 | 2 | scored | .7873<br>±.0250 | .6045<br>±.0299 | .5634<br>±.0304 | .5634<br>±.0304 | 5.54 |
 
-> **Analysis.** No level-5 data yet — nothing to take away.
-> **Limitations / follow-up:** entire table planned; launch is
-> the level-4 counterpart's command plus `data.level=5`.
+> **Analysis.** 6/19 cells scored (2 trials each). Step-1 pair
+> (`w_eff=10`, `lam=1.0` vs `lam=0.01`): pass@gb .7575 vs .7687 —
+> within SEM (±.026/±.026), no strong `lam` effect. All 6 scored
+> cells cluster tightly on pass@gb (.7575–.7873) regardless of
+> `lam` or `w_eff`, the flattest spread of any model-family table
+> in this sweep so far.
+> **Limitations / follow-up:** 13/19 cells still unrun — the
+> `w_eff=1/3` blocks, the `w_eff=0.1/0.3` on-ramp, and the
+> `w_eff=0` gap-closer; only 2 trials/cell.
 
 #### model family, size, quantization comparison (RLHFlowPRM)
 > **Compares:** model family, size, and quantization jointly —

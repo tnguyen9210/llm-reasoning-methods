@@ -1816,6 +1816,20 @@
 - launcher: generate_mcts_cnt.py
   config_root: mcts_cnt_prm800k
   overrides:
+    llm: qwen_7b_gptq_int4
+    prm: qwen_prm
+    data.level: 5
+  trials: 2
+  feeds: [level5-cnt-model-family-qwen]
+  group: cnt-mcts
+  recorded: true
+  priority: 2
+  note: level-5 qwen-7b gptq-int4, cfg-9e1d3b8c, run_id hrfcyqx4; pass@gb
+    .7537±.0264 (docs/exp-comparison-level5.md "model family, size,
+    quantization comparison (qwen PRM)")
+- launcher: generate_mcts_cnt.py
+  config_root: mcts_cnt_prm800k
+  overrides:
     llm: qwen_math_1_5b
     prm: qwen_prm
     data.level: 5
@@ -2271,10 +2285,11 @@
   trials: 2
   feeds: [level5-sem-lam-dsalpha-qwen7bgptq]
   group: sem-mcts
-  recorded: false
+  recorded: true
   priority: 1
   note: level-5 qwen-7b-gptq w_eff=10 lam=0.01, cfg-2d955515, run_id
-    3l1vzy8m; 1/2 trials done as of 2026-07-13 audit.
+    3l1vzy8m; pass@gb .7687±.0258 (docs/exp-comparison-level5.md
+    "lam / ds_alpha joint sweep (qwen-7b gptq-int4)")
 - launcher: generate_mcts_sem.py
   config_root: mcts_sem_v02_prm800k
   overrides:
@@ -2287,10 +2302,11 @@
   trials: 2
   feeds: [level5-sem-lam-dsalpha-qwen7bgptq]
   group: sem-mcts
-  recorded: false
+  recorded: true
   priority: 1
   note: level-5 qwen-7b-gptq w_eff=100 lam=0.01, cfg-17c71cb9, run_id
-    es99bc0h; 1/2 trials done as of 2026-07-13 audit.
+    es99bc0h; pass@gb .7873±.0250 (docs/exp-comparison-level5.md
+    "lam / ds_alpha joint sweep (qwen-7b gptq-int4)")
 - launcher: generate_mcts_sem.py
   config_root: mcts_sem_v02_prm800k
   overrides:
@@ -2303,10 +2319,11 @@
   trials: 2
   feeds: [level5-sem-lam-dsalpha-qwen7bgptq]
   group: sem-mcts
-  recorded: false
+  recorded: true
   priority: 1
   note: level-5 qwen-7b-gptq w_eff=10 lam=0.1, cfg-1510dd5a, run_id
-    l1lgaa6a; 1/2 trials done as of 2026-07-13 audit.
+    l1lgaa6a; pass@gb .7761±.0255 (docs/exp-comparison-level5.md
+    "lam / ds_alpha joint sweep (qwen-7b gptq-int4)")
 - launcher: generate_mcts_sem.py
   config_root: mcts_sem_v02_prm800k
   overrides:
@@ -2319,10 +2336,11 @@
   trials: 2
   feeds: [level5-sem-lam-dsalpha-qwen7bgptq]
   group: sem-mcts
-  recorded: false
+  recorded: true
   priority: 1
   note: level-5 qwen-7b-gptq w_eff=100 lam=0.1, cfg-8cfa0e6f, run_id
-    b1ssdntk; 1/2 trials done as of 2026-07-13 audit.
+    b1ssdntk; pass@gb .7799±.0254 (docs/exp-comparison-level5.md
+    "lam / ds_alpha joint sweep (qwen-7b gptq-int4)")
 - launcher: generate_mcts_sem.py
   config_root: mcts_sem_v02_prm800k
   overrides:
@@ -2335,10 +2353,11 @@
   trials: 2
   feeds: [level5-sem-lam-dsalpha-qwen7bgptq]
   group: sem-mcts
-  recorded: false
+  recorded: true
   priority: 1
   note: level-5 qwen-7b-gptq w_eff=10 lam=1.0, cfg-4f118d41, run_id
-    9mocwqq1; 1/2 trials done as of 2026-07-13 audit.
+    9mocwqq1; pass@gb .7575±.0262 (docs/exp-comparison-level5.md
+    "lam / ds_alpha joint sweep (qwen-7b gptq-int4)")
 - launcher: generate_mcts_sem.py
   config_root: mcts_sem_v02_prm800k
   overrides:
@@ -2351,7 +2370,135 @@
   trials: 2
   feeds: [level5-sem-lam-dsalpha-qwen7bgptq]
   group: sem-mcts
-  recorded: false
+  recorded: true
   priority: 1
   note: level-5 qwen-7b-gptq w_eff=100 lam=1.0, cfg-9ae74311, run_id
-    0lscllmx; 1/2 trials done as of 2026-07-13 audit.
+    0lscllmx; pass@gb .7761±.0255 (docs/exp-comparison-level5.md
+    "lam / ds_alpha joint sweep (qwen-7b gptq-int4)")
+
+# --- level-5 qwen-math-1.5b lam/ds_alpha joint sweep (qwen PRM),
+#     w_eff=10/100 step-1 blocks -- found via 2026-07-13 queue
+#     audit: 6 result dirs done on disk/W&B, no ledger entry.
+- launcher: generate_mcts_sem.py
+  config_root: mcts_sem_v02_prm800k
+  overrides:
+    llm: qwen_math_1_5b
+    prm: qwen_prm
+    search.lam: 1.0
+    search.ds_alpha: 10
+    search.ds_beta: 1.0
+    data.level: 5
+  trials: 2
+  feeds: [level5-sem-lam-dsalpha-qwenmath15b]
+  group: sem-mcts
+  recorded: true
+  priority: 1
+  note: level-5 qwen-math-1.5b w_eff=10 lam=1.0, cfg-b425e187, run_id
+    rrnvx096; pass@gb .7425±.0268 (docs/exp-comparison-level5.md
+    "lam / ds_alpha joint sweep (qwen-math-1.5b)")
+- launcher: generate_mcts_sem.py
+  config_root: mcts_sem_v02_prm800k
+  overrides:
+    llm: qwen_math_1_5b
+    prm: qwen_prm
+    search.lam: 0.1
+    search.ds_alpha: 3.16
+    search.ds_beta: 1.0
+    data.level: 5
+  trials: 2
+  feeds: [level5-sem-lam-dsalpha-qwenmath15b]
+  group: sem-mcts
+  recorded: true
+  priority: 1
+  note: level-5 qwen-math-1.5b w_eff=10 lam=0.1, cfg-711204f7, run_id
+    by68fjij; pass@gb .7015±.0280 (docs/exp-comparison-level5.md
+    "lam / ds_alpha joint sweep (qwen-math-1.5b)")
+- launcher: generate_mcts_sem.py
+  config_root: mcts_sem_v02_prm800k
+  overrides:
+    llm: qwen_math_1_5b
+    prm: qwen_prm
+    search.lam: 0.01
+    search.ds_alpha: 1.0
+    search.ds_beta: 1.0
+    data.level: 5
+  trials: 2
+  feeds: [level5-sem-lam-dsalpha-qwenmath15b]
+  group: sem-mcts
+  recorded: true
+  priority: 1
+  note: level-5 qwen-math-1.5b w_eff=10 lam=0.01, cfg-35918e8b, run_id
+    bb6rpjps; pass@gb .7500±.0265 (docs/exp-comparison-level5.md
+    "lam / ds_alpha joint sweep (qwen-math-1.5b)")
+- launcher: generate_mcts_sem.py
+  config_root: mcts_sem_v02_prm800k
+  overrides:
+    llm: qwen_math_1_5b
+    prm: qwen_prm
+    search.lam: 1.0
+    search.ds_alpha: 100
+    search.ds_beta: 1.0
+    data.level: 5
+  trials: 2
+  feeds: [level5-sem-lam-dsalpha-qwenmath15b]
+  group: sem-mcts
+  recorded: true
+  priority: 1
+  note: level-5 qwen-math-1.5b w_eff=100 lam=1.0, cfg-b115065e, run_id
+    5o718fai; pass@gb .6866±.0284 (docs/exp-comparison-level5.md
+    "lam / ds_alpha joint sweep (qwen-math-1.5b)")
+- launcher: generate_mcts_sem.py
+  config_root: mcts_sem_v02_prm800k
+  overrides:
+    llm: qwen_math_1_5b
+    prm: qwen_prm
+    search.lam: 0.1
+    search.ds_alpha: 31.6
+    search.ds_beta: 1.0
+    data.level: 5
+  trials: 2
+  feeds: [level5-sem-lam-dsalpha-qwenmath15b]
+  group: sem-mcts
+  recorded: true
+  priority: 1
+  note: level-5 qwen-math-1.5b w_eff=100 lam=0.1, cfg-870767e1, run_id
+    a4phhmiu; pass@gb .7164±.0276 (docs/exp-comparison-level5.md
+    "lam / ds_alpha joint sweep (qwen-math-1.5b)")
+- launcher: generate_mcts_sem.py
+  config_root: mcts_sem_v02_prm800k
+  overrides:
+    llm: qwen_math_1_5b
+    prm: qwen_prm
+    search.lam: 0.01
+    search.ds_alpha: 10
+    search.ds_beta: 1.0
+    data.level: 5
+  trials: 2
+  feeds: [level5-sem-lam-dsalpha-qwenmath15b]
+  group: sem-mcts
+  recorded: true
+  priority: 1
+  note: level-5 qwen-math-1.5b w_eff=100 lam=0.01, cfg-68c5dc4e, run_id
+    scmsaxeq; pass@gb .7164±.0276 (docs/exp-comparison-level5.md
+    "lam / ds_alpha joint sweep (qwen-math-1.5b)")
+
+# --- level-5 llama-1b lam/ds_alpha joint sweep (qwen PRM), the
+#     w_eff=1, lam=1.0 cell -- found via 2026-07-13 spot check:
+#     result dir done on disk/W&B, no ledger entry.
+- launcher: generate_mcts_sem.py
+  config_root: mcts_sem_v02_prm800k
+  overrides:
+    llm: llama_1b
+    prm: qwen_prm
+    search.lam: 1.0
+    search.ds_alpha: 1
+    search.ds_beta: 1.0
+    data.level: 5
+  trials: 2
+  feeds: [level5-sem-lam-dsalpha-llama1b]
+  group: sem-mcts
+  recorded: true
+  priority: 1
+  note: level-5 llama-1b w_eff=1 lam=1.0, cfg-a27d7abc, run_id
+    w6vql8ws; pass@gb .3358±.0289 (docs/exp-comparison-level5.md
+    "lam / ds_alpha joint sweep (llama-1b)")
