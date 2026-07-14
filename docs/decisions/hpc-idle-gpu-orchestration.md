@@ -1,11 +1,17 @@
-# HPC idle-GPU experiment orchestration: 15-minute cycle over queue.yaml + auto-maintained jobs.yaml
+# HPC idle-GPU experiment orchestration: on-demand cycle over queue.yaml + auto-maintained jobs.yaml
 
-*2026-07-10 — design decided (details below settled with Tuan);
-not yet armed. Go-live = scheduling the cycle (see "Scheduler").*
+*2026-07-10 — design decided (details below settled with Tuan).
+2026-07-14 — reverted from recurring cron to manual-trigger only
+(see "Scheduler"); crontab entries removed, `cron_stop_at.txt`/
+`cron_output.log`/`run_cycle.sh` are now historical artifacts of
+the cron attempt, not part of the live design.*
 
-Records the design of the recurring orchestration system that
-launches queued experiments onto idle GPUs inside Tuan's existing
-SLURM allocations, and the choices made where the design forked.
+Records the design of the orchestration system that launches
+queued experiments onto idle GPUs inside Tuan's existing SLURM
+allocations, and the choices made where the design forked. Each
+cycle is now triggered manually by Tuan (via `/exp-orchestrate-cycle`
+or a request like "check job ids and run planned experiments"),
+not on a fixed schedule.
 
 ## Context
 
@@ -52,12 +58,14 @@ raw nodes, and SLURM job IDs replacing a hand-kept node list.
    there to keep a session off-limits (e.g. a notebook about to
    be used interactively, whose GPU would otherwise look idle
    and get claimed).
-3. **`log.md` — append-only cycle log.** One entry per cycle:
-   timestamp, pool refresh result, idle probes, (job, experiment)
-   pairs launched, skips and why. This is the audit trail for
-   "what happened overnight".
+No per-cycle log file (removed 2026-07-14 — Tuan found the
+written log unnecessary once cycles are manual and reported
+directly in the conversation). The cycle's outcome — pool refresh
+result, idle probes, (job, experiment) pairs launched, skips and
+why — is reported straight to Tuan in the triggering conversation
+instead of written to disk.
 
-## The cycle (every 15 minutes, aligned :00/:15/:30/:45)
+## The cycle (run manually, on Tuan's request)
 
 1. Refresh `jobs.yaml` from `squeue` (R-state GPU jobs, minus
    `exclude`).
@@ -71,12 +79,12 @@ raw nodes, and SLURM job IDs replacing a hand-kept node list.
    **Idle ⇔ utilization == 0% AND memory == 0 MiB** (an active
    vLLM run always holds GBs, so the memory clause alone rules
    out between-batch dips; a fresh launch occupies its GPU within
-   ~1–2 min, well inside the 15-min cadence).
+   ~1–2 min of being started).
 4. **Walltime guard**: skip a job whose remaining time
    (`squeue -j <id> -o %L`) is less than the candidate entry's
    `expected_hr` — launching a 6-hour run into a 2-hours-left
    allocation wastes the whole run. Entries without
-   `expected_hr` launch anyway, with a note in the log.
+   `expected_hr` launch anyway.
 5. Launch the next planned entry inside the chosen allocation:
    `cd <repo> && nohup srun --jobid=<id> --overlap <command>
    > /dev/null 2>&1 &` — stdout discarded because W&B is the
@@ -85,7 +93,7 @@ raw nodes, and SLURM job IDs replacing a hand-kept node list.
    the job id for the rest of this cycle (no double-booking a
    GPU whose new process hasn't loaded yet).
 7. Repeat 3–6 until no idle pooled GPUs remain or the queue has
-   no planned entries. Append the cycle's log entry either way.
+   no planned entries. Report the outcome to Tuan directly.
 
 ## Explicitly out of scope (Tuan's call, 2026-07-10)
 
@@ -109,23 +117,27 @@ raw nodes, and SLURM job IDs replacing a hand-kept node list.
 
 The per-cycle procedure is codified as the project skill
 [.claude/skills/exp-orchestrate-cycle/SKILL.md](../../.claude/skills/exp-orchestrate-cycle/SKILL.md)
-(user-invocable as `/exp-orchestrate-cycle`; also the contract a
-scheduled/headless invocation executes — one invocation = one
-cycle).
+(user-invocable as `/exp-orchestrate-cycle`, or any equivalent
+request — "run an orchestrator cycle", "check job ids and run
+planned experiments"). One invocation = one cycle. **Manual only,
+no recurring schedule.**
 
-Decided: **Claude-managed cron (`CronCreate`, `*/15 * * * *`) if
-it executes locally on this login node; otherwise system crontab
-running headless `claude -p "<run one orchestrator cycle>"`.**
-CronCreate's locality must be verified at go-live (its skill
-description says "cloud agents", and a cloud runner has no
-`squeue`/`srun` — if so, the crontab fallback applies). Either
-way the cycle survives closed editors and ended sessions, and
-`*/15` gives the exact :00/:15/:30/:45 alignment requested.
-A `/loop` in a live session was considered and rejected as the
-primary mechanism (dies with the session) but remains useful for
-a supervised first day. A no-Claude pure-Python cron script was
-considered (cheapest, most rigid) and rejected for now — Tuan
-wants the agent in the loop.
+**History (reverted 2026-07-14):** the original design ran a
+system crontab (`orchestration/run_cycle.sh`) firing
+`claude -p` every 45 min (a Claude-managed `CronCreate` at
+`*/15 * * * *` was the first choice, but was never actually armed
+this way — the crontab fallback was used instead). That crontab
+was disabled early via `cron_stop_at.txt`'s fixed stop timestamp
+and had been firing no-op cycles (logging "stop time reached" and
+exiting) for the rest of its life; Tuan asked 2026-07-14 to stop
+recurring entirely rather than re-arm it, so the crontab entries
+were removed outright. `run_cycle.sh`, `cron_stop_at.txt`, and
+`cron_output.log` are kept as historical record of that attempt,
+not part of the live flow — do not re-add crontab entries or
+treat those files as needing maintenance going forward. If
+`/loop`-style periodic triggering is wanted again later, that is
+a new decision to make explicitly with Tuan, not a default to
+restore.
 
 ## Assumptions / limits
 
@@ -136,8 +148,9 @@ wants the agent in the loop.
   is inherited from the login-node shell that `srun --overlap`
   is invoked from — the same environment this design was
   validated in.
-- Cycles are assumed non-overlapping (a cycle takes seconds to
-  a couple of minutes ≪ 15 min). If a cycle ever runs long, the
-  per-cycle claim set plus re-probing makes a concurrent cycle
-  mostly harmless, but no lock is taken — accepted risk at this
-  cadence.
+- Cycles are assumed non-overlapping (a cycle takes seconds to a
+  couple of minutes, and is now triggered manually rather than on
+  a fixed cadence, so overlap is unlikely in practice). If two
+  cycles ever did run concurrently, the per-cycle claim set plus
+  re-probing makes it mostly harmless, but no lock is taken —
+  accepted risk.

@@ -2,23 +2,26 @@
 
 Loaded when: Tuan wants one cycle of the idle-GPU experiment
 orchestrator executed — "run an orchestrator cycle", "fill the
-idle GPUs from the queue", `/exp-orchestrate-cycle` — or when a
-scheduled (cron / headless `claude -p`) invocation fires. Design:
+idle GPUs from the queue", "check job ids and run planned
+experiments", `/exp-orchestrate-cycle`. **Manual-trigger only —
+not on a cron/recurring schedule** (the prior cron setup was
+removed 2026-07-14; Tuan runs this himself whenever he has new
+allocations or wants the queue drained). Design:
 [docs/decisions/hpc-idle-gpu-orchestration.md](../../../docs/decisions/hpc-idle-gpu-orchestration.md).
 Sibling of `exp-smoke-test` / `exp-record-results` (this skill
 launches real experiments; those validate and record them).
 
 One invocation = ONE full cycle: refresh the allocation pool,
 probe for idle GPUs, launch as many `planned` queue entries as
-there are usable idle GPUs, mark them `running`, append one log
-entry. Then stop — no waiting, no watching.
+there are usable idle GPUs, mark them `running`. Then stop — no
+waiting, no watching.
 
 ---
 
 ## 0. What this skill is and is NOT
 
 **IS:** the mechanical drain-the-queue step. Launch onto idle
-GPUs, record what was launched, exit.
+GPUs, exit.
 
 **IS NOT:**
 - a monitor — it does NOT verify startup, detect stalls, check
@@ -41,7 +44,6 @@ GPUs, record what was launched, exit.
 - `jobs.yaml` — `exclude:` (list of job ids to never touch —
   PRESERVE across refreshes) and `jobs:` (auto-rewritten every
   cycle from squeue).
-- `log.md` — append-only; one block per cycle (see §7).
 
 Both yaml files are re-read fresh at the start of every cycle —
 never assume state from a previous cycle or from conversation
@@ -66,8 +68,8 @@ per job for the walltime guard in §5.
 ## 3. Read the queue
 
 Parse `orchestration/queue.yaml` (`yaml.safe_load`). Work list =
-entries with `status: planned`, in file order. If none: skip to
-§7 and log "queue empty".
+entries with `status: planned`, in file order. If none: tell
+Tuan "queue empty" and stop.
 
 ## 4. Probe for idle GPUs
 
@@ -83,7 +85,8 @@ srun --jobid=<id> --overlap nvidia-smi \
 the memory clause is the strong signal (an active vLLM run holds
 GBs even between batches; a momentary 0%-util dip alone is not
 idle). Any srun/probe error → treat that job as unavailable this
-cycle and note it in the log; do not retry the probe.
+cycle and mention it in your summary to Tuan; do not retry the
+probe.
 
 These are 1-GPU allocations, and the probe is cgroup-scoped — it
 reads only that job's GPU, even on shared nodes. One idle job =
@@ -96,7 +99,8 @@ entry has `expected_hr` and the job's remaining time (§2's `%L`)
 is less, **skip this job for this entry** (try the next idle
 job; the entry stays at the head of the work list). A 6-hour run
 in a 2-hours-left allocation wastes the whole run. Entries
-without `expected_hr` launch anywhere, with a log note.
+without `expected_hr` launch anywhere; mention it in your
+summary to Tuan.
 
 ## 6. Launch + mark
 
@@ -131,20 +135,12 @@ disown
 
 Repeat §4-§6 pairing until idle jobs or planned entries run out.
 
-## 7. Log the cycle
+## 7. Report + validate
 
-Append to `orchestration/log.md` (create if missing) — one block
-per cycle even when nothing launched:
-
-```
-## 2026-07-10 22:45
-- pool: 12 jobs (0 excluded, 2 pruned, 1 added)
-- idle: 22840187 (r5u35n1), 22828653 (r5u09n1)
-- launched: cnt-mcts-l5-llama3b -> 22840187 (pid 12345)
-- launched: cnt-mcts-l5-qwen3b -> 22828653 (pid 12346)
-- skipped: 22814237 — 3h left < expected_hr 8 (cnt-mcts-l5-qwen7b-gptq)
-- queue: 1 running -> 3 running, 13 planned remain
-```
+No log file — report the cycle's outcome directly to Tuan in
+your response: pool size (excluded/pruned/added), which jobs were
+idle, each (job, experiment) pair launched with its pid, any
+skips and why, and the queue's before/after planned count.
 
 After all edits: `yaml.safe_load` both yaml files to confirm
 they still parse. If either fails, fix before ending the turn —
@@ -155,14 +151,14 @@ a malformed queue breaks every future cycle.
 - **Half-edited queue**: if anything goes wrong mid-cycle, leave
   entries you launched marked `running` (they ARE running) and
   entries you didn't touch as `planned`; never roll back a
-  status for a process you started. Log what happened.
+  status for a process you started. Report what happened to Tuan.
 - **Launch command typo'd / dies instantly**: by design, not
   detected. It surfaces as a `running` entry with no result dir
   growth and a dead/short W&B run at verification time.
 - **Same experiment queued twice** (same composed config): both
   launches share a config hash → same result dir; the second
   run's trials resume/collide. Not this skill's job to dedupe —
-  flag in the log if two planned entries have byte-identical
+  flag it to Tuan if two planned entries have byte-identical
   commands, launch only the first.
 - **A GPU idles between cycles because its run finished**: fine
   — next cycle's probe sees 0%/0MiB and refills it. That is the
