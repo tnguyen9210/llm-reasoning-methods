@@ -661,6 +661,11 @@ def parse_ground_truth(example: Dict[str, Any], data_name):
         gt_ans = extract_answer(gt_cot, data_name)
     elif data_name == "gsm8k":
         gt_cot, gt_ans = example["answer"].split("####")
+    elif data_name == "aime":
+        # AIME ground truth is always a bare integer 0-999 (a hard
+        # competition rule, not just a formatting convention) --
+        # no boxed-expression parsing or #### split needed.
+        gt_cot, gt_ans = None, str(example["answer"])
     elif data_name == "svamp":
         gt_cot, gt_ans = example["Equation"], example["Answer"]
     elif data_name == "asdiv":

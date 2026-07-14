@@ -1,0 +1,8 @@
+# @package data
+# Dataset group → binds onto DataConfig.
+name: aime2025
+ds_dir: ${base_dir}/aime2025
+ds_split: train
+question_field: problem
+level: null
+grader_name: aime
