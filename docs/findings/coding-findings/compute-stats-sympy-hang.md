@@ -97,7 +97,7 @@ combination is simply the first one to have surfaced it.
 - `utils/grader2.py::math_equal`, `call_with_timeout`,
   `symbolic_equal_process` — the pre-existing hard-kill path this fix
   now actually uses.
-- [exp-comparison.md](../../exp-comparison.md) — cnt-mcts (updated)
+- [exp-comp-prm800k-level4.md](../../exp-comp-prm800k-level4.md) — cnt-mcts (updated)
   `model family, size, quantization comparison` (rlhflow) table,
   `qwen-3b gptq-int4` row — the cell this was discovered while
   filling in.

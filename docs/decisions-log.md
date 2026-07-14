@@ -14,6 +14,36 @@ scaffold, it also gets a standalone file in [decisions/](decisions/);
 the log entry then carries a one-line pointer to it rather than
 repeating the full writeup.
 
+## 2026-07-14 — Docs, Naming: exp-comparison*.md renamed to exp-comp-{dataname}-{level}.md
+
+**Context:** three tracking docs existed under inconsistent names —
+`exp-comparison.md` (PRM800K level-4, no dataset/level in the name),
+`exp-comparison-level5.md` (PRM800K level-5, no dataset in the name),
+`exp-comparison-gsm8k.md` (GSM8K, correctly dataset-named). Adding a
+fourth doc for AIME (itself split across `aime2024`/`aime2025`
+dataset names, per the same-day `data.name` decision) made the
+inconsistency untenable — there was no naming slot for "which
+dataset, which level" that generalized.
+
+**Decision:** rename all three to `exp-comp-{dataname}-{level}.md`,
+omitting `{level}` when the dataset has none:
+- `exp-comparison.md` → `docs/exp-comp-prm800k-level4.md`
+- `exp-comparison-level5.md` → `docs/exp-comp-prm800k-level5.md`
+- `exp-comparison-gsm8k.md` → `docs/exp-comp-gsm8k.md`
+
+All cross-references updated in the same commit: `experiments.yaml`
+`note:` fields (~90 occurrences), `status.py` comment, doc
+cross-links (`exp-comp-prm800k-level5.md`'s and `exp-comp-gsm8k.md`'s
+own provenance notes), `docs/benchmarks.md`, and both
+`.claude/skills/exp-new-comparison-table/SKILL.md` and
+`.claude/skills/exp-record-results/SKILL.md`. Historical mentions of
+the old names elsewhere in this log (e.g. the 2026-07-07 entry below)
+are left as-is — they describe what the file was called *at the
+time*, which this rename doesn't retroactively change.
+
+**Why:** future dataset additions (AIME and beyond) need a naming
+slot that scales without inventing a new ad hoc suffix each time.
+
 ## 2026-07-10 — Infra: idle-GPU experiment orchestration — 15-min cycle, queue.yaml + auto-refreshed jobs.yaml (designed, not yet armed)
 
 **Context/decision:** recurring system that launches queued

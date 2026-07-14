@@ -1,9 +1,11 @@
 # exp-record-results
 
 Loaded when: Tuan asks to record / transcribe finished runs
-into `docs/exp-comparison.md` — e.g. "record the done runs",
-"run the recorder", "update the tables with finished results",
-"what's done but not in the doc yet". Sibling of
+into one of the `docs/exp-comp-*.md` tracking docs (e.g.
+`exp-comp-prm800k-level4.md`, `exp-comp-prm800k-level5.md`,
+`exp-comp-gsm8k.md`) — e.g. "record the done runs", "run the
+recorder", "update the tables with finished results", "what's
+done but not in the doc yet". Sibling of
 `exp-new-comparison-table`.
 
 **Two entry points, same operation.** This fires whether Tuan
@@ -67,8 +69,10 @@ Three layers (vault guide
   one mutable field and the ONLY thing this skill writes there.
 - `status.py` — the reconciler; tells you what's
   `done --not-recorded` and emits per-cell verification.
-- `docs/exp-comparison.md` — the report; this skill writes
-  `done` numbers into its cells.
+- `docs/exp-comp-*.md` — the report layer (one file per
+  dataset/level, e.g. `exp-comp-prm800k-level4.md`,
+  `exp-comp-gsm8k.md`); this skill writes `done` numbers into
+  its cells.
 
 The `feeds` key on each entry names which doc cell(s) the
 number goes into. A run can feed several tables (one entry's
@@ -129,9 +133,10 @@ rather than "record the done runs," do this first, then
 continue with the numbered steps below:
 
 1. **Map the table → its `feeds` key.** Read the table's `####`
-   heading + its `**Limitations / follow-up:**` line in
-   `docs/exp-comparison.md` (it usually names the feeds key,
-   e.g. `sem-mcts/ds_alpha-sweep-qwen`). That key is the scope.
+   heading + its `**Limitations / follow-up:**` line in the
+   relevant `docs/exp-comp-*.md` doc (it usually names the
+   feeds key, e.g. `sem-mcts/ds_alpha-sweep-qwen`). That key is
+   the scope.
 2. **Check feeds coverage of EVERY cell — the gap ledger-first
    misses.** For each row of the table, confirm a ledger entry
    exists whose `feeds` includes this table's key. A cell can
@@ -164,8 +169,8 @@ continue with the numbered steps below:
    pass@gb/naive@gb/wei@gb/maj@gb doc columns).
 
 3. **Locate the target cell(s)** via the entry's `feeds`
-   key(s). Find the matching table + row in
-   `docs/exp-comparison.md`. One entry may feed several cells
+   key(s). Find the matching table + row in the relevant
+   `docs/exp-comp-*.md` doc. One entry may feed several cells
    (e.g. a default-config run that backs ds_alpha-sweep AND
    model-family AND prm-comparison) — handle each.
 
@@ -232,9 +237,9 @@ mismatches.
 
 ## 5. Append-only / write-discipline (do not violate)
 
-- The ONLY writes this skill makes: numbers into
-  `exp-comparison.md` cells, and `recorded: false → true` in
-  `experiments.yaml`. Nothing else in the ledger changes; no
+- The ONLY writes this skill makes: numbers into a
+  `docs/exp-comp-*.md` doc's cells, and `recorded: false → true`
+  in `experiments.yaml`. Nothing else in the ledger changes; no
   entries added, removed, or reordered.
 - `recorded` only flips `true` for a *cleanly written* entry.
   A mismatch leaves it `false` (so the run stays on the

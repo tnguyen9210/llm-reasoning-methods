@@ -5,7 +5,7 @@
 Findings from the sem-mcts (v02, PRM embeds) `ds_alpha`
 sweeps across LLM × PRM, 2 trials/cell — see the two
 `ds_alpha sweep (v02)` tuning tables (rlhflow and qwen PRM) in
-[exp-comparison.md](../../exp-comparison.md) for the raw
+[exp-comp-prm800k-level4.md](../../exp-comp-prm800k-level4.md) for the raw
 numbers.
 
 ## The question
@@ -132,7 +132,7 @@ such defense.
 
 ## Connections
 
-- [exp-comparison.md](../../exp-comparison.md) — the two
+- [exp-comp-prm800k-level4.md](../../exp-comp-prm800k-level4.md) — the two
   `ds_alpha sweep (v02)` tuning tables (rlhflow + qwen PRM)
   these numbers are recorded in.
 - [prm-batch-size-throughput-memory.md](prm-batch-size-throughput-memory.md)

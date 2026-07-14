@@ -241,9 +241,9 @@ _METHOD_TO_LAUNCHER = {
     "mcts_bl_sem_v01": "generate_mcts_sem.py",
 }
 
-# method= -> the `group:` label used by docs/exp-comparison.md's `###`
-# subsection names, so --group filtering and backfilled entries agree
-# with the doc. A plain `startswith("mcts_sem")` guess (the old
+# method= -> the `group:` label used by the docs/exp-comp-*.md files'
+# `###` subsection names, so --group filtering and backfilled entries
+# agree with the docs. A plain `startswith("mcts_sem")` guess (the old
 # behavior) misclassifies mcts_bl_sem_v01 as "sem-mcts" -- explicit
 # per-method mapping avoids that.
 _METHOD_TO_GROUP = {

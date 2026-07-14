@@ -186,6 +186,6 @@ the wall-clock cost (276.7s vs 153.5s) — the added cost comes
 from the diversity term's embedding + covariance-fold
 machinery on every selection. This is one question, one trial;
 not a substitute for the scored pass@gb comparisons in
-`docs/exp-comparison.md`, but a concrete illustration of why
+`docs/exp-comp-prm800k-level4.md`, but a concrete illustration of why
 bl_cnt's zero-completion issue motivated exploring bl_sem as an
 alternative frontier-selection strategy.

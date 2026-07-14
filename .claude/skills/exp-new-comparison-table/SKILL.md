@@ -1,14 +1,15 @@
 # exp-new-comparison-table
 
-Loaded when: Tuan asks to add a new comparison table to
-`docs/exp-comparison.md` and queue its experiments — e.g.
-"add a table comparing X across Y with prm=Z", "make a
-ds_alpha sweep table for qwen PRM", "add a b=320 model-family
-table".
+Loaded when: Tuan asks to add a new comparison table to one
+of the `docs/exp-comp-*.md` tracking docs (e.g.
+`exp-comp-prm800k-level4.md`, `exp-comp-prm800k-level5.md`,
+`exp-comp-gsm8k.md`) and queue its experiments — e.g. "add a
+table comparing X across Y with prm=Z", "make a ds_alpha
+sweep table for qwen PRM", "add a b=320 model-family table".
 
 This skill creates two artifacts from one intent statement:
-1. a `####` comparison table in `docs/exp-comparison.md`
-   (all cells `planned`), and
+1. a `####` comparison table in the relevant `docs/exp-comp-*.md`
+   doc (all cells `planned`), and
 2. the matching planned entries in `experiments.yaml`.
 
 It does **not** launch runs, and **does not commit** — it
@@ -51,9 +52,10 @@ Three layers (full design: vault guide
 - `status.py` — the reconciler. **One source of truth** for
   compose/hash/collision logic. This skill calls it; it does
   NOT reimplement composing or hashing.
-- `docs/exp-comparison.md` — the human report. Tables are a
-  *view*; numbers only land here from `done` runs (that's
-  the separate `exp-record-results` skill's job).
+- `docs/exp-comp-*.md` — the human report (one file per
+  dataset/level). Tables are a *view*; numbers only land here
+  from `done` runs (that's the separate `exp-record-results`
+  skill's job).
 
 The link between a ledger entry and a doc table is the
 `feeds` key — a loose string roughly tracking the doc

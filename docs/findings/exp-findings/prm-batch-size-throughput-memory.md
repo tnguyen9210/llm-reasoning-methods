@@ -5,7 +5,7 @@
 Findings from the cnt-mcts Llama-3.2-1B `prm_batch_size`
 sweep (rlhflow/qwen × prm_bs∈{1,4}, 2 trials each, scored
 2026-06-21) — see the tuning table in
-[exp-comparison.md](../../exp-comparison.md) for the
+[exp-comp-prm800k-level4.md](../../exp-comp-prm800k-level4.md) for the
 raw numbers.
 
 ## The question
@@ -99,5 +99,5 @@ characterize a batching knob.
 
 ## Connections
 
-- [exp-comparison.md](../../exp-comparison.md) —
+- [exp-comp-prm800k-level4.md](../../exp-comp-prm800k-level4.md) —
   tuning table this sweep lives in

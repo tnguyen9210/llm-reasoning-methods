@@ -9,7 +9,7 @@ One topic per file, split by kind:
 - **exp-findings/** — empirical results about the algorithms
   themselves (accuracy/throughput/memory tradeoffs across configs).
   Headline numbers live in W&B and the
-  [exp-comparison](../exp-comparison.md) tuning
+  [exp-comp-prm800k-level4.md](../exp-comp-prm800k-level4.md) tuning
   tables; notes here are write-ups that need more room than a table
   cell.
 

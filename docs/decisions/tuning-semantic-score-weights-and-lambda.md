@@ -99,7 +99,7 @@ change" — the informative single quantity is really the *ratio*
 `ds_alpha * sqrt(lam)` (the effective bonus weight once `lam`'s
 contribution is normalized out), not either raw value alone. No sweep
 over `lam` currently exists in the repo (`lam=0.01` fixed throughout
-[exp-comparison.md](../exp-comparison.md)'s sem-mcts tables) — this is
+[exp-comp-prm800k-level4.md](../exp-comp-prm800k-level4.md)'s sem-mcts tables) — this is
 an open gap, not a settled finding.
 
 ## ds_beta=1, tune only ds_alpha — lossless
@@ -110,7 +110,7 @@ only the *ratio* `ds_alpha/ds_beta` matters for which arm is selected.
 Fixing `ds_beta=1` and sweeping `ds_alpha` covers the full
 one-parameter family; nothing is lost by not also varying `ds_beta`.
 This is what the project's `ds_alpha sweep (v02)` tables in
-[exp-comparison.md](../exp-comparison.md) already do (`ds_beta=1.0`
+[exp-comp-prm800k-level4.md](../exp-comp-prm800k-level4.md) already do (`ds_beta=1.0`
 fixed throughout).
 
 ## Recommended sweep range (at lam=0.01, the only lam tested so far)

@@ -1,7 +1,7 @@
 # Experiment intent ledger. APPEND-ONLY: never delete or reorder
 # entries; status is COMPUTED by status.py, not stored here. The one
 # mutable field is `recorded` (has this done run's number been written
-# into docs/exp-comparison.md yet?). See status.py and the vault guide
+# into docs/exp-comp-prm800k-level4.md yet?). See status.py and the vault guide
 # research-coding-practices-guides/tracking-experiment-status.
 #
 # Per entry:
@@ -12,7 +12,7 @@
 #   feeds        comparison-table cell(s) this run populates (loose keys)
 #   group        algorithm family (cheap filter axis)
 #   priority     1 = launch now, 2 = later
-#   recorded     true once its number is in docs/exp-comparison.md
+#   recorded     true once its number is in docs/exp-comp-prm800k-level4.md
 #
 # Existing on-disk runs are seeded via `python status.py --backfill`,
 # not hand-written. Below are a few entries to exercise status.py.
@@ -48,7 +48,7 @@
 
 # --- backfilled from existing result dirs (status.py --backfill,
 #     all hash-verified). feeds left empty: fill when recording into
-#     docs/exp-comparison.md. NOTE: the llama_3b + enforce_eager=true
+#     docs/exp-comp-prm800k-level4.md. NOTE: the llama_3b + enforce_eager=true
 #     cnt entry below feeds ONLY the enforce_eager comparison table.
 - launcher: generate_mcts_sem.py
   config_root: mcts_sem_v02_prm800k
@@ -191,7 +191,7 @@
   run_id: e5ki98he
   from_dir: mcts_cnt--level-4--Llama3.2-3B--rlhflow--d-20--bs-4--b-080--cfg-e829c53b
 
-# --- planned (harvested from docs/exp-comparison.md planned cells,
+# --- planned (harvested from docs/exp-comp-prm800k-level4.md planned cells,
 #     all compose-verified, no hash collision with existing entries):
 #       * 3 proj/cov 'exact' cells (embeds_proj x cov_update sweep)
 #       * 3 v01-policy runs (LLM-vs-PRM-embeds; v01 has no runs yet)
@@ -753,7 +753,7 @@
   priority: 2
   note: backfilled from mcts_sem_v02--level-4--Llama3.2-3B--qwen--d-20--bs-4--b-080--cfg-26404f30
     (run_id k6mikl4b); scored 2026-07-09, pass@gb .7617±.0267 (already in
-    docs/exp-comparison.md embeds_strategy x scope sweep table)
+    docs/exp-comp-prm800k-level4.md embeds_strategy x scope sweep table)
 - launcher: generate_mcts_sem.py
   config_root: mcts_bl_sem_v01_prm800k
   overrides:
@@ -783,7 +783,7 @@
   priority: 2
   note: backfilled from mcts_sem_v02--level-4--Qwen2.5-3B--qwen--d-20--bs-4--b-080--cfg-2d349d4e
     (run_id okvdvw33); scored 2026-07-09, pass@gb .8750±.0207 (already in
-    docs/exp-comparison.md agg_strategy w_eff=100 table)
+    docs/exp-comp-prm800k-level4.md agg_strategy w_eff=100 table)
 - launcher: generate_mcts_cnt.py
   config_root: mcts_cnt_prm800k
   overrides:
@@ -863,7 +863,7 @@
   priority: 2
   note: backfilled from mcts_sem_v02--level-4--Llama3.2-1B--qwen--d-20--bs-4--b-080--cfg-3c7d4fe6
     (run_id ncl65erd); scored 2026-07-09, pass@gb .6172±.0304 (already in
-    docs/exp-comparison.md lam/ds_alpha joint sweep llama-1b table)
+    docs/exp-comp-prm800k-level4.md lam/ds_alpha joint sweep llama-1b table)
 - launcher: generate_mcts_sem.py
   config_root: mcts_sem_v02_prm800k
   overrides:
@@ -877,7 +877,7 @@
   priority: 2
   note: backfilled from mcts_sem_v02--level-4--Llama3.2-1B--qwen--d-20--bs-4--b-080--cfg-3e17aad4
     (run_id yc6jjwd0); scored 2026-07-09, pass@gb .6133±.0305 (already in
-    docs/exp-comparison.md lam/ds_alpha joint sweep llama-1b table)
+    docs/exp-comp-prm800k-level4.md lam/ds_alpha joint sweep llama-1b table)
 - launcher: generate_mcts_sem.py
   config_root: mcts_sem_v02_prm800k
   overrides:
@@ -974,7 +974,7 @@
   priority: 2
   note: backfilled from mcts_sem_v02--level-4--Qwen2.5-Math-1.5B--qwen--d-20--bs-4--b-080--cfg-57003287
     (run_id ikse2p6t); scored 2026-07-09, pass@gb .8672±.0213 (already in
-    docs/exp-comparison.md lam/ds_alpha joint sweep qwen-math-1.5b table)
+    docs/exp-comp-prm800k-level4.md lam/ds_alpha joint sweep qwen-math-1.5b table)
 - launcher: generate_mcts_sem.py
   config_root: mcts_sem_v02_prm800k
   overrides:
@@ -989,7 +989,7 @@
   priority: 2
   note: backfilled from mcts_sem_v02--level-4--Qwen2.5-Math-1.5B--qwen--d-20--bs-4--b-080--cfg-5a58a0b7
     (run_id gefqemm3); scored 2026-07-09, pass@gb .8867±.0198 (already in
-    docs/exp-comparison.md lam/ds_alpha joint sweep qwen-math-1.5b table)
+    docs/exp-comp-prm800k-level4.md lam/ds_alpha joint sweep qwen-math-1.5b table)
 - launcher: generate_mcts_sem.py
   config_root: mcts_sem_v02_prm800k
   overrides:
@@ -1005,7 +1005,7 @@
   priority: 2
   note: backfilled from mcts_sem_v02--level-4--Llama3.2-3B--qwen--d-20--bs-4--b-080--cfg-5b443cc1
     (run_id 3p9ltai4); scored 2026-07-09, pass@gb .7695±.0264 (already in
-    docs/exp-comparison.md embeds_strategy x scope sweep table)
+    docs/exp-comp-prm800k-level4.md embeds_strategy x scope sweep table)
 - launcher: generate_mcts_sem.py
   config_root: mcts_sem_v02_prm800k
   overrides:
@@ -1021,7 +1021,7 @@
   priority: 2
   note: backfilled from mcts_sem_v02--level-4--Llama3.2-3B--qwen--d-20--bs-4--b-080--cfg-6286b2ef
     (run_id 1h6cd3au); scored 2026-07-09, pass@gb .7539±.0270 (already in
-    docs/exp-comparison.md embeds_strategy x scope sweep table)
+    docs/exp-comp-prm800k-level4.md embeds_strategy x scope sweep table)
 - launcher: generate_mcts_sem.py
   config_root: mcts_sem_v02_prm800k
   overrides:
@@ -1124,7 +1124,7 @@
   priority: 2
   note: backfilled from mcts_sem_v02--level-4--Llama3.2-1B--qwen--d-20--bs-4--b-080--cfg-953fff79
     (run_id 5wwrv272); scored 2026-07-09, pass@gb .5938±.0308 (already in
-    docs/exp-comparison.md lam/ds_alpha joint sweep llama-1b table)
+    docs/exp-comp-prm800k-level4.md lam/ds_alpha joint sweep llama-1b table)
 - launcher: generate_mcts_bl_cnt_v01.py
   config_root: mcts_bl_cnt_v01_prm800k
   overrides:
@@ -1173,7 +1173,7 @@
   priority: 2
   note: backfilled from mcts_sem_v02--level-4--Llama3.2-3B--qwen--d-20--bs-4--b-080--cfg-a99c090a
     (run_id tzgjckmm); scored 2026-07-09, pass@gb .7773±.0261 (already in
-    docs/exp-comparison.md embeds_strategy x scope sweep table)
+    docs/exp-comp-prm800k-level4.md embeds_strategy x scope sweep table)
 - launcher: generate_mcts_cnt.py
   config_root: mcts_cnt_prm800k
   overrides:
@@ -1217,7 +1217,7 @@
   priority: 2
   note: backfilled from mcts_sem_v02--level-4--Qwen2.5-Math-1.5B--qwen--d-20--bs-4--b-080--cfg-af1f6f2e
     (run_id fvtvd9hj); scored 2026-07-09, pass@gb .9023±.0186 (already in
-    docs/exp-comparison.md agg_strategy table)
+    docs/exp-comp-prm800k-level4.md agg_strategy table)
 - launcher: generate_mcts_sem.py
   config_root: mcts_sem_v02_prm800k
   overrides:
@@ -1245,7 +1245,7 @@
   priority: 2
   note: backfilled from mcts_sem_v02--level-4--Qwen2.5-3B--qwen--d-20--bs-4--b-080--cfg-afd11edc
     (run_id 4xtvcqlh); scored 2026-07-09, pass@gb .8438±.0227 (already in
-    docs/exp-comparison.md agg_strategy w_eff=10 table)
+    docs/exp-comp-prm800k-level4.md agg_strategy w_eff=10 table)
 - launcher: generate_mcts_sem.py
   config_root: mcts_sem_v02_prm800k
   overrides:
@@ -1259,7 +1259,7 @@
   priority: 2
   note: backfilled from mcts_sem_v02--level-4--Llama3.2-1B--qwen--d-20--bs-4--b-080--cfg-b12fd984
     (run_id s6ud58ix); scored 2026-07-09, pass@gb .6094±.0306 (already in
-    docs/exp-comparison.md lam/ds_alpha joint sweep llama-1b table)
+    docs/exp-comp-prm800k-level4.md lam/ds_alpha joint sweep llama-1b table)
 - launcher: generate_mcts_cnt.py
   config_root: mcts_cnt_prm800k
   overrides:
@@ -1344,7 +1344,7 @@
   priority: 2
   note: backfilled from mcts_sem_v02--level-4--Qwen2.5-Math-1.5B--qwen--d-20--bs-4--b-080--cfg-bf22ecf8
     (run_id vjczoukn); scored 2026-07-09, pass@gb .8633±.0215 (already in
-    docs/exp-comparison.md lam/ds_alpha joint sweep table)
+    docs/exp-comp-prm800k-level4.md lam/ds_alpha joint sweep table)
 - launcher: generate_mcts_bl_cnt_v01.py
   config_root: mcts_bl_cnt_v01_prm800k
   overrides:
@@ -1356,7 +1356,7 @@
   priority: 2
   note: backfilled from mcts_bl_cnt_v01--level-4--Llama3.2-1B--qwen--d-20--bs-4--b-080--cfg-c055d98b
     (run_id ok5kmv0q); scored 2026-07-09, pass@gb .4414±.0311 (already in
-    docs/exp-comparison.md cnt-mcts-bl model family table)
+    docs/exp-comp-prm800k-level4.md cnt-mcts-bl model family table)
 - launcher: generate_mcts_sem.py
   config_root: mcts_sem_v02_prm800k
   overrides:
@@ -1461,7 +1461,7 @@
   priority: 2
   note: backfilled from mcts_sem_v02--level-4--Llama3.2-3B--qwen--d-20--bs-4--b-080--cfg-f5167568
     (run_id sjpxkjy6); scored 2026-07-09, pass@gb .7227±.0280 (already in
-    docs/exp-comparison.md lam/ds_alpha joint sweep llama-3b table)
+    docs/exp-comp-prm800k-level4.md lam/ds_alpha joint sweep llama-3b table)
 - launcher: generate_mcts_sem.py
   config_root: mcts_sem_v02_prm800k
   overrides:
@@ -1488,7 +1488,7 @@
   priority: 2
   note: backfilled from mcts_sem_v02--level-4--Llama3.2-3B--qwen--d-20--bs-4--b-080--cfg-f9915052
     (run_id ck5c2n09); scored 2026-07-09, pass@gb .7305±.0278 (already in
-    docs/exp-comparison.md lam/ds_alpha joint sweep llama-3b table)
+    docs/exp-comp-prm800k-level4.md lam/ds_alpha joint sweep llama-3b table)
 - launcher: generate_mcts_sem.py
   config_root: mcts_sem_v02_prm800k
   overrides:
@@ -1501,7 +1501,7 @@
   priority: 2
   note: backfilled from mcts_sem_v02--level-4--Llama3.2-1B--qwen--d-20--bs-4--b-080--cfg-f9e8eb8b
     (run_id do56sykw); scored 2026-07-09, pass@gb .6289±.0303 (already in
-    docs/exp-comparison.md lam/ds_alpha joint sweep llama-1b table)
+    docs/exp-comp-prm800k-level4.md lam/ds_alpha joint sweep llama-1b table)
 - launcher: generate_mcts_cnt.py
   config_root: mcts_cnt_prm800k
   overrides:
@@ -1528,7 +1528,7 @@
   priority: 2
   note: backfilled from mcts_sem_v02--level-4--Llama3.2-3B--qwen--d-20--bs-4--b-080--cfg-fc47bef8
     (run_id durd587z); scored 2026-07-09, pass@gb .7422±.0274 (already in
-    docs/exp-comparison.md lam/ds_alpha joint sweep llama-3b table)
+    docs/exp-comp-prm800k-level4.md lam/ds_alpha joint sweep llama-3b table)
 - launcher: generate_mcts_sem.py
   config_root: mcts_bl_sem_v01_prm800k
   overrides:
@@ -1558,7 +1558,7 @@
   priority: 2
   note: backfilled from mcts_bl_sem_v01--level-4--Qwen2.5-3B-GPTQ-Int4--qwen--d-20--bs-4--b-080--cfg-b6c3b99c
     (run_id g1dwjiyv); scored 2026-07-09, pass@gb .7422±.0274 (already in
-    docs/exp-comparison.md sem-mcts-bl w_eff=100 table)
+    docs/exp-comp-prm800k-level4.md sem-mcts-bl w_eff=100 table)
 - launcher: generate_mcts_sem.py
   config_root: mcts_bl_sem_v01_prm800k
   overrides:
@@ -1573,7 +1573,7 @@
   priority: 2
   note: backfilled from mcts_bl_sem_v01--level-4--Qwen2.5-7B-GPTQ-Int4--qwen--d-20--bs-4--b-080--cfg-fa3a0c0a
     (run_id 80by1b4f); scored 2026-07-09, pass@gb .8906±.0195 (already in
-    docs/exp-comparison.md sem-mcts-bl w_eff=100 table)
+    docs/exp-comp-prm800k-level4.md sem-mcts-bl w_eff=100 table)
 - launcher: generate_mcts_sem.py
   config_root: mcts_sem_v02_prm800k
   overrides:
@@ -1589,7 +1589,7 @@
   priority: 2
   note: backfilled from mcts_sem_v02--level-4--Qwen2.5-Math-1.5B--qwen--d-20--bs-4--b-080--cfg-d5f27e0f
     (run_id wixl51ql); scored 2026-07-09, pass@gb .8867±.0198 (already in
-    docs/exp-comparison.md agg_strategy comparison lam=0.1 w_eff=10 table)
+    docs/exp-comp-prm800k-level4.md agg_strategy comparison lam=0.1 w_eff=10 table)
 - launcher: generate_mcts_bl_cnt.py
   config_root: mcts_bl_cnt_v02_prm800k
   overrides:
@@ -1601,7 +1601,7 @@
   priority: 2
   note: backfilled from mcts_bl_cnt_v02--level-4--Llama3.2-1B--qwen--d-20--bs-4--b-080--cfg-4586b6a1
     (run_id 5hlr1c61); scored 2026-07-09, pass@gb .5586±.0311 (in
-    docs/exp-comparison.md cnt-mcts-bl-v02 model family/size/quantization table)
+    docs/exp-comp-prm800k-level4.md cnt-mcts-bl-v02 model family/size/quantization table)
 - launcher: generate_mcts_bl_cnt.py
   config_root: mcts_bl_cnt_v02_prm800k
   overrides:
@@ -1614,7 +1614,7 @@
   priority: 2
   note: backfilled from mcts_bl_cnt_v02--level-4--Llama3.2-3B--qwen--d-20--bs-4--b-080--cfg-55643f02
     (run_id rwqjq7fl); scored 2026-07-09, pass@gb .7305±.0278 (in
-    docs/exp-comparison.md cnt-mcts-bl-v02 model family/size/quantization table)
+    docs/exp-comp-prm800k-level4.md cnt-mcts-bl-v02 model family/size/quantization table)
 - launcher: generate_mcts_bl_cnt.py
   config_root: mcts_bl_cnt_v02_prm800k
   overrides:
@@ -1627,7 +1627,7 @@
   priority: 2
   note: backfilled from mcts_bl_cnt_v02--level-4--Qwen2.5-3B--qwen--d-20--bs-4--b-080--cfg-e1360dda
     (run_id vimdoh1b); scored 2026-07-09, pass@gb .8320±.0234 (in
-    docs/exp-comparison.md cnt-mcts-bl-v02 model family/size/quantization table)
+    docs/exp-comp-prm800k-level4.md cnt-mcts-bl-v02 model family/size/quantization table)
 - launcher: generate_mcts_bl_cnt.py
   config_root: mcts_bl_cnt_v02_prm800k
   overrides:
@@ -1640,7 +1640,7 @@
   priority: 2
   note: backfilled from mcts_bl_cnt_v02--level-4--Qwen2.5-7B-GPTQ-Int4--qwen--d-20--bs-4--b-080--cfg-0ef9c289
     (run_id a0nlicyf); scored 2026-07-09, pass@gb .8750±.0207 (in
-    docs/exp-comparison.md cnt-mcts-bl-v02 model family/size/quantization table)
+    docs/exp-comp-prm800k-level4.md cnt-mcts-bl-v02 model family/size/quantization table)
 - launcher: generate_mcts_bl_cnt.py
   config_root: mcts_bl_cnt_v02_prm800k
   overrides:
@@ -1653,7 +1653,7 @@
   priority: 2
   note: backfilled from mcts_bl_cnt_v02--level-4--Qwen2.5-Math-1.5B--qwen--d-20--bs-4--b-080--cfg-497d2e67
     (run_id ub5wqvva); scored 2026-07-09, pass@gb .8359±.0232 (in
-    docs/exp-comparison.md cnt-mcts-bl-v02 model family/size/quantization table)
+    docs/exp-comp-prm800k-level4.md cnt-mcts-bl-v02 model family/size/quantization table)
 - launcher: generate_mcts_bl_cnt.py
   config_root: mcts_bl_cnt_v03_prm800k
   overrides:
@@ -1665,7 +1665,7 @@
   priority: 2
   note: backfilled from mcts_bl_cnt_v03--level-4--Llama3.2-1B--qwen--d-20--bs-4--b-080--cfg-8dda8957
     (run_id 3yyni5fn); scored 2026-07-09, pass@gb .5742±.0310 (in
-    docs/exp-comparison.md cnt-mcts-bl-v03 model family/size/quantization table)
+    docs/exp-comp-prm800k-level4.md cnt-mcts-bl-v03 model family/size/quantization table)
 - launcher: generate_mcts_bl_cnt.py
   config_root: mcts_bl_cnt_v03_prm800k
   overrides:
@@ -1678,7 +1678,7 @@
   priority: 2
   note: backfilled from mcts_bl_cnt_v03--level-4--Llama3.2-3B--qwen--d-20--bs-4--b-080--cfg-3978c92d
     (run_id kl22af6y); scored 2026-07-09, pass@gb .7227±.0280 (in
-    docs/exp-comparison.md cnt-mcts-bl-v03 model family/size/quantization table)
+    docs/exp-comp-prm800k-level4.md cnt-mcts-bl-v03 model family/size/quantization table)
 - launcher: generate_mcts_bl_cnt.py
   config_root: mcts_bl_cnt_v03_prm800k
   overrides:
@@ -1691,7 +1691,7 @@
   priority: 2
   note: backfilled from mcts_bl_cnt_v03--level-4--Qwen2.5-3B--qwen--d-20--bs-4--b-080--cfg-e1311880
     (run_id asn77q7e); scored 2026-07-09, pass@gb .8164±.0242 (in
-    docs/exp-comparison.md cnt-mcts-bl-v03 model family/size/quantization table)
+    docs/exp-comp-prm800k-level4.md cnt-mcts-bl-v03 model family/size/quantization table)
 - launcher: generate_mcts_bl_cnt.py
   config_root: mcts_bl_cnt_v03_prm800k
   overrides:
@@ -1704,7 +1704,7 @@
   priority: 2
   note: backfilled from mcts_bl_cnt_v03--level-4--Qwen2.5-7B-GPTQ-Int4--qwen--d-20--bs-4--b-080--cfg-4a99b754
     (run_id g0jll3ts); scored 2026-07-09, pass@gb .9023±.0186 (in
-    docs/exp-comparison.md cnt-mcts-bl-v03 model family/size/quantization table)
+    docs/exp-comp-prm800k-level4.md cnt-mcts-bl-v03 model family/size/quantization table)
 - launcher: generate_mcts_bl_cnt.py
   config_root: mcts_bl_cnt_v03_prm800k
   overrides:
@@ -1717,7 +1717,7 @@
   priority: 2
   note: backfilled from mcts_bl_cnt_v03--level-4--Qwen2.5-Math-1.5B--qwen--d-20--bs-4--b-080--cfg-12183f3b
     (run_id i8qyv1gv); scored 2026-07-09, pass@gb .8164±.0242 (in
-    docs/exp-comparison.md cnt-mcts-bl-v03 model family/size/quantization table)
+    docs/exp-comp-prm800k-level4.md cnt-mcts-bl-v03 model family/size/quantization table)
 - launcher: generate_mcts_sem.py
   config_root: mcts_bl_sem_v01_prm800k
   overrides:
@@ -1732,7 +1732,7 @@
   priority: 2
   note: backfilled from mcts_bl_sem_v01--level-4--Qwen2.5-3B-GPTQ-Int4--qwen--d-20--bs-4--b-080--cfg-7a516838
     (run_id ic5ixmjt); scored 2026-07-09, pass@gb .8086±.0246 (in
-    docs/exp-comparison.md sem-mcts-bl w_eff=10 table)
+    docs/exp-comp-prm800k-level4.md sem-mcts-bl w_eff=10 table)
 - launcher: generate_mcts_sem.py
   config_root: mcts_bl_sem_v01_prm800k
   overrides:
@@ -1783,7 +1783,7 @@
   recorded: true
   priority: 2
   note: level-5 llama-1b fp16, cfg-0f003563, run_id 05lky8bc; pass@gb
-    .3619±.0294 (docs/exp-comparison-level5.md "model family, size,
+    .3619±.0294 (docs/exp-comp-prm800k-level5.md "model family, size,
     quantization comparison (qwen PRM)")
 - launcher: generate_mcts_cnt.py
   config_root: mcts_cnt_prm800k
@@ -1797,7 +1797,7 @@
   recorded: true
   priority: 2
   note: level-5 llama-3b fp16, cfg-2785219b, run_id grfdicia; pass@gb
-    .5522±.0304 (docs/exp-comparison-level5.md "model family, size,
+    .5522±.0304 (docs/exp-comp-prm800k-level5.md "model family, size,
     quantization comparison (qwen PRM)")
 - launcher: generate_mcts_cnt.py
   config_root: mcts_cnt_prm800k
@@ -1811,7 +1811,7 @@
   recorded: true
   priority: 2
   note: level-5 qwen-3b fp16, cfg-0daecfca, run_id wns54ql3; pass@gb
-    .6978±.0281 (docs/exp-comparison-level5.md "model family, size,
+    .6978±.0281 (docs/exp-comp-prm800k-level5.md "model family, size,
     quantization comparison (qwen PRM)")
 - launcher: generate_mcts_cnt.py
   config_root: mcts_cnt_prm800k
@@ -1825,7 +1825,7 @@
   recorded: true
   priority: 2
   note: level-5 qwen-7b gptq-int4, cfg-9e1d3b8c, run_id hrfcyqx4; pass@gb
-    .7537±.0264 (docs/exp-comparison-level5.md "model family, size,
+    .7537±.0264 (docs/exp-comp-prm800k-level5.md "model family, size,
     quantization comparison (qwen PRM)")
 - launcher: generate_mcts_cnt.py
   config_root: mcts_cnt_prm800k
@@ -1839,7 +1839,7 @@
   recorded: true
   priority: 2
   note: level-5 qwen-math-1.5b fp16, cfg-3eb8c1ee, run_id 43zjzxmj; pass@gb
-    .7575±.0262 (docs/exp-comparison-level5.md "model family, size,
+    .7575±.0262 (docs/exp-comp-prm800k-level5.md "model family, size,
     quantization comparison (qwen PRM)")
 - launcher: generate_mcts_sem.py
   config_root: mcts_sem_v02_prm800k
@@ -1855,7 +1855,7 @@
   recorded: true
   priority: 2
   note: level-5 llama-1b w_eff=1 lam=0.1, cfg-9a5a5377, run_id incpahob;
-    pass@gb .2910±.0278 (docs/exp-comparison-level5.md "lam / ds_alpha
+    pass@gb .2910±.0278 (docs/exp-comp-prm800k-level5.md "lam / ds_alpha
     joint sweep (v02, llama-1b, step 1 done)")
 - launcher: generate_mcts_sem.py
   config_root: mcts_sem_v02_prm800k
@@ -1871,7 +1871,7 @@
   recorded: true
   priority: 2
   note: level-5 llama-1b w_eff=1 lam=0.01, cfg-8f81ed9d, run_id c7n1fujb;
-    pass@gb .2985±.0280 (docs/exp-comparison-level5.md "lam / ds_alpha
+    pass@gb .2985±.0280 (docs/exp-comp-prm800k-level5.md "lam / ds_alpha
     joint sweep (v02, llama-1b, step 1 done)")
 - launcher: generate_mcts_sem.py
   config_root: mcts_sem_v02_prm800k
@@ -1887,7 +1887,7 @@
   recorded: true
   priority: 2
   note: level-5 llama-1b w_eff=3 lam=1.0, cfg-370ebb8c, run_id 7oz77f9z;
-    pass@gb .3507±.0292 (docs/exp-comparison-level5.md "lam / ds_alpha
+    pass@gb .3507±.0292 (docs/exp-comp-prm800k-level5.md "lam / ds_alpha
     joint sweep (v02, llama-1b, step 1 done)")
 - launcher: generate_mcts_sem.py
   config_root: mcts_sem_v02_prm800k
@@ -1903,7 +1903,7 @@
   recorded: true
   priority: 2
   note: level-5 llama-1b w_eff=3 lam=0.1, cfg-eb5eaadc, run_id azzutwjt;
-    pass@gb .3433±.0291 (docs/exp-comparison-level5.md "lam / ds_alpha
+    pass@gb .3433±.0291 (docs/exp-comp-prm800k-level5.md "lam / ds_alpha
     joint sweep (v02, llama-1b, step 1 done)")
 - launcher: generate_mcts_sem.py
   config_root: mcts_sem_v02_prm800k
@@ -1919,7 +1919,7 @@
   recorded: true
   priority: 2
   note: level-5 llama-1b w_eff=3 lam=0.01, cfg-127e3f8f, run_id e4rzqcd8;
-    pass@gb .3321±.0288 (docs/exp-comparison-level5.md "lam / ds_alpha
+    pass@gb .3321±.0288 (docs/exp-comp-prm800k-level5.md "lam / ds_alpha
     joint sweep (v02, llama-1b, step 1 done)")
 - launcher: generate_mcts_sem.py
   config_root: mcts_sem_v02_prm800k
@@ -1935,7 +1935,7 @@
   recorded: true
   priority: 2
   note: level-5 llama-1b w_eff=10 lam=1.0 (step-1 cell), cfg-c89b788b,
-    run_id 1ba4zs5d; pass@gb .3582±.0293 (docs/exp-comparison-level5.md
+    run_id 1ba4zs5d; pass@gb .3582±.0293 (docs/exp-comp-prm800k-level5.md
     "lam / ds_alpha joint sweep (v02, llama-1b, step 1 done)")
 - launcher: generate_mcts_sem.py
   config_root: mcts_sem_v02_prm800k
@@ -1951,7 +1951,7 @@
   recorded: true
   priority: 2
   note: level-5 llama-1b w_eff=10 lam=0.1, cfg-cb6a22b8, run_id yoid6063;
-    pass@gb .3433±.0291 (docs/exp-comparison-level5.md "lam / ds_alpha
+    pass@gb .3433±.0291 (docs/exp-comp-prm800k-level5.md "lam / ds_alpha
     joint sweep (v02, llama-1b, step 1 done)")
 - launcher: generate_mcts_sem.py
   config_root: mcts_sem_v02_prm800k
@@ -1967,7 +1967,7 @@
   recorded: true
   priority: 2
   note: level-5 llama-1b w_eff=10 lam=0.01 (step-1 cell), cfg-219d2c64,
-    run_id tdyxh9sr; pass@gb .3209±.0286 (docs/exp-comparison-level5.md
+    run_id tdyxh9sr; pass@gb .3209±.0286 (docs/exp-comp-prm800k-level5.md
     "lam / ds_alpha joint sweep (v02, llama-1b, step 1 done)")
 - launcher: generate_mcts_sem.py
   config_root: mcts_sem_v02_prm800k
@@ -1983,7 +1983,7 @@
   recorded: true
   priority: 2
   note: level-5 llama-1b w_eff=100 lam=1.0, cfg-6463962b, run_id ct714lg5;
-    pass@gb .3284±.0287 (docs/exp-comparison-level5.md "lam / ds_alpha
+    pass@gb .3284±.0287 (docs/exp-comp-prm800k-level5.md "lam / ds_alpha
     joint sweep (v02, llama-1b, step 1 done)")
 - launcher: generate_mcts_sem.py
   config_root: mcts_sem_v02_prm800k
@@ -1999,7 +1999,7 @@
   recorded: true
   priority: 2
   note: level-5 llama-1b w_eff=100 lam=0.1, cfg-cd1b91dd, run_id o9uydfa9;
-    pass@gb .2910±.0278 (docs/exp-comparison-level5.md "lam / ds_alpha
+    pass@gb .2910±.0278 (docs/exp-comp-prm800k-level5.md "lam / ds_alpha
     joint sweep (v02, llama-1b, step 1 done)")
 - launcher: generate_mcts_sem.py
   config_root: mcts_sem_v02_prm800k
@@ -2015,7 +2015,7 @@
   recorded: true
   priority: 2
   note: level-5 llama-1b w_eff=100 lam=0.01, cfg-e0ea7604, run_id 2sd0cen5;
-    pass@gb .3433±.0291 (docs/exp-comparison-level5.md "lam / ds_alpha
+    pass@gb .3433±.0291 (docs/exp-comp-prm800k-level5.md "lam / ds_alpha
     joint sweep (v02, llama-1b, step 1 done)")
 - launcher: generate_mcts_sem.py
   config_root: mcts_sem_v02_prm800k
@@ -2031,7 +2031,7 @@
   recorded: true
   priority: 2
   note: level-5 llama-3b w_eff=1 lam=1.0, cfg-d4d3ebd9, run_id t7nydxhi;
-    pass@gb .5336±.0305 (docs/exp-comparison-level5.md "lam / ds_alpha
+    pass@gb .5336±.0305 (docs/exp-comp-prm800k-level5.md "lam / ds_alpha
     joint sweep (v02, llama-3b, step 1 done)")
 - launcher: generate_mcts_sem.py
   config_root: mcts_sem_v02_prm800k
@@ -2047,7 +2047,7 @@
   recorded: true
   priority: 2
   note: level-5 llama-3b w_eff=1 lam=0.1, cfg-8633d244, run_id ehl59qs2;
-    pass@gb .5299±.0305 (docs/exp-comparison-level5.md "lam / ds_alpha
+    pass@gb .5299±.0305 (docs/exp-comp-prm800k-level5.md "lam / ds_alpha
     joint sweep (v02, llama-3b, step 1 done)")
 - launcher: generate_mcts_sem.py
   config_root: mcts_sem_v02_prm800k
@@ -2063,7 +2063,7 @@
   recorded: true
   priority: 2
   note: level-5 llama-3b w_eff=1 lam=0.01, cfg-d1086f9f, run_id 5tw616kl;
-    pass@gb .5261±.0306 (docs/exp-comparison-level5.md "lam / ds_alpha
+    pass@gb .5261±.0306 (docs/exp-comp-prm800k-level5.md "lam / ds_alpha
     joint sweep (v02, llama-3b, step 1 done)")
 - launcher: generate_mcts_sem.py
   config_root: mcts_sem_v02_prm800k
@@ -2079,7 +2079,7 @@
   recorded: true
   priority: 2
   note: level-5 llama-3b w_eff=3 lam=1.0, cfg-3978d10e, run_id 3o3aontb;
-    pass@gb .5336±.0305 (docs/exp-comparison-level5.md "lam / ds_alpha
+    pass@gb .5336±.0305 (docs/exp-comp-prm800k-level5.md "lam / ds_alpha
     joint sweep (v02, llama-3b, step 1 done)")
 - launcher: generate_mcts_sem.py
   config_root: mcts_sem_v02_prm800k
@@ -2095,7 +2095,7 @@
   recorded: true
   priority: 2
   note: level-5 llama-3b w_eff=3 lam=0.1, cfg-0d6680fe, run_id wkalmt6q;
-    pass@gb .5336±.0305 (docs/exp-comparison-level5.md "lam / ds_alpha
+    pass@gb .5336±.0305 (docs/exp-comp-prm800k-level5.md "lam / ds_alpha
     joint sweep (v02, llama-3b, step 1 done)")
 - launcher: generate_mcts_sem.py
   config_root: mcts_sem_v02_prm800k
@@ -2111,7 +2111,7 @@
   recorded: true
   priority: 2
   note: level-5 llama-3b w_eff=3 lam=0.01, cfg-d8bfa8d9, run_id efj0azle;
-    pass@gb .5261±.0306 (docs/exp-comparison-level5.md "lam / ds_alpha
+    pass@gb .5261±.0306 (docs/exp-comp-prm800k-level5.md "lam / ds_alpha
     joint sweep (v02, llama-3b, step 1 done)")
 - launcher: generate_mcts_sem.py
   config_root: mcts_sem_v02_prm800k
@@ -2127,7 +2127,7 @@
   recorded: true
   priority: 2
   note: level-5 llama-3b w_eff=10 lam=1.0 (step-1 cell), cfg-a3b6f8d8,
-    run_id ooplo2yt; pass@gb .5373±.0305 (docs/exp-comparison-level5.md
+    run_id ooplo2yt; pass@gb .5373±.0305 (docs/exp-comp-prm800k-level5.md
     "lam / ds_alpha joint sweep (v02, llama-3b, step 1 done)")
 - launcher: generate_mcts_sem.py
   config_root: mcts_sem_v02_prm800k
@@ -2144,7 +2144,7 @@
   recorded: true
   priority: 2
   note: level-5 llama-3b w_eff=10 lam=0.1 (step-1 cell), cfg-fde3765e,
-    run_id pgugz95w; pass@gb .5597±.0304 (docs/exp-comparison-level5.md
+    run_id pgugz95w; pass@gb .5597±.0304 (docs/exp-comp-prm800k-level5.md
     "lam / ds_alpha joint sweep (v02, llama-3b, step 1 done)")
 - launcher: generate_mcts_sem.py
   config_root: mcts_sem_v02_prm800k
@@ -2161,7 +2161,7 @@
   recorded: true
   priority: 2
   note: level-5 llama-3b w_eff=10 lam=0.01 (step-1 cell), cfg-0e46f0e4,
-    run_id tc6d70jy; pass@gb .5784±.0302 (docs/exp-comparison-level5.md
+    run_id tc6d70jy; pass@gb .5784±.0302 (docs/exp-comp-prm800k-level5.md
     "lam / ds_alpha joint sweep (v02, llama-3b, step 1 done)")
 - launcher: generate_mcts_sem.py
   config_root: mcts_sem_v02_prm800k
@@ -2178,7 +2178,7 @@
   recorded: true
   priority: 2
   note: level-5 llama-3b w_eff=100 lam=1.0 (step-1 cell), cfg-de019b1b,
-    run_id hswb2qoq; pass@gb .5560±.0304 (docs/exp-comparison-level5.md
+    run_id hswb2qoq; pass@gb .5560±.0304 (docs/exp-comp-prm800k-level5.md
     "lam / ds_alpha joint sweep (v02, llama-3b, step 1 done)")
 - launcher: generate_mcts_sem.py
   config_root: mcts_sem_v02_prm800k
@@ -2195,7 +2195,7 @@
   recorded: true
   priority: 2
   note: level-5 llama-3b w_eff=100 lam=0.1 (step-1 cell), cfg-b87ce67e,
-    run_id bm2osrgi; pass@gb .5634±.0304 (docs/exp-comparison-level5.md
+    run_id bm2osrgi; pass@gb .5634±.0304 (docs/exp-comp-prm800k-level5.md
     "lam / ds_alpha joint sweep (v02, llama-3b, step 1 done)")
 - launcher: generate_mcts_sem.py
   config_root: mcts_sem_v02_prm800k
@@ -2212,7 +2212,7 @@
   recorded: true
   priority: 2
   note: level-5 llama-3b w_eff=100 lam=0.01 (step-1 cell), cfg-ddd4002a,
-    run_id q7yxcuq7; pass@gb .5485±.0305 (docs/exp-comparison-level5.md
+    run_id q7yxcuq7; pass@gb .5485±.0305 (docs/exp-comp-prm800k-level5.md
     "lam / ds_alpha joint sweep (v02, llama-3b, step 1 done)")
 - launcher: generate_mcts_sem.py
   config_root: mcts_sem_v02_prm800k
@@ -2229,7 +2229,7 @@
   recorded: true
   priority: 2
   note: level-5 llama-3b w_eff=1000 lam=1.0 (step-1 cell), cfg-d10de74d,
-    run_id rq603tet; pass@gb .5485±.0305 (docs/exp-comparison-level5.md
+    run_id rq603tet; pass@gb .5485±.0305 (docs/exp-comp-prm800k-level5.md
     "lam / ds_alpha joint sweep (v02, llama-3b, step 1 done)")
 - launcher: generate_mcts_sem.py
   config_root: mcts_sem_v02_prm800k
@@ -2246,7 +2246,7 @@
   recorded: true
   priority: 2
   note: level-5 llama-3b w_eff=1000 lam=0.1 (step-1 cell), cfg-249e41ee,
-    run_id ljyceid9; pass@gb .5410±.0305 (docs/exp-comparison-level5.md
+    run_id ljyceid9; pass@gb .5410±.0305 (docs/exp-comp-prm800k-level5.md
     "lam / ds_alpha joint sweep (v02, llama-3b, step 1 done)")
 - launcher: generate_mcts_sem.py
   config_root: mcts_sem_v02_prm800k
@@ -2263,13 +2263,13 @@
   recorded: true
   priority: 2
   note: level-5 llama-3b w_eff=1000 lam=0.01 (step-1 cell), cfg-b45bd9a0,
-    run_id vo69wefx; pass@gb .5896±.0301 (docs/exp-comparison-level5.md
+    run_id vo69wefx; pass@gb .5896±.0301 (docs/exp-comp-prm800k-level5.md
     "lam / ds_alpha joint sweep (v02, llama-3b, step 1 done)")
 
 # --- in-progress (1/2 trials done): qwen-7b gptq-int4 lam/ds_alpha
 #     joint sweep, level-5, qwen PRM. Found via audit 2026-07-13 —
 #     6 result dirs exist with .done trial-000 markers but no
-#     matching ledger entry; docs/exp-comparison-level5.md "lam /
+#     matching ledger entry; docs/exp-comp-prm800k-level5.md "lam /
 #     ds_alpha joint sweep (qwen-7b gptq-int4)" still shows these
 #     as planned pending the 2nd trial. recorded: false throughout
 #     (nothing to record yet at 1/2 trials).
@@ -2288,7 +2288,7 @@
   recorded: true
   priority: 1
   note: level-5 qwen-7b-gptq w_eff=10 lam=0.01, cfg-2d955515, run_id
-    3l1vzy8m; pass@gb .7687±.0258 (docs/exp-comparison-level5.md
+    3l1vzy8m; pass@gb .7687±.0258 (docs/exp-comp-prm800k-level5.md
     "lam / ds_alpha joint sweep (qwen-7b gptq-int4)")
 - launcher: generate_mcts_sem.py
   config_root: mcts_sem_v02_prm800k
@@ -2305,7 +2305,7 @@
   recorded: true
   priority: 1
   note: level-5 qwen-7b-gptq w_eff=100 lam=0.01, cfg-17c71cb9, run_id
-    es99bc0h; pass@gb .7873±.0250 (docs/exp-comparison-level5.md
+    es99bc0h; pass@gb .7873±.0250 (docs/exp-comp-prm800k-level5.md
     "lam / ds_alpha joint sweep (qwen-7b gptq-int4)")
 - launcher: generate_mcts_sem.py
   config_root: mcts_sem_v02_prm800k
@@ -2322,7 +2322,7 @@
   recorded: true
   priority: 1
   note: level-5 qwen-7b-gptq w_eff=10 lam=0.1, cfg-1510dd5a, run_id
-    l1lgaa6a; pass@gb .7761±.0255 (docs/exp-comparison-level5.md
+    l1lgaa6a; pass@gb .7761±.0255 (docs/exp-comp-prm800k-level5.md
     "lam / ds_alpha joint sweep (qwen-7b gptq-int4)")
 - launcher: generate_mcts_sem.py
   config_root: mcts_sem_v02_prm800k
@@ -2339,7 +2339,7 @@
   recorded: true
   priority: 1
   note: level-5 qwen-7b-gptq w_eff=100 lam=0.1, cfg-8cfa0e6f, run_id
-    b1ssdntk; pass@gb .7799±.0254 (docs/exp-comparison-level5.md
+    b1ssdntk; pass@gb .7799±.0254 (docs/exp-comp-prm800k-level5.md
     "lam / ds_alpha joint sweep (qwen-7b gptq-int4)")
 - launcher: generate_mcts_sem.py
   config_root: mcts_sem_v02_prm800k
@@ -2356,7 +2356,7 @@
   recorded: true
   priority: 1
   note: level-5 qwen-7b-gptq w_eff=10 lam=1.0, cfg-4f118d41, run_id
-    9mocwqq1; pass@gb .7575±.0262 (docs/exp-comparison-level5.md
+    9mocwqq1; pass@gb .7575±.0262 (docs/exp-comp-prm800k-level5.md
     "lam / ds_alpha joint sweep (qwen-7b gptq-int4)")
 - launcher: generate_mcts_sem.py
   config_root: mcts_sem_v02_prm800k
@@ -2373,7 +2373,7 @@
   recorded: true
   priority: 1
   note: level-5 qwen-7b-gptq w_eff=100 lam=1.0, cfg-9ae74311, run_id
-    0lscllmx; pass@gb .7761±.0255 (docs/exp-comparison-level5.md
+    0lscllmx; pass@gb .7761±.0255 (docs/exp-comp-prm800k-level5.md
     "lam / ds_alpha joint sweep (qwen-7b gptq-int4)")
 
 # --- level-5 qwen-math-1.5b lam/ds_alpha joint sweep (qwen PRM),
@@ -2394,7 +2394,7 @@
   recorded: true
   priority: 1
   note: level-5 qwen-math-1.5b w_eff=10 lam=1.0, cfg-b425e187, run_id
-    rrnvx096; pass@gb .7425±.0268 (docs/exp-comparison-level5.md
+    rrnvx096; pass@gb .7425±.0268 (docs/exp-comp-prm800k-level5.md
     "lam / ds_alpha joint sweep (qwen-math-1.5b)")
 - launcher: generate_mcts_sem.py
   config_root: mcts_sem_v02_prm800k
@@ -2411,7 +2411,7 @@
   recorded: true
   priority: 1
   note: level-5 qwen-math-1.5b w_eff=10 lam=0.1, cfg-711204f7, run_id
-    by68fjij; pass@gb .7015±.0280 (docs/exp-comparison-level5.md
+    by68fjij; pass@gb .7015±.0280 (docs/exp-comp-prm800k-level5.md
     "lam / ds_alpha joint sweep (qwen-math-1.5b)")
 - launcher: generate_mcts_sem.py
   config_root: mcts_sem_v02_prm800k
@@ -2428,7 +2428,7 @@
   recorded: true
   priority: 1
   note: level-5 qwen-math-1.5b w_eff=10 lam=0.01, cfg-35918e8b, run_id
-    bb6rpjps; pass@gb .7500±.0265 (docs/exp-comparison-level5.md
+    bb6rpjps; pass@gb .7500±.0265 (docs/exp-comp-prm800k-level5.md
     "lam / ds_alpha joint sweep (qwen-math-1.5b)")
 - launcher: generate_mcts_sem.py
   config_root: mcts_sem_v02_prm800k
@@ -2445,7 +2445,7 @@
   recorded: true
   priority: 1
   note: level-5 qwen-math-1.5b w_eff=100 lam=1.0, cfg-b115065e, run_id
-    5o718fai; pass@gb .6866±.0284 (docs/exp-comparison-level5.md
+    5o718fai; pass@gb .6866±.0284 (docs/exp-comp-prm800k-level5.md
     "lam / ds_alpha joint sweep (qwen-math-1.5b)")
 - launcher: generate_mcts_sem.py
   config_root: mcts_sem_v02_prm800k
@@ -2462,7 +2462,7 @@
   recorded: true
   priority: 1
   note: level-5 qwen-math-1.5b w_eff=100 lam=0.1, cfg-870767e1, run_id
-    a4phhmiu; pass@gb .7164±.0276 (docs/exp-comparison-level5.md
+    a4phhmiu; pass@gb .7164±.0276 (docs/exp-comp-prm800k-level5.md
     "lam / ds_alpha joint sweep (qwen-math-1.5b)")
 - launcher: generate_mcts_sem.py
   config_root: mcts_sem_v02_prm800k
@@ -2479,7 +2479,7 @@
   recorded: true
   priority: 1
   note: level-5 qwen-math-1.5b w_eff=100 lam=0.01, cfg-68c5dc4e, run_id
-    scmsaxeq; pass@gb .7164±.0276 (docs/exp-comparison-level5.md
+    scmsaxeq; pass@gb .7164±.0276 (docs/exp-comp-prm800k-level5.md
     "lam / ds_alpha joint sweep (qwen-math-1.5b)")
 
 # --- level-5 llama-1b lam/ds_alpha joint sweep (qwen PRM), the
@@ -2500,7 +2500,7 @@
   recorded: true
   priority: 1
   note: level-5 llama-1b w_eff=1 lam=1.0, cfg-a27d7abc, run_id
-    w6vql8ws; pass@gb .3358±.0289 (docs/exp-comparison-level5.md
+    w6vql8ws; pass@gb .3358±.0289 (docs/exp-comp-prm800k-level5.md
     "lam / ds_alpha joint sweep (llama-1b)")
 
 # --- GSM8K cnt-mcts model family, size, quantization comparison
@@ -2521,7 +2521,7 @@
   recorded: true
   priority: 2
   note: gsm8k llama-1b fp16, cfg-4c6eeea3, run_id 1zihpeib; pass@gb
-    .9023±.0131 (docs/exp-comparison-gsm8k.md "model family, size,
+    .9023±.0131 (docs/exp-comp-gsm8k.md "model family, size,
     quantization comparison (QwenPRM)")
 - launcher: generate_mcts_cnt.py
   config_root: mcts_cnt_prm800k
@@ -2535,7 +2535,7 @@
   recorded: true
   priority: 2
   note: gsm8k qwen-7b gptq-int4, cfg-f4e9d64e, run_id hlbqb0ib;
-    pass@gb .9727±.0072 (docs/exp-comparison-gsm8k.md "model family,
+    pass@gb .9727±.0072 (docs/exp-comp-gsm8k.md "model family,
     size, quantization comparison (QwenPRM)")
 - launcher: generate_mcts_cnt.py
   config_root: mcts_cnt_prm800k
@@ -2549,7 +2549,7 @@
   recorded: true
   priority: 2
   note: gsm8k llama-3b fp16, cfg-ba773291, run_id 2tqufnuv; pass@gb
-    .9668±.0079 (docs/exp-comparison-gsm8k.md "model family, size,
+    .9668±.0079 (docs/exp-comp-gsm8k.md "model family, size,
     quantization comparison (QwenPRM)"); trial-001 scoring initially
     failed (skipped by compute_stats.py) and completed naturally on
     a later pass -- did not use prepare_scored_dataset.py recovery.
@@ -2565,7 +2565,7 @@
   recorded: true
   priority: 2
   note: gsm8k qwen-3b fp16, cfg-47bff566, run_id 8msypaw8; pass@gb
-    .9707±.0075 (docs/exp-comparison-gsm8k.md "model family, size,
+    .9707±.0075 (docs/exp-comp-gsm8k.md "model family, size,
     quantization comparison (QwenPRM)")
 - launcher: generate_mcts_cnt.py
   config_root: mcts_cnt_prm800k
@@ -2579,7 +2579,7 @@
   recorded: true
   priority: 2
   note: gsm8k qwen-math-1.5b fp16, cfg-5a20db26, run_id hy6vvm9b;
-    pass@gb .9766±.0067 (docs/exp-comparison-gsm8k.md "model family,
+    pass@gb .9766±.0067 (docs/exp-comp-gsm8k.md "model family,
     size, quantization comparison (QwenPRM)")
 
 # --- level-5 lam/ds_alpha joint sweep, w_eff=1000 step, 9 cells
@@ -2600,7 +2600,7 @@
   recorded: true
   priority: 1
   note: level-5 llama-1b w_eff=1000 lam=1.0, cfg-83d26939, run_id
-    cao33yfz; pass@gb .3396±.0290 (docs/exp-comparison-level5.md
+    cao33yfz; pass@gb .3396±.0290 (docs/exp-comp-prm800k-level5.md
     "lam / ds_alpha joint sweep (llama-1b)")
 - launcher: generate_mcts_sem.py
   config_root: mcts_sem_v02_prm800k
@@ -2617,7 +2617,7 @@
   recorded: true
   priority: 1
   note: level-5 llama-1b w_eff=1000 lam=0.1, cfg-4fbd47df, run_id
-    dggu24ja; pass@gb .3470±.0291 (docs/exp-comparison-level5.md
+    dggu24ja; pass@gb .3470±.0291 (docs/exp-comp-prm800k-level5.md
     "lam / ds_alpha joint sweep (llama-1b)")
 - launcher: generate_mcts_sem.py
   config_root: mcts_sem_v02_prm800k
@@ -2634,7 +2634,7 @@
   recorded: true
   priority: 1
   note: level-5 llama-1b w_eff=1000 lam=0.01, cfg-94126a99, run_id
-    f2r2nsv7; pass@gb .3769±.0297 (docs/exp-comparison-level5.md
+    f2r2nsv7; pass@gb .3769±.0297 (docs/exp-comp-prm800k-level5.md
     "lam / ds_alpha joint sweep (llama-1b)")
 - launcher: generate_mcts_sem.py
   config_root: mcts_sem_v02_prm800k
@@ -2651,7 +2651,7 @@
   recorded: true
   priority: 1
   note: level-5 qwen-math-1.5b w_eff=1000 lam=1.0, cfg-c371341f,
-    run_id t9oed954; pass@gb .6754±.0287 (docs/exp-comparison-level5.md
+    run_id t9oed954; pass@gb .6754±.0287 (docs/exp-comp-prm800k-level5.md
     "lam / ds_alpha joint sweep (qwen-math-1.5b)")
 - launcher: generate_mcts_sem.py
   config_root: mcts_sem_v02_prm800k
@@ -2668,7 +2668,7 @@
   recorded: true
   priority: 1
   note: level-5 qwen-math-1.5b w_eff=1000 lam=0.1, cfg-372193f7,
-    run_id u5t7y0eq; pass@gb .7463±.0266 (docs/exp-comparison-level5.md
+    run_id u5t7y0eq; pass@gb .7463±.0266 (docs/exp-comp-prm800k-level5.md
     "lam / ds_alpha joint sweep (qwen-math-1.5b)")
 - launcher: generate_mcts_sem.py
   config_root: mcts_sem_v02_prm800k
@@ -2685,7 +2685,7 @@
   recorded: true
   priority: 1
   note: level-5 qwen-math-1.5b w_eff=1000 lam=0.01, cfg-fc5e5101,
-    run_id ryzf69dm; pass@gb .7201±.0275 (docs/exp-comparison-level5.md
+    run_id ryzf69dm; pass@gb .7201±.0275 (docs/exp-comp-prm800k-level5.md
     "lam / ds_alpha joint sweep (qwen-math-1.5b)")
 - launcher: generate_mcts_sem.py
   config_root: mcts_sem_v02_prm800k
@@ -2702,7 +2702,7 @@
   recorded: true
   priority: 1
   note: level-5 qwen-7b-gptq w_eff=1000 lam=1.0, cfg-7c0d85ea,
-    run_id be021ujq; pass@gb .7500±.0265 (docs/exp-comparison-level5.md
+    run_id be021ujq; pass@gb .7500±.0265 (docs/exp-comp-prm800k-level5.md
     "lam / ds_alpha joint sweep (qwen-7b gptq-int4)")
 - launcher: generate_mcts_sem.py
   config_root: mcts_sem_v02_prm800k
@@ -2719,7 +2719,7 @@
   recorded: true
   priority: 1
   note: level-5 qwen-7b-gptq w_eff=1000 lam=0.1, cfg-84b0611e,
-    run_id r2c56ks3; pass@gb .7799±.0254 (docs/exp-comparison-level5.md
+    run_id r2c56ks3; pass@gb .7799±.0254 (docs/exp-comp-prm800k-level5.md
     "lam / ds_alpha joint sweep (qwen-7b gptq-int4)")
 - launcher: generate_mcts_sem.py
   config_root: mcts_sem_v02_prm800k
@@ -2736,7 +2736,7 @@
   recorded: true
   priority: 1
   note: level-5 qwen-7b-gptq w_eff=1000 lam=0.01, cfg-ee2a8129,
-    run_id qhyxutx6; pass@gb .7649±.0260 (docs/exp-comparison-level5.md
+    run_id qhyxutx6; pass@gb .7649±.0260 (docs/exp-comp-prm800k-level5.md
     "lam / ds_alpha joint sweep (qwen-7b gptq-int4)")
 
 # --- level-4 agg_strategy comparison (sem-mcts, qwen PRM), lam=0.1
@@ -2757,7 +2757,7 @@
   recorded: true
   priority: 2
   note: level-4 qwen-3b lam=0.1 w_eff=10 agg=prod, cfg-a0c0449c,
-    run_id mf6eo6vf; pass@gb .8594±.0218 (docs/exp-comparison.md
+    run_id mf6eo6vf; pass@gb .8594±.0218 (docs/exp-comp-prm800k-level4.md
     "agg_strategy comparison (qwen-3b, qwen-math-1.5b, lam=0.1,
     w_eff=10)")
 - launcher: generate_mcts_sem.py
@@ -2774,7 +2774,7 @@
   recorded: true
   priority: 2
   note: level-4 qwen-3b lam=0.1 w_eff=10 agg=min, cfg-78d44e1f,
-    run_id vos21kl1; pass@gb .8633±.0215 (docs/exp-comparison.md
+    run_id vos21kl1; pass@gb .8633±.0215 (docs/exp-comp-prm800k-level4.md
     "agg_strategy comparison (qwen-3b, qwen-math-1.5b, lam=0.1,
     w_eff=10)")
 - launcher: generate_mcts_sem.py
@@ -2792,7 +2792,7 @@
   priority: 2
   note: level-4 qwen-math-1.5b lam=0.1 w_eff=100 agg=min,
     cfg-21a28447, run_id wxp07ylo; pass@gb .8789±.0204
-    (docs/exp-comparison.md "agg_strategy comparison (qwen-3b,
+    (docs/exp-comp-prm800k-level4.md "agg_strategy comparison (qwen-3b,
     qwen-math-1.5b, lam=0.1, w_eff=100)")
 - launcher: generate_mcts_sem.py
   config_root: mcts_sem_v02_prm800k
@@ -2809,7 +2809,7 @@
   priority: 2
   note: level-4 qwen-math-1.5b lam=0.1 w_eff=100 agg=prod,
     cfg-717ca367, run_id lv6k7484; pass@gb .8594±.0218
-    (docs/exp-comparison.md "agg_strategy comparison (qwen-3b,
+    (docs/exp-comp-prm800k-level4.md "agg_strategy comparison (qwen-3b,
     qwen-math-1.5b, lam=0.1, w_eff=100)")
 - launcher: generate_mcts_sem.py
   config_root: mcts_sem_v02_prm800k
@@ -2825,7 +2825,7 @@
   recorded: true
   priority: 2
   note: level-4 qwen-3b lam=0.1 w_eff=100 agg=prod, cfg-3cebaec0,
-    run_id fld3knq5; pass@gb .8672±.0213 (docs/exp-comparison.md
+    run_id fld3knq5; pass@gb .8672±.0213 (docs/exp-comp-prm800k-level4.md
     "agg_strategy comparison (qwen-3b, qwen-math-1.5b, lam=0.1,
     w_eff=100)")
 - launcher: generate_mcts_sem.py
@@ -2842,6 +2842,6 @@
   recorded: true
   priority: 2
   note: level-4 qwen-3b lam=0.1 w_eff=100 agg=min, cfg-4ef6d3b2,
-    run_id rmt3u7sf; pass@gb .8711±.0210 (docs/exp-comparison.md
+    run_id rmt3u7sf; pass@gb .8711±.0210 (docs/exp-comp-prm800k-level4.md
     "agg_strategy comparison (qwen-3b, qwen-math-1.5b, lam=0.1,
     w_eff=100)")
