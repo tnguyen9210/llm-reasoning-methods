@@ -252,6 +252,7 @@ def main(cfg: ExpConfig):
                 trial_idx, agg_strategy=cfg.gen.agg_strategy,
                 n="gb", batch_size=cfg.prm.score_batch_size,
                 num_proc=cfg.run.num_proc,
+                question_field=cfg.data.question_field,
             )
         except Exception as e:
             print(f"scoring failed for trial {trial_idx}: {e!r}")

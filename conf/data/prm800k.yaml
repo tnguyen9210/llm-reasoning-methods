@@ -5,3 +5,4 @@ ds_dir: ${base_dir}/prm800k/math_splits
 ds_split: test
 question_field: problem
 level: 4
+grader_name: math

@@ -78,7 +78,7 @@ def main(cfg: ExpConfig):
     #   pass@gb, naive@gb, weighted@gb, maj@gb,
     #   ncomps, depth, nphases, ndepths   (each: mean ± SEM)
     summary = metrics.compute_stats_basics(
-        result_dir, run_name, cfg.run.num_trials,
+        result_dir, run_name, cfg.run.num_trials, cfg.data.grader_name,
     )
 
     # Reattach to the generation run (id saved at generation time) and

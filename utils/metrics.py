@@ -45,10 +45,14 @@ def timeout_handler(signum, frame):
 
 
 def run_with_timeout(
-    fn_extract_answer, fn_grade, completion, gt_answer, timeout=2
+    fn_extract_answer, fn_grade, completion, gt_answer,
+    grader_name='math', timeout=2,
 ):
     """Extract an answer from `completion` and grade it against
     `gt_answer`, aborting if it runs past `timeout` seconds.
+
+    `grader_name` selects the utils/parser.py `data_name` vocabulary
+    ("math", "gsm8k", ...) fn_extract_answer branches on.
 
     The grading call passes timeout=True so grader2.math_equal routes
     symbolic comparison through its multiprocessing hard-kill path
@@ -62,7 +66,7 @@ def run_with_timeout(
     signal.signal(signal.SIGALRM, timeout_handler)
     signal.alarm(timeout)
     try:
-        c_answer = fn_extract_answer(completion, 'math')
+        c_answer = fn_extract_answer(completion, grader_name)
         result = fn_grade(c_answer, gt_answer, timeout=True)
     except TimeoutException:
         print(f"Timeout: {completion}")
@@ -73,12 +77,12 @@ def run_with_timeout(
     return c_answer, result
 
 
-def _grade_pred(pred_field, gt_answer, timeout=2):
+def _grade_pred(pred_field, gt_answer, grader_name='math', timeout=2):
     """Grade a single pred_*@gb field string against the ground
     truth. Returns bool (False on timeout). See run_with_timeout for
     why grading passes timeout=True (hard-kill subprocess, not
     signal.alarm)."""
-    pred_answer = parser.extract_answer(pred_field, 'math')
+    pred_answer = parser.extract_answer(pred_field, grader_name)
     signal.signal(signal.SIGALRM, timeout_handler)
     signal.alarm(timeout)
     try:
@@ -93,8 +97,12 @@ def _grade_pred(pred_field, gt_answer, timeout=2):
 # Per-dataset correctness evaluation                              #
 # --------------------------------------------------------------- #
 
-def evaluate_correctness(dataset, timeout=2):
+def evaluate_correctness(dataset, grader_name='math', timeout=2):
     """Per-question metrics for one trial's scored dataset.
+
+    `grader_name` selects the utils/parser.py `data_name` vocabulary
+    ("math", "gsm8k", ...) ground-truth parsing and answer extraction
+    branch on -- pass the run's `cfg.data.grader_name`.
 
     Returns a dict of 1-D arrays (one entry per question):
       pass_gb, naive_gb, weighted_gb, maj_gb  (correctness in {0,1})
@@ -113,7 +121,7 @@ def evaluate_correctness(dataset, timeout=2):
     }
 
     for q_idx, data in enumerate(dataset):
-        _, gt_answer = parser.parse_ground_truth(data, 'math')
+        _, gt_answer = parser.parse_ground_truth(data, grader_name)
         completions = data["completions"]
 
         # No completions: the search produced nothing for this
@@ -134,18 +142,18 @@ def evaluate_correctness(dataset, timeout=2):
 
         # Aggregation-based predictions (naive / weighted / maj).
         out["naive_gb"][q_idx] = _grade_pred(
-            data["pred_naive@gb"], gt_answer, timeout)
+            data["pred_naive@gb"], gt_answer, grader_name, timeout)
         out["weighted_gb"][q_idx] = _grade_pred(
-            data["pred_weighted@gb"], gt_answer, timeout)
+            data["pred_weighted@gb"], gt_answer, grader_name, timeout)
         out["maj_gb"][q_idx] = _grade_pred(
-            data["pred_maj@gb"], gt_answer, timeout)
+            data["pred_maj@gb"], gt_answer, grader_name, timeout)
 
         # pass@gb: oracle best-of-n — correct if ANY completion is.
         pass_gb_correct = False
         for completion in completions:
             _, is_correct = run_with_timeout(
                 parser.extract_answer, grader2.math_equal,
-                completion, gt_answer, timeout,
+                completion, gt_answer, grader_name, timeout,
             )
             if is_correct is True:
                 pass_gb_correct = True
@@ -171,7 +179,7 @@ def evaluate_correctness(dataset, timeout=2):
     return out
 
 
-def _load_trials(result_dir, config_name, num_trials):
+def _load_trials(result_dir, config_name, num_trials, grader_name='math'):
     """Load + evaluate each trial, returning per-metric arrays
     concatenated over all trials x questions. Trials whose scored
     .jsonl is missing are skipped (and reported), so stats can be
@@ -189,7 +197,7 @@ def _load_trials(result_dir, config_name, num_trials):
         dataset_res = load_dataset(
             "json", data_files=path, split='train',
         )
-        per_trial.append(evaluate_correctness(dataset_res))
+        per_trial.append(evaluate_correctness(dataset_res, grader_name))
 
     if skipped:
         print(f"missing trials, skipped: {skipped}")
@@ -216,11 +224,15 @@ def _mean_sem(arr):
 # Top-level: basic statistics                                     #
 # --------------------------------------------------------------- #
 
-def compute_stats_basics(result_dir, config_name, num_trials):
+def compute_stats_basics(
+    result_dir, config_name, num_trials, grader_name='math',
+):
     """Aggregate correctness + search-cost stats across trials,
     save the per-question correctness arrays, and print a summary
-    line. Returns the stats dict (metric -> (mean, sem))."""
-    stats = _load_trials(result_dir, config_name, num_trials)
+    line. `grader_name` selects the utils/parser.py `data_name`
+    vocabulary ("math", "gsm8k", ...) -- pass `cfg.data.grader_name`.
+    Returns the stats dict (metric -> (mean, sem))."""
+    stats = _load_trials(result_dir, config_name, num_trials, grader_name)
 
     # Persist the raw per-question correctness for downstream tests.
     for name in ("pass_gb", "naive_gb", "weighted_gb", "maj_gb"):
@@ -260,7 +272,9 @@ def max_with_index(arr):
     return max_score, max_idx
 
 
-def compute_correctness_curve_budget(dataset, step_budget, timeout=2):
+def compute_correctness_curve_budget(
+    dataset, step_budget, grader_name='math', timeout=2,
+):
     """Per-question best-of-n correctness as a function of generation
     budget. Uses comp_gen (generation count when each completion
     finished) as the budget axis; the running argmax over agg_scores
@@ -275,7 +289,7 @@ def compute_correctness_curve_budget(dataset, step_budget, timeout=2):
         if len(completions) == 0:
             continue
 
-        _, gt_answer = parser.parse_ground_truth(data, 'math')
+        _, gt_answer = parser.parse_ground_truth(data, grader_name)
 
         max_correctness_list = []
         max_score = float('-inf')
@@ -293,7 +307,7 @@ def compute_correctness_curve_budget(dataset, step_budget, timeout=2):
                 max_step_cnt = step_cnt
                 _, max_is_correct = run_with_timeout(
                     parser.extract_answer, grader2.math_equal,
-                    completion, gt_answer, timeout,
+                    completion, gt_answer, grader_name, timeout,
                 )
 
             if max_overlap:
@@ -316,10 +330,13 @@ def compute_correctness_curve_budget(dataset, step_budget, timeout=2):
 
 
 def compute_stats_correctness_curve_budget(
-    result_dir, config_name, num_trials, step_budget
+    result_dir, config_name, num_trials, step_budget,
+    grader_name='math',
 ):
     """Average the budget curve over trials x questions; print and
-    return the peak mean correctness with its SEM."""
+    return the peak mean correctness with its SEM. `grader_name`
+    selects the utils/parser.py `data_name` vocabulary ("math",
+    "gsm8k", ...) -- pass `cfg.data.grader_name`."""
     all_curves = []
     for trial_idx in range(num_trials):
         path = (
@@ -330,7 +347,7 @@ def compute_stats_correctness_curve_budget(
             "json", data_files=path, split='train',
         )
         curve, _ = compute_correctness_curve_budget(
-            dataset_res, step_budget,
+            dataset_res, step_budget, grader_name,
         )
         all_curves.append(curve)
 

@@ -1,0 +1,8 @@
+# @package data
+# Dataset group → binds onto DataConfig.
+name: gsm8k
+ds_dir: ${base_dir}/gsm8k
+ds_split: test_subset
+question_field: question
+level: null
+grader_name: gsm8k

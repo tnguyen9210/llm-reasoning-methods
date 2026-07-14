@@ -203,6 +203,11 @@ class DataConfig:
     ds_split: str = "test"
     question_field: str = "problem"
     level: Optional[int] = None
+    # Which utils/parser.py `data_name` vocabulary ("math", "gsm8k",
+    # ...) the ground-truth grader uses for this dataset. Derived
+    # from `name`, not an independent experimental axis -- see
+    # _HASH_EXCLUDE.
+    grader_name: str = "math"
 
 
 @dataclass
@@ -662,7 +667,7 @@ _HASH_EXCLUDE = {
     "llm": {"gpu_memory_utilization"},
     "prm": {"device_map", "score_batch_size"},
     "search": {"embeds_gpu_memory_utilization", "embeds_mean"},
-    "data": {"ds_dir", "question_field"},
+    "data": {"ds_dir", "question_field", "grader_name"},
 }
 
 

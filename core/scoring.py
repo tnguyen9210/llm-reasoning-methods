@@ -293,17 +293,20 @@ def build_scored_dataset(
     n: str = "gb",
     num_proc: int = 1,
     batch_size: int = 4,
+    question_field: str = "problem",
 ) -> Dataset:
     """Turn one trial's raw search results into a scored Dataset and
     write it to {result_dir}/{run_name}--trial-{trial_idx:03d}.jsonl.
 
     `results` holds per-question lists batched over all questions (the
     object generate_*.jsonl stores). `dataset` is the matching question
-    split (sliced to the same questions). The output row schema is the
-    dataset's base fields (problem/solution/answer/subject/level/
-    unique_id) plus completions, scores, agg_scores,
-    pred_{weighted,maj,naive}@gb, and whatever per-question stats the
-    method produced.
+    split (sliced to the same questions). `question_field` is the
+    dataset's question column name (`cfg.data.question_field` —
+    "problem" for prm800k, "question" for gsm8k). The output row schema
+    is the dataset's base fields (problem/solution/answer/subject/
+    level/unique_id, or gsm8k's question/answer) plus completions,
+    scores, agg_scores, pred_{weighted,maj,naive}@gb, and whatever
+    per-question stats the method produced.
 
     Stats are method-agnostic: every per-question list in `results`
     other than `completions` is attached as a column under its raw key
@@ -318,7 +321,7 @@ def build_scored_dataset(
     if len(dataset) != num_questions:
         dataset = dataset.select(range(num_questions))
 
-    questions = [dataset[i]["problem"] for i in range(num_questions)]
+    questions = [dataset[i][question_field] for i in range(num_questions)]
 
     # PRM-score every candidate: scores[q][answer][step].
     scores = prm.score(questions, completions, batch_size=batch_size)
