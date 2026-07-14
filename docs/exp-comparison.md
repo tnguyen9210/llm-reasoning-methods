@@ -1486,8 +1486,8 @@ instead of one wide sparse grid.)
 | qwen-3b | rlhflow | min | — | planned | — | — | — | — | — |
 | qwen-3b | rlhflow | prod | — | planned | — | — | — | — | — |
 | qwen-3b | rlhflow | last | — | planned | — | — | — | — | — |
-| qwen-3b | qwen | min | — | planned | — | — | — | — | — |
-| qwen-3b | qwen | prod | — | planned | — | — | — | — | — |
+| qwen-3b | qwen | min | 2 | scored | .8633<br>±.0215 | .8047<br>±.0248 | .7969<br>±.0252 | .7500<br>±.0271 | 4.92 |
+| qwen-3b | qwen | prod | 2 | scored | .8594<br>±.0218 | .7852<br>±.0257 | .8008<br>±.0250 | .7695<br>±.0264 | 4.85 |
 | qwen-3b | qwen | last | 2 | scored | .8438<br>±.0227 | .7344<br>±.0277 | .7070<br>±.0285 | .7031<br>±.0286 | 4.90 |
 | qwen-math-1.5b | rlhflow | min | — | planned | — | — | — | — | — |
 | qwen-math-1.5b | rlhflow | prod | — | planned | — | — | — | — | — |
@@ -1496,25 +1496,23 @@ instead of one wide sparse grid.)
 | qwen-math-1.5b | qwen | prod | 2 | scored | .8867<br>±.0198 | .8125<br>±.0244 | .7891<br>±.0255 | .7852<br>±.0257 | 3.99 |
 | qwen-math-1.5b | qwen | last | 2 | scored (see lam/ds_alpha joint sweep, qwen-math-1.5b) | .8867<br>±.0198 | .7930<br>±.0254 | .7578<br>±.0268 | .7500<br>±.0271 | 4.02 |
 
-> **Analysis.** 4 of 12 cells scored (2026-07-09). qwen-math-1.5b/
-> qwen-PRM: all three agg_strategy values now filled — `min` (.9023)
-> edges out `prod`/`last` (both .8867 exactly) on pass@gb, though all
-> three are within ~1 SEM of each other. Naive/wei/maj tell a
-> different story: `prod` (.8125/.7891/.7852) clearly beats both
-> `min` (.8320/.8086/.7695 — comparable naive, but lower maj) and
-> `last` (.7930/.7578/.7500 — lowest of the three on all three
-> metrics) — so unlike pass@gb, which is flat across agg_strategy
-> here, the non-pass metrics show a real spread with `prod` on top.
-> qwen-3b/qwen-PRM `last` (.8438) is the only qwen-3b cell filled so
-> far, nothing to compare it against yet within this table.
-> **Limitations / follow-up:** 8 of 12 cells still new/unqueued in
-> `experiments.yaml` (all qwen-3b except `last`, all rlhflow-PRM
-> cells for both models). The pass@gb-flat-but-naive/wei/maj-spread
-> pattern for qwen-math-1.5b is worth re-checking once qwen-3b's
-> `min`/`prod` cells fill in — if it holds there too, it would mean
-> `agg_strategy`'s effect at `lam=0.1` shows up in the non-pass
-> metrics even when pass@gb itself looks flat, which the `lam=0.01`
-> table didn't surface.
+> **Analysis.** 6 of 12 cells scored. qwen-math-1.5b/qwen-PRM: all
+> three agg_strategy values filled — `min` (.9023) edges out
+> `prod`/`last` (both .8867 exactly) on pass@gb, though all three
+> are within ~1 SEM of each other. Naive/wei/maj tell a different
+> story: `prod` (.8125/.7891/.7852) clearly beats both `min`
+> (.8320/.8086/.7695 — comparable naive, but lower maj) and `last`
+> (.7930/.7578/.7500 — lowest of the three on all three metrics) —
+> so unlike pass@gb, which is flat across agg_strategy here, the
+> non-pass metrics show a real spread with `prod` on top. qwen-3b/
+> qwen-PRM now shows the same pattern: pass@gb is flat across all
+> three (`min` .8633, `prod` .8594, `last` .8438 — all within ~1
+> SEM), but naive/wei/maj favor `min`/`prod` (.80–.80/.79–.80)
+> over `last` (.73/.71/.70) — confirming the pass@gb-flat-but-
+> naive/wei/maj-spread pattern holds across both models at this
+> `w_eff`, not just qwen-math-1.5b.
+> **Limitations / follow-up:** 6 of 12 cells still new/unqueued in
+> `experiments.yaml` (all rlhflow-PRM cells for both models).
 
 #### agg_strategy comparison (qwen-3b, qwen-math-1.5b, lam=0.1, w_eff=100)
 > **Compares:** same as the `w_eff=10` table above, at the next
@@ -1530,28 +1528,36 @@ instead of one wide sparse grid.)
 | qwen-3b | rlhflow | min | — | planned | — | — | — | — | — |
 | qwen-3b | rlhflow | prod | — | planned | — | — | — | — | — |
 | qwen-3b | rlhflow | last | — | planned | — | — | — | — | — |
-| qwen-3b | qwen | min | — | planned | — | — | — | — | — |
-| qwen-3b | qwen | prod | — | planned | — | — | — | — | — |
+| qwen-3b | qwen | min | 2 | scored | .8711<br>±.0210 | .7734<br>±.0262 | .7617<br>±.0267 | .7383<br>±.0275 | 4.88 |
+| qwen-3b | qwen | prod | 2 | scored | .8672<br>±.0213 | .7930<br>±.0254 | .7773<br>±.0261 | .7305<br>±.0278 | 4.92 |
 | qwen-3b | qwen | last | 2 | scored | .8750<br>±.0207 | .8086<br>±.0246 | .7656<br>±.0265 | .7266<br>±.0279 | 4.84 |
 | qwen-math-1.5b | rlhflow | min | — | planned | — | — | — | — | — |
 | qwen-math-1.5b | rlhflow | prod | — | planned | — | — | — | — | — |
 | qwen-math-1.5b | rlhflow | last | — | planned | — | — | — | — | — |
-| qwen-math-1.5b | qwen | min | — | planned | — | — | — | — | — |
-| qwen-math-1.5b | qwen | prod | — | planned | — | — | — | — | — |
+| qwen-math-1.5b | qwen | min | 2 | scored | .8789<br>±.0204 | .8125<br>±.0244 | .7852<br>±.0257 | .7422<br>±.0274 | 4.02 |
+| qwen-math-1.5b | qwen | prod | 2 | scored | .8594<br>±.0218 | .7930<br>±.0254 | .7656<br>±.0265 | .7422<br>±.0274 | 3.96 |
 | qwen-math-1.5b | qwen | last | 2 | scored (see lam/ds_alpha joint sweep, qwen-math-1.5b) | .8672<br>±.0213 | .7891<br>±.0255 | .7656<br>±.0265 | .7422<br>±.0274 | 3.92 |
 
-> **Analysis.** 2 of 12 cells scored (2026-07-09), both `last`
-> (qwen-3b .8750, qwen-math-1.5b .8672) — no `min`/`prod` cells
-> filled at this `w_eff` yet, so no within-table agg_strategy
-> comparison possible here. qwen-3b's `last` here (.8750) is close
-> to its `w_eff=10` counterpart in the table above (.8438, +.031,
-> within ~1.5 SEM) — consistent with the general `w_eff` plateau
-> once past ~10.
-> **Limitations / follow-up:** 10 of 12 cells still new/unqueued in
-> `experiments.yaml`. Filling `min`/`prod` at qwen-3b here would
-> pair with the `w_eff=10` table's qwen-math-1.5b `min`>`last`
-> result and confirm/refute whether that gap is agg_strategy- or
-> model-specific.
+> **Analysis.** 6 of 12 cells scored. All three qwen-3b/qwen-PRM
+> agg_strategy values are close on pass@gb (.8711/.8672/.8750 —
+> within ~1 SEM), matching the flat-pass@gb pattern from the
+> `w_eff=10` table, though the naive/wei/maj spread is milder here
+> (`last` actually leads maj@gb at .7266 vs. `min`/`prod`'s
+> .7383/.7305 — the `w_eff=10` table's "min/prod beat last on
+> non-pass metrics" finding does not clearly repeat at this
+> `w_eff`). qwen-math-1.5b/qwen-PRM: `min` (.8789) again edges out
+> `prod`/`last` (.8594/.8672) on pass@gb, all within ~1 SEM — same
+> ranking as `w_eff=10`, but maj@gb is now tied across all three
+> (.7422 for all) rather than showing `prod`'s clear lead there.
+> qwen-3b's `last` here (.8750) is close to its `w_eff=10`
+> counterpart in the table above (.8438, +.031, within ~1.5 SEM) —
+> consistent with the general `w_eff` plateau once past ~10.
+> **Limitations / follow-up:** 6 of 12 cells still new/unqueued in
+> `experiments.yaml` (all rlhflow-PRM cells for both models). The
+> `w_eff=10` table's "min/prod beat last on non-pass metrics"
+> pattern doesn't clearly hold here — worth flagging as `w_eff`-
+> dependent rather than a stable agg_strategy effect once more
+> data lands.
 
 #### LLM vs PRM embeds comparison
 > **Compares:** the diversity-embedding *source* — v01 sources
