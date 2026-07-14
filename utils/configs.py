@@ -573,10 +573,11 @@ class RunConfig:
     num_proc: int = 1
     # Top-level results subdir override. Empty -> use data.name (the
     # normal case: results/{data.name}/...). Set to e.g. "smoketest"
-    # to reroute output to results/smoketest/... WITHOUT changing the
-    # dataset or the config hash (run is not a hash group). This is
-    # how throwaway smoke-test runs stay isolated from real result
-    # dirs while still loading the real dataset. See results_root().
+    # to reroute output to results/smoketest/{data.name}/... WITHOUT
+    # changing the dataset or the config hash (run is not a hash
+    # group). This is how throwaway smoke-test runs stay isolated
+    # from real result dirs (and from each other, across datasets)
+    # while still loading the real dataset. See results_root().
     results_subdir: str = ""
 
 
@@ -611,13 +612,16 @@ class ExpConfig:
 
 
 def results_root(cfg) -> str:
-    """The top-level results subdir for this run: run.results_subdir
-    if set, else data.name. One definition so every path-builder
-    (launchers + find_run_dir + status.py) agrees on where a run's
-    dir lives. Overriding run.results_subdir (e.g. 'smoketest')
-    reroutes output without touching the dataset or the config hash."""
+    """The top-level results subdir for this run: `{results_subdir}/
+    {data.name}` if run.results_subdir is set, else just data.name.
+    One definition so every path-builder (launchers + find_run_dir +
+    status.py) agrees on where a run's dir lives. Overriding
+    run.results_subdir (e.g. 'smoketest') reroutes output to
+    results/smoketest/{data.name}/... WITHOUT changing the dataset or
+    the config hash -- the dataset subfolder keeps smoke tests across
+    different datasets from mixing in one flat dir."""
     sub = getattr(cfg.run, "results_subdir", "") or ""
-    return sub if sub else cfg.data.name
+    return f"{sub}/{cfg.data.name}" if sub else cfg.data.name
 
 
 def level_dir(cfg) -> str:
