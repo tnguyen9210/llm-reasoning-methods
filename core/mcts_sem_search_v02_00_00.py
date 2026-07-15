@@ -107,15 +107,6 @@ logging.basicConfig(format='%(message)s', level=logging.FATAL + 1)
 _COV_DTYPES = {"fp32": np.float32, "fp64": np.float64}
 
 
-def _is_local_center(sc):
-    """True iff embeds_center_mode="local" is active. Single source of
-    truth for _extract_embeds's defer decision and
-    _maybe_center_local's own gate — both MUST agree, or embeddings
-    would silently ship uncentered and unnormalized (neither function
-    would touch them)."""
-    return sc.embeds_center and sc.embeds_center_mode == "local"
-
-
 # --------------------------------------------------------------------- #
 # Diversity selection                                                   #
 # --------------------------------------------------------------------- #
@@ -229,26 +220,22 @@ def _extract_embeds(raw, config, response_start_idx):
     the policy path it's `llm_vllm_embeds.encode(..., "token_embed")`.
     Both feed this same function so the two sources pool identically.
 
-    Five gated steps, in this order:
+    Three steps, in this order:
       1. scope     pick which tokens contribute (full sequence or only
                    the assistant response).
       2. pool      reduce to (dim,): last token or mean over scope.
       3. project   optional sparse random projection to embeds_dim
                    (JL near-isometry; fixed matrix per run). Linear, so
-                   it composes cleanly with centering below.
-      4. center    optional mean subtraction, POST-projection.
-                   embeds_center_mode="fixed": a held-out mean, to
-                   remove the embeddings' shared anisotropic offset.
-                   Done before normalize: the mean must be subtracted
-                   in the linear space. mode="local" needs the whole
-                   sibling group, so this function defers center AND
-                   normalize to `_maybe_center_local` (called from
-                   `_embed_candidates` once the group is assembled).
-      5. normalize optional L2 normalization (puts embeddings on the
-                   unit sphere so the diversity term reads direction,
-                   not magnitude). Non-linear, so it must come last.
+                   it composes cleanly with the centering that follows.
 
-    Steps 3-5 run on the numpy side; pooling/scope on the torch tensor.
+    Centering (fixed-mean OR local-group-mean) and the final L2
+    normalize are NOT done here — both need to see the whole sibling
+    batch at once (fixed mode's shape guard lives alongside local
+    mode's group-mean math for one reason to read), so they're
+    entirely `_center_and_normalize`'s job, called once per expansion
+    from `_embed_candidates` after every candidate has been pooled.
+
+    Step 3 runs on the numpy side; pooling/scope on the torch tensor.
     """
     sc = config.search
     # 1. Scope.
@@ -280,82 +267,86 @@ def _extract_embeds(raw, config, response_start_idx):
     elif embeds_proj != "none":
         raise ValueError(f"unknown embeds_proj: {embeds_proj!r}")
 
-    # 4. Center. Mode-dependent (embeds_center_mode): "fixed"
-    # subtracts the held-out precomputed mean here, per vector;
-    # "local" needs the whole sibling group's mean, so this function
-    # defers BOTH center and normalize to _maybe_center_local (called
-    # from _embed_candidates once the group is assembled) — the
-    # deferral keeps the pipeline order intact: center in the linear
-    # space, then the non-linear normalize.
+    return pooled
+
+
+def _center_and_normalize(embeds, sc):
+    """Center (optional, mode-dependent) then L2-normalize (optional)
+    an expansion's whole sibling batch of pooled/projected embeddings.
+
+    Owns BOTH gated steps `_extract_embeds`'s docstring used to number
+    4 and 5 — moved here because "fixed" mode's shape guard and
+    "local" mode's group-mean math read better side by side than
+    split across two functions, and because "local" mode strictly
+    needs the whole batch (see below), so per-vector `_extract_embeds`
+    could never do it anyway. Centering always happens in the linear
+    space, before the non-linear normalize — this function is the one
+    place that ordering has to be kept correct now.
+
+      embeds_center=False        : pass through; only normalize below.
+      embeds_center_mode="fixed" : subtract a held-out, precomputed
+                                    mean (search.embeds_mean) — same
+                                    constant for every vector, every
+                                    expansion, the whole run. The mean
+                                    lives in the post-projection space,
+                                    so its shape must match embeds_dim
+                                    (guard: a raw-space mean can never
+                                    be silently subtracted from a
+                                    projected vector).
+      embeds_center_mode="local" : subtract the mean of THIS
+                                    expansion's own sibling group,
+                                    recomputed fresh every expansion,
+                                    never carried forward (rep_exp-
+                                    style local centering:
+                                    docs/decisions/
+                                    rep-exp-elliptical-bonus-review.md).
+                                    batch_size=1 edge: the centered
+                                    vector is exactly 0 — zero
+                                    diversity bonus, and the Sherman-
+                                    Morrison fold of a zero vector is
+                                    a no-op. Harmless.
+
+    Coherence caveat for local mode (recorded in
+    docs/decisions/embeds-centering-design.md): each group is centered
+    at its own mean while V accumulates across the whole search, so
+    folded vectors carry group-dependent offsets. This is an empirical
+    ablation arm, not a coherence-preserving transform — rep_exp pairs
+    local centering with a per-group FRESH covariance, which our
+    accumulated V deliberately is not.
+    """
     if sc.embeds_center and sc.embeds_center_mode not in (
         "fixed", "local",
     ):
         raise ValueError(
             f"unknown embeds_center_mode: {sc.embeds_center_mode!r}"
         )
-    defer_local = _is_local_center(sc)
-    if sc.embeds_center and not defer_local:
-        # Fixed mode. The held-out mean lives in the post-projection
-        # space, so its shape must match the current (projected) dim —
-        # guard so a raw-space mean can't be silently subtracted from
-        # projected vecs.
+
+    stacked = np.stack(embeds)  # (batch_size, embeds_dim)
+
+    if sc.embeds_center and sc.embeds_center_mode == "local":
+        mean = stacked.mean(axis=0)
+    elif sc.embeds_center:
         if sc.embeds_mean is None:
             raise ValueError("embeds_center=True requires search.embeds_mean")
         mean = np.asarray(sc.embeds_mean)
-        if mean.shape[-1] != pooled.shape[-1]:
+        if mean.shape[-1] != stacked.shape[-1]:
             raise ValueError(
                 "embeds_mean dim "
-                f"{mean.shape[-1]} != embedding dim {pooled.shape[-1]}; "
+                f"{mean.shape[-1]} != embedding dim {stacked.shape[-1]}; "
                 "when embeds_proj='sparse' the mean must be computed in "
                 "the post-projection space (same fixed projection)."
             )
-        pooled = pooled - mean
+    else:
+        mean = None
 
-    # 5. Normalize (L2), on the numpy side so it stays after centering.
-    if sc.embeds_normalize and not defer_local:
-        norm = np.linalg.norm(pooled)
-        if norm > 0:
-            pooled = pooled / norm
-
-    return pooled
-
-
-def _maybe_center_local(embeds, sc):
-    """Group-center a sibling batch's embeddings on their own mean
-    when embeds_center_mode="local"; otherwise pass through.
-
-    The local mean is the mean of THIS expansion's candidates only —
-    recomputed fresh every expansion, never carried forward
-    (rep_exp-style local centering:
-    docs/decisions/rep-exp-elliptical-bonus-review.md). In this mode
-    _extract_embeds defers its center AND normalize steps to here, so
-    the pipeline order is preserved: center in the linear space, then
-    the non-linear L2 normalize.
-
-    batch_size=1 edge: the centered vector is exactly 0 — zero
-    diversity bonus, and the Sherman-Morrison fold of a zero vector
-    is a no-op. Harmless.
-
-    Coherence caveat (recorded in
-    docs/decisions/embeds-centering-design.md): each group is
-    centered at its own mean while V accumulates across the whole
-    search, so folded vectors carry group-dependent offsets. This is
-    an empirical ablation arm, not a coherence-preserving transform —
-    rep_exp pairs local centering with a per-group FRESH covariance,
-    which our accumulated V deliberately is not.
-    """
-    if not _is_local_center(sc):
-        return embeds
-    mean = np.mean(np.stack(embeds), axis=0)
-    out = []
-    for e in embeds:
-        e = e - mean
-        if sc.embeds_normalize:
-            norm = np.linalg.norm(e)
-            if norm > 0:
-                e = e / norm
-        out.append(e)
-    return out
+    if mean is not None:
+        stacked = stacked - mean
+    if sc.embeds_normalize:
+        norms = np.linalg.norm(stacked, axis=1, keepdims=True)
+        stacked = np.divide(
+            stacked, norms, out=np.zeros_like(stacked), where=norms > 0,
+        )
+    return list(stacked)
 
 
 def _embed_candidates(
@@ -405,7 +396,7 @@ def _embed_candidates(
                     outputs[0].outputs.data, config, response_start_idx
                 )
             )
-        return _maybe_center_local(embeds, sc)
+        return _center_and_normalize(embeds, sc)
 
     if source == "prm":
         # response_start_idx was computed with the GENERATOR tokenizer
@@ -436,7 +427,7 @@ def _embed_candidates(
             _extract_embeds(raw, config, response_start_idx)
             for raw in raw_embeds
         ]
-        return _maybe_center_local(embeds, sc)
+        return _center_and_normalize(embeds, sc)
 
     raise ValueError(f"unknown embeds_source: {source!r}")
 
