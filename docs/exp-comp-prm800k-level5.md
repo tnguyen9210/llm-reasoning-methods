@@ -448,122 +448,189 @@ Two activities, two shapes:
 > `w_eff=1/3` blocks, the `w_eff=0.1/0.3` on-ramp, and the
 > `w_eff=0` gap-closer; only 2 trials/cell.
 
-#### model family, size, quantization comparison (RLHFlowPRM)
-> **Compares:** model family, size, and quantization jointly —
-> same shape as cnt-mcts's table above, for cross-method
-> comparability.
+#### embeds_center_mode comparison (lam=0.01/ds_alpha=1)
+> **Compares:** `embeds_center_mode="local"` (rep_exp-style
+> sibling-group centering) against `embeds_center=false` (no
+> centering — today's default). `"fixed"` mode isn't in this table
+> yet — no precomputed held-out mean exists at this level. See
+> [rep-exp-elliptical-bonus-review.md](decisions/rep-exp-elliptical-bonus-review.md)
+> follow-up #3 and
+> [embeds-centering-design.md](decisions/embeds-centering-design.md)
+> for the full discussion.
 >
-> **Fixed:** bs-4, d-20, b=80, tmpl=model-family default,
-> method=`mcts_sem_v02` (PRM embeds), `embeds_proj=sparse512`,
-> `cov_update=sherman_morrison` (sm).
+> **Fixed:** method=`mcts_sem_v02` (PRM embeds), prm=qwen, bs-4,
+> d-20, b=80, proj=sparse512, cov_update=sm, cov_dtype=fp64 (default),
+> ds_beta=1.0, prm_batch_size=1, tmpl=model-family default (native for
+> Qwen, custom for Llama), **lam=0.01, ds_alpha=1.0** (`w_eff =
+> ds_alpha/sqrt(lam) = 10`) — the same checkpoint recommended as the
+> cross-model default in the `lam`/`ds_alpha` joint-sweep tables
+> above.
 >
-> **W&B:** none yet (no level-5 runs).
+> **W&B:** baselines cited from each model's own `lam`/`ds_alpha`
+> joint-sweep table above — llama-1b `tdyxh9sr`, llama-3b `tc6d70jy`,
+> qwen-7b gptq-int4 `3l1vzy8m`, qwen-math-1.5b `bb6rpjps`. `local`
+> rows and both qwen-3b rows: none yet.
 
-| llm | trials | status | pass@gb | naive@gb | wei@gb | maj@gb | hr/trial |
-|---|---|---|---|---|---|---|---|
-| llama-1b fp16 | — | planned | — | — | — | — | — |
-| llama-3b fp16 | — | planned | — | — | — | — | — |
-| qwen-3b fp16 | — | planned | — | — | — | — | — |
-| qwen-7b gptq-int4 | — | planned | — | — | — | — | — |
-| qwen-math-1.5b fp16 | — | planned | — | — | — | — | — |
+| llm | prm | center | trials | status | pass@gb | naive@gb | wei@gb | maj@gb | hr/trial |
+|---|---|---|---|---|---|---|---|---|---|
+| llama-1b | qwen | none | 2 | scored | .3209<br>±.0286 | .2425<br>±.0262 | .2313<br>±.0258 | .2015<br>±.0245 | 4.88 |
+| llama-1b | qwen | local | — | planned | — | — | — | — | — |
+| llama-3b | qwen | none | 2 | scored | .5784<br>±.0302 | .4403<br>±.0304 | .4291<br>±.0303 | .3881<br>±.0298 | 6.93 |
+| llama-3b | qwen | local | — | planned | — | — | — | — | — |
+| qwen-3b | qwen | none | — | planned | — | — | — | — | — |
+| qwen-3b | qwen | local | — | planned | — | — | — | — | — |
+| qwen-7b gptq-int4 | qwen | none | 2 | scored | .7687<br>±.0258 | .6231<br>±.0297 | .6194<br>±.0297 | .6119<br>±.0298 | 5.42 |
+| qwen-7b gptq-int4 | qwen | local | — | planned | — | — | — | — | — |
+| qwen-math-1.5b | qwen | none | 2 | scored | .7500<br>±.0265 | .6343<br>±.0295 | .6157<br>±.0298 | .6007<br>±.0300 | 4.79 |
+| qwen-math-1.5b | qwen | local | — | planned | — | — | — | — | — |
+
+> **Analysis.** 4/10 cells filled (all baselines, cited from
+> existing scored data — no new compute); the 5 `local` rows and
+> qwen-3b's baseline are all still `planned`. Nothing to compare yet
+> until at least one `local` row lands next to its baseline.
+> **Limitations / follow-up:** 6 launches remain (5 `local` rows +
+> qwen-3b's baseline). Match `run.num_trials=2` for consistency with
+> the cited baselines. A `"fixed"`-mode column is a natural follow-up
+> once a held-out mean is computed for at least one model (see
+> [embeds-centering-design.md](decisions/embeds-centering-design.md)
+> for how the fixed-mean file is built and loaded).
+
+#### embeds_center_mode comparison (lam=0.01/ds_alpha=10)
+> **Compares:** same as the `ds_alpha=1` table above, at the next
+> `w_eff` checkpoint (`w_eff = ds_alpha/sqrt(lam) = 100`).
+>
+> **Fixed:** identical to the `ds_alpha=1` table above (method=
+> `mcts_sem_v02`, prm=qwen, bs-4, d-20, b=80, proj=sparse512,
+> cov_update=sm, cov_dtype=fp64, ds_beta=1.0, prm_batch_size=1,
+> tmpl=model-family default) except **ds_alpha=10** (`w_eff=100`).
+>
+> **W&B:** baselines cited from each model's own `lam`/`ds_alpha`
+> joint-sweep table above — llama-1b `2sd0cen5`, llama-3b `q7yxcuq7`,
+> qwen-7b gptq-int4 `es99bc0h`, qwen-math-1.5b `scmsaxeq`. `local`
+> rows and both qwen-3b rows: none yet.
+
+| llm | prm | center | trials | status | pass@gb | naive@gb | wei@gb | maj@gb | hr/trial |
+|---|---|---|---|---|---|---|---|---|---|
+| llama-1b | qwen | none | 2 | scored | .3433<br>±.0291 | .2537<br>±.0266 | .1978<br>±.0244 | .1679<br>±.0229 | 4.85 |
+| llama-1b | qwen | local | — | planned | — | — | — | — | — |
+| llama-3b | qwen | none | 2 | scored | .5485<br>±.0305 | .4328<br>±.0303 | .3619<br>±.0294 | .3321<br>±.0288 | 6.99 |
+| llama-3b | qwen | local | — | planned | — | — | — | — | — |
+| qwen-3b | qwen | none | — | planned | — | — | — | — | — |
+| qwen-3b | qwen | local | — | planned | — | — | — | — | — |
+| qwen-7b gptq-int4 | qwen | none | 2 | scored | .7873<br>±.0250 | .6045<br>±.0299 | .5634<br>±.0304 | .5634<br>±.0304 | 5.54 |
+| qwen-7b gptq-int4 | qwen | local | — | planned | — | — | — | — | — |
+| qwen-math-1.5b | qwen | none | 2 | scored | .7164<br>±.0276 | .5896<br>±.0301 | .5746<br>±.0303 | .5597<br>±.0304 | 4.83 |
+| qwen-math-1.5b | qwen | local | — | planned | — | — | — | — | — |
+
+> **Analysis.** 4/10 cells filled (all baselines, cited from
+> existing scored data — no new compute); the 5 `local` rows and
+> qwen-3b's baseline are all still `planned`. Nothing to compare yet
+> until at least one `local` row lands next to its baseline.
+> **Limitations / follow-up:** 6 launches remain (5 `local` rows +
+> qwen-3b's baseline). Match `run.num_trials=2` for consistency with
+> the cited baselines.
+
+#### agg_strategy comparison (qwen-3b, qwen-math-1.5b, lam=0.01/ds_alpha=1)
+> **Compares:** `gen.agg_strategy` (`"min"` | `"prod"` | `"last"` —
+> `core/scoring.py::aggregate_scores`) — how a candidate's per-step
+> PRM scores collapse to one scalar — at `lam=0.01, ds_alpha=1.0`
+> (`w_eff = ds_alpha/sqrt(lam) = 10`), the same checkpoint used in
+> the `embeds_center_mode` tables above.
+>
+> **Fixed:** method=`mcts_sem_v02`, bs-4, d-20, b=80,
+> tmpl=model-family default (native for both models here),
+> proj=sparse512, cov=sm, lam=0.01, ds_alpha=1.0 (w_eff=10),
+> ds_beta=1.0.
+
+| llm | prm | agg_strategy | trials | status | pass@gb | naive@gb | wei@gb | maj@gb | hr/trial |
+|---|---|---|---|---|---|---|---|---|---|
+| qwen-3b | qwen | min | — | planned | — | — | — | — | — |
+| qwen-3b | qwen | prod | — | planned | — | — | — | — | — |
+| qwen-3b | qwen | last | — | planned | — | — | — | — | — |
+| qwen-math-1.5b | qwen | min | — | planned | — | — | — | — | — |
+| qwen-math-1.5b | qwen | prod | — | planned | — | — | — | — | — |
+| qwen-math-1.5b | qwen | last | — | planned | — | — | — | — | — |
 
 > **Analysis.** No level-5 data yet — nothing to take away.
 > **Limitations / follow-up:** entire table planned; launch is
 > the level-4 counterpart's command plus `data.level=5`.
 
-#### model family, size, quantization comparison (QwenPRM)
-> **Compares:** the same 5-model family/size/quantization sweep
-> as the RLHFlowPRM table above, but scored with `prm=qwen`
-> (Qwen-Math-7B-PRM) instead of the default `prm=rlhflow`
-> (Llama-8B-PRM).
+#### agg_strategy comparison (qwen-3b, qwen-math-1.5b, lam=0.01/ds_alpha=10)
+> **Compares:** same as the `ds_alpha=1.0` table above, at the next
+> `w_eff` checkpoint (`w_eff = ds_alpha/sqrt(lam) = 100`).
+>
+> **Fixed:** method=`mcts_sem_v02`, bs-4, d-20, b=80,
+> tmpl=model-family default (native for both models here),
+> proj=sparse512, cov=sm, lam=0.01, ds_alpha=10 (w_eff=100),
+> ds_beta=1.0.
+
+| llm | prm | agg_strategy | trials | status | pass@gb | naive@gb | wei@gb | maj@gb | hr/trial |
+|---|---|---|---|---|---|---|---|---|---|
+| qwen-3b | qwen | min | — | planned | — | — | — | — | — |
+| qwen-3b | qwen | prod | — | planned | — | — | — | — | — |
+| qwen-3b | qwen | last | — | planned | — | — | — | — | — |
+| qwen-math-1.5b | qwen | min | — | planned | — | — | — | — | — |
+| qwen-math-1.5b | qwen | prod | — | planned | — | — | — | — | — |
+| qwen-math-1.5b | qwen | last | — | planned | — | — | — | — | — |
+
+> **Analysis.** No level-5 data yet — nothing to take away.
+> **Limitations / follow-up:** entire table planned; launch is
+> the level-4 counterpart's command plus `data.level=5`.
+
+#### model family, size, quantization comparison (QwenPRM, lam=0.01/ds_alpha=1)
+> **Compares:** model family, size, and quantization jointly,
+> scored with `prm=qwen` (Qwen-Math-7B-PRM), at `lam=0.01,
+> ds_alpha=1.0` (`w_eff = ds_alpha/sqrt(lam) = 10`) — the same
+> checkpoint used in the `embeds_center_mode` and `agg_strategy`
+> tables above.
 >
 > **Fixed:** method=`mcts_sem_v02` (PRM embeds), prm=qwen,
 > bs-4, d-20, b=80, tmpl=model-family default (native for Qwen,
 > custom for Llama), `embeds_proj=sparse512`,
-> `cov_update=sherman_morrison` (sm), ds_alpha=100, ds_beta=1.0,
-> prm_batch_size=1.
+> `cov_update=sherman_morrison` (sm), lam=0.01, ds_alpha=1.0
+> (w_eff=10), ds_beta=1.0, prm_batch_size=1.
 >
-> **W&B:** none yet (no level-5 runs).
+> **W&B:** baselines cited from each model's own `lam`/`ds_alpha`
+> joint-sweep table above — llama-1b `tdyxh9sr`, llama-3b `tc6d70jy`,
+> qwen-7b gptq-int4 `3l1vzy8m`, qwen-math-1.5b `bb6rpjps`. qwen-3b:
+> none yet.
 
 | llm | trials | status | pass@gb | naive@gb | wei@gb | maj@gb | hr/trial |
 |---|---|---|---|---|---|---|---|
-| llama-1b fp16 | — | planned | — | — | — | — | — |
-| llama-3b fp16 | — | planned | — | — | — | — | — |
+| llama-1b fp16 | 2 | scored | .3209<br>±.0286 | .2425<br>±.0262 | .2313<br>±.0258 | .2015<br>±.0245 | 4.88 |
+| llama-3b fp16 | 2 | scored | .5784<br>±.0302 | .4403<br>±.0304 | .4291<br>±.0303 | .3881<br>±.0298 | 6.93 |
 | qwen-3b fp16 | — | planned | — | — | — | — | — |
-| qwen-7b gptq-int4 | — | planned | — | — | — | — | — |
-| qwen-math-1.5b fp16 | — | planned | — | — | — | — | — |
+| qwen-7b gptq-int4 | 2 | scored | .7687<br>±.0258 | .6231<br>±.0297 | .6194<br>±.0297 | .6119<br>±.0298 | 5.42 |
+| qwen-math-1.5b fp16 | 2 | scored | .7500<br>±.0265 | .6343<br>±.0295 | .6157<br>±.0298 | .6007<br>±.0300 | 4.79 |
 
-> **Analysis.** No level-5 data yet — nothing to take away.
-> **Limitations / follow-up:** entire table planned; launch is
-> the level-4 counterpart's command plus `data.level=5`.
+> **Analysis.** 4/5 cells filled (cited from existing scored data —
+> no new compute); only qwen-3b remains `planned`.
+> **Limitations / follow-up:** 1 launch remains (qwen-3b). Launch
+> is the level-4 counterpart's command plus `data.level=5`.
 
-
-#### agg_strategy comparison (qwen-3b, qwen-math-1.5b)
-> **Compares:** `gen.agg_strategy` (`"min"` | `"prod"` | `"last"` —
-> `core/scoring.py::aggregate_scores`) — how a candidate's
-> per-step PRM scores collapse to one scalar. Scoring-side
-> counterpart to the cnt-mcts table of the same name.
+#### model family, size, quantization comparison (QwenPRM, lam=0.01/ds_alpha=10)
+> **Compares:** same as the `ds_alpha=1` table above, at the next
+> `w_eff` checkpoint (`w_eff = ds_alpha/sqrt(lam) = 100`).
 >
-> **Fixed:** method=`mcts_sem_v02`, bs-4, d-20, b=80,
-> tmpl=model-family default (native for both models here),
-> proj=sparse512, cov=sm, ds_alpha=100.0, ds_beta=1.0.
-
-| llm | prm | agg_strategy | trials | status | pass@gb | naive@gb | wei@gb | maj@gb | hr/trial |
-|---|---|---|---|---|---|---|---|---|---|
-| qwen-3b | qwen | min | — | planned | — | — | — | — | — |
-| qwen-3b | qwen | prod | — | planned | — | — | — | — | — |
-| qwen-3b | qwen | last | — | planned | — | — | — | — | — |
-| qwen-math-1.5b | qwen | min | — | planned | — | — | — | — | — |
-| qwen-math-1.5b | qwen | prod | — | planned | — | — | — | — | — |
-| qwen-math-1.5b | qwen | last | — | planned | — | — | — | — | — |
-
-#### agg_strategy comparison (qwen-3b, qwen-math-1.5b, lam=0.1, w_eff=10)
-> **Compares:** same `gen.agg_strategy` knob as the table above, at
-> `lam=0.1` instead of the default `lam=0.01` — matched `w_eff` (via
-> `w_eff = ds_alpha/sqrt(lam)`) rather than matched `ds_alpha`, so
-> this is a cross-check on the `agg_strategy` finding under a
-> different `lam` operating point, not a new axis.
+> **Fixed:** identical to the `ds_alpha=1` table above except
+> **ds_alpha=10** (w_eff=100).
 >
-> **Fixed:** method=`mcts_sem_v02`, bs-4, d-20, b=80,
-> tmpl=model-family default (native for both models here),
-> proj=sparse512, cov=sm, lam=0.1, ds_alpha=3.16 (w_eff=10),
-> ds_beta=1.0.
+> **W&B:** baselines cited from each model's own `lam`/`ds_alpha`
+> joint-sweep table above — llama-1b `2sd0cen5`, llama-3b `q7yxcuq7`,
+> qwen-7b gptq-int4 `es99bc0h`, qwen-math-1.5b `scmsaxeq`. qwen-3b:
+> none yet.
 
-| llm | prm | agg_strategy | trials | status | pass@gb | naive@gb | wei@gb | maj@gb | hr/trial |
-|---|---|---|---|---|---|---|---|---|---|
-| qwen-3b | qwen | min | — | planned | — | — | — | — | — |
-| qwen-3b | qwen | prod | — | planned | — | — | — | — | — |
-| qwen-3b | qwen | last | — | planned | — | — | — | — | — |
-| qwen-math-1.5b | qwen | min | — | planned | — | — | — | — | — |
-| qwen-math-1.5b | qwen | prod | — | planned | — | — | — | — | — |
-| qwen-math-1.5b | qwen | last | — | planned | — | — | — | — | — |
+| llm | trials | status | pass@gb | naive@gb | wei@gb | maj@gb | hr/trial |
+|---|---|---|---|---|---|---|---|
+| llama-1b fp16 | 2 | scored | .3433<br>±.0291 | .2537<br>±.0266 | .1978<br>±.0244 | .1679<br>±.0229 | 4.85 |
+| llama-3b fp16 | 2 | scored | .5485<br>±.0305 | .4328<br>±.0303 | .3619<br>±.0294 | .3321<br>±.0288 | 6.99 |
+| qwen-3b fp16 | — | planned | — | — | — | — | — |
+| qwen-7b gptq-int4 | 2 | scored | .7873<br>±.0250 | .6045<br>±.0299 | .5634<br>±.0304 | .5634<br>±.0304 | 5.54 |
+| qwen-math-1.5b fp16 | 2 | scored | .7164<br>±.0276 | .5896<br>±.0301 | .5746<br>±.0303 | .5597<br>±.0304 | 4.83 |
 
-> **Analysis.** No level-5 data yet — nothing to take away.
-> **Limitations / follow-up:** entire table planned; launch is
-> the level-4 counterpart's command plus `data.level=5`.
-
-#### agg_strategy comparison (qwen-3b, qwen-math-1.5b, lam=0.1, w_eff=100)
-> **Compares:** same as the `w_eff=10` table above, at the next
-> `w_eff` checkpoint.
->
-> **Fixed:** method=`mcts_sem_v02`, bs-4, d-20, b=80,
-> tmpl=model-family default (native for both models here),
-> proj=sparse512, cov=sm, lam=0.1, ds_alpha=31.6 (w_eff=100),
-> ds_beta=1.0.
-
-| llm | prm | agg_strategy | trials | status | pass@gb | naive@gb | wei@gb | maj@gb | hr/trial |
-|---|---|---|---|---|---|---|---|---|---|
-| qwen-3b | qwen | min | — | planned | — | — | — | — | — |
-| qwen-3b | qwen | prod | — | planned | — | — | — | — | — |
-| qwen-3b | qwen | last | — | planned | — | — | — | — | — |
-| qwen-math-1.5b | qwen | min | — | planned | — | — | — | — | — |
-| qwen-math-1.5b | qwen | prod | — | planned | — | — | — | — | — |
-| qwen-math-1.5b | qwen | last | — | planned | — | — | — | — | — |
-
-> **Analysis.** No level-5 data yet — nothing to take away.
-> **Limitations / follow-up:** entire table planned; launch is
-> the level-4 counterpart's command plus `data.level=5`.
-
+> **Analysis.** 4/5 cells filled (cited from existing scored data —
+> no new compute); only qwen-3b remains `planned`.
+> **Limitations / follow-up:** 1 launch remains (qwen-3b).
 
 ### cnt-mcts-bl-v01
 

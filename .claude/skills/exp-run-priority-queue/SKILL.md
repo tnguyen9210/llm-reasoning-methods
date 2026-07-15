@@ -1,11 +1,12 @@
-# exp-orchestrate-cycle
+# exp-run-priority-queue
 
 Loaded when: Tuan wants one cycle of the idle-GPU experiment
-orchestrator executed — "run an orchestrator cycle", "fill the
-idle GPUs from the queue", "check job ids and run planned
-experiments", `/exp-orchestrate-cycle`. **Manual-trigger only —
-not on a cron/recurring schedule** (the prior cron setup was
-removed 2026-07-14; Tuan runs this himself whenever he has new
+orchestrator executed — "run the experiments (in the queue)",
+"run an orchestrator cycle", "fill the idle GPUs from the
+queue", "check job ids and run planned experiments",
+`/exp-run-priority-queue`. **Manual-trigger only — not on a
+cron/recurring schedule** (the prior cron setup was removed
+2026-07-14; Tuan runs this himself whenever he has new
 allocations or wants the queue drained). Design:
 [docs/decisions/hpc-idle-gpu-orchestration.md](../../../docs/decisions/hpc-idle-gpu-orchestration.md).
 Sibling of `exp-smoke-test` / `exp-record-results` (this skill
@@ -13,8 +14,10 @@ launches real experiments; those validate and record them).
 
 One invocation = ONE full cycle: refresh the allocation pool,
 probe for idle GPUs, launch as many `planned` queue entries as
-there are usable idle GPUs, mark them `running`. Then stop — no
-waiting, no watching.
+there are usable idle GPUs — **lowest `priority` number first**
+(1 before 2 before 3…), file order breaking ties within the same
+priority — mark them `running`. Then stop — no waiting, no
+watching.
 
 ---
 
@@ -38,9 +41,13 @@ GPUs, exit.
 
 - `queue.yaml` — list of entries: `id` (unique), `command`
   (full launch command, run from the repo root), `expected_hr`
-  (optional), `status` (`planned` | `running`), and — written by
-  this skill at launch — `launch: {job_id, node, pid, at}`.
-  Drained **top-first**; Tuan reorders to reprioritize.
+  (optional), `priority` (integer, lower = launched sooner —
+  treat a missing `priority` as the lowest priority, i.e. sort
+  after every entry that has one), `status` (`planned` |
+  `running`), and — written by this skill at launch — `launch:
+  {job_id, node, pid, at}`. Drained in **priority order (1, 2,
+  3, … ascending)**, file order breaking ties within the same
+  priority; Tuan sets/edits `priority` to reprioritize.
 - `jobs.yaml` — `exclude:` (list of job ids to never touch —
   PRESERVE across refreshes) and `jobs:` (auto-rewritten every
   cycle from squeue).
@@ -68,8 +75,11 @@ per job for the walltime guard in §5.
 ## 3. Read the queue
 
 Parse `orchestration/queue.yaml` (`yaml.safe_load`). Work list =
-entries with `status: planned`, in file order. If none: tell
-Tuan "queue empty" and stop.
+entries with `status: planned`, sorted by `priority` ascending
+(1 first, then 2, …), file order breaking ties within the same
+priority; an entry with no `priority` sorts after every entry
+that has one, in its original file order. If none: tell Tuan
+"queue empty" and stop.
 
 ## 4. Probe for idle GPUs
 

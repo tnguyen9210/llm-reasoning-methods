@@ -9,9 +9,9 @@ the cron attempt, not part of the live design.*
 Records the design of the orchestration system that launches
 queued experiments onto idle GPUs inside Tuan's existing SLURM
 allocations, and the choices made where the design forked. Each
-cycle is now triggered manually by Tuan (via `/exp-orchestrate-cycle`
-or a request like "check job ids and run planned experiments"),
-not on a fixed schedule.
+cycle is now triggered manually by Tuan (via `/exp-run-priority-queue`
+or a request like "run the experiments in the queue"), not on a
+fixed schedule.
 
 ## Context
 
@@ -116,11 +116,13 @@ instead of written to disk.
 ## Scheduler
 
 The per-cycle procedure is codified as the project skill
-[.claude/skills/exp-orchestrate-cycle/SKILL.md](../../.claude/skills/exp-orchestrate-cycle/SKILL.md)
-(user-invocable as `/exp-orchestrate-cycle`, or any equivalent
-request — "run an orchestrator cycle", "check job ids and run
-planned experiments"). One invocation = one cycle. **Manual only,
-no recurring schedule.**
+[.claude/skills/exp-run-priority-queue/SKILL.md](../../.claude/skills/exp-run-priority-queue/SKILL.md)
+(user-invocable as `/exp-run-priority-queue`, or any equivalent
+request — "run the experiments in the queue", "run an
+orchestrator cycle", "check job ids and run planned
+experiments"). One invocation = one cycle, draining `planned`
+entries in `priority` order (1 before 2 before 3…, file order
+breaking ties). **Manual only, no recurring schedule.**
 
 **History (reverted 2026-07-14):** the original design ran a
 system crontab (`orchestration/run_cycle.sh`) firing

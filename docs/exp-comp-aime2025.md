@@ -146,7 +146,9 @@ Two activities, two shapes:
 #### model family, size, quantization comparison (RLHFlowPRM)
 > **Fixed:** method=`mcts_cnt_v01`, prm=rlhflow, agg_strategy=
 > `last`, cpuct=2.0, bs-4, d-20, b=80, prm_batch_size=1,
-> tmpl=model-family default (native for Qwen, custom for Llama).
+> tmpl=model-family default (native for Qwen, custom for Llama),
+> **run.num_trials=4** (AIME2025's n=30 is small — 4 trials
+> instead of the usual 2 to narrow the wide per-cell SEMs).
 >
 > **W&B:** none yet (no AIME2025 runs).
 
@@ -161,7 +163,8 @@ Two activities, two shapes:
 #### model family, size, quantization comparison (QwenPRM)
 > **Fixed:** method=`mcts_cnt_v01`, prm=qwen, agg_strategy=
 > `last`, cpuct=2.0, bs-4, d-20, b=80, prm_batch_size=1,
-> tmpl=model-family default (native for Qwen, custom for Llama).
+> tmpl=model-family default (native for Qwen, custom for Llama),
+> **run.num_trials=4** (see the RLHFlowPRM table above).
 > Companion to the rlhflow-PRM table above; same 5 model/quant
 > configs, different scoring PRM.
 >
@@ -191,7 +194,8 @@ Two activities, two shapes:
 > reported anywhere in this doc.
 >
 > **Fixed:** method=`mcts_cnt_v01`, cpuct=2.0, bs-4, d-20, b=80,
-> tmpl=model-family default (native for both models here).
+> tmpl=model-family default (native for both models here),
+> **run.num_trials=4** (see the model-family tables above).
 
 | llm | prm | agg_strategy | trials | status | pass@gb | naive@gb | wei@gb | maj@gb | hr/trial |
 |---|---|---|---|---|---|---|---|---|---|
@@ -215,7 +219,8 @@ Two activities, two shapes:
 >
 > **Fixed:** method=`mcts_sem_v02`, llm=llama-3b, prm=qwen,
 > tmpl=custom (llama default), bs-4, d-20, b=80,
-> proj=sparse512, cov_update=sm, ds_beta=1.0.
+> proj=sparse512, cov_update=sm, ds_beta=1.0,
+> **run.num_trials=4** (see the cnt-mcts tables above).
 >
 > ⚠️ `embeds_scope=response` is **not supported on v02** (PRM
 > source) — the two `response` rows are **blocked**,
@@ -271,7 +276,8 @@ Two activities, two shapes:
 >
 > **Fixed:** tmpl=model-family default, bs-4, d-20, b=80,
 > proj=sparse512, cov_update=sm, prm=qwen, ds_beta=1.0,
-> prm_batch_size=1, llm=llama-1b.
+> prm_batch_size=1, llm=llama-1b, **run.num_trials=4**
+> (see the cnt-mcts tables above).
 
 | llm | prm | lam | ds_alpha | w_eff | trials | status | pass@gb | naive@gb | wei@gb | maj@gb | hr/trial |
 |---|---|---|---|---|---|---|---|---|---|---|---|
@@ -308,7 +314,8 @@ Two activities, two shapes:
 >
 > **Fixed:** tmpl=model-family default, bs-4, d-20, b=80,
 > proj=sparse512, cov_update=sm, prm=qwen, ds_beta=1.0,
-> prm_batch_size=1, llm=llama-3b.
+> prm_batch_size=1, llm=llama-3b, **run.num_trials=4**
+> (see the cnt-mcts tables above).
 
 | llm | prm | lam | ds_alpha | w_eff | trials | status | pass@gb | naive@gb | wei@gb | maj@gb | hr/trial |
 |---|---|---|---|---|---|---|---|---|---|---|---|
@@ -345,7 +352,8 @@ Two activities, two shapes:
 >
 > **Fixed:** tmpl=model-family default (native), bs-4, d-20, b=80,
 > proj=sparse512, cov_update=sm, prm=qwen, ds_beta=1.0,
-> prm_batch_size=1, llm=qwen-math-1.5b.
+> prm_batch_size=1, llm=qwen-math-1.5b, **run.num_trials=4**
+> (see the cnt-mcts tables above).
 
 | llm | prm | lam | ds_alpha | w_eff | trials | status | pass@gb | naive@gb | wei@gb | maj@gb | hr/trial |
 |---|---|---|---|---|---|---|---|---|---|---|---|
@@ -383,7 +391,8 @@ Two activities, two shapes:
 >
 > **Fixed:** tmpl=model-family default, bs-4, d-20, b=80,
 > proj=sparse512, cov_update=sm, prm=qwen, ds_beta=1.0,
-> prm_batch_size=1, llm=qwen-7b gptq-int4.
+> prm_batch_size=1, llm=qwen-7b gptq-int4, **run.num_trials=4**
+> (see the cnt-mcts tables above).
 
 | llm | prm | lam | ds_alpha | w_eff | trials | status | pass@gb | naive@gb | wei@gb | maj@gb | hr/trial |
 |---|---|---|---|---|---|---|---|---|---|---|---|
@@ -414,40 +423,133 @@ Two activities, two shapes:
 > **Limitations / follow-up:** entire table planned; launch is
 > the GSM8K counterpart's command with `data=aime2025`.
 
-#### model family, size, quantization comparison (RLHFlowPRM)
-> **Compares:** model family, size, and quantization jointly —
-> same shape as cnt-mcts's table above, for cross-method
-> comparability.
+#### embeds_center_mode comparison (lam=0.01/ds_alpha=1)
+> **Compares:** `embeds_center_mode="local"` (rep_exp-style
+> sibling-group centering) against `embeds_center=false` (no
+> centering — today's default). `"fixed"` mode isn't in this table
+> yet — no precomputed held-out mean exists for AIME2025. See
+> [rep-exp-elliptical-bonus-review.md](decisions/rep-exp-elliptical-bonus-review.md)
+> follow-up #3 and
+> [embeds-centering-design.md](decisions/embeds-centering-design.md)
+> for the full discussion.
 >
-> **Fixed:** bs-4, d-20, b=80, tmpl=model-family default,
-> method=`mcts_sem_v02` (PRM embeds), `embeds_proj=sparse512`,
-> `cov_update=sherman_morrison` (sm).
+> **Fixed:** method=`mcts_sem_v02` (PRM embeds), prm=qwen, bs-4,
+> d-20, b=80, proj=sparse512, cov_update=sm, cov_dtype=fp64 (default),
+> ds_beta=1.0, prm_batch_size=1, tmpl=model-family default (native for
+> Qwen, custom for Llama), **lam=0.01, ds_alpha=1.0** (`w_eff =
+> ds_alpha/sqrt(lam) = 10`), **run.num_trials=4** (see the cnt-mcts
+> tables above).
 >
 > **W&B:** none yet (no AIME2025 runs).
 
-| llm | trials | status | pass@gb | naive@gb | wei@gb | maj@gb | hr/trial |
-|---|---|---|---|---|---|---|---|
-| llama-1b fp16 | — | planned | — | — | — | — | — |
-| llama-3b fp16 | — | planned | — | — | — | — | — |
-| qwen-3b fp16 | — | planned | — | — | — | — | — |
-| qwen-7b gptq-int4 | — | planned | — | — | — | — | — |
-| qwen-math-1.5b fp16 | — | planned | — | — | — | — | — |
+| llm | prm | center | trials | status | pass@gb | naive@gb | wei@gb | maj@gb | hr/trial |
+|---|---|---|---|---|---|---|---|---|---|
+| llama-1b | qwen | none | — | planned | — | — | — | — | — |
+| llama-1b | qwen | local | — | planned | — | — | — | — | — |
+| llama-3b | qwen | none | — | planned | — | — | — | — | — |
+| llama-3b | qwen | local | — | planned | — | — | — | — | — |
+| qwen-3b | qwen | none | — | planned | — | — | — | — | — |
+| qwen-3b | qwen | local | — | planned | — | — | — | — | — |
+| qwen-7b gptq-int4 | qwen | none | — | planned | — | — | — | — | — |
+| qwen-7b gptq-int4 | qwen | local | — | planned | — | — | — | — | — |
+| qwen-math-1.5b | qwen | none | — | planned | — | — | — | — | — |
+| qwen-math-1.5b | qwen | local | — | planned | — | — | — | — | — |
 
 > **Analysis.** No AIME2025 data yet — nothing to take away.
 > **Limitations / follow-up:** entire table planned; launch is
 > the GSM8K counterpart's command with `data=aime2025`.
 
-#### model family, size, quantization comparison (QwenPRM)
-> **Compares:** the same 5-model family/size/quantization sweep
-> as the RLHFlowPRM table above, but scored with `prm=qwen`
-> (Qwen-Math-7B-PRM) instead of the default `prm=rlhflow`
-> (Llama-8B-PRM).
+#### embeds_center_mode comparison (lam=0.01/ds_alpha=10)
+> **Compares:** same as the `ds_alpha=1` table above, at the next
+> `w_eff` checkpoint (`w_eff = ds_alpha/sqrt(lam) = 100`).
+>
+> **Fixed:** identical to the `ds_alpha=1` table above (method=
+> `mcts_sem_v02`, prm=qwen, bs-4, d-20, b=80, proj=sparse512,
+> cov_update=sm, cov_dtype=fp64, ds_beta=1.0, prm_batch_size=1,
+> tmpl=model-family default, run.num_trials=4) except
+> **ds_alpha=10** (`w_eff=100`).
+>
+> **W&B:** none yet (no AIME2025 runs).
+
+| llm | prm | center | trials | status | pass@gb | naive@gb | wei@gb | maj@gb | hr/trial |
+|---|---|---|---|---|---|---|---|---|---|
+| llama-1b | qwen | none | — | planned | — | — | — | — | — |
+| llama-1b | qwen | local | — | planned | — | — | — | — | — |
+| llama-3b | qwen | none | — | planned | — | — | — | — | — |
+| llama-3b | qwen | local | — | planned | — | — | — | — | — |
+| qwen-3b | qwen | none | — | planned | — | — | — | — | — |
+| qwen-3b | qwen | local | — | planned | — | — | — | — | — |
+| qwen-7b gptq-int4 | qwen | none | — | planned | — | — | — | — | — |
+| qwen-7b gptq-int4 | qwen | local | — | planned | — | — | — | — | — |
+| qwen-math-1.5b | qwen | none | — | planned | — | — | — | — | — |
+| qwen-math-1.5b | qwen | local | — | planned | — | — | — | — | — |
+
+> **Analysis.** No AIME2025 data yet — nothing to take away.
+> **Limitations / follow-up:** entire table planned; launch is
+> the GSM8K counterpart's command with `data=aime2025`.
+
+#### agg_strategy comparison (qwen-3b, qwen-math-1.5b, lam=0.01/ds_alpha=1)
+> **Compares:** `gen.agg_strategy` (`"min"` | `"prod"` | `"last"` —
+> `core/scoring.py::aggregate_scores`) — how a candidate's per-step
+> PRM scores collapse to one scalar — at `lam=0.01, ds_alpha=1.0`
+> (`w_eff = ds_alpha/sqrt(lam) = 10`), the same checkpoint used in
+> the `embeds_center_mode` tables above.
+>
+> **Fixed:** method=`mcts_sem_v02`, bs-4, d-20, b=80,
+> tmpl=model-family default (native for both models here),
+> proj=sparse512, cov=sm, lam=0.01, ds_alpha=1.0 (w_eff=10),
+> ds_beta=1.0, **run.num_trials=4** (see the cnt-mcts tables
+> above).
+
+| llm | prm | agg_strategy | trials | status | pass@gb | naive@gb | wei@gb | maj@gb | hr/trial |
+|---|---|---|---|---|---|---|---|---|---|
+| qwen-3b | qwen | min | — | planned | — | — | — | — | — |
+| qwen-3b | qwen | prod | — | planned | — | — | — | — | — |
+| qwen-3b | qwen | last | — | planned | — | — | — | — | — |
+| qwen-math-1.5b | qwen | min | — | planned | — | — | — | — | — |
+| qwen-math-1.5b | qwen | prod | — | planned | — | — | — | — | — |
+| qwen-math-1.5b | qwen | last | — | planned | — | — | — | — | — |
+
+> **Analysis.** No AIME2025 data yet — nothing to take away.
+> **Limitations / follow-up:** entire table planned; launch is
+> the GSM8K counterpart's command with `data=aime2025`.
+
+#### agg_strategy comparison (qwen-3b, qwen-math-1.5b, lam=0.01/ds_alpha=10)
+> **Compares:** same as the `ds_alpha=1.0` table above, at the next
+> `w_eff` checkpoint (`w_eff = ds_alpha/sqrt(lam) = 100`).
+>
+> **Fixed:** method=`mcts_sem_v02`, bs-4, d-20, b=80,
+> tmpl=model-family default (native for both models here),
+> proj=sparse512, cov=sm, lam=0.01, ds_alpha=10 (w_eff=100),
+> ds_beta=1.0, **run.num_trials=4** (see the cnt-mcts tables
+> above).
+
+| llm | prm | agg_strategy | trials | status | pass@gb | naive@gb | wei@gb | maj@gb | hr/trial |
+|---|---|---|---|---|---|---|---|---|---|
+| qwen-3b | qwen | min | — | planned | — | — | — | — | — |
+| qwen-3b | qwen | prod | — | planned | — | — | — | — | — |
+| qwen-3b | qwen | last | — | planned | — | — | — | — | — |
+| qwen-math-1.5b | qwen | min | — | planned | — | — | — | — | — |
+| qwen-math-1.5b | qwen | prod | — | planned | — | — | — | — | — |
+| qwen-math-1.5b | qwen | last | — | planned | — | — | — | — | — |
+
+> **Analysis.** No AIME2025 data yet — nothing to take away.
+> **Limitations / follow-up:** entire table planned; launch is
+> the GSM8K counterpart's command with `data=aime2025`.
+
+#### model family, size, quantization comparison (QwenPRM, lam=0.01/ds_alpha=1)
+> **Compares:** model family, size, and quantization jointly,
+> scored with `prm=qwen` (Qwen-Math-7B-PRM), at `lam=0.01,
+> ds_alpha=1.0` (`w_eff = ds_alpha/sqrt(lam) = 10`) — the same
+> checkpoint used in the `embeds_center_mode` and `agg_strategy`
+> tables above.
 >
 > **Fixed:** method=`mcts_sem_v02` (PRM embeds), prm=qwen,
 > bs-4, d-20, b=80, tmpl=model-family default (native for Qwen,
 > custom for Llama), `embeds_proj=sparse512`,
-> `cov_update=sherman_morrison` (sm), ds_alpha=100, ds_beta=1.0,
-> prm_batch_size=1.
+> `cov_update=sherman_morrison` (sm), lam=0.01, ds_alpha=1.0
+> (w_eff=10), ds_beta=1.0, prm_batch_size=1, **run.num_trials=4**
+> (see the cnt-mcts tables above).
 >
 > **W&B:** none yet (no AIME2025 runs).
 
@@ -463,68 +565,24 @@ Two activities, two shapes:
 > **Limitations / follow-up:** entire table planned; launch is
 > the GSM8K counterpart's command with `data=aime2025`.
 
-
-#### agg_strategy comparison (qwen-3b, qwen-math-1.5b)
-> **Compares:** `gen.agg_strategy` (`"min"` | `"prod"` | `"last"` —
-> `core/scoring.py::aggregate_scores`) — how a candidate's
-> per-step PRM scores collapse to one scalar. Scoring-side
-> counterpart to the cnt-mcts table of the same name.
+#### model family, size, quantization comparison (QwenPRM, lam=0.01/ds_alpha=10)
+> **Compares:** same as the `ds_alpha=1` table above, at the next
+> `w_eff` checkpoint (`w_eff = ds_alpha/sqrt(lam) = 100`).
 >
-> **Fixed:** method=`mcts_sem_v02`, bs-4, d-20, b=80,
-> tmpl=model-family default (native for both models here),
-> proj=sparse512, cov=sm, ds_alpha=100.0, ds_beta=1.0.
-
-| llm | prm | agg_strategy | trials | status | pass@gb | naive@gb | wei@gb | maj@gb | hr/trial |
-|---|---|---|---|---|---|---|---|---|---|
-| qwen-3b | qwen | min | — | planned | — | — | — | — | — |
-| qwen-3b | qwen | prod | — | planned | — | — | — | — | — |
-| qwen-3b | qwen | last | — | planned | — | — | — | — | — |
-| qwen-math-1.5b | qwen | min | — | planned | — | — | — | — | — |
-| qwen-math-1.5b | qwen | prod | — | planned | — | — | — | — | — |
-| qwen-math-1.5b | qwen | last | — | planned | — | — | — | — | — |
-
-#### agg_strategy comparison (qwen-3b, qwen-math-1.5b, lam=0.1, w_eff=10)
-> **Compares:** same `gen.agg_strategy` knob as the table above, at
-> `lam=0.1` instead of the default `lam=0.01` — matched `w_eff` (via
-> `w_eff = ds_alpha/sqrt(lam)`) rather than matched `ds_alpha`, so
-> this is a cross-check on the `agg_strategy` finding under a
-> different `lam` operating point, not a new axis.
+> **Fixed:** identical to the `ds_alpha=1` table above (method=
+> `mcts_sem_v02`, prm=qwen, bs-4, d-20, b=80, proj=sparse512,
+> cov_update=sm, ds_beta=1.0, prm_batch_size=1, tmpl=model-family
+> default, run.num_trials=4) except **ds_alpha=10** (`w_eff=100`).
 >
-> **Fixed:** method=`mcts_sem_v02`, bs-4, d-20, b=80,
-> tmpl=model-family default (native for both models here),
-> proj=sparse512, cov=sm, lam=0.1, ds_alpha=3.16 (w_eff=10),
-> ds_beta=1.0.
+> **W&B:** none yet (no AIME2025 runs).
 
-| llm | prm | agg_strategy | trials | status | pass@gb | naive@gb | wei@gb | maj@gb | hr/trial |
-|---|---|---|---|---|---|---|---|---|---|
-| qwen-3b | qwen | min | — | planned | — | — | — | — | — |
-| qwen-3b | qwen | prod | — | planned | — | — | — | — | — |
-| qwen-3b | qwen | last | — | planned | — | — | — | — | — |
-| qwen-math-1.5b | qwen | min | — | planned | — | — | — | — | — |
-| qwen-math-1.5b | qwen | prod | — | planned | — | — | — | — | — |
-| qwen-math-1.5b | qwen | last | — | planned | — | — | — | — | — |
-
-> **Analysis.** No AIME2025 data yet — nothing to take away.
-> **Limitations / follow-up:** entire table planned; launch is
-> the GSM8K counterpart's command with `data=aime2025`.
-
-#### agg_strategy comparison (qwen-3b, qwen-math-1.5b, lam=0.1, w_eff=100)
-> **Compares:** same as the `w_eff=10` table above, at the next
-> `w_eff` checkpoint.
->
-> **Fixed:** method=`mcts_sem_v02`, bs-4, d-20, b=80,
-> tmpl=model-family default (native for both models here),
-> proj=sparse512, cov=sm, lam=0.1, ds_alpha=31.6 (w_eff=100),
-> ds_beta=1.0.
-
-| llm | prm | agg_strategy | trials | status | pass@gb | naive@gb | wei@gb | maj@gb | hr/trial |
-|---|---|---|---|---|---|---|---|---|---|
-| qwen-3b | qwen | min | — | planned | — | — | — | — | — |
-| qwen-3b | qwen | prod | — | planned | — | — | — | — | — |
-| qwen-3b | qwen | last | — | planned | — | — | — | — | — |
-| qwen-math-1.5b | qwen | min | — | planned | — | — | — | — | — |
-| qwen-math-1.5b | qwen | prod | — | planned | — | — | — | — | — |
-| qwen-math-1.5b | qwen | last | — | planned | — | — | — | — | — |
+| llm | trials | status | pass@gb | naive@gb | wei@gb | maj@gb | hr/trial |
+|---|---|---|---|---|---|---|---|
+| llama-1b fp16 | — | planned | — | — | — | — | — |
+| llama-3b fp16 | — | planned | — | — | — | — | — |
+| qwen-3b fp16 | — | planned | — | — | — | — | — |
+| qwen-7b gptq-int4 | — | planned | — | — | — | — | — |
+| qwen-math-1.5b fp16 | — | planned | — | — | — | — | — |
 
 > **Analysis.** No AIME2025 data yet — nothing to take away.
 > **Limitations / follow-up:** entire table planned; launch is
@@ -541,7 +599,8 @@ Two activities, two shapes:
 >
 > **Fixed:** method=`mcts_bl_cnt_v01`, prm=qwen, agg_strategy=
 > `last`, cpuct=2.0, bs-4, d-20, b=80, prm_batch_size=1,
-> tmpl=model-family default (native for Qwen, custom for Llama).
+> tmpl=model-family default (native for Qwen, custom for Llama),
+> **run.num_trials=4** (see the cnt-mcts tables above).
 
 | llm | trials | status | pass@gb | naive@gb | wei@gb | maj@gb | hr/trial |
 |---|---|---|---|---|---|---|---|
@@ -566,7 +625,8 @@ Two activities, two shapes:
 > **Fixed:** method=`mcts_bl_cnt_v02`, prm=qwen, agg_strategy=
 > `last`, kube_c=2.0, kube_schedule=parent, kube_affordable=true,
 > bs-4, d-20, b=80, prm_batch_size=1, tmpl=model-family default
-> (native for Qwen, custom for Llama). See
+> (native for Qwen, custom for Llama), **run.num_trials=4** (see
+> the cnt-mcts tables above). See
 > `docs/decisions/kube-bonus-schedule.md` for the schedule choice.
 
 | llm | trials | status | pass@gb | naive@gb | wei@gb | maj@gb | hr/trial |
@@ -593,7 +653,8 @@ Two activities, two shapes:
 > **Fixed:** method=`mcts_bl_cnt_v03`, prm=qwen, agg_strategy=
 > `last`, depth_beta=2.0, depth_alpha=1.0, kube_affordable=true
 > (default), bs-4, d-20, b=80, prm_batch_size=1, tmpl=model-family
-> default (native for Qwen, custom for Llama).
+> default (native for Qwen, custom for Llama), **run.num_trials=4**
+> (see the cnt-mcts tables above).
 
 | llm | trials | status | pass@gb | naive@gb | wei@gb | maj@gb | hr/trial |
 |---|---|---|---|---|---|---|---|
@@ -626,7 +687,8 @@ Two activities, two shapes:
 > — see
 > [decisions/tuning-semantic-score-weights-and-lambda.md](decisions/tuning-semantic-score-weights-and-lambda.md)'s
 > `lam=0.1` row; `ds_beta=1.0` fixed throughout, so only the
-> ratio matters).
+> ratio matters). **run.num_trials=4** (see the cnt-mcts tables
+> above).
 
 | llm | trials | status | pass@gb | naive@gb | wei@gb | maj@gb | hr/trial |
 |---|---|---|---|---|---|---|---|
@@ -651,9 +713,9 @@ Two activities, two shapes:
 > `mcts_bl_sem_v01`, prm=qwen, agg_strategy=`last`, bs-4, d-20,
 > b=80, prm_batch_size=1, `ds_alpha_schedule=global`,
 > `cov_update=sm`, `embeds_dim=512`/`embeds_proj=sparse`, tmpl=
-> model-family default) except the diversity weight.
-> **lam=0.1, ds_alpha=3.16** (`w_eff = ds_alpha/sqrt(lam) = 10`
-> — see
+> model-family default, **run.num_trials=4**) except the
+> diversity weight. **lam=0.1, ds_alpha=3.16** (`w_eff =
+> ds_alpha/sqrt(lam) = 10` — see
 > [decisions/tuning-semantic-score-weights-and-lambda.md](decisions/tuning-semantic-score-weights-and-lambda.md)'s
 > `lam=0.1` row).
 
@@ -692,7 +754,8 @@ Two activities, two shapes:
 > per model would be needed to separate the two effects.
 >
 > **Fixed:** cpuct=2.0, bs-4, d-20, b=320, prm=qwen,
-> tmpl=model-family default (native for Qwen, custom for Llama).
+> tmpl=model-family default (native for Qwen, custom for Llama),
+> **run.num_trials=4** (see the [gen_budget=80] tables above).
 >
 > ⚠️ Entirely `planned` — no runs yet. Budget=320 is a 4×
 > generation-count increase over the b=80 table; AIME2025's much
@@ -738,7 +801,8 @@ Two activities, two shapes:
 > (`w_eff=10` — see
 > [decisions/tuning-semantic-score-weights-and-lambda.md](decisions/tuning-semantic-score-weights-and-lambda.md)'s
 > `lam=0.1` row, same point used by the `sem-mcts-bl` w_eff=10
-> table).
+> table). **run.num_trials=4** (see the [gen_budget=80] tables
+> above).
 >
 > ⚠️ Entirely `planned` — no runs yet. Budget=320 is a 4×
 > generation-count increase over the b=80 table; no AIME2025
@@ -769,8 +833,8 @@ Two activities, two shapes:
 > `mcts_sem_v02`, prm=qwen, bs-4, d-20, b=320, prm_batch_size=1,
 > `ds_alpha_schedule=global`, `cov_update=sm`,
 > `embeds_dim=512`/`embeds_proj=sparse`, tmpl=model-family
-> default) except the diversity weight. **lam=0.1,
-> ds_alpha=31.6** (`w_eff=100`).
+> default, **run.num_trials=4**) except the diversity weight.
+> **lam=0.1, ds_alpha=31.6** (`w_eff=100`).
 >
 > ⚠️ Entirely `planned` — no runs yet.
 >
