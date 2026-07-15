@@ -29,9 +29,15 @@ embeds_scope: full      # "full" | "response" ("response" unsupported
                         #   for embeds_source=prm — see search core)
 embeds_normalize: true
 embeds_center: false
-embeds_mean_dir: ""     # results/-relative .npy prefix (if center=true);
-                        #   the mean must be computed POST-projection
-                        #   when proj is on
+embeds_center_mode: fixed  # "fixed" | "local" (which mean, when
+                        #   center=true): "fixed" = held-out .npy from
+                        #   embeds_mean_dir; "local" = each expansion's
+                        #   own sibling-group mean, fresh every
+                        #   expansion (rep_exp-style — docs/decisions/
+                        #   rep-exp-elliptical-bonus-review.md)
+embeds_mean_dir: ""     # results/-relative .npy prefix (if center=true
+                        #   and mode=fixed); the mean must be computed
+                        #   POST-projection when proj is on
 # Post-projection dim = size of the covariance V. The raw PRM hidden
 # size (Llama3.1-8B-PRM = 4096) is read off the pooled tensor, then
 # sparse-projected down to this. (Set 4096 + embeds_proj=none to feed
@@ -48,6 +54,10 @@ prm_embeds_layer: -1    # which PRM layer to pool (-1 = last)
 # numerical reference / cross-check (the dataclass default stays exact
 # for v01, whose sm path isn't refactored).
 cov_update: sm   # "exact" | "sm" (Sherman-Morrison)
+cov_dtype: fp64  # "fp32" | "fp64" (precision of V/V_inv and the
+                 #   embeds multiplied against them; fp64 matches the
+                 #   prior implicit NumPy-default behavior — see
+                 #   docs/decisions/covariance-precision.md)
 revisit_policy: reuse   # "reuse" | "regenerate"
 
 # NOTE: no embeds_gpu_memory_utilization here — v02 has no pooling

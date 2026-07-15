@@ -132,12 +132,15 @@ def main(cfg: ExpConfig):
     num_trials = cfg.run.num_trials
     print(f"num_questions = {num_questions}, num_trials = {num_trials}")
 
-    # Load the held-out embedding mean when centering is on. Stored on
-    # the search config so the core's _extract_embeds can subtract it.
-    # With embeds_proj="sparse" the mean must be in the POST-projection
-    # space (built with the same fixed projection); _extract_embeds
-    # guards on the shape and raises if it's the raw-source dim instead.
-    if cfg.search.embeds_center:
+    # Load the held-out embedding mean when centering is on AND in
+    # "fixed" mode. Stored on the search config so the core's
+    # _extract_embeds can subtract it. With embeds_proj="sparse" the
+    # mean must be in the POST-projection space (built with the same
+    # fixed projection); _extract_embeds guards on the shape and
+    # raises if it's the raw-source dim instead. "local" mode needs no
+    # precomputed mean — it centers each expansion on its own sibling
+    # group, computed at runtime (see core._maybe_center_local).
+    if cfg.search.embeds_center and cfg.search.embeds_center_mode == "fixed":
         mean_path = f"{root_dir}/results/{cfg.search.embeds_mean_dir}.npy"
         cfg.search.embeds_mean = np.load(mean_path).flatten()
         print(f"embeds_mean.shape = {cfg.search.embeds_mean.shape}")

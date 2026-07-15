@@ -403,7 +403,22 @@ class MCTSSemV01Config(SearchConfig):
     embeds_strategy: str = "last"     # "last" | "avg"  (pooling)
     embeds_scope: str = "full"        # "full" | "response"
     embeds_normalize: bool = True     # L2-normalize pooled vector
-    embeds_center: bool = False       # subtract held-out mean
+    embeds_center: bool = False       # subtract a mean (see mode)
+    # Which mean embeds_center subtracts when it's on:
+    #   "fixed" — held-out precomputed mean (embeds_mean_dir),
+    #             loaded once by the launcher. The original mode.
+    #   "local" — mean of the current expansion's own sibling
+    #             candidates, recomputed fresh at every expansion,
+    #             never carried forward (rep_exp-style local
+    #             centering — docs/decisions/
+    #             rep-exp-elliptical-bonus-review.md). Implemented
+    #             in the v02 core only; v01 ignores it.
+    # ("online" reserved for the planned Welford mode — see
+    # docs/decisions/embeds-centering-design.md.) Hash: excluded
+    # iff equal to the pinned neutral value "fixed", so adding
+    # this field left every pre-existing config_hash unchanged
+    # (see _HASH_EXCLUDE_IF_DEFAULT).
+    embeds_center_mode: str = "fixed"  # "fixed" | "local"
     embeds_mean_dir: str = ""         # results/-relative .npy prefix
     # Size of the covariance V AND the final embedding dim fed to it.
     # With embeds_proj="sparse" this is the POST-projection dim (the
@@ -427,6 +442,19 @@ class MCTSSemV01Config(SearchConfig):
     # Covariance bookkeeping + expansion policy.
     cov_update: str = "exact"         # "exact" | "sm" (Sherman-Morrison)
     revisit_policy: str = "reuse"     # "reuse" | "regenerate"
+    # Precision for V / V_inv and the embeddings multiplied against
+    # them. "fp64" matches the long-standing de facto behavior:
+    # np.eye()/np.linalg.solve() with no dtype= already default to
+    # float64, so V/V_inv have always been float64 while the pooled
+    # embeddings (torch .float() -> float32) get silently upcast at
+    # every V_inv @ u / einsum. "fp32" makes that explicit and
+    # uniform: V/V_inv seeded as float32, embeds cast to float32
+    # before any covariance op, so fp32-vs-fp64 can be A/B'd instead
+    # of relying on NumPy's implicit promotion. See docs/decisions/
+    # covariance-precision.md. Hash: excluded iff equal to the pinned
+    # neutral value "fp64", so adding this field left every
+    # pre-existing config_hash unchanged (see _HASH_EXCLUDE_IF_DEFAULT).
+    cov_dtype: str = "fp64"           # "fp32" | "fp64"
 
     # Second (pooling) vLLM engine's share of GPU memory. Only used
     # when embeds_source == "policy". The generative engine uses
@@ -674,6 +702,15 @@ _HASH_EXCLUDE = {
     "data": {"ds_dir", "question_field", "grader_name"},
 }
 
+# Fields added after many configs already had hashes: excluded from
+# the identity iff they equal this pinned "neutral" value (the value
+# that reproduces the old, pre-field behavior), so every existing
+# config_hash stays unchanged. The pinned value is frozen forever,
+# independent of the dataclass default above.
+_HASH_EXCLUDE_IF_DEFAULT = {
+    "search": {"cov_dtype": "fp64", "embeds_center_mode": "fixed"},
+}
+
 
 def _resolved(cfg):
     """cfg as a plain nested dict, interpolations resolved. Imported
@@ -698,8 +735,11 @@ def config_identity(cfg) -> dict:
         if not isinstance(gvals, dict):
             continue
         exclude = _HASH_EXCLUDE.get(group, set())
+        neutral = _HASH_EXCLUDE_IF_DEFAULT.get(group, {})
         out[group] = {
-            k: v for k, v in gvals.items() if k not in exclude
+            k: v for k, v in gvals.items()
+            if k not in exclude
+            and not (k in neutral and v == neutral[k])
         }
     return out
 

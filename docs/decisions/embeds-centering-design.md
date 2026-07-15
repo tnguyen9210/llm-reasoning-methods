@@ -44,16 +44,80 @@ before the run starts and never moves.
 `embeds_mean_dir`, `embeds_mean` all present and wired exactly as
 above; this is the only mode with a working implementation today.
 
+## Local mean (sibling-group) — **built 2026-07-14/15, v02 only**
+
+`embeds_center_mode: "fixed" | "local"` (`MCTSSemV01Config`; default
+`"fixed"` preserves the original behavior — `embeds_center` stays the
+on/off master switch, the mode picks which mean when it's on). With
+`"local"`, each expansion's candidates are centered on **their own
+group's mean** — the mean of the `batch_size` siblings generated
+together — recomputed fresh at every expansion and never carried
+forward. No precomputed `.npy` is needed; the launcher skips the
+`embeds_mean` load in this mode.
+
+**Provenance:** direct transplant of rep_exp's local centering
+(Tuyls et al., arXiv 2510.11686 — see
+[rep-exp-elliptical-bonus-review.md](rep-exp-elliptical-bonus-review.md),
+follow-up #3), which centers each prompt's n=8 GRPO rollouts on the
+group mean before the covariance fold. Our group is the exact
+structural analog: `bs=4` same-prompt sibling candidates at one MCTS
+node.
+
+**Implementation shape:** the group mean needs the whole sibling
+batch, so it can't live in per-vector `_extract_embeds`. In local
+mode `_extract_embeds` defers BOTH its center and normalize steps;
+`_maybe_center_local` (called from `_embed_candidates` once the group
+is assembled, both embed sources) subtracts the group mean and then
+L2-normalizes — preserving the pipeline invariant that centering
+happens in the linear space before the non-linear normalize. Both
+functions share one predicate, `_is_local_center(sc)`, so the defer
+decision and the centering gate can never silently disagree.
+`batch_size=1` edge: the centered vector is exactly 0 → zero bonus,
+and the Sherman-Morrison fold of a zero vector is a no-op.
+**v02 core only** — v01 and bl_sem cores ignore the flag
+(deliberately unimplemented there for now; the field comment says
+so).
+
+**Hash handling (reuses the mechanism `cov_dtype` also uses):**
+adding any field to the `search` group would change every existing
+sem-mcts `config_hash`. `_HASH_EXCLUDE_IF_DEFAULT`
+(`utils/configs.py`) drops the field from the identity iff it equals
+the pinned neutral value `"fixed"` — so every pre-existing config
+hashes exactly as before (verified 2026-07-15: `cfg-c371341f`
+recomputes unchanged; full `status.py --group sem-mcts` sweep shows
+0 orphans), while `local` runs get a distinct identity (verified:
+`cfg-1a54038d`). The pinned value is frozen forever, independent of
+the dataclass default.
+
+**Verified (2026-07-15, live smoke test):** `1q/1trial`,
+`results_subdir=smoketest`, `embeds_center=true
+embeds_center_mode=local`, `WANDB_MODE=offline` — ran end-to-end
+(model load → full search → scoring → scored dataset written) with
+no crash.
+
+**Coherence caveat (why this is an ablation arm, not a clean
+transplant):** rep_exp pairs local centering with a per-group *fresh*
+covariance (`persist_covariance=False`); our `V` accumulates across
+the whole search. Local centering + accumulated `V` means each
+group's vectors enter `V` with a different affine offset — the same
+incoherence concern raised for the online mode below. The faithful
+transplant (fresh `V` per expansion) would be a separate, larger
+change; this mode lets the cheap half be tested first.
+
 ## Online mean (Welford running update) — **planned, not yet built**
 
-The original 2026-06-18 log entry scoped a second mode: a
-`centering_mode: "fixed" | "online"` flag (with `embeds_center` staying
-the on/off switch and `centering_mode` choosing which mean when it's
-on), a per-question mutable Welford `_mean`/`_count` running-average
-state living on the `MCTS` instance, an optional running-state argument
+The original 2026-06-18 log entry scoped a second mode: a mode flag
+(provisionally named `centering_mode`; **now built as
+`embeds_center_mode`** — see the local-mean section above — so online
+would be a third value on that existing flag, not a new field), a
+per-question mutable Welford `_mean`/`_count` running-average state
+living on the `MCTS` instance, an optional running-state argument
 threaded through `_extract_embeds` → `_embed_candidates` →
 `_generate_candidates`, and a `config_name` tag
-(`--center-{fixed|online}`, shown only when `embeds_center` is true).
+(`--center-{fixed|online}`, shown only when `embeds_center` is true —
+NOT adopted by the local-mode implementation, which relies on the
+config hash alone; revisit if readable dir names start mattering for
+centering sweeps).
 
 **Status as of 2026-07-07:** none of this exists in the codebase yet —
 confirmed via `grep` across `utils/configs.py` and both sem-mcts core

@@ -14,6 +14,33 @@ scaffold, it also gets a standalone file in [decisions/](decisions/);
 the log entry then carries a one-line pointer to it rather than
 repeating the full writeup.
 
+## 2026-07-15 — Search, Configs: cov_dtype + embeds_center_mode — reimplemented after a pydantic field-declaration bug
+
+**Context:** both flags were built and verified 2026-07-14 (hash
+stability, ledger sweep), then launched live via the idle-GPU
+orchestrator. Every launched job crashed instantly: `ValueError:
+"MCTS" object has no field "cov_dtype"`. Root cause: `MCTS`
+(`core/mcts_sem_search_v02_00_00.py`) is a **pydantic `BaseModel`**,
+which raises on `self.attr = value` for any attribute not declared
+as a class-level field — the first implementation only assigned
+`self.cov_dtype` inside `__init__`, never declaring it alongside
+`V`/`V_inv`/`completed_nodes`. Reverted both flags entirely
+(`git restore`) rather than patch live, then reimplemented.
+**Decision:** identical design to the 2026-07-14 entries below, plus
+one fix: `cov_dtype: Any = np.float64` is now declared as a
+class-level pydantic field on `MCTS`, matching the existing
+`V`/`V_inv` pattern. Also added a shared predicate `_is_local_center
+(sc)` so `_extract_embeds`'s defer decision and
+`_maybe_center_local`'s gate can't silently diverge (a hazard flagged
+in a code review of the first implementation, fixed opportunistically
+during the redo). Both hash-verified unchanged from the first pass
+(`cfg-c371341f` baseline stable) AND, this time, verified with a live
+end-to-end smoke test on an idle GPU (`WANDB_MODE=offline`,
+1q/1trial) for each flag before considering it done — the step that
+was skipped before shipping the buggy first version. Full writeups:
+[decisions/covariance-precision.md](decisions/covariance-precision.md),
+[decisions/embeds-centering-design.md](decisions/embeds-centering-design.md#local-mean-sibling-group--built-2026-07-1415-v02-only).
+
 ## 2026-07-14 — Docs, Naming: exp-comparison*.md renamed to exp-comp-{dataname}-{level}.md
 
 **Context:** three tracking docs existed under inconsistent names —
