@@ -551,7 +551,19 @@ class BLMCTSSemConfig(SearchConfig):
     embeds_strategy: str = "last"     # "last" | "avg"  (pooling)
     embeds_scope: str = "full"        # "full" | "response"
     embeds_normalize: bool = True     # L2-normalize pooled vector
-    embeds_center: bool = False       # subtract held-out mean
+    embeds_center: bool = False       # subtract a mean (see mode)
+    # Which mean embeds_center subtracts when it's on:
+    #   "fixed" — held-out precomputed mean (embeds_mean_dir),
+    #             loaded once by the launcher. The original mode.
+    #   "local" — mean of the current expansion's own sibling
+    #             candidates, recomputed fresh at every expansion,
+    #             never carried forward (rep_exp-style local
+    #             centering — docs/decisions/
+    #             rep-exp-elliptical-bonus-review.md).
+    # Hash: excluded iff equal to the pinned neutral value "fixed",
+    # so adding this field left every pre-existing config_hash
+    # unchanged (see _HASH_EXCLUDE_IF_DEFAULT).
+    embeds_center_mode: str = "fixed"  # "fixed" | "local"
     embeds_mean_dir: str = ""         # results/-relative .npy prefix
     # Post-projection dim = size of the covariance V (the raw source
     # dim is read off the pooled tensor at runtime).
@@ -566,6 +578,17 @@ class BLMCTSSemConfig(SearchConfig):
     # persistent inverse update, validated machine-precision-identical
     # to exact in sem_v02 (see conf/search/mcts_sem_v02.yaml).
     cov_update: str = "sm"            # "exact" | "sm"
+    # Precision for V / V_inv and the embeddings multiplied against
+    # them. "fp64" matches the long-standing de facto behavior:
+    # np.eye()/np.linalg.solve() with no dtype= already default to
+    # float64, so V/V_inv have always been float64 while the pooled
+    # embeddings (torch .float() -> float32) get silently upcast at
+    # every V_inv @ u / einsum. "fp32" makes that explicit and
+    # uniform. See docs/decisions/covariance-precision.md. Hash:
+    # excluded iff equal to the pinned neutral value "fp64", so
+    # adding this field left every pre-existing config_hash
+    # unchanged (see _HASH_EXCLUDE_IF_DEFAULT).
+    cov_dtype: str = "fp64"           # "fp32" | "fp64"
 
     # Second (pooling) vLLM engine's share of GPU memory. Only used
     # when embeds_source == "policy".

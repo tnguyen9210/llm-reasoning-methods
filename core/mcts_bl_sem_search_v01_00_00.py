@@ -51,9 +51,14 @@ Differences from mcts_sem_v02 beyond the frontier:
     re-added).
 
 Embedding machinery (_diverse_select, _extract_embeds,
-_embed_candidates, sparse projector) is identical to
-mcts_sem_search_v02_00_00's; both embeds sources ("prm" default,
-"policy" via the pooling engine) are supported.
+_center_and_normalize, _embed_candidates, sparse projector) is
+identical to mcts_sem_search_v02_00_00's; both embeds sources ("prm"
+default, "policy" via the pooling engine) are supported, as are both
+embeds_center_mode values ("fixed" | "local") and both cov_dtype
+values ("fp32" | "fp64") — see MCTSSemV01Config's docstrings in
+utils/configs.py for the semantics; BLMCTSSemConfig carries its own
+copies of these fields (a fresh SearchConfig subclass, not inherited)
+with matching defaults.
 
 Variant lineage: docs/algorithms.md.
 """
@@ -79,12 +84,19 @@ from sal.search.utils import build_conv, generate_k_steps
 
 logging.basicConfig(format='%(message)s', level=logging.FATAL + 1)
 
+# config.search.cov_dtype -> numpy dtype for V/V_inv and everything
+# multiplied against them (see MCTS.__init__, _fold_covariance,
+# select_leaf_from_list).
+_COV_DTYPES = {"fp32": np.float32, "fp64": np.float64}
+
 
 # --------------------------------------------------------------------- #
 # Diversity selection                                                   #
 # --------------------------------------------------------------------- #
 
-def _diverse_select(V_inv, q_embeds, q_scores, ds_alpha, ds_beta):
+def _diverse_select(
+    V_inv, q_embeds, q_scores, ds_alpha, ds_beta, cov_dtype=np.float64,
+):
     """Pick the one arm maximizing `beta*score + alpha*diversity`.
 
     The diversity term for arm `x` is `sqrt(x^T V^-1 x)` — large when
@@ -98,10 +110,15 @@ def _diverse_select(V_inv, q_embeds, q_scores, ds_alpha, ds_beta):
     schedules) or a per-arm array (the "parent" schedule) — numpy
     broadcasting handles both identically.
 
+    `cov_dtype` (config.search.cov_dtype) fixes the precision
+    `q_embeds` is cast to before multiplying against `V_inv`, so the
+    einsum below runs at a controlled precision rather than whatever
+    NumPy's mixed-dtype promotion happens to pick.
+
     Ties (within `tol`) are broken by uniform random sampling, which
     avoids the systematic bias of picking the first argmax.
     """
-    q_embeds = np.asarray(q_embeds)
+    q_embeds = np.asarray(q_embeds, dtype=cov_dtype)
     q_scores = np.asarray(q_scores)
     tol = 1e-4
 
@@ -187,22 +204,22 @@ def _extract_embeds(raw, config, response_start_idx):
     `llm_vllm_embeds.encode(..., "token_embed")`. Both feed this same
     function so the two sources pool identically.
 
-    Five gated steps, in this order:
+    Three steps, in this order:
       1. scope     pick which tokens contribute (full sequence or only
                    the assistant response).
       2. pool      reduce to (dim,): last token or mean over scope.
       3. project   optional sparse random projection to embeds_dim
                    (JL near-isometry; fixed matrix per run). Linear, so
-                   it composes cleanly with centering below.
-      4. center    optional mean subtraction (a held-out mean, in the
-                   POST-projection space, to remove the embeddings'
-                   shared anisotropic offset). Done before normalize:
-                   the mean must be subtracted in the linear space.
-      5. normalize optional L2 normalization (puts embeddings on the
-                   unit sphere so the diversity term reads direction,
-                   not magnitude). Non-linear, so it must come last.
+                   it composes cleanly with the centering that follows.
 
-    Steps 3-5 run on the numpy side; pooling/scope on the torch tensor.
+    Centering (fixed-mean OR local-group-mean) and the final L2
+    normalize are NOT done here — both need to see the whole sibling
+    batch at once (fixed mode's shape guard lives alongside local
+    mode's group-mean math for one reason to read), so they're
+    entirely `_center_and_normalize`'s job, called once per expansion
+    from `_embed_candidates` after every candidate has been pooled.
+
+    Step 3 runs on the numpy side; pooling/scope on the torch tensor.
     """
     sc = config.search
     # 1. Scope.
@@ -234,29 +251,85 @@ def _extract_embeds(raw, config, response_start_idx):
     elif embeds_proj != "none":
         raise ValueError(f"unknown embeds_proj: {embeds_proj!r}")
 
-    # 4. Center. The held-out mean lives in the post-projection space,
-    # so its shape must match the current (projected) dim — guard so a
-    # raw-space mean can't be silently subtracted from projected vecs.
-    if sc.embeds_center:
+    return pooled
+
+
+def _center_and_normalize(embeds, sc):
+    """Center (optional, mode-dependent) then L2-normalize (optional)
+    an expansion's whole sibling batch of pooled/projected embeddings.
+
+    Owns BOTH gated steps `_extract_embeds`'s docstring used to number
+    4 and 5 — moved here because "fixed" mode's shape guard and
+    "local" mode's group-mean math read better side by side than
+    split across two functions, and because "local" mode strictly
+    needs the whole batch (see below), so per-vector `_extract_embeds`
+    could never do it anyway. Centering always happens in the linear
+    space, before the non-linear normalize — this function is the one
+    place that ordering has to be kept correct now.
+
+      embeds_center=False        : pass through; only normalize below.
+      embeds_center_mode="fixed" : subtract a held-out, precomputed
+                                    mean (search.embeds_mean) — same
+                                    constant for every vector, every
+                                    expansion, the whole run. The mean
+                                    lives in the post-projection space,
+                                    so its shape must match embeds_dim
+                                    (guard: a raw-space mean can never
+                                    be silently subtracted from a
+                                    projected vector).
+      embeds_center_mode="local" : subtract the mean of THIS
+                                    expansion's own sibling group,
+                                    recomputed fresh every expansion,
+                                    never carried forward (rep_exp-
+                                    style local centering:
+                                    docs/decisions/
+                                    rep-exp-elliptical-bonus-review.md).
+                                    batch_size=1 edge: the centered
+                                    vector is exactly 0 — zero
+                                    diversity bonus, and folding a zero
+                                    vector into V is a no-op. Harmless.
+
+    Coherence caveat for local mode (recorded in
+    docs/decisions/embeds-centering-design.md): each group is centered
+    at its own mean while V accumulates across the whole search, so
+    folded vectors carry group-dependent offsets. This is an empirical
+    ablation arm, not a coherence-preserving transform — rep_exp pairs
+    local centering with a per-group FRESH covariance, which our
+    accumulated V deliberately is not.
+    """
+    if sc.embeds_center and sc.embeds_center_mode not in (
+        "fixed", "local",
+    ):
+        raise ValueError(
+            f"unknown embeds_center_mode: {sc.embeds_center_mode!r}"
+        )
+
+    stacked = np.stack(embeds)  # (batch_size, embeds_dim)
+
+    if sc.embeds_center and sc.embeds_center_mode == "local":
+        mean = stacked.mean(axis=0)
+    elif sc.embeds_center:
         if sc.embeds_mean is None:
             raise ValueError("embeds_center=True requires search.embeds_mean")
         mean = np.asarray(sc.embeds_mean)
-        if mean.shape[-1] != pooled.shape[-1]:
+        if mean.shape[-1] != stacked.shape[-1]:
             raise ValueError(
                 "embeds_mean dim "
-                f"{mean.shape[-1]} != embedding dim {pooled.shape[-1]}; "
+                f"{mean.shape[-1]} != embedding dim {stacked.shape[-1]}; "
                 "when embeds_proj='sparse' the mean must be computed in "
                 "the post-projection space (same fixed projection)."
             )
-        pooled = pooled - mean
+    else:
+        mean = None
 
-    # 5. Normalize (L2), on the numpy side so it stays after centering.
+    if mean is not None:
+        stacked = stacked - mean
     if sc.embeds_normalize:
-        norm = np.linalg.norm(pooled)
-        if norm > 0:
-            pooled = pooled / norm
-
-    return pooled
+        norms = np.linalg.norm(stacked, axis=1, keepdims=True)
+        stacked = np.divide(
+            stacked, norms, out=np.zeros_like(stacked), where=norms > 0,
+        )
+    return list(stacked)
 
 
 def _embed_candidates(
@@ -306,7 +379,7 @@ def _embed_candidates(
                     outputs[0].outputs.data, config, response_start_idx
                 )
             )
-        return embeds
+        return _center_and_normalize(embeds, sc)
 
     if source == "prm":
         # response_start_idx was computed with the GENERATOR tokenizer
@@ -333,10 +406,11 @@ def _embed_candidates(
         )[0]
         # response_start_idx is unused under "full" scope; pass it
         # through so _extract_embeds keeps one signature.
-        return [
+        embeds = [
             _extract_embeds(raw, config, response_start_idx)
             for raw in raw_embeds
         ]
+        return _center_and_normalize(embeds, sc)
 
     raise ValueError(f"unknown embeds_source: {source!r}")
 
@@ -458,6 +532,11 @@ class MCTS(BaseTree):
     # Count of nodes that hit max_depth (mirrors the sibling variants'
     # cnt_node_max_depth); incremented in create_child.
     cnt_node_max_depth: int = 0
+    # Precision for V/V_inv (config.search.cov_dtype), resolved to a
+    # numpy dtype in __init__. MUST be declared here — MCTS is a
+    # pydantic BaseModel, which raises on `self.attr = ...` for any
+    # attribute not declared as a field (unlike V/V_inv above).
+    cov_dtype: Any = np.float64
 
     def __init__(self, **kwargs) -> None:
         super().__init__(**kwargs)
@@ -476,12 +555,23 @@ class MCTS(BaseTree):
         # initial diversity term is uniform across arms.
         embeds_dim = self.config.search.embeds_dim
         lam = self.config.search.lam
+        # cov_dtype fixes V/V_inv's precision explicitly (default
+        # "fp64" matches the previous implicit behavior: np.eye() with
+        # no dtype= already defaulted to float64).
+        cov_dtype_cfg = self.config.search.cov_dtype
+        if cov_dtype_cfg not in _COV_DTYPES:
+            raise ValueError(f"unknown cov_dtype: {cov_dtype_cfg!r}")
+        self.cov_dtype = _COV_DTYPES[cov_dtype_cfg]
         if self.config.search.cov_update == "sm":
             self.V = None
-            self.V_inv = (1.0 / lam) * np.eye(embeds_dim)
+            self.V_inv = (1.0 / lam) * np.eye(
+                embeds_dim, dtype=self.cov_dtype
+            )
         else:
-            self.V = lam * np.eye(embeds_dim)
-            self.V_inv = (1.0 / lam) * np.eye(embeds_dim)
+            self.V = lam * np.eye(embeds_dim, dtype=self.cov_dtype)
+            self.V_inv = (1.0 / lam) * np.eye(
+                embeds_dim, dtype=self.cov_dtype
+            )
 
     def create_node(self, parent=None):
         return MCTSNode(parent=parent)
@@ -542,10 +632,13 @@ class MCTS(BaseTree):
         direction), skipped only when the node has no embedding: the
         root, which is selected alone on the first iteration before
         anything is in V.
+
+        Cast to cov_dtype so u's precision matches V/V_inv exactly —
+        otherwise NumPy's mixed-dtype promotion decides silently.
         """
         if selected_node.embeds is None:
             return
-        u = selected_node.embeds.reshape(-1, 1)
+        u = selected_node.embeds.reshape(-1, 1).astype(self.cov_dtype)
         if self.config.search.cov_update == "sm":
             # Persistent rank-1 inverse update (O(d^2)), then symmetrize
             # to stop floating-point asymmetry compounding over the run.
@@ -561,7 +654,7 @@ class MCTS(BaseTree):
             # via a less stable routine).
             self.V = self.V + u @ u.T
             self.V_inv = np.linalg.solve(
-                self.V, np.eye(self.V.shape[0])
+                self.V, np.eye(self.V.shape[0], dtype=self.cov_dtype)
             )
 
     def select_leaf_from_list(self, nodes: List[Any], t: int):
@@ -616,6 +709,7 @@ class MCTS(BaseTree):
             self.V_inv, embeds, q_values,
             self.config.search.ds_alpha * sched,
             self.config.search.ds_beta,
+            cov_dtype=self.cov_dtype,
         )
         selected_node = nodes[best_idx]
         self._fold_covariance(selected_node)
