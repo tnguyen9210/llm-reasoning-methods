@@ -469,29 +469,33 @@ Two activities, two shapes:
 > **W&B:** baselines cited from each model's own `lam`/`ds_alpha`
 > joint-sweep table above — llama-1b `tdyxh9sr`, llama-3b `tc6d70jy`,
 > qwen-7b gptq-int4 `3l1vzy8m`, qwen-math-1.5b `bb6rpjps`. `local`
-> rows and both qwen-3b rows: none yet.
+> rows: llama-1b `dcgo3trx`, llama-3b `x0oosb8l`, qwen-3b
+> `lrd7oa38`, qwen-7b gptq-int4 `oks5m0gi`, qwen-math-1.5b
+> `x8eokhhd`. qwen-3b `none`: `8ssy5kpj`.
 
 | llm | prm | center | trials | status | pass@gb | naive@gb | wei@gb | maj@gb | hr/trial |
 |---|---|---|---|---|---|---|---|---|---|
 | llama-1b | qwen | none | 2 | scored | .3209<br>±.0286 | .2425<br>±.0262 | .2313<br>±.0258 | .2015<br>±.0245 | 4.88 |
-| llama-1b | qwen | local | — | planned | — | — | — | — | — |
+| llama-1b | qwen | local | 2 | scored | .3806<br>±.0297 | .2724<br>±.0272 | .2575<br>±.0268 | .2201<br>±.0254 | 4.86 |
 | llama-3b | qwen | none | 2 | scored | .5784<br>±.0302 | .4403<br>±.0304 | .4291<br>±.0303 | .3881<br>±.0298 | 6.93 |
-| llama-3b | qwen | local | — | planned | — | — | — | — | — |
-| qwen-3b | qwen | none | — | planned | — | — | — | — | — |
-| qwen-3b | qwen | local | — | planned | — | — | — | — | — |
+| llama-3b | qwen | local | 2 | scored | .5746<br>±.0303 | .4104<br>±.0301 | .3993<br>±.0300 | .3694<br>±.0295 | 7.02 |
+| qwen-3b | qwen | none | 2 | scored | .6903<br>±.0283 | .5784<br>±.0302 | .5597<br>±.0304 | .5373<br>±.0305 | 6.20 |
+| qwen-3b | qwen | local | 2 | scored | .6978<br>±.0281 | .5634<br>±.0304 | .5336<br>±.0305 | .5112<br>±.0306 | 6.33 |
 | qwen-7b gptq-int4 | qwen | none | 2 | scored | .7687<br>±.0258 | .6231<br>±.0297 | .6194<br>±.0297 | .6119<br>±.0298 | 5.42 |
-| qwen-7b gptq-int4 | qwen | local | — | planned | — | — | — | — | — |
+| qwen-7b gptq-int4 | qwen | local | 2 | scored | .7724<br>±.0257 | .6231<br>±.0297 | .5821<br>±.0302 | .5709<br>±.0303 | 5.57 |
 | qwen-math-1.5b | qwen | none | 2 | scored | .7500<br>±.0265 | .6343<br>±.0295 | .6157<br>±.0298 | .6007<br>±.0300 | 4.79 |
-| qwen-math-1.5b | qwen | local | — | planned | — | — | — | — | — |
+| qwen-math-1.5b | qwen | local | 2 | scored | .7500<br>±.0265 | .6418<br>±.0293 | .6082<br>±.0299 | .6045<br>±.0299 | 4.85 |
 
-> **Analysis.** 4/10 cells filled (all baselines, cited from
-> existing scored data — no new compute); the 5 `local` rows and
-> qwen-3b's baseline are all still `planned`. Nothing to compare yet
-> until at least one `local` row lands next to its baseline.
-> **Limitations / follow-up:** 6 launches remain (5 `local` rows +
-> qwen-3b's baseline). Match `run.num_trials=2` for consistency with
-> the cited baselines. A `"fixed"`-mode column is a natural follow-up
-> once a held-out mean is computed for at least one model (see
+> **Analysis.** 10/10 cells scored (2 trials each). `local` vs
+> `none` splits both directions: llama-1b (.3209→.3806) and
+> qwen-3b (.6903→.6978) trend higher under `local`; llama-3b
+> (.5784→.5746) and qwen-7b gptq-int4 (.7687→.7724, essentially
+> flat) show little change; qwen-math-1.5b is identical on
+> pass@gb (.7500 both). Every gap is within ~1 SEM — no
+> consistent centering-mode effect at this trial count.
+> **Limitations / follow-up:** n=2 trials/cell is preliminary. A
+> `"fixed"`-mode column is a natural follow-up once a held-out
+> mean is computed for at least one model (see
 > [embeds-centering-design.md](decisions/embeds-centering-design.md)
 > for how the fixed-mean file is built and loaded).
 
@@ -507,28 +511,44 @@ Two activities, two shapes:
 > **W&B:** baselines cited from each model's own `lam`/`ds_alpha`
 > joint-sweep table above — llama-1b `2sd0cen5`, llama-3b `q7yxcuq7`,
 > qwen-7b gptq-int4 `es99bc0h`, qwen-math-1.5b `scmsaxeq`. `local`
-> rows and both qwen-3b rows: none yet.
+> rows: llama-1b `1mtu94qz`, llama-3b `mi4pzhba`, qwen-3b
+> `22z34pwz`, qwen-7b gptq-int4 `250t5r5m`, qwen-math-1.5b
+> `cu0ntvth`. qwen-3b `none`: `c7a9bmxt`.
+>
+> ⚠️ The `none` baselines cited for llama-1b (`2sd0cen5`),
+> qwen-7b gptq-int4 (`es99bc0h`), and qwen-math-1.5b (`scmsaxeq`)
+> were independently recomputed this pass via the runs cited in
+> the `lam`/`ds_alpha` joint-sweep tables above (`f2r2nsv7`,
+> `qhyxutx6`, `ryzf69dm` — same config, same trial count) and
+> disagreed with the doc's existing numbers beyond rounding; see
+> the mismatch note under those tables. The `none` values shown
+> here are left as the doc's pre-existing (possibly stale)
+> numbers — do not treat this row's `none` baseline as verified
+> until that mismatch is resolved.
 
 | llm | prm | center | trials | status | pass@gb | naive@gb | wei@gb | maj@gb | hr/trial |
 |---|---|---|---|---|---|---|---|---|---|
 | llama-1b | qwen | none | 2 | scored | .3433<br>±.0291 | .2537<br>±.0266 | .1978<br>±.0244 | .1679<br>±.0229 | 4.85 |
-| llama-1b | qwen | local | — | planned | — | — | — | — | — |
+| llama-1b | qwen | local | 2 | scored | .3246<br>±.0287 | .2276<br>±.0257 | .2313<br>±.0258 | .1866<br>±.0238 | 4.90 |
 | llama-3b | qwen | none | 2 | scored | .5485<br>±.0305 | .4328<br>±.0303 | .3619<br>±.0294 | .3321<br>±.0288 | 6.99 |
-| llama-3b | qwen | local | — | planned | — | — | — | — | — |
-| qwen-3b | qwen | none | — | planned | — | — | — | — | — |
-| qwen-3b | qwen | local | — | planned | — | — | — | — | — |
+| llama-3b | qwen | local | 2 | scored | .5896<br>±.0301 | .4366<br>±.0304 | .4179<br>±.0302 | .3955<br>±.0299 | 6.85 |
+| qwen-3b | qwen | none | 2 | scored | .6642<br>±.0289 | .5634<br>±.0304 | .5261<br>±.0306 | .5000<br>±.0306 | 6.07 |
+| qwen-3b | qwen | local | 2 | scored | .6903<br>±.0283 | .5560<br>±.0304 | .5261<br>±.0306 | .4963<br>±.0306 | 6.20 |
 | qwen-7b gptq-int4 | qwen | none | 2 | scored | .7873<br>±.0250 | .6045<br>±.0299 | .5634<br>±.0304 | .5634<br>±.0304 | 5.54 |
-| qwen-7b gptq-int4 | qwen | local | — | planned | — | — | — | — | — |
+| qwen-7b gptq-int4 | qwen | local | 2 | scored | .7836<br>±.0252 | .5933<br>±.0301 | .5784<br>±.0302 | .5560<br>±.0304 | 5.63 |
 | qwen-math-1.5b | qwen | none | 2 | scored | .7164<br>±.0276 | .5896<br>±.0301 | .5746<br>±.0303 | .5597<br>±.0304 | 4.83 |
-| qwen-math-1.5b | qwen | local | — | planned | — | — | — | — | — |
+| qwen-math-1.5b | qwen | local | 2 | scored | .7463<br>±.0266 | .6194<br>±.0297 | .6045<br>±.0299 | .5746<br>±.0303 | 4.81 |
 
-> **Analysis.** 4/10 cells filled (all baselines, cited from
-> existing scored data — no new compute); the 5 `local` rows and
-> qwen-3b's baseline are all still `planned`. Nothing to compare yet
-> until at least one `local` row lands next to its baseline.
-> **Limitations / follow-up:** 6 launches remain (5 `local` rows +
-> qwen-3b's baseline). Match `run.num_trials=2` for consistency with
-> the cited baselines.
+> **Analysis.** 10/10 cells scored (2 trials each), but three of
+> the five `none` baselines shown are flagged stale (see the
+> ⚠️ above) — treat any `local` vs `none` comparison here as
+> provisional until that's resolved. Of the two unaffected
+> baselines (llama-3b, qwen-3b), both trend higher under `local`
+> (.5485→.5896, .6642→.6903), within ~1 SEM.
+> **Limitations / follow-up:** resolve the `none`-baseline
+> mismatch (dead/stale W&B citation vs. hand-entered value vs.
+> genuine re-run) before drawing conclusions from this table;
+> n=2 trials/cell throughout.
 
 #### agg_strategy comparison (qwen-3b, qwen-math-1.5b, lam=0.01/ds_alpha=1)
 > **Compares:** `gen.agg_strategy` (`"min"` | `"prod"` | `"last"` —
@@ -593,20 +613,23 @@ Two activities, two shapes:
 > **W&B:** baselines cited from each model's own `lam`/`ds_alpha`
 > joint-sweep table above — llama-1b `tdyxh9sr`, llama-3b `tc6d70jy`,
 > qwen-7b gptq-int4 `3l1vzy8m`, qwen-math-1.5b `bb6rpjps`. qwen-3b:
-> none yet.
+> `8ssy5kpj`.
 
 | llm | trials | status | pass@gb | naive@gb | wei@gb | maj@gb | hr/trial |
 |---|---|---|---|---|---|---|---|
 | llama-1b fp16 | 2 | scored | .3209<br>±.0286 | .2425<br>±.0262 | .2313<br>±.0258 | .2015<br>±.0245 | 4.88 |
 | llama-3b fp16 | 2 | scored | .5784<br>±.0302 | .4403<br>±.0304 | .4291<br>±.0303 | .3881<br>±.0298 | 6.93 |
-| qwen-3b fp16 | — | planned | — | — | — | — | — |
+| qwen-3b fp16 | 2 | scored | .6903<br>±.0283 | .5784<br>±.0302 | .5597<br>±.0304 | .5373<br>±.0305 | 6.20 |
 | qwen-7b gptq-int4 | 2 | scored | .7687<br>±.0258 | .6231<br>±.0297 | .6194<br>±.0297 | .6119<br>±.0298 | 5.42 |
 | qwen-math-1.5b fp16 | 2 | scored | .7500<br>±.0265 | .6343<br>±.0295 | .6157<br>±.0298 | .6007<br>±.0300 | 4.79 |
 
-> **Analysis.** 4/5 cells filled (cited from existing scored data —
-> no new compute); only qwen-3b remains `planned`.
-> **Limitations / follow-up:** 1 launch remains (qwen-3b). Launch
-> is the level-4 counterpart's command plus `data.level=5`.
+> **Analysis.** 5/5 cells filled (qwen-3b newly computed this
+> pass; the other 4 cited from existing scored data — no new
+> compute). Ranking by pass@gb: qwen-7b gptq-int4 (.7687) ≈
+> qwen-math-1.5b (.7500) > qwen-3b (.6903) > llama-3b (.5784) >
+> llama-1b (.3209).
+> **Limitations / follow-up:** none — table complete at this
+> checkpoint.
 
 #### model family, size, quantization comparison (QwenPRM, lam=0.01/ds_alpha=10)
 > **Compares:** same as the `ds_alpha=1` table above, at the next
@@ -618,19 +641,28 @@ Two activities, two shapes:
 > **W&B:** baselines cited from each model's own `lam`/`ds_alpha`
 > joint-sweep table above — llama-1b `2sd0cen5`, llama-3b `q7yxcuq7`,
 > qwen-7b gptq-int4 `es99bc0h`, qwen-math-1.5b `scmsaxeq`. qwen-3b:
-> none yet.
+> `c7a9bmxt`.
+>
+> ⚠️ Same mismatch flag as the `embeds_center_mode (ds_alpha=10)`
+> table above: independently recomputing the cited llama-1b,
+> qwen-7b gptq-int4, and qwen-math-1.5b baselines this pass
+> produced different numbers than shown below (same config, same
+> trial count). Not overwritten — see that table's note.
 
 | llm | trials | status | pass@gb | naive@gb | wei@gb | maj@gb | hr/trial |
 |---|---|---|---|---|---|---|---|
 | llama-1b fp16 | 2 | scored | .3433<br>±.0291 | .2537<br>±.0266 | .1978<br>±.0244 | .1679<br>±.0229 | 4.85 |
 | llama-3b fp16 | 2 | scored | .5485<br>±.0305 | .4328<br>±.0303 | .3619<br>±.0294 | .3321<br>±.0288 | 6.99 |
-| qwen-3b fp16 | — | planned | — | — | — | — | — |
+| qwen-3b fp16 | 2 | scored | .6642<br>±.0289 | .5634<br>±.0304 | .5261<br>±.0306 | .5000<br>±.0306 | 6.07 |
 | qwen-7b gptq-int4 | 2 | scored | .7873<br>±.0250 | .6045<br>±.0299 | .5634<br>±.0304 | .5634<br>±.0304 | 5.54 |
 | qwen-math-1.5b fp16 | 2 | scored | .7164<br>±.0276 | .5896<br>±.0301 | .5746<br>±.0303 | .5597<br>±.0304 | 4.83 |
 
-> **Analysis.** 4/5 cells filled (cited from existing scored data —
-> no new compute); only qwen-3b remains `planned`.
-> **Limitations / follow-up:** 1 launch remains (qwen-3b).
+> **Analysis.** 5/5 cells filled (qwen-3b newly computed this
+> pass; the other 4 cited from existing scored data — 3 of which
+> are flagged stale, see ⚠️ above).
+> **Limitations / follow-up:** resolve the flagged mismatch
+> before treating llama-1b/qwen-7b gptq-int4/qwen-math-1.5b rows
+> as verified.
 
 ### cnt-mcts-bl-v01
 

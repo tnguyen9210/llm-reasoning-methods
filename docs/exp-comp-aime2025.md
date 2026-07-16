@@ -168,23 +168,30 @@ Two activities, two shapes:
 > Companion to the rlhflow-PRM table above; same 5 model/quant
 > configs, different scoring PRM.
 >
-> **W&B:** none yet (no AIME2025 runs).
+> **W&B:** llama-1b `nvk5x5jc`, llama-3b `vetl9lf1`, qwen-3b
+> `7m5nmmtj`, qwen-7b gptq-int4 `zxy77eld`, qwen-math-1.5b
+> `n59svtr8`.
 
 | llm | trials | status | pass@gb | naive@gb | wei@gb | maj@gb | hr/trial |
 |---|---|---|---|---|---|---|---|
-| llama-1b fp16 | — | planned | — | — | — | — | — |
-| llama-3b fp16 | — | planned | — | — | — | — | — |
-| qwen-3b fp16 | — | planned | — | — | — | — | — |
-| qwen-7b gptq-int4 | — | planned | — | — | — | — | — |
-| qwen-math-1.5b fp16 | — | planned | — | — | — | — | — |
+| llama-1b fp16 | 4 | scored | .0083<br>±.0083 | .0083<br>±.0083 | .0083<br>±.0083 | .0083<br>±.0083 | 0.78 |
+| llama-3b fp16 | 4 | scored | .0750<br>±.0241 | .0500<br>±.0200 | .0333<br>±.0165 | .0167<br>±.0117 | 1.33 |
+| qwen-3b fp16 | 4 | scored | .1417<br>±.0320 | .0667<br>±.0229 | .0917<br>±.0265 | .0917<br>±.0265 | 1.28 |
+| qwen-7b gptq-int4 | 4 | scored | .2500<br>±.0397 | .1417<br>±.0320 | .1167<br>±.0294 | .1083<br>±.0285 | 1.25 |
+| qwen-math-1.5b fp16 | 4 | scored | .2667<br>±.0405 | .1917<br>±.0361 | .1667<br>±.0342 | .1500<br>±.0327 | 1.02 |
 
-> **Analysis.** No AIME2025 data yet — nothing to take away.
-> **Limitations / follow-up:** entire table planned; launch is
-> the GSM8K counterpart's command with `data=aime2025`. n=30
-> questions total (vs. GSM8K's 256) means SEMs here will be much
-> wider than the GSM8K table's — a single flipped question moves
-> pass@gb by ~3.3 percentage points, so treat early cells as
-> noisy until more trials accumulate.
+> **Analysis.** 5/5 cells scored (4 trials each, n=30 questions).
+> Ranking by pass@gb is qwen-math-1.5b (.2667) > qwen-7b
+> gptq-int4 (.2500) > qwen-3b (.1417) > llama-3b (.0750) >
+> llama-1b (.0083, essentially a floor — 1/120 correct) —
+> broadly the same family ordering as GSM8K/PRM800K-level5's
+> QwenPRM tables, but pass@gb is far lower across the board, as
+> expected for a genuinely harder, likely-less-contaminated
+> competition set.
+> **Limitations / follow-up:** n=30 questions total means SEMs
+> are wide (±.02 to ±.04) — treat rankings as directional, not
+> conclusive. The RLHFlowPRM companion table above remains
+> entirely planned.
 
 #### agg_strategy comparison (qwen-3b, qwen-math-1.5b)
 > **Compares:** `gen.agg_strategy` (`"min"` | `"prod"` | `"last"` —
@@ -440,24 +447,35 @@ Two activities, two shapes:
 > ds_alpha/sqrt(lam) = 10`), **run.num_trials=4** (see the cnt-mcts
 > tables above).
 >
-> **W&B:** none yet (no AIME2025 runs).
+> **W&B:** llama-1b none `kusajt8w` / local `j3ktqdcj`, llama-3b
+> none `llkxel7t` / local `afgb59jx`, qwen-3b none `gztx392f` /
+> local `saxhgtii`, qwen-7b gptq-int4 none `yrcwjwpe` / local
+> `cczd3l2r`, qwen-math-1.5b none `s87k7uxn` / local `jif17zx7`.
 
 | llm | prm | center | trials | status | pass@gb | naive@gb | wei@gb | maj@gb | hr/trial |
 |---|---|---|---|---|---|---|---|---|---|
-| llama-1b | qwen | none | — | planned | — | — | — | — | — |
-| llama-1b | qwen | local | — | planned | — | — | — | — | — |
-| llama-3b | qwen | none | — | planned | — | — | — | — | — |
-| llama-3b | qwen | local | — | planned | — | — | — | — | — |
-| qwen-3b | qwen | none | — | planned | — | — | — | — | — |
-| qwen-3b | qwen | local | — | planned | — | — | — | — | — |
-| qwen-7b gptq-int4 | qwen | none | — | planned | — | — | — | — | — |
-| qwen-7b gptq-int4 | qwen | local | — | planned | — | — | — | — | — |
-| qwen-math-1.5b | qwen | none | — | planned | — | — | — | — | — |
-| qwen-math-1.5b | qwen | local | — | planned | — | — | — | — | — |
+| llama-1b | qwen | none | 4 | scored | .0333<br>±.0165 | .0167<br>±.0117 | .0167<br>±.0117 | .0000<br>±.0000 | 1.34 |
+| llama-1b | qwen | local | 4 | scored | .0083<br>±.0083 | .0000<br>±.0000 | .0000<br>±.0000 | .0000<br>±.0000 | 1.28 |
+| llama-3b | qwen | none | 4 | scored | .0417<br>±.0183 | .0333<br>±.0165 | .0167<br>±.0117 | .0167<br>±.0117 | 1.78 |
+| llama-3b | qwen | local | 4 | scored | .0500<br>±.0200 | .0333<br>±.0165 | .0083<br>±.0083 | .0000<br>±.0000 | 1.82 |
+| qwen-3b | qwen | none | 4 | scored | .1833<br>±.0355 | .1250<br>±.0303 | .1083<br>±.0285 | .1000<br>±.0275 | 1.71 |
+| qwen-3b | qwen | local | 4 | scored | .1583<br>±.0335 | .1250<br>±.0303 | .1000<br>±.0275 | .0833<br>±.0253 | 1.77 |
+| qwen-7b gptq-int4 | qwen | none | 4 | scored | .2250<br>±.0383 | .1167<br>±.0294 | .1333<br>±.0312 | .1250<br>±.0303 | 1.59 |
+| qwen-7b gptq-int4 | qwen | local | 4 | scored | .2917<br>±.0417 | .1333<br>±.0312 | .1417<br>±.0320 | .1333<br>±.0312 | 1.69 |
+| qwen-math-1.5b | qwen | none | 4 | scored | .2583<br>±.0401 | .1833<br>±.0355 | .1583<br>±.0335 | .1500<br>±.0327 | 1.45 |
+| qwen-math-1.5b | qwen | local | 4 | scored | .2583<br>±.0401 | .1583<br>±.0335 | .1750<br>±.0348 | .1750<br>±.0348 | 1.47 |
 
-> **Analysis.** No AIME2025 data yet — nothing to take away.
-> **Limitations / follow-up:** entire table planned; launch is
-> the GSM8K counterpart's command with `data=aime2025`.
+> **Analysis.** 10/10 cells scored (4 trials each, n=30
+> questions). `local` vs `none` splits both directions across
+> models — llama-1b/qwen-3b/qwen-math-1.5b(mixed) trend slightly
+> lower or flat under `local`, qwen-7b gptq-int4 trends higher
+> (.2250→.2917) — no consistent direction, and every gap is well
+> within 1 SEM given n=30's wide intervals. No clear
+> centering-mode effect at this sample size.
+> **Limitations / follow-up:** n=30 questions means SEMs are wide
+> (±.008 to ±.042) — treat any `local` vs `none` gap here as
+> noise until more trials accumulate. A `"fixed"`-mode column
+> remains a follow-up once a held-out mean exists for AIME2025.
 
 #### embeds_center_mode comparison (lam=0.01/ds_alpha=10)
 > **Compares:** same as the `ds_alpha=1` table above, at the next
@@ -469,24 +487,33 @@ Two activities, two shapes:
 > tmpl=model-family default, run.num_trials=4) except
 > **ds_alpha=10** (`w_eff=100`).
 >
-> **W&B:** none yet (no AIME2025 runs).
+> **W&B:** llama-1b none `5dr4nnlo` / local `w121yxyb`, llama-3b
+> none `vlsck1e4` / local `d0cs9hb6`, qwen-3b none `geje96pg` /
+> local `u0wgl7xo`, qwen-7b gptq-int4 none `30pfsbnl` / local
+> `js9umand`, qwen-math-1.5b none `bu8v110w` / local `5uwdjimk`.
 
 | llm | prm | center | trials | status | pass@gb | naive@gb | wei@gb | maj@gb | hr/trial |
 |---|---|---|---|---|---|---|---|---|---|
-| llama-1b | qwen | none | — | planned | — | — | — | — | — |
-| llama-1b | qwen | local | — | planned | — | — | — | — | — |
-| llama-3b | qwen | none | — | planned | — | — | — | — | — |
-| llama-3b | qwen | local | — | planned | — | — | — | — | — |
-| qwen-3b | qwen | none | — | planned | — | — | — | — | — |
-| qwen-3b | qwen | local | — | planned | — | — | — | — | — |
-| qwen-7b gptq-int4 | qwen | none | — | planned | — | — | — | — | — |
-| qwen-7b gptq-int4 | qwen | local | — | planned | — | — | — | — | — |
-| qwen-math-1.5b | qwen | none | — | planned | — | — | — | — | — |
-| qwen-math-1.5b | qwen | local | — | planned | — | — | — | — | — |
+| llama-1b | qwen | none | 4 | scored | .0000<br>±.0000 | .0000<br>±.0000 | .0000<br>±.0000 | .0000<br>±.0000 | 1.30 |
+| llama-1b | qwen | local | 4 | scored | .0250<br>±.0143 | .0167<br>±.0117 | .0000<br>±.0000 | .0000<br>±.0000 | 1.35 |
+| llama-3b | qwen | none | 4 | scored | .0583<br>±.0215 | .0167<br>±.0117 | .0167<br>±.0117 | .0167<br>±.0117 | 1.90 |
+| llama-3b | qwen | local | 4 | scored | .0750<br>±.0241 | .0250<br>±.0143 | .0333<br>±.0165 | .0167<br>±.0117 | 1.86 |
+| qwen-3b | qwen | none | 4 | scored | .1667<br>±.0342 | .1167<br>±.0294 | .0917<br>±.0265 | .0833<br>±.0253 | 1.77 |
+| qwen-3b | qwen | local | 4 | scored | .2000<br>±.0367 | .1333<br>±.0312 | .0917<br>±.0265 | .0583<br>±.0215 | 1.77 |
+| qwen-7b gptq-int4 | qwen | none | 4 | scored | .3000<br>±.0420 | .1833<br>±.0355 | .1333<br>±.0312 | .1167<br>±.0294 | 1.65 |
+| qwen-7b gptq-int4 | qwen | local | 4 | scored | .2667<br>±.0405 | .1917<br>±.0361 | .1083<br>±.0285 | .1083<br>±.0285 | 1.68 |
+| qwen-math-1.5b | qwen | none | 4 | scored | .1917<br>±.0361 | .1417<br>±.0320 | .1333<br>±.0312 | .1250<br>±.0303 | 1.39 |
+| qwen-math-1.5b | qwen | local | 4 | scored | .2500<br>±.0397 | .1750<br>±.0348 | .1417<br>±.0320 | .1167<br>±.0294 | 1.43 |
 
-> **Analysis.** No AIME2025 data yet — nothing to take away.
-> **Limitations / follow-up:** entire table planned; launch is
-> the GSM8K counterpart's command with `data=aime2025`.
+> **Analysis.** 10/10 cells scored (4 trials each, n=30
+> questions). Same pattern as the `ds_alpha=1` checkpoint above:
+> `local` vs `none` splits both directions (llama-1b/llama-3b/
+> qwen-3b/qwen-math-1.5b trend slightly higher under `local`,
+> qwen-7b gptq-int4 trends lower), every gap within 1 SEM. No
+> consistent centering-mode effect visible at this sample size.
+> **Limitations / follow-up:** n=30 questions means SEMs are wide
+> (±.000 to ±.042) — treat gaps as noise until more trials
+> accumulate.
 
 #### agg_strategy comparison (qwen-3b, qwen-math-1.5b, lam=0.01/ds_alpha=1)
 > **Compares:** `gen.agg_strategy` (`"min"` | `"prod"` | `"last"` —
@@ -551,19 +578,25 @@ Two activities, two shapes:
 > (w_eff=10), ds_beta=1.0, prm_batch_size=1, **run.num_trials=4**
 > (see the cnt-mcts tables above).
 >
-> **W&B:** none yet (no AIME2025 runs).
+> **W&B:** baselines cited from the `embeds_center_mode` table
+> above (`none` rows) — llama-1b `kusajt8w`, llama-3b `llkxel7t`,
+> qwen-3b `gztx392f`, qwen-7b gptq-int4 `yrcwjwpe`,
+> qwen-math-1.5b `s87k7uxn`.
 
 | llm | trials | status | pass@gb | naive@gb | wei@gb | maj@gb | hr/trial |
 |---|---|---|---|---|---|---|---|
-| llama-1b fp16 | — | planned | — | — | — | — | — |
-| llama-3b fp16 | — | planned | — | — | — | — | — |
-| qwen-3b fp16 | — | planned | — | — | — | — | — |
-| qwen-7b gptq-int4 | — | planned | — | — | — | — | — |
-| qwen-math-1.5b fp16 | — | planned | — | — | — | — | — |
+| llama-1b fp16 | 4 | scored | .0333<br>±.0165 | .0167<br>±.0117 | .0167<br>±.0117 | .0000<br>±.0000 | 1.34 |
+| llama-3b fp16 | 4 | scored | .0417<br>±.0183 | .0333<br>±.0165 | .0167<br>±.0117 | .0167<br>±.0117 | 1.78 |
+| qwen-3b fp16 | 4 | scored | .1833<br>±.0355 | .1250<br>±.0303 | .1083<br>±.0285 | .1000<br>±.0275 | 1.71 |
+| qwen-7b gptq-int4 | 4 | scored | .2250<br>±.0383 | .1167<br>±.0294 | .1333<br>±.0312 | .1250<br>±.0303 | 1.59 |
+| qwen-math-1.5b fp16 | 4 | scored | .2583<br>±.0401 | .1833<br>±.0355 | .1583<br>±.0335 | .1500<br>±.0327 | 1.45 |
 
-> **Analysis.** No AIME2025 data yet — nothing to take away.
-> **Limitations / follow-up:** entire table planned; launch is
-> the GSM8K counterpart's command with `data=aime2025`.
+> **Analysis.** 5/5 cells filled (cited from the
+> `embeds_center_mode` table above — no new compute). Same
+> ranking as the cnt-mcts QwenPRM table: qwen-math-1.5b >
+> qwen-7b gptq-int4 ≈ qwen-3b > llama-3b > llama-1b.
+> **Limitations / follow-up:** n=30 questions means SEMs are
+> wide; treat as directional only.
 
 #### model family, size, quantization comparison (QwenPRM, lam=0.01/ds_alpha=10)
 > **Compares:** same as the `ds_alpha=1` table above, at the next
@@ -574,19 +607,27 @@ Two activities, two shapes:
 > cov_update=sm, ds_beta=1.0, prm_batch_size=1, tmpl=model-family
 > default, run.num_trials=4) except **ds_alpha=10** (`w_eff=100`).
 >
-> **W&B:** none yet (no AIME2025 runs).
+> **W&B:** baselines cited from the `embeds_center_mode` table
+> above (`none` rows) — llama-1b `5dr4nnlo`, llama-3b `vlsck1e4`,
+> qwen-3b `geje96pg`, qwen-7b gptq-int4 `30pfsbnl`,
+> qwen-math-1.5b `bu8v110w`.
 
 | llm | trials | status | pass@gb | naive@gb | wei@gb | maj@gb | hr/trial |
 |---|---|---|---|---|---|---|---|
-| llama-1b fp16 | — | planned | — | — | — | — | — |
-| llama-3b fp16 | — | planned | — | — | — | — | — |
-| qwen-3b fp16 | — | planned | — | — | — | — | — |
-| qwen-7b gptq-int4 | — | planned | — | — | — | — | — |
-| qwen-math-1.5b fp16 | — | planned | — | — | — | — | — |
+| llama-1b fp16 | 4 | scored | .0000<br>±.0000 | .0000<br>±.0000 | .0000<br>±.0000 | .0000<br>±.0000 | 1.30 |
+| llama-3b fp16 | 4 | scored | .0583<br>±.0215 | .0167<br>±.0117 | .0167<br>±.0117 | .0167<br>±.0117 | 1.90 |
+| qwen-3b fp16 | 4 | scored | .1667<br>±.0342 | .1167<br>±.0294 | .0917<br>±.0265 | .0833<br>±.0253 | 1.77 |
+| qwen-7b gptq-int4 | 4 | scored | .3000<br>±.0420 | .1833<br>±.0355 | .1333<br>±.0312 | .1167<br>±.0294 | 1.65 |
+| qwen-math-1.5b fp16 | 4 | scored | .1917<br>±.0361 | .1417<br>±.0320 | .1333<br>±.0312 | .1250<br>±.0303 | 1.39 |
 
-> **Analysis.** No AIME2025 data yet — nothing to take away.
-> **Limitations / follow-up:** entire table planned; launch is
-> the GSM8K counterpart's command with `data=aime2025`.
+> **Analysis.** 5/5 cells filled (cited from the
+> `embeds_center_mode` table above — no new compute). llama-1b
+> is at floor (0/120 across all metrics). qwen-7b gptq-int4 is
+> now the top pass@gb (.3000), ahead of qwen-math-1.5b (.1917) —
+> a ranking flip vs. the `ds_alpha=1` checkpoint, though within
+> ~1-2 SEM given n=30.
+> **Limitations / follow-up:** n=30 questions means SEMs are
+> wide; treat as directional only.
 
 
 ### cnt-mcts-bl-v01

@@ -296,19 +296,25 @@ Two activities, two shapes:
 | llama-1b | qwen | 1.0 | 3.0 | 3.0 | — | planned | — | — | — | — | — |
 | llama-1b | qwen | 0.1 | 0.949 | 3.0 | — | planned | — | — | — | — | — |
 | llama-1b | qwen | 0.01 | 0.3 | 3.0 | — | planned | — | — | — | — | — |
-| llama-1b | qwen | **1.0** | **10** | **10** | — | planned | — | — | — | — | — |
-| llama-1b | qwen | 0.1 | 3.16 | 10 | — | planned | — | — | — | — | — |
-| llama-1b | qwen | **0.01** | **1.0** | **10** | — | planned | — | — | — | — | — |
-| llama-1b | qwen | 1.0 | 100 | 100 | — | planned | — | — | — | — | — |
-| llama-1b | qwen | 0.1 | 31.6 | 100 | — | planned | — | — | — | — | — |
-| llama-1b | qwen | 0.01 | 10 | 100 | — | planned | — | — | — | — | — |
+| llama-1b | qwen | **1.0** | **10** | **10** | 2 | scored | .8887<br>±.0139 | .8398<br>±.0162 | .7871<br>±.0181 | .7480<br>±.0192 | 4.18 |
+| llama-1b | qwen | 0.1 | 3.16 | 10 | 2 | scored | .8965<br>±.0135 | .8398<br>±.0162 | .7969<br>±.0178 | .7539<br>±.0191 | 4.26 |
+| llama-1b | qwen | **0.01** | **1.0** | **10** | 2 | scored | .8965<br>±.0135 | .8555<br>±.0156 | .8105<br>±.0173 | .7871<br>±.0181 | 4.20 |
+| llama-1b | qwen | 1.0 | 100 | 100 | 0/2 | running | — | — | — | — | — |
+| llama-1b | qwen | 0.1 | 31.6 | 100 | 0/2 | running | — | — | — | — | — |
+| llama-1b | qwen | 0.01 | 10 | 100 | 0/2 | running | — | — | — | — | — |
 | llama-1b | qwen | 1.0 | 1000 | 1000 | — | planned | — | — | — | — | — |
 | llama-1b | qwen | 0.1 | 316.2 | 1000 | — | planned | — | — | — | — | — |
 | llama-1b | qwen | 0.01 | 100 | 1000 | — | planned | — | — | — | — | — |
 
-> **Analysis.** No GSM8K data yet — nothing to take away.
-> **Limitations / follow-up:** entire table planned; launch is
-> the level-5 counterpart's command with `data=gsm8k`.
+> **Analysis.** 3/22 cells scored (2 trials each, n=256). The
+> `w_eff=10` step is fully resolved: pass@gb .8887/.8965/.8965
+> (`lam=1.0/0.1/0.01`) — all within 1 SEM of each other, no
+> `lam`-dependence signal, matching the PRM800K-level5 pattern at
+> this checkpoint. The `w_eff=100` step (3 cells) is currently
+> running.
+> **Limitations / follow-up:** `w_eff=100` in flight;
+> `w_eff=0.1/0.3/1000` and the `w_eff=0` gap-closer remain
+> unlaunched.
 
 #### lam / ds_alpha joint sweep (llama-3b)
 > **Compares:** the same `lam`/`ds_alpha` joint-tuning question as
@@ -333,19 +339,25 @@ Two activities, two shapes:
 | llama-3b | qwen | 1.0 | 3.0 | 3.0 | — | planned | — | — | — | — | — |
 | llama-3b | qwen | 0.1 | 0.949 | 3.0 | — | planned | — | — | — | — | — |
 | llama-3b | qwen | 0.01 | 0.3 | 3.0 | — | planned | — | — | — | — | — |
-| llama-3b | qwen | **1.0** | **10** | **10** | — | planned | — | — | — | — | — |
-| llama-3b | qwen | 0.1 | 3.16 | 10 | — | planned | — | — | — | — | — |
-| llama-3b | qwen | **0.01** | **1.0** | **10** | — | planned | — | — | — | — | — |
-| llama-3b | qwen | 1.0 | 100 | 100 | — | planned | — | — | — | — | — |
-| llama-3b | qwen | 0.1 | 31.6 | 100 | — | planned | — | — | — | — | — |
-| llama-3b | qwen | 0.01 | 10 | 100 | — | planned | — | — | — | — | — |
+| llama-3b | qwen | **1.0** | **10** | **10** | 2 | scored | .9590<br>±.0088 | .9180<br>±.0121 | .9297<br>±.0113 | .9238<br>±.0117 | 4.88 |
+| llama-3b | qwen | 0.1 | 3.16 | 10 | 2 | scored | .9629<br>±.0084 | .9316<br>±.0112 | .9160<br>±.0123 | .9180<br>±.0121 | 5.33 |
+| llama-3b | qwen | **0.01** | **1.0** | **10** | 2 | scored | .9590<br>±.0088 | .9277<br>±.0115 | .9238<br>±.0117 | .9238<br>±.0117 | 5.44 |
+| llama-3b | qwen | 1.0 | 100 | 100 | 2 | scored | .9648<br>±.0081 | .9414<br>±.0104 | .8809<br>±.0143 | .8711<br>±.0148 | 5.20 |
+| llama-3b | qwen | 0.1 | 31.6 | 100 | 2 | scored | .9688<br>±.0077 | .9316<br>±.0112 | .8984<br>±.0134 | .8906<br>±.0138 | 5.64 |
+| llama-3b | qwen | 0.01 | 10 | 100 | 2 | scored | .9648<br>±.0081 | .9316<br>±.0112 | .8984<br>±.0134 | .8984<br>±.0134 | 5.82 |
 | llama-3b | qwen | 1.0 | 1000 | 1000 | — | planned | — | — | — | — | — |
 | llama-3b | qwen | 0.1 | 316.2 | 1000 | — | planned | — | — | — | — | — |
 | llama-3b | qwen | 0.01 | 100 | 1000 | — | planned | — | — | — | — | — |
 
-> **Analysis.** No GSM8K data yet — nothing to take away.
-> **Limitations / follow-up:** entire table planned; launch is
-> the level-5 counterpart's command with `data=gsm8k`.
+> **Analysis.** 6/22 cells scored (2 trials each, n=256). Both
+> `w_eff=10` and `w_eff=100` steps are fully resolved: `w_eff=10`
+> pass@gb .9590/.9629/.9590 (`lam=1.0/0.1/0.01`) — tightly
+> clustered, no `lam`-dependence. `w_eff=100` similarly tight
+> (.9648/.9688/.9648) — a hair higher than `w_eff=10` across the
+> board, all within 1 SEM of each other and of `w_eff=10`. No
+> `lam` effect visible at this budget/dataset.
+> **Limitations / follow-up:** `w_eff=0.1/0.3/1000` and the
+> `w_eff=0` gap-closer remain unlaunched; only 2 trials/cell.
 
 #### lam / ds_alpha joint sweep (qwen-math-1.5b)
 > **Compares:** the same `lam`/`ds_alpha` joint-tuning question as
@@ -370,19 +382,29 @@ Two activities, two shapes:
 | qwen-math-1.5b | qwen | 1.0 | 3.0 | 3.0 | — | planned | — | — | — | — | — |
 | qwen-math-1.5b | qwen | 0.1 | 0.949 | 3.0 | — | planned | — | — | — | — | — |
 | qwen-math-1.5b | qwen | 0.01 | 0.3 | 3.0 | — | planned | — | — | — | — | — |
-| qwen-math-1.5b | qwen | **1.0** | **10** | **10** | — | planned | — | — | — | — | — |
-| qwen-math-1.5b | qwen | 0.1 | 3.16 | 10 | — | planned | — | — | — | — | — |
-| qwen-math-1.5b | qwen | **0.01** | **1.0** | **10** | — | planned | — | — | — | — | — |
-| qwen-math-1.5b | qwen | 1.0 | 100 | 100 | — | planned | — | — | — | — | — |
-| qwen-math-1.5b | qwen | 0.1 | 31.6 | 100 | — | planned | — | — | — | — | — |
-| qwen-math-1.5b | qwen | 0.01 | 10 | 100 | — | planned | — | — | — | — | — |
+| qwen-math-1.5b | qwen | **1.0** | **10** | **10** | 2 | scored | .9785<br>±.0064 | .9395<br>±.0106 | .8809<br>±.0143 | .8672<br>±.0150 | 6.17 |
+| qwen-math-1.5b | qwen | 0.1 | 3.16 | 10 | 2 | scored | .9629<br>±.0084 | .9316<br>±.0112 | .8809<br>±.0143 | .8691<br>±.0149 | 5.93 |
+| qwen-math-1.5b | qwen | **0.01** | **1.0** | **10** | 2 | scored | .9688<br>±.0077 | .9336<br>±.0110 | .8984<br>±.0134 | .8809<br>±.0143 | 5.87 |
+| qwen-math-1.5b | qwen | 1.0 | 100 | 100 | 2 | scored | .9531<br>±.0094 | .9121<br>±.0125 | .8320<br>±.0165 | .8125<br>±.0173 | 6.13 |
+| qwen-math-1.5b | qwen | 0.1 | 31.6 | 100 | 2 | scored | .9668<br>±.0079 | .9277<br>±.0115 | .8652<br>±.0151 | .8555<br>±.0156 | 5.92 |
+| qwen-math-1.5b | qwen | 0.01 | 10 | 100 | 2 | scored | .9668<br>±.0079 | .9277<br>±.0115 | .8887<br>±.0139 | .8730<br>±.0147 | 5.86 |
 | qwen-math-1.5b | qwen | 1.0 | 1000 | 1000 | — | planned | — | — | — | — | — |
 | qwen-math-1.5b | qwen | 0.1 | 316.2 | 1000 | — | planned | — | — | — | — | — |
 | qwen-math-1.5b | qwen | 0.01 | 100 | 1000 | — | planned | — | — | — | — | — |
 
-> **Analysis.** No GSM8K data yet — nothing to take away.
-> **Limitations / follow-up:** entire table planned; launch is
-> the level-5 counterpart's command with `data=gsm8k`.
+> **Analysis.** 6/22 cells scored (2 trials each, n=256).
+> `w_eff=10` step: pass@gb .9785 (`lam=1.0`) is the highest of
+> the three, vs. .9629/.9688 (`lam=0.1`/`0.01`) — a small
+> `lam=1.0`-trending-higher pattern, opposite the direction seen
+> at PRM800K-level5 for this model (`lam=1.0` trended lowest
+> there). `w_eff=100` shows the reverse: `lam=1.0` .9531 is now
+> the lowest of the three (vs. .9668 for both `lam=0.1`/`0.01`) —
+> consistent with the level-5 direction at that checkpoint. All
+> gaps are within ~1-2 SEM.
+> **Limitations / follow-up:** `w_eff=0.1/0.3/1000` and the
+> `w_eff=0` gap-closer remain unlaunched; only 2 trials/cell, so
+> the direction flip between checkpoints is suggestive, not
+> conclusive.
 
 #### lam / ds_alpha joint sweep (qwen-7b gptq-int4)
 > **Compares:** the same `lam`/`ds_alpha` joint-tuning question as
@@ -408,19 +430,24 @@ Two activities, two shapes:
 | qwen-7b gptq-int4 | qwen | 1.0 | 3.0 | 3.0 | — | planned | — | — | — | — | — |
 | qwen-7b gptq-int4 | qwen | 0.1 | 0.949 | 3.0 | — | planned | — | — | — | — | — |
 | qwen-7b gptq-int4 | qwen | 0.01 | 0.3 | 3.0 | — | planned | — | — | — | — | — |
-| qwen-7b gptq-int4 | qwen | **1.0** | **10** | **10** | — | planned | — | — | — | — | — |
-| qwen-7b gptq-int4 | qwen | 0.1 | 3.16 | 10 | — | planned | — | — | — | — | — |
-| qwen-7b gptq-int4 | qwen | **0.01** | **1.0** | **10** | — | planned | — | — | — | — | — |
-| qwen-7b gptq-int4 | qwen | 1.0 | 100 | 100 | — | planned | — | — | — | — | — |
-| qwen-7b gptq-int4 | qwen | 0.1 | 31.6 | 100 | — | planned | — | — | — | — | — |
-| qwen-7b gptq-int4 | qwen | 0.01 | 10 | 100 | — | planned | — | — | — | — | — |
+| qwen-7b gptq-int4 | qwen | **1.0** | **10** | **10** | 2 | scored | .9688<br>±.0077 | .9414<br>±.0104 | .9434<br>±.0102 | .9414<br>±.0104 | 3.42 |
+| qwen-7b gptq-int4 | qwen | 0.1 | 3.16 | 10 | 2 | scored | .9609<br>±.0086 | .9492<br>±.0097 | .9512<br>±.0095 | .9453<br>±.0101 | 3.71 |
+| qwen-7b gptq-int4 | qwen | **0.01** | **1.0** | **10** | 2 | scored | .9766<br>±.0067 | .9570<br>±.0090 | .9473<br>±.0099 | .9473<br>±.0099 | 3.83 |
+| qwen-7b gptq-int4 | qwen | 1.0 | 100 | 100 | 2 | scored | .9746<br>±.0070 | .9512<br>±.0095 | .9375<br>±.0107 | .9316<br>±.0112 | 3.54 |
+| qwen-7b gptq-int4 | qwen | 0.1 | 31.6 | 100 | 2 | scored | .9707<br>±.0075 | .9492<br>±.0097 | .9316<br>±.0112 | .9219<br>±.0119 | 3.80 |
+| qwen-7b gptq-int4 | qwen | 0.01 | 10 | 100 | 2 | scored | .9648<br>±.0081 | .9551<br>±.0092 | .9395<br>±.0106 | .9355<br>±.0109 | 3.94 |
 | qwen-7b gptq-int4 | qwen | 1.0 | 1000 | 1000 | — | planned | — | — | — | — | — |
 | qwen-7b gptq-int4 | qwen | 0.1 | 316.2 | 1000 | — | planned | — | — | — | — | — |
 | qwen-7b gptq-int4 | qwen | 0.01 | 100 | 1000 | — | planned | — | — | — | — | — |
 
-> **Analysis.** No GSM8K data yet — nothing to take away.
-> **Limitations / follow-up:** entire table planned; launch is
-> the level-5 counterpart's command with `data=gsm8k`.
+> **Analysis.** 6/22 cells scored (2 trials each, n=256). Both
+> `w_eff=10` and `w_eff=100` steps land tightly clustered on
+> pass@gb (.9609–.9766), the flattest spread of any model-family
+> table in this GSM8K sweep so far — echoing the same flatness
+> seen at PRM800K-level5 for this model. No clear `lam` effect at
+> either checkpoint.
+> **Limitations / follow-up:** `w_eff=0.1/0.3/1000` and the
+> `w_eff=0` gap-closer remain unlaunched; only 2 trials/cell.
 
 #### model family, size, quantization comparison (RLHFlowPRM)
 > **Compares:** model family, size, and quantization jointly —
