@@ -74,9 +74,10 @@ functions share one predicate, `_is_local_center(sc)`, so the defer
 decision and the centering gate can never silently disagree.
 `batch_size=1` edge: the centered vector is exactly 0 → zero bonus,
 and the Sherman-Morrison fold of a zero vector is a no-op.
-**v02 core only** — v01 and bl_sem cores ignore the flag
-(deliberately unimplemented there for now; the field comment says
-so).
+**Ported to bl_sem 2026-07-15** (`mcts_bl_sem_search_v01_00_00`,
+`BLMCTSSemConfig`) — same mechanism, `_center_and_normalize` shared
+line-for-line with v02. **v01 (`mcts_sem_search_v01_00_00`) still
+ignores the flag** — not yet ported.
 
 **Hash handling (reuses the mechanism `cov_dtype` also uses):**
 adding any field to the `search` group would change every existing
@@ -103,6 +104,51 @@ group's vectors enter `V` with a different affine offset — the same
 incoherence concern raised for the online mode below. The faithful
 transplant (fresh `V` per expansion) would be a separate, larger
 change; this mode lets the cheap half be tested first.
+
+## Local mean (sibling-group) in frontier selection — bl_sem caveat
+
+Ported mechanism ≠ ported recommendation. bl_sem
+(`mcts_bl_sem_search_v01_00_00`) accumulates `V` by best-first
+**global** selection over a flat, ever-growing leaf frontier: each
+selection folds in the one winning candidate's embedding, and a
+frontier node is expanded at most once by construction (no
+per-parent revisits, no tree walk — see the module docstring's
+"Differences from mcts_sem_v02"). v02 instead compares a node's
+diversity bonus against its own siblings under one parent, walking
+the tree, with a node sometimes revisited.
+
+That structural difference matters for local centering specifically.
+v02's local mode centers each expansion's `bs=4` siblings on their
+own group mean, then compares diversity bonuses *within that same
+group* at selection time — the comparison is at least locally
+coherent, even though the accumulated `V` mixes offsets across
+groups (the caveat already on record above). bl_sem's global
+frontier selection instead compares candidates from *different*
+groups, centered at *different* points in the run, directly against
+each other in one selection step — there is no "local" frame left in
+which the comparison is coherent, only the incoherent accumulated-`V`
+one. Local mode remains available in bl_sem (ported, verified to
+run) but should be read strictly as a v02-parity ablation arm, not a
+mode to prefer over fixed centering here.
+
+**Recommendation (2026-07-15):** fixed held-out centering stays the
+default for bl_sem, same as v02, and for a stronger reason than
+v02's — v02 at least has locally-coherent per-parent comparisons to
+fall back on; bl_sem's frontier does not.
+
+**If a coherent adaptive mode is ever wanted for bl_sem:** the
+Welford-at-expansion-time shape scoped for v02's online mode (below)
+doesn't transfer as-is, because bl_sem's selection is global and
+cross-branch rather than scoped to one parent's siblings at a time.
+A coherent version would need centering decided **at selection time**
+(the mean used to compare frontier candidates would have to be
+current as of that global comparison, not fixed at each candidate's
+own expansion time), and `V` would need to be rebuilt from raw
+embedding history whenever the center moves, rather than folded
+incrementally — since a shifting center invalidates the affine basis
+every previously-folded vector was expressed in. This is sketched
+informally only; no implementation, no config surface, not scoped as
+a concrete task.
 
 ## Online mean (Welford running update) — **planned, not yet built**
 

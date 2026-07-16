@@ -14,6 +14,42 @@ scaffold, it also gets a standalone file in [decisions/](decisions/);
 the log entry then carries a one-line pointer to it rather than
 repeating the full writeup.
 
+## 2026-07-15 — Search: mean-centering recommendation for mcts_bl_sem_v01 — fixed stays primary, local is a stricter ablation than in v02
+
+**Context:** `cov_dtype` and `embeds_center_mode` ("fixed"/"local")
+were ported into `mcts_bl_sem_search_v01_00_00` from
+`mcts_sem_search_v02_00_00` (same day, see the config-porting entry
+below) so bl_sem could run either mode at all. Porting the mechanism
+answers "can it run local mode," not "should it, here" — bl_sem's
+best-first frontier selection accumulates `V` differently from v02's
+tree walk (global sequential folding of one winner per selection,
+each frontier node expanded exactly once, vs. v02's per-parent
+sibling comparison with possible revisits), so the mode recommendation
+needed its own pass rather than inheriting v02's.
+**Decision:** fixed held-out centering stays the recommended default
+for bl_sem, same as v02. `local` mode is available (parity with v02,
+already verified to run) but scoped strictly as an ablation arm, with
+a **stronger** incoherence caveat than v02 carries: v02's per-parent
+sibling groups are at least locally comparable at selection time
+(same parent, same expansion); bl_sem's global frontier selection
+compares candidates whose *groups* were centered at different points
+in the run against each other directly, so the affine-offset mismatch
+that already made local mode an ablation in v02
+([embeds-centering-design.md](decisions/embeds-centering-design.md#local-mean-sibling-group--built-2026-07-1415-v02-only))
+is structurally worse here. No design for a coherent adaptive/online
+mode in bl_sem yet — sketched only informally: it would need
+selection-time centering (not expansion-time Welford, since frontier
+comparison is global and cross-branch) and `V` rebuilt from raw
+embedding history whenever the center moves, which is a materially
+different shape than the Welford-at-expansion-time design already
+scoped for v02's online mode.
+**Why:** recommending fixed-by-default without flagging local as
+*more* fragile here than in v02 would understate the risk — bl_sem's
+frontier structurally removes the one thing that kept v02's local
+mode locally coherent (comparison scoped to one parent's siblings).
+Full writeup:
+[embeds-centering-design.md](decisions/embeds-centering-design.md#local-mean-sibling-group-in-frontier-selection--bl_sem-caveat).
+
 ## 2026-07-15 — Search, Configs: cov_dtype + embeds_center_mode — reimplemented after a pydantic field-declaration bug
 
 **Context:** both flags were built and verified 2026-07-14 (hash
