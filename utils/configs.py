@@ -252,6 +252,49 @@ class BLMCTSCntConfig(SearchConfig):
 
 
 @dataclass
+class BLMCTSCntV02Config(SearchConfig):
+    """Count-based MCTS (PUCT) with eager terminal backprop and a
+    path-aware frontier score (Option 1: parent-blend).
+
+    v02 of BLMCTSCntConfig's family, not a same-family bugfix -- see
+    docs/decisions/bl-cnt-v02-eager-backprop-path-aware.md for the
+    full design and docs/decisions/
+    bl-cnt-path-aware-frontier-score-design.md for the analysis that
+    established plain eager backprop alone doesn't change v01's
+    ranking (puct() never reads a parent's q_value, only its own
+    frozen q plus the parent's visit count -- a backpropagated value
+    is otherwise write-only).
+
+    Two changes relative to BLMCTSCntConfig, both in
+    core/mcts_bl_cnt_search_v02_00_00.py:
+      1. Terminal split + eager backprop (unconditional): a terminal
+         child backprops immediately at creation and never enters the
+         leaf frontier, instead of waiting to win a later selection.
+      2. Path-aware PUCT (Option 1): the leaf's own q_value is
+         blended with its immediate parent's q_value by `alpha`
+         before adding the (unchanged) UCB1 exploration term:
+             blended_q = alpha*q_value(leaf) + (1-alpha)*q_value(parent)
+             path_aware_puct = blended_q + cpuct*sqrt(log(N_parent)/N_leaf)
+         alpha=1.0 recovers BLMCTSCntConfig's exact puct() (the
+         parent term drops out) -- the built-in control arm for a
+         sweep. alpha in [0, 1]; alpha ~= 0.6-0.8 is the reasonable
+         starting range per the design doc's `\S`3.
+    """
+    method: str = "mcts_bl_cnt_v02"
+    num_phases: int = 1000
+    gen_budget: int = 80          # total generations across the run
+    cpuct: float = 2.0
+    alpha: float = 0.8            # own-q vs. parent-q blend weight;
+                                   # 1.0 = BLMCTSCntConfig's exact puct
+
+    # PRM forward-pass micro-batch *inside* the search loop (distinct
+    # from prm.score_batch_size, which scores the final dataset). Kept
+    # small because in-loop scoring is per-candidate-set. Mirrors
+    # BLMCTSCntConfig.prm_batch_size.
+    prm_batch_size: int = 1
+
+
+@dataclass
 class BLMCTSKubeV01Config(SearchConfig):
     """Count-based MCTS with fractional-KUBE frontier selection.
 
@@ -326,6 +369,59 @@ class BLMCTSKubeV01Config(SearchConfig):
 
 
 @dataclass
+class BLMCTSKubeV02Config(SearchConfig):
+    """Fractional-KUBE with eager terminal backprop, and (under
+    kube_schedule="parent" only) a path-aware frontier score.
+
+    v02 of BLMCTSKubeV01Config's family -- see
+    docs/decisions/bl-cnt-v02-eager-backprop-path-aware.md `\S`
+    "kube mechanism" for the full design and
+    docs/decisions/bl-cnt-path-aware-frontier-score-design.md `\S`7.1
+    for the analysis this implements.
+
+    Two changes relative to BLMCTSKubeV01Config, both in
+    core/mcts_bl_kube_search_v02_00_00.py:
+      1. Terminal split + eager backprop (BOTH schedules). v01 has a
+         structural defect: a max-depth dead-end always has cost <=
+         0, so kube_density() returns -inf and it is NEVER selected
+         while any finite-density node remains -- it sits in
+         leaf_nodes forever, and its permanent is_terminal==True
+         membership permanently satisfies kube_affordable's "always
+         eligible" clause, silently disabling that filter's own
+         empty-set fallback. v02 backprops a terminal immediately at
+         creation and never puts it on the frontier, fixing this
+         directly.
+      2. Path-aware KUBE density -- "parent" schedule ONLY. The
+         "parent" bonus is exactly BLMCTSCntV02Config's PUCT bonus
+         (this file differs from bl_cnt only by the /cost division),
+         so the identical parent-blend applies to the q term before
+         the bonus and cost division. Under "global", the bonus is a
+         frontier-wide constant with no per-node channel to blend --
+         v02 supplies ONLY the terminal-split fix there, with NO
+         claim of reading propagated values differently than v01.
+         `alpha` is read but unused when kube_schedule="global".
+    """
+    method: str = "mcts_bl_kube_v02"
+    num_phases: int = 1000
+    gen_budget: int = 80          # total generations across the run
+    kube_c: float = 2.0            # UCB exploration coefficient
+    kube_schedule: str = "parent"  # "parent" | "global" (see above)
+    kube_affordable: bool = True   # restrict argmax to affordable
+                                   # nodes (KUBE feasibility step)
+    alpha: float = 0.8            # own-q vs. parent-q blend weight,
+                                   # "parent" schedule only; 1.0 =
+                                   # BLMCTSKubeV01Config's exact
+                                   # kube_density under "parent";
+                                   # unused under "global"
+
+    # PRM forward-pass micro-batch *inside* the search loop (distinct
+    # from prm.score_batch_size, which scores the final dataset). Kept
+    # small because in-loop scoring is per-candidate-set. Mirrors
+    # BLMCTSKubeV01Config.prm_batch_size.
+    prm_batch_size: int = 1
+
+
+@dataclass
 class BLMCTSKdepthV01Config(SearchConfig):
     """Knapsack-cost-normalized MCTS with a depth-shaping frontier
     selection bonus (no visit counts).
@@ -380,6 +476,48 @@ class BLMCTSKdepthV01Config(SearchConfig):
     # from prm.score_batch_size, which scores the final dataset). Kept
     # small because in-loop scoring is per-candidate-set. Mirrors
     # BLMCTSKubeV01Config.prm_batch_size.
+    prm_batch_size: int = 1
+
+
+@dataclass
+class BLMCTSKdepthV02Config(SearchConfig):
+    """Depth-shaping knapsack MCTS with eager terminal backprop only
+    -- no formula change.
+
+    v02 of BLMCTSKdepthV01Config's family -- see
+    docs/decisions/bl-cnt-v02-eager-backprop-path-aware.md `\S`
+    "kdepth scope" for why this v02 is hygiene-only, and
+    docs/decisions/bl-cnt-path-aware-frontier-score-design.md `\S`7.2
+    for the analysis establishing the goal is unreachable via
+    backprop timing alone here: depth_density() reads only a leaf's
+    own frozen q_value, its own depth, and two constants -- no
+    visit-count or parent-q channel exists at all for a blend to hook
+    into, so "no backprop timing -- eager, lazy, or never -- can
+    change which non-terminal node gets expanded next" (`\S`7.2,
+    verbatim).
+
+    One change relative to BLMCTSKdepthV01Config, in
+    core/mcts_bl_kdepth_search_v02_00_00.py: terminal split + eager
+    backprop. A terminal child backprops immediately at creation and
+    never enters the leaf frontier -- fixes the same permanently-
+    stuck-dead-end / kube_affordable-fallback-suppression defect
+    BLMCTSKubeV02Config's docstring describes (this file shares the
+    identical feasibility filter). depth_density() itself is BYTE-
+    IDENTICAL to BLMCTSKdepthV01Config's -- no alpha knob, since
+    there is nothing designed for it to blend.
+    """
+    method: str = "mcts_bl_kdepth_v02"
+    num_phases: int = 1000
+    gen_budget: int = 80            # total generations across the run
+    depth_beta: float = 2.0         # depth-bonus coefficient
+    depth_alpha: float = 1.0        # depth-bonus exponent
+    kube_affordable: bool = True    # restrict argmax to affordable
+                                    # nodes (knapsack feasibility step)
+
+    # PRM forward-pass micro-batch *inside* the search loop (distinct
+    # from prm.score_batch_size, which scores the final dataset). Kept
+    # small because in-loop scoring is per-candidate-set. Mirrors
+    # BLMCTSKdepthV01Config.prm_batch_size.
     prm_batch_size: int = 1
 
 

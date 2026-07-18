@@ -14,6 +14,42 @@ scaffold, it also gets a standalone file in [decisions/](decisions/);
 the log entry then carries a one-line pointer to it rather than
 repeating the full writeup.
 
+## 2026-07-18 — Search, Feature: v02 of `mcts_bl_cnt`, `mcts_bl_kube`, `mcts_bl_kdepth` — eager terminal backprop, implemented per each family's `\S`7 verdict
+
+**Context:** Tuan asked to "create a v02 versions for these three
+methods, that will implement eager terminal backprop with additional
+options (maybe options mentioned above but determined later)" — the
+direct implementation follow-up to the 2026-07-16 design-only
+entries above. **Decision:** each family got a genuinely different
+treatment, per
+[decisions/bl-cnt-path-aware-frontier-score-design.md](decisions/bl-cnt-path-aware-frontier-score-design.md)
+§7's own per-variant verdicts, resolved via a short scoped-questions
+pass rather than one mechanism copy-pasted three times:
+`mcts_bl_cnt_v02` gets the terminal-split + eager backprop plus
+Option 1's parent-blended PUCT (`alpha` knob, `alpha=1.0` recovers
+v01 exactly — verified numerically identical across 6+ edge cases);
+`mcts_bl_kube_v02` gets the same terminal-split (both
+`kube_schedule` values — fixes a real defect where dead-ends were
+*permanently* stuck at `cost≤0`/`-inf`, silently disabling the
+`kube_affordable` fallback for the rest of any run) plus the
+identical parent-blend, but **only** under `kube_schedule="parent"`
+(the `"global"` bonus has no per-node channel to blend into, so it
+gets hygiene only, no invented formula); `mcts_bl_kdepth_v02` gets
+**hygiene only** — `depth_density()` is byte-identical to v01's
+(diff-verified), since no visit-count/parent-q channel exists there
+at all for a blend to hook into. All three verified end-to-end:
+Hydra composition, distinct `config_hash` from each v01 sibling, and
+`status.py --verify` showing zero new problems (same 4 pre-existing
+`mcts_cnt` drift issues as every prior run this session). Each v02
+got its own `status.py` group label (`cnt-mcts-bl-v02` etc.) rather
+than sharing its v01's — considered the `mcts_sem_v01`/
+`mcts_sem_v02` shared-group precedent, decided against it: the
+algorithm change here is large enough to warrant its own
+`docs/exp-comp-*.md` table rather than a same-table row next to v01.
+**Why:** full per-file mechanics, the four scoping questions and
+their answers, and the verification detail are in
+[decisions/bl-cnt-v02-eager-backprop-path-aware.md](decisions/bl-cnt-v02-eager-backprop-path-aware.md).
+
 ## 2026-07-17 — Search, Refactor: `mcts_bl_cnt_v03` renamed to `mcts_bl_kdepth_v01`, its own algorithm family; result dirs, manifests, and ledger migrated
 
 **Context:** Tuan asked to rename `mcts_bl_cnt_search_v03_00_00` to
@@ -119,6 +155,13 @@ implements — stale drift, not a live bug, but left uncorrected.
 and the comparison table are in §7 of
 [decisions/bl-cnt-path-aware-frontier-score-design.md](decisions/bl-cnt-path-aware-frontier-score-design.md).
 
+**Update 2026-07-18:** implemented, per this entry's own §7 verdicts
+— v02s of all three families now exist. See the 2026-07-18 entry
+below and
+[decisions/bl-cnt-v02-eager-backprop-path-aware.md](decisions/bl-cnt-v02-eager-backprop-path-aware.md).
+This section is left as written for historical accuracy (it correctly
+describes the pre-implementation analysis), not corrected in place.
+
 ## 2026-07-16 — Search, Design: bl_cnt eager terminal backprop alone doesn't propagate dead-end signal; two path-aware scoring designs proposed instead
 
 **Context:** Tuan proposed splitting terminal candidates out of
@@ -137,6 +180,12 @@ magnitude argument, both formulas, and the recommendation (try the
 one-hop blend first, in a new version file, before the full
 discounted-path variant) are in
 [decisions/bl-cnt-path-aware-frontier-score-design.md](decisions/bl-cnt-path-aware-frontier-score-design.md).
+
+**Update 2026-07-18:** the one-hop blend (Option 1) shipped as
+`mcts_bl_cnt_v02` — see the 2026-07-18 entry below and
+[decisions/bl-cnt-v02-eager-backprop-path-aware.md](decisions/bl-cnt-v02-eager-backprop-path-aware.md).
+This section is left as written for historical accuracy, not
+corrected in place.
 
 ## 2026-07-16 — Search, Refactor: mcts_bl_cnt_v01 loop reordered to generate→expand→select; selection scope stays global
 

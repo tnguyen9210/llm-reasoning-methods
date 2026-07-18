@@ -1,0 +1,24 @@
+# @package search
+# Search-method group → binds onto BLMCTSKdepthV02Config.
+# v02 of BLMCTSKdepthV01Config's family -- eager terminal backprop
+# only, no formula change (no channel exists for a path-aware blend
+# in this variant's selection formula). See
+# docs/decisions/bl-cnt-v02-eager-backprop-path-aware.md.
+# The mcts_bl_kdepth_v02_schema node (registered in the launcher under
+# group "search") supplies the typed dataclass; values below
+# override it. Each method carries only its own hyperparameters.
+defaults:
+  - mcts_bl_kdepth_v02_schema
+  - _self_
+
+method: mcts_bl_kdepth_v02
+batch_size: 4           # candidates generated per expansion
+lookahead: 0
+max_depth: 20
+negative_reward: 0
+num_phases: 1000
+gen_budget: 80           # total generations across the full run
+depth_beta: 2.0          # depth-bonus coefficient
+depth_alpha: 1.0         # depth-bonus exponent
+kube_affordable: true    # knapsack feasibility step: argmax over
+                         # nodes whose cost fits the remaining budget

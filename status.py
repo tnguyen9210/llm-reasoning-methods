@@ -47,7 +47,9 @@ from hydra.core.config_store import ConfigStore
 
 from utils.configs import (
     ExpConfig, MCTSCntConfig, MCTSSemV01Config, MCTSSemV02Config,
-    BLMCTSCntConfig, BLMCTSKubeV01Config, BLMCTSKdepthV01Config,
+    BLMCTSCntConfig, BLMCTSCntV02Config,
+    BLMCTSKubeV01Config, BLMCTSKubeV02Config,
+    BLMCTSKdepthV01Config, BLMCTSKdepthV02Config,
     BLMCTSSemConfig,
     config_hash, config_name, level_dir, results_root, MANIFEST_FILE,
 )
@@ -78,11 +80,21 @@ _cs.store(
     group="search", name="mcts_bl_cnt_v01_schema", node=BLMCTSCntConfig,
 )
 _cs.store(
+    group="search", name="mcts_bl_cnt_v02_schema", node=BLMCTSCntV02Config,
+)
+_cs.store(
     group="search", name="mcts_bl_kube_v01_schema", node=BLMCTSKubeV01Config,
+)
+_cs.store(
+    group="search", name="mcts_bl_kube_v02_schema", node=BLMCTSKubeV02Config,
 )
 _cs.store(
     group="search", name="mcts_bl_kdepth_v01_schema",
     node=BLMCTSKdepthV01Config,
+)
+_cs.store(
+    group="search", name="mcts_bl_kdepth_v02_schema",
+    node=BLMCTSKdepthV02Config,
 )
 _cs.store(
     group="search", name="mcts_bl_sem_v01_schema", node=BLMCTSSemConfig,
@@ -226,8 +238,11 @@ _METHOD_TO_ROOT = {
     "mcts_sem_v01": "mcts_sem_v01_prm800k",
     "mcts_sem_v02": "mcts_sem_v02_prm800k",
     "mcts_bl_cnt_v01": "mcts_bl_cnt_v01_prm800k",
+    "mcts_bl_cnt_v02": "mcts_bl_cnt_v02_prm800k",
     "mcts_bl_kube_v01": "mcts_bl_kube_v01_prm800k",
+    "mcts_bl_kube_v02": "mcts_bl_kube_v02_prm800k",
     "mcts_bl_kdepth_v01": "mcts_bl_kdepth_v01_prm800k",
+    "mcts_bl_kdepth_v02": "mcts_bl_kdepth_v02_prm800k",
     "mcts_bl_sem_v01": "mcts_bl_sem_v01_prm800k",
 }
 
@@ -237,8 +252,11 @@ _METHOD_TO_LAUNCHER = {
     "mcts_sem_v01": "generate_mcts_sem.py",
     "mcts_sem_v02": "generate_mcts_sem.py",
     "mcts_bl_cnt_v01": "generate_mcts_bl_cnt.py",
+    "mcts_bl_cnt_v02": "generate_mcts_bl_cnt.py",
     "mcts_bl_kube_v01": "generate_mcts_bl_cnt.py",
+    "mcts_bl_kube_v02": "generate_mcts_bl_cnt.py",
     "mcts_bl_kdepth_v01": "generate_mcts_bl_cnt.py",
+    "mcts_bl_kdepth_v02": "generate_mcts_bl_cnt.py",
     "mcts_bl_sem_v01": "generate_mcts_sem.py",
 }
 
@@ -256,14 +274,26 @@ _METHOD_TO_LAUNCHER = {
 # "cnt-mcts-bl" bucket accordingly. See
 # docs/decisions/bl-cnt-to-bl-kube-rename.md and
 # docs/decisions/bl-cnt-to-bl-kdepth-rename.md.
+#
+# Each family's v02 (eager terminal backprop -- see
+# docs/decisions/bl-cnt-v02-eager-backprop-path-aware.md) gets its OWN
+# group label rather than sharing its v01's (Tuan's call, 2026-07-18 --
+# the mcts_sem_v01/v02 precedent of sharing a group was considered and
+# explicitly not followed here): v02 changes the algorithm (eager vs.
+# lazy backprop timing, plus a path-aware blend for cnt/kube-parent)
+# enough to warrant its own docs/exp-comp-*.md subsection/table rather
+# than comparing as a same-table row alongside v01.
 _METHOD_TO_GROUP = {
     "mcts_cnt": "cnt-mcts",
     "mcts_cnt_v01": "cnt-mcts",
     "mcts_sem_v01": "sem-mcts",
     "mcts_sem_v02": "sem-mcts",
     "mcts_bl_cnt_v01": "cnt-mcts-bl",
+    "mcts_bl_cnt_v02": "cnt-mcts-bl-v02",
     "mcts_bl_kube_v01": "kube-mcts-bl",
+    "mcts_bl_kube_v02": "kube-mcts-bl-v02",
     "mcts_bl_kdepth_v01": "kdepth-mcts-bl",
+    "mcts_bl_kdepth_v02": "kdepth-mcts-bl-v02",
     "mcts_bl_sem_v01": "sem-mcts-bl",
 }
 

@@ -18,57 +18,82 @@ import wandb
 
 from core import (
     mcts_bl_cnt_search_v01_00_00,
+    mcts_bl_cnt_search_v02_00_00,
     mcts_bl_kube_search_v01_00_00,
+    mcts_bl_kube_search_v02_00_00,
     mcts_bl_kdepth_search_v01_00_00,
+    mcts_bl_kdepth_search_v02_00_00,
 )
 from core.reward_models import build_prm
 from core.scoring import build_scored_dataset
 from utils.configs import (
-    ExpConfig, BLMCTSCntConfig, BLMCTSKubeV01Config, BLMCTSKdepthV01Config,
+    ExpConfig, BLMCTSCntConfig, BLMCTSCntV02Config,
+    BLMCTSKubeV01Config, BLMCTSKubeV02Config,
+    BLMCTSKdepthV01Config, BLMCTSKdepthV02Config,
     config_name, level_dir, results_root,
     write_manifest, load_wandb_run_id,
     save_timing_state, load_timing_state,
 )
 from utils.load_data import load_data_hf
 
-# One launcher, three budget-limited-frontier MCTS variants: bl_cnt
-# v01 (PUCT), bl_kube v01 (fractional-KUBE -- renamed 2026-07-16 from
-# bl_cnt v02, see docs/decisions/bl-cnt-to-bl-kube-rename.md), and
-# bl_kdepth v01 (knapsack cost normalization + depth-shaping bonus --
-# renamed 2026-07-17 from bl_cnt v03, see
-# docs/decisions/bl-cnt-to-bl-kdepth-rename.md). All three share an
-# identical _search(batch_of_questions, cfg, trial_idx, llm_vllm, prm)
-# signature and the same best-first frontier skeleton -- they differ
-# only in the leaf-selection index, which lives entirely in each core
+# One launcher, three budget-limited-frontier MCTS families, each
+# with a v01 and a v02: bl_cnt (v01 PUCT, v02 PUCT + eager terminal
+# backprop + path-aware parent-blend), bl_kube (v01 fractional-KUBE
+# -- renamed 2026-07-16 from bl_cnt v02, see
+# docs/decisions/bl-cnt-to-bl-kube-rename.md -- v02 adds eager
+# terminal backprop + parent-blend under kube_schedule="parent"
+# only), and bl_kdepth (v01 knapsack cost normalization +
+# depth-shaping bonus -- renamed 2026-07-17 from bl_cnt v03, see
+# docs/decisions/bl-cnt-to-bl-kdepth-rename.md -- v02 adds eager
+# terminal backprop only, no formula change). Every v02's design and
+# implementation are recorded in
+# docs/decisions/bl-cnt-v02-eager-backprop-path-aware.md. All six
+# share an identical _search(batch_of_questions, cfg, trial_idx,
+# llm_vllm, prm) signature and the same best-first frontier skeleton
+# -- they differ only in the leaf-selection index and (for the v02s)
+# WHEN a terminal backprops, which lives entirely in each core
 # module, so there is no per-variant runtime wiring here (contrast
 # generate_mcts_sem.py, which branches on whether to build a second
 # pooling engine). cfg.algo picks the core module; --config-name picks
 # the root config (and therefore the search schema, via its
-# search: mcts_bl_cnt_v01 / mcts_bl_kube_v01 / mcts_bl_kdepth_v01
-# group file).
+# search: mcts_bl_cnt_v01/v02 / mcts_bl_kube_v01/v02 /
+# mcts_bl_kdepth_v01/v02 group file).
 algo_dict = {
     "mcts_bl_cnt_v01": mcts_bl_cnt_search_v01_00_00,
+    "mcts_bl_cnt_v02": mcts_bl_cnt_search_v02_00_00,
     "mcts_bl_kube_v01": mcts_bl_kube_search_v01_00_00,
+    "mcts_bl_kube_v02": mcts_bl_kube_search_v02_00_00,
     "mcts_bl_kdepth_v01": mcts_bl_kdepth_search_v01_00_00,
+    "mcts_bl_kdepth_v02": mcts_bl_kdepth_search_v02_00_00,
 }
 
 # Register the structured schemas so the YAML binds onto typed,
 # validated dataclasses instead of a plain DictConfig. The search
 # subclasses are registered under the "search" group; conf/search/
-# mcts_bl_cnt_v01 / mcts_bl_kube_v01 / mcts_bl_kdepth_v01 selects one
-# (ExpConfig.search is the base type, so the concrete schema must come
-# from the group).
+# mcts_bl_cnt_v01/v02 / mcts_bl_kube_v01/v02 / mcts_bl_kdepth_v01/v02
+# selects one (ExpConfig.search is the base type, so the concrete
+# schema must come from the group).
 cs = ConfigStore.instance()
 cs.store(name="exp_schema", node=ExpConfig)
 cs.store(
     group="search", name="mcts_bl_cnt_v01_schema", node=BLMCTSCntConfig,
 )
 cs.store(
+    group="search", name="mcts_bl_cnt_v02_schema", node=BLMCTSCntV02Config,
+)
+cs.store(
     group="search", name="mcts_bl_kube_v01_schema", node=BLMCTSKubeV01Config,
+)
+cs.store(
+    group="search", name="mcts_bl_kube_v02_schema", node=BLMCTSKubeV02Config,
 )
 cs.store(
     group="search", name="mcts_bl_kdepth_v01_schema",
     node=BLMCTSKdepthV01Config,
+)
+cs.store(
+    group="search", name="mcts_bl_kdepth_v02_schema",
+    node=BLMCTSKdepthV02Config,
 )
 
 

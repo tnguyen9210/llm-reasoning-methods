@@ -1,0 +1,34 @@
+defaults:
+  - exp_schema           # the ExpConfig dataclass (structured config)
+  - llm: llama_1b
+  - prm: llama_prm
+  - data: prm800k
+  - search: mcts_bl_cnt_v02
+  - _self_
+  - override hydra/job_logging: disabled
+  - override hydra/hydra_logging: disabled
+
+hydra:
+  output_subdir: null
+  run:
+    dir: .
+
+# base path interpolated by the group files (${base_dir}/...)
+base_dir: /groups/chichengz/tnn/datasets
+
+algo: mcts_bl_cnt_v02
+
+# generation params (group: gen) — only overrides vs GenConfig defaults
+gen:
+  temperature: 0.8
+  max_tokens: 2048
+  top_p: 1.0
+  seed: 0
+  agg_strategy: last
+  filter_duplicates: true
+  date_string: "Aug 1 2025"
+
+# run-level params (group: run)
+run:
+  num_trials: 2
+  num_questions: -1      # -1 = use full dataset

@@ -1,0 +1,25 @@
+# @package search
+# Search-method group → binds onto BLMCTSKubeV02Config.
+# v02 of BLMCTSKubeV01Config's family -- eager terminal backprop
+# (both schedules) + path-aware KUBE density (parent schedule only).
+# See docs/decisions/bl-cnt-v02-eager-backprop-path-aware.md.
+# The mcts_bl_kube_v02_schema node (registered in the launcher under
+# group "search") supplies the typed dataclass; values below
+# override it. Each method carries only its own hyperparameters.
+defaults:
+  - mcts_bl_kube_v02_schema
+  - _self_
+
+method: mcts_bl_kube_v02
+batch_size: 4           # candidates generated per expansion
+lookahead: 0
+max_depth: 20
+negative_reward: 0
+num_phases: 1000
+gen_budget: 80           # total generations across the full run
+kube_c: 2.0
+kube_schedule: parent    # "parent" (UCT-style) | "global" (KUBE clock)
+kube_affordable: true    # KUBE feasibility step: argmax over nodes
+                         # whose cost fits the remaining gen budget
+alpha: 0.8               # own-q vs. parent-q blend, "parent" schedule
+                         # only; 1.0 = plain KUBE; unused if "global"

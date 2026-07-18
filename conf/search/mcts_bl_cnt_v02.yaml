@@ -1,0 +1,21 @@
+# @package search
+# Search-method group → binds onto BLMCTSCntV02Config.
+# v02 of BLMCTSCntConfig's family -- eager terminal backprop +
+# path-aware PUCT (parent-blend). See
+# docs/decisions/bl-cnt-v02-eager-backprop-path-aware.md.
+# The mcts_bl_cnt_v02_schema node (registered in the launcher under
+# group "search") supplies the typed dataclass; values below
+# override it. Each method carries only its own hyperparameters.
+defaults:
+  - mcts_bl_cnt_v02_schema
+  - _self_
+
+method: mcts_bl_cnt_v02
+batch_size: 4           # candidates generated per expansion
+lookahead: 0
+max_depth: 20
+negative_reward: 0
+num_phases: 1000
+gen_budget: 80           # total generations across the full run
+cpuct: 2.0
+alpha: 0.8               # own-q vs. parent-q blend; 1.0 = plain PUCT

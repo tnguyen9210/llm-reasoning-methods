@@ -34,8 +34,11 @@ Empirical observations about repo behavior: [findings/](findings/README.md).
 | Semantic-MCTS v02 (`mcts_sem_v02`, PRM embeds) | `core/mcts_sem_search_v02_00_00.py` | `generate_mcts_sem.py` | `conf/mcts_sem_v02_prm800k.yaml` |
 | BL-Sem-MCTS v01 (`mcts_bl_sem_v01`, best-first + PRM embeds) | `core/mcts_bl_sem_search_v01_00_00.py` | `generate_mcts_sem.py` | `conf/mcts_bl_sem_v01_prm800k.yaml` |
 | BL-MCTS v01 (PUCT, best-first) | `core/mcts_bl_cnt_search_v01_00_00.py` | `generate_mcts_bl_cnt.py` | `conf/mcts_bl_cnt_v01_prm800k.yaml` |
+| BL-MCTS v02 (`mcts_bl_cnt_v02`, PUCT + eager terminal backprop + path-aware blend) | `core/mcts_bl_cnt_search_v02_00_00.py` | `generate_mcts_bl_cnt.py` | `conf/mcts_bl_cnt_v02_prm800k.yaml` |
 | BL-KUBE-MCTS v01 (`mcts_bl_kube_v01`, fractional KUBE) | `core/mcts_bl_kube_search_v01_00_00.py` | `generate_mcts_bl_cnt.py` | `conf/mcts_bl_kube_v01_prm800k.yaml` |
+| BL-KUBE-MCTS v02 (`mcts_bl_kube_v02`, + eager terminal backprop + path-aware blend under `kube_schedule=parent`) | `core/mcts_bl_kube_search_v02_00_00.py` | `generate_mcts_bl_cnt.py` | `conf/mcts_bl_kube_v02_prm800k.yaml` |
 | BL-KDEPTH-MCTS v01 (`mcts_bl_kdepth_v01`, knapsack + depth-shaping) | `core/mcts_bl_kdepth_search_v01_00_00.py` | `generate_mcts_bl_cnt.py` | `conf/mcts_bl_kdepth_v01_prm800k.yaml` |
+| BL-KDEPTH-MCTS v02 (`mcts_bl_kdepth_v02`, + eager terminal backprop only) | `core/mcts_bl_kdepth_search_v02_00_00.py` | `generate_mcts_bl_cnt.py` | `conf/mcts_bl_kdepth_v02_prm800k.yaml` |
 | BoN | `core/bon_search_v01_0_0.py` | `generate_bon.py` | `conf/bon_prm800k.yaml` (+ gsm8k, aime2025) |
 | BoB | `core/bob_search_v03_0_0.py` | `generate_bob_prm800k_v0101.py` | none (params hardcoded in launcher) |
 
@@ -77,12 +80,26 @@ Budget-limited best-first MCTS: an explicit `leaf_nodes` frontier with
 global leaf selection, instead of CNT-MCTS's phase-based root-to-leaf
 walks.
 - **v01** — PUCT leaf selection.
+- **v02** (`mcts_bl_cnt_v02`) — v01 plus two changes, both from
+  [decisions/bl-cnt-path-aware-frontier-score-design.md](decisions/bl-cnt-path-aware-frontier-score-design.md):
+  (1) terminal candidates backprop immediately at creation instead of
+  waiting to win a later frontier selection; (2) PUCT's `q` term is
+  blended with the leaf's immediate parent's `q_value` by a tunable
+  `alpha` before adding the (unchanged) UCB1 exploration term —
+  `blended_q = alpha*q_value(leaf) + (1-alpha)*q_value(parent)`.
+  `alpha=1.0` recovers v01 exactly (the built-in control arm); the
+  reason for the blend is that eager backprop alone doesn't change
+  v01's ranking (PUCT never reads a parent's `q`, only its own frozen
+  `q` plus the parent's visit count — a backpropagated value is
+  otherwise write-only). Config:
+  `utils/configs.py::BLMCTSCntV02Config` (`alpha`, default 0.8). See
+  [decisions/bl-cnt-v02-eager-backprop-path-aware.md](decisions/bl-cnt-v02-eager-backprop-path-aware.md).
 
-BL-MCTS v01, BL-KUBE-MCTS v01, and BL-KDEPTH-MCTS v01 are maintained
-in parallel for a PUCT / evidence-based-UCB / fixed-depth-shaping
-comparison at matched gen_budget, even though BL-KUBE-MCTS and
-BL-KDEPTH-MCTS now each live in their own algorithm family (see below)
-rather than as same-family sibling versions.
+BL-MCTS v01/v02, BL-KUBE-MCTS v01/v02, and BL-KDEPTH-MCTS v01/v02 are
+maintained in parallel for a PUCT / evidence-based-UCB /
+fixed-depth-shaping comparison at matched gen_budget, even though
+BL-KUBE-MCTS and BL-KDEPTH-MCTS now each live in their own algorithm
+family (see below) rather than as same-family sibling versions.
 
 ## BL-KUBE-MCTS
 
@@ -119,6 +136,21 @@ UCB index over cost) — an earlier version used a static depth-decay
 bonus with no UCB/visit-count term at all; see `docs/decisions-log.md`
 (2026-07-09, three entries).
 
+**v02** (`mcts_bl_kube_v02`) — v01 plus terminal-split eager backprop
+(both `kube_schedule` values: fixes a real defect where a max-depth
+dead-end's `cost≤0`/`-inf` density meant it was *permanently* stuck
+in the frontier, silently disabling the `kube_affordable` filter's
+empty-set fallback for the rest of any run) and, under
+`kube_schedule="parent"` only, the identical parent-blend BL-MCTS v02
+uses — `"parent"`'s bonus is exactly BL-MCTS's PUCT bonus (this
+family differs from BL-MCTS only by the `/cost` division), so the
+blend applies to the same `q` position. `kube_schedule="global"` gets
+the terminal-split fix only, with no formula change — its bonus is a
+frontier-wide constant with no per-node channel to blend into.
+Config: `utils/configs.py::BLMCTSKubeV02Config` (`alpha`, default
+0.8, `"parent"` schedule only). See
+[decisions/bl-cnt-v02-eager-backprop-path-aware.md](decisions/bl-cnt-v02-eager-backprop-path-aware.md).
+
 ## BL-KDEPTH-MCTS
 
 Renamed 2026-07-17 from BL-MCTS v03 (`mcts_bl_cnt_v03`) into its own
@@ -144,7 +176,21 @@ confidence-bound/regret guarantee — a deliberately different
 theoretical basis from BL-KUBE-MCTS, not a refinement of it. Config:
 `utils/configs.py::BLMCTSKdepthV01Config` (`depth_beta`, default 2.0;
 `depth_alpha`, default 1.0; `kube_affordable`, default true). See
-`docs/decisions/depth-shaping-knapsack-bonus.md`.
+[decisions/bl-kdepth-knapsack-bonus.md](decisions/bl-kdepth-knapsack-bonus.md).
+
+**v02** (`mcts_bl_kdepth_v02`) — v01 plus the same terminal-split
+eager backprop as BL-KUBE-MCTS v02 (identical `kube_affordable`
+defect, identical fix), and **nothing else**: `depth_density()` is
+byte-identical to v01's. No formula change and no `alpha` knob,
+because `depth_density` reads only a leaf's own frozen `q_value`, its
+own depth, and two constants — no visit-count or parent-`q` channel
+exists at all for a blend to hook into (unlike BL-MCTS/BL-KUBE-MCTS's
+`"parent"` schedule). Ranking among non-terminal nodes is provably
+unchanged; the only removed events are terminal-selection phases that
+did nothing but re-select an already-known dead-end. Config:
+`utils/configs.py::BLMCTSKdepthV02Config` (same fields as v01, no new
+ones). See
+[decisions/bl-cnt-v02-eager-backprop-path-aware.md](decisions/bl-cnt-v02-eager-backprop-path-aware.md).
 
 ## Semantic-MCTS
 
