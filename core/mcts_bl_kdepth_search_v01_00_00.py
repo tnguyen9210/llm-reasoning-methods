@@ -25,7 +25,13 @@ bonus — there is no exploration/visit-count term at all in this
 variant. Everything else (frontier bookkeeping, expansion, backprop,
 output shape) is identical — see mcts_bl_cnt_search_v01_00_00.py /
 mcts_bl_kube_search_v01_00_00.py's docstrings for the shared algorithm
-skeleton.
+skeleton, including the loop's generate -> expand -> select ordering
+(aligned 2026-07-17 across all three files — see
+docs/decisions-log.md; this file previously used an older
+select-first loop shape, same as mcts_bl_kube_search_v01_00_00.py did
+before its own alignment the same day — the algorithm and every
+selection is unchanged, only the reading order of the loop body
+moved).
 
 Sibling comparisons: mcts_bl_cnt_search_v01_00_00.py uses PUCT;
 mcts_bl_kube_search_v01_00_00.py uses Fractional KUBE (a UCB index
@@ -38,22 +44,14 @@ gen_budget, even though this variant and KUBE each now live in their
 own algorithm family rather than as bl_cnt sibling versions.
 
 Algorithm
-    Initialize completion_list = [], leaf_nodes = [root], gen_cnt = 0
+    Initialize completion_list = [], leaf_nodes = [], gen_cnt = 0,
+        current = root
     While gen_cnt < gen_budget:
-        residual = gen_budget - gen_cnt
-        candidates = {x in leaf_nodes : x terminal
-                      or cost(x) <= residual}   (if kube_affordable;
-                      falls back to all of leaf_nodes if empty — see
-                      mcts_bl_kube_search_v01_00_00.py's docstring /
-                      docs/decisions/
-                      kube-affordability-restriction.md for why)
-        selected_node = argmax_{x in candidates} depth_density(x)
-        Remove selected_node from leaf_nodes
-        If selected_node.is_terminal:
-            Backprop: update_recursive(selected_node.q_value(), root)
+        If current.is_terminal:
+            Backprop: update_recursive(current.q_value(), root)
         Else:
             Expand: generate n next-step continuations, dedupe,
-                    score with PRM, attach as children
+                    score with PRM, attach as current's children
             gen_cnt += 1
             For each child:
                 child.update(prm_score)
@@ -61,7 +59,25 @@ Algorithm
                     add to completion_list
                 if not completed and depth >= max_depth:
                     mark terminal, score = negative_reward
-            Add non-terminal children to leaf_nodes
+            Add children to leaf_nodes
+        residual = gen_budget - gen_cnt
+        candidates = {x in leaf_nodes : x terminal
+                      or cost(x) <= residual}   (if kube_affordable;
+                      falls back to all of leaf_nodes if empty — see
+                      mcts_bl_kube_search_v01_00_00.py's docstring /
+                      docs/decisions/
+                      kube-affordability-restriction.md for why)
+        Select: current = argmax_{x in candidates} depth_density(x);
+                remove current from leaf_nodes
+
+    The loop body is ordered generate -> expand -> select to mirror
+    mcts_bl_cnt_search_v01_00_00.py's walk step; the selection SCOPE
+    stays global (the whole leaf frontier), not per-parent. This is a
+    rotation of the older select-first loop: the same nodes are
+    selected in the same order by the same density index (verified
+    behavior-preserving — the reorder only changes when in the loop
+    body residual is computed and where current_node is read from,
+    not what gets selected or when gen_cnt/phase caps trigger).
 
 Selection criterion (fractional-knapsack objective with a depth-
 shaping bonus in place of a UCB term):
@@ -458,9 +474,12 @@ def mcts_search(question, agent, config, llm_vllm, prm):
     """Run budget-limited best-first MCTS on a single `question`.
 
     Outer loop: `config.search.num_phases` iterations (safety cap).
-    Each iteration selects one leaf globally by depth-shaping density
-    and either backprops (if terminal) or expands (otherwise). Only
-    expansions charge gen_cnt.
+    Each iteration expands the current node (or backprops it, if
+    terminal), then selects the next node by depth-shaping density
+    globally across the leaf frontier — generate -> expand -> select,
+    mirroring mcts_bl_cnt_search_v01_00_00.py's walk step, with the
+    freshly expanded children competing against every older leaf at
+    that selection. Only expansions charge gen_cnt.
     """
     tokenizer = llm_vllm.get_tokenizer()
     # Template selection (mirrors generate_bon / bon_search): default
@@ -487,51 +506,56 @@ def mcts_search(question, agent, config, llm_vllm, prm):
     gen_cnt = 0
     p = 0
     phase_depths: List[int] = []
-    leaf_nodes: List[Any] = [agent.root]
+    leaf_nodes: List[Any] = []
+    current_node = agent.root
 
     for p in range(config.search.num_phases):
         logging.fatal(f"\n-> p = {p}")
 
-        if not leaf_nodes:
-            logging.fatal("leaf_nodes is empty — stopping.")
-            break
-
-        # Select leaf with highest depth-shaping density across the
-        # entire frontier. residual = generations left, for the
-        # affordability filter (see module docstring).
-        residual = config.search.gen_budget - gen_cnt
-        selected = agent.select_child_from_list(leaf_nodes, residual)
-        leaf_nodes.remove(selected)
-
-        selected_density = selected.depth_density(
-            config.search.max_depth, config.search.depth_beta,
-            config.search.depth_alpha,
-        )
-        logging.fatal(
-            f"selected = {selected.tag}  "
-            f"density={selected_density:.4f}  "
-            f"q={selected.q_value():.4f}  "
-            f"nvisit={selected.visit_count()}"
-        )
-
-        if selected.is_terminal:
-            logging.fatal(f"selected.is_terminal = True")
-            agent.backprop(selected)
-            phase_depths.append(selected.depth)
+        if current_node.is_terminal:
+            logging.fatal(f"current_node.is_terminal = True")
+            agent.backprop(current_node)
+            phase_depths.append(current_node.depth)
         else:
             gen_cnt += 1
             infos, scores = _generate_candidates(
-                question, selected, selected.depth, config,
+                question, current_node, current_node.depth, config,
                 tokenizer, llm_vllm, prm, sampling_params,
             )
-            agent.expand_node(selected, infos, scores, p, gen_cnt)
-            for child in selected.children:
+            agent.expand_node(current_node, infos, scores, p, gen_cnt)
+            for child in current_node.children:
                 leaf_nodes.append(child)
 
         logging.fatal(f"gen_cnt = {gen_cnt}")
         if gen_cnt >= config.search.gen_budget:
             logging.fatal("run out of budget!")
             break
+
+        if not leaf_nodes:
+            logging.fatal("leaf_nodes is empty — stopping.")
+            break
+
+        # Select the next node with highest depth-shaping density
+        # across the entire frontier — the children expanded above
+        # compete against every older leaf here. residual =
+        # generations left, for the affordability filter (see module
+        # docstring).
+        residual = config.search.gen_budget - gen_cnt
+        current_node = agent.select_child_from_list(
+            leaf_nodes, residual
+        )
+        leaf_nodes.remove(current_node)
+
+        selected_density = current_node.depth_density(
+            config.search.max_depth, config.search.depth_beta,
+            config.search.depth_alpha,
+        )
+        logging.fatal(
+            f"selected = {current_node.tag}  "
+            f"density={selected_density:.4f}  "
+            f"q={current_node.q_value():.4f}  "
+            f"nvisit={current_node.visit_count()}"
+        )
 
     # Collect unique completions from completed nodes.
     seen: Dict[str, int] = {}

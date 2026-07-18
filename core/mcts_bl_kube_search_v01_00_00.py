@@ -9,10 +9,14 @@ and the old-name -> new-name mapping (config method/algo string,
 result dirs, and manifests were all migrated alongside the code).
 
 Frontier bookkeeping, expansion, backprop, and output shape are
-shared with mcts_bl_cnt_search_v01_00_00.py's PUCT variant — see that
-module's docstring for the shared algorithm skeleton. Only the leaf
-selection criterion differs: this file uses a fractional-KUBE density
-index instead of PUCT.
+shared with mcts_bl_cnt_search_v01_00_00.py's PUCT variant, including
+the loop's generate -> expand -> select ordering (aligned 2026-07-17
+— see docs/decisions-log.md — this file previously used an older
+select-first loop shape; the algorithm and every selection is
+unchanged, only the reading order of the loop body moved to match
+v01's). See that module's docstring for the shared skeleton. Only the
+leaf selection criterion differs: this file uses a fractional-KUBE
+density index instead of PUCT.
 
 Sibling comparison: mcts_bl_cnt_search_v01_00_00.py uses PUCT. Both
 are active (a PUCT-vs-KUBE comparison at matched gen_budget), even
@@ -20,22 +24,15 @@ though KUBE now lives in its own algorithm family rather than as a
 same-family sibling version.
 
 Algorithm
-    Initialize completion_list = [], leaf_nodes = [root], gen_cnt = 0
-    t = 0  (frontier clock: one tick per selection; only feeds the
-            bonus when kube_schedule="global")
+    Initialize completion_list = [], leaf_nodes = [], gen_cnt = 0,
+        t = 0 (frontier clock: one tick per selection; only feeds the
+        bonus when kube_schedule="global"), current = root
     While gen_cnt < gen_budget:
-        t += 1
-        residual = gen_budget - gen_cnt
-        candidates = {x in leaf_nodes : x terminal
-                      or cost(x) <= residual}   (if kube_affordable;
-                      falls back to all of leaf_nodes if empty)
-        selected_node = argmax_{x in candidates} kube_density(x, t)
-        Remove selected_node from leaf_nodes
-        If selected_node.is_terminal:
-            Backprop: update_recursive(selected_node.q_value(), root)
+        If current.is_terminal:
+            Backprop: update_recursive(current.q_value(), root)
         Else:
             Expand: generate n next-step continuations, dedupe,
-                    score with PRM, attach as children
+                    score with PRM, attach as current's children
             gen_cnt += 1
             For each child:
                 child.update(prm_score)
@@ -43,7 +40,24 @@ Algorithm
                     add to completion_list
                 if not completed and depth >= max_depth:
                     mark terminal, score = negative_reward
-            Add non-terminal children to leaf_nodes
+            Add children to leaf_nodes
+        t += 1
+        residual = gen_budget - gen_cnt
+        candidates = {x in leaf_nodes : x terminal
+                      or cost(x) <= residual}   (if kube_affordable;
+                      falls back to all of leaf_nodes if empty)
+        Select: current = argmax_{x in candidates} kube_density(x, t);
+                remove current from leaf_nodes
+
+    The loop body is ordered generate -> expand -> select to mirror
+    mcts_bl_cnt_search_v01_00_00.py's walk step; the selection SCOPE
+    stays global (the whole leaf frontier — the children just
+    expanded compete against every older leaf), not per-parent. This
+    is a rotation of the older select-first loop: the same nodes are
+    selected in the same order by the same density index (verified
+    behavior-preserving — the reorder only changes when in the loop
+    body t/residual are computed and where current_node is read from,
+    not what gets selected or when gen_cnt/phase caps trigger).
 
 Selection criterion (Fractional KUBE, Tran-Thanh et al. arXiv:1204.1909
 sec. 3.3 — see the reference implementation in the sibling `budget-mab`
@@ -459,9 +473,12 @@ def mcts_search(question, agent, config, llm_vllm, prm):
     """Run budget-limited best-first MCTS on a single `question`.
 
     Outer loop: `config.search.num_phases` iterations (safety cap).
-    Each iteration selects one leaf globally by fractional-KUBE
-    density and either backprops (if terminal) or expands (otherwise).
-    Only expansions charge gen_cnt.
+    Each iteration expands the current node (or backprops it, if
+    terminal), then selects the next node by fractional-KUBE density
+    globally across the leaf frontier — generate -> expand -> select,
+    mirroring mcts_bl_cnt_search_v01_00_00.py's walk step, with the
+    freshly expanded children competing against every older leaf at
+    that selection. Only expansions charge gen_cnt.
     """
     tokenizer = llm_vllm.get_tokenizer()
     # Template selection (mirrors generate_bon / bon_search): default
@@ -489,54 +506,59 @@ def mcts_search(question, agent, config, llm_vllm, prm):
     p = 0
     t = 0
     phase_depths: List[int] = []
-    leaf_nodes: List[Any] = [agent.root]
+    leaf_nodes: List[Any] = []
+    current_node = agent.root
 
     for p in range(config.search.num_phases):
         logging.fatal(f"\n-> p = {p}")
 
-        if not leaf_nodes:
-            logging.fatal("leaf_nodes is empty — stopping.")
-            break
-
-        # Select leaf with highest fractional-KUBE density across the
-        # entire frontier. t only feeds the bonus when
-        # kube_schedule="global"; the default "parent" schedule uses
-        # each node's parent visit count (see module docstring).
-        # residual = generations left, for the affordability filter.
-        t += 1
-        residual = config.search.gen_budget - gen_cnt
-        selected = agent.select_child_from_list(leaf_nodes, t, residual)
-        leaf_nodes.remove(selected)
-
-        selected_density = selected.kube_density(
-            config.search.max_depth, config.search.kube_c, t,
-            config.search.kube_schedule,
-        )
-        logging.fatal(
-            f"selected = {selected.tag}  "
-            f"density={selected_density:.4f}  "
-            f"q={selected.q_value():.4f}  "
-            f"nvisit={selected.visit_count()}"
-        )
-
-        if selected.is_terminal:
-            logging.fatal(f"selected.is_terminal = True")
-            agent.backprop(selected)
-            phase_depths.append(selected.depth)
+        if current_node.is_terminal:
+            logging.fatal(f"current_node.is_terminal = True")
+            agent.backprop(current_node)
+            phase_depths.append(current_node.depth)
         else:
             gen_cnt += 1
             infos, scores = _generate_candidates(
-                question, selected, selected.depth, config,
+                question, current_node, current_node.depth, config,
                 tokenizer, llm_vllm, prm, sampling_params,
             )
-            agent.expand_node(selected, infos, scores, p, gen_cnt)
-            for child in selected.children:
+            agent.expand_node(current_node, infos, scores, p, gen_cnt)
+            for child in current_node.children:
                 leaf_nodes.append(child)
 
         logging.fatal(f"gen_cnt = {gen_cnt}")
         if gen_cnt >= config.search.gen_budget:
             logging.fatal("run out of budget!")
             break
+
+        if not leaf_nodes:
+            logging.fatal("leaf_nodes is empty — stopping.")
+            break
+
+        # Select the next node with highest fractional-KUBE density
+        # across the entire frontier — the children expanded above
+        # compete against every older leaf here. t only feeds the
+        # bonus when kube_schedule="global"; the default "parent"
+        # schedule uses each node's parent visit count (see module
+        # docstring). residual = generations left, for the
+        # affordability filter.
+        t += 1
+        residual = config.search.gen_budget - gen_cnt
+        current_node = agent.select_child_from_list(
+            leaf_nodes, t, residual
+        )
+        leaf_nodes.remove(current_node)
+
+        selected_density = current_node.kube_density(
+            config.search.max_depth, config.search.kube_c, t,
+            config.search.kube_schedule,
+        )
+        logging.fatal(
+            f"selected = {current_node.tag}  "
+            f"density={selected_density:.4f}  "
+            f"q={current_node.q_value():.4f}  "
+            f"nvisit={current_node.visit_count()}"
+        )
 
     # Collect unique completions from completed nodes.
     seen: Dict[str, int] = {}
