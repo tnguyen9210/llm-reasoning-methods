@@ -1,14 +1,22 @@
-# `mcts_bl_cnt_v03`: reintroducing the depth-decay bonus as its own knapsack variant
+# BL-KDEPTH-MCTS: reintroducing the depth-decay bonus as its own knapsack variant
 
-*2026-07-09*
+*2026-07-09 (variant renamed 2026-07-17 from `mcts_bl_cnt_v03` to
+`mcts_bl_kdepth_v01` — see
+[bl-cnt-to-bl-kdepth-rename.md](bl-cnt-to-bl-kdepth-rename.md); the
+v02 sibling referenced throughout was itself renamed 2026-07-16 from
+`mcts_bl_cnt_v02` to `mcts_bl_kube_v01` — see
+[bl-cnt-to-bl-kube-rename.md](bl-cnt-to-bl-kube-rename.md); the
+narrative below is left in its original terms)*
 
 Records why the `f_a(z) = 1 - z**alpha` depth-decay bonus — the
 selection term that was in the *original*, pre-rewrite
-`mcts_bl_cnt_search_v02_00_00.py` and was removed from v02 earlier
+`mcts_bl_kube_search_v01_00_00.py` (then named
+`mcts_bl_cnt_search_v02_00_00.py`) and was removed from v02 earlier
 today for not matching Fractional KUBE — was brought back as its
-own explicit variant, `mcts_bl_cnt_search_v03_00_00.py`, rather than
-folded back into v02 or discarded outright. Also records a sign error
-caught before implementation.
+own explicit variant, `mcts_bl_kdepth_search_v01_00_00.py` (then named
+`mcts_bl_cnt_search_v03_00_00.py`), rather than folded back into v02
+or discarded outright. Also records a sign error caught before
+implementation.
 
 ## Where the idea came from
 
@@ -56,7 +64,8 @@ verify at the call site.)
 ## Why a new variant, not a v02 change or a discard
 
 This is the same `f_a(z)=1-z^alpha` shape that was in the *original*
-`mcts_bl_cnt_search_v02_00_00.py`, before this morning's rewrite to
+`mcts_bl_kube_search_v01_00_00.py` (then named
+`mcts_bl_cnt_search_v02_00_00.py`), before this morning's rewrite to
 match Fractional KUBE — removed then because it has no UCB/visit-
 count term at all, so it doesn't implement the algorithm v02 is
 supposed to be (`docs/decisions-log.md`, 2026-07-09 KUBE-rewrite
@@ -75,10 +84,10 @@ function of tree position — it never shrinks as a node accumulates
 visits, so it carries no confidence-bound/regret guarantee of any
 kind. Mixing it into v02 would muddy what v02's ablation is testing
 (cost normalization vs. PUCT, per
-[kube-bonus-schedule.md](kube-bonus-schedule.md)) with an unrelated,
-unbounded heuristic term. Keeping it as v03 preserves the clean
-three-way comparison: v01 (PUCT), v02 (Fractional KUBE, evidence-
-based bonus), v03 (fixed depth-shaping bonus, no exploration
+[bl-kube-bonus-schedule.md](bl-kube-bonus-schedule.md)) with an
+unrelated, unbounded heuristic term. Keeping it as v03 preserves the
+clean three-way comparison: v01 (PUCT), v02 (Fractional KUBE,
+evidence-based bonus), v03 (fixed depth-shaping bonus, no exploration
 guarantee) — same cost mapping and (optional) affordability
 restriction across all three, differing only in what replaces the
 "bonus" term.
@@ -114,13 +123,19 @@ kube-affordability-restriction.md`).
 
 ## Connections
 
-- `core/mcts_bl_cnt_search_v02_00_00.py` — the sibling this shares
+- `core/mcts_bl_kube_search_v01_00_00.py` — the sibling this shares
   its knapsack skeleton, cost mapping, and affordability logic with.
-- [kube-bonus-schedule.md](kube-bonus-schedule.md),
+- [bl-kube-bonus-schedule.md](bl-kube-bonus-schedule.md),
   [kube-affordability-restriction.md](kube-affordability-restriction.md)
   — the v02 decisions this variant's shared machinery was audited
   against.
 - `docs/decisions-log.md`, 2026-07-09 KUBE-rewrite entry — records
   why the original depth-decay formula was removed from v02.
-- `core/mcts_bl_cnt_search_v03_00_00.py::MCTSNode.depth_density` —
+- `core/mcts_bl_kdepth_search_v01_00_00.py::MCTSNode.depth_density` —
   the implementation.
+- [bl-cnt-to-bl-kube-rename.md](bl-cnt-to-bl-kube-rename.md) — the
+  2026-07-16 rename that gave the v02 sibling its current name,
+  `mcts_bl_kube_v01`.
+- [bl-cnt-to-bl-kdepth-rename.md](bl-cnt-to-bl-kdepth-rename.md) — the
+  2026-07-17 rename that gave this variant its current name,
+  `mcts_bl_kdepth_v01`.

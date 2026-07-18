@@ -34,8 +34,8 @@ Empirical observations about repo behavior: [findings/](findings/README.md).
 | Semantic-MCTS v02 (`mcts_sem_v02`, PRM embeds) | `core/mcts_sem_search_v02_00_00.py` | `generate_mcts_sem.py` | `conf/mcts_sem_v02_prm800k.yaml` |
 | BL-Sem-MCTS v01 (`mcts_bl_sem_v01`, best-first + PRM embeds) | `core/mcts_bl_sem_search_v01_00_00.py` | `generate_mcts_sem.py` | `conf/mcts_bl_sem_v01_prm800k.yaml` |
 | BL-MCTS v01 (PUCT, best-first) | `core/mcts_bl_cnt_search_v01_00_00.py` | `generate_mcts_bl_cnt.py` | `conf/mcts_bl_cnt_v01_prm800k.yaml` |
-| BL-MCTS v02 (KUBE) | `core/mcts_bl_cnt_search_v02_00_00.py` | `generate_mcts_bl_cnt.py` | `conf/mcts_bl_cnt_v02_prm800k.yaml` |
-| BL-MCTS v03 (depth-shaping knapsack) | `core/mcts_bl_cnt_search_v03_00_00.py` | `generate_mcts_bl_cnt.py` | `conf/mcts_bl_cnt_v03_prm800k.yaml` |
+| BL-KUBE-MCTS v01 (`mcts_bl_kube_v01`, fractional KUBE) | `core/mcts_bl_kube_search_v01_00_00.py` | `generate_mcts_bl_cnt.py` | `conf/mcts_bl_kube_v01_prm800k.yaml` |
+| BL-KDEPTH-MCTS v01 (`mcts_bl_kdepth_v01`, knapsack + depth-shaping) | `core/mcts_bl_kdepth_search_v01_00_00.py` | `generate_mcts_bl_cnt.py` | `conf/mcts_bl_kdepth_v01_prm800k.yaml` |
 | BoN | `core/bon_search_v01_0_0.py` | `generate_bon.py` | `conf/bon_prm800k.yaml` (+ gsm8k, aime2025) |
 | BoB | `core/bob_search_v03_0_0.py` | `generate_bob_prm800k_v0101.py` | none (params hardcoded in launcher) |
 
@@ -44,17 +44,25 @@ file: `mcts_cnt_v01` (default, current) and `mcts_cnt` (retained only so
 older result dirs remain queryable). New experiments always use
 `mcts_cnt_v01`.
 
-BL-MCTS v01/v02/v03 share one launcher, `generate_mcts_bl_cnt.py`
-(merged 2026-07-09 — the three `_search` signatures and launcher
-bodies were already identical; only `cfg.algo` differs, same pattern
-`generate_mcts_sem.py` already uses for its three variants). Select
-the variant via `--config-name` (each `conf/mcts_bl_cnt_v0N_prm800k.
-yaml` sets `algo:` accordingly), same as sem's `algo=mcts_sem_v01|
-v02|mcts_bl_sem_v01`. The old per-variant launchers
-(`generate_mcts_bl_cnt_v01.py` etc.) no longer exist; historical
-`experiments.yaml` entries recorded under the old launcher names are
-left as-is (they record what was actually run, not a forward-looking
-pointer).
+BL-MCTS v01, BL-KUBE-MCTS v01, and BL-KDEPTH-MCTS v01 share one
+launcher, `generate_mcts_bl_cnt.py` (merged 2026-07-09 — the three
+`_search` signatures and launcher bodies were already identical; only
+`cfg.algo` differs, same pattern `generate_mcts_sem.py` already uses
+for its three variants). Select the variant via `--config-name`
+(`conf/mcts_bl_cnt_v01_prm800k.yaml`, `conf/mcts_bl_kube_v01_prm800k.
+yaml`, `conf/mcts_bl_kdepth_v01_prm800k.yaml` each set `algo:`
+accordingly), same as sem's `algo=mcts_sem_v01|v02|mcts_bl_sem_v01`.
+The old per-variant launchers (`generate_mcts_bl_cnt_v01.py` etc.) no
+longer exist; historical `experiments.yaml` entries recorded under
+the old launcher names are left as-is (they record what was actually
+run, not a forward-looking pointer). The KUBE variant's family name
+was renamed from `mcts_bl_cnt_v02` to `mcts_bl_kube_v01` on
+2026-07-16, and the depth-shaping variant's from `mcts_bl_cnt_v03` to
+`mcts_bl_kdepth_v01` on 2026-07-17, each independent of the
+launcher-merge history above — see
+[decisions/bl-cnt-to-bl-kube-rename.md](decisions/bl-cnt-to-bl-kube-rename.md)
+and
+[decisions/bl-cnt-to-bl-kdepth-rename.md](decisions/bl-cnt-to-bl-kdepth-rename.md).
 
 ## CNT-MCTS
 
@@ -69,45 +77,74 @@ Budget-limited best-first MCTS: an explicit `leaf_nodes` frontier with
 global leaf selection, instead of CNT-MCTS's phase-based root-to-leaf
 walks.
 - **v01** — PUCT leaf selection.
-- **v02** — Fractional KUBE density-based leaf selection, following
-  Tran-Thanh et al. arXiv:1204.1909 sec. 3.3 (reference implementation:
-  the sibling `budget-mab` repo's `src/algorithms.py::FractionalKUBE`).
-  `density(x) = (q_value(x) + bonus(x)) / cost(x)`, `cost(x) =
-  max_depth - depth(x)` (the MCTS analogue of an arm's fixed pull
-  price). The bonus clock is configurable via `kube_schedule`:
-  `"parent"` (default) uses `kube_c*sqrt(log(parent_visits)/visits)` —
-  UCT-style local clock, identical to v01's PUCT bonus, so v02 differs
-  from v01 only by the cost division (single-factor ablation);
-  `"global"` uses `kube_c*sqrt(log(1+t)/visits)` with `t` = frontier
-  selections so far — faithful to KUBE's flat-bandit clock, but since
-  frontier nodes keep `visits == 1` for life it is a frontier-wide
-  constant with no per-node discrimination (kept as an ablation arm).
-  Selection mirrors KUBE's feasibility step (`kube_affordable`,
-  default true): the argmax is restricted to nodes whose cost fits
-  the remaining generation budget (terminal nodes always eligible;
-  empty set relaxes to the full frontier). Config:
-  `utils/configs.py::BLMCTSCntV02Config` (`kube_c`, default 2.0;
-  `kube_schedule`, default `parent`; `kube_affordable`, default
-  true). Rewritten 2026-07-09 to match budget-mab's actual
-  FractionalKUBE (a UCB index over cost) — an earlier version used a
-  static depth-decay bonus with no UCB/visit-count term at all; see
-  `docs/decisions-log.md` (2026-07-09, three entries).
-- **v03** — same knapsack skeleton, cost mapping, and
-  `kube_affordable` feasibility step as v02, but the UCB confidence
-  bonus is replaced with a fixed depth-preference function:
-  `density(x) = (q_value(x) + depth_beta*f_a(depth_frac(x))) /
-  cost(x)`, `depth_frac(x) = depth(x)/max_depth`,
-  `f_a(z) = 1 - z**depth_alpha` (1 at the root, 0 at max depth —
-  monotonically favors shallower nodes). No visit-count/parent-
-  visit/global-clock term at all, so no confidence-bound/regret
-  guarantee — a deliberately different theoretical basis from v02,
-  not a refinement of it. Config: `utils/configs.py::
-  BLMCTSCntV03Config` (`depth_beta`, default 2.0; `depth_alpha`,
-  default 1.0; `kube_affordable`, default true). See
-  `docs/decisions/depth-shaping-knapsack-bonus.md`.
 
-All three are maintained in parallel for a PUCT / evidence-based-UCB
-/ fixed-depth-shaping comparison at matched gen_budget.
+BL-MCTS v01, BL-KUBE-MCTS v01, and BL-KDEPTH-MCTS v01 are maintained
+in parallel for a PUCT / evidence-based-UCB / fixed-depth-shaping
+comparison at matched gen_budget, even though BL-KUBE-MCTS and
+BL-KDEPTH-MCTS now each live in their own algorithm family (see below)
+rather than as same-family sibling versions.
+
+## BL-KUBE-MCTS
+
+Renamed 2026-07-16 from BL-MCTS v02 (`mcts_bl_cnt_v02`) into its own
+family, `mcts_bl_kube_v01` — a distinct selection criterion from
+BL-MCTS's PUCT, not a same-family variant of it. See
+[decisions/bl-cnt-to-bl-kube-rename.md](decisions/bl-cnt-to-bl-kube-rename.md)
+for the full old-name -> new-name mapping.
+
+Same budget-limited best-first frontier skeleton as BL-MCTS (an
+explicit `leaf_nodes` frontier with global leaf selection), but with
+PUCT replaced by Fractional KUBE density-based leaf selection,
+following Tran-Thanh et al. arXiv:1204.1909 sec. 3.3 (reference
+implementation: the sibling `budget-mab` repo's
+`src/algorithms.py::FractionalKUBE`).
+`density(x) = (q_value(x) + bonus(x)) / cost(x)`, `cost(x) =
+max_depth - depth(x)` (the MCTS analogue of an arm's fixed pull
+price). The bonus clock is configurable via `kube_schedule`:
+`"parent"` (default) uses `kube_c*sqrt(log(parent_visits)/visits)` —
+UCT-style local clock, identical to BL-MCTS v01's PUCT bonus, so this
+differs from BL-MCTS v01 only by the cost division (single-factor
+ablation); `"global"` uses `kube_c*sqrt(log(1+t)/visits)` with `t` =
+frontier selections so far — faithful to KUBE's flat-bandit clock,
+but since frontier nodes keep `visits == 1` for life it is a
+frontier-wide constant with no per-node discrimination (kept as an
+ablation arm). Selection mirrors KUBE's feasibility step
+(`kube_affordable`, default true): the argmax is restricted to nodes
+whose cost fits the remaining generation budget (terminal nodes
+always eligible; empty set relaxes to the full frontier). Config:
+`utils/configs.py::BLMCTSKubeV01Config` (`kube_c`, default 2.0;
+`kube_schedule`, default `parent`; `kube_affordable`, default true).
+Rewritten 2026-07-09 to match budget-mab's actual FractionalKUBE (a
+UCB index over cost) — an earlier version used a static depth-decay
+bonus with no UCB/visit-count term at all; see `docs/decisions-log.md`
+(2026-07-09, three entries).
+
+## BL-KDEPTH-MCTS
+
+Renamed 2026-07-17 from BL-MCTS v03 (`mcts_bl_cnt_v03`) into its own
+family, `mcts_bl_kdepth_v01` — "kdepth" = knapsack cost normalization
++ deterministic depth-shaping. Same reasoning as the BL-KUBE-MCTS
+rename: this variant's own docstring already described itself as "a
+deliberately different theoretical basis... not a refinement" of
+anything in BL-MCTS/BL-KUBE-MCTS, and it has no visit-count term of
+any kind, which made keeping it filed as a `bl_cnt` ("count-based")
+sibling version a category mismatch. See
+[decisions/bl-cnt-to-bl-kdepth-rename.md](decisions/bl-cnt-to-bl-kdepth-rename.md)
+for the full old-name -> new-name mapping.
+
+Same budget-limited best-first frontier skeleton, cost mapping
+(`max_depth - depth`), and `kube_affordable` feasibility step as
+BL-KUBE-MCTS, but the UCB confidence bonus is replaced with a fixed
+depth-preference function:
+`density(x) = (q_value(x) + depth_beta*f_a(depth_frac(x))) / cost(x)`,
+`depth_frac(x) = depth(x)/max_depth`, `f_a(z) = 1 - z**depth_alpha`
+(1 at the root, 0 at max depth — monotonically favors shallower
+nodes). No visit-count/parent-visit/global-clock term at all, so no
+confidence-bound/regret guarantee — a deliberately different
+theoretical basis from BL-KUBE-MCTS, not a refinement of it. Config:
+`utils/configs.py::BLMCTSKdepthV01Config` (`depth_beta`, default 2.0;
+`depth_alpha`, default 1.0; `kube_affordable`, default true). See
+`docs/decisions/depth-shaping-knapsack-bonus.md`.
 
 ## Semantic-MCTS
 

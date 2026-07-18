@@ -1,13 +1,15 @@
 # @package search
-# Search-method group → binds onto BLMCTSCntV03Config.
-# The mcts_bl_cnt_v03_schema node (registered in the launcher under
+# Search-method group → binds onto BLMCTSKdepthV01Config.
+# Renamed 2026-07-17 from mcts_bl_cnt_v03(.yaml) — see
+# docs/decisions/bl-cnt-to-bl-kdepth-rename.md.
+# The mcts_bl_kdepth_v01_schema node (registered in the launcher under
 # group "search") supplies the typed dataclass; values below
 # override it. Each method carries only its own hyperparameters.
 defaults:
-  - mcts_bl_cnt_v03_schema
+  - mcts_bl_kdepth_v01_schema
   - _self_
 
-method: mcts_bl_cnt_v03
+method: mcts_bl_kdepth_v01
 batch_size: 4           # candidates generated per expansion
 lookahead: 0
 max_depth: 20

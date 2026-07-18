@@ -14,6 +14,156 @@ scaffold, it also gets a standalone file in [decisions/](decisions/);
 the log entry then carries a one-line pointer to it rather than
 repeating the full writeup.
 
+## 2026-07-17 — Search, Refactor: `mcts_bl_cnt_v03` renamed to `mcts_bl_kdepth_v01`, its own algorithm family; result dirs, manifests, and ledger migrated
+
+**Context:** Tuan asked to rename `mcts_bl_cnt_search_v03_00_00` to
+match the naming convention of the previous day's `mcts_bl_cnt_v02` →
+`mcts_bl_kube_v01` rename, and asked what name would best describe a
+protocol combining "knapsack-based allocation with depth-based
+exploration." **Decision:** the same family-scope question from the
+KUBE rename was raised and answered the same way — this variant's own
+docstring already argued it was "a deliberately different theoretical
+basis... not a bugfix or refinement" of anything in bl_cnt/bl_kube,
+and "cnt" specifically denotes count-based (visit-count) exploration,
+which this variant has none of at all. New family: `mcts_bl_kdepth`
+(v01 of that family). Tuan proposed the name directly — `kdepth`
+(knapsack + depth), mirroring `kube`'s shape and answering both the
+naming and family-scope questions in one coinage. Same migration
+mechanics as the KUBE rename: `config_hash` includes `search.method`
+and `level_dir` derives the result-dir name from it, so all 5 existing
+scored result directories were physically renamed, their manifests'
+`config_name`/`config_hash`/`config_identity.search.method` rewritten
+with a faithfully recomputed hash (reproducing `config_hash()`'s exact
+algorithm, independently spot-verified), and W&B `run_id` links
+preserved. `experiments.yaml`'s 5 corresponding entries had
+`config_root`, `group` (`cnt-mcts-bl` → `kdepth-mcts-bl`), and their
+`note:`'s dir/hash citation updated. Checked whether v01's (`bl_cnt`)
+and bl_kube v01's own sibling docstrings reference v03 by name —
+neither does, so no edits were needed there. Two unrelated pre-existing
+typos ("knapbe" for "knapsack," appearing twice in the module
+docstring, pointing at a filename that never existed) were fixed
+opportunistically while touching the file anyway. Every code, config,
+and doc reference across the repo was updated to match, except
+genuinely historical `decisions-log.md` entries, which keep their
+original "v03" terminology per the append-only convention. **Why:**
+full migration record, the old-name → new-name mapping table, and what
+was deliberately left alone are in
+[decisions/bl-cnt-to-bl-kdepth-rename.md](decisions/bl-cnt-to-bl-kdepth-rename.md).
+
+## 2026-07-16 — Search, Refactor: `mcts_bl_cnt_v02` renamed to `mcts_bl_kube_v01`, its own algorithm family; result dirs, manifests, and ledger migrated
+
+**Context:** Tuan asked to rename
+`mcts_bl_cnt_search_v02_00_00` to `mcts_bl_kube_search_v01_00_00`. Two
+scoping questions were asked and confirmed before touching anything:
+whether the config `method`/`algo` string changes too (not just
+file/class names), and whether sibling files' (v01, v03) own
+docstrings should be updated to the new name. **Decision:** yes to
+both. The variant becomes its own family, `mcts_bl_kube` (v01 of that
+family, not v02 — first member of a new lineage) rather than a
+same-family sibling of `mcts_bl_cnt`'s PUCT variant, since fractional
+KUBE is a distinct selection theory (cost-normalized knapsack density),
+not a PUCT variant. `mcts_bl_cnt_v03` (depth-shaping) was deliberately
+NOT renamed or moved into the new family — it already frames itself
+as "a deliberately different theoretical basis... not a refinement" of
+KUBE and has no visit-count/confidence-bound term at all, closer to a
+heuristic bl_cnt variant than to KUBE's bandit lineage. Because
+`config_hash` hashes the full `search` dict (including `method`) and
+`level_dir` derives the result-dir name from `method`, changing the
+string forced physical migration, not just a code change: all 5
+existing scored result directories were renamed, their manifests'
+`config_name`/`config_hash`/`config_identity.search.method` rewritten
+with a faithfully recomputed hash (reproducing `config_hash()`'s exact
+algorithm against the mutated identity, independently spot-verified),
+and W&B `run_id` links preserved. `experiments.yaml`'s 5 corresponding
+entries had `config_root`, `group` (`cnt-mcts-bl` → `kube-mcts-bl`),
+and their `note:`'s dir/hash citation updated. Every code, config, and
+doc reference across the repo was updated to match, except genuinely
+historical `decisions-log.md` entries (2026-07-09, predating this
+rename), which keep their original "v02" terminology per the
+append-only convention — only one stale internal link among them was
+fixed. **Why:** full migration record, the old-name → new-name
+mapping table, the hash-recomputation method, and what was
+deliberately left alone are in
+[decisions/bl-cnt-to-bl-kube-rename.md](decisions/bl-cnt-to-bl-kube-rename.md).
+
+## 2026-07-16 — Search, Design: eager-terminal-backprop proposal extended to v02 (KUBE) and v03 (depth-shaping); different verdict per variant; a v02/v03 docstring discrepancy surfaced
+
+**Context:** the eager-terminal-backprop proposal below (see the
+following entry) was evaluated against v01 only. Tuan asked how the
+same proposal — terminal candidates split out of the frontier and
+backpropped at creation, no scoring change — would land on the other
+two active `bl_cnt` variants,
+`mcts_bl_cnt_search_v02_00_00` (fractional KUBE — renamed later the
+same day to `mcts_bl_kube_search_v01_00_00`, see the 2026-07-16
+`bl-cnt-to-bl-kube-rename` entry above) and
+`mcts_bl_cnt_search_v03_00_00` (depth-shaping knapsack), which each
+replace PUCT with a different selection criterion. **Decision:** no
+code changed; the analysis was extended and recorded. v02: max-depth
+dead-ends currently score `−inf` (`cost ≤ 0`) and so are *never*
+selected under the present lazy scheme — not delayed, permanently
+stuck — which also means they permanently satisfy the `kube_affordable`
+feasibility filter's "always eligible" terminal clause, silently
+preventing that filter's empty-set fallback from ever relaxing to the
+full frontier as designed. The terminal-split fix genuinely repairs
+this, but under `kube_schedule="parent"` it also introduces a new
+failure mode identical to v01's (count-driven attraction toward failed
+siblings); under `"global"` it's pure hygiene with no such side
+effect. v03's selection criterion reads no visit counts at all, so
+backprop is write-only on every channel there — the fix is a
+near-pure refactor and the stated goal (faster negative-feedback
+propagation) is unreachable in v03 through any backprop-timing change.
+Separately, both v02's and v03's module docstrings describe a
+terminal-split frontier policy that neither file's code actually
+implements — stale drift, not a live bug, but left uncorrected.
+**Why:** full per-variant mechanics, the `kube_affordable` walkthrough,
+and the comparison table are in §7 of
+[decisions/bl-cnt-path-aware-frontier-score-design.md](decisions/bl-cnt-path-aware-frontier-score-design.md).
+
+## 2026-07-16 — Search, Design: bl_cnt eager terminal backprop alone doesn't propagate dead-end signal; two path-aware scoring designs proposed instead
+
+**Context:** Tuan proposed splitting terminal candidates out of
+`leaf_nodes` and backpropping them eagerly at creation (instead of
+waiting for a later selection to trigger it), aiming to make bad
+directions discourage the search sooner. **Decision:** the proposal's
+mechanics are sound but don't reach the stated goal in bl_cnt's
+frontier-selection shape — `select_child_from_list` never reads an
+internal node's `q`, only a leaf's own `q`/`N` and its parent's *visit
+count*, so a backpropped value is write-only regardless of how early
+it lands; the only live effect is `N(ancestor) += 1`, which increases
+exploration pull toward the failed path's siblings rather than
+discouraging it. Two alternative designs that would actually work were
+sketched instead — not implemented. **Why:** full analysis, the
+magnitude argument, both formulas, and the recommendation (try the
+one-hop blend first, in a new version file, before the full
+discounted-path variant) are in
+[decisions/bl-cnt-path-aware-frontier-score-design.md](decisions/bl-cnt-path-aware-frontier-score-design.md).
+
+## 2026-07-16 — Search, Refactor: mcts_bl_cnt_v01 loop reordered to generate→expand→select; selection scope stays global
+
+**Context:** `mcts_bl_cnt_search_v01_00_00`'s loop read select-first
+(pick the globally best frontier leaf, then expand it), while
+`mcts_cnt_search_v01_00_00`'s walk step reads generate → expand →
+select. Tuan asked for the two to follow the same
+generation/expansion/selection order. "Selection among the expanded
+children" is ambiguous in the frontier setting: it can mean the fresh
+children merely *compete* in the next selection (a reorder), or that
+selection is *restricted* to them (a per-parent greedy descent,
+~max_depth generations per frontier pick — a different algorithm).
+**Decision:** reorder only, confirmed explicitly: each iteration now
+expands (or backprops) the current node, adds the children to the
+frontier, then selects the next node globally across the whole
+frontier. The per-parent-scope descent variant was deliberately not
+built. No config field changed, so every existing `config_hash` is
+untouched.
+**Why:** the reorder is a pure rotation of the old loop — the same
+nodes are expanded in the same order (traces can drift only via
+RNG-draw ordering on tie-breaks), so scored `cnt-mcts-bl-v01` cells
+remain comparable, while the two sibling files now read step-for-step
+parallel. The descent variant would have changed the search shape
+fundamentally and, per the two-tier convention in
+[algorithms.md](algorithms.md), belongs in a new version file if ever
+wanted — not an in-place edit of v01.
+
 ## 2026-07-15 — Search: mean-centering recommendation for mcts_bl_sem_v01 — fixed stays primary, local is a stricter ablation than in v02
 
 **Context:** `cov_dtype` and `embeds_center_mode` ("fixed"/"local")
@@ -214,7 +364,8 @@ in passing: the zero-visit case used `bonus=inf`, forcing exhaustive
 exploration of every new node before any q_value-informed comparison
 — unaffordable under a small `gen_budget`; now `bonus=0.0`, matching
 v01's `puct()`.) Full discussion and derivation in
-[decisions/kube-bonus-schedule.md](decisions/kube-bonus-schedule.md).
+[decisions/bl-kube-bonus-schedule.md](decisions/bl-kube-bonus-schedule.md)
+(renamed 2026-07-16 from `kube-bonus-schedule.md`).
 
 ## 2026-07-09 — Search, Refactor: `mcts_bl_cnt_v02` rewritten to match budget-mab's actual Fractional KUBE; infra aligned with v01
 

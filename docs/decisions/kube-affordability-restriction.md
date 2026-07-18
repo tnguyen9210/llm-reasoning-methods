@@ -1,10 +1,14 @@
 # Fractional-KUBE alignment audit: `(q+bonus)/cost` confirmed; affordability restriction added; constant folded into `kube_c`
 
-*2026-07-09*
+*2026-07-09 (variant renamed 2026-07-16 from `mcts_bl_cnt_v02` to
+`mcts_bl_kube_v01` — see
+[bl-cnt-to-bl-kube-rename.md](bl-cnt-to-bl-kube-rename.md); the audit
+narrative below is left in its original terms)*
 
 Records a line-by-line verification of
-`mcts_bl_cnt_search_v02_00_00.py::MCTSNode.kube_density` and
-`MCTS.select_child_from_list` against both the paper (Tran-Thanh et
+`mcts_bl_kube_search_v01_00_00.py::MCTSNode.kube_density` (then named
+`mcts_bl_cnt_search_v02_00_00.py`) and `MCTS.select_child_from_list`
+against both the paper (Tran-Thanh et
 al., arXiv:1204.1909, Section 3.3, Eq. 9 — read from the local
 `budget-mab/paper.pdf`, not from memory) and the reference
 implementation (`budget-mab/src/algorithms.py::FractionalKUBE`), plus
@@ -45,7 +49,7 @@ uses for UCT's constant (`cpuct·sqrt(log(N)/n)`, `cpuct=2.0` by
 default), so v02 matching it keeps the two siblings comparable —
 which matters more here than matching the paper's literal constant,
 given the single-factor-ablation design
-([kube-bonus-schedule.md](kube-bonus-schedule.md)). The cost is that
+([bl-kube-bonus-schedule.md](bl-kube-bonus-schedule.md)). The cost is that
 `kube_c=2.0` should be read as a tuning starting point, not as "the
 paper's √2" — now stated in the module docstring rather than left
 implicit.
@@ -125,13 +129,15 @@ tracked run.
 
 ## Connections
 
-- [kube-bonus-schedule.md](kube-bonus-schedule.md) — the bonus-clock
-  decision this audit followed; together they cover every term of
-  the v02 selection rule.
+- [bl-kube-bonus-schedule.md](bl-kube-bonus-schedule.md) — the
+  bonus-clock decision this audit followed; together they cover every
+  term of the v02 selection rule.
 - `budget-mab/src/algorithms.py::FractionalKUBE` and
   `budget-mab/docs/issues.md` — reference implementation and the
   restrict-before-argmax lesson.
 - `budget-mab/paper.pdf`, Section 3.3 / Eq. 9 — the primary source
   the formula was checked against.
-- `core/mcts_bl_cnt_search_v02_00_00.py::MCTS.select_child_from_list`
+- `core/mcts_bl_kube_search_v01_00_00.py::MCTS.select_child_from_list`
   — the implementation.
+- [bl-cnt-to-bl-kube-rename.md](bl-cnt-to-bl-kube-rename.md) — the
+  2026-07-16 rename that gave this variant its current name.

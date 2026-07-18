@@ -47,7 +47,7 @@ from hydra.core.config_store import ConfigStore
 
 from utils.configs import (
     ExpConfig, MCTSCntConfig, MCTSSemV01Config, MCTSSemV02Config,
-    BLMCTSCntConfig, BLMCTSCntV02Config, BLMCTSCntV03Config,
+    BLMCTSCntConfig, BLMCTSKubeV01Config, BLMCTSKdepthV01Config,
     BLMCTSSemConfig,
     config_hash, config_name, level_dir, results_root, MANIFEST_FILE,
 )
@@ -78,10 +78,11 @@ _cs.store(
     group="search", name="mcts_bl_cnt_v01_schema", node=BLMCTSCntConfig,
 )
 _cs.store(
-    group="search", name="mcts_bl_cnt_v02_schema", node=BLMCTSCntV02Config,
+    group="search", name="mcts_bl_kube_v01_schema", node=BLMCTSKubeV01Config,
 )
 _cs.store(
-    group="search", name="mcts_bl_cnt_v03_schema", node=BLMCTSCntV03Config,
+    group="search", name="mcts_bl_kdepth_v01_schema",
+    node=BLMCTSKdepthV01Config,
 )
 _cs.store(
     group="search", name="mcts_bl_sem_v01_schema", node=BLMCTSSemConfig,
@@ -225,8 +226,8 @@ _METHOD_TO_ROOT = {
     "mcts_sem_v01": "mcts_sem_v01_prm800k",
     "mcts_sem_v02": "mcts_sem_v02_prm800k",
     "mcts_bl_cnt_v01": "mcts_bl_cnt_v01_prm800k",
-    "mcts_bl_cnt_v02": "mcts_bl_cnt_v02_prm800k",
-    "mcts_bl_cnt_v03": "mcts_bl_cnt_v03_prm800k",
+    "mcts_bl_kube_v01": "mcts_bl_kube_v01_prm800k",
+    "mcts_bl_kdepth_v01": "mcts_bl_kdepth_v01_prm800k",
     "mcts_bl_sem_v01": "mcts_bl_sem_v01_prm800k",
 }
 
@@ -236,8 +237,8 @@ _METHOD_TO_LAUNCHER = {
     "mcts_sem_v01": "generate_mcts_sem.py",
     "mcts_sem_v02": "generate_mcts_sem.py",
     "mcts_bl_cnt_v01": "generate_mcts_bl_cnt.py",
-    "mcts_bl_cnt_v02": "generate_mcts_bl_cnt.py",
-    "mcts_bl_cnt_v03": "generate_mcts_bl_cnt.py",
+    "mcts_bl_kube_v01": "generate_mcts_bl_cnt.py",
+    "mcts_bl_kdepth_v01": "generate_mcts_bl_cnt.py",
     "mcts_bl_sem_v01": "generate_mcts_sem.py",
 }
 
@@ -246,14 +247,23 @@ _METHOD_TO_LAUNCHER = {
 # agree with the docs. A plain `startswith("mcts_sem")` guess (the old
 # behavior) misclassifies mcts_bl_sem_v01 as "sem-mcts" -- explicit
 # per-method mapping avoids that.
+#
+# mcts_bl_kube_v01 renamed 2026-07-16 from mcts_bl_cnt_v02, and
+# mcts_bl_kdepth_v01 renamed 2026-07-17 from mcts_bl_cnt_v03, each into
+# its own algorithm family (fractional-KUBE / knapsack-depth-shaping
+# are different selection criteria from bl_cnt's PUCT, not same-family
+# sibling versions) -- their group labels moved off the shared
+# "cnt-mcts-bl" bucket accordingly. See
+# docs/decisions/bl-cnt-to-bl-kube-rename.md and
+# docs/decisions/bl-cnt-to-bl-kdepth-rename.md.
 _METHOD_TO_GROUP = {
     "mcts_cnt": "cnt-mcts",
     "mcts_cnt_v01": "cnt-mcts",
     "mcts_sem_v01": "sem-mcts",
     "mcts_sem_v02": "sem-mcts",
     "mcts_bl_cnt_v01": "cnt-mcts-bl",
-    "mcts_bl_cnt_v02": "cnt-mcts-bl",
-    "mcts_bl_cnt_v03": "cnt-mcts-bl",
+    "mcts_bl_kube_v01": "kube-mcts-bl",
+    "mcts_bl_kdepth_v01": "kdepth-mcts-bl",
     "mcts_bl_sem_v01": "sem-mcts-bl",
 }
 

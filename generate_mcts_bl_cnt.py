@@ -18,50 +18,57 @@ import wandb
 
 from core import (
     mcts_bl_cnt_search_v01_00_00,
-    mcts_bl_cnt_search_v02_00_00,
-    mcts_bl_cnt_search_v03_00_00,
+    mcts_bl_kube_search_v01_00_00,
+    mcts_bl_kdepth_search_v01_00_00,
 )
 from core.reward_models import build_prm
 from core.scoring import build_scored_dataset
 from utils.configs import (
-    ExpConfig, BLMCTSCntConfig, BLMCTSCntV02Config, BLMCTSCntV03Config,
+    ExpConfig, BLMCTSCntConfig, BLMCTSKubeV01Config, BLMCTSKdepthV01Config,
     config_name, level_dir, results_root,
     write_manifest, load_wandb_run_id,
     save_timing_state, load_timing_state,
 )
 from utils.load_data import load_data_hf
 
-# One launcher, three budget-limited-cnt-MCTS variants. All three share
-# an identical _search(batch_of_questions, cfg, trial_idx, llm_vllm,
-# prm) signature and the same best-first frontier skeleton -- they
-# differ only in the leaf-selection index (PUCT / fractional-KUBE /
-# depth-shaping knapsack), which lives entirely in each core module, so
-# there is no per-variant runtime wiring here (contrast
+# One launcher, three budget-limited-frontier MCTS variants: bl_cnt
+# v01 (PUCT), bl_kube v01 (fractional-KUBE -- renamed 2026-07-16 from
+# bl_cnt v02, see docs/decisions/bl-cnt-to-bl-kube-rename.md), and
+# bl_kdepth v01 (knapsack cost normalization + depth-shaping bonus --
+# renamed 2026-07-17 from bl_cnt v03, see
+# docs/decisions/bl-cnt-to-bl-kdepth-rename.md). All three share an
+# identical _search(batch_of_questions, cfg, trial_idx, llm_vllm, prm)
+# signature and the same best-first frontier skeleton -- they differ
+# only in the leaf-selection index, which lives entirely in each core
+# module, so there is no per-variant runtime wiring here (contrast
 # generate_mcts_sem.py, which branches on whether to build a second
 # pooling engine). cfg.algo picks the core module; --config-name picks
 # the root config (and therefore the search schema, via its
-# search: mcts_bl_cnt_v0N group file).
+# search: mcts_bl_cnt_v01 / mcts_bl_kube_v01 / mcts_bl_kdepth_v01
+# group file).
 algo_dict = {
     "mcts_bl_cnt_v01": mcts_bl_cnt_search_v01_00_00,
-    "mcts_bl_cnt_v02": mcts_bl_cnt_search_v02_00_00,
-    "mcts_bl_cnt_v03": mcts_bl_cnt_search_v03_00_00,
+    "mcts_bl_kube_v01": mcts_bl_kube_search_v01_00_00,
+    "mcts_bl_kdepth_v01": mcts_bl_kdepth_search_v01_00_00,
 }
 
 # Register the structured schemas so the YAML binds onto typed,
 # validated dataclasses instead of a plain DictConfig. The search
 # subclasses are registered under the "search" group; conf/search/
-# mcts_bl_cnt_v01|v02|v03 selects one (ExpConfig.search is the base
-# type, so the concrete schema must come from the group).
+# mcts_bl_cnt_v01 / mcts_bl_kube_v01 / mcts_bl_kdepth_v01 selects one
+# (ExpConfig.search is the base type, so the concrete schema must come
+# from the group).
 cs = ConfigStore.instance()
 cs.store(name="exp_schema", node=ExpConfig)
 cs.store(
     group="search", name="mcts_bl_cnt_v01_schema", node=BLMCTSCntConfig,
 )
 cs.store(
-    group="search", name="mcts_bl_cnt_v02_schema", node=BLMCTSCntV02Config,
+    group="search", name="mcts_bl_kube_v01_schema", node=BLMCTSKubeV01Config,
 )
 cs.store(
-    group="search", name="mcts_bl_cnt_v03_schema", node=BLMCTSCntV03Config,
+    group="search", name="mcts_bl_kdepth_v01_schema",
+    node=BLMCTSKdepthV01Config,
 )
 
 

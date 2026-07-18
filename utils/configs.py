@@ -252,8 +252,16 @@ class BLMCTSCntConfig(SearchConfig):
 
 
 @dataclass
-class BLMCTSCntV02Config(SearchConfig):
+class BLMCTSKubeV01Config(SearchConfig):
     """Count-based MCTS with fractional-KUBE frontier selection.
+
+    Renamed 2026-07-16 from BLMCTSCntV02Config into its own
+    mcts_bl_kube family (v01 of that family), since it's a distinct
+    selection criterion rather than a same-family variant of
+    BLMCTSCntConfig's PUCT — see docs/decisions-log.md and
+    docs/decisions/bl-cnt-to-bl-kube-rename.md for the full mapping
+    (old method string "mcts_bl_cnt_v02" -> new "mcts_bl_kube_v01";
+    result dirs and manifests were migrated alongside).
 
     Frontier counterpart of MCTSCntConfig, exactly as BLMCTSCntConfig
     is but with the leaf-selection index replaced: instead of PUCT
@@ -271,11 +279,12 @@ class BLMCTSCntV02Config(SearchConfig):
         bonus_i — selected by kube_schedule:
           "parent" (default):
               kube_c*sqrt(log(parent_visits_i)/visits_i)
-              UCT-style local clock — exactly v01's PUCT bonus, so
-              v02 differs from v01 only by the cost division
-              (single-factor PUCT-vs-KUBE ablation). Frontier nodes
-              keep visits == 1 for life, so discrimination comes
-              from parent_visits, grown by terminal backprops.
+              UCT-style local clock — exactly bl_cnt v01's PUCT
+              bonus, so this differs from bl_cnt v01 only by the
+              cost division (single-factor PUCT-vs-KUBE ablation).
+              Frontier nodes keep visits == 1 for life, so
+              discrimination comes from parent_visits, grown by
+              terminal backprops.
           "global":
               kube_c*sqrt(log(1+t)/visits_i), t = frontier
               selections so far — faithful to KUBE's flat-bandit
@@ -291,8 +300,9 @@ class BLMCTSCntV02Config(SearchConfig):
     Terminal nodes consume no generations and are always eligible;
     an empty affordable set relaxes to the full frontier (cost_i is
     a worst-case bound — EOS can finish a path early). With it on,
-    v01-vs-v02 compares the full KUBE package; kube_affordable=false
-    is the middle arm isolating cost normalization alone. See
+    bl_cnt-v01-vs-bl_kube-v01 compares the full KUBE package;
+    kube_affordable=false is the middle arm isolating cost
+    normalization alone. See
     docs/decisions/kube-affordability-restriction.md.
 
     An earlier version of this file used a static depth-decay bonus
@@ -300,7 +310,7 @@ class BLMCTSCntV02Config(SearchConfig):
     all) that didn't match budget-mab's actual FractionalKUBE — see
     docs/decisions-log.md (2026-07-09) for the correction.
     """
-    method: str = "mcts_bl_cnt_v02"
+    method: str = "mcts_bl_kube_v01"
     num_phases: int = 1000
     gen_budget: int = 80          # total generations across the run
     kube_c: float = 2.0            # UCB exploration coefficient
@@ -316,19 +326,34 @@ class BLMCTSCntV02Config(SearchConfig):
 
 
 @dataclass
-class BLMCTSCntV03Config(SearchConfig):
-    """Count-based MCTS with depth-shaping knapsack frontier selection.
+class BLMCTSKdepthV01Config(SearchConfig):
+    """Knapsack-cost-normalized MCTS with a depth-shaping frontier
+    selection bonus (no visit counts).
 
-    Sibling of BLMCTSCntV02Config (Fractional KUBE): same knapsack-
-    style objective and cost mapping, but the UCB confidence bonus is
+    Renamed 2026-07-17 from BLMCTSCntV03Config into its own
+    mcts_bl_kdepth family (v01 of that family) — "kdepth" = knapsack
+    cost normalization + deterministic depth-shaping, following the
+    same reasoning as the mcts_bl_cnt_v02 -> mcts_bl_kube_v01 rename
+    the day before: this docstring already argued it was "a
+    deliberately different theoretical basis... not a refinement" of
+    anything in bl_cnt/bl_kube, and "cnt" specifically denotes
+    count-based (visit-count) exploration, which this variant has none
+    of — see docs/decisions/bl-cnt-to-bl-kdepth-rename.md for the full
+    mapping.
+
+    Sibling of BLMCTSKubeV01Config (Fractional KUBE, renamed
+    2026-07-16 from BLMCTSCntV02Config — see
+    docs/decisions/bl-cnt-to-bl-kube-rename.md): same knapsack-style
+    objective and cost mapping, but the UCB confidence bonus is
     replaced with a fixed depth-preference function — there is no
     visit-count/exploration term of any kind. A deliberately
-    different theoretical basis from v02 (no bandit/regret
+    different theoretical basis from fractional-KUBE (no bandit/regret
     guarantee), not a refinement of it — see
     docs/decisions/depth-shaping-knapsack-bonus.md.
 
         density_i = (q_value_i + depth_beta*f_a(depth_frac_i)) / cost_i
-        cost_i = max_depth - depth_i        (same mapping as v01/v02)
+        cost_i = max_depth - depth_i    (same mapping as bl_cnt v01 /
+                                          bl_kube v01)
         depth_frac_i = depth_i / max_depth  (0 at root, 1 at max_depth)
         f_a(z) = 1 - z**depth_alpha
             f_a(0)=1 (root, max bonus), f_a(1)=0 (max_depth, no
@@ -339,11 +364,11 @@ class BLMCTSCntV03Config(SearchConfig):
             decision doc for the sign check.)
 
     kube_affordable (default True): identical feasibility-restriction
-    semantics to BLMCTSCntV02Config — same knapsack constraint, only
+    semantics to BLMCTSKubeV01Config — same knapsack constraint, only
     the per-arm value term differs. See
     docs/decisions/kube-affordability-restriction.md.
     """
-    method: str = "mcts_bl_cnt_v03"
+    method: str = "mcts_bl_kdepth_v01"
     num_phases: int = 1000
     gen_budget: int = 80            # total generations across the run
     depth_beta: float = 2.0         # depth-bonus coefficient
@@ -354,7 +379,7 @@ class BLMCTSCntV03Config(SearchConfig):
     # PRM forward-pass micro-batch *inside* the search loop (distinct
     # from prm.score_batch_size, which scores the final dataset). Kept
     # small because in-loop scoring is per-candidate-set. Mirrors
-    # BLMCTSCntV02Config.prm_batch_size.
+    # BLMCTSKubeV01Config.prm_batch_size.
     prm_batch_size: int = 1
 
 

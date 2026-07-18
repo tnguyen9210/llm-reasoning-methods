@@ -2,20 +2,40 @@
 Budget-Limited MCTS with best-first leaf selection (depth-shaping
 knapsack density, no embeddings).
 
-Key difference from mcts_bl_cnt_search_v02_00_00: leaf selection uses
-a deterministic depth-preference bonus instead of a UCB confidence
+Renamed 2026-07-17 from mcts_bl_cnt_search_v03_00_00.py to its own
+mcts_bl_kdepth family (v01 of that family) — "kdepth" = knapsack cost
+normalization + a deterministic depth-shaping bonus. Same reasoning
+as the mcts_bl_cnt_v02 -> mcts_bl_kube_v01 rename the day before: this
+variant's own docstring already argued it is "a deliberately different
+theoretical basis... not a bugfix or refinement" of anything in the
+bl_cnt/bl_kube families, and "cnt" specifically denotes count-based
+(visit-count) exploration, which this variant has none of at all — so
+keeping it filed under mcts_bl_cnt was the same category mismatch the
+KUBE rename fixed. See docs/decisions-log.md and
+docs/decisions/bl-cnt-to-bl-kdepth-rename.md for the full rationale
+and the old-name -> new-name mapping (config method/algo string,
+result dirs, and manifests were all migrated alongside the code, same
+as the KUBE rename).
+
+Key difference from mcts_bl_kube_search_v01_00_00.py (fractional
+KUBE, renamed 2026-07-16 from mcts_bl_cnt_search_v02_00_00.py — see
+docs/decisions/bl-cnt-to-bl-kube-rename.md): leaf selection uses a
+deterministic depth-preference bonus instead of a UCB confidence
 bonus — there is no exploration/visit-count term at all in this
 variant. Everything else (frontier bookkeeping, expansion, backprop,
-output shape) is identical — see v01/v02's docstrings for the shared
-algorithm skeleton.
+output shape) is identical — see mcts_bl_cnt_search_v01_00_00.py /
+mcts_bl_kube_search_v01_00_00.py's docstrings for the shared algorithm
+skeleton.
 
-Sibling variants: mcts_bl_cnt_search_v01_00_00.py uses PUCT;
-mcts_bl_cnt_search_v02_00_00.py uses Fractional KUBE (a UCB index
-over cost). v03 replaces KUBE's confidence bonus with a fixed
+Sibling comparisons: mcts_bl_cnt_search_v01_00_00.py uses PUCT;
+mcts_bl_kube_search_v01_00_00.py uses Fractional KUBE (a UCB index
+over cost). This variant replaces KUBE's confidence bonus with a fixed
 depth-shaping function, solved under the same knapsack-style cost
 constraint — a deliberately different theoretical basis (no
-bandit/regret guarantee), not a bugfix or refinement of v02. All
-three are active for a three-way comparison at matched gen_budget.
+bandit/regret guarantee), not a bugfix or refinement of the KUBE
+variant. All three are active for a three-way comparison at matched
+gen_budget, even though this variant and KUBE each now live in their
+own algorithm family rather than as bl_cnt sibling versions.
 
 Algorithm
     Initialize completion_list = [], leaf_nodes = [root], gen_cnt = 0
@@ -24,7 +44,8 @@ Algorithm
         candidates = {x in leaf_nodes : x terminal
                       or cost(x) <= residual}   (if kube_affordable;
                       falls back to all of leaf_nodes if empty — see
-                      v02's docstring / docs/decisions/
+                      mcts_bl_kube_search_v01_00_00.py's docstring /
+                      docs/decisions/
                       kube-affordability-restriction.md for why)
         selected_node = argmax_{x in candidates} depth_density(x)
         Remove selected_node from leaf_nodes
@@ -49,13 +70,14 @@ shaping bonus in place of a UCB term):
 
     The fractional relaxation of this knapsack reduces to the same
     density-argmax-over-affordable-arms rule Fractional KUBE uses
-    (see mcts_bl_cnt_search_v02_00_00.py's docstring): at each step,
+    (see mcts_bl_kube_search_v01_00_00.py's docstring): at each step,
     pick argmax over affordable nodes of (value_i) / cost_i:
 
     depth_density(x) = (q_value(x) + depth_beta*f_a(depth_frac(x)))
                         / cost(x)
     cost(x) = max_depth - depth(x)   (remaining generations to reach
-              the depth limit; same cost mapping as v01/v02)
+              the depth limit; same cost mapping as the PUCT and KUBE
+              siblings)
     depth_frac(x) = depth(x) / max_depth   (0 at root, 1 at max_depth)
     f_a(z) = 1 - z**depth_alpha
         f_a(0) = 1 (root — maximal bonus), f_a(1) = 0 (max_depth — no
@@ -65,20 +87,22 @@ shaping bonus in place of a UCB term):
         which inverts the intended direction — f_a(0)=0 at the root,
         f_a(1)=1 at max_depth, rewarding DEEP nodes instead. Fixed by
         indexing f_a on depth_frac, not cost_frac — see
-        docs/decisions/depth-shaping-knapbe-bonus.md.)
-    q_value = value_sum / visit_count  (running mean, same as v01/v02)
+        docs/decisions/depth-shaping-knapsack-bonus.md.)
+    q_value = value_sum / visit_count  (running mean, same as the PUCT
+              and KUBE siblings)
 
     No visit_count/parent_visit/global-clock term anywhere — this is
-    the deliberate difference from v02: f_a is a static function of
-    tree position only, not a confidence bound that shrinks with
-    evidence. There is consequently no exploration guarantee of any
-    kind; depth_beta trades off q_value against a fixed preference
-    for shallower (cheaper, more numerous) nodes.
+    the deliberate difference from the KUBE variant: f_a is a static
+    function of tree position only, not a confidence bound that
+    shrinks with evidence. There is consequently no exploration
+    guarantee of any kind; depth_beta trades off q_value against a
+    fixed preference for shallower (cheaper, more numerous) nodes.
 
     Affordability (kube_affordable, default true): identical
-    feasibility-restriction step to v02 — the knapsack constraint
-    (sum m_i*cost_i <= B_t) is the same, only the per-arm value term
-    changed. See mcts_bl_cnt_search_v02_00_00.py / docs/decisions/
+    feasibility-restriction step to mcts_bl_kube_search_v01_00_00.py —
+    the knapsack constraint (sum m_i*cost_i <= B_t) is the same, only
+    the per-arm value term changed. See
+    mcts_bl_kube_search_v01_00_00.py / docs/decisions/
     kube-affordability-restriction.md for the full rationale
     (terminal nodes always eligible; empty affordable set relaxes to
     the full frontier, since cost is a worst-case bound).
@@ -89,11 +113,13 @@ shaping bonus in place of a UCB term):
     against a boundary case at exactly max_depth).
 
 Variant lineage: docs/algorithms.md, docs/decisions/
-depth-shaping-knapbe-bonus.md (2026-07-09) — this reuses the
+depth-shaping-knapsack-bonus.md (2026-07-09) — this reuses the
 depth-decay f_a(z)=1-z**alpha shape that was in the ORIGINAL, pre-
-KUBE mcts_bl_cnt_search_v02_00_00.py (removed from v02 the same day
-for not matching Fractional KUBE's UCB structure), reintroduced here
-as its own explicit variant with corrected sign and an explicit
+KUBE mcts_bl_cnt_search_v02_00_00.py (removed the same day for not
+matching Fractional KUBE's UCB structure; that file has since been
+renamed to mcts_bl_kube_search_v01_00_00.py, 2026-07-16 — see
+docs/decisions/bl-cnt-to-bl-kube-rename.md), reintroduced here as its
+own explicit variant with corrected sign and an explicit
 knapsack/affordability treatment it didn't have before.
 """
 
@@ -217,9 +243,9 @@ class BaseTree(BaseModel):
         super().__init__(**kwargs)
         self.root = self.create_root()
         # Seed root with one update so visit_count >= 1 from the start,
-        # matching v01/v02's convention (q_value() well-defined
-        # immediately, even though this variant's density doesn't use
-        # visit_count itself).
+        # matching the PUCT and KUBE siblings' convention (q_value()
+        # well-defined immediately, even though this variant's density
+        # doesn't use visit_count itself).
         self.root.update(0)
 
     def create_root(self):
@@ -297,7 +323,8 @@ class MCTS(BaseTree):
 
         If config.search.kube_affordable, first restrict to nodes
         whose worst-case completion cost fits the residual generation
-        budget — same feasibility step as v02 (see that module's
+        budget — same feasibility step as
+        mcts_bl_kube_search_v01_00_00.py (see that module's
         docstring): applied BEFORE the argmax so the ranking among
         affordable nodes is preserved. Terminal nodes are always
         eligible (they cost no generations). If no node is affordable,

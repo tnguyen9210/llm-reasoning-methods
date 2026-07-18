@@ -3,7 +3,7 @@ defaults:
   - llm: llama_1b
   - prm: llama_prm
   - data: prm800k
-  - search: mcts_bl_cnt_v02
+  - search: mcts_bl_kube_v01
   - _self_
   - override hydra/job_logging: disabled
   - override hydra/hydra_logging: disabled
@@ -16,7 +16,7 @@ hydra:
 # base path interpolated by the group files (${base_dir}/...)
 base_dir: /groups/chichengz/tnn/datasets
 
-algo: mcts_bl_cnt_v02
+algo: mcts_bl_kube_v01
 
 # generation params (group: gen) — only overrides vs GenConfig defaults
 gen:

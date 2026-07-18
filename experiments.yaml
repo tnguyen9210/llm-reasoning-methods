@@ -1591,133 +1591,163 @@
     (run_id wixl51ql); scored 2026-07-09, pass@gb .8867±.0198 (already in
     docs/exp-comp-prm800k-level4.md agg_strategy comparison lam=0.1 w_eff=10 table)
 - launcher: generate_mcts_bl_cnt.py
-  config_root: mcts_bl_cnt_v02_prm800k
+  config_root: mcts_bl_kube_v01_prm800k
   overrides:
     prm: qwen_prm
   trials: 2
   feeds: []
-  group: cnt-mcts-bl
+  group: kube-mcts-bl
   recorded: true
   priority: 2
-  note: backfilled from mcts_bl_cnt_v02--level-4--Llama3.2-1B--qwen--d-20--bs-4--b-080--cfg-4586b6a1
+  note: backfilled from mcts_bl_kube_v01--level-4--Llama3.2-1B--qwen--d-20--bs-4--b-080--cfg-bc421e24
     (run_id 5hlr1c61); scored 2026-07-09, pass@gb .5586±.0311 (in
-    docs/exp-comp-prm800k-level4.md cnt-mcts-bl-v02 model family/size/quantization table)
+    docs/exp-comp-prm800k-level4.md cnt-mcts-bl-v02 model family/size/quantization table).
+    Variant renamed 2026-07-16 from mcts_bl_cnt_v02 to mcts_bl_kube_v01;
+    result dir migrated from mcts_bl_cnt_v02--level-4--Llama3.2-1B--qwen--d-20--bs-4--b-080--cfg-4586b6a1
+    (old hash 4586b6a1) -- see docs/decisions/bl-cnt-to-bl-kube-rename.md
 - launcher: generate_mcts_bl_cnt.py
-  config_root: mcts_bl_cnt_v02_prm800k
+  config_root: mcts_bl_kube_v01_prm800k
   overrides:
     llm: llama_3b
     prm: qwen_prm
   trials: 2
   feeds: []
-  group: cnt-mcts-bl
+  group: kube-mcts-bl
   recorded: true
   priority: 2
-  note: backfilled from mcts_bl_cnt_v02--level-4--Llama3.2-3B--qwen--d-20--bs-4--b-080--cfg-55643f02
+  note: backfilled from mcts_bl_kube_v01--level-4--Llama3.2-3B--qwen--d-20--bs-4--b-080--cfg-06feb79e
     (run_id rwqjq7fl); scored 2026-07-09, pass@gb .7305±.0278 (in
-    docs/exp-comp-prm800k-level4.md cnt-mcts-bl-v02 model family/size/quantization table)
+    docs/exp-comp-prm800k-level4.md cnt-mcts-bl-v02 model family/size/quantization table).
+    Variant renamed 2026-07-16 from mcts_bl_cnt_v02 to mcts_bl_kube_v01;
+    result dir migrated from mcts_bl_cnt_v02--level-4--Llama3.2-3B--qwen--d-20--bs-4--b-080--cfg-55643f02
+    (old hash 55643f02) -- see docs/decisions/bl-cnt-to-bl-kube-rename.md
 - launcher: generate_mcts_bl_cnt.py
-  config_root: mcts_bl_cnt_v02_prm800k
+  config_root: mcts_bl_kube_v01_prm800k
   overrides:
     llm: qwen_3b
     prm: qwen_prm
   trials: 2
   feeds: []
-  group: cnt-mcts-bl
+  group: kube-mcts-bl
   recorded: true
   priority: 2
-  note: backfilled from mcts_bl_cnt_v02--level-4--Qwen2.5-3B--qwen--d-20--bs-4--b-080--cfg-e1360dda
+  note: backfilled from mcts_bl_kube_v01--level-4--Qwen2.5-3B--qwen--d-20--bs-4--b-080--cfg-f0dcc67f
     (run_id vimdoh1b); scored 2026-07-09, pass@gb .8320±.0234 (in
-    docs/exp-comp-prm800k-level4.md cnt-mcts-bl-v02 model family/size/quantization table)
+    docs/exp-comp-prm800k-level4.md cnt-mcts-bl-v02 model family/size/quantization table).
+    Variant renamed 2026-07-16 from mcts_bl_cnt_v02 to mcts_bl_kube_v01;
+    result dir migrated from mcts_bl_cnt_v02--level-4--Qwen2.5-3B--qwen--d-20--bs-4--b-080--cfg-e1360dda
+    (old hash e1360dda) -- see docs/decisions/bl-cnt-to-bl-kube-rename.md
 - launcher: generate_mcts_bl_cnt.py
-  config_root: mcts_bl_cnt_v02_prm800k
+  config_root: mcts_bl_kube_v01_prm800k
   overrides:
     llm: qwen_7b_gptq_int4
     prm: qwen_prm
   trials: 2
   feeds: []
-  group: cnt-mcts-bl
+  group: kube-mcts-bl
   recorded: true
   priority: 2
-  note: backfilled from mcts_bl_cnt_v02--level-4--Qwen2.5-7B-GPTQ-Int4--qwen--d-20--bs-4--b-080--cfg-0ef9c289
+  note: backfilled from mcts_bl_kube_v01--level-4--Qwen2.5-7B-GPTQ-Int4--qwen--d-20--bs-4--b-080--cfg-aade1550
     (run_id a0nlicyf); scored 2026-07-09, pass@gb .8750±.0207 (in
-    docs/exp-comp-prm800k-level4.md cnt-mcts-bl-v02 model family/size/quantization table)
+    docs/exp-comp-prm800k-level4.md cnt-mcts-bl-v02 model family/size/quantization table).
+    Variant renamed 2026-07-16 from mcts_bl_cnt_v02 to mcts_bl_kube_v01;
+    result dir migrated from mcts_bl_cnt_v02--level-4--Qwen2.5-7B-GPTQ-Int4--qwen--d-20--bs-4--b-080--cfg-0ef9c289
+    (old hash 0ef9c289) -- see docs/decisions/bl-cnt-to-bl-kube-rename.md
 - launcher: generate_mcts_bl_cnt.py
-  config_root: mcts_bl_cnt_v02_prm800k
+  config_root: mcts_bl_kube_v01_prm800k
   overrides:
     llm: qwen_math_1_5b
     prm: qwen_prm
   trials: 2
   feeds: []
-  group: cnt-mcts-bl
+  group: kube-mcts-bl
   recorded: true
   priority: 2
-  note: backfilled from mcts_bl_cnt_v02--level-4--Qwen2.5-Math-1.5B--qwen--d-20--bs-4--b-080--cfg-497d2e67
+  note: backfilled from mcts_bl_kube_v01--level-4--Qwen2.5-Math-1.5B--qwen--d-20--bs-4--b-080--cfg-7dd65d04
     (run_id ub5wqvva); scored 2026-07-09, pass@gb .8359±.0232 (in
-    docs/exp-comp-prm800k-level4.md cnt-mcts-bl-v02 model family/size/quantization table)
+    docs/exp-comp-prm800k-level4.md cnt-mcts-bl-v02 model family/size/quantization table).
+    Variant renamed 2026-07-16 from mcts_bl_cnt_v02 to mcts_bl_kube_v01;
+    result dir migrated from mcts_bl_cnt_v02--level-4--Qwen2.5-Math-1.5B--qwen--d-20--bs-4--b-080--cfg-497d2e67
+    (old hash 497d2e67) -- see docs/decisions/bl-cnt-to-bl-kube-rename.md
 - launcher: generate_mcts_bl_cnt.py
-  config_root: mcts_bl_cnt_v03_prm800k
+  config_root: mcts_bl_kdepth_v01_prm800k
   overrides:
     prm: qwen_prm
   trials: 2
   feeds: []
-  group: cnt-mcts-bl
+  group: kdepth-mcts-bl
   recorded: true
   priority: 2
-  note: backfilled from mcts_bl_cnt_v03--level-4--Llama3.2-1B--qwen--d-20--bs-4--b-080--cfg-8dda8957
+  note: backfilled from mcts_bl_kdepth_v01--level-4--Llama3.2-1B--qwen--d-20--bs-4--b-080--cfg-e8c9626f
     (run_id 3yyni5fn); scored 2026-07-09, pass@gb .5742±.0310 (in
-    docs/exp-comp-prm800k-level4.md cnt-mcts-bl-v03 model family/size/quantization table)
+    docs/exp-comp-prm800k-level4.md cnt-mcts-bl-v03 model family/size/quantization table).
+    Variant renamed 2026-07-17 from mcts_bl_cnt_v03 to mcts_bl_kdepth_v01;
+    result dir migrated from mcts_bl_cnt_v03--level-4--Llama3.2-1B--qwen--d-20--bs-4--b-080--cfg-8dda8957
+    (old hash 8dda8957) -- see docs/decisions/bl-cnt-to-bl-kdepth-rename.md
 - launcher: generate_mcts_bl_cnt.py
-  config_root: mcts_bl_cnt_v03_prm800k
+  config_root: mcts_bl_kdepth_v01_prm800k
   overrides:
     llm: llama_3b
     prm: qwen_prm
   trials: 2
   feeds: []
-  group: cnt-mcts-bl
+  group: kdepth-mcts-bl
   recorded: true
   priority: 2
-  note: backfilled from mcts_bl_cnt_v03--level-4--Llama3.2-3B--qwen--d-20--bs-4--b-080--cfg-3978c92d
+  note: backfilled from mcts_bl_kdepth_v01--level-4--Llama3.2-3B--qwen--d-20--bs-4--b-080--cfg-ed731d7b
     (run_id kl22af6y); scored 2026-07-09, pass@gb .7227±.0280 (in
-    docs/exp-comp-prm800k-level4.md cnt-mcts-bl-v03 model family/size/quantization table)
+    docs/exp-comp-prm800k-level4.md cnt-mcts-bl-v03 model family/size/quantization table).
+    Variant renamed 2026-07-17 from mcts_bl_cnt_v03 to mcts_bl_kdepth_v01;
+    result dir migrated from mcts_bl_cnt_v03--level-4--Llama3.2-3B--qwen--d-20--bs-4--b-080--cfg-3978c92d
+    (old hash 3978c92d) -- see docs/decisions/bl-cnt-to-bl-kdepth-rename.md
 - launcher: generate_mcts_bl_cnt.py
-  config_root: mcts_bl_cnt_v03_prm800k
+  config_root: mcts_bl_kdepth_v01_prm800k
   overrides:
     llm: qwen_3b
     prm: qwen_prm
   trials: 2
   feeds: []
-  group: cnt-mcts-bl
+  group: kdepth-mcts-bl
   recorded: true
   priority: 2
-  note: backfilled from mcts_bl_cnt_v03--level-4--Qwen2.5-3B--qwen--d-20--bs-4--b-080--cfg-e1311880
+  note: backfilled from mcts_bl_kdepth_v01--level-4--Qwen2.5-3B--qwen--d-20--bs-4--b-080--cfg-e74406ac
     (run_id asn77q7e); scored 2026-07-09, pass@gb .8164±.0242 (in
-    docs/exp-comp-prm800k-level4.md cnt-mcts-bl-v03 model family/size/quantization table)
+    docs/exp-comp-prm800k-level4.md cnt-mcts-bl-v03 model family/size/quantization table).
+    Variant renamed 2026-07-17 from mcts_bl_cnt_v03 to mcts_bl_kdepth_v01;
+    result dir migrated from mcts_bl_cnt_v03--level-4--Qwen2.5-3B--qwen--d-20--bs-4--b-080--cfg-e1311880
+    (old hash e1311880) -- see docs/decisions/bl-cnt-to-bl-kdepth-rename.md
 - launcher: generate_mcts_bl_cnt.py
-  config_root: mcts_bl_cnt_v03_prm800k
+  config_root: mcts_bl_kdepth_v01_prm800k
   overrides:
     llm: qwen_7b_gptq_int4
     prm: qwen_prm
   trials: 2
   feeds: []
-  group: cnt-mcts-bl
+  group: kdepth-mcts-bl
   recorded: true
   priority: 2
-  note: backfilled from mcts_bl_cnt_v03--level-4--Qwen2.5-7B-GPTQ-Int4--qwen--d-20--bs-4--b-080--cfg-4a99b754
+  note: backfilled from mcts_bl_kdepth_v01--level-4--Qwen2.5-7B-GPTQ-Int4--qwen--d-20--bs-4--b-080--cfg-883e5265
     (run_id g0jll3ts); scored 2026-07-09, pass@gb .9023±.0186 (in
-    docs/exp-comp-prm800k-level4.md cnt-mcts-bl-v03 model family/size/quantization table)
+    docs/exp-comp-prm800k-level4.md cnt-mcts-bl-v03 model family/size/quantization table).
+    Variant renamed 2026-07-17 from mcts_bl_cnt_v03 to mcts_bl_kdepth_v01;
+    result dir migrated from mcts_bl_cnt_v03--level-4--Qwen2.5-7B-GPTQ-Int4--qwen--d-20--bs-4--b-080--cfg-4a99b754
+    (old hash 4a99b754) -- see docs/decisions/bl-cnt-to-bl-kdepth-rename.md
 - launcher: generate_mcts_bl_cnt.py
-  config_root: mcts_bl_cnt_v03_prm800k
+  config_root: mcts_bl_kdepth_v01_prm800k
   overrides:
     llm: qwen_math_1_5b
     prm: qwen_prm
   trials: 2
   feeds: []
-  group: cnt-mcts-bl
+  group: kdepth-mcts-bl
   recorded: true
   priority: 2
-  note: backfilled from mcts_bl_cnt_v03--level-4--Qwen2.5-Math-1.5B--qwen--d-20--bs-4--b-080--cfg-12183f3b
+  note: backfilled from mcts_bl_kdepth_v01--level-4--Qwen2.5-Math-1.5B--qwen--d-20--bs-4--b-080--cfg-cbbbeccb
     (run_id i8qyv1gv); scored 2026-07-09, pass@gb .8164±.0242 (in
-    docs/exp-comp-prm800k-level4.md cnt-mcts-bl-v03 model family/size/quantization table)
+    docs/exp-comp-prm800k-level4.md cnt-mcts-bl-v03 model family/size/quantization table).
+    Variant renamed 2026-07-17 from mcts_bl_cnt_v03 to mcts_bl_kdepth_v01;
+    result dir migrated from mcts_bl_cnt_v03--level-4--Qwen2.5-Math-1.5B--qwen--d-20--bs-4--b-080--cfg-12183f3b
+    (old hash 12183f3b) -- see docs/decisions/bl-cnt-to-bl-kdepth-rename.md
 - launcher: generate_mcts_sem.py
   config_root: mcts_bl_sem_v01_prm800k
   overrides:

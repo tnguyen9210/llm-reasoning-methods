@@ -2,14 +2,22 @@
 Budget-Limited MCTS with best-first leaf selection (fractional-KUBE,
 no embeddings).
 
-Key difference from mcts_bl_cnt_search_v01_00_00: leaf selection uses
-a fractional-KUBE density index instead of PUCT. Everything else
-(frontier bookkeeping, expansion, backprop, output shape) is
-identical — see that module's docstring for the shared algorithm
-skeleton.
+Renamed 2026-07-16 from mcts_bl_cnt_search_v02_00_00.py to its own
+mcts_bl_kube family (v01 of that family) — see docs/decisions-log.md
+and docs/decisions/bl-cnt-to-bl-kube-rename.md for the full rationale
+and the old-name -> new-name mapping (config method/algo string,
+result dirs, and manifests were all migrated alongside the code).
 
-Sibling variant: mcts_bl_cnt_search_v01_00_00.py uses PUCT. Both are
-active (a PUCT-vs-KUBE comparison at matched gen_budget).
+Frontier bookkeeping, expansion, backprop, and output shape are
+shared with mcts_bl_cnt_search_v01_00_00.py's PUCT variant — see that
+module's docstring for the shared algorithm skeleton. Only the leaf
+selection criterion differs: this file uses a fractional-KUBE density
+index instead of PUCT.
+
+Sibling comparison: mcts_bl_cnt_search_v01_00_00.py uses PUCT. Both
+are active (a PUCT-vs-KUBE comparison at matched gen_budget), even
+though KUBE now lives in its own algorithm family rather than as a
+same-family sibling version.
 
 Algorithm
     Initialize completion_list = [], leaf_nodes = [root], gen_cnt = 0
@@ -50,9 +58,10 @@ repo, src/algorithms.py::FractionalKUBE):
           kube_c * sqrt(log(parent_visits(x)) / visits(x))
           UCT-style local clock: each parent's children form their
           own bandit instance, so the parent's visit count is that
-          bandit's elapsed time. This is exactly v01's PUCT bonus,
-          so v02 differs from v01 only by the cost division —
-          the PUCT-vs-KUBE ablation is a single-factor comparison.
+          bandit's elapsed time. This is exactly bl_cnt v01's PUCT
+          bonus, so this file differs from bl_cnt v01 only by the
+          cost division — the PUCT-vs-KUBE ablation is a
+          single-factor comparison.
           Frontier nodes keep visits == 1 for life (born with one
           update, removed from the frontier on first selection),
           so per-node discrimination comes entirely from
@@ -68,7 +77,7 @@ repo, src/algorithms.py::FractionalKUBE):
           an ablatable schedule — see docs/decisions-log.md
           (2026-07-09, kube_schedule entry) and
           docs/decisions/global-vs-local-exploration-schedule.md.
-    q_value = value_sum / visit_count  (running mean, same as v01)
+    q_value = value_sum / visit_count  (running mean, same as bl_cnt v01)
 
     Affordability (kube_affordable, default true): the argmax is
     restricted to nodes whose cost fits the remaining generation
@@ -81,9 +90,9 @@ repo, src/algorithms.py::FractionalKUBE):
     docs/decisions/kube-affordability-restriction.md.
 
     Constant note: the paper's bonus is sqrt(2*ln(t)/n); the 2 is
-    folded into the tunable kube_c here, the same convention v01's
-    cpuct uses for UCT's constant. kube_c = 2.0 is a starting point,
-    not the literal sqrt(2).
+    folded into the tunable kube_c here, the same convention bl_cnt
+    v01's cpuct uses for UCT's constant. kube_c = 2.0 is a starting
+    point, not the literal sqrt(2).
 
     Nodes at cost(x) <= 0 (already at max_depth) get density = -inf so
     they are never selected over a node that can still make progress

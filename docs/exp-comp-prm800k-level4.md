@@ -66,7 +66,7 @@ instead of one wide sparse grid.)
 > One table per model, one row per algorithm — pulled directly from
 > each algorithm's own "model family, size, quantization comparison
 > (qwen PRM)" table above/below (`cnt-mcts (updated)`, `sem-mcts`,
-> `cnt-mcts-bl-v01`, `cnt-mcts-bl-v02`, `cnt-mcts-bl-v03`,
+> `cnt-mcts-bl-v01`, `kube-mcts-bl-v01`, `kdepth-mcts-bl-v01`,
 > `sem-mcts-bl-v01`). All rows fixed at b=80, bs-4, d-20,
 > agg_strategy=`last`, tmpl=model-family default (native for Qwen,
 > custom for Llama), prm=qwen. `cnt-mcts` row is method=`mcts_cnt_v01`
@@ -76,11 +76,11 @@ instead of one wide sparse grid.)
 > `sem-mcts-bl-v01` row uses the `w_eff=100` table (more complete than
 > `w_eff=10` at time of writing: 5/7 vs. 4/7 cells scored); see that
 > algorithm's own section for the `w_eff=10` comparison point.
-> `cnt-mcts-bl-v02` (Fractional KUBE) and `cnt-mcts-bl-v03`
+> `kube-mcts-bl-v01` (Fractional KUBE) and `kdepth-mcts-bl-v01`
 > (depth-shaping) are each filled at 5 of 7 models as of 2026-07-09
-> (see `docs/decisions/kube-bonus-schedule.md` /
+> (see `docs/decisions/bl-kube-bonus-schedule.md` /
 > `kube-affordability-restriction.md` and
-> `docs/decisions/depth-shaping-knapsack-bonus.md` for the
+> `docs/decisions/bl-kdepth-knapsack-bonus.md` for the
 > algorithms); llama-3b gptq and qwen-3b gptq-int4 still unqueued for
 > both.
 
@@ -91,8 +91,8 @@ instead of one wide sparse grid.)
 | cnt-mcts | 2 | scored | .6367<br>±.0301 | .5352<br>±.0312 | .4961<br>±.0313 | .4531<br>±.0312 | 2.38 |
 | sem-mcts | 2 | scored | .6133<br>±.0305 | .4961<br>±.0313 | .4492<br>±.0311 | .3906<br>±.0306 | 3.90 |
 | cnt-mcts-bl-v01 | 2 | scored | .4414<br>±.0311 | .4297<br>±.0310 | .3984<br>±.0307 | .3789<br>±.0304 | 2.12 |
-| cnt-mcts-bl-v02 | 2 | scored | .5586<br>±.0311 | .5117<br>±.0313 | .4688<br>±.0312 | .4531<br>±.0312 | 2.30 |
-| cnt-mcts-bl-v03 | 2 | scored | .5742<br>±.0310 | .5430<br>±.0312 | .5117<br>±.0313 | .4883<br>±.0313 | 2.21 |
+| kube-mcts-bl-v01 | 2 | scored | .5586<br>±.0311 | .5117<br>±.0313 | .4688<br>±.0312 | .4531<br>±.0312 | 2.30 |
+| kdepth-mcts-bl-v01 | 2 | scored | .5742<br>±.0310 | .5430<br>±.0312 | .5117<br>±.0313 | .4883<br>±.0313 | 2.21 |
 | sem-mcts-bl-v01 | 2 | scored | .5195<br>±.0313 | .4219<br>±.0309 | .3242<br>±.0293 | .2422<br>±.0268 | 5.18 |
 
 **llama-3b fp16**
@@ -102,8 +102,8 @@ instead of one wide sparse grid.)
 | cnt-mcts | 2 | scored | .7656<br>±.0265 | .6758<br>±.0293 | .6523<br>±.0298 | .6445<br>±.0300 | 4.02 |
 | sem-mcts | 2 | scored | .7656<br>±.0265 | .6562<br>±.0297 | .6289<br>±.0303 | .6016<br>±.0307 | 5.43 |
 | cnt-mcts-bl-v01 | — | planned | — | — | — | — | — |
-| cnt-mcts-bl-v02 | 2 | scored | .7305<br>±.0278 | .6602<br>±.0297 | .6367<br>±.0301 | .6211<br>±.0304 | 3.55 |
-| cnt-mcts-bl-v03 | 2 | scored | .7227<br>±.0280 | .6680<br>±.0295 | .6758<br>±.0293 | .6445<br>±.0300 | 3.25 |
+| kube-mcts-bl-v01 | 2 | scored | .7305<br>±.0278 | .6602<br>±.0297 | .6367<br>±.0301 | .6211<br>±.0304 | 3.55 |
+| kdepth-mcts-bl-v01 | 2 | scored | .7227<br>±.0280 | .6680<br>±.0295 | .6758<br>±.0293 | .6445<br>±.0300 | 3.25 |
 | sem-mcts-bl-v01 | — | failed | — | — | — | — | — |
 
 **llama-3b gptq**
@@ -113,8 +113,8 @@ instead of one wide sparse grid.)
 | cnt-mcts | 2 | scored | .7148<br>±.0283 | .6055<br>±.0306 | .5781<br>±.0309 | .5625<br>±.0311 | 2.85 |
 | sem-mcts | 2 | scored | .7148<br>±.0283 | .6094<br>±.0306 | .5625<br>±.0311 | .5078<br>±.0313 | 4.45 |
 | cnt-mcts-bl-v01 | — | planned | — | — | — | — | — |
-| cnt-mcts-bl-v02 | — | planned | — | — | — | — | — |
-| cnt-mcts-bl-v03 | — | planned | — | — | — | — | — |
+| kube-mcts-bl-v01 | — | planned | — | — | — | — | — |
+| kdepth-mcts-bl-v01 | — | planned | — | — | — | — | — |
 | sem-mcts-bl-v01 | — | planned | — | — | — | — | — |
 
 **qwen-3b fp16**
@@ -124,8 +124,8 @@ instead of one wide sparse grid.)
 | cnt-mcts | 2 | scored | .8789<br>±.0204 | .7461<br>±.0273 | .7695<br>±.0264 | .7617<br>±.0267 | 3.76 |
 | sem-mcts | 2 | scored (pre-fix backup) | .8750<br>±.0207 | .7734<br>±.0262 | .7461<br>±.0273 | .7227<br>±.0280 | 5.00 |
 | cnt-mcts-bl-v01 | 2 | scored | .6445<br>±.0300 | .6328<br>±.0302 | .6172<br>±.0304 | .6094<br>±.0306 | 3.50 |
-| cnt-mcts-bl-v02 | 2 | scored | .8320<br>±.0234 | .7617<br>±.0267 | .7422<br>±.0274 | .7344<br>±.0277 | 3.31 |
-| cnt-mcts-bl-v03 | 2 | scored | .8164<br>±.0242 | .7539<br>±.0270 | .7461<br>±.0273 | .7344<br>±.0277 | 3.00 |
+| kube-mcts-bl-v01 | 2 | scored | .8320<br>±.0234 | .7617<br>±.0267 | .7422<br>±.0274 | .7344<br>±.0277 | 3.31 |
+| kdepth-mcts-bl-v01 | 2 | scored | .8164<br>±.0242 | .7539<br>±.0270 | .7461<br>±.0273 | .7344<br>±.0277 | 3.00 |
 | sem-mcts-bl-v01 | 2 | scored | .8320<br>±.0234 | .6836<br>±.0291 | .6484<br>±.0299 | .6016<br>±.0307 | 5.19 |
 
 **qwen-3b gptq-int4**
@@ -135,8 +135,8 @@ instead of one wide sparse grid.)
 | cnt-mcts | 2 | scored | .8320<br>±.0234 | .7031<br>±.0286 | .7109<br>±.0284 | .6914<br>±.0289 | 2.68 |
 | sem-mcts | 2 | scored | .7930<br>±.0254 | .6953<br>±.0288 | .6953<br>±.0288 | .6875<br>±.0290 | 3.87 |
 | cnt-mcts-bl-v01 | — | planned | — | — | — | — | — |
-| cnt-mcts-bl-v02 | — | planned | — | — | — | — | — |
-| cnt-mcts-bl-v03 | — | planned | — | — | — | — | — |
+| kube-mcts-bl-v01 | — | planned | — | — | — | — | — |
+| kdepth-mcts-bl-v01 | — | planned | — | — | — | — | — |
 | sem-mcts-bl-v01 | 2 | scored | .7422<br>±.0274 | .6133<br>±.0305 | .5625<br>±.0311 | .5273<br>±.0313 | 4.18 |
 
 **qwen-7b gptq-int4**
@@ -146,8 +146,8 @@ instead of one wide sparse grid.)
 | cnt-mcts | 2 | scored | .9102<br>±.0179 | .8086<br>±.0246 | .8164<br>±.0242 | .8008<br>±.0250 | 3.11 |
 | sem-mcts | 2 | scored | .9375<br>±.0152 | .8164<br>±.0242 | .8086<br>±.0246 | .8047<br>±.0248 | 4.20 |
 | cnt-mcts-bl-v01 | 2 | scored | .8125<br>±.0244 | .7578<br>±.0268 | .7461<br>±.0273 | .7422<br>±.0274 | 2.78 |
-| cnt-mcts-bl-v02 | 2 | scored | .8750<br>±.0207 | .7930<br>±.0254 | .7852<br>±.0257 | .7656<br>±.0265 | 2.58 |
-| cnt-mcts-bl-v03 | 2 | scored | .9023<br>±.0186 | .8281<br>±.0236 | .8320<br>±.0234 | .8203<br>±.0240 | 2.43 |
+| kube-mcts-bl-v01 | 2 | scored | .8750<br>±.0207 | .7930<br>±.0254 | .7852<br>±.0257 | .7656<br>±.0265 | 2.58 |
+| kdepth-mcts-bl-v01 | 2 | scored | .9023<br>±.0186 | .8281<br>±.0236 | .8320<br>±.0234 | .8203<br>±.0240 | 2.43 |
 | sem-mcts-bl-v01 | 2 | scored | .8906<br>±.0195 | .7500<br>±.0271 | .7109<br>±.0284 | .6953<br>±.0288 | 4.15 |
 
 **qwen-math-1.5b fp16**
@@ -157,8 +157,8 @@ instead of one wide sparse grid.)
 | cnt-mcts | 2 | scored | .8906<br>±.0195 | .8008<br>±.0250 | .8047<br>±.0248 | .7891<br>±.0255 | 2.84 |
 | sem-mcts | 2 | scored (pre-fix backup) | .8750<br>±.0207 | .7969<br>±.0252 | .7734<br>±.0262 | .7578<br>±.0268 | 3.96 |
 | cnt-mcts-bl-v01 | 2 | scored | .6836<br>±.0291 | .6562<br>±.0297 | .6602<br>±.0297 | .6562<br>±.0297 | 2.75 |
-| cnt-mcts-bl-v02 | 2 | scored | .8359<br>±.0232 | .7773<br>±.0261 | .7617<br>±.0267 | .7695<br>±.0264 | 2.71 |
-| cnt-mcts-bl-v03 | 2 | scored | .8164<br>±.0242 | .7422<br>±.0274 | .7461<br>±.0273 | .7461<br>±.0273 | 2.58 |
+| kube-mcts-bl-v01 | 2 | scored | .8359<br>±.0232 | .7773<br>±.0261 | .7617<br>±.0267 | .7695<br>±.0264 | 2.71 |
+| kdepth-mcts-bl-v01 | 2 | scored | .8164<br>±.0242 | .7422<br>±.0274 | .7461<br>±.0273 | .7461<br>±.0273 | 2.58 |
 | sem-mcts-bl-v01 | 2 | scored | .8320<br>±.0234 | .6992<br>±.0287 | .6445<br>±.0300 | .6484<br>±.0299 | 4.19 |
 
 > **Analysis.** Across the 5 models with cnt-mcts-bl-v01 data
@@ -174,7 +174,7 @@ instead of one wide sparse grid.)
 > completing a path loses all credit for that question, and bl_sem's
 > diversity bonus may be mitigating that failure mode somewhat where
 > bl_cnt's plain PUCT does not.
-> `cnt-mcts-bl-v02` (Fractional KUBE) is now filled at 5 of 7
+> `kube-mcts-bl-v01` (Fractional KUBE) is now filled at 5 of 7
 > models (2026-07-09) and confirms this: cost-aware density
 > selection substantially closes the frontier-vs-phase-based gap
 > that cnt-mcts-bl-v01 showed. v02 beats v01 at every shared model
@@ -182,14 +182,14 @@ instead of one wide sparse grid.)
 > .8750 vs .8125, qwen-math-1.5b .8359 vs .6836) and lands close to
 > (though still slightly behind) cnt-mcts/sem-mcts at the same
 > models — e.g. qwen-7b-gptq-int4: cnt-mcts .9102, sem-mcts .9375,
-> cnt-mcts-bl-v02 .8750, a ~.05-.06 gap versus bl_cnt_v01's ~.10 gap
+> kube-mcts-bl-v01 .8750, a ~.05-.06 gap versus bl_cnt_v01's ~.10 gap
 > at the same model. This supports the hypothesis above: KUBE's
 > cost-normalized `(q+bonus)/cost` density discounts
 > expensive-to-finish nodes rather than treating them as equally
 > attractive regardless of remaining budget, mitigating (not fully
 > closing) the budget-exhaustion failure mode without needing sem's
 > diversity bonus.
-> `cnt-mcts-bl-v03` (fixed depth-shaping bonus, no exploration term)
+> `kdepth-mcts-bl-v01` (fixed depth-shaping bonus, no exploration term)
 > is also now filled at the same 5 models and tells a similar story:
 > it beats v01 at every shared model (llama-1b .5742 vs .4414,
 > qwen-3b .8164 vs .6445, qwen-7b-gptq-int4 .9023 vs .8125,
@@ -229,8 +229,8 @@ instead of one wide sparse grid.)
 | sem-mcts (PRM) | `mcts_sem_v02` | `mcts_sem_search_v02_00_00` | runs logged |
 | sem-mcts (policy) | `mcts_sem_v01` | `mcts_sem_search_v01_00_00` | runnable, no runs yet |
 | cnt-mcts-bl v01 | `mcts_bl_cnt_v01` | `mcts_bl_cnt_search_v01_00_00` | runs logged |
-| cnt-mcts-bl v02 | `mcts_bl_cnt_v02` | `mcts_bl_cnt_search_v02_00_00` | runnable, no runs yet |
-| cnt-mcts-bl v03 | `mcts_bl_cnt_v03` | `mcts_bl_cnt_search_v03_00_00` | runnable, no runs yet |
+| kube-mcts-bl v01 (renamed 2026-07-16 from cnt-mcts-bl v02) | `mcts_bl_kube_v01` | `mcts_bl_kube_search_v01_00_00` | runs logged |
+| kdepth-mcts-bl v01 (renamed 2026-07-17 from cnt-mcts-bl v03) | `mcts_bl_kdepth_v01` | `mcts_bl_kdepth_search_v01_00_00` | runs logged |
 | sem-mcts-bl | `mcts_bl_sem_v01` | `mcts_bl_sem_search_v01_00_00` | runnable, no runs yet |
 
 > Every sem-mcts row elsewhere in this doc is **v02** (PRM-sourced
@@ -240,14 +240,17 @@ instead of one wide sparse grid.)
 > diversity algorithm; v02 additionally supports
 > `embeds_proj=none|sparse` (sparse = JL projection to 512-dim,
 > ~2.5x faster) and `cov_update=exact|sherman_morrison`.
-> `mcts_bl_cnt_v02` has a launcher + config now (previously
-> flat/unmigrated) but hasn't been run. `mcts_bl_cnt_v03`
-> (2026-07-09) is a sibling of v02 sharing the same knapsack
-> skeleton/cost mapping/affordability step, but replaces v02's
+> `mcts_bl_kube_v01` (renamed 2026-07-16 from `mcts_bl_cnt_v02`) has a
+> launcher + config now (previously flat/unmigrated); see the
+> `kube-mcts-bl-v01` rows above and section below for its now-scored
+> runs. `mcts_bl_kdepth_v01` (renamed 2026-07-17 from `mcts_bl_cnt_v03`)
+> (2026-07-09) is a sibling of the KUBE variant sharing the same knapsack
+> skeleton/cost mapping/affordability step, but replaces its
 > UCB confidence bonus with a fixed depth-preference function
 > (`depth_beta`/`depth_alpha`, no visit-count term) — see
-> `docs/decisions/depth-shaping-knapsack-bonus.md`. Smoke-tested
-> only so far, no real runs. `sem-mcts-bl`
+> `docs/decisions/bl-kdepth-knapsack-bonus.md`; see the
+> `kdepth-mcts-bl-v01` rows above and section below for its now-scored
+> runs. `sem-mcts-bl`
 > (`mcts_bl_sem_v01`) is now implemented (2026-07-08) — best-
 > first frontier selection with sem's diversity-adjusted value,
 > run from `generate_mcts_sem.py`, `algo=mcts_bl_sem_v01` — but
@@ -1664,16 +1667,18 @@ instead of one wide sparse grid.)
 > zero-completion issue before spending more budget on bl_cnt_v01
 > sweeps — check `llm-reasoning-mcts-bl-exp-todo`.
 
-### cnt-mcts-bl-v02
+### kube-mcts-bl-v01
 > knobs: template, kube_c, kube_schedule, kube_affordable (bs-4,
-> d-20 fixed). method=`mcts_bl_cnt_v02`. No kube_c sweep yet —
-> every row is the default (kube_c=2.0, kube_schedule=parent,
+> d-20 fixed). method=`mcts_bl_kube_v01` (renamed 2026-07-16 from
+> `mcts_bl_cnt_v02` — see
+> `docs/decisions/bl-cnt-to-bl-kube-rename.md`). No kube_c sweep
+> yet — every row is the default (kube_c=2.0, kube_schedule=parent,
 > kube_affordable=true). Same best-first frontier as
 > cnt-mcts-bl-v01, but selects by fractional-KUBE density (a UCB
 > confidence bonus divided by remaining cost) instead of PUCT,
 > following Tran-Thanh et al. arXiv:1204.1909 sec. 3.3. See
-> `docs/algorithms.md` ("BL-MCTS") and
-> `docs/decisions/kube-bonus-schedule.md` /
+> `docs/algorithms.md` ("BL-KUBE-MCTS") and
+> `docs/decisions/bl-kube-bonus-schedule.md` /
 > `docs/decisions/kube-affordability-restriction.md` for the
 > algorithm and its schedule/feasibility design.
 
@@ -1681,13 +1686,13 @@ instead of one wide sparse grid.)
 > **Compares:** model family, size, and quantization jointly —
 > same 7-model/quant grid as cnt-mcts-bl-v01's equivalent table
 > above, so a direct v01-vs-v02 (PUCT-vs-KUBE) read is possible
-> once filled. All 7 cells are new for bl_cnt_v02.
+> once filled. All 7 cells are new for bl_kube_v01.
 >
-> **Fixed:** method=`mcts_bl_cnt_v02`, prm=qwen, agg_strategy=
+> **Fixed:** method=`mcts_bl_kube_v01`, prm=qwen, agg_strategy=
 > `last`, kube_c=2.0, kube_schedule=parent (default — UCT-style
 > local clock, matches v01's PUCT bonus so the v01-vs-v02
 > comparison isolates cost normalization; see
-> `docs/decisions/kube-bonus-schedule.md`), kube_affordable=true
+> `docs/decisions/bl-kube-bonus-schedule.md`), kube_affordable=true
 > (default), bs-4, d-20, b=80, prm_batch_size=1, tmpl=model-family
 > default (native for Qwen, custom for Llama).
 
@@ -1721,29 +1726,32 @@ instead of one wide sparse grid.)
 > `kube_c`/`kube_schedule`/`kube_affordable` sweep yet — every row
 > is the same fixed point until one exists.
 
-### cnt-mcts-bl-v03
+### kdepth-mcts-bl-v01
 > knobs: template, depth_beta, depth_alpha (bs-4, d-20 fixed).
-> method=`mcts_bl_cnt_v03`. No depth_beta/depth_alpha sweep yet —
-> every row is the default (depth_beta=2.0, depth_alpha=1.0).
-> Sibling of cnt-mcts-bl-v01 (PUCT) and cnt-mcts-bl-v02
-> (Fractional KUBE): same best-first frontier / knapsack-style
-> selection and cost mapping as both, but the leaf-selection
-> bonus is a fixed depth-preference function instead of a
-> confidence bound — no visit-count/exploration term, no
-> bandit/regret guarantee. See `docs/algorithms.md` ("BL-MCTS")
-> and `docs/decisions/depth-shaping-knapsack-bonus.md` for the
-> algorithm and the sign-correction note (`f_a` is indexed on
-> depth fraction, not cost fraction, so it favors shallow nodes
-> as intended).
+> method=`mcts_bl_kdepth_v01` (renamed 2026-07-17 from
+> `mcts_bl_cnt_v03` — see
+> `docs/decisions/bl-cnt-to-bl-kdepth-rename.md`). No
+> depth_beta/depth_alpha sweep yet — every row is the default
+> (depth_beta=2.0, depth_alpha=1.0). Sibling of cnt-mcts-bl-v01
+> (PUCT) and kube-mcts-bl-v01 (Fractional KUBE): same best-first
+> frontier / knapsack-style selection and cost mapping as both,
+> but the leaf-selection bonus is a fixed depth-preference
+> function instead of a confidence bound — no
+> visit-count/exploration term, no bandit/regret guarantee. See
+> `docs/algorithms.md` ("BL-KDEPTH-MCTS") and
+> `docs/decisions/bl-kdepth-knapsack-bonus.md` for the algorithm
+> and the sign-correction note (`f_a` is indexed on depth
+> fraction, not cost fraction, so it favors shallow nodes as
+> intended).
 
 #### model family, size, quantization comparison (qwen PRM)
 > **Compares:** model family, size, and quantization jointly —
 > same 7-model/quant grid as cnt-mcts-bl-v01's equivalent table
 > above, so a direct bl_cnt-v01-vs-v03 (and, once v02 has runs,
 > a three-way PUCT/KUBE/depth-shaping) read is possible once
-> filled. All 7 cells are new for bl_cnt_v03.
+> filled. All 7 cells are new for bl_kdepth_v01.
 >
-> **Fixed:** method=`mcts_bl_cnt_v03`, prm=qwen, agg_strategy=
+> **Fixed:** method=`mcts_bl_kdepth_v01`, prm=qwen, agg_strategy=
 > `last`, depth_beta=2.0, depth_alpha=1.0, kube_affordable=true
 > (default), bs-4, d-20, b=80, prm_batch_size=1, tmpl=model-family
 > default (native for Qwen, custom for Llama).

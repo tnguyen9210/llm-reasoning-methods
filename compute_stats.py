@@ -30,7 +30,7 @@ import wandb
 from utils import metrics
 from utils.configs import (
     ExpConfig, BoNConfig, MCTSCntConfig, BLMCTSCntConfig,
-    BLMCTSCntV02Config, BLMCTSCntV03Config, BLMCTSSemConfig,
+    BLMCTSKubeV01Config, BLMCTSKdepthV01Config, BLMCTSSemConfig,
     MCTSSemV01Config, MCTSSemV02Config, resolve_result_dir,
     load_wandb_run_id,
 )
@@ -46,10 +46,11 @@ cs.store(
     group="search", name="mcts_bl_cnt_v01_schema", node=BLMCTSCntConfig,
 )
 cs.store(
-    group="search", name="mcts_bl_cnt_v02_schema", node=BLMCTSCntV02Config,
+    group="search", name="mcts_bl_kube_v01_schema", node=BLMCTSKubeV01Config,
 )
 cs.store(
-    group="search", name="mcts_bl_cnt_v03_schema", node=BLMCTSCntV03Config,
+    group="search", name="mcts_bl_kdepth_v01_schema",
+    node=BLMCTSKdepthV01Config,
 )
 cs.store(group="search", name="mcts_sem_v01_schema", node=MCTSSemV01Config)
 cs.store(group="search", name="mcts_sem_v02_schema", node=MCTSSemV02Config)

@@ -1,9 +1,13 @@
-# `mcts_bl_cnt_v02`'s KUBE bonus schedule: global clock vs. per-parent (UCT-style) clock
+# BL-KUBE-MCTS's KUBE bonus schedule: global clock vs. per-parent (UCT-style) clock
 
-*2026-07-09*
+*2026-07-09 (variant renamed 2026-07-16 from `mcts_bl_cnt_v02` to
+`mcts_bl_kube_v01` — see
+[bl-cnt-to-bl-kube-rename.md](bl-cnt-to-bl-kube-rename.md); this file's
+own narrative below is left in its original 2026-07-09 terms, since
+that's the name the variant had at the time this decision was made)*
 
 Records the discussion and decision behind
-`BLMCTSCntV02Config.kube_schedule` — which clock drives the
+`BLMCTSKubeV01Config.kube_schedule` — which clock drives the
 exploration bonus in `MCTSNode.kube_density`'s fractional-KUBE index.
 This was a real back-and-forth, not a single call: the first
 implementation shipped with a global clock, chosen by analogy to
@@ -37,7 +41,8 @@ stay flat for most nodes? And why global `t` for v02 but not for
 v01's PUCT?"*
 
 Working through the node lifecycle in
-`mcts_bl_cnt_search_v02_00_00.py` answered the first half directly.
+`mcts_bl_kube_search_v01_00_00.py` (then named
+`mcts_bl_cnt_search_v02_00_00.py`) answered the first half directly.
 `MCTS.create_child` gives every new node exactly one `update()` call
 at birth (`new_node.update(candidate_score)`), so `visit_count() == 1`
 the instant it enters `leaf_nodes`. The outer loop in `mcts_search`
@@ -191,7 +196,7 @@ turns out to perform better.
 
 ## Decision
 
-`BLMCTSCntV02Config.kube_schedule: str = "parent"` (`"parent"` |
+`BLMCTSKubeV01Config.kube_schedule: str = "parent"` (`"parent"` |
 `"global"`, same vocabulary as `BLMCTSSemConfig.ds_alpha_schedule`),
 in `MCTSNode.kube_density`:
 
@@ -257,5 +262,7 @@ node-creation order ever changes.
 - `core/mcts_bl_cnt_search_v01_00_00.py::MCTSNode.puct` — the sibling
   formula `kube_density`'s `"parent"` schedule now matches exactly
   (modulo the `/cost(x)` division).
-- `core/mcts_bl_cnt_search_v02_00_00.py::MCTSNode.kube_density` — the
+- `core/mcts_bl_kube_search_v01_00_00.py::MCTSNode.kube_density` — the
   implementation.
+- [bl-cnt-to-bl-kube-rename.md](bl-cnt-to-bl-kube-rename.md) — the
+  2026-07-16 rename that gave this variant its current name.

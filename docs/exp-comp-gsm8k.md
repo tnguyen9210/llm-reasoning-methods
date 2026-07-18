@@ -54,7 +54,7 @@ Two activities, two shapes:
 > One table per model, one row per algorithm — pulled directly from
 > each algorithm's own "model family, size, quantization comparison
 > (QwenPRM)" table above/below (`cnt-mcts`, `sem-mcts`,
-> `cnt-mcts-bl-v01`, `cnt-mcts-bl-v02`, `cnt-mcts-bl-v03`,
+> `cnt-mcts-bl-v01`, `kube-mcts-bl-v01`, `kdepth-mcts-bl-v01`,
 > `sem-mcts-bl-v01`). All rows fixed at b=80, bs-4, d-20,
 > agg_strategy=`last`, tmpl=model-family default (native for Qwen,
 > custom for Llama), prm=qwen. `cnt-mcts` row is method=`mcts_cnt_v01`
@@ -63,10 +63,10 @@ Two activities, two shapes:
 > `ds_alpha=100` (w_eff not applicable — that knob is bl_sem-specific).
 > `sem-mcts-bl-v01` row uses the `w_eff=100` table; see that
 > algorithm's own section for the `w_eff=10` comparison point.
-> `cnt-mcts-bl-v02` (Fractional KUBE) and `cnt-mcts-bl-v03`
-> (depth-shaping) — see `docs/decisions/kube-bonus-schedule.md` /
+> `kube-mcts-bl-v01` (Fractional KUBE) and `kdepth-mcts-bl-v01`
+> (depth-shaping) — see `docs/decisions/bl-kube-bonus-schedule.md` /
 > `kube-affordability-restriction.md` and
-> `docs/decisions/depth-shaping-knapsack-bonus.md` for the
+> `docs/decisions/bl-kdepth-knapsack-bonus.md` for the
 > algorithms.
 
 **llama-1b fp16**
@@ -76,8 +76,8 @@ Two activities, two shapes:
 | cnt-mcts | — | planned | — | — | — | — | — |
 | sem-mcts | — | planned | — | — | — | — | — |
 | cnt-mcts-bl-v01 | — | planned | — | — | — | — | — |
-| cnt-mcts-bl-v02 | — | planned | — | — | — | — | — |
-| cnt-mcts-bl-v03 | — | planned | — | — | — | — | — |
+| kube-mcts-bl-v01 | — | planned | — | — | — | — | — |
+| kdepth-mcts-bl-v01 | — | planned | — | — | — | — | — |
 | sem-mcts-bl-v01 | — | planned | — | — | — | — | — |
 
 **llama-3b fp16**
@@ -87,8 +87,8 @@ Two activities, two shapes:
 | cnt-mcts | — | planned | — | — | — | — | — |
 | sem-mcts | — | planned | — | — | — | — | — |
 | cnt-mcts-bl-v01 | — | planned | — | — | — | — | — |
-| cnt-mcts-bl-v02 | — | planned | — | — | — | — | — |
-| cnt-mcts-bl-v03 | — | planned | — | — | — | — | — |
+| kube-mcts-bl-v01 | — | planned | — | — | — | — | — |
+| kdepth-mcts-bl-v01 | — | planned | — | — | — | — | — |
 | sem-mcts-bl-v01 | — | planned | — | — | — | — | — |
 
 **qwen-3b fp16**
@@ -98,8 +98,8 @@ Two activities, two shapes:
 | cnt-mcts | — | planned | — | — | — | — | — |
 | sem-mcts | — | planned | — | — | — | — | — |
 | cnt-mcts-bl-v01 | — | planned | — | — | — | — | — |
-| cnt-mcts-bl-v02 | — | planned | — | — | — | — | — |
-| cnt-mcts-bl-v03 | — | planned | — | — | — | — | — |
+| kube-mcts-bl-v01 | — | planned | — | — | — | — | — |
+| kdepth-mcts-bl-v01 | — | planned | — | — | — | — | — |
 | sem-mcts-bl-v01 | — | planned | — | — | — | — | — |
 
 **qwen-7b gptq-int4**
@@ -109,8 +109,8 @@ Two activities, two shapes:
 | cnt-mcts | — | planned | — | — | — | — | — |
 | sem-mcts | — | planned | — | — | — | — | — |
 | cnt-mcts-bl-v01 | — | planned | — | — | — | — | — |
-| cnt-mcts-bl-v02 | — | planned | — | — | — | — | — |
-| cnt-mcts-bl-v03 | — | planned | — | — | — | — | — |
+| kube-mcts-bl-v01 | — | planned | — | — | — | — | — |
+| kdepth-mcts-bl-v01 | — | planned | — | — | — | — | — |
 | sem-mcts-bl-v01 | — | planned | — | — | — | — | — |
 
 **qwen-math-1.5b fp16**
@@ -120,8 +120,8 @@ Two activities, two shapes:
 | cnt-mcts | — | planned | — | — | — | — | — |
 | sem-mcts | — | planned | — | — | — | — | — |
 | cnt-mcts-bl-v01 | — | planned | — | — | — | — | — |
-| cnt-mcts-bl-v02 | — | planned | — | — | — | — | — |
-| cnt-mcts-bl-v03 | — | planned | — | — | — | — | — |
+| kube-mcts-bl-v01 | — | planned | — | — | — | — | — |
+| kdepth-mcts-bl-v01 | — | planned | — | — | — | — | — |
 | sem-mcts-bl-v01 | — | planned | — | — | — | — | — |
 
 > **Analysis.** No GSM8K data yet — nothing to take away.
@@ -590,7 +590,7 @@ Two activities, two shapes:
 > **Limitations / follow-up:** entire table planned; launch is
 > the level-5 counterpart's command with `data=gsm8k`.
 
-### cnt-mcts-bl-v02
+### kube-mcts-bl-v01
 
 #### model family, size, quantization comparison (QwenPRM)
 > **Compares:** model family, size, and quantization jointly —
@@ -598,11 +598,12 @@ Two activities, two shapes:
 > above, so a direct v01-vs-v02 (PUCT-vs-KUBE) read is possible
 > once filled.
 >
-> **Fixed:** method=`mcts_bl_cnt_v02`, prm=qwen, agg_strategy=
+> **Fixed:** method=`mcts_bl_kube_v01` (renamed 2026-07-16 from
+> `mcts_bl_cnt_v02`), prm=qwen, agg_strategy=
 > `last`, kube_c=2.0, kube_schedule=parent, kube_affordable=true,
 > bs-4, d-20, b=80, prm_batch_size=1, tmpl=model-family default
 > (native for Qwen, custom for Llama). See
-> `docs/decisions/kube-bonus-schedule.md` for the schedule choice.
+> `docs/decisions/bl-kube-bonus-schedule.md` for the schedule choice.
 
 | llm | trials | status | pass@gb | naive@gb | wei@gb | maj@gb | hr/trial |
 |---|---|---|---|---|---|---|---|
@@ -616,7 +617,7 @@ Two activities, two shapes:
 > **Limitations / follow-up:** entire table planned; launch is
 > the level-5 counterpart's command with `data=gsm8k`.
 
-### cnt-mcts-bl-v03
+### kdepth-mcts-bl-v01
 
 #### model family, size, quantization comparison (QwenPRM)
 > **Compares:** model family, size, and quantization jointly —
@@ -625,7 +626,8 @@ Two activities, two shapes:
 > a three-way PUCT/KUBE/depth-shaping) read is possible once
 > filled.
 >
-> **Fixed:** method=`mcts_bl_cnt_v03`, prm=qwen, agg_strategy=
+> **Fixed:** method=`mcts_bl_kdepth_v01` (renamed 2026-07-17 from
+> `mcts_bl_cnt_v03`), prm=qwen, agg_strategy=
 > `last`, depth_beta=2.0, depth_alpha=1.0, kube_affordable=true
 > (default), bs-4, d-20, b=80, prm_batch_size=1, tmpl=model-family
 > default (native for Qwen, custom for Llama).
