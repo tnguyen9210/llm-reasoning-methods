@@ -8,9 +8,7 @@ Every current search config (`MCTSCntConfig`, `MCTSSemV01Config`,
 `MCTSSemV02Config`, `MCTSBLCntConfig` — `utils/configs.py`) exposes
 `gen_budget: int = 80` directly, and every `conf/search/*.yaml` sets it
 explicitly (`mcts_cnt.yaml`, `mcts_sem_v01.yaml`, `mcts_sem_v02.yaml`,
-`mcts_bl_cnt_v01.yaml`, `mcts_bl_kube_v01_prm800k.yaml` (renamed
-2026-07-16 from `mcts_bl_cnt_v02_prm800k.yaml` — see
-[bl-cnt-to-bl-kube-rename.md](bl-cnt-to-bl-kube-rename.md)) — all
+`mcts_bl_cnt_v01.yaml`, `mcts_bl_kube_v01_prm800k.yaml` — all
 `= 80`).
 Launchers pass it through unchanged; it also feeds `config_name`'s
 `--b-{budget:03d}` tag (`utils/configs.py:545`), so it's part of a

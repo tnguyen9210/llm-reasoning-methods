@@ -37,16 +37,13 @@ from utils.configs import (
 from utils.load_data import load_data_hf
 
 # One launcher, three budget-limited-frontier MCTS families, each
-# with a v01 and a v02: bl_cnt (v01 PUCT, v02 PUCT + eager terminal
-# backprop + path-aware parent-blend), bl_kube (v01 fractional-KUBE
-# -- renamed 2026-07-16 from bl_cnt v02, see
-# docs/decisions/bl-cnt-to-bl-kube-rename.md -- v02 adds eager
-# terminal backprop + parent-blend under kube_schedule="parent"
-# only), and bl_kdepth (v01 knapsack cost normalization +
-# depth-shaping bonus -- renamed 2026-07-17 from bl_cnt v03, see
-# docs/decisions/bl-cnt-to-bl-kdepth-rename.md -- v02 adds eager
-# terminal backprop only, no formula change). Every v02's design and
-# implementation are recorded in
+# with a v01 and a v02: bl_cnt (v01 PUCT, v02 PUCT + delayed-eager
+# terminal backprop + path-aware parent-blend), bl_kube (v01
+# fractional-KUBE, v02 adds delayed-eager terminal backprop +
+# parent-blend, both kube_schedule values), and bl_kdepth (v01
+# knapsack cost normalization + depth-shaping bonus, v02 adds
+# terminal-split hygiene only, no formula change). Every v02's design
+# and implementation are recorded in
 # docs/decisions/bl-cnt-v02-eager-backprop-path-aware.md. All six
 # share an identical _search(batch_of_questions, cfg, trial_idx,
 # llm_vllm, prm) signature and the same best-first frontier skeleton

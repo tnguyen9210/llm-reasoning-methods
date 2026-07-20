@@ -2,11 +2,9 @@
 Budget-Limited MCTS with best-first leaf selection (fractional-KUBE,
 no embeddings).
 
-Renamed 2026-07-16 from mcts_bl_cnt_search_v02_00_00.py to its own
-mcts_bl_kube family (v01 of that family) — see docs/decisions-log.md
-and docs/decisions/bl-cnt-to-bl-kube-rename.md for the full rationale
-and the old-name -> new-name mapping (config method/algo string,
-result dirs, and manifests were all migrated alongside the code).
+Its own mcts_bl_kube algorithm family (v01 of that family) — a
+distinct selection criterion from bl_cnt's PUCT, not a same-family
+sibling version.
 
 Frontier bookkeeping, expansion, backprop, and output shape are
 shared with mcts_bl_cnt_search_v01_00_00.py's PUCT variant, including

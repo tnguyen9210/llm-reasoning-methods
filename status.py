@@ -33,13 +33,27 @@ Usage
   python status.py --verify             # assert all hashes still match
   python status.py --check mcts_cnt_prm800k llm=qwen_3b prm=qwen_prm \
                           search.gen_budget=320   # probe a candidate cell
+  python status.py --verify --jobs 1    # force serial (debugging)
+
+Per-entry composes run in parallel forked workers by default
+(min(48, workload) -- the nodes have 96 CPU threads, 48 assumed
+safely available per Tuan's standing rule). --jobs overrides.
+
+Entries carry a `hash:` field written once at append time (see the
+exp-new-comparison-table skill): membership/collision fast paths
+read it instead of recomposing; --verify NEVER trusts it -- it
+recomposes and flags any stored-vs-fresh mismatch as drift.
+--group/--priority/--not-recorded scope which entries get composed
+at all (entry-level pre-filtering), including for --verify.
 """
 import argparse
 import contextlib
 import glob
 import json
+import multiprocessing
 import os
 import sys
+from concurrent.futures import ProcessPoolExecutor
 
 import yaml
 from hydra import compose, initialize_config_dir
@@ -58,6 +72,29 @@ ROOT = os.path.dirname(os.path.abspath(__file__))
 CONF_DIR = f"{ROOT}/conf"
 QUEUE_FILE = f"{ROOT}/experiments.yaml"
 RESULTS_DIR = f"{ROOT}/results"
+
+# Parallelism: the compute nodes provide 96 CPU threads; default to
+# a conservative 48-worker cap (Tuan's standing rule, 2026-07-19).
+# Override with --jobs N (--jobs 1 = serial, the debugging path).
+# Workers are FORKED, so they inherit the already-imported Hydra +
+# schema state and skip the ~10s per-process import tax that made
+# serial per-entry composing slow.
+DEFAULT_JOBS_CAP = 48
+
+
+def _pmap(fn, items, jobs=None):
+    """Order-preserving parallel map over `items` in forked worker
+    processes. `fn` must be a module-level function and must not
+    raise (workers return error markers instead). Serial fast path
+    for singleton workloads or jobs=1."""
+    items = list(items)
+    n = jobs if jobs is not None else min(DEFAULT_JOBS_CAP, len(items))
+    if n <= 1 or len(items) <= 1:
+        return [fn(it) for it in items]
+    ctx = multiprocessing.get_context("fork")
+    chunk = max(1, len(items) // (n * 4))
+    with ProcessPoolExecutor(max_workers=n, mp_context=ctx) as ex:
+        return list(ex.map(fn, items, chunksize=chunk))
 
 
 def _is_smoketest(path):
@@ -207,6 +244,46 @@ def load_queue():
     return entries
 
 
+def _entry_hash(entry):
+    """(hash, error) for one ledger entry. Worker-safe: never
+    raises, returns the error as a string instead."""
+    try:
+        cfg = compose_cfg(
+            entry["config_root"], entry.get("overrides_list", []))
+        return config_hash(cfg), None
+    except Exception as ex:
+        return None, f"{type(ex).__name__}: {ex}"
+
+
+def entry_hashes(queue, jobs=None, use_stored=False):
+    """Per-entry (hash, error) pairs, order-aligned with `queue`.
+    THE shared parallel primitive: --check's collision scan,
+    --verify, and --backfill's claimed-set all need every entry's
+    hash -- computing them once here, in parallel, keeps each of
+    those O(ledger) passes at wall-clock O(ledger / workers).
+
+    use_stored=True trusts each entry's `hash:` field (written once
+    at append time) and composes only entries that lack one -- the
+    fast path for membership/collision questions. NEVER pass it for
+    drift checking: a stored hash is a snapshot, and detecting that
+    it no longer matches a fresh compose is --verify's entire job.
+    """
+    if not use_stored:
+        return _pmap(_entry_hash, queue, jobs)
+    out = [None] * len(queue)
+    missing = []
+    for i, e in enumerate(queue):
+        h = e.get("hash")
+        if h:
+            out[i] = (str(h), None)
+        else:
+            missing.append(i)
+    computed = _pmap(_entry_hash, [queue[i] for i in missing], jobs)
+    for i, pair in zip(missing, computed):
+        out[i] = pair
+    return out
+
+
 # ------------------------------------------------------------------ #
 # Backfill: disk -> yaml. Scan every result manifest; for each whose  #
 # hash is NOT already claimed by a queue entry, emit a ready-made     #
@@ -266,14 +343,11 @@ _METHOD_TO_LAUNCHER = {
 # behavior) misclassifies mcts_bl_sem_v01 as "sem-mcts" -- explicit
 # per-method mapping avoids that.
 #
-# mcts_bl_kube_v01 renamed 2026-07-16 from mcts_bl_cnt_v02, and
-# mcts_bl_kdepth_v01 renamed 2026-07-17 from mcts_bl_cnt_v03, each into
-# its own algorithm family (fractional-KUBE / knapsack-depth-shaping
-# are different selection criteria from bl_cnt's PUCT, not same-family
-# sibling versions) -- their group labels moved off the shared
-# "cnt-mcts-bl" bucket accordingly. See
-# docs/decisions/bl-cnt-to-bl-kube-rename.md and
-# docs/decisions/bl-cnt-to-bl-kdepth-rename.md.
+# mcts_bl_kube_v01 and mcts_bl_kdepth_v01 are each their own algorithm
+# family (fractional-KUBE / knapsack-depth-shaping are different
+# selection criteria from bl_cnt's PUCT, not same-family sibling
+# versions) -- their group labels sit off the shared "cnt-mcts-bl"
+# bucket accordingly.
 #
 # Each family's v02 (eager terminal backprop -- see
 # docs/decisions/bl-cnt-v02-eager-backprop-path-aware.md) gets its OWN
@@ -374,55 +448,57 @@ def derive_overrides(root, ident):
     return overrides, warns
 
 
-def backfill(queue):
-    claimed = set()
-    for e in queue:
-        try:
-            claimed.add(config_hash(
-                compose_cfg(e["config_root"], e.get("overrides_list", []))))
-        except Exception:
-            pass
+def _backfill_worker(item):
+    """Build one backfill entry from a (hash, dir, manifest-record)
+    tuple; None for out-of-scope methods (e.g. bon, bl). Worker-safe:
+    derive_overrides' composes + the verifying re-compose are the
+    per-item cost this function exists to parallelize."""
+    h, rdir, rec = item
+    ident = rec.get("config_identity", {})
+    method = ident.get("search", {}).get("method", "")
+    root = _METHOD_TO_ROOT.get(method)
+    if root is None:
+        return None
+    n_done = count_done(rdir)
+
+    overrides, warns = derive_overrides(root, ident)
+    # Verify: re-compose with the derived overrides and check the
+    # hash round-trips back to the recorded one. A mismatch means
+    # an override couldn't be reconstructed (e.g. a missing group
+    # file) -- flag it instead of emitting a wrong entry silently.
+    ov_list = [f"{k}={v}" for k, v in overrides.items()]
+    try:
+        verified = config_hash(compose_cfg(root, ov_list)) == h
+    except Exception as ex:
+        verified = False
+        warns.append(f"re-compose failed: {type(ex).__name__}: {ex}")
+
+    entry = {
+        "launcher": _METHOD_TO_LAUNCHER[method],
+        "config_root": root,
+        "overrides": overrides,
+        "trials": n_done or 1,
+        "feeds": [],
+        "group": _METHOD_TO_GROUP.get(method, "cnt-mcts"),
+        "recorded": False,
+        "_backfilled_from": os.path.basename(rdir),
+        "_config_hash": h,
+        "_run_id": rec.get("run_id"),
+        "_verified": verified,
+    }
+    if warns:
+        entry["_warnings"] = warns
+    return entry
+
+
+def backfill(queue, jobs=None):
+    claimed = {h for h, _ in entry_hashes(queue, jobs, use_stored=True)
+               if h}
     found = scan_result_manifests()
-    new = []
-    for h, (rdir, rec) in sorted(found.items()):
-        if h in claimed:
-            continue
-        ident = rec.get("config_identity", {})
-        method = ident.get("search", {}).get("method", "")
-        root = _METHOD_TO_ROOT.get(method)
-        if root is None:
-            continue  # out of scope (e.g. bon, bl) -- skip silently
-        n_done = count_done(rdir)
-
-        overrides, warns = derive_overrides(root, ident)
-        # Verify: re-compose with the derived overrides and check the
-        # hash round-trips back to the recorded one. A mismatch means
-        # an override couldn't be reconstructed (e.g. a missing group
-        # file) -- flag it instead of emitting a wrong entry silently.
-        ov_list = [f"{k}={v}" for k, v in overrides.items()]
-        try:
-            verified = config_hash(compose_cfg(root, ov_list)) == h
-        except Exception as ex:
-            verified = False
-            warns.append(f"re-compose failed: {type(ex).__name__}: {ex}")
-
-        entry = {
-            "launcher": _METHOD_TO_LAUNCHER[method],
-            "config_root": root,
-            "overrides": overrides,
-            "trials": n_done or 1,
-            "feeds": [],
-            "group": _METHOD_TO_GROUP.get(method, "cnt-mcts"),
-            "recorded": False,
-            "_backfilled_from": os.path.basename(rdir),
-            "_config_hash": h,
-            "_run_id": rec.get("run_id"),
-            "_verified": verified,
-        }
-        if warns:
-            entry["_warnings"] = warns
-        new.append(entry)
-    return new
+    orphans = [(h, rdir, rec) for h, (rdir, rec) in sorted(found.items())
+               if h not in claimed]
+    entries = _pmap(_backfill_worker, orphans, jobs)
+    return [e for e in entries if e is not None]
 
 
 # ------------------------------------------------------------------ #
@@ -446,22 +522,15 @@ def launch_command(entry):
 # per-cell primitive the exp-new-comparison-table skill calls, not    #
 # re-deriving hashes itself -- one source of truth for compose/hash.  #
 # ------------------------------------------------------------------ #
-def check_candidate(config_root, overrides, queue):
+def check_candidate(config_root, overrides, queue, jobs=None):
     cfg = compose_cfg(config_root, overrides)
     h = config_hash(cfg)
     name = config_name(cfg)
     rdir = find_dir_by_hash(cfg)
     on_disk = rdir is not None
     n_done = count_done(rdir) if on_disk else 0
-    collision = False
-    for e in queue:
-        try:
-            if config_hash(compose_cfg(
-                    e["config_root"], e.get("overrides_list", []))) == h:
-                collision = True
-                break
-        except Exception:
-            pass
+    collision = any(
+        eh == h for eh, _ in entry_hashes(queue, jobs, use_stored=True))
     return {
         "hash": h, "name": name, "on_disk": on_disk,
         "n_done": n_done, "ledger_collision": collision,
@@ -475,17 +544,24 @@ def check_candidate(config_root, overrides, queue):
 # Tripwire for launcher/config drift desyncing this script's mirrored #
 # ConfigStore from the real launchers. Run after any launcher edit.   #
 # ------------------------------------------------------------------ #
-def verify_queue(queue):
+def verify_queue(queue, jobs=None):
+    """ALWAYS recomposes -- never trusts stored `hash:` fields.
+    Stored hashes are what --verify audits, not what it reads."""
     problems = []
-    for e in queue:
+    for e, (h, err) in zip(queue, entry_hashes(queue, jobs)):
         label = e.get("note") or e.get("from_dir") or str(e.get("overrides"))
-        try:
-            h = config_hash(compose_cfg(
-                e["config_root"], e.get("overrides_list", [])))
-        except Exception as ex:
-            problems.append((label, f"compose failed: "
-                                    f"{type(ex).__name__}: {ex}"))
+        if err is not None:
+            problems.append((label, f"compose failed: {err}"))
             continue
+        # Stored hash (written once at append time): a mismatch means
+        # the config groups/defaults changed since the entry was
+        # appended -- drift protection for EVERY entry, not just
+        # backfilled ones.
+        stored = e.get("hash")
+        if stored and str(stored) != h:
+            problems.append(
+                (label, f"hash drift: composes to {h}, "
+                        f"stored hash: says {stored}"))
         # If the entry records the dir it came from, that dir's name
         # encodes its cfg hash suffix (cfg-XXXXXXXX); check it matches.
         from_dir = e.get("from_dir")
@@ -498,18 +574,38 @@ def verify_queue(queue):
     return problems
 
 
-def matches_filters(entry, status, args):
-    if args.status and status != args.status:
-        return False
-    if args.done and status != "done":
-        return False
-    if args.planned and status != "planned":
-        return False
+def _classify_worker(item):
+    """(entry, check_wandb) -> (status, detail). Worker-safe: the
+    per-entry compose + dir scan (+ optional W&B call) runs in a
+    forked worker; exceptions become an ERROR row, never a raise."""
+    entry, check_wandb = item
+    try:
+        return classify(entry, check_wandb)
+    except Exception as ex:
+        return "ERROR", {"err": f"{type(ex).__name__}: {ex}"}
+
+
+def matches_entry_filters(entry, args):
+    """Filters decidable from the entry ALONE (no compose needed):
+    group, priority, recorded. Applied BEFORE the per-entry compose
+    pass, so a scoped query (--group X) composes only X's entries
+    instead of the whole ledger."""
     if args.not_recorded and entry.get("recorded"):
         return False
     if args.group and entry.get("group") != args.group:
         return False
     if args.priority is not None and entry.get("priority") != args.priority:
+        return False
+    return True
+
+
+def matches_status_filters(status, args):
+    """Filters that need the computed status -- applied after."""
+    if args.status and status != args.status:
+        return False
+    if args.done and status != "done":
+        return False
+    if args.planned and status != "planned":
         return False
     return True
 
@@ -542,30 +638,37 @@ def main():
     ap.add_argument("--check", nargs="+", metavar="ROOT OVERRIDE",
                     help="compose a candidate (config_root key=val ...) and "
                          "report hash/name/on-disk/collision; does not write")
+    ap.add_argument("--jobs", type=int, default=None,
+                    help="parallel worker processes for per-entry composes "
+                         f"(default min({DEFAULT_JOBS_CAP}, workload); "
+                         "1 = serial)")
     args = ap.parse_args()
 
     queue = load_queue()
 
     if args.check:
         root, overrides = args.check[0], args.check[1:]
-        info = check_candidate(root, overrides, queue)
+        info = check_candidate(root, overrides, queue, args.jobs)
         print(yaml.safe_dump(info, sort_keys=False, allow_unicode=True),
               end="")
         return
 
     if args.verify:
-        problems = verify_queue(queue)
+        scope = [e for e in queue if matches_entry_filters(e, args)]
+        scope_note = (f" (scoped: {len(scope)}/{len(queue)})"
+                      if len(scope) != len(queue) else "")
+        problems = verify_queue(scope, args.jobs)
         if not problems:
-            print(f"# OK: all {len(queue)} entries compose and match "
-                  f"their recorded hash")
+            print(f"# OK: all {len(scope)} entries compose and match "
+                  f"their recorded hash{scope_note}")
             return
-        print(f"# {len(problems)} problem(s):")
+        print(f"# {len(problems)} problem(s){scope_note}:")
         for label, msg in problems:
             print(f"  ! {label}: {msg}")
         sys.exit(1)
 
     if args.backfill:
-        new = backfill(queue)
+        new = backfill(queue, args.jobs)
         if not new:
             print("# no un-queued result dirs found (nothing to backfill)")
             return
@@ -575,13 +678,14 @@ def main():
         print(yaml.safe_dump(new, sort_keys=False, allow_unicode=True))
         return
 
+    # Pre-filter on entry-level criteria BEFORE composing anything:
+    # a scoped listing (--group X) then composes only X's entries.
+    scoped = [e for e in queue if matches_entry_filters(e, args)]
+    results = _pmap(_classify_worker,
+                    [(e, args.wandb) for e in scoped], args.jobs)
     rows = []
-    for e in queue:
-        try:
-            status, detail = classify(e, args.wandb)
-        except Exception as ex:
-            status, detail = "ERROR", {"err": f"{type(ex).__name__}: {ex}"}
-        if status != "ERROR" and not matches_filters(e, status, args):
+    for e, (status, detail) in zip(scoped, results):
+        if status != "ERROR" and not matches_status_filters(status, args):
             continue
         rows.append((e, status, detail))
 

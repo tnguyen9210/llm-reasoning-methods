@@ -19,6 +19,7 @@
 
 # --- known-done (sem default, 2 trials on disk) ----------------------
 - launcher: generate_mcts_sem.py
+  hash: "c833c08a"
   config_root: mcts_sem_v02_prm800k
   overrides: {}
   trials: 2
@@ -29,6 +30,7 @@
 
 # --- planned (the run we deleted earlier; no dir -> planned) ---------
 - launcher: generate_mcts_sem.py
+  hash: "fbc22a8a"
   config_root: mcts_sem_v02_prm800k
   overrides: {search.ds_alpha: 1000}
   trials: 2
@@ -38,6 +40,7 @@
   recorded: true
 
 - launcher: generate_mcts_sem.py
+  hash: "00a99d51"
   config_root: mcts_sem_v02_prm800k
   overrides: {llm: qwen_math_1_5b, search.ds_alpha: 0}
   trials: 2
@@ -51,6 +54,7 @@
 #     docs/exp-comp-prm800k-level4.md. NOTE: the llama_3b + enforce_eager=true
 #     cnt entry below feeds ONLY the enforce_eager comparison table.
 - launcher: generate_mcts_sem.py
+  hash: "036c554c"
   config_root: mcts_sem_v02_prm800k
   overrides:
     llm: qwen_math_1_5b
@@ -63,6 +67,7 @@
   run_id: kbwjqw96
   from_dir: mcts_sem_v02--level-4--Qwen2.5-Math-1.5B--rlhflow--d-20--bs-4--b-080--cfg-036c554c
 - launcher: generate_mcts_sem.py
+  hash: "047767a8"
   config_root: mcts_sem_v02_prm800k
   overrides:
     search.ds_alpha: 10.0
@@ -74,6 +79,7 @@
   run_id: wsvy5q72
   from_dir: mcts_sem_v02--level-4--Llama3.2-1B--rlhflow--d-20--bs-4--b-080--cfg-047767a8
 - launcher: generate_mcts_sem.py
+  hash: "05ab09f5"
   config_root: mcts_sem_v02_prm800k
   overrides:
     llm: llama_3b
@@ -86,6 +92,7 @@
   run_id: fv18snbn
   from_dir: mcts_sem_v02--level-4--Llama3.2-3B--rlhflow--d-20--bs-4--b-080--cfg-05ab09f5
 - launcher: generate_mcts_cnt.py
+  hash: "edf000bf"
   config_root: mcts_cnt_prm800k
   overrides:
     llm: qwen_3b
@@ -98,6 +105,7 @@
   run_id: 9kxy56vs
   from_dir: mcts_cnt--level-4--Qwen2.5-3B--qwen--d-20--bs-4--b-080--cfg-076f1b3f
 - launcher: generate_mcts_sem.py
+  hash: "585b090a"
   config_root: mcts_sem_v02_prm800k
   overrides:
     llm: llama_3b
@@ -110,6 +118,7 @@
   run_id: 8882rt6u
   from_dir: mcts_sem_v02--level-4--Llama3.2-3B--rlhflow--d-20--bs-4--b-080--cfg-585b090a
 - launcher: generate_mcts_sem.py
+  hash: "6d71fe7e"
   config_root: mcts_sem_v02_prm800k
   overrides:
     llm: qwen_math_1_5b
@@ -121,6 +130,7 @@
   run_id: qn3b8lg0
   from_dir: mcts_sem_v02--level-4--Qwen2.5-Math-1.5B--rlhflow--d-20--bs-4--b-080--cfg-6d71fe7e
 - launcher: generate_mcts_sem.py
+  hash: "9b20f7fe"
   config_root: mcts_sem_v02_prm800k
   overrides:
     llm: qwen_math_1_5b
@@ -133,6 +143,7 @@
   run_id: ihxrzedi
   from_dir: mcts_sem_v02--level-4--Qwen2.5-Math-1.5B--rlhflow--d-20--bs-4--b-080--cfg-9b20f7fe
 - launcher: generate_mcts_cnt.py
+  hash: "2de3d3d9"
   config_root: mcts_cnt_prm800k
   overrides:
     llm: qwen_math_1_5b
@@ -145,6 +156,7 @@
   run_id: 9skdu6r4
   from_dir: mcts_cnt--level-4--Qwen2.5-Math-1.5B--qwen--d-20--bs-4--b-080--cfg-b9bdc323
 - launcher: generate_mcts_cnt.py
+  hash: "2850dccd"
   config_root: mcts_cnt_prm800k
   overrides:
     llm: llama_3b
@@ -157,6 +169,7 @@
   run_id: 5opc7rii
   from_dir: mcts_cnt--level-4--Llama3.2-3B--qwen--d-20--bs-4--b-080--cfg-d13c8fc3
 - launcher: generate_mcts_sem.py
+  hash: "dfcb1c57"
   config_root: mcts_sem_v02_prm800k
   overrides:
     search.ds_alpha: 0.0
@@ -168,6 +181,7 @@
   run_id: bjz0yxrg
   from_dir: mcts_sem_v02--level-4--Llama3.2-1B--rlhflow--d-20--bs-4--b-080--cfg-dfcb1c57
 - launcher: generate_mcts_sem.py
+  hash: "e5707db9"
   config_root: mcts_sem_v02_prm800k
   overrides:
     llm: llama_3b
@@ -179,6 +193,7 @@
   run_id: gv2b7ajq
   from_dir: mcts_sem_v02--level-4--Llama3.2-3B--rlhflow--d-20--bs-4--b-080--cfg-e5707db9
 - launcher: generate_mcts_cnt.py
+  hash: "bb5f5acb"
   config_root: mcts_cnt_prm800k
   overrides:
     llm: llama_3b
@@ -199,6 +214,7 @@
 #     (hash to the already-done default / already-partial dirs), so
 #     they are NOT added here.
 - launcher: generate_mcts_sem.py
+  hash: "d8502926"
   config_root: mcts_sem_v02_prm800k
   overrides:
     llm: llama_1b
@@ -211,6 +227,7 @@
   recorded: false
   note: llama-1b none/exact
 - launcher: generate_mcts_sem.py
+  hash: "8a04437c"
   config_root: mcts_sem_v02_prm800k
   overrides:
     llm: llama_1b
@@ -222,6 +239,7 @@
   recorded: false
   note: llama-1b sparse512/exact
 - launcher: generate_mcts_sem.py
+  hash: "cbc0a340"
   config_root: mcts_sem_v02_prm800k
   overrides:
     llm: qwen_math_1_5b
@@ -234,6 +252,7 @@
   recorded: false
   note: qwen-math-1.5b none/exact
 - launcher: generate_mcts_sem.py
+  hash: "0a8d0790"
   config_root: mcts_sem_v01_prm800k
   overrides:
     llm: llama_1b
@@ -244,6 +263,7 @@
   recorded: false
   note: v01 policy llama-1b custom
 - launcher: generate_mcts_sem.py
+  hash: "445e60cc"
   config_root: mcts_sem_v01_prm800k
   overrides:
     llm: llama_3b
@@ -254,6 +274,7 @@
   recorded: false
   note: v01 policy llama-3b custom
 - launcher: generate_mcts_sem.py
+  hash: "3ce0120e"
   config_root: mcts_sem_v01_prm800k
   overrides:
     llm: qwen_math_1_5b
@@ -270,6 +291,7 @@
 #     3 models x ds_alpha {10,100,1000}; ds_alpha=0 omitted
 #     (lower-bound check already covered in the rlhflow table).
 - launcher: generate_mcts_sem.py
+  hash: "1886c8f2"
   config_root: mcts_sem_v02_prm800k
   overrides:
     llm: llama_1b
@@ -283,6 +305,7 @@
   recorded: true
   note: qwen-PRM ds_alpha=10 llama-1b
 - launcher: generate_mcts_sem.py
+  hash: "f24283b8"
   config_root: mcts_sem_v02_prm800k
   overrides:
     llm: llama_1b
@@ -297,6 +320,7 @@
   recorded: true
   note: qwen-PRM ds_alpha=100 llama-1b (= model-family fp16 default)
 - launcher: generate_mcts_sem.py
+  hash: "c483446a"
   config_root: mcts_sem_v02_prm800k
   overrides:
     llm: llama_1b
@@ -310,6 +334,7 @@
   recorded: true
   note: qwen-PRM ds_alpha=1000 llama-1b
 - launcher: generate_mcts_sem.py
+  hash: "f03558e1"
   config_root: mcts_sem_v02_prm800k
   overrides:
     llm: qwen_math_1_5b
@@ -324,6 +349,7 @@
   recorded: true
   note: qwen-PRM ds_alpha=10 qwen-math-1.5b
 - launcher: generate_mcts_sem.py
+  hash: "7a4be169"
   config_root: mcts_sem_v02_prm800k
   overrides:
     llm: qwen_math_1_5b
@@ -339,6 +365,7 @@
   recorded: true
   note: qwen-PRM ds_alpha=100 qwen-math-1.5b (= model-family fp16 default)
 - launcher: generate_mcts_sem.py
+  hash: "f2cbd3de"
   config_root: mcts_sem_v02_prm800k
   overrides:
     llm: qwen_math_1_5b
@@ -353,6 +380,7 @@
   recorded: true
   note: qwen-PRM ds_alpha=1000 qwen-math-1.5b
 - launcher: generate_mcts_sem.py
+  hash: "baa5b18e"
   config_root: mcts_sem_v02_prm800k
   overrides:
     llm: llama_3b
@@ -366,6 +394,7 @@
   recorded: true
   note: qwen-PRM ds_alpha=10 llama-3b
 - launcher: generate_mcts_sem.py
+  hash: "2b647a18"
   config_root: mcts_sem_v02_prm800k
   overrides:
     llm: llama_3b
@@ -381,6 +410,7 @@
   recorded: true
   note: qwen-PRM ds_alpha=100 llama-3b (= embeds last x full = model-family fp16 default)
 - launcher: generate_mcts_sem.py
+  hash: "63ab4770"
   config_root: mcts_sem_v02_prm800k
   overrides:
     llm: llama_3b
@@ -400,6 +430,7 @@
 #     table's rows; budget and PRM both differ from that table
 #     at once. feeds cnt-mcts/model-family-b320-qwen.
 - launcher: generate_mcts_cnt.py
+  hash: "98a07b8d"
   config_root: mcts_cnt_prm800k
   overrides:
     llm: llama_1b
@@ -413,6 +444,7 @@
   recorded: false
   note: b=320 qwen-PRM llama-1b fp16
 - launcher: generate_mcts_cnt.py
+  hash: "01426e44"
   config_root: mcts_cnt_prm800k
   overrides:
     llm: llama_3b
@@ -426,6 +458,7 @@
   recorded: false
   note: b=320 qwen-PRM llama-3b fp16
 - launcher: generate_mcts_cnt.py
+  hash: "355533ed"
   config_root: mcts_cnt_prm800k
   overrides:
     llm: llama_3b_gptq
@@ -439,6 +472,7 @@
   recorded: false
   note: b=320 qwen-PRM llama-3b gptq
 - launcher: generate_mcts_cnt.py
+  hash: "9fd14d37"
   config_root: mcts_cnt_prm800k
   overrides:
     llm: qwen_3b
@@ -452,6 +486,7 @@
   recorded: false
   note: b=320 qwen-PRM qwen-3b fp16
 - launcher: generate_mcts_cnt.py
+  hash: "9fe5eaf8"
   config_root: mcts_cnt_prm800k
   overrides:
     llm: qwen_3b_gptq_int4
@@ -465,6 +500,7 @@
   recorded: false
   note: b=320 qwen-PRM qwen-3b gptq-int4
 - launcher: generate_mcts_cnt.py
+  hash: "c8fddcba"
   config_root: mcts_cnt_prm800k
   overrides:
     llm: qwen_7b_gptq_int4
@@ -478,6 +514,7 @@
   recorded: false
   note: b=320 qwen-PRM qwen-7b gptq-int4
 - launcher: generate_mcts_cnt.py
+  hash: "aa2a9f51"
   config_root: mcts_cnt_prm800k
   overrides:
     llm: qwen_math_1_5b
@@ -500,6 +537,7 @@
 #     deliberately NOT queued; queue them if/when the v02 core
 #     supports embeds_scope=response for embeds_source=prm.
 - launcher: generate_mcts_sem.py
+  hash: "2d22ccd4"
   config_root: mcts_sem_v02_prm800k
   overrides:
     llm: llama_3b
@@ -519,6 +557,7 @@
 #     ds_alpha=100 default runs above, now also feeding
 #     sem-mcts/model-family-qwen.
 - launcher: generate_mcts_sem.py
+  hash: "a68374f0"
   config_root: mcts_sem_v02_prm800k
   overrides:
     llm: llama_3b_gptq
@@ -531,6 +570,7 @@
   recorded: false
   note: qwen-PRM sem model-family llama-3b gptq
 - launcher: generate_mcts_sem.py
+  hash: "77cae091"
   config_root: mcts_sem_v02_prm800k
   overrides:
     llm: qwen_3b
@@ -543,6 +583,7 @@
   recorded: false
   note: qwen-PRM sem model-family qwen-3b fp16
 - launcher: generate_mcts_sem.py
+  hash: "7095316b"
   config_root: mcts_sem_v02_prm800k
   overrides:
     llm: qwen_3b_gptq_int4
@@ -555,6 +596,7 @@
   recorded: false
   note: qwen-PRM sem model-family qwen-3b gptq-int4
 - launcher: generate_mcts_sem.py
+  hash: "e7041715"
   config_root: mcts_sem_v02_prm800k
   overrides:
     llm: qwen_7b_gptq_int4
@@ -572,6 +614,7 @@
 #     sem-mcts, cnt-mcts, cnt-mcts-bl, sem-mcts-bl. See each entry's
 #     note for the source dir + W&B run id. ---
 - launcher: generate_mcts_sem.py
+  hash: "019ecd02"
   config_root: mcts_sem_v02_prm800k
   overrides:
     prm: qwen_prm
@@ -585,6 +628,7 @@
   note: backfilled from mcts_sem_v02--level-4--Llama3.2-1B--qwen--d-20--bs-4--b-080--cfg-019ecd02
     (run_id xblhv6xb)
 - launcher: generate_mcts_sem.py
+  hash: "05b41daf"
   config_root: mcts_bl_sem_v01_prm800k
   overrides:
     llm: qwen_math_1_5b
@@ -600,6 +644,7 @@
     (run_id x2t2cxx1); trials corrected 1->2 (run.num_trials=2 default, only 1 .done
     at backfill time); scored 2026-07-09, pass@gb .8555±.0220
 - launcher: generate_mcts_cnt.py
+  hash: "076f1b3f"
   config_root: mcts_cnt_prm800k
   overrides:
     llm: qwen_3b
@@ -613,6 +658,7 @@
   note: backfilled from mcts_cnt--level-4--Qwen2.5-3B--qwen--d-20--bs-4--b-080--cfg-076f1b3f
     (run_id 9kxy56vs)
 - launcher: generate_mcts_cnt.py
+  hash: "082d0098"
   config_root: mcts_cnt_prm800k
   overrides:
     llm: qwen_math_1_5b
@@ -624,6 +670,7 @@
   note: backfilled from mcts_cnt_v01--level-4--Qwen2.5-Math-1.5B--rlhflow--d-20--bs-4--b-080--cfg-082d0098
     (run_id twiher6b)
 - launcher: generate_mcts_cnt.py
+  hash: "0a9a4e49"
   config_root: mcts_cnt_prm800k
   overrides:
     llm: qwen_math_1_5b
@@ -637,6 +684,7 @@
   note: backfilled from mcts_cnt_v01--level-4--Qwen2.5-Math-1.5B--qwen--d-20--bs-4--b-080--cfg-0a9a4e49
     (run_id jxux0dfm)
 - launcher: generate_mcts_cnt.py
+  hash: "0ad81fba"
   config_root: mcts_cnt_prm800k
   overrides:
     llm: qwen_3b_gptq_int4
@@ -648,6 +696,7 @@
   note: backfilled from mcts_cnt_v01--level-4--Qwen2.5-3B-GPTQ-Int4--rlhflow--d-20--bs-4--b-080--cfg-0ad81fba
     (run_id bigbjzi4)
 - launcher: generate_mcts_sem.py
+  hash: "0c3fa88a"
   config_root: mcts_sem_v02_prm800k
   overrides:
     llm: llama_3b
@@ -662,6 +711,7 @@
   note: backfilled from mcts_sem_v02--level-4--Llama3.2-3B--qwen--d-20--bs-4--b-080--cfg-0c3fa88a
     (run_id j21xcutg)
 - launcher: generate_mcts_sem.py
+  hash: "0ce0ce69"
   config_root: mcts_sem_v02_prm800k
   overrides:
     prm: qwen_prm
@@ -674,6 +724,7 @@
   note: backfilled from mcts_sem_v02--level-4--Llama3.2-1B--qwen--d-20--bs-4--b-080--cfg-0ce0ce69
     (run_id mimxgvdw)
 - launcher: generate_mcts_cnt.py
+  hash: "11326e47"
   config_root: mcts_cnt_prm800k
   overrides:
     llm: llama_3b_gptq
@@ -688,6 +739,7 @@
   note: backfilled from mcts_cnt--level-4--Llama3.2-3B-GPTQ--qwen--d-20--bs-4--b-320--cfg-11326e47
     (run_id p0bfobev)
 - launcher: generate_mcts_sem.py
+  hash: "1c3aa934"
   config_root: mcts_bl_sem_v01_prm800k
   overrides:
     prm: qwen_prm
@@ -702,6 +754,7 @@
     (run_id 11259dfh); trials corrected 1->2 (run.num_trials=2 default, only 1 .done
     at backfill time); scored 2026-07-09, pass@gb .5859±.0308
 - launcher: generate_mcts_cnt.py
+  hash: "22e7e576"
   config_root: mcts_cnt_prm800k
   overrides:
     prm: qwen_prm
@@ -713,6 +766,7 @@
   note: backfilled from mcts_cnt_v01--level-4--Llama3.2-1B--qwen--d-20--bs-4--b-080--cfg-22e7e576
     (run_id cqbxegfu)
 - launcher: generate_mcts_sem.py
+  hash: "23f6c64a"
   config_root: mcts_sem_v02_prm800k
   overrides:
     llm: llama_3b
@@ -726,6 +780,7 @@
   note: backfilled from mcts_sem_v02--level-4--Llama3.2-3B--qwen--d-20--bs-4--b-080--cfg-23f6c64a
     (run_id 77unmq5h)
 - launcher: generate_mcts_sem.py
+  hash: "259e346e"
   config_root: mcts_sem_v02_prm800k
   overrides:
     llm: llama_3b
@@ -740,6 +795,7 @@
   note: backfilled from mcts_sem_v02--level-4--Llama3.2-3B--qwen--d-20--bs-4--b-080--cfg-259e346e
     (run_id 3xmmtguk)
 - launcher: generate_mcts_sem.py
+  hash: "26404f30"
   config_root: mcts_sem_v02_prm800k
   overrides:
     llm: llama_3b
@@ -755,6 +811,7 @@
     (run_id k6mikl4b); scored 2026-07-09, pass@gb .7617±.0267 (already in
     docs/exp-comp-prm800k-level4.md embeds_strategy x scope sweep table)
 - launcher: generate_mcts_sem.py
+  hash: "291dc3a4"
   config_root: mcts_bl_sem_v01_prm800k
   overrides:
     llm: qwen_3b
@@ -770,6 +827,7 @@
     (run_id 2gfmsfwp); trials corrected 1->2 (run.num_trials=2 default, only 1 .done
     at backfill time); scored 2026-07-09, pass@gb .8320±.0234
 - launcher: generate_mcts_sem.py
+  hash: "2d349d4e"
   config_root: mcts_sem_v02_prm800k
   overrides:
     llm: qwen_3b
@@ -785,6 +843,7 @@
     (run_id okvdvw33); scored 2026-07-09, pass@gb .8750±.0207 (already in
     docs/exp-comp-prm800k-level4.md agg_strategy w_eff=100 table)
 - launcher: generate_mcts_cnt.py
+  hash: "32a800f3"
   config_root: mcts_cnt_prm800k
   overrides:
     llm: qwen_3b
@@ -797,6 +856,7 @@
   note: backfilled from mcts_cnt_v01--level-4--Qwen2.5-3B--rlhflow--d-20--bs-4--b-080--cfg-32a800f3
     (run_id t2p3vkvb)
 - launcher: generate_mcts_sem.py
+  hash: "35c18945"
   config_root: mcts_sem_v02_prm800k
   overrides:
     llm: llama_3b
@@ -811,6 +871,7 @@
   note: backfilled from mcts_sem_v02--level-4--Llama3.2-3B--qwen--d-20--bs-4--b-080--cfg-35c18945
     (run_id 2wdq0fmr)
 - launcher: generate_mcts_sem.py
+  hash: "365d29ac"
   config_root: mcts_bl_sem_v01_prm800k
   overrides:
     llm: qwen_math_1_5b
@@ -826,6 +887,7 @@
     (run_id hu6zxhjd); trials corrected 1->2 (run.num_trials=2 default, only 1 .done
     at backfill time); scored 2026-07-09, pass@gb .8320±.0234
 - launcher: generate_mcts_cnt.py
+  hash: "39024cc5"
   config_root: mcts_cnt_prm800k
   overrides:
     prm: qwen_prm
@@ -839,6 +901,7 @@
   note: backfilled from mcts_cnt--level-4--Llama3.2-1B--qwen--d-20--bs-4--b-320--cfg-39024cc5
     (run_id 0ag3uxi1)
 - launcher: generate_mcts_cnt.py
+  hash: "3959399a"
   config_root: mcts_cnt_prm800k
   overrides:
     llm: qwen_3b_gptq_int4
@@ -851,6 +914,7 @@
   note: backfilled from mcts_cnt_v01--level-4--Qwen2.5-3B-GPTQ-Int4--qwen--d-20--bs-4--b-080--cfg-3959399a
     (run_id pr4yz0v3)
 - launcher: generate_mcts_sem.py
+  hash: "3c7d4fe6"
   config_root: mcts_sem_v02_prm800k
   overrides:
     prm: qwen_prm
@@ -865,6 +929,7 @@
     (run_id ncl65erd); scored 2026-07-09, pass@gb .6172±.0304 (already in
     docs/exp-comp-prm800k-level4.md lam/ds_alpha joint sweep llama-1b table)
 - launcher: generate_mcts_sem.py
+  hash: "3e17aad4"
   config_root: mcts_sem_v02_prm800k
   overrides:
     prm: qwen_prm
@@ -879,6 +944,7 @@
     (run_id yc6jjwd0); scored 2026-07-09, pass@gb .6133±.0305 (already in
     docs/exp-comp-prm800k-level4.md lam/ds_alpha joint sweep llama-1b table)
 - launcher: generate_mcts_sem.py
+  hash: "40d6abdb"
   config_root: mcts_sem_v02_prm800k
   overrides:
     prm: qwen_prm
@@ -892,6 +958,7 @@
   note: backfilled from mcts_sem_v02--level-4--Llama3.2-1B--qwen--d-20--bs-4--b-080--cfg-40d6abdb
     (run_id mdjpp3fp)
 - launcher: generate_mcts_sem.py
+  hash: "432be82e"
   config_root: mcts_bl_sem_v01_prm800k
   overrides:
     llm: qwen_3b
@@ -907,6 +974,7 @@
     (run_id b6i8ch3v); trials corrected 1->2 (run.num_trials=2 default, only 1 .done
     at backfill time); scored 2026-07-09, pass@gb .8477±.0225
 - launcher: generate_mcts_cnt.py
+  hash: "43be7dfa"
   config_root: mcts_cnt_prm800k
   overrides:
     llm: qwen_3b
@@ -921,6 +989,7 @@
   note: backfilled from mcts_cnt--level-4--Qwen2.5-3B--qwen--d-20--bs-4--b-320--cfg-43be7dfa
     (run_id tn7cft7k)
 - launcher: generate_mcts_cnt.py
+  hash: "4ab9d22e"
   config_root: mcts_cnt_prm800k
   overrides:
     llm: qwen_3b
@@ -933,6 +1002,7 @@
   note: backfilled from mcts_cnt_v01--level-4--Qwen2.5-3B--rlhflow--d-20--bs-4--b-080--cfg-4ab9d22e
     (run_id u8oyi72y)
 - launcher: generate_mcts_cnt.py
+  hash: "4ff0cf1e"
   config_root: mcts_cnt_prm800k
   overrides:
     llm: qwen_7b_gptq_int4
@@ -947,6 +1017,7 @@
   note: backfilled from mcts_cnt--level-4--Qwen2.5-7B-GPTQ-Int4--qwen--d-20--bs-4--b-320--cfg-4ff0cf1e
     (run_id gxu398jn)
 - launcher: generate_mcts_cnt.py
+  hash: "520f87c8"
   config_root: mcts_cnt_prm800k
   overrides:
     llm: qwen_math_1_5b
@@ -961,6 +1032,7 @@
   note: backfilled from mcts_cnt--level-4--Qwen2.5-Math-1.5B--qwen--d-20--bs-4--b-320--cfg-520f87c8
     (run_id h2ofp3ti)
 - launcher: generate_mcts_sem.py
+  hash: "57003287"
   config_root: mcts_sem_v02_prm800k
   overrides:
     llm: qwen_math_1_5b
@@ -976,6 +1048,7 @@
     (run_id ikse2p6t); scored 2026-07-09, pass@gb .8672±.0213 (already in
     docs/exp-comp-prm800k-level4.md lam/ds_alpha joint sweep qwen-math-1.5b table)
 - launcher: generate_mcts_sem.py
+  hash: "5a58a0b7"
   config_root: mcts_sem_v02_prm800k
   overrides:
     llm: qwen_math_1_5b
@@ -991,6 +1064,7 @@
     (run_id gefqemm3); scored 2026-07-09, pass@gb .8867±.0198 (already in
     docs/exp-comp-prm800k-level4.md lam/ds_alpha joint sweep qwen-math-1.5b table)
 - launcher: generate_mcts_sem.py
+  hash: "5b443cc1"
   config_root: mcts_sem_v02_prm800k
   overrides:
     llm: llama_3b
@@ -1007,6 +1081,7 @@
     (run_id 3p9ltai4); scored 2026-07-09, pass@gb .7695±.0264 (already in
     docs/exp-comp-prm800k-level4.md embeds_strategy x scope sweep table)
 - launcher: generate_mcts_sem.py
+  hash: "6286b2ef"
   config_root: mcts_sem_v02_prm800k
   overrides:
     llm: llama_3b
@@ -1023,6 +1098,7 @@
     (run_id 1h6cd3au); scored 2026-07-09, pass@gb .7539±.0270 (already in
     docs/exp-comp-prm800k-level4.md embeds_strategy x scope sweep table)
 - launcher: generate_mcts_sem.py
+  hash: "720b0505"
   config_root: mcts_sem_v02_prm800k
   overrides:
     prm: qwen_prm
@@ -1036,6 +1112,7 @@
   note: backfilled from mcts_sem_v02--level-4--Llama3.2-1B--qwen--d-20--bs-4--b-080--cfg-720b0505
     (run_id wkh4mdwk)
 - launcher: generate_mcts_cnt.py
+  hash: "76aff934"
   config_root: mcts_cnt_prm800k
   overrides:
     llm: qwen_math_1_5b
@@ -1048,6 +1125,7 @@
   note: backfilled from mcts_cnt_v01--level-4--Qwen2.5-Math-1.5B--rlhflow--d-20--bs-4--b-080--cfg-76aff934
     (run_id 8z45o3c5)
 - launcher: generate_mcts_bl_cnt_v01.py
+  hash: "7cfae464"
   config_root: mcts_bl_cnt_v01_prm800k
   overrides:
     llm: qwen_3b
@@ -1061,6 +1139,7 @@
     (run_id xc5goyz6); trials corrected 1->2 (run.num_trials=2 default, only 1 .done
     at backfill time); scored 2026-07-09, pass@gb .6445±.0300
 - launcher: generate_mcts_cnt.py
+  hash: "8ce1ea23"
   config_root: mcts_cnt_prm800k
   overrides:
     llm: llama_3b
@@ -1075,6 +1154,7 @@
   note: backfilled from mcts_cnt--level-4--Llama3.2-3B--qwen--d-20--bs-4--b-320--cfg-8ce1ea23
     (run_id ky73v26e)
 - launcher: generate_mcts_cnt.py
+  hash: "8db79188"
   config_root: mcts_cnt_prm800k
   overrides:
     llm: llama_3b_gptq
@@ -1087,6 +1167,7 @@
   note: backfilled from mcts_cnt_v01--level-4--Llama3.2-3B-GPTQ--qwen--d-20--bs-4--b-080--cfg-8db79188
     (run_id 34hihgfu)
 - launcher: generate_mcts_cnt.py
+  hash: "902a2e9a"
   config_root: mcts_cnt_prm800k
   overrides:
     llm: qwen_3b
@@ -1100,6 +1181,7 @@
   note: backfilled from mcts_cnt_v01--level-4--Qwen2.5-3B--qwen--d-20--bs-4--b-080--cfg-902a2e9a
     (run_id 1gce9zr6)
 - launcher: generate_mcts_cnt.py
+  hash: "90f77992"
   config_root: mcts_cnt_prm800k
   overrides:
     llm: qwen_math_1_5b
@@ -1113,6 +1195,7 @@
   note: backfilled from mcts_cnt_v01--level-4--Qwen2.5-Math-1.5B--qwen--d-20--bs-4--b-080--cfg-90f77992
     (run_id 0a9vqg73)
 - launcher: generate_mcts_sem.py
+  hash: "953fff79"
   config_root: mcts_sem_v02_prm800k
   overrides:
     prm: qwen_prm
@@ -1126,6 +1209,7 @@
     (run_id 5wwrv272); scored 2026-07-09, pass@gb .5938±.0308 (already in
     docs/exp-comp-prm800k-level4.md lam/ds_alpha joint sweep llama-1b table)
 - launcher: generate_mcts_bl_cnt_v01.py
+  hash: "97761fb2"
   config_root: mcts_bl_cnt_v01_prm800k
   overrides:
     llm: qwen_7b_gptq_int4
@@ -1138,6 +1222,7 @@
   note: backfilled from mcts_bl_cnt_v01--level-4--Qwen2.5-7B-GPTQ-Int4--qwen--d-20--bs-4--b-080--cfg-97761fb2
     (run_id boteurbn); scored 2026-07-09, pass@gb .8125±.0244
 - launcher: generate_mcts_cnt.py
+  hash: "9b77a678"
   config_root: mcts_cnt_prm800k
   overrides: {}
   trials: 2
@@ -1148,6 +1233,7 @@
   note: backfilled from mcts_cnt_v01--level-4--Llama3.2-1B--rlhflow--d-20--bs-4--b-080--cfg-9b77a678
     (run_id w0e8cidi)
 - launcher: generate_mcts_bl_cnt_v01.py
+  hash: "a50732cb"
   config_root: mcts_bl_cnt_v01_prm800k
   overrides:
     llm: qwen_math_1_5b
@@ -1160,6 +1246,7 @@
   note: backfilled from mcts_bl_cnt_v01--level-4--Qwen2.5-Math-1.5B--qwen--d-20--bs-4--b-080--cfg-a50732cb
     (run_id qbhlzqch); scored 2026-07-09, pass@gb .6836±.0291
 - launcher: generate_mcts_sem.py
+  hash: "a99c090a"
   config_root: mcts_sem_v02_prm800k
   overrides:
     llm: llama_3b
@@ -1175,6 +1262,7 @@
     (run_id tzgjckmm); scored 2026-07-09, pass@gb .7773±.0261 (already in
     docs/exp-comp-prm800k-level4.md embeds_strategy x scope sweep table)
 - launcher: generate_mcts_cnt.py
+  hash: "ac3def03"
   config_root: mcts_cnt_prm800k
   overrides:
     llm: qwen_3b_gptq_int4
@@ -1189,6 +1277,7 @@
   note: backfilled from mcts_cnt--level-4--Qwen2.5-3B-GPTQ-Int4--qwen--d-20--bs-4--b-320--cfg-ac3def03
     (run_id 5j0ryst8)
 - launcher: generate_mcts_sem.py
+  hash: "ae450961"
   config_root: mcts_sem_v02_prm800k
   overrides:
     llm: llama_3b
@@ -1203,6 +1292,7 @@
   note: backfilled from mcts_sem_v02--level-4--Llama3.2-3B--qwen--d-20--bs-4--b-080--cfg-ae450961
     (run_id zyheqs7l)
 - launcher: generate_mcts_sem.py
+  hash: "af1f6f2e"
   config_root: mcts_sem_v02_prm800k
   overrides:
     llm: qwen_math_1_5b
@@ -1219,6 +1309,7 @@
     (run_id fvtvd9hj); scored 2026-07-09, pass@gb .9023±.0186 (already in
     docs/exp-comp-prm800k-level4.md agg_strategy table)
 - launcher: generate_mcts_sem.py
+  hash: "af62a80b"
   config_root: mcts_sem_v02_prm800k
   overrides:
     llm: llama_3b
@@ -1232,6 +1323,7 @@
   note: backfilled from mcts_sem_v02--level-4--Llama3.2-3B--qwen--d-20--bs-4--b-080--cfg-af62a80b
     (run_id iso8ux18)
 - launcher: generate_mcts_sem.py
+  hash: "afd11edc"
   config_root: mcts_sem_v02_prm800k
   overrides:
     llm: qwen_3b
@@ -1247,6 +1339,7 @@
     (run_id 4xtvcqlh); scored 2026-07-09, pass@gb .8438±.0227 (already in
     docs/exp-comp-prm800k-level4.md agg_strategy w_eff=10 table)
 - launcher: generate_mcts_sem.py
+  hash: "b12fd984"
   config_root: mcts_sem_v02_prm800k
   overrides:
     prm: qwen_prm
@@ -1261,6 +1354,7 @@
     (run_id s6ud58ix); scored 2026-07-09, pass@gb .6094±.0306 (already in
     docs/exp-comp-prm800k-level4.md lam/ds_alpha joint sweep llama-1b table)
 - launcher: generate_mcts_cnt.py
+  hash: "b7f043a2"
   config_root: mcts_cnt_prm800k
   overrides:
     llm: qwen_3b
@@ -1274,6 +1368,7 @@
   note: backfilled from mcts_cnt_v01--level-4--Qwen2.5-3B--qwen--d-20--bs-4--b-080--cfg-b7f043a2
     (run_id z9g695wc)
 - launcher: generate_mcts_cnt.py
+  hash: "b9bdc323"
   config_root: mcts_cnt_prm800k
   overrides:
     llm: qwen_math_1_5b
@@ -1287,6 +1382,7 @@
   note: backfilled from mcts_cnt--level-4--Qwen2.5-Math-1.5B--qwen--d-20--bs-4--b-080--cfg-b9bdc323
     (run_id 9skdu6r4)
 - launcher: generate_mcts_cnt.py
+  hash: "ba452066"
   config_root: mcts_cnt_prm800k
   overrides:
     llm: llama_3b
@@ -1298,6 +1394,7 @@
   note: backfilled from mcts_cnt_v01--level-4--Llama3.2-3B--rlhflow--d-20--bs-4--b-080--cfg-ba452066
     (run_id 87yk0nf9)
 - launcher: generate_mcts_cnt.py
+  hash: "bb778e7b"
   config_root: mcts_cnt_prm800k
   overrides:
     llm: qwen_3b
@@ -1309,6 +1406,7 @@
   note: backfilled from mcts_cnt_v01--level-4--Qwen2.5-3B--rlhflow--d-20--bs-4--b-080--cfg-bb778e7b
     (run_id gg9cvlx5)
 - launcher: generate_mcts_cnt.py
+  hash: "be0b29f3"
   config_root: mcts_cnt_prm800k
   overrides:
     llm: llama_3b_gptq
@@ -1320,6 +1418,7 @@
   note: backfilled from mcts_cnt_v01--level-4--Llama3.2-3B-GPTQ--rlhflow--d-20--bs-4--b-080--cfg-be0b29f3
     (run_id c9qcq6dk)
 - launcher: generate_mcts_cnt.py
+  hash: "bea935c7"
   config_root: mcts_cnt_prm800k
   overrides:
     llm: qwen_7b_gptq_int4
@@ -1332,6 +1431,7 @@
   note: backfilled from mcts_cnt_v01--level-4--Qwen2.5-7B-GPTQ-Int4--qwen--d-20--bs-4--b-080--cfg-bea935c7
     (run_id pk4vy32g)
 - launcher: generate_mcts_sem.py
+  hash: "bf22ecf8"
   config_root: mcts_sem_v02_prm800k
   overrides:
     llm: qwen_math_1_5b
@@ -1346,6 +1446,7 @@
     (run_id vjczoukn); scored 2026-07-09, pass@gb .8633±.0215 (already in
     docs/exp-comp-prm800k-level4.md lam/ds_alpha joint sweep table)
 - launcher: generate_mcts_bl_cnt_v01.py
+  hash: "c055d98b"
   config_root: mcts_bl_cnt_v01_prm800k
   overrides:
     prm: qwen_prm
@@ -1358,6 +1459,7 @@
     (run_id ok5kmv0q); scored 2026-07-09, pass@gb .4414±.0311 (already in
     docs/exp-comp-prm800k-level4.md cnt-mcts-bl model family table)
 - launcher: generate_mcts_sem.py
+  hash: "c9afd826"
   config_root: mcts_sem_v02_prm800k
   overrides:
     llm: llama_3b
@@ -1371,6 +1473,7 @@
   note: backfilled from mcts_sem_v02--level-4--Llama3.2-3B--qwen--d-20--bs-4--b-080--cfg-c9afd826
     (run_id e5t3shoh)
 - launcher: generate_mcts_sem.py
+  hash: "cb4ca30c"
   config_root: mcts_sem_v02_prm800k
   overrides:
     llm: llama_3b
@@ -1385,6 +1488,7 @@
   note: backfilled from mcts_sem_v02--level-4--Llama3.2-3B--qwen--d-20--bs-4--b-080--cfg-cb4ca30c
     (run_id b4g7hjrn)
 - launcher: generate_mcts_cnt.py
+  hash: "d13c8fc3"
   config_root: mcts_cnt_prm800k
   overrides:
     llm: llama_3b
@@ -1398,6 +1502,7 @@
   note: backfilled from mcts_cnt--level-4--Llama3.2-3B--qwen--d-20--bs-4--b-080--cfg-d13c8fc3
     (run_id 5opc7rii)
 - launcher: generate_mcts_sem.py
+  hash: "e1e8503f"
   config_root: mcts_sem_v02_prm800k
   overrides:
     prm: qwen_prm
@@ -1410,6 +1515,7 @@
   note: backfilled from mcts_sem_v02--level-4--Llama3.2-1B--qwen--d-20--bs-4--b-080--cfg-e1e8503f
     (run_id neevs4k1)
 - launcher: generate_mcts_cnt.py
+  hash: "e32bd042"
   config_root: mcts_cnt_prm800k
   overrides:
     llm: qwen_7b_gptq_int4
@@ -1421,6 +1527,7 @@
   note: backfilled from mcts_cnt_v01--level-4--Qwen2.5-7B-GPTQ-Int4--rlhflow--d-20--bs-4--b-080--cfg-e32bd042
     (run_id qumxbcc8)
 - launcher: generate_mcts_cnt.py
+  hash: "e829c53b"
   config_root: mcts_cnt_prm800k
   overrides:
     llm: llama_3b
@@ -1434,6 +1541,7 @@
   note: backfilled from mcts_cnt--level-4--Llama3.2-3B--rlhflow--d-20--bs-4--b-080--cfg-e829c53b
     (run_id e5ki98he)
 - launcher: generate_mcts_sem.py
+  hash: "ecb51fef"
   config_root: mcts_bl_sem_v01_prm800k
   overrides:
     prm: qwen_prm
@@ -1448,6 +1556,7 @@
     (run_id vat9uzl5); trials corrected 1->2 (run.num_trials=2 default, only 1 .done
     at backfill time); scored 2026-07-09, pass@gb .5195±.0313
 - launcher: generate_mcts_sem.py
+  hash: "f5167568"
   config_root: mcts_sem_v02_prm800k
   overrides:
     llm: llama_3b
@@ -1463,6 +1572,7 @@
     (run_id sjpxkjy6); scored 2026-07-09, pass@gb .7227±.0280 (already in
     docs/exp-comp-prm800k-level4.md lam/ds_alpha joint sweep llama-3b table)
 - launcher: generate_mcts_sem.py
+  hash: "f5a51c3a"
   config_root: mcts_sem_v02_prm800k
   overrides:
     prm: qwen_prm
@@ -1476,6 +1586,7 @@
   note: backfilled from mcts_sem_v02--level-4--Llama3.2-1B--qwen--d-20--bs-4--b-080--cfg-f5a51c3a
     (run_id to6m79v2)
 - launcher: generate_mcts_sem.py
+  hash: "f9915052"
   config_root: mcts_sem_v02_prm800k
   overrides:
     llm: llama_3b
@@ -1490,6 +1601,7 @@
     (run_id ck5c2n09); scored 2026-07-09, pass@gb .7305±.0278 (already in
     docs/exp-comp-prm800k-level4.md lam/ds_alpha joint sweep llama-3b table)
 - launcher: generate_mcts_sem.py
+  hash: "f9e8eb8b"
   config_root: mcts_sem_v02_prm800k
   overrides:
     prm: qwen_prm
@@ -1503,6 +1615,7 @@
     (run_id do56sykw); scored 2026-07-09, pass@gb .6289±.0303 (already in
     docs/exp-comp-prm800k-level4.md lam/ds_alpha joint sweep llama-1b table)
 - launcher: generate_mcts_cnt.py
+  hash: "fbdc4cc0"
   config_root: mcts_cnt_prm800k
   overrides:
     llm: qwen_math_1_5b
@@ -1515,6 +1628,7 @@
   note: backfilled from mcts_cnt_v01--level-4--Qwen2.5-Math-1.5B--rlhflow--d-20--bs-4--b-080--cfg-fbdc4cc0
     (run_id am09p6gf)
 - launcher: generate_mcts_sem.py
+  hash: "fc47bef8"
   config_root: mcts_sem_v02_prm800k
   overrides:
     llm: llama_3b
@@ -1530,6 +1644,7 @@
     (run_id durd587z); scored 2026-07-09, pass@gb .7422±.0274 (already in
     docs/exp-comp-prm800k-level4.md lam/ds_alpha joint sweep llama-3b table)
 - launcher: generate_mcts_sem.py
+  hash: "fe3325af"
   config_root: mcts_bl_sem_v01_prm800k
   overrides:
     llm: qwen_7b_gptq_int4
@@ -1545,6 +1660,7 @@
     (run_id xc7rd2nt); trials corrected 1->2 (run.num_trials=2 default, only 1 .done
     at backfill time); scored 2026-07-09, pass@gb .9102±.0179
 - launcher: generate_mcts_sem.py
+  hash: "b6c3b99c"
   config_root: mcts_bl_sem_v01_prm800k
   overrides:
     llm: qwen_3b_gptq_int4
@@ -1560,6 +1676,7 @@
     (run_id g1dwjiyv); scored 2026-07-09, pass@gb .7422±.0274 (already in
     docs/exp-comp-prm800k-level4.md sem-mcts-bl w_eff=100 table)
 - launcher: generate_mcts_sem.py
+  hash: "fa3a0c0a"
   config_root: mcts_bl_sem_v01_prm800k
   overrides:
     llm: qwen_7b_gptq_int4
@@ -1575,6 +1692,7 @@
     (run_id 80by1b4f); scored 2026-07-09, pass@gb .8906±.0195 (already in
     docs/exp-comp-prm800k-level4.md sem-mcts-bl w_eff=100 table)
 - launcher: generate_mcts_sem.py
+  hash: "d5f27e0f"
   config_root: mcts_sem_v02_prm800k
   overrides:
     llm: qwen_math_1_5b
@@ -1591,6 +1709,7 @@
     (run_id wixl51ql); scored 2026-07-09, pass@gb .8867±.0198 (already in
     docs/exp-comp-prm800k-level4.md agg_strategy comparison lam=0.1 w_eff=10 table)
 - launcher: generate_mcts_bl_cnt.py
+  hash: "bc421e24"
   config_root: mcts_bl_kube_v01_prm800k
   overrides:
     prm: qwen_prm
@@ -1604,8 +1723,9 @@
     docs/exp-comp-prm800k-level4.md cnt-mcts-bl-v02 model family/size/quantization table).
     Variant renamed 2026-07-16 from mcts_bl_cnt_v02 to mcts_bl_kube_v01;
     result dir migrated from mcts_bl_cnt_v02--level-4--Llama3.2-1B--qwen--d-20--bs-4--b-080--cfg-4586b6a1
-    (old hash 4586b6a1) -- see docs/decisions/bl-cnt-to-bl-kube-rename.md
+    (old hash 4586b6a1)
 - launcher: generate_mcts_bl_cnt.py
+  hash: "06feb79e"
   config_root: mcts_bl_kube_v01_prm800k
   overrides:
     llm: llama_3b
@@ -1620,8 +1740,9 @@
     docs/exp-comp-prm800k-level4.md cnt-mcts-bl-v02 model family/size/quantization table).
     Variant renamed 2026-07-16 from mcts_bl_cnt_v02 to mcts_bl_kube_v01;
     result dir migrated from mcts_bl_cnt_v02--level-4--Llama3.2-3B--qwen--d-20--bs-4--b-080--cfg-55643f02
-    (old hash 55643f02) -- see docs/decisions/bl-cnt-to-bl-kube-rename.md
+    (old hash 55643f02)
 - launcher: generate_mcts_bl_cnt.py
+  hash: "f0dcc67f"
   config_root: mcts_bl_kube_v01_prm800k
   overrides:
     llm: qwen_3b
@@ -1636,8 +1757,9 @@
     docs/exp-comp-prm800k-level4.md cnt-mcts-bl-v02 model family/size/quantization table).
     Variant renamed 2026-07-16 from mcts_bl_cnt_v02 to mcts_bl_kube_v01;
     result dir migrated from mcts_bl_cnt_v02--level-4--Qwen2.5-3B--qwen--d-20--bs-4--b-080--cfg-e1360dda
-    (old hash e1360dda) -- see docs/decisions/bl-cnt-to-bl-kube-rename.md
+    (old hash e1360dda)
 - launcher: generate_mcts_bl_cnt.py
+  hash: "aade1550"
   config_root: mcts_bl_kube_v01_prm800k
   overrides:
     llm: qwen_7b_gptq_int4
@@ -1652,8 +1774,9 @@
     docs/exp-comp-prm800k-level4.md cnt-mcts-bl-v02 model family/size/quantization table).
     Variant renamed 2026-07-16 from mcts_bl_cnt_v02 to mcts_bl_kube_v01;
     result dir migrated from mcts_bl_cnt_v02--level-4--Qwen2.5-7B-GPTQ-Int4--qwen--d-20--bs-4--b-080--cfg-0ef9c289
-    (old hash 0ef9c289) -- see docs/decisions/bl-cnt-to-bl-kube-rename.md
+    (old hash 0ef9c289)
 - launcher: generate_mcts_bl_cnt.py
+  hash: "7dd65d04"
   config_root: mcts_bl_kube_v01_prm800k
   overrides:
     llm: qwen_math_1_5b
@@ -1668,8 +1791,9 @@
     docs/exp-comp-prm800k-level4.md cnt-mcts-bl-v02 model family/size/quantization table).
     Variant renamed 2026-07-16 from mcts_bl_cnt_v02 to mcts_bl_kube_v01;
     result dir migrated from mcts_bl_cnt_v02--level-4--Qwen2.5-Math-1.5B--qwen--d-20--bs-4--b-080--cfg-497d2e67
-    (old hash 497d2e67) -- see docs/decisions/bl-cnt-to-bl-kube-rename.md
+    (old hash 497d2e67)
 - launcher: generate_mcts_bl_cnt.py
+  hash: "e8c9626f"
   config_root: mcts_bl_kdepth_v01_prm800k
   overrides:
     prm: qwen_prm
@@ -1683,8 +1807,9 @@
     docs/exp-comp-prm800k-level4.md cnt-mcts-bl-v03 model family/size/quantization table).
     Variant renamed 2026-07-17 from mcts_bl_cnt_v03 to mcts_bl_kdepth_v01;
     result dir migrated from mcts_bl_cnt_v03--level-4--Llama3.2-1B--qwen--d-20--bs-4--b-080--cfg-8dda8957
-    (old hash 8dda8957) -- see docs/decisions/bl-cnt-to-bl-kdepth-rename.md
+    (old hash 8dda8957)
 - launcher: generate_mcts_bl_cnt.py
+  hash: "ed731d7b"
   config_root: mcts_bl_kdepth_v01_prm800k
   overrides:
     llm: llama_3b
@@ -1699,8 +1824,9 @@
     docs/exp-comp-prm800k-level4.md cnt-mcts-bl-v03 model family/size/quantization table).
     Variant renamed 2026-07-17 from mcts_bl_cnt_v03 to mcts_bl_kdepth_v01;
     result dir migrated from mcts_bl_cnt_v03--level-4--Llama3.2-3B--qwen--d-20--bs-4--b-080--cfg-3978c92d
-    (old hash 3978c92d) -- see docs/decisions/bl-cnt-to-bl-kdepth-rename.md
+    (old hash 3978c92d)
 - launcher: generate_mcts_bl_cnt.py
+  hash: "e74406ac"
   config_root: mcts_bl_kdepth_v01_prm800k
   overrides:
     llm: qwen_3b
@@ -1715,8 +1841,9 @@
     docs/exp-comp-prm800k-level4.md cnt-mcts-bl-v03 model family/size/quantization table).
     Variant renamed 2026-07-17 from mcts_bl_cnt_v03 to mcts_bl_kdepth_v01;
     result dir migrated from mcts_bl_cnt_v03--level-4--Qwen2.5-3B--qwen--d-20--bs-4--b-080--cfg-e1311880
-    (old hash e1311880) -- see docs/decisions/bl-cnt-to-bl-kdepth-rename.md
+    (old hash e1311880)
 - launcher: generate_mcts_bl_cnt.py
+  hash: "883e5265"
   config_root: mcts_bl_kdepth_v01_prm800k
   overrides:
     llm: qwen_7b_gptq_int4
@@ -1731,8 +1858,9 @@
     docs/exp-comp-prm800k-level4.md cnt-mcts-bl-v03 model family/size/quantization table).
     Variant renamed 2026-07-17 from mcts_bl_cnt_v03 to mcts_bl_kdepth_v01;
     result dir migrated from mcts_bl_cnt_v03--level-4--Qwen2.5-7B-GPTQ-Int4--qwen--d-20--bs-4--b-080--cfg-4a99b754
-    (old hash 4a99b754) -- see docs/decisions/bl-cnt-to-bl-kdepth-rename.md
+    (old hash 4a99b754)
 - launcher: generate_mcts_bl_cnt.py
+  hash: "cbbbeccb"
   config_root: mcts_bl_kdepth_v01_prm800k
   overrides:
     llm: qwen_math_1_5b
@@ -1747,8 +1875,9 @@
     docs/exp-comp-prm800k-level4.md cnt-mcts-bl-v03 model family/size/quantization table).
     Variant renamed 2026-07-17 from mcts_bl_cnt_v03 to mcts_bl_kdepth_v01;
     result dir migrated from mcts_bl_cnt_v03--level-4--Qwen2.5-Math-1.5B--qwen--d-20--bs-4--b-080--cfg-12183f3b
-    (old hash 12183f3b) -- see docs/decisions/bl-cnt-to-bl-kdepth-rename.md
+    (old hash 12183f3b)
 - launcher: generate_mcts_sem.py
+  hash: "7a516838"
   config_root: mcts_bl_sem_v01_prm800k
   overrides:
     llm: qwen_3b_gptq_int4
@@ -1764,6 +1893,7 @@
     (run_id ic5ixmjt); scored 2026-07-09, pass@gb .8086±.0246 (in
     docs/exp-comp-prm800k-level4.md sem-mcts-bl w_eff=10 table)
 - launcher: generate_mcts_sem.py
+  hash: "3ca318f6"
   config_root: mcts_bl_sem_v01_prm800k
   overrides:
     llm: llama_3b
@@ -1784,6 +1914,7 @@
     trials on disk; not scored; needs a rerun after a length guard (or a
     larger max_model_len). recorded is false until 2/2 trials complete.
 - launcher: generate_mcts_sem.py
+  hash: "0f06296f"
   config_root: mcts_bl_sem_v01_prm800k
   overrides:
     llm: llama_3b
@@ -1803,6 +1934,7 @@
     called these two attempts at one cell). recorded is false until 2/2
     trials complete.
 - launcher: generate_mcts_cnt.py
+  hash: "0f003563"
   config_root: mcts_cnt_prm800k
   overrides:
     prm: qwen_prm
@@ -1816,6 +1948,7 @@
     .3619±.0294 (docs/exp-comp-prm800k-level5.md "model family, size,
     quantization comparison (qwen PRM)")
 - launcher: generate_mcts_cnt.py
+  hash: "2785219b"
   config_root: mcts_cnt_prm800k
   overrides:
     llm: llama_3b
@@ -1830,6 +1963,7 @@
     .5522±.0304 (docs/exp-comp-prm800k-level5.md "model family, size,
     quantization comparison (qwen PRM)")
 - launcher: generate_mcts_cnt.py
+  hash: "0daecfca"
   config_root: mcts_cnt_prm800k
   overrides:
     llm: qwen_3b
@@ -1844,6 +1978,7 @@
     .6978±.0281 (docs/exp-comp-prm800k-level5.md "model family, size,
     quantization comparison (qwen PRM)")
 - launcher: generate_mcts_cnt.py
+  hash: "9e1d3b8c"
   config_root: mcts_cnt_prm800k
   overrides:
     llm: qwen_7b_gptq_int4
@@ -1858,6 +1993,7 @@
     .7537±.0264 (docs/exp-comp-prm800k-level5.md "model family, size,
     quantization comparison (qwen PRM)")
 - launcher: generate_mcts_cnt.py
+  hash: "3eb8c1ee"
   config_root: mcts_cnt_prm800k
   overrides:
     llm: qwen_math_1_5b
@@ -1872,6 +2008,7 @@
     .7575±.0262 (docs/exp-comp-prm800k-level5.md "model family, size,
     quantization comparison (qwen PRM)")
 - launcher: generate_mcts_sem.py
+  hash: "9a5a5377"
   config_root: mcts_sem_v02_prm800k
   overrides:
     llm: llama_1b
@@ -1888,6 +2025,7 @@
     pass@gb .2910±.0278 (docs/exp-comp-prm800k-level5.md "lam / ds_alpha
     joint sweep (v02, llama-1b, step 1 done)")
 - launcher: generate_mcts_sem.py
+  hash: "8f81ed9d"
   config_root: mcts_sem_v02_prm800k
   overrides:
     llm: llama_1b
@@ -1904,6 +2042,7 @@
     pass@gb .2985±.0280 (docs/exp-comp-prm800k-level5.md "lam / ds_alpha
     joint sweep (v02, llama-1b, step 1 done)")
 - launcher: generate_mcts_sem.py
+  hash: "370ebb8c"
   config_root: mcts_sem_v02_prm800k
   overrides:
     llm: llama_1b
@@ -1920,6 +2059,7 @@
     pass@gb .3507±.0292 (docs/exp-comp-prm800k-level5.md "lam / ds_alpha
     joint sweep (v02, llama-1b, step 1 done)")
 - launcher: generate_mcts_sem.py
+  hash: "eb5eaadc"
   config_root: mcts_sem_v02_prm800k
   overrides:
     llm: llama_1b
@@ -1936,6 +2076,7 @@
     pass@gb .3433±.0291 (docs/exp-comp-prm800k-level5.md "lam / ds_alpha
     joint sweep (v02, llama-1b, step 1 done)")
 - launcher: generate_mcts_sem.py
+  hash: "127e3f8f"
   config_root: mcts_sem_v02_prm800k
   overrides:
     llm: llama_1b
@@ -1952,6 +2093,7 @@
     pass@gb .3321±.0288 (docs/exp-comp-prm800k-level5.md "lam / ds_alpha
     joint sweep (v02, llama-1b, step 1 done)")
 - launcher: generate_mcts_sem.py
+  hash: "c89b788b"
   config_root: mcts_sem_v02_prm800k
   overrides:
     llm: llama_1b
@@ -1968,6 +2110,7 @@
     run_id 1ba4zs5d; pass@gb .3582±.0293 (docs/exp-comp-prm800k-level5.md
     "lam / ds_alpha joint sweep (v02, llama-1b, step 1 done)")
 - launcher: generate_mcts_sem.py
+  hash: "cb6a22b8"
   config_root: mcts_sem_v02_prm800k
   overrides:
     llm: llama_1b
@@ -1984,6 +2127,7 @@
     pass@gb .3433±.0291 (docs/exp-comp-prm800k-level5.md "lam / ds_alpha
     joint sweep (v02, llama-1b, step 1 done)")
 - launcher: generate_mcts_sem.py
+  hash: "219d2c64"
   config_root: mcts_sem_v02_prm800k
   overrides:
     llm: llama_1b
@@ -2000,6 +2144,7 @@
     run_id tdyxh9sr; pass@gb .3209±.0286 (docs/exp-comp-prm800k-level5.md
     "lam / ds_alpha joint sweep (v02, llama-1b, step 1 done)")
 - launcher: generate_mcts_sem.py
+  hash: "6463962b"
   config_root: mcts_sem_v02_prm800k
   overrides:
     llm: llama_1b
@@ -2016,6 +2161,7 @@
     pass@gb .3284±.0287 (docs/exp-comp-prm800k-level5.md "lam / ds_alpha
     joint sweep (v02, llama-1b, step 1 done)")
 - launcher: generate_mcts_sem.py
+  hash: "cd1b91dd"
   config_root: mcts_sem_v02_prm800k
   overrides:
     llm: llama_1b
@@ -2032,6 +2178,7 @@
     pass@gb .2910±.0278 (docs/exp-comp-prm800k-level5.md "lam / ds_alpha
     joint sweep (v02, llama-1b, step 1 done)")
 - launcher: generate_mcts_sem.py
+  hash: "e0ea7604"
   config_root: mcts_sem_v02_prm800k
   overrides:
     llm: llama_1b
@@ -2048,6 +2195,7 @@
     pass@gb .3433±.0291 (docs/exp-comp-prm800k-level5.md "lam / ds_alpha
     joint sweep (v02, llama-1b, step 1 done)")
 - launcher: generate_mcts_sem.py
+  hash: "d4d3ebd9"
   config_root: mcts_sem_v02_prm800k
   overrides:
     llm: llama_3b
@@ -2064,6 +2212,7 @@
     pass@gb .5336±.0305 (docs/exp-comp-prm800k-level5.md "lam / ds_alpha
     joint sweep (v02, llama-3b, step 1 done)")
 - launcher: generate_mcts_sem.py
+  hash: "8633d244"
   config_root: mcts_sem_v02_prm800k
   overrides:
     llm: llama_3b
@@ -2080,6 +2229,7 @@
     pass@gb .5299±.0305 (docs/exp-comp-prm800k-level5.md "lam / ds_alpha
     joint sweep (v02, llama-3b, step 1 done)")
 - launcher: generate_mcts_sem.py
+  hash: "d1086f9f"
   config_root: mcts_sem_v02_prm800k
   overrides:
     llm: llama_3b
@@ -2096,6 +2246,7 @@
     pass@gb .5261±.0306 (docs/exp-comp-prm800k-level5.md "lam / ds_alpha
     joint sweep (v02, llama-3b, step 1 done)")
 - launcher: generate_mcts_sem.py
+  hash: "3978d10e"
   config_root: mcts_sem_v02_prm800k
   overrides:
     llm: llama_3b
@@ -2112,6 +2263,7 @@
     pass@gb .5336±.0305 (docs/exp-comp-prm800k-level5.md "lam / ds_alpha
     joint sweep (v02, llama-3b, step 1 done)")
 - launcher: generate_mcts_sem.py
+  hash: "0d6680fe"
   config_root: mcts_sem_v02_prm800k
   overrides:
     llm: llama_3b
@@ -2128,6 +2280,7 @@
     pass@gb .5336±.0305 (docs/exp-comp-prm800k-level5.md "lam / ds_alpha
     joint sweep (v02, llama-3b, step 1 done)")
 - launcher: generate_mcts_sem.py
+  hash: "d8bfa8d9"
   config_root: mcts_sem_v02_prm800k
   overrides:
     llm: llama_3b
@@ -2144,6 +2297,7 @@
     pass@gb .5261±.0306 (docs/exp-comp-prm800k-level5.md "lam / ds_alpha
     joint sweep (v02, llama-3b, step 1 done)")
 - launcher: generate_mcts_sem.py
+  hash: "a3b6f8d8"
   config_root: mcts_sem_v02_prm800k
   overrides:
     llm: llama_3b
@@ -2160,6 +2314,7 @@
     run_id ooplo2yt; pass@gb .5373±.0305 (docs/exp-comp-prm800k-level5.md
     "lam / ds_alpha joint sweep (v02, llama-3b, step 1 done)")
 - launcher: generate_mcts_sem.py
+  hash: "fde3765e"
   config_root: mcts_sem_v02_prm800k
   overrides:
     llm: llama_3b
@@ -2177,6 +2332,7 @@
     run_id pgugz95w; pass@gb .5597±.0304 (docs/exp-comp-prm800k-level5.md
     "lam / ds_alpha joint sweep (v02, llama-3b, step 1 done)")
 - launcher: generate_mcts_sem.py
+  hash: "0e46f0e4"
   config_root: mcts_sem_v02_prm800k
   overrides:
     llm: llama_3b
@@ -2194,6 +2350,7 @@
     run_id tc6d70jy; pass@gb .5784±.0302 (docs/exp-comp-prm800k-level5.md
     "lam / ds_alpha joint sweep (v02, llama-3b, step 1 done)")
 - launcher: generate_mcts_sem.py
+  hash: "de019b1b"
   config_root: mcts_sem_v02_prm800k
   overrides:
     llm: llama_3b
@@ -2211,6 +2368,7 @@
     run_id hswb2qoq; pass@gb .5560±.0304 (docs/exp-comp-prm800k-level5.md
     "lam / ds_alpha joint sweep (v02, llama-3b, step 1 done)")
 - launcher: generate_mcts_sem.py
+  hash: "b87ce67e"
   config_root: mcts_sem_v02_prm800k
   overrides:
     llm: llama_3b
@@ -2228,6 +2386,7 @@
     run_id bm2osrgi; pass@gb .5634±.0304 (docs/exp-comp-prm800k-level5.md
     "lam / ds_alpha joint sweep (v02, llama-3b, step 1 done)")
 - launcher: generate_mcts_sem.py
+  hash: "ddd4002a"
   config_root: mcts_sem_v02_prm800k
   overrides:
     llm: llama_3b
@@ -2245,6 +2404,7 @@
     run_id q7yxcuq7; pass@gb .5485±.0305 (docs/exp-comp-prm800k-level5.md
     "lam / ds_alpha joint sweep (v02, llama-3b, step 1 done)")
 - launcher: generate_mcts_sem.py
+  hash: "d10de74d"
   config_root: mcts_sem_v02_prm800k
   overrides:
     llm: llama_3b
@@ -2262,6 +2422,7 @@
     run_id rq603tet; pass@gb .5485±.0305 (docs/exp-comp-prm800k-level5.md
     "lam / ds_alpha joint sweep (v02, llama-3b, step 1 done)")
 - launcher: generate_mcts_sem.py
+  hash: "249e41ee"
   config_root: mcts_sem_v02_prm800k
   overrides:
     llm: llama_3b
@@ -2279,6 +2440,7 @@
     run_id ljyceid9; pass@gb .5410±.0305 (docs/exp-comp-prm800k-level5.md
     "lam / ds_alpha joint sweep (v02, llama-3b, step 1 done)")
 - launcher: generate_mcts_sem.py
+  hash: "b45bd9a0"
   config_root: mcts_sem_v02_prm800k
   overrides:
     llm: llama_3b
@@ -2304,6 +2466,7 @@
 #     as planned pending the 2nd trial. recorded: false throughout
 #     (nothing to record yet at 1/2 trials).
 - launcher: generate_mcts_sem.py
+  hash: "2d955515"
   config_root: mcts_sem_v02_prm800k
   overrides:
     llm: qwen_7b_gptq_int4
@@ -2321,6 +2484,7 @@
     3l1vzy8m; pass@gb .7687±.0258 (docs/exp-comp-prm800k-level5.md
     "lam / ds_alpha joint sweep (qwen-7b gptq-int4)")
 - launcher: generate_mcts_sem.py
+  hash: "17c71cb9"
   config_root: mcts_sem_v02_prm800k
   overrides:
     llm: qwen_7b_gptq_int4
@@ -2338,6 +2502,7 @@
     es99bc0h; pass@gb .7873±.0250 (docs/exp-comp-prm800k-level5.md
     "lam / ds_alpha joint sweep (qwen-7b gptq-int4)")
 - launcher: generate_mcts_sem.py
+  hash: "1510dd5a"
   config_root: mcts_sem_v02_prm800k
   overrides:
     llm: qwen_7b_gptq_int4
@@ -2355,6 +2520,7 @@
     l1lgaa6a; pass@gb .7761±.0255 (docs/exp-comp-prm800k-level5.md
     "lam / ds_alpha joint sweep (qwen-7b gptq-int4)")
 - launcher: generate_mcts_sem.py
+  hash: "8cfa0e6f"
   config_root: mcts_sem_v02_prm800k
   overrides:
     llm: qwen_7b_gptq_int4
@@ -2372,6 +2538,7 @@
     b1ssdntk; pass@gb .7799±.0254 (docs/exp-comp-prm800k-level5.md
     "lam / ds_alpha joint sweep (qwen-7b gptq-int4)")
 - launcher: generate_mcts_sem.py
+  hash: "4f118d41"
   config_root: mcts_sem_v02_prm800k
   overrides:
     llm: qwen_7b_gptq_int4
@@ -2389,6 +2556,7 @@
     9mocwqq1; pass@gb .7575±.0262 (docs/exp-comp-prm800k-level5.md
     "lam / ds_alpha joint sweep (qwen-7b gptq-int4)")
 - launcher: generate_mcts_sem.py
+  hash: "9ae74311"
   config_root: mcts_sem_v02_prm800k
   overrides:
     llm: qwen_7b_gptq_int4
@@ -2410,6 +2578,7 @@
 #     w_eff=10/100 step-1 blocks -- found via 2026-07-13 queue
 #     audit: 6 result dirs done on disk/W&B, no ledger entry.
 - launcher: generate_mcts_sem.py
+  hash: "b425e187"
   config_root: mcts_sem_v02_prm800k
   overrides:
     llm: qwen_math_1_5b
@@ -2427,6 +2596,7 @@
     rrnvx096; pass@gb .7425±.0268 (docs/exp-comp-prm800k-level5.md
     "lam / ds_alpha joint sweep (qwen-math-1.5b)")
 - launcher: generate_mcts_sem.py
+  hash: "711204f7"
   config_root: mcts_sem_v02_prm800k
   overrides:
     llm: qwen_math_1_5b
@@ -2444,6 +2614,7 @@
     by68fjij; pass@gb .7015±.0280 (docs/exp-comp-prm800k-level5.md
     "lam / ds_alpha joint sweep (qwen-math-1.5b)")
 - launcher: generate_mcts_sem.py
+  hash: "35918e8b"
   config_root: mcts_sem_v02_prm800k
   overrides:
     llm: qwen_math_1_5b
@@ -2461,6 +2632,7 @@
     bb6rpjps; pass@gb .7500±.0265 (docs/exp-comp-prm800k-level5.md
     "lam / ds_alpha joint sweep (qwen-math-1.5b)")
 - launcher: generate_mcts_sem.py
+  hash: "b115065e"
   config_root: mcts_sem_v02_prm800k
   overrides:
     llm: qwen_math_1_5b
@@ -2478,6 +2650,7 @@
     5o718fai; pass@gb .6866±.0284 (docs/exp-comp-prm800k-level5.md
     "lam / ds_alpha joint sweep (qwen-math-1.5b)")
 - launcher: generate_mcts_sem.py
+  hash: "870767e1"
   config_root: mcts_sem_v02_prm800k
   overrides:
     llm: qwen_math_1_5b
@@ -2495,6 +2668,7 @@
     a4phhmiu; pass@gb .7164±.0276 (docs/exp-comp-prm800k-level5.md
     "lam / ds_alpha joint sweep (qwen-math-1.5b)")
 - launcher: generate_mcts_sem.py
+  hash: "68c5dc4e"
   config_root: mcts_sem_v02_prm800k
   overrides:
     llm: qwen_math_1_5b
@@ -2516,6 +2690,7 @@
 #     w_eff=1, lam=1.0 cell -- found via 2026-07-13 spot check:
 #     result dir done on disk/W&B, no ledger entry.
 - launcher: generate_mcts_sem.py
+  hash: "a27d7abc"
   config_root: mcts_sem_v02_prm800k
   overrides:
     llm: llama_1b
@@ -2540,6 +2715,7 @@
 #     fixes made 2026-07-13/14 (utils/configs.py, utils/metrics.py,
 #     core/scoring.py) to score correctly.
 - launcher: generate_mcts_cnt.py
+  hash: "4c6eeea3"
   config_root: mcts_cnt_prm800k
   overrides:
     llm: llama_1b
@@ -2554,6 +2730,7 @@
     .9023±.0131 (docs/exp-comp-gsm8k.md "model family, size,
     quantization comparison (QwenPRM)")
 - launcher: generate_mcts_cnt.py
+  hash: "f4e9d64e"
   config_root: mcts_cnt_prm800k
   overrides:
     llm: qwen_7b_gptq_int4
@@ -2568,6 +2745,7 @@
     pass@gb .9727±.0072 (docs/exp-comp-gsm8k.md "model family,
     size, quantization comparison (QwenPRM)")
 - launcher: generate_mcts_cnt.py
+  hash: "ba773291"
   config_root: mcts_cnt_prm800k
   overrides:
     llm: llama_3b
@@ -2584,6 +2762,7 @@
     failed (skipped by compute_stats.py) and completed naturally on
     a later pass -- did not use prepare_scored_dataset.py recovery.
 - launcher: generate_mcts_cnt.py
+  hash: "47bff566"
   config_root: mcts_cnt_prm800k
   overrides:
     llm: qwen_3b
@@ -2598,6 +2777,7 @@
     .9707±.0075 (docs/exp-comp-gsm8k.md "model family, size,
     quantization comparison (QwenPRM)")
 - launcher: generate_mcts_cnt.py
+  hash: "5a20db26"
   config_root: mcts_cnt_prm800k
   overrides:
     llm: qwen_math_1_5b
@@ -2616,6 +2796,7 @@
 #     (3 models x lam=1.0/0.1/0.01) -- launched 2026-07-13, all
 #     2/2 done as of 2026-07-14 W&B check.
 - launcher: generate_mcts_sem.py
+  hash: "83d26939"
   config_root: mcts_sem_v02_prm800k
   overrides:
     llm: llama_1b
@@ -2633,6 +2814,7 @@
     cao33yfz; pass@gb .3396±.0290 (docs/exp-comp-prm800k-level5.md
     "lam / ds_alpha joint sweep (llama-1b)")
 - launcher: generate_mcts_sem.py
+  hash: "4fbd47df"
   config_root: mcts_sem_v02_prm800k
   overrides:
     llm: llama_1b
@@ -2650,6 +2832,7 @@
     dggu24ja; pass@gb .3470±.0291 (docs/exp-comp-prm800k-level5.md
     "lam / ds_alpha joint sweep (llama-1b)")
 - launcher: generate_mcts_sem.py
+  hash: "94126a99"
   config_root: mcts_sem_v02_prm800k
   overrides:
     llm: llama_1b
@@ -2667,6 +2850,7 @@
     f2r2nsv7; pass@gb .3769±.0297 (docs/exp-comp-prm800k-level5.md
     "lam / ds_alpha joint sweep (llama-1b)")
 - launcher: generate_mcts_sem.py
+  hash: "c371341f"
   config_root: mcts_sem_v02_prm800k
   overrides:
     llm: qwen_math_1_5b
@@ -2684,6 +2868,7 @@
     run_id t9oed954; pass@gb .6754±.0287 (docs/exp-comp-prm800k-level5.md
     "lam / ds_alpha joint sweep (qwen-math-1.5b)")
 - launcher: generate_mcts_sem.py
+  hash: "372193f7"
   config_root: mcts_sem_v02_prm800k
   overrides:
     llm: qwen_math_1_5b
@@ -2701,6 +2886,7 @@
     run_id u5t7y0eq; pass@gb .7463±.0266 (docs/exp-comp-prm800k-level5.md
     "lam / ds_alpha joint sweep (qwen-math-1.5b)")
 - launcher: generate_mcts_sem.py
+  hash: "fc5e5101"
   config_root: mcts_sem_v02_prm800k
   overrides:
     llm: qwen_math_1_5b
@@ -2718,6 +2904,7 @@
     run_id ryzf69dm; pass@gb .7201±.0275 (docs/exp-comp-prm800k-level5.md
     "lam / ds_alpha joint sweep (qwen-math-1.5b)")
 - launcher: generate_mcts_sem.py
+  hash: "7c0d85ea"
   config_root: mcts_sem_v02_prm800k
   overrides:
     llm: qwen_7b_gptq_int4
@@ -2735,6 +2922,7 @@
     run_id be021ujq; pass@gb .7500±.0265 (docs/exp-comp-prm800k-level5.md
     "lam / ds_alpha joint sweep (qwen-7b gptq-int4)")
 - launcher: generate_mcts_sem.py
+  hash: "84b0611e"
   config_root: mcts_sem_v02_prm800k
   overrides:
     llm: qwen_7b_gptq_int4
@@ -2752,6 +2940,7 @@
     run_id r2c56ks3; pass@gb .7799±.0254 (docs/exp-comp-prm800k-level5.md
     "lam / ds_alpha joint sweep (qwen-7b gptq-int4)")
 - launcher: generate_mcts_sem.py
+  hash: "ee2a8129"
   config_root: mcts_sem_v02_prm800k
   overrides:
     llm: qwen_7b_gptq_int4
@@ -2774,6 +2963,7 @@
 #     math-1.5b w_eff=100 min/prod) -- found done via 2026-07-14
 #     W&B 24h check, no prior ledger entries for this table.
 - launcher: generate_mcts_sem.py
+  hash: "a0c0449c"
   config_root: mcts_sem_v02_prm800k
   overrides:
     llm: qwen_3b
@@ -2791,6 +2981,7 @@
     "agg_strategy comparison (qwen-3b, qwen-math-1.5b, lam=0.1,
     w_eff=10)")
 - launcher: generate_mcts_sem.py
+  hash: "78d44e1f"
   config_root: mcts_sem_v02_prm800k
   overrides:
     llm: qwen_3b
@@ -2808,6 +2999,7 @@
     "agg_strategy comparison (qwen-3b, qwen-math-1.5b, lam=0.1,
     w_eff=10)")
 - launcher: generate_mcts_sem.py
+  hash: "21a28447"
   config_root: mcts_sem_v02_prm800k
   overrides:
     llm: qwen_math_1_5b
@@ -2825,6 +3017,7 @@
     (docs/exp-comp-prm800k-level4.md "agg_strategy comparison (qwen-3b,
     qwen-math-1.5b, lam=0.1, w_eff=100)")
 - launcher: generate_mcts_sem.py
+  hash: "717ca367"
   config_root: mcts_sem_v02_prm800k
   overrides:
     llm: qwen_math_1_5b
@@ -2842,6 +3035,7 @@
     (docs/exp-comp-prm800k-level4.md "agg_strategy comparison (qwen-3b,
     qwen-math-1.5b, lam=0.1, w_eff=100)")
 - launcher: generate_mcts_sem.py
+  hash: "3cebaec0"
   config_root: mcts_sem_v02_prm800k
   overrides:
     llm: qwen_3b
@@ -2859,6 +3053,7 @@
     "agg_strategy comparison (qwen-3b, qwen-math-1.5b, lam=0.1,
     w_eff=100)")
 - launcher: generate_mcts_sem.py
+  hash: "4ef6d3b2"
   config_root: mcts_sem_v02_prm800k
   overrides:
     llm: qwen_3b
@@ -2875,3 +3070,316 @@
     run_id rmt3u7sf; pass@gb .8711±.0210 (docs/exp-comp-prm800k-level4.md
     "agg_strategy comparison (qwen-3b, qwen-math-1.5b, lam=0.1,
     w_eff=100)")
+
+# --- planned: level-5 mcts_bl_cnt_v02 score_mode sweep (qwen-3b, QwenPRM):
+#     parent_blend alpha {1.0, 0.8, 0.6} at cpuct=2.0, plus
+#     path_decay gamma {1.0, 0.8, 0.5} x cpuct {2.0, 0.5} full cross.
+#     alpha=1.0 = exact v01 control arm. Winner survives; losing
+#     score_mode slated for deletion in v03 (decisions-log 2026-07-19).
+- launcher: generate_mcts_bl_cnt.py
+  hash: "b6831cf4"
+  config_root: mcts_bl_cnt_v02_prm800k
+  overrides:
+    llm: qwen_3b
+    prm: qwen_prm
+    data.level: 5
+    search.score_mode: parent_blend
+    search.alpha: 1.0
+  trials: 2
+  feeds: [level5-cnt-bl-v02-score-mode-qwen3b]
+  group: cnt-mcts-bl-v02
+  recorded: false
+  priority: 2
+  note: level-5 qwen-3b score_mode sweep, parent_blend alpha=1.0 (exact
+    v01 control arm), cfg-b6831cf4
+- launcher: generate_mcts_bl_cnt.py
+  hash: "6d84794c"
+  config_root: mcts_bl_cnt_v02_prm800k
+  overrides:
+    llm: qwen_3b
+    prm: qwen_prm
+    data.level: 5
+    search.score_mode: parent_blend
+    search.alpha: 0.8
+  trials: 2
+  feeds: [level5-cnt-bl-v02-score-mode-qwen3b]
+  group: cnt-mcts-bl-v02
+  recorded: false
+  priority: 2
+  note: level-5 qwen-3b score_mode sweep, parent_blend alpha=0.8,
+    cfg-6d84794c
+- launcher: generate_mcts_bl_cnt.py
+  hash: "556fbf27"
+  config_root: mcts_bl_cnt_v02_prm800k
+  overrides:
+    llm: qwen_3b
+    prm: qwen_prm
+    data.level: 5
+    search.score_mode: parent_blend
+    search.alpha: 0.6
+  trials: 2
+  feeds: [level5-cnt-bl-v02-score-mode-qwen3b]
+  group: cnt-mcts-bl-v02
+  recorded: false
+  priority: 2
+  note: level-5 qwen-3b score_mode sweep, parent_blend alpha=0.6,
+    cfg-556fbf27
+- launcher: generate_mcts_bl_cnt.py
+  hash: "564fb594"
+  config_root: mcts_bl_cnt_v02_prm800k
+  overrides:
+    llm: qwen_3b
+    prm: qwen_prm
+    data.level: 5
+    search.score_mode: path_decay
+    search.gamma: 1.0
+    search.cpuct: 2.0
+  trials: 2
+  feeds: [level5-cnt-bl-v02-score-mode-qwen3b]
+  group: cnt-mcts-bl-v02
+  recorded: false
+  priority: 2
+  note: level-5 qwen-3b score_mode sweep, path_decay gamma=1.0
+    cpuct=2.0, cfg-564fb594
+- launcher: generate_mcts_bl_cnt.py
+  hash: "e97b9869"
+  config_root: mcts_bl_cnt_v02_prm800k
+  overrides:
+    llm: qwen_3b
+    prm: qwen_prm
+    data.level: 5
+    search.score_mode: path_decay
+    search.gamma: 0.8
+    search.cpuct: 2.0
+  trials: 2
+  feeds: [level5-cnt-bl-v02-score-mode-qwen3b]
+  group: cnt-mcts-bl-v02
+  recorded: false
+  priority: 2
+  note: level-5 qwen-3b score_mode sweep, path_decay gamma=0.8
+    cpuct=2.0, cfg-e97b9869
+- launcher: generate_mcts_bl_cnt.py
+  hash: "28cdcd53"
+  config_root: mcts_bl_cnt_v02_prm800k
+  overrides:
+    llm: qwen_3b
+    prm: qwen_prm
+    data.level: 5
+    search.score_mode: path_decay
+    search.gamma: 0.5
+    search.cpuct: 2.0
+  trials: 2
+  feeds: [level5-cnt-bl-v02-score-mode-qwen3b]
+  group: cnt-mcts-bl-v02
+  recorded: false
+  priority: 2
+  note: level-5 qwen-3b score_mode sweep, path_decay gamma=0.5
+    cpuct=2.0, cfg-28cdcd53
+- launcher: generate_mcts_bl_cnt.py
+  hash: "bf16554f"
+  config_root: mcts_bl_cnt_v02_prm800k
+  overrides:
+    llm: qwen_3b
+    prm: qwen_prm
+    data.level: 5
+    search.score_mode: path_decay
+    search.gamma: 1.0
+    search.cpuct: 0.5
+  trials: 2
+  feeds: [level5-cnt-bl-v02-score-mode-qwen3b]
+  group: cnt-mcts-bl-v02
+  recorded: false
+  priority: 2
+  note: level-5 qwen-3b score_mode sweep, path_decay gamma=1.0
+    cpuct=0.5, cfg-bf16554f
+- launcher: generate_mcts_bl_cnt.py
+  hash: "fa1aba74"
+  config_root: mcts_bl_cnt_v02_prm800k
+  overrides:
+    llm: qwen_3b
+    prm: qwen_prm
+    data.level: 5
+    search.score_mode: path_decay
+    search.gamma: 0.8
+    search.cpuct: 0.5
+  trials: 2
+  feeds: [level5-cnt-bl-v02-score-mode-qwen3b]
+  group: cnt-mcts-bl-v02
+  recorded: false
+  priority: 2
+  note: level-5 qwen-3b score_mode sweep, path_decay gamma=0.8
+    cpuct=0.5, cfg-fa1aba74
+- launcher: generate_mcts_bl_cnt.py
+  hash: "3b03ebe5"
+  config_root: mcts_bl_cnt_v02_prm800k
+  overrides:
+    llm: qwen_3b
+    prm: qwen_prm
+    data.level: 5
+    search.score_mode: path_decay
+    search.gamma: 0.5
+    search.cpuct: 0.5
+  trials: 2
+  feeds: [level5-cnt-bl-v02-score-mode-qwen3b]
+  group: cnt-mcts-bl-v02
+  recorded: false
+  priority: 2
+  note: level-5 qwen-3b score_mode sweep, path_decay gamma=0.5
+    cpuct=0.5, cfg-3b03ebe5
+
+# --- planned: level-5 mcts_bl_kube_v02 score_mode sweep (qwen-3b,
+#     QwenPRM, kube_schedule=parent): parent_blend alpha {1.0, 0.8,
+#     0.6} + path_decay gamma {1.0, 0.8, 0.5} x kube_c {2.0, 0.5}.
+#     Mirrors the cnt-bl-v02 sweep cell-for-cell (kube-parent
+#     path_decay == cnt path_decay / cost). alpha=1.0 = exact v01
+#     control arm. Priority 1: drains before the cnt sweep.
+- launcher: generate_mcts_bl_cnt.py
+  hash: "4db0f6ff"
+  config_root: mcts_bl_kube_v02_prm800k
+  overrides:
+    llm: qwen_3b
+    prm: qwen_prm
+    data.level: 5
+    search.score_mode: parent_blend
+    search.alpha: 1.0
+  trials: 2
+  feeds: [level5-kube-bl-v02-score-mode-qwen3b]
+  group: kube-mcts-bl-v02
+  recorded: true
+  priority: 1
+  note: level-5 qwen-3b kube score_mode sweep, parent_blend
+    alpha=1.0 (exact v01 control arm), cfg-4db0f6ff
+- launcher: generate_mcts_bl_cnt.py
+  hash: "a027f260"
+  config_root: mcts_bl_kube_v02_prm800k
+  overrides:
+    llm: qwen_3b
+    prm: qwen_prm
+    data.level: 5
+    search.score_mode: parent_blend
+    search.alpha: 0.8
+  trials: 2
+  feeds: [level5-kube-bl-v02-score-mode-qwen3b]
+  group: kube-mcts-bl-v02
+  recorded: true
+  priority: 1
+  note: level-5 qwen-3b kube score_mode sweep, parent_blend
+    alpha=0.8, cfg-a027f260
+- launcher: generate_mcts_bl_cnt.py
+  hash: "27ad5749"
+  config_root: mcts_bl_kube_v02_prm800k
+  overrides:
+    llm: qwen_3b
+    prm: qwen_prm
+    data.level: 5
+    search.score_mode: parent_blend
+    search.alpha: 0.6
+  trials: 2
+  feeds: [level5-kube-bl-v02-score-mode-qwen3b]
+  group: kube-mcts-bl-v02
+  recorded: false
+  priority: 1
+  note: level-5 qwen-3b kube score_mode sweep, parent_blend
+    alpha=0.6, cfg-27ad5749
+- launcher: generate_mcts_bl_cnt.py
+  hash: "4271e551"
+  config_root: mcts_bl_kube_v02_prm800k
+  overrides:
+    llm: qwen_3b
+    prm: qwen_prm
+    data.level: 5
+    search.score_mode: path_decay
+    search.gamma: 1.0
+    search.kube_c: 2.0
+  trials: 2
+  feeds: [level5-kube-bl-v02-score-mode-qwen3b]
+  group: kube-mcts-bl-v02
+  recorded: false
+  priority: 1
+  note: level-5 qwen-3b kube score_mode sweep, path_decay gamma=1.0
+    kube_c=2.0, cfg-4271e551
+- launcher: generate_mcts_bl_cnt.py
+  hash: "c7aa4c7e"
+  config_root: mcts_bl_kube_v02_prm800k
+  overrides:
+    llm: qwen_3b
+    prm: qwen_prm
+    data.level: 5
+    search.score_mode: path_decay
+    search.gamma: 0.8
+    search.kube_c: 2.0
+  trials: 2
+  feeds: [level5-kube-bl-v02-score-mode-qwen3b]
+  group: kube-mcts-bl-v02
+  recorded: false
+  priority: 1
+  note: level-5 qwen-3b kube score_mode sweep, path_decay gamma=0.8
+    kube_c=2.0, cfg-c7aa4c7e
+- launcher: generate_mcts_bl_cnt.py
+  hash: "26de6383"
+  config_root: mcts_bl_kube_v02_prm800k
+  overrides:
+    llm: qwen_3b
+    prm: qwen_prm
+    data.level: 5
+    search.score_mode: path_decay
+    search.gamma: 0.5
+    search.kube_c: 2.0
+  trials: 2
+  feeds: [level5-kube-bl-v02-score-mode-qwen3b]
+  group: kube-mcts-bl-v02
+  recorded: false
+  priority: 1
+  note: level-5 qwen-3b kube score_mode sweep, path_decay gamma=0.5
+    kube_c=2.0, cfg-26de6383
+- launcher: generate_mcts_bl_cnt.py
+  hash: "41daf39e"
+  config_root: mcts_bl_kube_v02_prm800k
+  overrides:
+    llm: qwen_3b
+    prm: qwen_prm
+    data.level: 5
+    search.score_mode: path_decay
+    search.gamma: 1.0
+    search.kube_c: 0.5
+  trials: 2
+  feeds: [level5-kube-bl-v02-score-mode-qwen3b]
+  group: kube-mcts-bl-v02
+  recorded: false
+  priority: 1
+  note: level-5 qwen-3b kube score_mode sweep, path_decay gamma=1.0
+    kube_c=0.5, cfg-41daf39e
+- launcher: generate_mcts_bl_cnt.py
+  hash: "7f28642e"
+  config_root: mcts_bl_kube_v02_prm800k
+  overrides:
+    llm: qwen_3b
+    prm: qwen_prm
+    data.level: 5
+    search.score_mode: path_decay
+    search.gamma: 0.8
+    search.kube_c: 0.5
+  trials: 2
+  feeds: [level5-kube-bl-v02-score-mode-qwen3b]
+  group: kube-mcts-bl-v02
+  recorded: true
+  priority: 1
+  note: level-5 qwen-3b kube score_mode sweep, path_decay gamma=0.8
+    kube_c=0.5, cfg-7f28642e
+- launcher: generate_mcts_bl_cnt.py
+  hash: "9535b114"
+  config_root: mcts_bl_kube_v02_prm800k
+  overrides:
+    llm: qwen_3b
+    prm: qwen_prm
+    data.level: 5
+    search.score_mode: path_decay
+    search.gamma: 0.5
+    search.kube_c: 0.5
+  trials: 2
+  feeds: [level5-kube-bl-v02-score-mode-qwen3b]
+  group: kube-mcts-bl-v02
+  recorded: false
+  priority: 1
+  note: level-5 qwen-3b kube score_mode sweep, path_decay gamma=0.5
+    kube_c=0.5, cfg-9535b114

@@ -253,39 +253,64 @@ class BLMCTSCntConfig(SearchConfig):
 
 @dataclass
 class BLMCTSCntV02Config(SearchConfig):
-    """Count-based MCTS (PUCT) with eager terminal backprop and a
-    path-aware frontier score (Option 1: parent-blend).
+    """Count-based MCTS with delayed-eager terminal backprop and a
+    selectable path-aware frontier score (`score_mode`).
 
     v02 of BLMCTSCntConfig's family, not a same-family bugfix -- see
     docs/decisions/bl-cnt-v02-eager-backprop-path-aware.md for the
-    full design and docs/decisions/
-    bl-cnt-path-aware-frontier-score-design.md for the analysis that
-    established plain eager backprop alone doesn't change v01's
-    ranking (puct() never reads a parent's q_value, only its own
-    frozen q plus the parent's visit count -- a backpropagated value
-    is otherwise write-only).
+    original v02 record. Motivation for value-aware scoring: v01's
+    puct() never reads a parent's q_value, only its own frozen q
+    plus the parent's visit count -- a backpropagated value is
+    otherwise write-only to selection.
 
-    Two changes relative to BLMCTSCntConfig, both in
+    Changes relative to BLMCTSCntConfig, all in
     core/mcts_bl_cnt_search_v02_00_00.py:
-      1. Terminal split + eager backprop (unconditional): a terminal
-         child backprops immediately at creation and never enters the
-         leaf frontier, instead of waiting to win a later selection.
-      2. Path-aware PUCT (Option 1): the leaf's own q_value is
-         blended with its immediate parent's q_value by `alpha`
-         before adding the (unchanged) UCB1 exploration term:
-             blended_q = alpha*q_value(leaf) + (1-alpha)*q_value(parent)
-             path_aware_puct = blended_q + cpuct*sqrt(log(N_parent)/N_leaf)
-         alpha=1.0 recovers BLMCTSCntConfig's exact puct() (the
-         parent term drops out) -- the built-in control arm for a
-         sweep. alpha in [0, 1]; alpha ~= 0.6-0.8 is the reasonable
-         starting range per the design doc's `\S`3.
+
+    1. Terminal split + DELAYED eager backprop (unconditional): a
+       terminal child never enters the leaf frontier; it is queued
+       at creation and backpropped right after the immediately
+       following selection resolves (one step of latency -- never
+       same-step, never the unbounded "maybe never" of v01's lazy
+       scheme). See the core module's docstring for the full
+       delayed-vs-immediate rationale.
+
+    2. A selectable frontier score, `score_mode` (added 2026-07-19;
+       both modes are arms of one planned sweep, after which the
+       losing mode is expected to be DELETED -- the two scorers are
+       deliberately independent, joined only by the
+       MCTS.frontier_score dispatcher, so removal is a pure
+       deletion):
+
+       score_mode="parent_blend" (default) -- one-hop blend:
+           blended_q = alpha*q(leaf) + (1-alpha)*q(parent)
+           score = blended_q + cpuct*sqrt(log(N_parent)/N_leaf)
+         Exploration term is v01's UCB1 form, unchanged. alpha in
+         [0, 1]; alpha=1.0 recovers BLMCTSCntConfig's exact puct()
+         -- the ONLY exact-v01 control arm in this config; include
+         it in any sweep.
+
+       score_mode="path_decay" -- full-path decayed subtree value:
+           q_path = sum_k gamma^k * q(ancestor_k) / sum_k gamma^k
+                    (k = 0 at the leaf, walking to the root)
+           score = q_path + cpuct*sqrt(N_parent) / (1 + N_leaf)
+         Exploration term is the AlphaZero shape, NOT v01's UCB1 --
+         so cpuct values are NOT comparable across modes; sweep
+         cpuct per mode. gamma in [0, 1]: gamma=1 is a plain path
+         average; gamma=0 reads only the leaf's own q (still with
+         the AZ-shaped u, so NOT a v01 control arm).
+
+       The cross-mode knob is idle by design (alpha unused under
+       "path_decay", gamma unused under "parent_blend").
     """
     method: str = "mcts_bl_cnt_v02"
     num_phases: int = 1000
     gen_budget: int = 80          # total generations across the run
-    cpuct: float = 2.0
-    alpha: float = 0.8            # own-q vs. parent-q blend weight;
-                                   # 1.0 = BLMCTSCntConfig's exact puct
+    cpuct: float = 2.0             # both modes; NOT comparable across
+                                   # modes (different u-term shapes)
+    score_mode: str = "parent_blend"   # "parent_blend" | "path_decay"
+    alpha: float = 0.8            # parent_blend only: own-q vs.
+                                   # parent-q blend; 1.0 = v01's puct
+    gamma: float = 0.8             # path_decay only: per-hop decay
 
     # PRM forward-pass micro-batch *inside* the search loop (distinct
     # from prm.score_batch_size, which scores the final dataset). Kept
@@ -298,13 +323,9 @@ class BLMCTSCntV02Config(SearchConfig):
 class BLMCTSKubeV01Config(SearchConfig):
     """Count-based MCTS with fractional-KUBE frontier selection.
 
-    Renamed 2026-07-16 from BLMCTSCntV02Config into its own
-    mcts_bl_kube family (v01 of that family), since it's a distinct
-    selection criterion rather than a same-family variant of
-    BLMCTSCntConfig's PUCT — see docs/decisions-log.md and
-    docs/decisions/bl-cnt-to-bl-kube-rename.md for the full mapping
-    (old method string "mcts_bl_cnt_v02" -> new "mcts_bl_kube_v01";
-    result dirs and manifests were migrated alongside).
+    Its own mcts_bl_kube algorithm family (v01 of that family) — a
+    distinct selection criterion rather than a same-family variant of
+    BLMCTSCntConfig's PUCT.
 
     Frontier counterpart of MCTSCntConfig, exactly as BLMCTSCntConfig
     is but with the leaf-selection index replaced: instead of PUCT
@@ -370,49 +391,82 @@ class BLMCTSKubeV01Config(SearchConfig):
 
 @dataclass
 class BLMCTSKubeV02Config(SearchConfig):
-    """Fractional-KUBE with eager terminal backprop, and (under
-    kube_schedule="parent" only) a path-aware frontier score.
+    """Fractional-KUBE with delayed-eager terminal backprop and a
+    path-aware frontier score (both schedules; the schedules differ
+    only in the bonus's clock).
 
     v02 of BLMCTSKubeV01Config's family -- see
-    docs/decisions/bl-cnt-v02-eager-backprop-path-aware.md `\S`
+    docs/decisions/bl-cnt-v02-eager-backprop-path-aware.md §
     "kube mechanism" for the full design and
-    docs/decisions/bl-cnt-path-aware-frontier-score-design.md `\S`7.1
+    docs/decisions/bl-cnt-path-aware-frontier-score-design.md §7.1
     for the analysis this implements.
 
     Two changes relative to BLMCTSKubeV01Config, both in
     core/mcts_bl_kube_search_v02_00_00.py:
-      1. Terminal split + eager backprop (BOTH schedules). v01 has a
-         structural defect: a max-depth dead-end always has cost <=
-         0, so kube_density() returns -inf and it is NEVER selected
-         while any finite-density node remains -- it sits in
+      1. Terminal split + DELAYED eager backprop (BOTH schedules).
+         v01 has a structural defect: a max-depth dead-end always has
+         cost <= 0, so kube_density() returns -inf and it is NEVER
+         selected while any finite-density node remains -- it sits in
          leaf_nodes forever, and its permanent is_terminal==True
          membership permanently satisfies kube_affordable's "always
          eligible" clause, silently disabling that filter's own
-         empty-set fallback. v02 backprops a terminal immediately at
-         creation and never puts it on the frontier, fixing this
+         empty-set fallback. v02 queues a terminal at creation
+         (never on the frontier) and backprops it right after the
+         immediately following selection resolves, fixing this
          directly.
-      2. Path-aware KUBE density -- "parent" schedule ONLY. The
-         "parent" bonus is exactly BLMCTSCntV02Config's PUCT bonus
-         (this file differs from bl_cnt only by the /cost division),
-         so the identical parent-blend applies to the q term before
-         the bonus and cost division. Under "global", the bonus is a
-         frontier-wide constant with no per-node channel to blend --
-         v02 supplies ONLY the terminal-split fix there, with NO
-         claim of reading propagated values differently than v01.
-         `alpha` is read but unused when kube_schedule="global".
+      2. A selectable path-aware frontier score, `score_mode`
+         (aligned 2026-07-19 with BLMCTSCntV02Config's two modes;
+         the loser of the planned sweep is expected to be DELETED
+         -- the two scorers share no code, joined only by the
+         MCTS.frontier_score dispatcher):
+
+         score_mode="parent_blend" (default) -- one-hop blend:
+             blended_q = alpha*q(leaf) + (1-alpha)*q(parent)
+             density = (blended_q + kube_c*sqrt(log(clock)/N_leaf))
+                       / cost
+           The "parent" bonus is exactly BLMCTSCntV02Config's PUCT
+           bonus (this file differs from bl_cnt only by the /cost
+           division). alpha=1.0 recovers BLMCTSKubeV01Config's
+           exact kube_density under either schedule -- the ONLY
+           exact-v01 control arm. (As first shipped 2026-07-18 the
+           blend was "parent"-only; extended to "global" the same
+           day -- see the core module docstring's history note.)
+
+         score_mode="path_decay" -- full-path decayed value +
+         AlphaZero-shaped bonus:
+             q_path = sum_k gamma^k q(ancestor_k) / sum_k gamma^k
+             density = (q_path + kube_c*sqrt(clock)/(1+N_leaf))
+                       / cost
+           Mirrors BLMCTSCntV02Config's path_decay exactly under
+           kube_schedule="parent" (same value walk, same AZ bonus
+           with clock=N_parent) before the /cost division;
+           "global" swaps clock=1+t into the same shape -- the
+           identical clock substitution the schedules have always
+           differed by. kube_c is NOT comparable across modes
+           (different bonus shapes); sweep it per mode. gamma=0.0
+           reads only the leaf's own q (NOT a v01 control arm).
+
+         clock = N_parent under kube_schedule="parent",
+         1 + t under "global", for both modes. The cross-mode knob
+         is idle by design (alpha unused under "path_decay", gamma
+         unused under "parent_blend").
     """
     method: str = "mcts_bl_kube_v02"
     num_phases: int = 1000
     gen_budget: int = 80          # total generations across the run
-    kube_c: float = 2.0            # UCB exploration coefficient
+    kube_c: float = 2.0            # bonus coefficient, both modes;
+                                   # NOT comparable across modes
+                                   # (different bonus shapes)
     kube_schedule: str = "parent"  # "parent" | "global" (see above)
     kube_affordable: bool = True   # restrict argmax to affordable
                                    # nodes (KUBE feasibility step)
-    alpha: float = 0.8            # own-q vs. parent-q blend weight,
-                                   # "parent" schedule only; 1.0 =
-                                   # BLMCTSKubeV01Config's exact
-                                   # kube_density under "parent";
-                                   # unused under "global"
+    score_mode: str = "parent_blend"   # "parent_blend" | "path_decay"
+    alpha: float = 0.8            # parent_blend only: own-q vs.
+                                   # parent-q blend; 1.0 = the exact
+                                   # BLMCTSKubeV01Config kube_density
+                                   # under either schedule (no-blend
+                                   # control arm -- include in sweeps)
+    gamma: float = 0.8             # path_decay only: per-hop decay
 
     # PRM forward-pass micro-batch *inside* the search loop (distinct
     # from prm.score_batch_size, which scores the final dataset). Kept
@@ -426,26 +480,19 @@ class BLMCTSKdepthV01Config(SearchConfig):
     """Knapsack-cost-normalized MCTS with a depth-shaping frontier
     selection bonus (no visit counts).
 
-    Renamed 2026-07-17 from BLMCTSCntV03Config into its own
-    mcts_bl_kdepth family (v01 of that family) — "kdepth" = knapsack
-    cost normalization + deterministic depth-shaping, following the
-    same reasoning as the mcts_bl_cnt_v02 -> mcts_bl_kube_v01 rename
-    the day before: this docstring already argued it was "a
-    deliberately different theoretical basis... not a refinement" of
-    anything in bl_cnt/bl_kube, and "cnt" specifically denotes
-    count-based (visit-count) exploration, which this variant has none
-    of — see docs/decisions/bl-cnt-to-bl-kdepth-rename.md for the full
-    mapping.
+    Its own mcts_bl_kdepth algorithm family (v01 of that family) —
+    "kdepth" = knapsack cost normalization + deterministic
+    depth-shaping. A deliberately different theoretical basis from
+    anything in bl_cnt/bl_kube, not a refinement: "cnt" specifically
+    denotes count-based (visit-count) exploration, which this variant
+    has none of.
 
-    Sibling of BLMCTSKubeV01Config (Fractional KUBE, renamed
-    2026-07-16 from BLMCTSCntV02Config — see
-    docs/decisions/bl-cnt-to-bl-kube-rename.md): same knapsack-style
-    objective and cost mapping, but the UCB confidence bonus is
-    replaced with a fixed depth-preference function — there is no
-    visit-count/exploration term of any kind. A deliberately
-    different theoretical basis from fractional-KUBE (no bandit/regret
-    guarantee), not a refinement of it — see
-    docs/decisions/depth-shaping-knapsack-bonus.md.
+    Sibling of BLMCTSKubeV01Config (Fractional KUBE): same
+    knapsack-style objective and cost mapping, but the UCB confidence
+    bonus is replaced with a fixed depth-preference function — there
+    is no visit-count/exploration term of any kind, and no
+    bandit/regret guarantee — see
+    docs/decisions/bl-kdepth-knapsack-bonus.md.
 
         density_i = (q_value_i + depth_beta*f_a(depth_frac_i)) / cost_i
         cost_i = max_depth - depth_i    (same mapping as bl_cnt v01 /
@@ -485,21 +532,23 @@ class BLMCTSKdepthV02Config(SearchConfig):
     -- no formula change.
 
     v02 of BLMCTSKdepthV01Config's family -- see
-    docs/decisions/bl-cnt-v02-eager-backprop-path-aware.md `\S`
+    docs/decisions/bl-cnt-v02-eager-backprop-path-aware.md §
     "kdepth scope" for why this v02 is hygiene-only, and
-    docs/decisions/bl-cnt-path-aware-frontier-score-design.md `\S`7.2
+    docs/decisions/bl-cnt-path-aware-frontier-score-design.md §7.2
     for the analysis establishing the goal is unreachable via
     backprop timing alone here: depth_density() reads only a leaf's
     own frozen q_value, its own depth, and two constants -- no
     visit-count or parent-q channel exists at all for a blend to hook
     into, so "no backprop timing -- eager, lazy, or never -- can
-    change which non-terminal node gets expanded next" (`\S`7.2,
+    change which non-terminal node gets expanded next" (§7.2,
     verbatim).
 
     One change relative to BLMCTSKdepthV01Config, in
-    core/mcts_bl_kdepth_search_v02_00_00.py: terminal split + eager
-    backprop. A terminal child backprops immediately at creation and
-    never enters the leaf frontier -- fixes the same permanently-
+    core/mcts_bl_kdepth_search_v02_00_00.py: terminal split +
+    delayed-eager backprop. A terminal child is queued at creation
+    (backpropped right after the immediately following selection;
+    timing provably inert here, applied for cross-file consistency)
+    and never enters the leaf frontier -- fixes the same permanently-
     stuck-dead-end / kube_affordable-fallback-suppression defect
     BLMCTSKubeV02Config's docstring describes (this file shares the
     identical feasibility filter). depth_density() itself is BYTE-

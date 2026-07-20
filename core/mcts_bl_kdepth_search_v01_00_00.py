@@ -2,27 +2,18 @@
 Budget-Limited MCTS with best-first leaf selection (depth-shaping
 knapsack density, no embeddings).
 
-Renamed 2026-07-17 from mcts_bl_cnt_search_v03_00_00.py to its own
-mcts_bl_kdepth family (v01 of that family) — "kdepth" = knapsack cost
-normalization + a deterministic depth-shaping bonus. Same reasoning
-as the mcts_bl_cnt_v02 -> mcts_bl_kube_v01 rename the day before: this
-variant's own docstring already argued it is "a deliberately different
-theoretical basis... not a bugfix or refinement" of anything in the
-bl_cnt/bl_kube families, and "cnt" specifically denotes count-based
-(visit-count) exploration, which this variant has none of at all — so
-keeping it filed under mcts_bl_cnt was the same category mismatch the
-KUBE rename fixed. See docs/decisions-log.md and
-docs/decisions/bl-cnt-to-bl-kdepth-rename.md for the full rationale
-and the old-name -> new-name mapping (config method/algo string,
-result dirs, and manifests were all migrated alongside the code, same
-as the KUBE rename).
+Its own mcts_bl_kdepth algorithm family (v01 of that family) —
+"kdepth" = knapsack cost normalization + a deterministic
+depth-shaping bonus. A deliberately different theoretical basis from
+the bl_cnt/bl_kube families, not a bugfix or refinement of either:
+"cnt" specifically denotes count-based (visit-count) exploration,
+which this variant has none of at all.
 
 Key difference from mcts_bl_kube_search_v01_00_00.py (fractional
-KUBE, renamed 2026-07-16 from mcts_bl_cnt_search_v02_00_00.py — see
-docs/decisions/bl-cnt-to-bl-kube-rename.md): leaf selection uses a
-deterministic depth-preference bonus instead of a UCB confidence
-bonus — there is no exploration/visit-count term at all in this
-variant. Everything else (frontier bookkeeping, expansion, backprop,
+KUBE): leaf selection uses a deterministic depth-preference bonus
+instead of a UCB confidence bonus — there is no
+exploration/visit-count term at all in this variant. Everything else
+(frontier bookkeeping, expansion, backprop,
 output shape) is identical — see mcts_bl_cnt_search_v01_00_00.py /
 mcts_bl_kube_search_v01_00_00.py's docstrings for the shared algorithm
 skeleton, including the loop's generate -> expand -> select ordering
@@ -103,7 +94,7 @@ shaping bonus in place of a UCB term):
         which inverts the intended direction — f_a(0)=0 at the root,
         f_a(1)=1 at max_depth, rewarding DEEP nodes instead. Fixed by
         indexing f_a on depth_frac, not cost_frac — see
-        docs/decisions/depth-shaping-knapsack-bonus.md.)
+        docs/decisions/bl-kdepth-knapsack-bonus.md.)
     q_value = value_sum / visit_count  (running mean, same as the PUCT
               and KUBE siblings)
 
@@ -129,14 +120,13 @@ shaping bonus in place of a UCB term):
     against a boundary case at exactly max_depth).
 
 Variant lineage: docs/algorithms.md, docs/decisions/
-depth-shaping-knapsack-bonus.md (2026-07-09) — this reuses the
-depth-decay f_a(z)=1-z**alpha shape that was in the ORIGINAL, pre-
-KUBE mcts_bl_cnt_search_v02_00_00.py (removed the same day for not
-matching Fractional KUBE's UCB structure; that file has since been
-renamed to mcts_bl_kube_search_v01_00_00.py, 2026-07-16 — see
-docs/decisions/bl-cnt-to-bl-kube-rename.md), reintroduced here as its
-own explicit variant with corrected sign and an explicit
-knapsack/affordability treatment it didn't have before.
+bl-kdepth-knapsack-bonus.md (2026-07-09) — this reuses the
+depth-decay f_a(z)=1-z**alpha shape that was in the ORIGINAL,
+pre-KUBE version of what is now mcts_bl_kube_search_v01_00_00.py
+(removed the same day for not matching Fractional KUBE's UCB
+structure), reintroduced here as its own explicit variant with
+corrected sign and an explicit knapsack/affordability treatment it
+didn't have before.
 """
 
 import random

@@ -1,57 +1,87 @@
 """
 Budget-Limited MCTS with best-first leaf selection (count-based, no
-embeddings) -- v02: eager terminal backprop + path-aware frontier
-score.
+embeddings) -- v02: delayed-eager terminal backprop + a selectable
+path-aware frontier score (score_mode: one-hop parent blend, or
+full-path decayed subtree value).
 
 Sibling: mcts_bl_cnt_search_v01_00_00.py (PUCT, unmodified). v02
-changes two things relative to v01, both from the design discussion
-in docs/decisions/bl-cnt-path-aware-frontier-score-design.md:
+changes two things relative to v01:
 
-  1. Terminal split + eager backprop. v01 pushes every freshly
-     created child -- terminal or not -- onto `leaf_nodes`; a
+  1. Terminal split + DELAYED eager backprop. v01 pushes every
+     freshly created child -- terminal or not -- onto `leaf_nodes`; a
      terminal only backprops once it later WINS a frontier selection
      (`current_node.is_terminal` branch at the top of the next loop
-     iteration). v02 instead backprops a terminal immediately at
-     creation and never puts it on the frontier at all: non-terminal
-     children still go to `leaf_nodes` as before.
-  2. Path-aware frontier score (design doc's "Option 1"). Backprop
-     alone doesn't change v01's ranking (see the design doc's `\S`2):
-     `puct()` reads a leaf's own frozen q plus its PARENT's visit
-     count, never the parent's q, so a backpropagated value is
-     write-only. v02's `path_aware_puct()` blends the leaf's own
-     q_value with its immediate parent's q_value by a tunable `alpha`,
-     so an ancestor's now-earlier-arriving backprop is actually read
-     by the node that triggered it and its still-live siblings. The
-     exploration term (`u`) is UNCHANGED (still v01's `sqrt(ln
-     N_parent / N_leaf)` UCB1 form) -- only the value term's inputs
-     change, matching the doc's Option 1 design (`\S`3): isolate one
-     variable (does neighborhood-blending help) with the smallest
-     footprint, rather than also changing the exploration-term shape
-     (`\S`4's Option 2, deferred pending Option 1 results).
+     iteration) -- possibly never. v02 instead QUEUES a terminal
+     child (never puts it on the frontier at all) and flushes the
+     queue (backprops every queued node) right after the VERY NEXT
+     selection resolves -- not immediately at creation. This is
+     deliberate, not an implementation shortcut (Tuan raised the
+     distinction, 2026-07-18): backpropping a same-batch terminal
+     sibling immediately, before the selection that's choosing among
+     its non-terminal siblings, would let information causally
+     CONCURRENT with those candidates (produced by the exact same
+     _generate_candidates call) leak into the selection ranking them
+     -- arguably not genuinely "prior" evidence at all. Delaying the
+     flush by exactly one step means a terminal's outcome influences
+     every selection AFTER the one immediately following its own
+     creation, never that one -- still bounded, still-fast
+     propagation (one step, not the unbounded "maybe never" of v01's
+     lazy scheme), but never same-step. Non-terminal children still
+     go to `leaf_nodes` as before.
+  2. Path-aware frontier score, selectable via config
+     `score_mode` (added 2026-07-19). Motivation: backprop timing
+     alone doesn't change v01's ranking -- `puct()` reads a leaf's
+     own frozen q plus its PARENT's visit count, never the parent's
+     q, so a backpropagated value is write-only regardless of when
+     it lands. Both modes below make ancestor values actually read
+     by later selections; they are arms of one planned sweep, after
+     which the losing mode is expected to be DELETED. The two
+     scorers deliberately share no code and are joined only by the
+     MCTS.frontier_score dispatcher, so that removal is a pure
+     deletion touching zero lines of the survivor.
 
-Path-aware score:
+Frontier score, score_mode="parent_blend" (default) -- one-hop blend:
     blended_q(x) = alpha * q_value(x) + (1 - alpha) * q_value(parent(x))
     path_aware_puct(x) = blended_q(x) + u(x)
     u(x) = cpuct * sqrt(log(parent_visits(x)) / visits(x))   (v01's u,
            unchanged)
 
     alpha in [0, 1]; alpha = 1.0 recovers v01's puct() exactly (the
-    parent term drops out) -- the built-in control arm for a sweep.
+    parent term drops out) -- the built-in control arm for a sweep,
+    and the ONLY exact-v01 arm in this file (path_decay has none).
     If parent has visit_count() == 0 (shouldn't happen once root is
     seeded with one update, but guarded anyway), falls back to the
     leaf's own q_value so blended_q reduces to plain q_value rather
     than dividing by zero or reading an undefined mean.
 
+Frontier score, score_mode="path_decay" -- full-path decayed value:
+    q_path(x) = sum_k gamma^k * q_value(ancestor_k(x)) / sum_k gamma^k
+                (k = 0 at the leaf x itself, walking to the root)
+    path_decay_score(x) = q_path(x) + u(x)
+    u(x) = cpuct * sqrt(parent_visits(x)) / (1 + visits(x))
+           (AlphaZero shape -- NOT v01's UCB1 form, so cpuct is NOT
+           comparable across the two modes; sweep it per mode)
+
+    gamma in [0, 1]; gamma = 1.0 is a plain path average, gamma = 0.0
+    reads only the leaf's own q (still with the AZ-shaped u -- not a
+    v01 control arm). A backpropagated ancestor value anywhere on
+    the lineage is read directly, discounted by distance.
+
+The cross-mode knob is idle by design: alpha is unused under
+"path_decay", gamma under "parent_blend".
+
 Everything else -- expansion, backprop, node classes, candidate
 generation, output shape -- is unchanged from v01. The loop shape
 (generate -> expand -> select) is also unchanged; only WHAT gets
 added to leaf_nodes at expand time (non-terminals only, not all
-children) and WHAT select_child_from_list scores (path_aware_puct,
-not puct) differ.
+children), WHEN a terminal's backprop is applied (delayed one step,
+not immediate), and WHAT select_child_from_list scores (the
+score_mode-selected frontier score, not puct) differ.
 
 Algorithm
     Initialize completion_list = [], leaf_nodes = [], gen_cnt = 0,
-        current = root
+        current = root, pending = []  (queued terminal children,
+        NOT yet backpropped -- see "Delayed-eager flush timing" below)
     While gen_cnt < gen_budget:
         If current.is_terminal:
             Backprop: update_recursive(current.q_value(), root)
@@ -66,13 +96,15 @@ Algorithm
                 if not completed and depth >= max_depth:
                     mark terminal, score = negative_reward
                 If child.is_terminal:
-                    Backprop eagerly: update_recursive(
-                        child.q_value(), root)
+                    pending.append(child)   -- QUEUED, not backpropped
                 Else:
                     Add child to leaf_nodes
         Select: current = argmax_{x in leaf_nodes}
-                    path_aware_puct(x, alpha);
+                    frontier_score(x)   (per score_mode);
                 remove current from leaf_nodes
+        For each node in pending:
+            Backprop: update_recursive(node.q_value(), root)
+        pending = []
 
     The `current.is_terminal` check at the top of the loop is now a
     defensive no-op in the common case (freshly created terminals
@@ -82,14 +114,25 @@ Algorithm
     terminal (max_depth == 0), a boundary case v01 also guards the
     same way.
 
-Selection criterion:
-    path_aware_puct(x) = blended_q(x) + cpuct * sqrt(log(parent.
-        visit_count) / visit_count)   (see "Path-aware score" above)
+    Delayed-eager flush timing: the flush ("For each node in
+    pending...") happens AFTER Select, so the selection that picks
+    `current` for THIS iteration uses only state that predates THIS
+    iteration's own Expand call -- a same-batch terminal sibling
+    cannot influence the selection choosing among its own siblings.
+    The flush also runs before EITHER of the loop's early-exit points
+    (gen_budget exhausted, leaf_nodes empty) -- a phase whose entire
+    batch of new children is terminal (leaf_nodes stays empty, the
+    loop is about to break) still gets its pending backprops applied
+    before that break, so no queued node is ever silently dropped.
+
+Selection criterion: the score_mode-selected frontier score -- see
+the two "Frontier score" blocks above and MCTS.frontier_score.
 
 Variant lineage: docs/algorithms.md,
-docs/decisions/bl-cnt-path-aware-frontier-score-design.md (design),
-docs/decisions/bl-cnt-v02-eager-backprop-path-aware.md (this
-implementation).
+docs/decisions/bl-cnt-v02-eager-backprop-path-aware.md (original v02
+record; delayed-vs-immediate flush timing decided 2026-07-18), and
+docs/decisions-log.md 2026-07-19 (score_mode: the two selectable
+scores, and the design-for-deletion rationale).
 """
 
 import random
@@ -197,6 +240,43 @@ class MCTSNode(BaseNode):
             u = cpuct * np.sqrt(np.log(parent_visits) / visits)
         return blended_q + u
 
+    def path_decay_score(self, cpuct=2, gamma=0.8) -> float:
+        """score_mode="path_decay" index: gamma-decayed average of
+        q_value along the leaf->root path, plus an AlphaZero-shaped
+        exploration term.
+
+        q_path = sum_k gamma^k * q(ancestor_k) / sum_k gamma^k
+                 (k = 0 at this leaf, increasing toward the root;
+                 the k=0 weight is 1 even at gamma=0, so norm > 0
+                 always)
+        u = cpuct * sqrt(N_parent) / (1 + N_leaf)
+
+        The u term's shape is NOT v01's UCB1 (no log, N_leaf in a
+        plain denominator), so cpuct here is not comparable to
+        parent_blend's cpuct. gamma=1 is a plain path average;
+        gamma=0 reads only the leaf's own q (still with this u, so
+        NOT a v01 control arm).
+
+        Deliberately shares NO code with path_aware_puct: the two
+        score_modes are sweep arms and the loser is expected to be
+        deleted afterward -- independence keeps that removal a pure
+        deletion (see MCTS.frontier_score).
+        """
+        if not self.parent:
+            return 0.0
+        node, acc, norm, k = self, 0.0, 0.0, 0
+        while node is not None:
+            q = node.q_value() if node.visit_count() > 0 else 0.0
+            acc += (gamma ** k) * q
+            norm += gamma ** k
+            k += 1
+            node = node.parent
+        q_path = acc / norm
+
+        u = (cpuct * np.sqrt(self.parent.visit_count())
+             / (1 + self.visit_count()))
+        return q_path + u
+
     def __repr__(self):
         return (
             f"MCTSNode(state={self.state}, "
@@ -234,10 +314,12 @@ class BaseTree(BaseModel):
 
 
 class MCTS(BaseTree):
-    """MCTS with path-aware PUCT selection and eager terminal backprop.
+    """MCTS with a score_mode-selectable path-aware frontier score
+    and delayed-eager terminal backprop.
 
     Holds `completed_nodes` (EOS/length-terminated leaves) and the
-    algorithm methods: `expand_node`, `select_child`, `backprop`.
+    algorithm methods: `expand_node`, `frontier_score`,
+    `select_child`, `backprop`.
     """
     completed_nodes: List[Type[BaseNode]] = []
     cnt_node_max_depth: int = 0
@@ -299,28 +381,44 @@ class MCTS(BaseTree):
 
     # ----- Selection ------------------------------------------------- #
 
+    def frontier_score(self, node) -> float:
+        """Score a frontier leaf per config.search.score_mode -- the
+        single point where the mode choice is read. Each mode's
+        scorer is self-contained on MCTSNode; removing a mode is one
+        branch here plus one node method (the modes are sweep arms,
+        and the loser is expected to be deleted after the sweep).
+        """
+        s = self.config.search
+        if s.score_mode == "parent_blend":
+            return node.path_aware_puct(s.cpuct, s.alpha)
+        if s.score_mode == "path_decay":
+            return node.path_decay_score(s.cpuct, s.gamma)
+        raise ValueError(
+            f"unknown score_mode: {s.score_mode!r} "
+            "(expected 'parent_blend' or 'path_decay')"
+        )
+
     def select_child(self, node, from_root: bool = False):
-        """Pick the child with the highest path-aware PUCT value,
-        uniform random tie-break. Returns None if no children.
+        """Pick the child with the highest frontier score (per
+        score_mode), uniform random tie-break. Returns None if no
+        children.
         """
         best_value = -float("inf")
         best_childs: List[Any] = []
 
         for child_node in node.children:
-            puct_value = child_node.path_aware_puct(
-                cpuct=self.config.search.cpuct,
-                alpha=self.config.search.alpha,
-            )
-            if puct_value == best_value:
+            score = self.frontier_score(child_node)
+            if score == best_value:
                 best_childs.append(child_node)
-            elif puct_value > best_value:
-                best_value = puct_value
+            elif score > best_value:
+                best_value = score
                 best_childs = [child_node]
 
             logging.fatal(f"{child_node.tag}")
-            logging.fatal(f"   q-value = {child_node.q_value():0.4f}")
-            logging.fatal(f"   u-value = {puct_value - child_node.q_value():0.4f}")
-            logging.fatal(f"   puct = {puct_value:0.4f}")
+            q = child_node.q_value()
+            logging.fatal(f"   q-value = {q:0.4f}")
+            logging.fatal(f"   score - q = {score - q:0.4f}")
+            logging.fatal(f"   score = {score:0.4f}")
             logging.fatal(f"   nvisit = {child_node.visit_count():0.2f}")
             logging.fatal(f"   parent.nvisit = {node.visit_count():0.2f}")
             logging.fatal(f"   is_terminal = {child_node.is_terminal}")
@@ -332,29 +430,26 @@ class MCTS(BaseTree):
         return selected_node
 
     def select_child_from_list(self, nodes: List[Any]):
-        """Pick the node with highest path-aware PUCT from an
-        arbitrary list, uniform random tie-break. Same logic as
-        `select_child` but operates on the BL-MCTS global leaf
-        frontier.
+        """Pick the node with the highest frontier score (per
+        score_mode) from an arbitrary list, uniform random
+        tie-break. Same logic as `select_child` but operates on the
+        BL-MCTS global leaf frontier.
         """
         best_value = -float("inf")
         best_nodes: List[Any] = []
 
         for node in nodes:
-            puct_value = node.path_aware_puct(
-                cpuct=self.config.search.cpuct,
-                alpha=self.config.search.alpha,
-            )
-            if puct_value == best_value:
+            score = self.frontier_score(node)
+            if score == best_value:
                 best_nodes.append(node)
-            elif puct_value > best_value:
-                best_value = puct_value
+            elif score > best_value:
+                best_value = score
                 best_nodes = [node]
 
             logging.fatal(f"{node.tag}")
             logging.fatal(f"   q-value = {node.q_value():0.4f}")
-            logging.fatal(f"   u-value = {puct_value - node.q_value():0.4f}")
-            logging.fatal(f"   puct = {puct_value:0.4f}")
+            logging.fatal(f"   score - q = {score - node.q_value():0.4f}")
+            logging.fatal(f"   score = {score:0.4f}")
             logging.fatal(f"   nvisit = {node.visit_count():0.2f}")
             logging.fatal(f"   is_terminal = {node.is_terminal}")
 
@@ -454,13 +549,16 @@ def mcts_search(question, agent, config, llm_vllm, prm):
 
     Outer loop: `config.search.num_phases` iterations (safety cap).
     Each iteration expands the current node (or backprops it, if
-    terminal), then selects the next node by path-aware PUCT globally
-    across the leaf frontier — generate -> expand -> select, mirroring
+    terminal), then selects the next node by the score_mode-selected
+    frontier score globally across the leaf frontier — generate ->
+    expand -> select, mirroring
     mcts_bl_cnt_search_v01_00_00.py's walk step. Newly created
-    terminal children backprop IMMEDIATELY at expand time and never
-    enter the frontier; only non-terminal children are added to
-    leaf_nodes and compete against every older leaf at the next
-    selection. Only expansions charge gen_cnt.
+    terminal children are queued (delayed eager backprop -- flushed
+    right after the selection immediately following their own
+    creation, see pending_terminal_backprops below) and never enter
+    the frontier; only non-terminal children are added to leaf_nodes
+    and compete against every older leaf at the next selection. Only
+    expansions charge gen_cnt.
     """
     tokenizer = llm_vllm.get_tokenizer()
     # Template selection (mirrors generate_bon / bon_search): default
@@ -489,6 +587,18 @@ def mcts_search(question, agent, config, llm_vllm, prm):
     phase_depths: List[int] = []
     leaf_nodes: List[Any] = []
     current_node = agent.root
+    # Delayed-eager backprop queue: this step's newly created terminal
+    # children are held here (not backpropped yet) so THIS step's
+    # selection reads only state that existed before this step's own
+    # generation call -- backpropping a same-batch terminal sibling
+    # immediately would let information causally concurrent with the
+    # candidates being ranked ("peek" at a sibling from the exact
+    # generation call that produced the candidates themselves) leak
+    # into the selection choosing among them. Flushed unconditionally
+    # right after selection resolves (or right before any loop exit,
+    # so a phase whose children are ALL terminal still gets its
+    # backprops applied even though leaf_nodes ends up empty).
+    pending_terminal_backprops: List[Any] = []
 
     for p in range(config.search.num_phases):
         logging.fatal(f"\n-> p = {p}")
@@ -497,8 +607,8 @@ def mcts_search(question, agent, config, llm_vllm, prm):
         # iteration 0, and root COULD in principle be terminal
         # (max_depth == 0) -- same boundary case v01 guards. In the
         # common case this branch is dead: freshly created terminals
-        # backprop eagerly below and never reach the frontier, so
-        # they are never selected as `current_node` via this path.
+        # are queued below and never reach the frontier, so they are
+        # never selected as `current_node` via this path.
         if current_node.is_terminal:
             logging.fatal(f"current_node.is_terminal = True")
             agent.backprop(current_node)
@@ -512,36 +622,60 @@ def mcts_search(question, agent, config, llm_vllm, prm):
             new_children = agent.expand_node(
                 current_node, infos, scores, p, gen_cnt,
             )
-            # Terminal split + eager backprop: a terminal child
-            # backprops immediately and never enters leaf_nodes; only
-            # non-terminal children compete for the next selection.
+            # Terminal split + DELAYED eager backprop: a terminal
+            # child is queued, not backpropped yet, and never enters
+            # leaf_nodes; only non-terminal children compete for the
+            # selection immediately below. The queue is flushed after
+            # that selection resolves (see below and the loop-exit
+            # points), so this step's own selection is unaffected by
+            # this step's own terminal outcomes, but the VERY NEXT
+            # selection already sees them -- one step of latency, not
+            # the unbounded latency of the original lazy scheme (a
+            # terminal that's never SELECTED under lazy backprop
+            # contributes nothing, ever).
             for child in new_children:
                 if child.is_terminal:
-                    agent.backprop(child)
+                    pending_terminal_backprops.append(child)
                 else:
                     leaf_nodes.append(child)
 
         logging.fatal(f"gen_cnt = {gen_cnt}")
         if gen_cnt >= config.search.gen_budget:
             logging.fatal("run out of budget!")
+            for child in pending_terminal_backprops:
+                agent.backprop(child)
+            pending_terminal_backprops = []
             break
 
         if not leaf_nodes:
             logging.fatal("leaf_nodes is empty — stopping.")
+            for child in pending_terminal_backprops:
+                agent.backprop(child)
+            pending_terminal_backprops = []
             break
 
-        # Select the next node with highest path-aware PUCT across
-        # the entire frontier — the children expanded above compete
-        # against every older leaf here.
+        # Select the next node with the highest frontier score (per
+        # score_mode) across the entire frontier — the children
+        # expanded above compete against every older leaf here,
+        # using only state that existed before THIS step's own
+        # generation call (see the pending_terminal_backprops
+        # comment above).
         current_node = agent.select_child_from_list(leaf_nodes)
         leaf_nodes.remove(current_node)
 
-        selected_puct = current_node.path_aware_puct(
-            config.search.cpuct, config.search.alpha,
-        )
+        # Flush now: this step's terminal outcomes are no longer
+        # "concurrent" with a selection in progress -- the next
+        # iteration's selection (and, if current_node is itself
+        # terminal, that very node's own backprop) is free to read
+        # them.
+        for child in pending_terminal_backprops:
+            agent.backprop(child)
+        pending_terminal_backprops = []
+
+        selected_score = agent.frontier_score(current_node)
         logging.fatal(
             f"selected = {current_node.tag}  "
-            f"puct={selected_puct:.4f}  "
+            f"score={selected_score:.4f}  "
             f"q={current_node.q_value():.4f}  "
             f"nvisit={current_node.visit_count()}"
         )

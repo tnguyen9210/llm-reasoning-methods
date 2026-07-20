@@ -1669,9 +1669,7 @@ instead of one wide sparse grid.)
 
 ### kube-mcts-bl-v01
 > knobs: template, kube_c, kube_schedule, kube_affordable (bs-4,
-> d-20 fixed). method=`mcts_bl_kube_v01` (renamed 2026-07-16 from
-> `mcts_bl_cnt_v02` — see
-> `docs/decisions/bl-cnt-to-bl-kube-rename.md`). No kube_c sweep
+> d-20 fixed). method=`mcts_bl_kube_v01`. No kube_c sweep
 > yet — every row is the default (kube_c=2.0, kube_schedule=parent,
 > kube_affordable=true). Same best-first frontier as
 > cnt-mcts-bl-v01, but selects by fractional-KUBE density (a UCB
@@ -1728,9 +1726,7 @@ instead of one wide sparse grid.)
 
 ### kdepth-mcts-bl-v01
 > knobs: template, depth_beta, depth_alpha (bs-4, d-20 fixed).
-> method=`mcts_bl_kdepth_v01` (renamed 2026-07-17 from
-> `mcts_bl_cnt_v03` — see
-> `docs/decisions/bl-cnt-to-bl-kdepth-rename.md`). No
+> method=`mcts_bl_kdepth_v01`. No
 > depth_beta/depth_alpha sweep yet — every row is the default
 > (depth_beta=2.0, depth_alpha=1.0). Sibling of cnt-mcts-bl-v01
 > (PUCT) and kube-mcts-bl-v01 (Fractional KUBE): same best-first

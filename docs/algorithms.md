@@ -34,9 +34,9 @@ Empirical observations about repo behavior: [findings/](findings/README.md).
 | Semantic-MCTS v02 (`mcts_sem_v02`, PRM embeds) | `core/mcts_sem_search_v02_00_00.py` | `generate_mcts_sem.py` | `conf/mcts_sem_v02_prm800k.yaml` |
 | BL-Sem-MCTS v01 (`mcts_bl_sem_v01`, best-first + PRM embeds) | `core/mcts_bl_sem_search_v01_00_00.py` | `generate_mcts_sem.py` | `conf/mcts_bl_sem_v01_prm800k.yaml` |
 | BL-MCTS v01 (PUCT, best-first) | `core/mcts_bl_cnt_search_v01_00_00.py` | `generate_mcts_bl_cnt.py` | `conf/mcts_bl_cnt_v01_prm800k.yaml` |
-| BL-MCTS v02 (`mcts_bl_cnt_v02`, PUCT + eager terminal backprop + path-aware blend) | `core/mcts_bl_cnt_search_v02_00_00.py` | `generate_mcts_bl_cnt.py` | `conf/mcts_bl_cnt_v02_prm800k.yaml` |
+| BL-MCTS v02 (`mcts_bl_cnt_v02`, delayed-eager terminal backprop + selectable path-aware score: parent-blend or path-decay) | `core/mcts_bl_cnt_search_v02_00_00.py` | `generate_mcts_bl_cnt.py` | `conf/mcts_bl_cnt_v02_prm800k.yaml` |
 | BL-KUBE-MCTS v01 (`mcts_bl_kube_v01`, fractional KUBE) | `core/mcts_bl_kube_search_v01_00_00.py` | `generate_mcts_bl_cnt.py` | `conf/mcts_bl_kube_v01_prm800k.yaml` |
-| BL-KUBE-MCTS v02 (`mcts_bl_kube_v02`, + eager terminal backprop + path-aware blend under `kube_schedule=parent`) | `core/mcts_bl_kube_search_v02_00_00.py` | `generate_mcts_bl_cnt.py` | `conf/mcts_bl_kube_v02_prm800k.yaml` |
+| BL-KUBE-MCTS v02 (`mcts_bl_kube_v02`, + delayed-eager terminal backprop + selectable path-aware score: parent-blend or path-decay, both schedules) | `core/mcts_bl_kube_search_v02_00_00.py` | `generate_mcts_bl_cnt.py` | `conf/mcts_bl_kube_v02_prm800k.yaml` |
 | BL-KDEPTH-MCTS v01 (`mcts_bl_kdepth_v01`, knapsack + depth-shaping) | `core/mcts_bl_kdepth_search_v01_00_00.py` | `generate_mcts_bl_cnt.py` | `conf/mcts_bl_kdepth_v01_prm800k.yaml` |
 | BL-KDEPTH-MCTS v02 (`mcts_bl_kdepth_v02`, + eager terminal backprop only) | `core/mcts_bl_kdepth_search_v02_00_00.py` | `generate_mcts_bl_cnt.py` | `conf/mcts_bl_kdepth_v02_prm800k.yaml` |
 | BoN | `core/bon_search_v01_0_0.py` | `generate_bon.py` | `conf/bon_prm800k.yaml` (+ gsm8k, aime2025) |
@@ -58,14 +58,10 @@ accordingly), same as sem's `algo=mcts_sem_v01|v02|mcts_bl_sem_v01`.
 The old per-variant launchers (`generate_mcts_bl_cnt_v01.py` etc.) no
 longer exist; historical `experiments.yaml` entries recorded under
 the old launcher names are left as-is (they record what was actually
-run, not a forward-looking pointer). The KUBE variant's family name
-was renamed from `mcts_bl_cnt_v02` to `mcts_bl_kube_v01` on
-2026-07-16, and the depth-shaping variant's from `mcts_bl_cnt_v03` to
-`mcts_bl_kdepth_v01` on 2026-07-17, each independent of the
-launcher-merge history above — see
-[decisions/bl-cnt-to-bl-kube-rename.md](decisions/bl-cnt-to-bl-kube-rename.md)
-and
-[decisions/bl-cnt-to-bl-kdepth-rename.md](decisions/bl-cnt-to-bl-kdepth-rename.md).
+run, not a forward-looking pointer). The KUBE and depth-shaping
+variants are each their own algorithm family (`mcts_bl_kube_v01`,
+`mcts_bl_kdepth_v01`), independent of the launcher-merge history
+above.
 
 ## CNT-MCTS
 
@@ -80,19 +76,33 @@ Budget-limited best-first MCTS: an explicit `leaf_nodes` frontier with
 global leaf selection, instead of CNT-MCTS's phase-based root-to-leaf
 walks.
 - **v01** — PUCT leaf selection.
-- **v02** (`mcts_bl_cnt_v02`) — v01 plus two changes, both from
-  [decisions/bl-cnt-path-aware-frontier-score-design.md](decisions/bl-cnt-path-aware-frontier-score-design.md):
-  (1) terminal candidates backprop immediately at creation instead of
-  waiting to win a later frontier selection; (2) PUCT's `q` term is
-  blended with the leaf's immediate parent's `q_value` by a tunable
-  `alpha` before adding the (unchanged) UCB1 exploration term —
-  `blended_q = alpha*q_value(leaf) + (1-alpha)*q_value(parent)`.
-  `alpha=1.0` recovers v01 exactly (the built-in control arm); the
-  reason for the blend is that eager backprop alone doesn't change
-  v01's ranking (PUCT never reads a parent's `q`, only its own frozen
-  `q` plus the parent's visit count — a backpropagated value is
-  otherwise write-only). Config:
-  `utils/configs.py::BLMCTSCntV02Config` (`alpha`, default 0.8). See
+- **v02** (`mcts_bl_cnt_v02`) — v01 plus two changes:
+  (1) terminal candidates are queued at creation and backpropped
+  right after the immediately-following selection resolves —
+  delayed one step, not instantaneous, so a terminal never
+  influences the selection choosing among its own same-batch
+  siblings (see
+  [decisions/bl-cnt-v02-eager-backprop-path-aware.md](decisions/bl-cnt-v02-eager-backprop-path-aware.md)
+  §1.5) — instead of waiting to win a later frontier selection as
+  v01 does; (2) a **selectable path-aware frontier score**
+  (`score_mode`, added 2026-07-19): `"parent_blend"` (default)
+  blends PUCT's `q` term with the leaf's immediate parent's
+  `q_value` by `alpha` before adding the unchanged UCB1 exploration
+  term (`alpha=1.0` recovers v01 exactly — the only exact-v01
+  control arm); `"path_decay"` replaces the value term with a
+  `gamma`-decayed average of `q_value` along the full leaf-to-root
+  path, paired with an AlphaZero-shaped exploration term
+  (`cpuct*sqrt(N_parent)/(1+N_leaf)` — so `cpuct` is **not
+  comparable across modes**; sweep it per mode). The reason for
+  value-aware scoring in either mode: backprop alone doesn't change
+  v01's ranking (PUCT never reads a parent's `q`, only its own
+  frozen `q` plus the parent's visit count — a backpropagated value
+  is otherwise write-only). The two modes are arms of one planned
+  sweep; the loser is expected to be deleted afterward (a pure
+  deletion — the scorers share no code, joined only by the
+  `MCTS.frontier_score` dispatcher). Config:
+  `utils/configs.py::BLMCTSCntV02Config` (`score_mode`, `alpha`,
+  `gamma`). See `docs/decisions-log.md` (2026-07-19) and
   [decisions/bl-cnt-v02-eager-backprop-path-aware.md](decisions/bl-cnt-v02-eager-backprop-path-aware.md).
 
 BL-MCTS v01/v02, BL-KUBE-MCTS v01/v02, and BL-KDEPTH-MCTS v01/v02 are
@@ -103,11 +113,8 @@ family (see below) rather than as same-family sibling versions.
 
 ## BL-KUBE-MCTS
 
-Renamed 2026-07-16 from BL-MCTS v02 (`mcts_bl_cnt_v02`) into its own
-family, `mcts_bl_kube_v01` — a distinct selection criterion from
-BL-MCTS's PUCT, not a same-family variant of it. See
-[decisions/bl-cnt-to-bl-kube-rename.md](decisions/bl-cnt-to-bl-kube-rename.md)
-for the full old-name -> new-name mapping.
+Its own algorithm family, `mcts_bl_kube_v01` — a distinct selection
+criterion from BL-MCTS's PUCT, not a same-family variant of it.
 
 Same budget-limited best-first frontier skeleton as BL-MCTS (an
 explicit `leaf_nodes` frontier with global leaf selection), but with
@@ -136,33 +143,41 @@ UCB index over cost) — an earlier version used a static depth-decay
 bonus with no UCB/visit-count term at all; see `docs/decisions-log.md`
 (2026-07-09, three entries).
 
-**v02** (`mcts_bl_kube_v02`) — v01 plus terminal-split eager backprop
-(both `kube_schedule` values: fixes a real defect where a max-depth
-dead-end's `cost≤0`/`-inf` density meant it was *permanently* stuck
-in the frontier, silently disabling the `kube_affordable` filter's
-empty-set fallback for the rest of any run) and, under
-`kube_schedule="parent"` only, the identical parent-blend BL-MCTS v02
-uses — `"parent"`'s bonus is exactly BL-MCTS's PUCT bonus (this
-family differs from BL-MCTS only by the `/cost` division), so the
-blend applies to the same `q` position. `kube_schedule="global"` gets
-the terminal-split fix only, with no formula change — its bonus is a
-frontier-wide constant with no per-node channel to blend into.
-Config: `utils/configs.py::BLMCTSKubeV02Config` (`alpha`, default
-0.8, `"parent"` schedule only). See
-[decisions/bl-cnt-v02-eager-backprop-path-aware.md](decisions/bl-cnt-v02-eager-backprop-path-aware.md).
+**v02** (`mcts_bl_kube_v02`) — v01 plus terminal-split, delayed-eager
+backprop (queued at creation, flushed right after the
+immediately-following selection resolves — not instantaneous, so a
+terminal never leaks into the selection ranking its own same-batch
+siblings; both `kube_schedule` values: fixes a real defect where a
+max-depth dead-end's `cost≤0`/`-inf` density meant it was
+*permanently* stuck in the frontier, silently disabling the
+`kube_affordable` filter's empty-set fallback for the rest of any
+run) and the same **selectable path-aware score** BL-MCTS v02 has
+(`score_mode`, aligned 2026-07-19), under **both** `kube_schedule`
+values: `"parent_blend"` (default) blends the leaf's `q` with its
+parent's by `alpha` before the schedule's unchanged log-form bonus
+(`alpha=1.0` = exact v01, the only v01 control arm; originally
+shipped `"parent"`-schedule-only, reversed same day 2026-07-18 —
+under `"global"` the blend is the *only* ancestor channel, since
+the shared-clock bonus cannot count-burst); `"path_decay"` replaces
+the value term with a `gamma`-decayed leaf-to-root average and the
+bonus with the AlphaZero shape `kube_c·sqrt(clock)/(1+N)` — the
+schedule's clock substituted as always (`N_parent` / `1+t`), making
+kube-parent path_decay exactly BL-MCTS v02's `path_decay_score`
+divided by `cost`. `kube_c` is **not comparable across modes**. The
+sweep's losing mode is slated for deletion (scorers share no code;
+single `frontier_score` dispatcher). Config:
+`utils/configs.py::BLMCTSKubeV02Config` (`score_mode`, `alpha`,
+`gamma`). See
+[decisions/bl-cnt-v02-eager-backprop-path-aware.md](decisions/bl-cnt-v02-eager-backprop-path-aware.md)
+§3.5 and `docs/decisions-log.md` (2026-07-19).
 
 ## BL-KDEPTH-MCTS
 
-Renamed 2026-07-17 from BL-MCTS v03 (`mcts_bl_cnt_v03`) into its own
-family, `mcts_bl_kdepth_v01` — "kdepth" = knapsack cost normalization
-+ deterministic depth-shaping. Same reasoning as the BL-KUBE-MCTS
-rename: this variant's own docstring already described itself as "a
-deliberately different theoretical basis... not a refinement" of
-anything in BL-MCTS/BL-KUBE-MCTS, and it has no visit-count term of
-any kind, which made keeping it filed as a `bl_cnt` ("count-based")
-sibling version a category mismatch. See
-[decisions/bl-cnt-to-bl-kdepth-rename.md](decisions/bl-cnt-to-bl-kdepth-rename.md)
-for the full old-name -> new-name mapping.
+Its own algorithm family, `mcts_bl_kdepth_v01` — "kdepth" = knapsack
+cost normalization + deterministic depth-shaping. Same reasoning as
+BL-KUBE-MCTS: it has no visit-count term of any kind, a deliberately
+different theoretical basis from BL-MCTS/BL-KUBE-MCTS rather than a
+refinement of either.
 
 Same budget-limited best-first frontier skeleton, cost mapping
 (`max_depth - depth`), and `kube_affordable` feasibility step as
@@ -178,14 +193,16 @@ theoretical basis from BL-KUBE-MCTS, not a refinement of it. Config:
 `depth_alpha`, default 1.0; `kube_affordable`, default true). See
 [decisions/bl-kdepth-knapsack-bonus.md](decisions/bl-kdepth-knapsack-bonus.md).
 
-**v02** (`mcts_bl_kdepth_v02`) — v01 plus the same terminal-split
-eager backprop as BL-KUBE-MCTS v02 (identical `kube_affordable`
-defect, identical fix), and **nothing else**: `depth_density()` is
-byte-identical to v01's. No formula change and no `alpha` knob,
-because `depth_density` reads only a leaf's own frozen `q_value`, its
-own depth, and two constants — no visit-count or parent-`q` channel
-exists at all for a blend to hook into (unlike BL-MCTS/BL-KUBE-MCTS's
-`"parent"` schedule). Ranking among non-terminal nodes is provably
+**v02** (`mcts_bl_kdepth_v02`) — v01 plus the same terminal-split,
+delayed-eager backprop queue structure as BL-KUBE-MCTS v02 (identical
+`kube_affordable` defect, identical fix), and **nothing else**:
+`depth_density()` is byte-identical to v01's. The delayed-vs-immediate
+flush timing that matters for BL-MCTS/BL-KUBE-MCTS's `"parent"`
+schedule is inert here, kept only for structural consistency — no
+formula change and no `alpha` knob, because `depth_density` reads
+only a leaf's own frozen `q_value`, its own depth, and two constants
+— no visit-count or parent-`q` channel exists at all for a blend to
+hook into. Ranking among non-terminal nodes is provably
 unchanged; the only removed events are terminal-selection phases that
 did nothing but re-select an already-known dead-end. Config:
 `utils/configs.py::BLMCTSKdepthV02Config` (same fields as v01, no new

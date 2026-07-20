@@ -166,6 +166,7 @@ Heading hierarchy: `## Tuning tables [...]` → `###
    `ledger_collision: false`. Each:
    ```yaml
    - launcher: <launcher>
+     hash: "<hash from step 2's --check>"
      config_root: <config_root>
      overrides: {<dict form>}
      trials: <n>
@@ -176,7 +177,12 @@ Heading hierarchy: `## Tuning tables [...]` → `###
      note: <short human label>
    ```
    Precede the block with a `# --- planned: <description>`
-   comment. Append at the bottom (never reorder).
+   comment. Append at the bottom (never reorder). The `hash:`
+   field is written ONCE here, quoted, verbatim from `--check`
+   (never hand-derived): status.py's fast paths (collision
+   scans) read it instead of recomposing, and `--verify`
+   audits it against a fresh compose — a mismatch there means
+   the config groups drifted since this entry was appended.
 6. **Re-verify the file parses + nothing collided:**
    ```
    python status.py --verify

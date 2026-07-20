@@ -14,7 +14,67 @@ scaffold, it also gets a standalone file in [decisions/](decisions/);
 the log entry then carries a one-line pointer to it rather than
 repeating the full writeup.
 
-## 2026-07-18 — Search, Feature: v02 of `mcts_bl_cnt`, `mcts_bl_kube`, `mcts_bl_kdepth` — eager terminal backprop, implemented per each family's `\S`7 verdict
+## 2026-07-19 — Search, Feature: `mcts_bl_cnt_v02` gains a selectable frontier score (`score_mode`): one-hop parent blend vs. full-path decayed subtree value
+
+**Context:** Tuan plans one sweep directly comparing the two
+candidate path-aware scores — the shipped one-hop parent blend
+(`alpha`) and an AlphaZero-style full-path decayed subtree value —
+and expects to keep only the winner for future development.
+**Decision:** both modes live in the same file behind one config
+knob, `score_mode: "parent_blend" | "path_decay"` (default
+`parent_blend` = shipped behavior), rather than as separate version
+files — with a joint sweep planned, one method string with
+`config_hash` separating arms beats two files' worth of
+launcher/YAML/group boilerplate (the `kube_schedule` precedent).
+Designed for deletion: the two scorers (`path_aware_puct`,
+`path_decay_score`) share NO code and are joined only by the new
+`MCTS.frontier_score` dispatcher — the single point that reads the
+mode — so pruning the loser is a pure-deletion diff touching zero
+lines of the survivor; no scorer registry or strategy classes (that
+would be machinery half-deleted immediately after the sweep). The
+post-sweep pruning becomes a v03 (v02 will have scored runs by
+then, so it can't be edited in place). `path_decay`'s formula:
+`q_path = sum_k gamma^k q(ancestor_k) / sum_k gamma^k` (leaf to
+root) plus `cpuct*sqrt(N_parent)/(1+N_leaf)` — the AlphaZero
+exploration shape, NOT v01's UCB1, so **cpuct is not comparable
+across modes** (sweep it per mode); the only exact-v01 control arm
+remains `parent_blend, alpha=1.0`. Log labels in the selection
+methods were made mode-neutral (`score =`, not `puct =`).
+`config_hash` for existing v02 YAMLs changed (two new fields) —
+safe, zero recorded v02 runs. The earlier design-space discussion
+doc is explicitly NOT a dependency of this implementation (Tuan's
+call, 2026-07-19: temporary artifact, not source of truth).
+**Verified:** ast-extraction harness (dispatcher==method==
+pre-refactor transcription for parent_blend across the edge-case
+battery; path_decay against a hand-computed 3-level tree; gamma
+limits 1.0/0.0 + zero-visit and root guards; unknown mode raises);
+compile/DeprecationWarning/line-length clean; Hydra composes the
+default and a sweep-shaped override arm to distinct hashes;
+`status.py --verify` unchanged (same 4 pre-existing `mcts_cnt`
+drift issues).
+
+**Same day — `mcts_bl_kube_v02` aligned to the same two
+score_modes.** Kube gets the identical config surface
+(`score_mode`, `alpha`, `gamma`), the identical
+designed-for-deletion structure (self-contained
+`path_decay_kube_density`, no shared code with
+`path_aware_kube_density`, single `MCTS.frontier_score(node, t)`
+dispatcher), and the identical formula composed with kube's own
+structure: `path_decay` = gamma-decayed path value + the AZ-shaped
+bonus `kube_c*sqrt(clock)/(1+N)`, all divided by `cost`. The one
+kube-specific design call: the AZ bonus takes the SCHEDULE'S clock
+(`N_parent` under `"parent"` — making kube-parent path_decay
+exactly bl_cnt v02's `path_decay_score / cost`, harness-proven —
+and `1+t` under `"global"`), per the established "schedules differ
+only in the bonus's clock" principle. `kube_c` is not comparable
+across modes; `parent_blend alpha=1.0` remains the only exact-v01
+arm. In-place edit again (zero kube-v02 runs; default reproduces
+shipped behavior, harness-proven no-op). Verified: 4-part
+ast-extraction harness incl. the cross-file alignment identity,
+Hydra composition of default + a global/path_decay arm, `--verify`
+unchanged.
+
+## 2026-07-18 — Search, Feature: v02 of `mcts_bl_cnt`, `mcts_bl_kube`, `mcts_bl_kdepth` — eager terminal backprop, implemented per each family's §7 verdict
 
 **Context:** Tuan asked to "create a v02 versions for these three
 methods, that will implement eager terminal backprop with additional
@@ -37,18 +97,70 @@ identical parent-blend, but **only** under `kube_schedule="parent"`
 gets hygiene only, no invented formula); `mcts_bl_kdepth_v02` gets
 **hygiene only** — `depth_density()` is byte-identical to v01's
 (diff-verified), since no visit-count/parent-q channel exists there
-at all for a blend to hook into. All three verified end-to-end:
-Hydra composition, distinct `config_hash` from each v01 sibling, and
-`status.py --verify` showing zero new problems (same 4 pre-existing
-`mcts_cnt` drift issues as every prior run this session). Each v02
-got its own `status.py` group label (`cnt-mcts-bl-v02` etc.) rather
-than sharing its v01's — considered the `mcts_sem_v01`/
-`mcts_sem_v02` shared-group precedent, decided against it: the
-algorithm change here is large enough to warrant its own
-`docs/exp-comp-*.md` table rather than a same-table row next to v01.
-**Why:** full per-file mechanics, the four scoping questions and
-their answers, and the verification detail are in
-[decisions/bl-cnt-v02-eager-backprop-path-aware.md](decisions/bl-cnt-v02-eager-backprop-path-aware.md).
+at all for a blend to hook into.
+
+**Correction, same day:** the initial implementation backpropped a
+terminal child *immediately*, inline during expand, before that
+step's own selection ran. Tuan caught the conceptual problem: this
+lets a same-batch terminal sibling's outcome — produced by the exact
+`_generate_candidates` call that also produced the candidates NOW
+being ranked — leak into the selection choosing among them, which
+isn't genuinely prior evidence. Fixed to **delayed-eager**: newly
+generated terminal children are queued, the selection that was
+already going to happen runs first using pre-existing state, then the
+queue flushes — so a terminal's effect reaches every selection
+strictly after the one immediately following its own creation, never
+that one. Live in `mcts_bl_cnt_v02` and `mcts_bl_kube_v02` (both read
+`parent.q_value()`/`parent.visit_count()` — exactly the channel a
+same-batch leak would corrupt); behaviorally inert but structurally
+applied for consistency in `mcts_bl_kdepth_v02` (`depth_density`
+reads neither). Re-verified with a dedicated harness exercising the
+real `path_aware_puct` formula, plus a re-run of the Hydra-composition
+and `status.py --verify` checks — same clean result. A `` `\S` ``
+transcription artifact (should have been the literal `§` character)
+found and fixed across all three core files, `utils/configs.py`, and
+this doc during the same pass.
+
+**Second same-day revision — kube blend extended to `"global"`:**
+the scoping answer "parent-blend only under `kube_schedule="parent"`"
+was reversed later the same day, after Tuan asked whether `"global"`
+could have the parent-blended value term too. The original "no
+per-node channel" reasoning was correct about the *bonus* term
+(`"global"`'s clock is the shared `t`; backprop can't move it) but
+was wrongly transferred to the *value* term, which Option 1 blends
+and which exists identically under both schedules. On analysis,
+global+blend is the **cleaner** one-variable test of the blend: under
+`"parent"`, a backprop moves two entangled channels (bonus clock
+`N(P)` — the count-attraction burst — and blended value `q(P)`);
+under `"global"` the bonus can't burst, so the blend is the *only*
+ancestor channel — pure discouragement of failed neighborhoods with
+no attraction side channel. Implemented by hoisting the blend out of
+the schedule branch (the branch now picks only the bonus clock);
+edited v02 **in place, no v03 bump**, because zero kube-v02 runs
+exist and `alpha=1.0` reproduces the pre-reversal `"global"` behavior
+exactly (strict generalization). Delayed-eager flush timing is
+thereby live under both schedules now. Verified via a new harness
+(`verify_kube_global_blend.py`, method source extracted from the
+real file via ast): parent-schedule hoist is a no-op, global
+`alpha=1.0` equals shipped behavior, global `alpha<1` moves by
+exactly the blend delta. Sweep note: global sweeps need their own
+`alpha=1.0` control arm. Full rationale in
+[decisions/bl-cnt-v02-eager-backprop-path-aware.md](decisions/bl-cnt-v02-eager-backprop-path-aware.md)
+§3.5.
+
+All three verified end-to-end: Hydra composition, distinct
+`config_hash` from each v01 sibling, and `status.py --verify` showing
+zero new problems (same 4 pre-existing `mcts_cnt` drift issues as
+every prior run this session). Each v02 got its own `status.py`
+group label (`cnt-mcts-bl-v02` etc.) rather than sharing its v01's —
+considered the `mcts_sem_v01`/`mcts_sem_v02` shared-group precedent,
+decided against it: the algorithm change here is large enough to
+warrant its own `docs/exp-comp-*.md` table rather than a same-table
+row next to v01. **Why:** full per-file mechanics, the four scoping
+questions and their answers, the delayed-vs-immediate design-space
+table, and the verification detail are in
+[decisions/bl-cnt-v02-eager-backprop-path-aware.md](decisions/bl-cnt-v02-eager-backprop-path-aware.md)
+(see §1.5 for the correction).
 
 ## 2026-07-17 — Search, Refactor: `mcts_bl_cnt_v03` renamed to `mcts_bl_kdepth_v01`, its own algorithm family; result dirs, manifests, and ledger migrated
 
@@ -81,10 +193,10 @@ docstring, pointing at a filename that never existed) were fixed
 opportunistically while touching the file anyway. Every code, config,
 and doc reference across the repo was updated to match, except
 genuinely historical `decisions-log.md` entries, which keep their
-original "v03" terminology per the append-only convention. **Why:**
-full migration record, the old-name → new-name mapping table, and what
-was deliberately left alone are in
-[decisions/bl-cnt-to-bl-kdepth-rename.md](decisions/bl-cnt-to-bl-kdepth-rename.md).
+original "v03" terminology per the append-only convention. (The
+standalone migration-record doc this entry originally pointed to was
+later removed, 2026-07-19 — Tuan's call that this class of doc
+doesn't need to be kept; this log entry stands as the record.)
 
 ## 2026-07-16 — Search, Refactor: `mcts_bl_cnt_v02` renamed to `mcts_bl_kube_v01`, its own algorithm family; result dirs, manifests, and ledger migrated
 
@@ -117,10 +229,10 @@ doc reference across the repo was updated to match, except genuinely
 historical `decisions-log.md` entries (2026-07-09, predating this
 rename), which keep their original "v02" terminology per the
 append-only convention — only one stale internal link among them was
-fixed. **Why:** full migration record, the old-name → new-name
-mapping table, the hash-recomputation method, and what was
-deliberately left alone are in
-[decisions/bl-cnt-to-bl-kube-rename.md](decisions/bl-cnt-to-bl-kube-rename.md).
+fixed. (The standalone migration-record doc this entry originally
+pointed to was later removed, 2026-07-19 — Tuan's call that this
+class of doc doesn't need to be kept; this log entry stands as the
+record.)
 
 ## 2026-07-16 — Search, Design: eager-terminal-backprop proposal extended to v02 (KUBE) and v03 (depth-shaping); different verdict per variant; a v02/v03 docstring discrepancy surfaced
 
@@ -131,7 +243,7 @@ backpropped at creation, no scoring change — would land on the other
 two active `bl_cnt` variants,
 `mcts_bl_cnt_search_v02_00_00` (fractional KUBE — renamed later the
 same day to `mcts_bl_kube_search_v01_00_00`, see the 2026-07-16
-`bl-cnt-to-bl-kube-rename` entry above) and
+rename entry above) and
 `mcts_bl_cnt_search_v03_00_00` (depth-shaping knapsack), which each
 replace PUCT with a different selection criterion. **Decision:** no
 code changed; the analysis was extended and recorded. v02: max-depth
@@ -371,7 +483,7 @@ muddy what that comparison tests. v01/v02/v03 now form a clean
 three-way comparison (PUCT / evidence-based UCB bonus / fixed
 depth-shaping bonus) sharing the same cost mapping and affordability
 restriction. Full writeup:
-[decisions/depth-shaping-knapsack-bonus.md](decisions/depth-shaping-knapsack-bonus.md).
+[decisions/bl-kdepth-knapsack-bonus.md](decisions/bl-kdepth-knapsack-bonus.md).
 
 ## 2026-07-09 — Search: KUBE alignment audit — `(q+bonus)/cost` confirmed against paper + budget-mab; affordability restriction added (`kube_affordable`)
 

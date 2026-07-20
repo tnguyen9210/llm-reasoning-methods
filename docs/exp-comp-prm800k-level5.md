@@ -688,6 +688,62 @@ Two activities, two shapes:
 > **Limitations / follow-up:** entire table planned; launch is
 > the level-4 counterpart's command plus `data.level=5`.
 
+### cnt-mcts-bl-v02
+
+#### score_mode sweep: parent_blend (alpha) vs. path_decay (gamma × cpuct) (qwen-3b, QwenPRM)
+> **Compares:** the two selectable v02 frontier scores head-to-head
+> on one model. parent_blend arms sweep `alpha` (one-hop blend of a
+> leaf's q with its parent's) at the file-default cpuct=2.0;
+> path_decay arms sweep the full `gamma × cpuct` cross. Why cpuct
+> is crossed with gamma rather than held fixed: path_decay's
+> exploration term uses the AlphaZero shape
+> `cpuct·sqrt(N_parent)/(1+N_leaf)` — no log damping, so at the
+> default cpuct=2.0 it can swamp the `q_path` value term (range
+> ~[0,1]) after a few backprops regardless of gamma. A flat gamma
+> effect at cpuct=2.0 alone would be uninterpretable (gamma
+> useless, or drowned out?). The cross separates the two stories:
+> gamma mattering at cpuct=0.5 but not 2.0 confirms
+> scale-domination; gamma inert at both scales is real evidence
+> against full-path value reading. gamma semantics: 1.0 = plain
+> path average, 0.8 = moderate decay, 0.5 = steep/near-local.
+>
+> **Fixed:** method=`mcts_bl_cnt_v02`, llm=qwen-3b fp16 (native
+> tmpl), prm=qwen, agg_strategy=`last`, bs-4, d-20, b=80,
+> prm_batch_size=1, level=5.
+>
+> ⚠️ Entirely planned, no runs yet. cpuct is NOT comparable across
+> the two modes (different exploration-term shapes) — compare
+> cpuct values within a mode only. The alpha=1.0 row is the exact
+> v01 control arm (recovers v01's puct identically); path_decay
+> has no v01-equivalent arm.
+>
+> **W&B:** none yet (no runs exist).
+
+| score_mode | alpha | gamma | cpuct | trials | status | pass@gb | naive@gb | wei@gb | maj@gb | hr/trial |
+|---|---|---|---|---|---|---|---|---|---|---|
+| parent_blend | 1.0 | — | 2.0 | — | planned | — | — | — | — | — |
+| parent_blend | 0.8 | — | 2.0 | — | planned | — | — | — | — | — |
+| parent_blend | 0.6 | — | 2.0 | — | planned | — | — | — | — | — |
+| path_decay | — | 1.0 | 2.0 | — | planned | — | — | — | — | — |
+| path_decay | — | 0.8 | 2.0 | — | planned | — | — | — | — | — |
+| path_decay | — | 0.5 | 2.0 | — | planned | — | — | — | — | — |
+| path_decay | — | 1.0 | 0.5 | — | planned | — | — | — | — | — |
+| path_decay | — | 0.8 | 0.5 | — | planned | — | — | — | — | — |
+| path_decay | — | 0.5 | 0.5 | — | planned | — | — | — | — | — |
+
+> **Analysis.** No data yet — nothing to take away. Once filled,
+> the three key reads: (1) does any alpha<1.0 arm beat the
+> alpha=1.0 v01 control (does one-hop blending help at all);
+> (2) does gamma matter at cpuct=0.5 but not at cpuct=2.0 (the
+> scale-domination story above); (3) best parent_blend arm vs.
+> best path_decay arm — the winning score_mode is the survivor,
+> the losing mode is slated for deletion in a future v03 (see
+> docs/decisions-log.md 2026-07-19).
+> **Limitations / follow-up:** all cells planned — see
+> experiments.yaml group `cnt-mcts-bl-v02`, feeds
+> `level5-cnt-bl-v02-score-mode-qwen3b`. Single model (qwen-3b);
+> extend the winning arm to the 5-model grid later if warranted.
+
 ### kube-mcts-bl-v01
 
 #### model family, size, quantization comparison (QwenPRM)
@@ -714,6 +770,62 @@ Two activities, two shapes:
 > **Analysis.** No level-5 data yet — nothing to take away.
 > **Limitations / follow-up:** entire table planned; launch is
 > the level-4 counterpart's command plus `data.level=5`.
+
+### kube-mcts-bl-v02
+
+#### score_mode sweep: parent_blend (alpha) vs. path_decay (gamma × kube_c) (qwen-3b, QwenPRM)
+> **Compares:** the two selectable v02 frontier densities
+> head-to-head, mirroring the cnt-mcts-bl-v02 score_mode sweep
+> above cell-for-cell (same model, PRM, level, budget, arm grid) —
+> so the two families' sweeps are directly comparable: under
+> kube_schedule=parent (fixed here), kube's path_decay density is
+> exactly bl_cnt v02's path_decay score divided by remaining cost,
+> and kube's parent_blend bonus is exactly bl_cnt's PUCT bonus
+> over cost. Any ranking difference between the families is
+> attributable to the /cost division alone. The gamma × kube_c
+> cross rationale is the same as the cnt table's (see its blurb):
+> the AZ-shaped path_decay bonus has no log damping, so
+> kube_c=2.0 may swamp the value term regardless of gamma — the
+> cross separates "gamma useless" from "gamma drowned out".
+>
+> **Fixed:** method=`mcts_bl_kube_v02`, kube_schedule=`parent`,
+> kube_affordable=true, llm=qwen-3b fp16 (native tmpl), prm=qwen,
+> agg_strategy=`last`, bs-4, d-20, b=80, prm_batch_size=1,
+> level=5.
+>
+> ⚠️ 3/9 cells scored, rest planned. kube_c is NOT comparable
+> across the two modes (different bonus shapes: log form vs. AZ
+> form) — compare kube_c values within a mode only. The alpha=1.0
+> row is the exact v01 control arm; path_decay has no
+> v01-equivalent arm.
+>
+> **W&B:** alpha=1.0 `26ty6v7n`, alpha=0.8 `z15wgie9`,
+> path_decay gamma=0.8/kube_c=0.5 `nvcah979`.
+
+| score_mode | alpha | gamma | kube_c | trials | status | pass@gb | naive@gb | wei@gb | maj@gb | hr/trial |
+|---|---|---|---|---|---|---|---|---|---|---|
+| parent_blend | 1.0 | — | — | 2 | scored | .6381<br>±.0294 | .5485<br>±.0305 | .5112<br>±.0306 | .5224<br>±.0306 | — |
+| parent_blend | 0.8 | — | — | 2 | scored | .6194<br>±.0297 | .5299<br>±.0305 | .5224<br>±.0306 | .5037<br>±.0306 | — |
+| parent_blend | 0.6 | — | — | — | planned | — | — | — | — | — |
+| path_decay | — | 1.0 | 2.0 | — | planned | — | — | — | — | — |
+| path_decay | — | 0.8 | 2.0 | — | planned | — | — | — | — | — |
+| path_decay | — | 0.5 | 2.0 | — | planned | — | — | — | — | — |
+| path_decay | — | 1.0 | 0.5 | — | planned | — | — | — | — | — |
+| path_decay | — | 0.8 | 0.5 | 2 | scored | .6269<br>±.0296 | .5261<br>±.0306 | .4813<br>±.0306 | .4813<br>±.0306 | — |
+| path_decay | — | 0.5 | 0.5 | — | planned | — | — | — | — | — |
+
+> **Analysis.** No data yet — nothing to take away. Once filled,
+> the reads mirror the cnt table's three (blend vs. v01 control;
+> gamma at kube_c=0.5 vs. 2.0; best arm per mode), plus the
+> cross-family read this table uniquely enables: same-arm
+> kube-vs-cnt cells isolate the effect of cost normalization on
+> each score_mode. The winning mode is the survivor; the loser is
+> slated for deletion (docs/decisions-log.md 2026-07-19).
+> **Limitations / follow-up:** all cells planned — see
+> experiments.yaml group `kube-mcts-bl-v02`, feeds
+> `level5-kube-bl-v02-score-mode-qwen3b`. kube_schedule=global not
+> swept here (would double the grid); a separate global-schedule
+> table is a later decision.
 
 ### kdepth-mcts-bl-v01
 

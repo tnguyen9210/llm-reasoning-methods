@@ -1,9 +1,8 @@
 # Fractional-KUBE alignment audit: `(q+bonus)/cost` confirmed; affordability restriction added; constant folded into `kube_c`
 
-*2026-07-09 (variant renamed 2026-07-16 from `mcts_bl_cnt_v02` to
-`mcts_bl_kube_v01` — see
-[bl-cnt-to-bl-kube-rename.md](bl-cnt-to-bl-kube-rename.md); the audit
-narrative below is left in its original terms)*
+*2026-07-09 (the variant audited here is now `mcts_bl_kube_v01`,
+then named `mcts_bl_cnt_v02`; the audit narrative below is left in
+its original terms)*
 
 Records a line-by-line verification of
 `mcts_bl_kube_search_v01_00_00.py::MCTSNode.kube_density` (then named
@@ -139,5 +138,3 @@ tracked run.
   the formula was checked against.
 - `core/mcts_bl_kube_search_v01_00_00.py::MCTS.select_child_from_list`
   — the implementation.
-- [bl-cnt-to-bl-kube-rename.md](bl-cnt-to-bl-kube-rename.md) — the
-  2026-07-16 rename that gave this variant its current name.

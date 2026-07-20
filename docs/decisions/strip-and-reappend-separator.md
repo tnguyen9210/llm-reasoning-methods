@@ -57,7 +57,7 @@ current MCTS search cores:
 |---|---|
 | `core/mcts_cnt_search_v01_00_00.py` | 263 |
 | `core/mcts_bl_cnt_search_v01_00_00.py` | 320 |
-| `core/mcts_bl_kube_search_v01_00_00.py` (renamed 2026-07-16 from `mcts_bl_cnt_search_v02_00_00.py` — see [bl-cnt-to-bl-kube-rename.md](bl-cnt-to-bl-kube-rename.md)) | 403 |
+| `core/mcts_bl_kube_search_v01_00_00.py` | 403 |
 | `core/mcts_sem_search_v01_00_00.py` | 526 |
 | `core/mcts_sem_search_v02_00_00.py` | 725 |
 

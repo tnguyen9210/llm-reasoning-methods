@@ -1,10 +1,9 @@
 # BL-KUBE-MCTS's KUBE bonus schedule: global clock vs. per-parent (UCT-style) clock
 
-*2026-07-09 (variant renamed 2026-07-16 from `mcts_bl_cnt_v02` to
-`mcts_bl_kube_v01` — see
-[bl-cnt-to-bl-kube-rename.md](bl-cnt-to-bl-kube-rename.md); this file's
-own narrative below is left in its original 2026-07-09 terms, since
-that's the name the variant had at the time this decision was made)*
+*2026-07-09 (the variant discussed here is now `mcts_bl_kube_v01`,
+then named `mcts_bl_cnt_v02`; this file's own narrative below is
+left in its original 2026-07-09 terms, since that's the name the
+variant had at the time this decision was made)*
 
 Records the discussion and decision behind
 `BLMCTSKubeV01Config.kube_schedule` — which clock drives the
@@ -264,5 +263,3 @@ node-creation order ever changes.
   (modulo the `/cost(x)` division).
 - `core/mcts_bl_kube_search_v01_00_00.py::MCTSNode.kube_density` — the
   implementation.
-- [bl-cnt-to-bl-kube-rename.md](bl-cnt-to-bl-kube-rename.md) — the
-  2026-07-16 rename that gave this variant its current name.

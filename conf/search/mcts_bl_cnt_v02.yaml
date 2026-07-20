@@ -1,7 +1,7 @@
 # @package search
 # Search-method group → binds onto BLMCTSCntV02Config.
-# v02 of BLMCTSCntConfig's family -- eager terminal backprop +
-# path-aware PUCT (parent-blend). See
+# v02 of BLMCTSCntConfig's family -- delayed-eager terminal backprop
+# + selectable path-aware frontier score (score_mode). See
 # docs/decisions/bl-cnt-v02-eager-backprop-path-aware.md.
 # The mcts_bl_cnt_v02_schema node (registered in the launcher under
 # group "search") supplies the typed dataclass; values below
@@ -17,5 +17,14 @@ max_depth: 20
 negative_reward: 0
 num_phases: 1000
 gen_budget: 80           # total generations across the full run
-cpuct: 2.0
-alpha: 0.8               # own-q vs. parent-q blend; 1.0 = plain PUCT
+cpuct: 2.0               # NOT comparable across score_modes (the two
+                         # modes use different exploration-term
+                         # shapes) -- sweep cpuct per mode
+score_mode: parent_blend # "parent_blend" | "path_decay" (sweep arms)
+alpha: 0.8               # parent_blend only: own-q vs. parent-q
+                         # blend; score_mode=parent_blend alpha=1.0
+                         # = v01's exact puct (the ONLY v01 control
+                         # arm -- include it in any sweep)
+gamma: 0.8               # path_decay only: per-hop decay (1.0 =
+                         # plain path average; 0.0 = own q + AZ-u,
+                         # NOT a v01 control arm)

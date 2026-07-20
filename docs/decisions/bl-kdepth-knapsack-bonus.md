@@ -1,12 +1,9 @@
 # BL-KDEPTH-MCTS: reintroducing the depth-decay bonus as its own knapsack variant
 
-*2026-07-09 (variant renamed 2026-07-17 from `mcts_bl_cnt_v03` to
-`mcts_bl_kdepth_v01` — see
-[bl-cnt-to-bl-kdepth-rename.md](bl-cnt-to-bl-kdepth-rename.md); the
-v02 sibling referenced throughout was itself renamed 2026-07-16 from
-`mcts_bl_cnt_v02` to `mcts_bl_kube_v01` — see
-[bl-cnt-to-bl-kube-rename.md](bl-cnt-to-bl-kube-rename.md); the
-narrative below is left in its original terms)*
+*2026-07-09 (the variant discussed here is now `mcts_bl_kdepth_v01`,
+then named `mcts_bl_cnt_v03`; the "v02" sibling referenced
+throughout is now `mcts_bl_kube_v01`; the narrative below is left in
+its original terms)*
 
 Records why the `f_a(z) = 1 - z**alpha` depth-decay bonus — the
 selection term that was in the *original*, pre-rewrite
@@ -133,9 +130,3 @@ kube-affordability-restriction.md`).
   why the original depth-decay formula was removed from v02.
 - `core/mcts_bl_kdepth_search_v01_00_00.py::MCTSNode.depth_density` —
   the implementation.
-- [bl-cnt-to-bl-kube-rename.md](bl-cnt-to-bl-kube-rename.md) — the
-  2026-07-16 rename that gave the v02 sibling its current name,
-  `mcts_bl_kube_v01`.
-- [bl-cnt-to-bl-kdepth-rename.md](bl-cnt-to-bl-kdepth-rename.md) — the
-  2026-07-17 rename that gave this variant its current name,
-  `mcts_bl_kdepth_v01`.

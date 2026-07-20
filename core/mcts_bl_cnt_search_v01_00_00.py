@@ -5,12 +5,10 @@ Key difference from mcts_cnt_search_v01_00_00: instead of phase-based
 root-to-leaf walks, maintains an explicit `leaf_nodes` frontier and
 selects globally across all current leaves each iteration.
 
-Sibling comparison: mcts_bl_kube_search_v01_00_00.py (renamed
-2026-07-16 from mcts_bl_cnt_search_v02_00_00.py -- see
-docs/decisions/bl-cnt-to-bl-kube-rename.md) replaces PUCT with KUBE
-density-based leaf selection. Both are active, even though KUBE now
-lives in its own algorithm family rather than as a same-family
-sibling version.
+Sibling comparison: mcts_bl_kube_search_v01_00_00.py replaces PUCT
+with KUBE density-based leaf selection. Both are active; KUBE lives
+in its own algorithm family rather than as a same-family sibling
+version.
 
 Algorithm
     Initialize completion_list = [], leaf_nodes = [], gen_cnt = 0,

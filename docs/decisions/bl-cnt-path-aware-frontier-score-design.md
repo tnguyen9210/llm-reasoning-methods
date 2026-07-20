@@ -203,17 +203,215 @@ total cost per phase is `O(frontier_size · depth)`. With
 `max_depth = 20` and a frontier that can grow into the hundreds, this
 is a real (if not prohibitive) cost difference from Option 1.
 
-## 5. Comparison (Option 1 vs. Option 2, v01)
+## 4.5. Option 3 — PUCT-proper prior term on the exploration bonus
+*(added 2026-07-18, discussed after v02/Option 1 shipped)*
 
-| | reach | new state read | exploration term | cost/selection | main risk |
+Options 1 and 2 both fix the same defect: a backpropagated *value*
+never reaches selection. Neither touches a separate, second defect
+named in §"Magnitude" above — the exploration term `u` is not just
+inert to backprop, it is **structurally blind to score, period**,
+backprop or no backprop. `u = cpuct · sqrt(ln N_parent / N_leaf)`
+is built entirely from counts; a fresh dead-end that scored 0.0 and
+one that scored 0.95 produce byte-identical `u`, so a count-burst
+through a shared parent pulls toward a dead-end's siblings "with the
+same strength regardless of whether the terminal that triggered it
+scored 0.0 or 0.95" — the passage's own words, quoted in full above.
+Option 1's `alpha` blend softens this indirectly (a bad sibling drags
+down `q(parent)`, which leaks into `blended_q`) but the *exploration*
+term itself still can't see the score that triggered its own burst.
+
+Standard PUCT (AlphaZero, and the source of the "P" in "PUCT") already
+has a slot for exactly this — a prior probability weighting the
+exploration bonus itself, not just the value term:
+
+```
+PUCT(x) = Q(x) + c · P(x) · sqrt(N_parent) / (1 + N_x)
+```
+
+`P(x)` is normally a policy network's output. This repo has no policy
+network, but it already computes something that can stand in for one:
+the PRM's `candidate_score` at expansion time (`create_child`'s
+`new_node.update(candidate_score)` call —
+[mcts_bl_cnt_search_v01_00_00.py:221](../../core/mcts_bl_cnt_search_v01_00_00.py#L221),
+`core/mcts_bl_cnt_search_v02_00_00.py:310` in the v02 sibling). That
+value already seeds a fresh node's first `q_value()`; Option 3 would
+additionally store it
+(or a batch-normalized version of it) as a separate, never-updated
+`prior_p` field, then read `prior_p` inside the exploration term:
+
+```python
+u = cpuct * node.prior_p * sqrt(N_parent) / (1 + N_leaf)
+```
+
+`prior_p` needs normalizing across the sibling batch created by the
+same expansion call — a raw PRM score in `(0, 1)` is one node's
+absolute quality, not a probability distribution over its siblings.
+Two natural normalizations:
+
+```
+P(x) = score(x) / sum(score(sibling) for sibling in batch)          # ratio
+P(x) = softmax(score(x) / tau over batch)                            # temperature
+```
+
+Softmax with high `tau` degenerates to `P(x) = 1/len(batch)` for every
+sibling — recovering something close to today's score-blind `u` as a
+limiting case, which is a useful sanity check that this is a strict
+generalization, not a different formula family.
+
+**Why this is a fix for the "Magnitude" defect specifically, not a
+restatement of Option 1**: a low-scoring dead-end now gets a small
+`prior_p`, so *its own* burst through `u` shrinks in proportion to how
+bad it scored — the exploration term finally tracks the value that
+triggered it. Options 1/2 route backpropagated value through `Q(x)`;
+Option 3 routes the *originating* score through `u` directly, and
+requires no backprop timing decision at all (`prior_p` is fixed once,
+at creation, from data already computed then) — it composes with
+either Option 1 or Option 2's value-term change rather than competing
+with it.
+
+**Cost / reach**: O(1) per leaf per selection, same as Option 1 —
+`prior_p` is read, not walked. Reach is local to the sibling batch
+that produced it (no cross-batch or cross-depth propagation, unlike
+Option 2's full path).
+
+**Not implemented; not benchmarked.** Recorded here as a design-space
+entry only, per Tuan's request (2026-07-18) to document it alongside
+Options 1/2 rather than leave it in conversation only.
+
+## 4.6. How these three options compare to real AlphaZero
+*(added 2026-07-18, researched against primary/near-primary sources —
+Silver et al. 2017 Nature, the ELF OpenGo reimplementation paper
+(Tian et al. 2019, arXiv:1902.04522), and the Leela Chess Zero
+implementation notes — after Tuan asked what AlphaZero itself
+actually does for Q/bonus computation.)*
+
+### The real mechanism: backup touches every ancestor, every
+simulation, unconditionally
+
+AlphaZero's MCTS runs many independent root-to-leaf simulations per
+move (800-1,600 in the primary sources). Each simulation ends with a
+leaf evaluation `v` (the value network's output — an estimated win
+probability, not a terminal game outcome, since most evaluated leaves
+are *not* terminal game states in AlphaZero's setting, only in bl_cnt's
+generation-until-terminal setting). The **backup** step then
+unconditionally updates *every node on that simulation's root-to-leaf
+path* — not just the leaf, not just its parent, all of them:
+
+```
+for node in path_from_leaf_to_root:
+    node.N += 1
+    node.W += v
+    node.Q = node.W / node.N
+```
+
+Because many simulations share the same upper portion of the tree (all
+of them pass through the root; most pass through the first few plies),
+an internal node's `Q` becomes, by construction, "the mean evaluation
+of every simulation that ever passed through here" — i.e. a live
+summary of its entire explored subtree, updated continuously, with
+zero extra computation needed at *selection* time. Selection then
+reads this already-aggregated `Q` directly:
+
+```
+a* = argmax_a  Q(s,a) + c_puct · P(s,a) · sqrt(ΣN(s,b)) / (1 + N(s,a))
+```
+
+### Why this doesn't map cleanly onto the bl_cnt codebase as-is
+
+bl_cnt's search is a best-first frontier search, not a
+simulation-based tree search: `agent.backprop(node)` only ever fires
+when a **terminal** node is created (or, in lazy v01, selected) —
+there is no notion of "every root-to-leaf walk backs up its own
+path," because there is no repeated independent walk at all, only a
+single frontier that grows breadth-first-ish via best-first
+selection. Consequently, in bl_cnt today, a node like `A` only
+accumulates contributions from whichever of *its own descendants'*
+terminals happen to have backpropped by a given point in the search —
+not "everything below `A`," and not on any fixed cadence. This is a
+real, structural difference from AlphaZero's per-simulation backup,
+not just a smaller-scale version of it.
+
+### Where Options 1/2/3 land relative to the real mechanism
+
+| | reach | prior term `P` | exploration-term shape | backup discount |
+|---|---|---|---|---|
+| **Real AlphaZero** | full path, every simulation, unconditional | policy-net softmax; root gets Dirichlet noise (`ε=0.25`, `Dir(0.03)`) | `c_puct · P · sqrt(ΣN_b) / (1+N_a)` | **none** — undiscounted, uniform across depth |
+| Option 1 (§3) | one hop (parent only) | none | unchanged bl_cnt UCB1, `sqrt(ln N_parent / N_leaf)` | n/a — only the value term is touched |
+| Option 2 (§4) | full path (matches AZ's *reach*) | none | changed to AZ's `sqrt(N_parent)/(1+N_leaf)` shape (matches) | `gamma`-discounted — **does not match**; real AlphaZero has no depth discount at all (see below) |
+| Option 3 (§4.5) | one batch (siblings at creation) | PRM-derived, batch-normalized — matches AZ's *role* (a prior weight on `u`), different *source* (no policy network here) | needs AZ's `P`-weighted shape to have a slot for `prior_p` at all; UCB1 alone has none | n/a |
+
+**None of the three is a full reproduction of AlphaZero, and none was
+trying to be** — each isolates a different piece of the mechanism on
+purpose (§3, §4's own text). But two specific, easy-to-miss points are
+worth recording plainly:
+
+1. **Option 2's `gamma`-discount is not part of real AlphaZero.** The
+   primary-source backup applies the *same* `v`, undiscounted, to
+   every ancestor regardless of distance from the leaf — a failure
+   twenty plies up counts exactly as much as one plie up, because it's
+   the identical simulation's `v` being added at every stop.
+   Option 2's `gamma ** depth` decay (§4) is a reasonable, deliberate
+   modification given bl_cnt's stated goal ("a failure many levels up
+   counts for less than an immediate parent's failure") — but it
+   should be described as *AlphaZero-inspired*, not
+   *AlphaZero-matching*, when writing this up anywhere more formal
+   (a paper, a related-work paragraph). Real AlphaZero's implicit
+   `gamma` is 1.0.
+2. **Option 3 is structurally the closest of the three to what "PUCT"
+   originally names** — a *prior-weighted* exploration bonus — even
+   though its reach (one sibling batch) is the shallowest of the
+   three. Option 2 is closest in *reach* (full path, matching AZ's
+   backup scope) but diverges on the discount. There is no reason
+   Options 2 and 3 couldn't be combined (full-path value + prior-
+   weighted bonus, `gamma` dropped to 1.0) as a fourth, more literal
+   reproduction — not currently a planned direction, recorded here
+   only as a named possibility in case the comparison becomes useful
+   later (e.g. if a reviewer asks "why doesn't this match AlphaZero
+   exactly").
+
+### A clarifying note on "why Option 2 is closer to the real
+mechanism than Option 1, in plain terms"
+
+Option 1's `path_aware_puct` reads `self.parent.q_value()` — a single
+number that, in bl_cnt's terminal-triggered backprop scheme, reflects
+"whatever has backpropped through this parent so far via its terminal
+descendants," which is a real but partial and update-cadence-dependent
+signal (see "Why this doesn't map cleanly" above). Option 2's
+full-path walk is an attempt to approximate AlphaZero's
+"every-ancestor-aggregates-its-whole-subtree" property directly at
+*read* time (walking and discounting the path on every selection
+call), precisely because bl_cnt's *write* step (backprop) doesn't
+already maintain that property the way AlphaZero's per-simulation
+backup does for free. Same end goal — let a node's score summarize
+its subtree — reached by different means, because the two systems
+don't share a backup trigger.
+
+**Sources** (primary/near-primary, checked directly rather than
+recalled): Silver, D. et al. "Mastering the game of Go without human
+knowledge," *Nature* 550, 354-359 (2017) — selection formula, backup
+rule (`W += v`, `Q = W/N`), Dirichlet noise at root. Tian, Y. et al.
+"ELF OpenGo: An Analysis and Open Reimplementation of AlphaZero,"
+ICML 2019 (arXiv:1902.04522) — `c_puct = 1.5` and virtual-loss-constant
+`= 1.0` as empirically swept values (both left unspecified in the
+original AGZ/AZ papers, per that paper's own Table S1). Leela Chess
+Zero implementation notes (lczero.org/dev/lc0/search/alphazero) —
+independent confirmation of the same formula and backup shape.
+
+## 5. Comparison (Option 1 vs. Option 2 vs. Option 3, v01)
+
+| | reach | new state read | which term changes | cost/selection | main risk |
 |---|---|---|---|---|---|
-| Option 1 | one hop (immediate parent) | `parent.q_value()` (already exists) | unchanged (`ln`-UCB1) | O(1)/leaf | weak effect in mixed-quality neighborhoods |
-| Option 2 | full path, `gamma`-discounted | whole ancestor chain's `q_value()` | changed to AlphaZero `sqrt(N)/(1+N)` form | O(depth)/leaf | two things change at once (depth *and* term shape); needs `cpuct` retuned or it overshoots harder than today |
+| Option 1 | one hop (immediate parent) | `parent.q_value()` (already exists) | value term only (`ln`-UCB1 exploration unchanged) | O(1)/leaf | weak effect in mixed-quality neighborhoods |
+| Option 2 | full path, `gamma`-discounted | whole ancestor chain's `q_value()` | both — value term *and* exploration term reshaped to AlphaZero `sqrt(N)/(1+N)` | O(depth)/leaf | two things change at once (depth *and* term shape); needs `cpuct` retuned or it overshoots harder than today |
+| Option 3 | one batch (siblings at creation) | new `prior_p` field, batch-normalized PRM score | exploration term only (value term untouched) | O(1)/leaf | needs a normalization/temperature choice (`tau`); no backprop-timing interaction to reason about, unlike 1/2 |
 
 Option 1 isolates one variable (does neighborhood-blending help at
 all) with the smaller footprint; Option 2 is the more "textbook"
 design (proper discounted subtree value) but confounds two changes and
-actively fights the stated goal unless `cpuct` is retuned alongside it.
+actively fights the stated goal unless `cpuct` is retuned alongside
+it; Option 3 targets a *different* defect (exploration-term
+value-blindness, not backprop-reachability) and is orthogonal enough
+to combine with either 1 or 2 rather than replace them.
 
 ## 6. Recommendation (v01)
 
@@ -221,7 +419,12 @@ Try Option 1 first, in a **new version file** (`v04` — `v02` is KUBE
 and `v03` is depth-shaping knapsack, see §7), sweeping
 `α ∈ {1.0, 0.8, 0.6}` with `α = 1.0` as the current-behavior control
 arm. Reach for Option 2's full path-walk only if one-hop blending is
-shown insufficient. Either option is a new version file, not an edit
+shown insufficient. Option 3 is a candidate to layer on top of
+whichever of Option 1/2 ships, once the `alpha` (or `gamma`) sweep
+gives a baseline to compare against — it changes a different term, so
+sequencing it strictly after rather than sweeping all three at once
+keeps each ablation attributable to one variable. Each option (and
+Option 3, if it proceeds) is a new version file, not an edit
 to `v01_00_00`, per the two-tier convention in
 [algorithms.md](../algorithms.md) — this changes search behavior, so
 existing scored `bl_cnt` cells must stay attributable to the old
@@ -229,23 +432,10 @@ formula.
 
 ## 7. Extending the same question to v02/bl_kube (KUBE) and v03 (depth-shaping)
 
-*Note: the v02 module referenced throughout this section was renamed
-2026-07-16, shortly after this analysis was written, from
-`mcts_bl_cnt_search_v02_00_00.py` / `mcts_bl_cnt_v02` to
-`mcts_bl_kube_search_v01_00_00.py` / `mcts_bl_kube_v01` — see
-[bl-cnt-to-bl-kube-rename.md](bl-cnt-to-bl-kube-rename.md). File-path
-citations below have been updated to the current name and line
-numbers; the analysis and "v02" shorthand in the prose are otherwise
-unchanged.*
-
-*Note: the v03 module referenced throughout this section was renamed
-2026-07-17, the day after this analysis was written, from
-`mcts_bl_cnt_search_v03_00_00.py` / `mcts_bl_cnt_v03` to
-`mcts_bl_kdepth_search_v01_00_00.py` / `mcts_bl_kdepth_v01` — see
-[bl-cnt-to-bl-kdepth-rename.md](bl-cnt-to-bl-kdepth-rename.md).
-File-path citations below have been updated to the current name and
-line numbers; the analysis and "v03" shorthand in the prose are
-otherwise unchanged.*
+*Note: "v02" and "v03" in this section's prose are this analysis's
+original shorthand for what are now the separate `mcts_bl_kube_v01`
+and `mcts_bl_kdepth_v01` families; file-path citations use the
+current module names.*
 
 Tuan asked how the *original* proposal (terminal-split + eager
 backprop, no path-aware scoring change) would land on
@@ -350,6 +540,18 @@ Depends on `kube_schedule`:
   (`√log(1+t)` grows the bonus weight over the run). Small, but traces
   will differ.
 
+  *Update 2026-07-18:* this "zero effect" verdict describes the
+  UNMODIFIED `"global"` formula and remains true of it — but the
+  shipped `mcts_bl_kube_v02` later extended Option 1's value-term
+  blend to `"global"` too (same day it first shipped
+  `"parent"`-only), which creates exactly the read channel this
+  bullet says the unmodified formula lacks. Notably, global+blend
+  gets the discouragement channel *without* this section's
+  count-burst objection to `"parent"` (the shared-clock bonus
+  cannot burst). See
+  [bl-cnt-v02-eager-backprop-path-aware.md](bl-cnt-v02-eager-backprop-path-aware.md)
+  §3.5 for the reversal rationale.
+
 ### 7.2 v03 — no channel exists at all; the goal is unreachable by construction
 
 `depth_density(x) = (q(x) + depth_beta·(1 − depth_frac(x)^depth_alpha))
@@ -420,8 +622,15 @@ comparable to what's on disk today.
   value is actually read by selection — 0 against PRM scores in
   `(0, 1)` is mild. Worth revisiting once either option is implemented
   and if dead-ends still don't seem sufficiently avoided.
-- Neither Option 1 nor Option 2 (v01) has been implemented or
-  benchmarked; this file records the design space only.
+- None of Option 1, Option 2, or Option 3 (v01) has been implemented
+  or benchmarked; this file records the design space only. (Option 1
+  *has* shipped as `mcts_bl_cnt_search_v02_00_00.py` — see
+  [bl-cnt-v02-eager-backprop-path-aware.md](bl-cnt-v02-eager-backprop-path-aware.md)
+  — but that implementation predates and is untracked by this file's
+  own §3-§6 recommendation text, which still calls it "a new version
+  file (`v04`)"; a renumbering note wasn't added retroactively since
+  §3-§6 remain an accurate description of the design regardless of
+  what it was eventually named.)
 - The v02/v03 docstring-vs-code discrepancy (§7.3) is unresolved —
   neither file's Algorithm block has been corrected yet.
 - Whether v02/v03 should actually get the terminal-split fix (as
@@ -431,9 +640,17 @@ comparable to what's on disk today.
 
 ## Revisit if
 
-- Option 1 (v01, §3) ships and a sweep shows it's too weak — go to
-  Option 2 (§4), and retune `cpuct` alongside the exploration-term-shape
-  change rather than swapping the formula in isolation.
+- Option 1 (v01, §3; shipped as `mcts_bl_cnt_search_v02_00_00.py`,
+  see [bl-cnt-v02-eager-backprop-path-aware.md](bl-cnt-v02-eager-backprop-path-aware.md))
+  is swept and shows either (a) too weak an effect — go to Option 2
+  (§4), retuning `cpuct` alongside the exploration-term-shape change
+  rather than swapping the formula in isolation — or (b) the specific
+  "count-burst attracts toward a dead-end's siblings regardless of its
+  score" failure mode from the "Magnitude" section is still visible in
+  traces even with `alpha < 1` — go to Option 3 (§4.5) instead, since
+  that's the defect it targets directly and Option 2 doesn't fix it
+  either (Option 2's exploration term is reshaped for a different
+  reason, not made score-aware).
 - The terminal-split fix is implemented for v02/v03 — remember it
   *introduces* new dead-end-driven attraction bursts under v02's
   `parent` schedule (§7.1), which is a new failure mode, not a

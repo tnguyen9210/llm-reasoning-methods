@@ -1,28 +1,40 @@
 """
 Budget-Limited MCTS with best-first leaf selection (depth-shaping
-knapsack density, no embeddings) -- v02: eager terminal backprop,
-hygiene only, no formula change.
+knapsack density, no embeddings) -- v02: delayed-eager terminal
+backprop, hygiene only, no formula change.
 
 Sibling: mcts_bl_kdepth_search_v01_00_00.py (unmodified). v02 applies
-the SAME terminal-split + eager-backprop fix as
-mcts_bl_cnt_search_v02_00_00.py / mcts_bl_kube_search_v02_00_00.py --
-a max-depth dead-end always has cost <= 0, so it scores -inf and (in
-v01) sits in leaf_nodes forever, permanently satisfying the
-kube_affordable filter's "always eligible" clause and silently
-disabling that filter's own empty-set fallback (see
-docs/decisions/bl-cnt-path-aware-frontier-score-design.md `\S`7.1,
+the SAME terminal-split + delayed-eager-backprop fix as
+mcts_bl_cnt_search_v02_00_00.py / mcts_bl_kube_search_v02_00_00.py
+(see mcts_bl_cnt_search_v02_00_00.py's docstring for the full
+"why delayed, not immediate" rationale) -- a max-depth dead-end
+always has cost <= 0, so it scores -inf and (in v01) sits in
+leaf_nodes forever, permanently satisfying the kube_affordable
+filter's "always eligible" clause and silently disabling that
+filter's own empty-set fallback (see
+docs/decisions/bl-cnt-path-aware-frontier-score-design.md §7.1,
 written for the KUBE sibling but the affordability mechanics are
 identical here -- both files share the same feasibility filter).
 
+NOTE on delayed-vs-immediate here specifically: unlike the cnt/kube
+siblings, the delay is BEHAVIORALLY INERT in this file --
+depth_density() (see below) reads neither a parent's q_value() nor
+its visit_count(), so there is no channel through which "was this
+terminal's backprop flushed before or after the immediately-following
+selection" could ever change a ranking. The delayed-flush queue
+pattern is kept anyway, for structural consistency with the cnt/kube
+v02 siblings (same invariant to reason about across all three files),
+not because it changes anything this file's selection formula reads.
+
 Unlike the other two v02 siblings, `depth_density()` is UNCHANGED --
-byte-identical to v01's. Per the design doc `\S`7.2: `depth_density`
+byte-identical to v01's. Per the design doc §7.2: `depth_density`
 reads only a leaf's own frozen q_value, its own depth, and two
 constants (depth_beta, depth_alpha) -- "No visit_count/parent_visit/
 global-clock term anywhere," by explicit design. There is no channel
 in this formula that WHEN a node backprops, or what a parent's
 q_value is, could ever reach -- so "no backprop timing -- eager,
 lazy, or never -- can change which non-terminal node gets expanded
-next" (`\S`7.2, verbatim). Consequently this v02 does NOT add a
+next" (§7.2, verbatim). Consequently this v02 does NOT add a
 parent-blend or any alpha knob: there is nothing designed for it to
 blend, and inventing one is explicitly out of scope of the existing
 design doc (a decision confirmed 2026-07-17 when this file was
@@ -30,9 +42,12 @@ written -- see docs/decisions/bl-cnt-v02-eager-backprop-path-aware.md
 "kdepth scope").
 
 What this v02 actually changes, concretely:
-  - A terminal child backprops immediately at creation (inside the
-    expand step) and never enters leaf_nodes, instead of waiting to
-    win a frontier selection.
+  - A terminal child is queued at creation (inside the expand step)
+    and never enters leaf_nodes, instead of waiting to win a frontier
+    selection; the queue is flushed (backpropped) right after the
+    very next selection resolves -- see the NOTE above on why this
+    delay is inert here despite being load-bearing in the cnt/kube
+    siblings.
   - Ranking among NON-terminal nodes is provably unchanged: every
     non-terminal node that would have been in leaf_nodes under v01
     is in leaf_nodes under v02 too, at the same relative order
@@ -53,7 +68,8 @@ the cost<=0 -inf guard, the loop shape -- is unchanged from v01.
 
 Algorithm
     Initialize completion_list = [], leaf_nodes = [], gen_cnt = 0,
-        current = root
+        current = root, pending = []  (queued terminal children, NOT
+        yet backpropped -- see the delayed-flush NOTE above)
     While gen_cnt < gen_budget:
         If current.is_terminal:
             Backprop: update_recursive(current.q_value(), root)
@@ -68,8 +84,7 @@ Algorithm
                 if not completed and depth >= max_depth:
                     mark terminal, score = negative_reward
                 If child.is_terminal:
-                    Backprop eagerly: update_recursive(
-                        child.q_value(), root)
+                    pending.append(child)   -- QUEUED, not backpropped
                 Else:
                     Add child to leaf_nodes
         residual = gen_budget - gen_cnt
@@ -84,19 +99,24 @@ Algorithm
                       identical situation here)
         Select: current = argmax_{x in candidates} depth_density(x);
                 remove current from leaf_nodes
+        For each node in pending:
+            Backprop: update_recursive(node.q_value(), root)
+        pending = []
 
     The loop body ordering, selection SCOPE, and behavior-preservation
     of the generate -> expand -> select rotation are unchanged from
     v01 -- see that module's docstring. Only the terminal-split
     described above differs; depth_density itself is byte-identical
-    to v01's.
+    to v01's, and the flush's timing (immediately after Select, or
+    before either early-exit point) is inert given what
+    depth_density reads -- see the NOTE above.
 
 Selection criterion: identical to v01 -- see that module's docstring
 (depth_density, cost mapping, f_a(z) depth-decay shape). This v02
 does not change the formula.
 
 Variant lineage: docs/algorithms.md,
-docs/decisions/bl-cnt-path-aware-frontier-score-design.md `\S`7.2
+docs/decisions/bl-cnt-path-aware-frontier-score-design.md §7.2
 (design -- establishes the goal is unreachable via backprop timing
 alone in this variant), docs/decisions/
 bl-cnt-v02-eager-backprop-path-aware.md (this implementation).
@@ -453,9 +473,10 @@ def mcts_search(question, agent, config, llm_vllm, prm):
     terminal), then selects the next node by depth-shaping density
     globally across the leaf frontier — generate -> expand -> select,
     mirroring mcts_bl_kdepth_search_v01_00_00.py's walk step. Newly
-    created terminal children backprop IMMEDIATELY at expand time and
-    never enter the frontier; only non-terminal children are added to
-    leaf_nodes. Only expansions charge gen_cnt.
+    created terminal children are queued (delayed eager backprop,
+    inert here given what depth_density reads -- see module
+    docstring) and never enter the frontier; only non-terminal
+    children are added to leaf_nodes. Only expansions charge gen_cnt.
     """
     tokenizer = llm_vllm.get_tokenizer()
     # Template selection (mirrors generate_bon / bon_search): default
@@ -484,14 +505,23 @@ def mcts_search(question, agent, config, llm_vllm, prm):
     phase_depths: List[int] = []
     leaf_nodes: List[Any] = []
     current_node = agent.root
+    # Delayed-eager backprop queue: see
+    # mcts_bl_cnt_search_v02_00_00.py's identical comment for the full
+    # rationale. depth_density reads neither parent.q_value() nor
+    # parent.visit_count() (see module docstring), so delayed vs.
+    # immediate flush timing is BEHAVIORALLY INERT here -- kept for
+    # structural consistency with the cnt/kube v02 siblings (same
+    # queue pattern, same invariant to reason about), not because it
+    # changes anything this file's selection formula reads.
+    pending_terminal_backprops: List[Any] = []
 
     for p in range(config.search.num_phases):
         logging.fatal(f"\n-> p = {p}")
 
         # Defensive: same boundary-case guard as v01 (root COULD in
         # principle be terminal at max_depth == 0). In the common
-        # case this branch is dead: freshly created terminals
-        # backprop eagerly below and never reach the frontier.
+        # case this branch is dead: freshly created terminals are
+        # queued below and never reach the frontier.
         if current_node.is_terminal:
             logging.fatal(f"current_node.is_terminal = True")
             agent.backprop(current_node)
@@ -505,22 +535,30 @@ def mcts_search(question, agent, config, llm_vllm, prm):
             new_children = agent.expand_node(
                 current_node, infos, scores, p, gen_cnt,
             )
-            # Terminal split + eager backprop: a terminal child
-            # backprops immediately and never enters leaf_nodes; only
-            # non-terminal children compete for the next selection.
+            # Terminal split + DELAYED eager backprop: a terminal
+            # child is queued, not backpropped yet, and never enters
+            # leaf_nodes; only non-terminal children compete for the
+            # selection immediately below. Flushed right after that
+            # selection resolves (or right before any loop exit).
             for child in new_children:
                 if child.is_terminal:
-                    agent.backprop(child)
+                    pending_terminal_backprops.append(child)
                 else:
                     leaf_nodes.append(child)
 
         logging.fatal(f"gen_cnt = {gen_cnt}")
         if gen_cnt >= config.search.gen_budget:
             logging.fatal("run out of budget!")
+            for child in pending_terminal_backprops:
+                agent.backprop(child)
+            pending_terminal_backprops = []
             break
 
         if not leaf_nodes:
             logging.fatal("leaf_nodes is empty — stopping.")
+            for child in pending_terminal_backprops:
+                agent.backprop(child)
+            pending_terminal_backprops = []
             break
 
         # Select the next node with highest depth-shaping density
@@ -533,6 +571,10 @@ def mcts_search(question, agent, config, llm_vllm, prm):
             leaf_nodes, residual
         )
         leaf_nodes.remove(current_node)
+
+        for child in pending_terminal_backprops:
+            agent.backprop(child)
+        pending_terminal_backprops = []
 
         selected_density = current_node.depth_density(
             config.search.max_depth, config.search.depth_beta,
