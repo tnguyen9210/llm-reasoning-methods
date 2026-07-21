@@ -1,5 +1,9 @@
 results
 results2
+# ...but DO track the notebook trace-inspection outputs (small
+# JSON/log/HTML diagnostics, kept as a record — Tuan 2026-07-20).
+!unittests/results/
+!unittests/results/**
 
 # Python bytecode
 __pycache__/
