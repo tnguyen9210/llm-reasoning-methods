@@ -3383,3 +3383,41 @@
   priority: 1
   note: level-5 qwen-3b kube score_mode sweep, path_decay gamma=0.5
     kube_c=0.5, cfg-9535b114
+
+# --- planned: level-5 kube-mcts-bl-v01 model family/size/quant
+# comparison, qwen-3b cell (docs/exp-comp-prm800k-level5.md
+# "kube-mcts-bl-v01 / model family, size, quantization comparison
+# (QwenPRM)")
+- launcher: generate_mcts_bl_cnt.py
+  hash: "d86fefc7"
+  config_root: mcts_bl_kube_v01_prm800k
+  overrides:
+    llm: qwen_3b
+    prm: qwen_prm
+    data.level: 5
+  trials: 2
+  feeds: [level5-kube-bl-v01-model-family-qwen3b]
+  group: kube-mcts-bl
+  recorded: false
+  priority: 1
+  note: level-5 qwen-3b kube-mcts-bl-v01 model family/size/quant
+    comparison cell, cfg-d86fefc7
+
+# --- planned: level-5 kdepth-mcts-bl-v01 model family/size/quant
+# comparison, qwen-3b cell (docs/exp-comp-prm800k-level5.md
+# "kdepth-mcts-bl-v01 / model family, size, quantization
+# comparison (QwenPRM)")
+- launcher: generate_mcts_bl_cnt.py
+  hash: "235547c5"
+  config_root: mcts_bl_kdepth_v01_prm800k
+  overrides:
+    llm: qwen_3b
+    prm: qwen_prm
+    data.level: 5
+  trials: 2
+  feeds: [level5-kdepth-bl-v01-model-family-qwen3b]
+  group: kdepth-mcts-bl
+  recorded: false
+  priority: 1
+  note: level-5 qwen-3b kdepth-mcts-bl-v01 model family/size/quant
+    comparison cell, cfg-235547c5
