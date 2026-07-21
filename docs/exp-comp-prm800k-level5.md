@@ -854,26 +854,26 @@ Two activities, two shapes:
 > **Limitations / follow-up:** entire table planned; launch is
 > the level-4 counterpart's command plus `data.level=5`.
 
-### sem-mcts-bl
+### sem-mcts-bl (v01)
 
-#### model family, size, quantization comparison (QwenPRM, w_eff=100)
+#### model family, size, quantization comparison (QwenPRM, lam=0.01/ds_alpha=10)
 > **Compares:** model family, size, and quantization jointly —
 > same 5-model/quant grid as cnt-mcts-bl-v01's equivalent table
 > above, so a direct bl_sem-vs-bl_cnt read is possible once both
-> are filled.
+> are filled. Anchored to the **same (lam, ds_alpha) checkpoint
+> as sem-mcts (v02)'s `lam=0.01/ds_alpha=10` table** above (not
+> level-4 bl_sem_v01's `lam=0.1` convention), so bl_sem-vs-sem_v02
+> is apples-to-apples at this `w_eff`.
 >
-> **Fixed:** method=`mcts_bl_sem_v01`, prm=qwen (both scoring
-> AND diversity embeds — `embeds_source=prm` is the schema
-> default, no second pooling engine), agg_strategy=`last`, bs-4,
-> d-20, b=80, prm_batch_size=1, `ds_alpha_schedule=global`
-> (default — see decisions-log), `cov_update=sm`,
-> `embeds_dim=512`/`embeds_proj=sparse` (defaults), tmpl=
-> model-family default (native for Qwen, custom for Llama).
-> **lam=0.1, ds_alpha=31.6** (`w_eff = ds_alpha/sqrt(lam) = 100`
-> — see
-> [decisions/tuning-semantic-score-weights-and-lambda.md](decisions/tuning-semantic-score-weights-and-lambda.md)'s
-> `lam=0.1` row; `ds_beta=1.0` fixed throughout, so only the
-> ratio matters).
+> **Fixed:** method=`mcts_bl_sem_v01` (PRM embeds — prm=qwen for
+> both scoring AND diversity via `embeds_source=prm`, the schema
+> default, no second pooling engine), prm=qwen, agg_strategy=
+> `last`, bs-4, d-20, b=80, prm_batch_size=1,
+> `ds_alpha_schedule=global` (default — see decisions-log),
+> `cov_update=sm` (sherman_morrison), `embeds_proj=sparse512`
+> (`embeds_dim=512`, defaults), ds_beta=1.0, tmpl=model-family
+> default (native for Qwen, custom for Llama).
+> **lam=0.01, ds_alpha=10** (`w_eff = ds_alpha/sqrt(lam) = 100`).
 
 | llm | trials | status | pass@gb | naive@gb | wei@gb | maj@gb | hr/trial |
 |---|---|---|---|---|---|---|---|
@@ -884,25 +884,28 @@ Two activities, two shapes:
 | qwen-math-1.5b fp16 | — | planned | — | — | — | — | — |
 
 > **Analysis.** No level-5 data yet — nothing to take away.
-> **Limitations / follow-up:** entire table planned; launch is
-> the level-4 counterpart's command plus `data.level=5`.
+> **Limitations / follow-up:** entire table planned. Launch per
+> cell: `generate_mcts_sem.py --config-name
+> mcts_bl_sem_v01_prm800k llm=<model> prm=qwen_prm data.level=5
+> search.lam=0.01 search.ds_alpha=10` (NOTE: `lam=0.01`, not the
+> level-4 bl_sem_v01 tables' `lam=0.1` — this table is anchored
+> to the sem_v02 `lam=0.01` checkpoint, see Compares).
 
-#### model family, size, quantization comparison (QwenPRM, w_eff=10)
-> **Compares:** same 5-model/quant grid as the `w_eff=100` table
-> above, at one order of magnitude lower effective diversity
-> weight — the two tables together give a first (coarse) read on
-> whether the model-family ranking is sensitive to `w_eff` for
-> this algorithm, ahead of a proper `w_eff` sweep.
+#### model family, size, quantization comparison (QwenPRM, lam=0.01/ds_alpha=1)
+> **Compares:** same 5-model/quant grid as the `lam=0.01/
+> ds_alpha=10` table above, at one order of magnitude lower
+> effective diversity weight — the two tables together give a
+> first (coarse) read on whether the model-family ranking is
+> sensitive to `w_eff` for this algorithm, ahead of a proper
+> `w_eff` sweep. Anchored to sem-mcts (v02)'s `lam=0.01/
+> ds_alpha=1` table above (`w_eff=10`).
 >
-> **Fixed:** identical to the `w_eff=100` table above (method=
-> `mcts_bl_sem_v01`, prm=qwen, agg_strategy=`last`, bs-4, d-20,
-> b=80, prm_batch_size=1, `ds_alpha_schedule=global`,
-> `cov_update=sm`, `embeds_dim=512`/`embeds_proj=sparse`, tmpl=
+> **Fixed:** identical to the `lam=0.01/ds_alpha=10` table above
+> (method=`mcts_bl_sem_v01`, prm=qwen, agg_strategy=`last`, bs-4,
+> d-20, b=80, prm_batch_size=1, `ds_alpha_schedule=global`,
+> `cov_update=sm`, `embeds_proj=sparse512`, ds_beta=1.0, tmpl=
 > model-family default) except the diversity weight.
-> **lam=0.1, ds_alpha=3.16** (`w_eff = ds_alpha/sqrt(lam) = 10`
-> — see
-> [decisions/tuning-semantic-score-weights-and-lambda.md](decisions/tuning-semantic-score-weights-and-lambda.md)'s
-> `lam=0.1` row).
+> **lam=0.01, ds_alpha=1.0** (`w_eff = ds_alpha/sqrt(lam) = 10`).
 
 | llm | trials | status | pass@gb | naive@gb | wei@gb | maj@gb | hr/trial |
 |---|---|---|---|---|---|---|---|
@@ -913,8 +916,12 @@ Two activities, two shapes:
 | qwen-math-1.5b fp16 | — | planned | — | — | — | — | — |
 
 > **Analysis.** No level-5 data yet — nothing to take away.
-> **Limitations / follow-up:** entire table planned; launch is
-> the level-4 counterpart's command plus `data.level=5`.
+> **Limitations / follow-up:** entire table planned. Launch per
+> cell: `generate_mcts_sem.py --config-name
+> mcts_bl_sem_v01_prm800k llm=<model> prm=qwen_prm data.level=5
+> search.lam=0.01 search.ds_alpha=1` (NOTE: `lam=0.01`, not the
+> level-4 bl_sem_v01 tables' `lam=0.1`; anchored to the sem_v02
+> `lam=0.01` checkpoint, see Compares).
 
 ## Tuning tables [gen_budget=160, 320, …] *(future)*
 > Add a new `## Tuning tables [gen_budget=N]` section, then
