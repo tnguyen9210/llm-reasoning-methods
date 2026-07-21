@@ -1,0 +1,307 @@
+<title>BL-MCTS Frontier Behavior — Four-Way Comparison</title>
+<style>
+  :root{
+    --bg:#0e1116; --panel:#161b22; --panel2:#1b222c;
+    --line:#2a323d; --ink:#e6edf3; --mut:#8b949e; --mut2:#6b7683;
+    --cnt:#4fb0ff; --kube:#3fd6a8; --kdepth:#ff8a5c; --sem:#c792ea;
+    --grid:#222a34; --good:#3fd6a8; --warn:#ff8a5c; --crit:#ff6b6b;
+    --mono:ui-monospace,"SF Mono",Menlo,Consolas,monospace;
+    --sans:ui-sans-serif,system-ui,-apple-system,"Segoe UI",Roboto,sans-serif;
+  }
+  @media (prefers-color-scheme: light){
+    :root{
+      --bg:#f4f6f9; --panel:#ffffff; --panel2:#f0f3f7;
+      --line:#dce2ea; --ink:#151a21; --mut:#5a6572; --mut2:#8b949e;
+      --cnt:#1f6fd4; --kube:#0f9d78; --kdepth:#d9611f; --sem:#8a54c4;
+      --grid:#e6ebf1;
+    }
+  }
+  :root[data-theme="dark"]{
+    --bg:#0e1116; --panel:#161b22; --panel2:#1b222c;
+    --line:#2a323d; --ink:#e6edf3; --mut:#8b949e; --mut2:#6b7683;
+    --cnt:#4fb0ff; --kube:#3fd6a8; --kdepth:#ff8a5c; --sem:#c792ea;
+    --grid:#222a34;
+  }
+  :root[data-theme="light"]{
+    --bg:#f4f6f9; --panel:#ffffff; --panel2:#f0f3f7;
+    --line:#dce2ea; --ink:#151a21; --mut:#5a6572; --mut2:#8b949e;
+    --cnt:#1f6fd4; --kube:#0f9d78; --kdepth:#d9611f; --sem:#8a54c4;
+    --grid:#e6ebf1;
+  }
+  *{box-sizing:border-box}
+  body{
+    margin:0; background:var(--bg); color:var(--ink);
+    font-family:var(--sans); line-height:1.55;
+    -webkit-font-smoothing:antialiased;
+  }
+  .wrap{max-width:1080px; margin:0 auto; padding:clamp(20px,4vw,56px)}
+  .eyebrow{
+    font-family:var(--mono); font-size:12px; letter-spacing:.18em;
+    text-transform:uppercase; color:var(--mut); margin:0 0 14px;
+  }
+  h1{
+    font-size:clamp(28px,4.6vw,44px); line-height:1.06; margin:0 0 16px;
+    font-weight:760; letter-spacing:-.022em; text-wrap:balance; max-width:20ch;
+  }
+  .lede{font-size:clamp(16px,2vw,19px); color:var(--mut); max-width:64ch; margin:0 0 8px}
+  .meta{font-family:var(--mono); font-size:12.5px; color:var(--mut2); margin-top:18px}
+  h2{
+    font-size:13px; font-family:var(--mono); letter-spacing:.14em;
+    text-transform:uppercase; color:var(--mut); font-weight:600;
+    margin:0 0 18px; padding-bottom:10px; border-bottom:1px solid var(--line);
+  }
+  section{margin-top:clamp(44px,7vw,76px)}
+  p{max-width:66ch}
+  strong{color:var(--ink); font-weight:650}
+
+  /* signature cards */
+  .cards{display:grid; grid-template-columns:repeat(auto-fit,minmax(220px,1fr)); gap:14px}
+  .card{
+    background:var(--panel); border:1px solid var(--line); border-radius:12px;
+    padding:18px 18px 16px; position:relative; overflow:hidden;
+  }
+  .card::before{content:""; position:absolute; left:0; top:0; bottom:0; width:3px; background:var(--mc)}
+  .card .name{font-family:var(--mono); font-weight:650; font-size:15px; color:var(--mc); letter-spacing:-.01em}
+  .card .tag{font-size:12.5px; color:var(--mut); margin:3px 0 14px; font-weight:600; text-transform:uppercase; letter-spacing:.04em}
+  .card .desc{font-size:14px; color:var(--ink); opacity:.9}
+  .stat-row{display:flex; gap:16px; margin-top:14px; flex-wrap:wrap}
+  .stat{display:flex; flex-direction:column}
+  .stat .v{font-family:var(--mono); font-size:20px; font-weight:600; font-variant-numeric:tabular-nums; color:var(--ink)}
+  .stat .k{font-size:10.5px; text-transform:uppercase; letter-spacing:.08em; color:var(--mut); margin-top:2px}
+
+  .panel{background:var(--panel); border:1px solid var(--line); border-radius:12px; padding:clamp(16px,2.4vw,26px)}
+  .chart-note{font-size:13.5px; color:var(--mut); margin:14px 0 0; max-width:70ch}
+  .legend{display:flex; gap:18px; flex-wrap:wrap; font-family:var(--mono); font-size:12.5px; margin:0 0 20px}
+  .legend span{display:inline-flex; align-items:center; gap:7px; color:var(--mut)}
+  .swatch{width:11px; height:11px; border-radius:3px; display:inline-block}
+
+  .smgrid{display:grid; grid-template-columns:repeat(auto-fit,minmax(300px,1fr)); gap:20px}
+  .sm{}
+  .sm h3{font-family:var(--mono); font-size:13px; margin:0 0 2px; font-weight:600; color:var(--ink)}
+  .sm .sub{font-size:12px; color:var(--mut); margin:0 0 10px}
+  canvas{display:block; width:100%; height:auto}
+
+  .tablewrap{overflow-x:auto}
+  table{border-collapse:collapse; width:100%; font-family:var(--mono); font-size:13px; min-width:640px}
+  th,td{text-align:right; padding:9px 12px; border-bottom:1px solid var(--line); font-variant-numeric:tabular-nums}
+  th:first-child,td:first-child{text-align:left}
+  thead th{color:var(--mut); font-weight:600; font-size:11px; text-transform:uppercase; letter-spacing:.06em; border-bottom:1px solid var(--line)}
+  tbody tr td:first-child{color:var(--mc,var(--ink)); font-weight:600}
+  .mrow-cnt td:first-child{color:var(--cnt)} .mrow-kube td:first-child{color:var(--kube)}
+  .mrow-kdepth td:first-child{color:var(--kdepth)} .mrow-sem td:first-child{color:var(--sem)}
+  .bar-cell{position:relative}
+  .bar-cell .bar{position:absolute; left:0; top:50%; transform:translateY(-50%); height:60%; border-radius:2px; opacity:.16}
+  .bar-cell .num{position:relative}
+
+  .keyfind{display:grid; grid-template-columns:repeat(auto-fit,minmax(240px,1fr)); gap:16px; margin-top:6px}
+  .kf{background:var(--panel); border:1px solid var(--line); border-left:3px solid var(--mc); border-radius:10px; padding:16px 18px}
+  .kf .h{font-family:var(--mono); font-size:12px; text-transform:uppercase; letter-spacing:.08em; color:var(--mc); margin:0 0 8px; font-weight:650}
+  .kf p{margin:0; font-size:14px; color:var(--ink); opacity:.92}
+
+  .mechlist{display:flex; flex-direction:column; gap:14px}
+  .mech{display:grid; grid-template-columns:132px 1fr; gap:18px; padding:14px 0; border-top:1px solid var(--line); align-items:baseline}
+  .mech:first-child{border-top:0}
+  .mech .m{font-family:var(--mono); font-weight:650; font-size:14px; color:var(--mc)}
+  .mech .m small{display:block; color:var(--mut); font-weight:400; font-size:11.5px; margin-top:3px; letter-spacing:.02em}
+  .mech .b{font-size:14.5px; color:var(--ink); opacity:.92; margin:0}
+  .caveat{font-size:13px; color:var(--mut); border-top:1px solid var(--line); margin-top:40px; padding-top:20px}
+  .caveat code{font-family:var(--mono); background:var(--panel2); padding:1px 5px; border-radius:4px; font-size:12px}
+  a{color:var(--cnt)}
+</style>
+
+<div class="wrap">
+
+  <header>
+    <p class="eyebrow">Search-tree telemetry · prm800k L5 · qwen-3b · budget 80</p>
+    <h1>Four frontier strategies, four ways to spend the same budget.</h1>
+    <p class="lede">Every method gets exactly 80 generations per question. What separates them is <strong>where in the tree those generations land</strong> — and the four <code style="font-family:var(--mono);font-size:.9em">mcts_bl_*_v02</code> variants diverge sharply. Measured across 20 single-question searches (4 methods × 5 level-5 problems spanning 5 MATH subjects).</p>
+    <p class="meta">cnt = PUCT · kube = KUBE density · kdepth = depth-discounted KUBE · sem = diversity-adjusted value</p>
+  </header>
+
+  <section>
+    <h2>The four signatures — averaged over 5 questions</h2>
+    <div class="cards" id="cards"></div>
+  </section>
+
+  <section>
+    <h2>Where the 80 expansions land · depth profile per question</h2>
+    <div class="panel">
+      <div class="legend">
+        <span><i class="swatch" style="background:var(--cnt)"></i>cnt</span>
+        <span><i class="swatch" style="background:var(--kube)"></i>kube</span>
+        <span><i class="swatch" style="background:var(--kdepth)"></i>kdepth</span>
+        <span><i class="swatch" style="background:var(--sem)"></i>sem</span>
+        <span style="color:var(--mut2)">— x: tree depth · y: # expansions at that depth</span>
+      </div>
+      <div class="smgrid" id="smgrid"></div>
+      <p class="chart-note">The shape <em>is</em> the strategy. <strong style="color:var(--kdepth)">kdepth</strong> piles a wall of expansions against the max-depth ceiling (depth 19–20) — it tunnels. <strong style="color:var(--sem)">sem</strong> keeps a broad, shallow hump centered at depth 3–6 — it fans out. <strong style="color:var(--cnt)">cnt</strong> and <strong style="color:var(--kube)">kube</strong> sit between, with a mid-depth mode that tracks where high-value completions appear.</p>
+    </div>
+  </section>
+
+  <section>
+    <h2>Exploration allocation · aggregate metrics</h2>
+    <div class="panel tablewrap">
+      <table id="metrics">
+        <thead><tr>
+          <th>method</th><th>mean comps</th><th>max depth</th><th>mean depth</th>
+          <th>deep-half %</th><th>depth-Gini</th><th>visit-Gini</th><th>dead-ends</th>
+        </tr></thead>
+        <tbody></tbody>
+      </table>
+    </div>
+    <p class="chart-note"><strong>depth-Gini</strong> = concentration of expansions across depths (0 = spread evenly, 1 = piled at one depth). <strong>visit-Gini</strong> = concentration of visit counts across nodes (how much one subtree hoards attention). <strong>deep-half %</strong> = share of expansions below the midpoint depth. <strong>dead-ends</strong> = total nodes that hit the max-depth wall without completing (summed over 5 questions).</p>
+  </section>
+
+  <section>
+    <h2>What the numbers say</h2>
+    <div class="keyfind" id="keyfind"></div>
+  </section>
+
+  <section>
+    <h2>Why each behaves this way</h2>
+    <div class="panel mechlist">
+      <div class="mech" style="--mc:var(--cnt)"><div class="m">cnt<small>PUCT frontier</small></div><p class="b">Selects on <span style="font-family:var(--mono)">q + c·√(ln N_parent / N_leaf)</span>. The visit term pulls toward under-visited siblings, so exploration stays <strong>balanced and mid-depth</strong> — but on hard problems (Q5, Q49) it spreads thin and <strong>completes nothing</strong>: no leaf ever reaches EOS before the budget runs out.</p></div>
+      <div class="mech" style="--mc:var(--kube)"><div class="m">kube<small>KUBE density</small></div><p class="b">Selects on a value-density ratio <span style="font-family:var(--mono)">(q+bonus)/cost</span>. This favors cheap, high-value continuations, producing the <strong>highest completion count</strong> (avg 77) and the <strong>most balanced depth profile</strong> (lowest depth-Gini) — it neither tunnels nor stalls. The most robust all-rounder here.</p></div>
+      <div class="mech" style="--mc:var(--kdepth)"><div class="m">kdepth<small>depth-discounted</small></div><p class="b">Discounts the density by depth, which paradoxically <strong>rewards going deeper</strong> once a path looks alive. It tunnels: on Q0/Q5 it drives <strong>150+ nodes into the max-depth wall</strong> (272 dead-ends total vs. ≤21 for any other method) and starves completions — yet on Q9 the same depth-seeking finds the answer fastest (156 comps).</p></div>
+      <div class="mech" style="--mc:var(--sem)"><div class="m">sem<small>diversity value</small></div><p class="b">Selects on <span style="font-family:var(--mono)">q + α·√(xᵀV⁻¹x)</span> — a diversity bonus for semantically novel branches. This <strong>penalizes going deep down one line</strong> (deep nodes are semantically close to their parents), so it stays the <strong>shallowest</strong> (mean depth 6.98) and broadest. Trades completion volume for coverage.</p></div>
+    </div>
+  </section>
+
+  <p class="caveat">
+    <strong style="color:var(--ink)">Scope &amp; caveats.</strong>
+    One trial per (method, question), seed <code>100000</code>, <code>gen_budget=80</code>, <code>enforce_eager</code> default, V100S. These are <em>behavioral</em> diagnostics on 5 problems — not accuracy claims; no scoring was run. "Completions" counts EOS/length-terminated leaves, not correct answers. The v02 terminal-fold mechanisms differ (cnt folds into backprop, sem into the diversity covariance V) but at this budget produced no dead-ends for either — the dead-end signal is entirely kdepth's depth-seeking and kube's occasional deep runs. Raw per-node trees + logs in <code>unittests/results/</code>.
+  </p>
+</div>
+
+<script>
+const DATA = {"methods":["mcts_bl_cnt_v02","mcts_bl_kube_v02","mcts_bl_kdepth_v02","mcts_bl_sem_v02"],"questions":[0,5,9,23,49],"subjects":{"0":"Int. Algebra","5":"Algebra","9":"Counting/Prob","23":"Geometry","49":"Number Theory"},"cells":{"mcts_bl_cnt_v02|0":{"comps":76,"terms":76,"maxdepth_dead":0,"max_depth":12,"mean_depth":7.06,"mean_comp_depth":9.4,"exp_gini":0.406,"visit_gini":0.639,"exp_hist":{"0":1,"1":4,"2":10,"3":3,"4":4,"5":4,"6":4,"7":3,"8":8,"9":22,"10":13,"11":4}},"mcts_bl_cnt_v02|5":{"comps":0,"terms":0,"maxdepth_dead":0,"max_depth":19,"mean_depth":11.28,"mean_comp_depth":null,"exp_gini":0.484,"visit_gini":0.0,"exp_hist":{"0":1,"1":1,"2":1,"3":1,"4":1,"5":2,"6":1,"7":3,"8":6,"9":13,"10":14,"11":3,"12":2,"13":3,"14":4,"15":6,"16":8,"17":9,"18":1}},"mcts_bl_cnt_v02|9":{"comps":119,"terms":119,"maxdepth_dead":0,"max_depth":10,"mean_depth":7.21,"mean_comp_depth":9.1,"exp_gini":0.517,"visit_gini":0.677,"exp_hist":{"0":1,"1":4,"2":4,"3":4,"4":4,"5":4,"6":4,"7":12,"8":40,"9":3}},"mcts_bl_cnt_v02|23":{"comps":26,"terms":26,"maxdepth_dead":0,"max_depth":13,"mean_depth":7.48,"mean_comp_depth":7.2,"exp_gini":0.254,"visit_gini":0.358,"exp_hist":{"0":1,"1":4,"2":4,"3":4,"4":8,"5":10,"6":6,"7":10,"8":8,"9":8,"10":8,"11":7,"12":2}},"mcts_bl_cnt_v02|49":{"comps":0,"terms":0,"maxdepth_dead":0,"max_depth":13,"mean_depth":7.56,"mean_comp_depth":null,"exp_gini":0.571,"visit_gini":0.0,"exp_hist":{"0":1,"1":1,"2":3,"3":1,"4":3,"5":9,"6":12,"7":27,"8":15,"9":2,"10":2,"11":3,"12":1}},"mcts_bl_kube_v02|0":{"comps":69,"terms":69,"maxdepth_dead":0,"max_depth":12,"mean_depth":6.95,"mean_comp_depth":9.1,"exp_gini":0.465,"visit_gini":0.622,"exp_hist":{"0":1,"1":4,"2":10,"3":3,"4":4,"5":4,"6":4,"7":3,"8":8,"9":25,"10":13,"11":1}},"mcts_bl_kube_v02|5":{"comps":57,"terms":57,"maxdepth_dead":0,"max_depth":12,"mean_depth":7.04,"mean_comp_depth":9.9,"exp_gini":0.321,"visit_gini":0.613,"exp_hist":{"0":1,"1":4,"2":4,"3":4,"4":7,"5":4,"6":4,"7":11,"8":8,"9":11,"10":16,"11":6}},"mcts_bl_kube_v02|9":{"comps":91,"terms":91,"maxdepth_dead":0,"max_depth":15,"mean_depth":8.77,"mean_comp_depth":11.1,"exp_gini":0.267,"visit_gini":0.693,"exp_hist":{"0":1,"1":4,"2":4,"3":4,"4":4,"5":4,"6":4,"7":4,"8":16,"9":5,"10":8,"11":4,"12":4,"13":6,"14":8}},"mcts_bl_kube_v02|23":{"comps":92,"terms":113,"maxdepth_dead":21,"max_depth":20,"mean_depth":10.18,"mean_comp_depth":10.3,"exp_gini":0.266,"visit_gini":0.716,"exp_hist":{"0":1,"1":4,"2":4,"3":4,"4":7,"5":7,"6":7,"7":4,"8":4,"9":3,"10":4,"11":4,"12":6,"13":4,"14":1,"15":1,"16":1,"17":3,"18":4,"19":7}},"mcts_bl_kube_v02|49":{"comps":77,"terms":77,"maxdepth_dead":0,"max_depth":15,"mean_depth":9.22,"mean_comp_depth":12.8,"exp_gini":0.278,"visit_gini":0.698,"exp_hist":{"0":1,"1":3,"2":4,"3":4,"4":4,"5":4,"6":4,"7":4,"8":4,"9":5,"10":13,"11":12,"12":5,"13":5,"14":8}},"mcts_bl_kdepth_v02|0":{"comps":4,"terms":156,"maxdepth_dead":152,"max_depth":20,"mean_depth":17.23,"mean_comp_depth":15.5,"exp_gini":0.691,"visit_gini":0.792,"exp_hist":{"0":1,"1":1,"2":1,"3":1,"4":1,"5":1,"6":1,"7":1,"8":1,"9":1,"10":1,"11":1,"12":1,"13":1,"14":1,"15":1,"16":1,"17":4,"18":12,"19":47}},"mcts_bl_kdepth_v02|5":{"comps":18,"terms":134,"maxdepth_dead":116,"max_depth":20,"mean_depth":16.73,"mean_comp_depth":19.2,"exp_gini":0.676,"visit_gini":0.781,"exp_hist":{"0":1,"1":1,"2":1,"3":2,"4":1,"5":1,"6":1,"7":1,"8":1,"9":1,"10":1,"11":1,"12":1,"13":1,"14":1,"15":1,"16":2,"17":5,"18":15,"19":41}},"mcts_bl_kdepth_v02|9":{"comps":156,"terms":156,"maxdepth_dead":0,"max_depth":10,"mean_depth":8.31,"mean_comp_depth":9.2,"exp_gini":0.695,"visit_gini":0.672,"exp_hist":{"0":1,"1":1,"2":1,"3":1,"4":1,"5":1,"6":3,"7":12,"8":48,"9":11}},"mcts_bl_kdepth_v02|23":{"comps":93,"terms":97,"maxdepth_dead":4,"max_depth":20,"mean_depth":15.49,"mean_comp_depth":18.7,"exp_gini":0.551,"visit_gini":0.754,"exp_hist":{"0":1,"1":1,"2":1,"3":1,"4":1,"5":1,"6":1,"7":1,"8":1,"9":1,"10":1,"11":2,"12":2,"13":3,"14":5,"15":6,"16":10,"17":14,"18":15,"19":12}},"mcts_bl_kdepth_v02|49":{"comps":61,"terms":61,"maxdepth_dead":0,"max_depth":14,"mean_depth":10.72,"mean_comp_depth":12.6,"exp_gini":0.593,"visit_gini":0.63,"exp_hist":{"0":1,"1":1,"2":1,"3":1,"4":1,"5":1,"6":1,"7":1,"8":2,"9":5,"10":12,"11":20,"12":13,"13":20}},"mcts_bl_sem_v02|0":{"comps":38,"terms":38,"maxdepth_dead":0,"max_depth":17,"mean_depth":9.62,"mean_comp_depth":11.4,"exp_gini":0.237,"visit_gini":0.524,"exp_hist":{"0":1,"1":2,"2":4,"3":5,"4":6,"5":5,"6":6,"7":5,"8":4,"9":7,"10":4,"11":6,"12":6,"13":6,"14":9,"15":2,"16":2}},"mcts_bl_sem_v02|5":{"comps":55,"terms":55,"maxdepth_dead":0,"max_depth":9,"mean_depth":5.4,"mean_comp_depth":6.8,"exp_gini":0.303,"visit_gini":0.464,"exp_hist":{"0":1,"1":3,"2":8,"3":12,"4":17,"5":13,"6":11,"7":9,"8":6}},"mcts_bl_sem_v02|9":{"comps":14,"terms":15,"maxdepth_dead":1,"max_depth":20,"mean_depth":8.99,"mean_comp_depth":9.4,"exp_gini":0.35,"visit_gini":0.322,"exp_hist":{"0":1,"1":2,"2":5,"3":4,"4":6,"5":4,"6":5,"7":5,"8":10,"9":7,"10":9,"11":5,"12":3,"13":4,"14":3,"15":3,"16":1,"17":1,"18":1,"19":1}},"mcts_bl_sem_v02|23":{"comps":58,"terms":58,"maxdepth_dead":0,"max_depth":10,"mean_depth":4.98,"mean_comp_depth":5.4,"exp_gini":0.448,"visit_gini":0.43,"exp_hist":{"0":1,"1":4,"2":9,"3":14,"4":19,"5":18,"6":8,"7":3,"8":3,"9":1}},"mcts_bl_sem_v02|49":{"comps":33,"terms":33,"maxdepth_dead":0,"max_depth":9,"mean_depth":5.93,"mean_comp_depth":7.6,"exp_gini":0.383,"visit_gini":0.433,"exp_hist":{"0":1,"1":3,"2":4,"3":6,"4":12,"5":20,"6":17,"7":10,"8":7}}}};
+
+const SHORT = {mcts_bl_cnt_v02:"cnt", mcts_bl_kube_v02:"kube", mcts_bl_kdepth_v02:"kdepth", mcts_bl_sem_v02:"sem"};
+const cssvar = n => getComputedStyle(document.documentElement).getPropertyValue(n).trim();
+const COLORVAR = {mcts_bl_cnt_v02:"--cnt", mcts_bl_kube_v02:"--kube", mcts_bl_kdepth_v02:"--kdepth", mcts_bl_sem_v02:"--sem"};
+
+function agg(m){
+  const cells = DATA.questions.map(q=>DATA.cells[m+"|"+q]);
+  const mean = k => cells.reduce((s,c)=>s+c[k],0)/cells.length;
+  const deepHalf = cells.map(c=>{
+    let tot=0,deep=0; for(const [d,n] of Object.entries(c.exp_hist)){tot+=n; if(+d>c.max_depth/2)deep+=n;}
+    return deep/tot;
+  }).reduce((a,b)=>a+b,0)/cells.length;
+  return {
+    comps:mean("comps"), maxd:mean("max_depth"), meand:mean("mean_depth"),
+    expg:mean("exp_gini"), visg:mean("visit_gini"),
+    dead:cells.reduce((s,c)=>s+c.maxdepth_dead,0), deepHalf
+  };
+}
+
+const DESC = {
+  mcts_bl_cnt_v02:"Balanced, mid-depth — but stalls (0 comps) on the hardest problems.",
+  mcts_bl_kube_v02:"The all-rounder: most completions, flattest depth profile, no tunneling.",
+  mcts_bl_kdepth_v02:"The tunneler: drives deep, 272 dead-ends — great on some, starved on others.",
+  mcts_bl_sem_v02:"The explorer: shallowest & broadest, trades volume for semantic coverage."
+};
+const TAG = {mcts_bl_cnt_v02:"PUCT", mcts_bl_kube_v02:"KUBE density", mcts_bl_kdepth_v02:"depth-discounted", mcts_bl_sem_v02:"diversity value"};
+
+// --- signature cards ---
+const cardsEl = document.getElementById("cards");
+DATA.methods.forEach(m=>{
+  const a = agg(m); const col = cssvar(COLORVAR[m]);
+  const el = document.createElement("div"); el.className="card"; el.style.setProperty("--mc",col);
+  el.innerHTML = `
+    <div class="name">${SHORT[m]}</div>
+    <div class="tag">${TAG[m]}</div>
+    <div class="desc">${DESC[m]}</div>
+    <div class="stat-row">
+      <div class="stat"><span class="v">${a.comps.toFixed(0)}</span><span class="k">avg comps</span></div>
+      <div class="stat"><span class="v">${a.meand.toFixed(1)}</span><span class="k">mean depth</span></div>
+      <div class="stat"><span class="v">${a.dead}</span><span class="k">dead-ends</span></div>
+    </div>`;
+  cardsEl.appendChild(el);
+});
+
+// --- small-multiple depth histograms (one per question, 4 methods overlaid) ---
+function drawHist(canvas, q){
+  const dpr = Math.min(window.devicePixelRatio||1, 2);
+  const W = canvas.clientWidth, H = 190;
+  canvas.width = W*dpr; canvas.height = H*dpr;
+  const ctx = canvas.getContext("2d"); ctx.scale(dpr,dpr);
+  ctx.clearRect(0,0,W,H);
+  const padL=30, padR=8, padT=10, padB=26;
+  const cells = DATA.methods.map(m=>DATA.cells[m+"|"+q]);
+  const maxD = Math.max(...cells.map(c=>c.max_depth));
+  const maxN = Math.max(...cells.flatMap(c=>Object.values(c.exp_hist)));
+  const x = d => padL + (d/maxD)*(W-padL-padR);
+  const y = n => H-padB - (n/maxN)*(H-padT-padB);
+  // grid + axis
+  ctx.strokeStyle = cssvar("--grid"); ctx.lineWidth=1; ctx.fillStyle=cssvar("--mut2");
+  ctx.font = "10px "+cssvar("--mono");
+  for(let gy=0; gy<=maxN; gy+=Math.ceil(maxN/3)){
+    ctx.beginPath(); ctx.moveTo(padL,y(gy)); ctx.lineTo(W-padR,y(gy)); ctx.stroke();
+    ctx.textAlign="right"; ctx.fillText(gy, padL-5, y(gy)+3);
+  }
+  ctx.textAlign="center";
+  for(let d=0; d<=maxD; d+=Math.max(1,Math.round(maxD/6))){ ctx.fillText(d, x(d), H-padB+14); }
+  ctx.fillStyle=cssvar("--mut"); ctx.textAlign="left"; ctx.fillText("depth →", padL, H-4);
+  // traces
+  DATA.methods.forEach(m=>{
+    const c = DATA.cells[m+"|"+q]; const col = cssvar(COLORVAR[m]);
+    ctx.strokeStyle = col; ctx.lineWidth=1.9; ctx.beginPath();
+    for(let d=0; d<=maxD; d++){
+      const n = c.exp_hist[d]||0;
+      const px=x(d), py=y(n);
+      if(d===0) ctx.moveTo(px,py); else ctx.lineTo(px,py);
+    }
+    ctx.stroke();
+    // endpoint dot at max-depth wall for tunnelers
+    const last = c.exp_hist[maxD]||0;
+    if(last>maxN*0.4){ ctx.fillStyle=col; ctx.beginPath(); ctx.arc(x(maxD),y(last),3,0,7); ctx.fill(); }
+  });
+}
+const smgrid = document.getElementById("smgrid");
+const canvases = [];
+DATA.questions.forEach(q=>{
+  const wrap = document.createElement("div"); wrap.className="sm";
+  wrap.innerHTML = `<h3>Q${q} · ${DATA.subjects[q]}</h3><div class="sub">completions: ${DATA.methods.map(m=>SHORT[m]+" "+DATA.cells[m+"|"+q].comps).join(" · ")}</div>`;
+  const cv = document.createElement("canvas"); wrap.appendChild(cv); smgrid.appendChild(wrap);
+  canvases.push([cv,q]);
+});
+function drawAll(){ canvases.forEach(([cv,q])=>drawHist(cv,q)); }
+
+// --- metrics table ---
+const tb = document.querySelector("#metrics tbody");
+const aggs = DATA.methods.map(m=>({m,...agg(m)}));
+const maxComps = Math.max(...aggs.map(a=>a.comps));
+aggs.forEach(a=>{
+  const tr = document.createElement("tr"); tr.className="mrow-"+SHORT[a.m];
+  const barW = (a.comps/maxComps*100).toFixed(0);
+  tr.innerHTML = `
+    <td>${SHORT[a.m]}</td>
+    <td class="bar-cell"><span class="bar" style="width:${barW}%;background:${cssvar(COLORVAR[a.m])}"></span><span class="num">${a.comps.toFixed(1)}</span></td>
+    <td>${a.maxd.toFixed(1)}</td>
+    <td>${a.meand.toFixed(2)}</td>
+    <td>${(a.deepHalf*100).toFixed(0)}%</td>
+    <td>${a.expg.toFixed(3)}</td>
+    <td>${a.visg.toFixed(3)}</td>
+    <td style="color:${a.dead>50?cssvar('--crit'):a.dead>0?cssvar('--warn'):'inherit'}">${a.dead}</td>`;
+  tb.appendChild(tr);
+});
+
+// --- key findings ---
+const KF = [
+  ["--kdepth","Depth is the axis of variation","Mean expansion depth ranges 2× across methods — sem 6.98 to kdepth 13.70. The frontier score, not the problem, decides how deep the tree grows."],
+  ["--sem","Diversity flattens the tree","sem posts the lowest deep-half share (19–53%) and shallowest mean depth. Its √(xᵀV⁻¹x) bonus actively discourages descending one semantic line."],
+  ["--cnt","PUCT can starve","cnt returned 0 completions on 2 of 5 problems (Q5, Q49). Balanced visit-driven exploration spreads the budget too thin to reach EOS on hard prompts."],
+  ["--kube","Density is the safe default","kube completed on all 5, most on average (77), with the flattest, most stable depth profile — the least likely to pathologically tunnel or stall."]
+];
+const kfEl = document.getElementById("keyfind");
+KF.forEach(([c,h,b])=>{
+  const d=document.createElement("div"); d.className="kf"; d.style.setProperty("--mc",cssvar(c));
+  d.innerHTML=`<div class="h">${h}</div><p>${b}</p>`; kfEl.appendChild(d);
+});
+
+drawAll();
+let rt; window.addEventListener("resize",()=>{clearTimeout(rt); rt=setTimeout(drawAll,120);});
+const mq = window.matchMedia("(prefers-color-scheme: dark)");
+mq.addEventListener && mq.addEventListener("change",()=>setTimeout(drawAll,50));
+new MutationObserver(()=>setTimeout(drawAll,50)).observe(document.documentElement,{attributes:true,attributeFilter:["data-theme"]});
+</script>

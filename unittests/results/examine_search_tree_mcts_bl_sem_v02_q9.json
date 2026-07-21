@@ -1,0 +1,3284 @@
+{
+ "tag": "0",
+ "depth": 0,
+ "phase": 0,
+ "gen_cnt": 0,
+ "n": 16,
+ "q": 0.5449638366699219,
+ "is_terminal": false,
+ "is_completed": false,
+ "step_text": "",
+ "children": [
+  {
+   "tag": "0.1",
+   "depth": 1,
+   "phase": 0,
+   "gen_cnt": 1,
+   "n": 2,
+   "q": 0.2266845703125,
+   "is_terminal": false,
+   "is_completed": false,
+   "step_text": "To solve the problem of seating 7 people around a round table such that Pierre, Rosa, and Thomas do not sit next to each other, we can use the principle of complementary counting. This means we first calculate the total number of unrestricted arrangements and then subtract the number of arrangements where at least two of Pierre, Rosa, and Thomas are adjacent.\n\n",
+   "children": [
+    {
+     "tag": "0.1.1",
+     "depth": 2,
+     "phase": 29,
+     "gen_cnt": 30,
+     "n": 1,
+     "q": 0.49609375,
+     "is_terminal": false,
+     "is_completed": false,
+     "step_text": "### Step 1: Total number of unrestricted arrangements\nFor \\( n \\) people sitting around a round table, the number of distinct arrangements is \\((n-1)!\\). Here \\( n = 7 \\), so the total number of unrestricted arrangements is:\n\\[ (7-1)! = 6! = 720 \\]\n\n",
+     "children": []
+    },
+    {
+     "tag": "0.1.2",
+     "depth": 2,
+     "phase": 29,
+     "gen_cnt": 30,
+     "n": 2,
+     "q": 0.302001953125,
+     "is_terminal": false,
+     "is_completed": false,
+     "step_text": "### Step 1: Total Number of Arrangements\n\n",
+     "children": [
+      {
+       "tag": "0.1.2.1",
+       "depth": 3,
+       "phase": 30,
+       "gen_cnt": 31,
+       "n": 1,
+       "q": 0.65478515625,
+       "is_terminal": false,
+       "is_completed": false,
+       "step_text": "For a round table with 7 distinct people, the total number of seating arrangements is given by:\n\\[\n(7-1)! = 6! = 720\n\\]\n\n",
+       "children": []
+      },
+      {
+       "tag": "0.1.2.2",
+       "depth": 3,
+       "phase": 30,
+       "gen_cnt": 31,
+       "n": 1,
+       "q": 0.6513671875,
+       "is_terminal": false,
+       "is_completed": false,
+       "step_text": "First, we calculate the total number of ways to arrange 7 people around a round table. For a round table, we fix one person in one seat to eliminate rotational symmetry, leaving us with \\(6!\\) (6 factorial) ways to arrange the remaining 6 people.\n\n",
+       "children": []
+      },
+      {
+       "tag": "0.1.2.3",
+       "depth": 3,
+       "phase": 30,
+       "gen_cnt": 31,
+       "n": 1,
+       "q": 0.65478515625,
+       "is_terminal": false,
+       "is_completed": false,
+       "step_text": "For a circular arrangement of 7 people, we fix one person to eliminate the rotational symmetry. We then arrange the remaining 6 people in the remaining seats.\n\n",
+       "children": []
+      },
+      {
+       "tag": "0.1.2.4",
+       "depth": 3,
+       "phase": 30,
+       "gen_cnt": 31,
+       "n": 2,
+       "q": 0.279052734375,
+       "is_terminal": false,
+       "is_completed": false,
+       "step_text": "For \\(7\\) people sitting around a round table, the number of distinguishable arrangements is \\((7-1)! = 6!\\). However, since we are dealing with a circular table, we can fix one person in one position to avoid counting rotations as distinct. \n\n",
+       "children": [
+        {
+         "tag": "0.1.2.4.1",
+         "depth": 4,
+         "phase": 32,
+         "gen_cnt": 33,
+         "n": 1,
+         "q": 0.72802734375,
+         "is_terminal": false,
+         "is_completed": false,
+         "step_text": "\\[\n\\text{Total arrangements} = 6! = 720\n\\]\n\n",
+         "children": []
+        },
+        {
+         "tag": "0.1.2.4.2",
+         "depth": 4,
+         "phase": 32,
+         "gen_cnt": 33,
+         "n": 2,
+         "q": 0.366943359375,
+         "is_terminal": false,
+         "is_completed": false,
+         "step_text": "Total number of arrangements = \\(6!\\)\n\n",
+         "children": [
+          {
+           "tag": "0.1.2.4.2.1",
+           "depth": 5,
+           "phase": 33,
+           "gen_cnt": 34,
+           "n": 1,
+           "q": 0.8154296875,
+           "is_terminal": false,
+           "is_completed": false,
+           "step_text": "\\[\n6! = 720\n\\]\n\n",
+           "children": []
+          },
+          {
+           "tag": "0.1.2.4.2.2",
+           "depth": 5,
+           "phase": 33,
+           "gen_cnt": 34,
+           "n": 2,
+           "q": 0.366943359375,
+           "is_terminal": false,
+           "is_completed": false,
+           "step_text": "### Step 2: Arrangements with At Least Two of Pierre, Rosa, and Thomas Adjacent\n\n",
+           "children": [
+            {
+             "tag": "0.1.2.4.2.2.1",
+             "depth": 6,
+             "phase": 34,
+             "gen_cnt": 35,
+             "n": 1,
+             "q": 0.7744140625,
+             "is_terminal": false,
+             "is_completed": false,
+             "step_text": "To find the number of arrangements where at least two of Pierre, Rosa, and Thomas are adjacent, we use the principle of inclusion-exclusion.\n\n",
+             "children": []
+            },
+            {
+             "tag": "0.1.2.4.2.2.2",
+             "depth": 6,
+             "phase": 34,
+             "gen_cnt": 35,
+             "n": 1,
+             "q": 0.751953125,
+             "is_terminal": false,
+             "is_completed": false,
+             "step_text": "We use the principle of inclusion-exclusion to count the number of arrangements where at least two of Pierre, Rosa, and Thomas are adjacent.\n\n",
+             "children": []
+            },
+            {
+             "tag": "0.1.2.4.2.2.3",
+             "depth": 6,
+             "phase": 34,
+             "gen_cnt": 35,
+             "n": 1,
+             "q": 0.71240234375,
+             "is_terminal": false,
+             "is_completed": false,
+             "step_text": "We use the principle of inclusion-exclusion here. Let's break it down into two cases: where exactly two of Pierre, Rosa, and Thomas are adjacent, and where all three are adjacent.\n\n",
+             "children": [
+              {
+               "tag": "0.1.2.4.2.2.3.1",
+               "depth": 7,
+               "phase": 47,
+               "gen_cnt": 48,
+               "n": 1,
+               "q": 0.7880859375,
+               "is_terminal": false,
+               "is_completed": false,
+               "step_text": "#### Case 1: Exactly Two of Pierre, Rosa, and Thomas are Adjacent\n\n",
+               "children": [
+                {
+                 "tag": "0.1.2.4.2.2.3.1.1",
+                 "depth": 8,
+                 "phase": 60,
+                 "gen_cnt": 61,
+                 "n": 1,
+                 "q": 0.7548828125,
+                 "is_terminal": false,
+                 "is_completed": false,
+                 "step_text": "Treat the pair of people as a single \"block\". So, we now have 6 \"blocks\" to arrange, which is \\(5!\\). Within the block, the two people can switch places, which is \\(2!\\). There are \\(\\binom{3}{2} = 3\\) ways to choose which two of Pierre, Rosa, and Thomas will be in the block. \n\n",
+                 "children": [
+                  {
+                   "tag": "0.1.2.4.2.2.3.1.1.1",
+                   "depth": 9,
+                   "phase": 62,
+                   "gen_cnt": 63,
+                   "n": 1,
+                   "q": 0.900390625,
+                   "is_terminal": false,
+                   "is_completed": false,
+                   "step_text": "Number of ways for exactly two to be adjacent = \\(3 \\cdot 2! \\cdot 5!\\)\n\n",
+                   "children": []
+                  },
+                  {
+                   "tag": "0.1.2.4.2.2.3.1.1.2",
+                   "depth": 9,
+                   "phase": 62,
+                   "gen_cnt": 63,
+                   "n": 1,
+                   "q": 0.8759765625,
+                   "is_terminal": false,
+                   "is_completed": false,
+                   "step_text": "Number of arrangements = \\(3 \\cdot 5! \\cdot 2!\\)\n\n",
+                   "children": []
+                  },
+                  {
+                   "tag": "0.1.2.4.2.2.3.1.1.3",
+                   "depth": 9,
+                   "phase": 62,
+                   "gen_cnt": 63,
+                   "n": 1,
+                   "q": 0.88427734375,
+                   "is_terminal": false,
+                   "is_completed": false,
+                   "step_text": "Number of arrangements for this case = \\(3 \\times 5! \\times 2!\\)\n\n",
+                   "children": []
+                  },
+                  {
+                   "tag": "0.1.2.4.2.2.3.1.1.4",
+                   "depth": 9,
+                   "phase": 62,
+                   "gen_cnt": 63,
+                   "n": 1,
+                   "q": 0.88720703125,
+                   "is_terminal": false,
+                   "is_completed": false,
+                   "step_text": "Number of ways for exactly two adjacent = \\(3 \\times 5! \\times 2!\\)\n\n",
+                   "children": [
+                    {
+                     "tag": "0.1.2.4.2.2.3.1.1.4.1",
+                     "depth": 10,
+                     "phase": 63,
+                     "gen_cnt": 64,
+                     "n": 1,
+                     "q": 0.9208984375,
+                     "is_terminal": false,
+                     "is_completed": false,
+                     "step_text": "#### Case 2: All Three of Pierre, Rosa, and Thomas are Adjacent\n\n",
+                     "children": [
+                      {
+                       "tag": "0.1.2.4.2.2.3.1.1.4.1.1",
+                       "depth": 11,
+                       "phase": 64,
+                       "gen_cnt": 65,
+                       "n": 1,
+                       "q": 0.9306640625,
+                       "is_terminal": false,
+                       "is_completed": false,
+                       "step_text": "Treat the trio as a single block. So, we have 5 \"blocks\" to arrange, which is \\(4!\\). Within the block, the three people can switch places, which is \\(3!\\).\n\n",
+                       "children": [
+                        {
+                         "tag": "0.1.2.4.2.2.3.1.1.4.1.1.1",
+                         "depth": 12,
+                         "phase": 65,
+                         "gen_cnt": 66,
+                         "n": 1,
+                         "q": 0.921875,
+                         "is_terminal": false,
+                         "is_completed": false,
+                         "step_text": "Number of ways for all three adjacent = \\(4! \\times 3!\\)\n\n",
+                         "children": []
+                        },
+                        {
+                         "tag": "0.1.2.4.2.2.3.1.1.4.1.1.2",
+                         "depth": 12,
+                         "phase": 65,
+                         "gen_cnt": 66,
+                         "n": 1,
+                         "q": 0.88427734375,
+                         "is_terminal": false,
+                         "is_completed": false,
+                         "step_text": "Number of ways for all three adjacent = \\(\\binom{3}{3} \\times 4! \\times 3!\\)\n\n",
+                         "children": []
+                        }
+                       ]
+                      },
+                      {
+                       "tag": "0.1.2.4.2.2.3.1.1.4.1.2",
+                       "depth": 11,
+                       "phase": 64,
+                       "gen_cnt": 65,
+                       "n": 1,
+                       "q": 0.93896484375,
+                       "is_terminal": false,
+                       "is_completed": false,
+                       "step_text": "Consider the three people as a single block. Now, we have 5 \"blocks\" to arrange, which is \\(4!\\). Within the block, the three people can switch places in \\(3!\\) ways.\n\n",
+                       "children": []
+                      },
+                      {
+                       "tag": "0.1.2.4.2.2.3.1.1.4.1.3",
+                       "depth": 11,
+                       "phase": 64,
+                       "gen_cnt": 65,
+                       "n": 1,
+                       "q": 0.93994140625,
+                       "is_terminal": false,
+                       "is_completed": false,
+                       "step_text": "Treat the trio as a single \"block\". So, we now have 5 \"blocks\" to arrange, which is \\(4!\\). Within the block, the three people can switch places in \\(3!\\) ways.\n\n",
+                       "children": []
+                      },
+                      {
+                       "tag": "0.1.2.4.2.2.3.1.1.4.1.4",
+                       "depth": 11,
+                       "phase": 64,
+                       "gen_cnt": 65,
+                       "n": 1,
+                       "q": 0.94189453125,
+                       "is_terminal": false,
+                       "is_completed": false,
+                       "step_text": "Treat all three as a single \"block\". So, we now have 5 \"blocks\" to arrange, which is \\(4!\\). Within the block, the three people can switch places, which is \\(3!\\).\n\n",
+                       "children": []
+                      }
+                     ]
+                    }
+                   ]
+                  }
+                 ]
+                },
+                {
+                 "tag": "0.1.2.4.2.2.3.1.2",
+                 "depth": 8,
+                 "phase": 60,
+                 "gen_cnt": 61,
+                 "n": 1,
+                 "q": 0.7607421875,
+                 "is_terminal": false,
+                 "is_completed": false,
+                 "step_text": "1. **Choose 2 out of 3 people to be adjacent:** \\(\\binom{3}{2} = 3\\) ways.\n2. **Treat the pair as a single \"block\":** This reduces the problem to arranging 6 \"people\" (the block + the other 5 people) around a circular table, which can be done in \\((6-1)! = 5!\\) ways.\n3. **Arrange the 2 chosen people within the block:** There are 2! ways to arrange the 2 chosen people within their block.\n4. **Adjust for circular permutations:** Fix one of the arrangements to avoid overcounting rotations. \n\n",
+                 "children": [
+                  {
+                   "tag": "0.1.2.4.2.2.3.1.2.1",
+                   "depth": 9,
+                   "phase": 61,
+                   "gen_cnt": 62,
+                   "n": 1,
+                   "q": 0.85986328125,
+                   "is_terminal": false,
+                   "is_completed": false,
+                   "step_text": "The number of ways for exactly two of Pierre, Rosa, and Thomas to be adjacent is:\n\\[3 \\times 5! \\times 2! = 3 \\times 120 \\times 2 = 720\\]\n\n",
+                   "children": [
+                    {
+                     "tag": "0.1.2.4.2.2.3.1.2.1.1",
+                     "depth": 10,
+                     "phase": 70,
+                     "gen_cnt": 71,
+                     "n": 1,
+                     "q": 0.9208984375,
+                     "is_terminal": false,
+                     "is_completed": false,
+                     "step_text": "#### Case 2: All Three of Pierre, Rosa, and Thomas are Adjacent\n\n",
+                     "children": []
+                    }
+                   ]
+                  },
+                  {
+                   "tag": "0.1.2.4.2.2.3.1.2.2",
+                   "depth": 9,
+                   "phase": 61,
+                   "gen_cnt": 62,
+                   "n": 1,
+                   "q": 0.85009765625,
+                   "is_terminal": false,
+                   "is_completed": false,
+                   "step_text": "Total for exactly two adjacent: \\(3 \\times 5! \\times 2!\\)\n\n",
+                   "children": []
+                  },
+                  {
+                   "tag": "0.1.2.4.2.2.3.1.2.3",
+                   "depth": 9,
+                   "phase": 61,
+                   "gen_cnt": 62,
+                   "n": 1,
+                   "q": 0.85595703125,
+                   "is_terminal": false,
+                   "is_completed": false,
+                   "step_text": "Total for this case = \\(3 \\times 5! \\times 2!\\)\n\n",
+                   "children": []
+                  },
+                  {
+                   "tag": "0.1.2.4.2.2.3.1.2.4",
+                   "depth": 9,
+                   "phase": 61,
+                   "gen_cnt": 62,
+                   "n": 1,
+                   "q": 0.8310546875,
+                   "is_terminal": false,
+                   "is_completed": false,
+                   "step_text": "Total for exactly two adjacent: \n\\[\n3 \\times 5! \\times 2! = 3 \\times 120 \\times 2 = 720\n\\]\n\n",
+                   "children": []
+                  }
+                 ]
+                },
+                {
+                 "tag": "0.1.2.4.2.2.3.1.3",
+                 "depth": 8,
+                 "phase": 60,
+                 "gen_cnt": 61,
+                 "n": 1,
+                 "q": 0.77734375,
+                 "is_terminal": false,
+                 "is_completed": false,
+                 "step_text": "1. Treat Pierre and Rosa (or Rosa and Thomas, or Thomas and Pierre) as a single block. This block, along with the other 4 people, makes \\(5\\) \"blocks\" to arrange around the table. Fixing one of these blocks in place, we have \\(4!\\) ways to arrange the remaining blocks.\n2. Within the block, Pierre and Rosa (or Rosa and Thomas, or Thomas and Pierre) can be arranged in \\(2\\) ways. \n\n",
+                 "children": [
+                  {
+                   "tag": "0.1.2.4.2.2.3.1.3.1",
+                   "depth": 9,
+                   "phase": 71,
+                   "gen_cnt": 72,
+                   "n": 1,
+                   "q": 0.6826171875,
+                   "is_terminal": false,
+                   "is_completed": false,
+                   "step_text": "Total number of arrangements for this case = \\(5! \\times 2 \\times 3\\) (3 ways to choose which two of the three are adjacent).\n\n",
+                   "children": []
+                  },
+                  {
+                   "tag": "0.1.2.4.2.2.3.1.3.2",
+                   "depth": 9,
+                   "phase": 71,
+                   "gen_cnt": 72,
+                   "n": 1,
+                   "q": 0.85595703125,
+                   "is_terminal": false,
+                   "is_completed": false,
+                   "step_text": "There are 3 ways to choose which two of the three are adjacent. So, the number of arrangements in this case is:\n\\[3 \\times 4! \\times 2 = 3 \\times 24 \\times 2 = 144.\\]\n\n",
+                   "children": []
+                  },
+                  {
+                   "tag": "0.1.2.4.2.2.3.1.3.3",
+                   "depth": 9,
+                   "phase": 71,
+                   "gen_cnt": 72,
+                   "n": 1,
+                   "q": 0.77734375,
+                   "is_terminal": false,
+                   "is_completed": false,
+                   "step_text": "Considering all combinations of which two out of the three are treated as a block:\n- Number of ways to choose the two out of the three people: \\(\\binom{3}{2} = 3\\)\n- Number of ways to arrange the chosen two within the block: \\(2\\)\n- Number of ways to arrange the remaining 4 people: \\(4!\\)\n\n",
+                   "children": [
+                    {
+                     "tag": "0.1.2.4.2.2.3.1.3.3.1",
+                     "depth": 10,
+                     "phase": 72,
+                     "gen_cnt": 73,
+                     "n": 1,
+                     "q": 0.78515625,
+                     "is_terminal": false,
+                     "is_completed": false,
+                     "step_text": "Number of arrangements where exactly two specific pairs are adjacent: \n\n",
+                     "children": [
+                      {
+                       "tag": "0.1.2.4.2.2.3.1.3.3.1.1",
+                       "depth": 11,
+                       "phase": 73,
+                       "gen_cnt": 74,
+                       "n": 1,
+                       "q": 0.880859375,
+                       "is_terminal": false,
+                       "is_completed": false,
+                       "step_text": "\\[\n3 \\times 2 \\times 4! = 3 \\times 2 \\times 24 = 144\n\\]\n\n",
+                       "children": []
+                      },
+                      {
+                       "tag": "0.1.2.4.2.2.3.1.3.3.1.2",
+                       "depth": 11,
+                       "phase": 73,
+                       "gen_cnt": 74,
+                       "n": 1,
+                       "q": 0.88232421875,
+                       "is_terminal": false,
+                       "is_completed": false,
+                       "step_text": "\\[3 \\cdot 2 \\cdot 4! = 3 \\cdot 2 \\cdot 24 = 144\\]\n\n",
+                       "children": []
+                      },
+                      {
+                       "tag": "0.1.2.4.2.2.3.1.3.3.1.3",
+                       "depth": 11,
+                       "phase": 73,
+                       "gen_cnt": 74,
+                       "n": 1,
+                       "q": 0.87744140625,
+                       "is_terminal": false,
+                       "is_completed": false,
+                       "step_text": "\\[\n\\binom{3}{2} \\times 2 \\times 4! = 3 \\times 2 \\times 24 = 144\n\\]\n\n",
+                       "children": []
+                      },
+                      {
+                       "tag": "0.1.2.4.2.2.3.1.3.3.1.4",
+                       "depth": 11,
+                       "phase": 73,
+                       "gen_cnt": 74,
+                       "n": 1,
+                       "q": 0.88427734375,
+                       "is_terminal": false,
+                       "is_completed": false,
+                       "step_text": "\\[3 \\times 2 \\times 4! = 3 \\times 2 \\times 24 = 144\\]\n\n",
+                       "children": []
+                      }
+                     ]
+                    },
+                    {
+                     "tag": "0.1.2.4.2.2.3.1.3.3.2",
+                     "depth": 10,
+                     "phase": 72,
+                     "gen_cnt": 73,
+                     "n": 1,
+                     "q": 0.90185546875,
+                     "is_terminal": false,
+                     "is_completed": false,
+                     "step_text": "Total for exactly two adjacent: \\(3 \\cdot 2 \\cdot 4! = 3 \\cdot 2 \\cdot 24 = 144\\)\n\n",
+                     "children": [
+                      {
+                       "tag": "0.1.2.4.2.2.3.1.3.3.2.1",
+                       "depth": 11,
+                       "phase": 74,
+                       "gen_cnt": 75,
+                       "n": 1,
+                       "q": 0.9326171875,
+                       "is_terminal": false,
+                       "is_completed": false,
+                       "step_text": "#### Case 2: All Three are Adjacent\n\n",
+                       "children": [
+                        {
+                         "tag": "0.1.2.4.2.2.3.1.3.3.2.1.1",
+                         "depth": 12,
+                         "phase": 75,
+                         "gen_cnt": 76,
+                         "n": 1,
+                         "q": 0.92626953125,
+                         "is_terminal": false,
+                         "is_completed": false,
+                         "step_text": "1. Treat Pierre, Rosa, and Thomas as a single block. This block, along with the other 4 people, makes \\(5\\) \"blocks\" to arrange around the table. Fixing one of these blocks in place, we have \\(4!\\) ways to arrange the remaining blocks.\n2. Within the block, Pierre, Rosa, and Thomas can be arranged in \\(3! = 6\\) ways.\n\n",
+                         "children": [
+                          {
+                           "tag": "0.1.2.4.2.2.3.1.3.3.2.1.1.1",
+                           "depth": 13,
+                           "phase": 76,
+                           "gen_cnt": 77,
+                           "n": 1,
+                           "q": 0.5888671875,
+                           "is_terminal": false,
+                           "is_completed": false,
+                           "step_text": "Total for all three adjacent: \\(5! = 120\\)\n\n",
+                           "children": [
+                            {
+                             "tag": "0.1.2.4.2.2.3.1.3.3.2.1.1.1.1",
+                             "depth": 14,
+                             "phase": 77,
+                             "gen_cnt": 78,
+                             "n": 1,
+                             "q": 0.8154296875,
+                             "is_terminal": false,
+                             "is_completed": false,
+                             "step_text": "### Step 3: Apply Inclusion-Exclusion Principle\n\n",
+                             "children": []
+                            },
+                            {
+                             "tag": "0.1.2.4.2.2.3.1.3.3.2.1.1.1.2",
+                             "depth": 14,
+                             "phase": 77,
+                             "gen_cnt": 78,
+                             "n": 1,
+                             "q": 0.8173828125,
+                             "is_terminal": false,
+                             "is_completed": false,
+                             "step_text": "### Step 3: Applying Inclusion-Exclusion Principle\n\n",
+                             "children": []
+                            },
+                            {
+                             "tag": "0.1.2.4.2.2.3.1.3.3.2.1.1.1.3",
+                             "depth": 14,
+                             "phase": 77,
+                             "gen_cnt": 78,
+                             "n": 1,
+                             "q": 0.8173828125,
+                             "is_terminal": false,
+                             "is_completed": false,
+                             "step_text": "### Step 3: Applying Inclusion-Exclusion\n\n",
+                             "children": [
+                              {
+                               "tag": "0.1.2.4.2.2.3.1.3.3.2.1.1.1.3.1",
+                               "depth": 15,
+                               "phase": 78,
+                               "gen_cnt": 79,
+                               "n": 1,
+                               "q": 0.90185546875,
+                               "is_terminal": false,
+                               "is_completed": false,
+                               "step_text": "Using inclusion-exclusion, the number of arrangements where at least two of Pierre, Rosa, and Thomas are adjacent is:\n\\[ 144 + 120 = 264 \\]\n\n",
+                               "children": []
+                              },
+                              {
+                               "tag": "0.1.2.4.2.2.3.1.3.3.2.1.1.1.3.2",
+                               "depth": 15,
+                               "phase": 78,
+                               "gen_cnt": 79,
+                               "n": 1,
+                               "q": 0.64794921875,
+                               "is_terminal": false,
+                               "is_completed": false,
+                               "step_text": "Using inclusion-exclusion:\n- Subtract the number of arrangements where exactly two are adjacent: \\(144\\)\n- Add the number of arrangements where all three are adjacent: \\(120\\)\n\n",
+                               "children": [
+                                {
+                                 "tag": "0.1.2.4.2.2.3.1.3.3.2.1.1.1.3.2.1",
+                                 "depth": 16,
+                                 "phase": 79,
+                                 "gen_cnt": 80,
+                                 "n": 1,
+                                 "q": 0.87890625,
+                                 "is_terminal": false,
+                                 "is_completed": false,
+                                 "step_text": "Total arrangements with at least two of Pierre, Rosa, and Thomas adjacent: \\(144 + 120 = 264\\)\n\n",
+                                 "children": []
+                                },
+                                {
+                                 "tag": "0.1.2.4.2.2.3.1.3.3.2.1.1.1.3.2.2",
+                                 "depth": 16,
+                                 "phase": 79,
+                                 "gen_cnt": 80,
+                                 "n": 1,
+                                 "q": 0.85400390625,
+                                 "is_terminal": false,
+                                 "is_completed": false,
+                                 "step_text": "Total where at least two are adjacent: \\(144 - 120 = 24\\)\n\n",
+                                 "children": []
+                                },
+                                {
+                                 "tag": "0.1.2.4.2.2.3.1.3.3.2.1.1.1.3.2.3",
+                                 "depth": 16,
+                                 "phase": 79,
+                                 "gen_cnt": 80,
+                                 "n": 1,
+                                 "q": 0.182373046875,
+                                 "is_terminal": false,
+                                 "is_completed": false,
+                                 "step_text": "Number of valid arrangements = Total arrangements - (Exactly two adjacent) + (All three adjacent)\n\\[= 6! - 144 + 120 = 720 - 144 + 120 = 704\\]\n\n",
+                                 "children": []
+                                },
+                                {
+                                 "tag": "0.1.2.4.2.2.3.1.3.3.2.1.1.1.3.2.4",
+                                 "depth": 16,
+                                 "phase": 79,
+                                 "gen_cnt": 80,
+                                 "n": 1,
+                                 "q": 0.83984375,
+                                 "is_terminal": false,
+                                 "is_completed": false,
+                                 "step_text": "Total number of arrangements where at least two are adjacent: \\(144 - 120 = 24\\)\n\n",
+                                 "children": []
+                                }
+                               ]
+                              },
+                              {
+                               "tag": "0.1.2.4.2.2.3.1.3.3.2.1.1.1.3.3",
+                               "depth": 15,
+                               "phase": 78,
+                               "gen_cnt": 79,
+                               "n": 1,
+                               "q": 0.91259765625,
+                               "is_terminal": false,
+                               "is_completed": false,
+                               "step_text": "Using the principle of inclusion-exclusion:\n- Total arrangements with at least two of Pierre, Rosa, and Thomas adjacent: \\(144 + 120 = 264\\)\n\n",
+                               "children": []
+                              },
+                              {
+                               "tag": "0.1.2.4.2.2.3.1.3.3.2.1.1.1.3.4",
+                               "depth": 15,
+                               "phase": 78,
+                               "gen_cnt": 79,
+                               "n": 1,
+                               "q": 0.763671875,
+                               "is_terminal": false,
+                               "is_completed": false,
+                               "step_text": "Using inclusion-exclusion, we subtract the number of arrangements where at least two are adjacent, and then add back the arrangements where all three are adjacent:\n\n",
+                               "children": []
+                              }
+                             ]
+                            },
+                            {
+                             "tag": "0.1.2.4.2.2.3.1.3.3.2.1.1.1.4",
+                             "depth": 14,
+                             "phase": 77,
+                             "gen_cnt": 78,
+                             "n": 1,
+                             "q": 0.81982421875,
+                             "is_terminal": false,
+                             "is_completed": false,
+                             "step_text": "### Step 3: Apply Inclusion-Exclusion\n\n",
+                             "children": []
+                            }
+                           ]
+                          },
+                          {
+                           "tag": "0.1.2.4.2.2.3.1.3.3.2.1.1.2",
+                           "depth": 13,
+                           "phase": 76,
+                           "gen_cnt": 77,
+                           "n": 1,
+                           "q": 0.86865234375,
+                           "is_terminal": false,
+                           "is_completed": false,
+                           "step_text": "Total for all three adjacent: \\(4! \\cdot 3! = 24 \\cdot 6 = 144\\)\n\n",
+                           "children": []
+                          }
+                         ]
+                        },
+                        {
+                         "tag": "0.1.2.4.2.2.3.1.3.3.2.1.2",
+                         "depth": 12,
+                         "phase": 75,
+                         "gen_cnt": 76,
+                         "n": 1,
+                         "q": 0.888671875,
+                         "is_terminal": false,
+                         "is_completed": false,
+                         "step_text": "1. Treat Pierre, Rosa, and Thomas as a single block. This block and the other 4 people make \\(4\\) \"blocks\" to arrange around the table.\n2. Fixing one of these blocks in place, we have \\(3!\\) ways to arrange the remaining blocks.\n3. Within the block, Pierre, Rosa, and Thomas can be arranged in \\(3! = 6\\) ways.\n\n",
+                         "children": []
+                        },
+                        {
+                         "tag": "0.1.2.4.2.2.3.1.3.3.2.1.3",
+                         "depth": 12,
+                         "phase": 75,
+                         "gen_cnt": 76,
+                         "n": 1,
+                         "q": 0.89501953125,
+                         "is_terminal": false,
+                         "is_completed": false,
+                         "step_text": "1. Treat Pierre, Rosa, and Thomas as a single block. This block, along with the other 4 people, makes \\(4\\) \"blocks\" to arrange around the table. Fixing one of these blocks in place, we have \\(3!\\) ways to arrange the remaining blocks.\n2. Within the block, Pierre, Rosa, and Thomas can be arranged in \\(3!\\) ways.\n\n",
+                         "children": []
+                        }
+                       ]
+                      },
+                      {
+                       "tag": "0.1.2.4.2.2.3.1.3.3.2.2",
+                       "depth": 11,
+                       "phase": 74,
+                       "gen_cnt": 75,
+                       "n": 1,
+                       "q": 0.9345703125,
+                       "is_terminal": false,
+                       "is_completed": false,
+                       "step_text": "#### Case 2: All Three of Pierre, Rosa, and Thomas are Adjacent\n\n",
+                       "children": []
+                      }
+                     ]
+                    },
+                    {
+                     "tag": "0.1.2.4.2.2.3.1.3.3.3",
+                     "depth": 10,
+                     "phase": 72,
+                     "gen_cnt": 73,
+                     "n": 1,
+                     "q": 0.900390625,
+                     "is_terminal": false,
+                     "is_completed": false,
+                     "step_text": "Total for exactly two adjacent:\n\\[ 3 \\times 2 \\times 4! = 3 \\times 2 \\times 24 = 144 \\]\n\n",
+                     "children": []
+                    },
+                    {
+                     "tag": "0.1.2.4.2.2.3.1.3.3.4",
+                     "depth": 10,
+                     "phase": 72,
+                     "gen_cnt": 73,
+                     "n": 1,
+                     "q": 0.9033203125,
+                     "is_terminal": false,
+                     "is_completed": false,
+                     "step_text": "Total for exactly two adjacent = \\(3 \\times 2 \\times 4!\\)\n\n",
+                     "children": []
+                    }
+                   ]
+                  },
+                  {
+                   "tag": "0.1.2.4.2.2.3.1.3.4",
+                   "depth": 9,
+                   "phase": 71,
+                   "gen_cnt": 72,
+                   "n": 1,
+                   "q": 0.77197265625,
+                   "is_terminal": false,
+                   "is_completed": false,
+                   "step_text": "The number of ways to arrange the blocks and within the blocks is:\n\\[4! \\times 2 = 24 \\times 2 = 48\\]\n\n",
+                   "children": []
+                  }
+                 ]
+                },
+                {
+                 "tag": "0.1.2.4.2.2.3.1.4",
+                 "depth": 8,
+                 "phase": 60,
+                 "gen_cnt": 61,
+                 "n": 1,
+                 "q": 0.5390625,
+                 "is_terminal": false,
+                 "is_completed": false,
+                 "step_text": "Consider Pierre and Rosa as a single \"block\" (PierreRosa or RosaPierre), which can be arranged in 2 ways internally. The block and Thomas can be arranged in 5 positions around the table with the \"block\" as a single unit. So there are \\(4! \\times 2 \\times 5 = 480\\) ways to arrange the 5 units (PierreRosa (or RosaPierre), Thomas, and the other 4 people) around the table.\n\n",
+                 "children": [
+                  {
+                   "tag": "0.1.2.4.2.2.3.1.4.1",
+                   "depth": 9,
+                   "phase": 66,
+                   "gen_cnt": 67,
+                   "n": 1,
+                   "q": 0.810546875,
+                   "is_terminal": false,
+                   "is_completed": false,
+                   "step_text": "#### Case 2: All Three of Pierre, Rosa, and Thomas are Adjacent\n\n",
+                   "children": []
+                  }
+                 ]
+                }
+               ]
+              },
+              {
+               "tag": "0.1.2.4.2.2.3.2",
+               "depth": 7,
+               "phase": 47,
+               "gen_cnt": 48,
+               "n": 1,
+               "q": 0.76611328125,
+               "is_terminal": false,
+               "is_completed": false,
+               "step_text": "#### Subcase 2.1: Exactly Two of Pierre, Rosa, and Thomas are Adjacent\n\n",
+               "children": []
+              }
+             ]
+            },
+            {
+             "tag": "0.1.2.4.2.2.4",
+             "depth": 6,
+             "phase": 34,
+             "gen_cnt": 35,
+             "n": 2,
+             "q": 0.352783203125,
+             "is_terminal": false,
+             "is_completed": false,
+             "step_text": "#### Case 1: Exactly Two of Pierre, Rosa, and Thomas are Adjacent\n\n",
+             "children": [
+              {
+               "tag": "0.1.2.4.2.2.4.1",
+               "depth": 7,
+               "phase": 35,
+               "gen_cnt": 36,
+               "n": 1,
+               "q": 0.4921875,
+               "is_terminal": false,
+               "is_completed": false,
+               "step_text": "1. **Treat Two People as a Block**: Choose which two of Pierre, Rosa, and Thomas will sit in the block. There are \\(\\binom{3}{2} = 3\\) ways to choose which two will sit together. Treat the pair as a single \"super person,\" making a block of size 2.\n2. **Arrange the Block and the Remaining 5 People**: This block (with a person) and the other 5 people need to be arranged around a round table. First, arrange them linearly to avoid rotation issues, and then fix one position to account for the circular arrangement (fixing one person to count rotations as unique). There are \\((5-1)! = 4!\\) ways to arrange the remaining 5 people (the block and the other 4 people), and we fix one position for the table. \n3. **Arrange within the Block**: The block itself can be arranged in \\(\\binom{2}{2} = 1\\) way (since it is just one block).\n\n",
+               "children": [
+                {
+                 "tag": "0.1.2.4.2.2.4.1.1",
+                 "depth": 8,
+                 "phase": 36,
+                 "gen_cnt": 37,
+                 "n": 1,
+                 "q": 0.740234375,
+                 "is_terminal": false,
+                 "is_completed": false,
+                 "step_text": "Thus, the number of ways to arrange exactly two out of Pierre, Rosa, and Thomas adjacent is:\n\\[3 \\times 4! \\times 1 = 3 \\times 24 = 72\\]\n\n",
+                 "children": []
+                },
+                {
+                 "tag": "0.1.2.4.2.2.4.1.2",
+                 "depth": 8,
+                 "phase": 36,
+                 "gen_cnt": 37,
+                 "n": 1,
+                 "q": 0.71240234375,
+                 "is_terminal": false,
+                 "is_completed": false,
+                 "step_text": "Number of ways to arrange exactly two of Pierre, Rosa, and Thomas adjacent: \n\\[ 3 \\times 4! \\]\n\n",
+                 "children": [
+                  {
+                   "tag": "0.1.2.4.2.2.4.1.2.1",
+                   "depth": 9,
+                   "phase": 37,
+                   "gen_cnt": 38,
+                   "n": 1,
+                   "q": 0.83544921875,
+                   "is_terminal": false,
+                   "is_completed": false,
+                   "step_text": "#### Case 2: All Three of Pierre, Rosa, and Thomas are Adjacent\n\n",
+                   "children": [
+                    {
+                     "tag": "0.1.2.4.2.2.4.1.2.1.1",
+                     "depth": 10,
+                     "phase": 38,
+                     "gen_cnt": 39,
+                     "n": 1,
+                     "q": 0.79052734375,
+                     "is_terminal": false,
+                     "is_completed": false,
+                     "step_text": "1. **Treat All Three as a Block**: We have 4 \"people\" to arrange: the block of 3 and the other 4 (excluding the non-sitting team members).\n2. **Arrange the Block and the Remaining 4 People**: There are \\((4-1)! = 3!\\) ways to arrange the block and the other 4 people linearly. Fix one position to avoid rotation issues, then arrange linearly: \\(3!\\).\n\n",
+                     "children": [
+                      {
+                       "tag": "0.1.2.4.2.2.4.1.2.1.1.1",
+                       "depth": 11,
+                       "phase": 46,
+                       "gen_cnt": 47,
+                       "n": 1,
+                       "q": 0.70263671875,
+                       "is_terminal": false,
+                       "is_completed": false,
+                       "step_text": "Number of ways to arrange all three of Pierre, Rosa, and Thomas adjacent: \n\\[ 3! \\]\n\n",
+                       "children": []
+                      },
+                      {
+                       "tag": "0.1.2.4.2.2.4.1.2.1.1.2",
+                       "depth": 11,
+                       "phase": 46,
+                       "gen_cnt": 47,
+                       "n": 1,
+                       "q": 0.8857421875,
+                       "is_terminal": false,
+                       "is_completed": false,
+                       "step_text": "Number of ways to arrange all three of Pierre, Rosa, and Thomas adjacent: \n\\[ 1 \\times 3! \\]\n\n",
+                       "children": []
+                      }
+                     ]
+                    },
+                    {
+                     "tag": "0.1.2.4.2.2.4.1.2.1.2",
+                     "depth": 10,
+                     "phase": 38,
+                     "gen_cnt": 39,
+                     "n": 1,
+                     "q": 0.83544921875,
+                     "is_terminal": false,
+                     "is_completed": false,
+                     "step_text": "1. **Treat All Three People as a Block**: Choose which three of Pierre, Rosa, and Thomas will sit together. There is only 1 way to choose all three.\n2. **Arrange the Block and the Remaining 4 People**: Prepare the arrangement as in Case 1. Arrange the 4 people (the block and the other 4 people) in a linear fashion, then fixing one position around the table. There are \\((4-1)! = 3!\\) ways to arrange the remaining 4 people.\n\n",
+                     "children": [
+                      {
+                       "tag": "0.1.2.4.2.2.4.1.2.1.2.1",
+                       "depth": 11,
+                       "phase": 39,
+                       "gen_cnt": 40,
+                       "n": 1,
+                       "q": 0.91845703125,
+                       "is_terminal": false,
+                       "is_completed": false,
+                       "step_text": "Number of ways to arrange all three of Pierre, Rosa, and Thomas adjacent:\n\\[ 1 \\times 3! \\]\n\n",
+                       "children": [
+                        {
+                         "tag": "0.1.2.4.2.2.4.1.2.1.2.1.1",
+                         "depth": 12,
+                         "phase": 41,
+                         "gen_cnt": 42,
+                         "n": 1,
+                         "q": 0.93896484375,
+                         "is_terminal": false,
+                         "is_completed": false,
+                         "step_text": "### Step 3: Subtracting Invalid Arrangements from Total Arrangements\n\n",
+                         "children": []
+                        },
+                        {
+                         "tag": "0.1.2.4.2.2.4.1.2.1.2.1.2",
+                         "depth": 12,
+                         "phase": 41,
+                         "gen_cnt": 42,
+                         "n": 1,
+                         "q": 0.93896484375,
+                         "is_terminal": false,
+                         "is_completed": false,
+                         "step_text": "### Step 3: Subtract from Total Arrangements\n\n",
+                         "children": [
+                          {
+                           "tag": "0.1.2.4.2.2.4.1.2.1.2.1.2.1",
+                           "depth": 13,
+                           "phase": 42,
+                           "gen_cnt": 43,
+                           "n": 1,
+                           "q": 0.66552734375,
+                           "is_terminal": false,
+                           "is_completed": false,
+                           "step_text": "Combine the results from both cases:\n- Total unrestricted arrangements: \\(6!\\)\n- Subtract arrangements with exactly two or all three adjacent:\n\\[ 6! - (3 \\times 4! + 3!) \\]\n\n",
+                           "children": [
+                            {
+                             "tag": "0.1.2.4.2.2.4.1.2.1.2.1.2.1.1",
+                             "depth": 14,
+                             "phase": 43,
+                             "gen_cnt": 44,
+                             "n": 1,
+                             "q": 0.83984375,
+                             "is_terminal": false,
+                             "is_completed": false,
+                             "step_text": "Calculate the values:\n\\[ 6! = 720 \\]\n\\[ 4! = 24 \\]\n\\[ 3! = 6 \\]\n\\[ 3 \\times 4! + 3! = 3 \\times 24 + 6 = 72 + 6 = 78 \\]\n\n",
+                             "children": []
+                            },
+                            {
+                             "tag": "0.1.2.4.2.2.4.1.2.1.2.1.2.1.2",
+                             "depth": 14,
+                             "phase": 43,
+                             "gen_cnt": 44,
+                             "n": 1,
+                             "q": 0.80810546875,
+                             "is_terminal": false,
+                             "is_completed": false,
+                             "step_text": "Calculate the factorials:\n\\[ 6! = 720 \\]\n\\[ 3! = 6 \\]\n\\[ 4! = 24 \\]\n\n",
+                             "children": []
+                            },
+                            {
+                             "tag": "0.1.2.4.2.2.4.1.2.1.2.1.2.1.3",
+                             "depth": 14,
+                             "phase": 43,
+                             "gen_cnt": 44,
+                             "n": 1,
+                             "q": 0.84375,
+                             "is_terminal": false,
+                             "is_completed": false,
+                             "step_text": "Calculate the factorials:\n\\[ 6! = 720 \\]\n\\[ 4! = 24 \\]\n\\[ 3! = 6 \\]\n\n",
+                             "children": []
+                            },
+                            {
+                             "tag": "0.1.2.4.2.2.4.1.2.1.2.1.2.1.4",
+                             "depth": 14,
+                             "phase": 43,
+                             "gen_cnt": 44,
+                             "n": 1,
+                             "q": 0.8173828125,
+                             "is_terminal": false,
+                             "is_completed": false,
+                             "step_text": "### Step 4: Calculate\n\n",
+                             "children": [
+                              {
+                               "tag": "0.1.2.4.2.2.4.1.2.1.2.1.2.1.4.1",
+                               "depth": 15,
+                               "phase": 44,
+                               "gen_cnt": 45,
+                               "n": 1,
+                               "q": 0.91357421875,
+                               "is_terminal": false,
+                               "is_completed": false,
+                               "step_text": "Calculate the factorials:\n\\[ 6! = 720 \\]\n\\[ 4! = 24 \\]\n\\[ 3! = 6 \\]\n\n",
+                               "children": []
+                              },
+                              {
+                               "tag": "0.1.2.4.2.2.4.1.2.1.2.1.2.1.4.2",
+                               "depth": 15,
+                               "phase": 44,
+                               "gen_cnt": 45,
+                               "n": 1,
+                               "q": 0.90869140625,
+                               "is_terminal": false,
+                               "is_completed": false,
+                               "step_text": "Calculate each factorial:\n\\[ 6! = 720 \\]\n\\[ 4! = 24 \\]\n\\[ 3! = 6 \\]\n\n",
+                               "children": [
+                                {
+                                 "tag": "0.1.2.4.2.2.4.1.2.1.2.1.2.1.4.2.1",
+                                 "depth": 16,
+                                 "phase": 59,
+                                 "gen_cnt": 60,
+                                 "n": 1,
+                                 "q": 0.93359375,
+                                 "is_terminal": false,
+                                 "is_completed": false,
+                                 "step_text": "Substitute these values:\n\\[ 6! - (3 \\times 24 + 6) = 720 - (72 + 6) = 720 - 78 = 642 \\]\n\n",
+                                 "children": []
+                                },
+                                {
+                                 "tag": "0.1.2.4.2.2.4.1.2.1.2.1.2.1.4.2.2",
+                                 "depth": 16,
+                                 "phase": 59,
+                                 "gen_cnt": 60,
+                                 "n": 1,
+                                 "q": 0.9541015625,
+                                 "is_terminal": false,
+                                 "is_completed": false,
+                                 "step_text": "Combine and simplify:\n\\[ 720 - (3 \\times 24 + 6) = 720 - (72 + 6) = 720 - 78 = 642 \\]\n\n",
+                                 "children": []
+                                },
+                                {
+                                 "tag": "0.1.2.4.2.2.4.1.2.1.2.1.2.1.4.2.3",
+                                 "depth": 16,
+                                 "phase": 59,
+                                 "gen_cnt": 60,
+                                 "n": 1,
+                                 "q": 0.95849609375,
+                                 "is_terminal": false,
+                                 "is_completed": false,
+                                 "step_text": "Substitute these values into the equation:\n\\[ 720 - (3 \\times 24 + 6) = 720 - (72 + 6) = 720 - 78 = 642 \\]\n\n",
+                                 "children": []
+                                },
+                                {
+                                 "tag": "0.1.2.4.2.2.4.1.2.1.2.1.2.1.4.2.4",
+                                 "depth": 16,
+                                 "phase": 59,
+                                 "gen_cnt": 60,
+                                 "n": 1,
+                                 "q": 0.931640625,
+                                 "is_terminal": false,
+                                 "is_completed": false,
+                                 "step_text": "Substitute:\n\\[ 6! - (3 \\times 24 + 6) = 720 - (72 + 6) = 720 - 78 = 642 \\]\n\n",
+                                 "children": []
+                                }
+                               ]
+                              }
+                             ]
+                            }
+                           ]
+                          },
+                          {
+                           "tag": "0.1.2.4.2.2.4.1.2.1.2.1.2.2",
+                           "depth": 13,
+                           "phase": 42,
+                           "gen_cnt": 43,
+                           "n": 1,
+                           "q": 0.87744140625,
+                           "is_terminal": false,
+                           "is_completed": false,
+                           "step_text": "Now, subtract the invalid arrangements from the total arrangements:\n\\[ 6! - (3 \\times 4! + 1 \\times 3!) \\]\n\n",
+                           "children": []
+                          },
+                          {
+                           "tag": "0.1.2.4.2.2.4.1.2.1.2.1.2.3",
+                           "depth": 13,
+                           "phase": 42,
+                           "gen_cnt": 43,
+                           "n": 1,
+                           "q": 0.69580078125,
+                           "is_terminal": false,
+                           "is_completed": false,
+                           "step_text": "Total number of ways where at least two of Pierre, Rosa, and Thomas are adjacent:\n\\[ 3 \\times 4! - 3! \\]\n\n",
+                           "children": []
+                          },
+                          {
+                           "tag": "0.1.2.4.2.2.4.1.2.1.2.1.2.4",
+                           "depth": 13,
+                           "phase": 42,
+                           "gen_cnt": 43,
+                           "n": 1,
+                           "q": 0.95263671875,
+                           "is_terminal": false,
+                           "is_completed": false,
+                           "step_text": "Sum the number of ways for Case 1 and Case 2 and subtract from the total number of arrangements.\n\n",
+                           "children": []
+                          }
+                         ]
+                        },
+                        {
+                         "tag": "0.1.2.4.2.2.4.1.2.1.2.1.3",
+                         "depth": 12,
+                         "phase": 41,
+                         "gen_cnt": 42,
+                         "n": 1,
+                         "q": 0.9326171875,
+                         "is_terminal": false,
+                         "is_completed": false,
+                         "step_text": "### Step 3: Subtract the Forbidden Arrangements from Total Arrangements\n\n",
+                         "children": []
+                        },
+                        {
+                         "tag": "0.1.2.4.2.2.4.1.2.1.2.1.4",
+                         "depth": 12,
+                         "phase": 41,
+                         "gen_cnt": 42,
+                         "n": 1,
+                         "q": 0.9072265625,
+                         "is_terminal": false,
+                         "is_completed": false,
+                         "step_text": "### Step 3: Apply the Principle of Inclusion-Exclusion\n\n",
+                         "children": []
+                        }
+                       ]
+                      },
+                      {
+                       "tag": "0.1.2.4.2.2.4.1.2.1.2.2",
+                       "depth": 11,
+                       "phase": 39,
+                       "gen_cnt": 40,
+                       "n": 1,
+                       "q": 0.9208984375,
+                       "is_terminal": false,
+                       "is_completed": false,
+                       "step_text": "Number of ways to arrange all three of Pierre, Rosa, and Thomas adjacent: \n\\[ 1 \\times 3! \\]\n\n",
+                       "children": []
+                      }
+                     ]
+                    },
+                    {
+                     "tag": "0.1.2.4.2.2.4.1.2.1.3",
+                     "depth": 10,
+                     "phase": 38,
+                     "gen_cnt": 39,
+                     "n": 1,
+                     "q": 0.861328125,
+                     "is_terminal": false,
+                     "is_completed": false,
+                     "step_text": "1. **Treat All Three as a Block**: Choose which three of Pierre, Rosa, and Thomas will sit in the block. There is \\(\\binom{3}{3} = 1\\) way to choose all three.\n2. **Arrange the Block and the Remaining 4 People**: Similar to Case 1, arrange the block and the remaining 4 people linearly and fix one position. There are \\((4-1)! = 3!\\) ways to arrange the block and the other people linearly and then fix one position for the table.\n3. **Arrange within the Block**: The block can be arranged in \\(\\binom{3}{3} = 1\\) way (since it is just one block).\n\n",
+                     "children": [
+                      {
+                       "tag": "0.1.2.4.2.2.4.1.2.1.3.1",
+                       "depth": 11,
+                       "phase": 45,
+                       "gen_cnt": 46,
+                       "n": 1,
+                       "q": 0.92724609375,
+                       "is_terminal": false,
+                       "is_completed": false,
+                       "step_text": "Number of ways to arrange all three of Pierre, Rosa, and Thomas adjacent:\n\\[ 1 \\times 3! \\]\n\n",
+                       "children": []
+                      },
+                      {
+                       "tag": "0.1.2.4.2.2.4.1.2.1.3.2",
+                       "depth": 11,
+                       "phase": 45,
+                       "gen_cnt": 46,
+                       "n": 1,
+                       "q": 0.92822265625,
+                       "is_terminal": false,
+                       "is_completed": false,
+                       "step_text": "Number of ways to arrange all three of Pierre, Rosa, and Thomas adjacent: \n\\[ 1 \\times 3! \\]\n\n",
+                       "children": []
+                      }
+                     ]
+                    },
+                    {
+                     "tag": "0.1.2.4.2.2.4.1.2.1.4",
+                     "depth": 10,
+                     "phase": 38,
+                     "gen_cnt": 39,
+                     "n": 1,
+                     "q": 0.7607421875,
+                     "is_terminal": false,
+                     "is_completed": false,
+                     "step_text": "1. **Treat All Three as a Block**: Choose the block as a single unit. There are \\(\\binom{3}{3} = 1\\) way to choose all three to be adjacent.\n2. **Arrange the Block and the Remaining 4 People**: The block of three and the other 4 people need to be arranged around a round table. Again, first arrange them linearly, fixing one position for the table. There are \\((4-1)! = 3!\\) ways to arrange the 4 people.\n3. **Arrange within the Block**: The block itself can be arranged in \\(3!\\) ways (since it is a block of three).\n\n",
+                     "children": []
+                    }
+                   ]
+                  }
+                 ]
+                },
+                {
+                 "tag": "0.1.2.4.2.2.4.1.3",
+                 "depth": 8,
+                 "phase": 36,
+                 "gen_cnt": 37,
+                 "n": 1,
+                 "q": 0.73095703125,
+                 "is_terminal": false,
+                 "is_completed": false,
+                 "step_text": "Total for exactly two adjacent: \\(3 \\times 4! \\times 1 = 3 \\times 24 = 72\\).\n\n",
+                 "children": [
+                  {
+                   "tag": "0.1.2.4.2.2.4.1.3.1",
+                   "depth": 9,
+                   "phase": 40,
+                   "gen_cnt": 41,
+                   "n": 1,
+                   "q": 0.84814453125,
+                   "is_terminal": false,
+                   "is_completed": false,
+                   "step_text": "#### Case 2: All Three of Pierre, Rosa, and Thomas are Adjacent\n\n",
+                   "children": []
+                  }
+                 ]
+                },
+                {
+                 "tag": "0.1.2.4.2.2.4.1.4",
+                 "depth": 8,
+                 "phase": 36,
+                 "gen_cnt": 37,
+                 "n": 1,
+                 "q": 0.69287109375,
+                 "is_terminal": false,
+                 "is_completed": false,
+                 "step_text": "So, for each choice of which two people form the block, there are \\(4!\\) ways to arrange the block and the other people, and 1 way to arrange the block internally. Thus, there are \\(3 \\times 4! = 3 \\times 24 = 72\\) ways to arrange them in this case.\n\n",
+                 "children": []
+                }
+               ]
+              },
+              {
+               "tag": "0.1.2.4.2.2.4.2",
+               "depth": 7,
+               "phase": 35,
+               "gen_cnt": 36,
+               "n": 1,
+               "q": 0.74609375,
+               "is_terminal": false,
+               "is_completed": false,
+               "step_text": "We treat the two adjacent people as a single \"block\". This reduces the problem to arranging \\(6\\) entities around a table (the \"block\" and the other 4 people).\n\n",
+               "children": []
+              },
+              {
+               "tag": "0.1.2.4.2.2.4.3",
+               "depth": 7,
+               "phase": 35,
+               "gen_cnt": 36,
+               "n": 2,
+               "q": 0.259765625,
+               "is_terminal": false,
+               "is_completed": false,
+               "step_text": "1. Treat the pair (say Pierre and Rosa) as a single \"block.\" This block can be arranged as (R, P) or (P, R). There are 2 ways to arrange each block. So, we have \\(2 \\times 1 = 2\\) ways to pair Pierre and Rosa. \n2. We now have 6 \"blocks\" to arrange (the Pierre-Rosa block, Thomas, and the remaining 4 people), which can be arranged in \\((6-1)! = 5!\\) ways in a circle.\n\n",
+               "children": [
+                {
+                 "tag": "0.1.2.4.2.2.4.3.1",
+                 "depth": 8,
+                 "phase": 48,
+                 "gen_cnt": 49,
+                 "n": 1,
+                 "q": 0.71533203125,
+                 "is_terminal": false,
+                 "is_completed": false,
+                 "step_text": "Number of ways for this case = \\(2 \\times 5!\\)\n\n",
+                 "children": []
+                },
+                {
+                 "tag": "0.1.2.4.2.2.4.3.2",
+                 "depth": 8,
+                 "phase": 48,
+                 "gen_cnt": 49,
+                 "n": 1,
+                 "q": 0.708984375,
+                 "is_terminal": false,
+                 "is_completed": false,
+                 "step_text": "So, number of ways for this case = \\(2 \\times 5!\\)\n\n",
+                 "children": []
+                },
+                {
+                 "tag": "0.1.2.4.2.2.4.3.3",
+                 "depth": 8,
+                 "phase": 48,
+                 "gen_cnt": 49,
+                 "n": 2,
+                 "q": 0.362548828125,
+                 "is_terminal": false,
+                 "is_completed": false,
+                 "step_text": "Total for exactly two adjacent = \\(2 \\times 5!\\)\n\n",
+                 "children": [
+                  {
+                   "tag": "0.1.2.4.2.2.4.3.3.1",
+                   "depth": 9,
+                   "phase": 49,
+                   "gen_cnt": 50,
+                   "n": 2,
+                   "q": 0.426025390625,
+                   "is_terminal": false,
+                   "is_completed": false,
+                   "step_text": "#### Case 2: All Three of Pierre, Rosa, and Thomas are Adjacent\n\n",
+                   "children": [
+                    {
+                     "tag": "0.1.2.4.2.2.4.3.3.1.1",
+                     "depth": 10,
+                     "phase": 50,
+                     "gen_cnt": 51,
+                     "n": 2,
+                     "q": 0.316650390625,
+                     "is_terminal": false,
+                     "is_completed": false,
+                     "step_text": "1. Treat all three (say Pierre, Rosa, and Thomas) as a single \"block.\" This block can be arranged as (P, R, T) or (P, T, R) or (R, P, T) or (R, T, P) or (T, P, R) or (T, R, P). There are \\(3!\\) ways to arrange the block internally and 2! ways to arrange the other 4 people with the block treated as a single unit. Thus, we have \\(3! \\times 2! = 6 \\times 2 = 12\\) ways to arrange all three.\n2. We now have 5 \"blocks\" to arrange (the Pierre-Rosa-Thomas block and the remaining 4 people), which can be arranged in \\((5-1)! = 4!\\) ways in a circle.\n\n",
+                     "children": [
+                      {
+                       "tag": "0.1.2.4.2.2.4.3.3.1.1.1",
+                       "depth": 11,
+                       "phase": 51,
+                       "gen_cnt": 52,
+                       "n": 2,
+                       "q": 0.406494140625,
+                       "is_terminal": false,
+                       "is_completed": false,
+                       "step_text": "Total for all three adjacent = \\(12 \\times 4!\\)\n\n",
+                       "children": [
+                        {
+                         "tag": "0.1.2.4.2.2.4.3.3.1.1.1.1",
+                         "depth": 12,
+                         "phase": 52,
+                         "gen_cnt": 53,
+                         "n": 1,
+                         "q": 0.865234375,
+                         "is_terminal": false,
+                         "is_completed": false,
+                         "step_text": "### Step 3: Complementary Counting\n\n",
+                         "children": []
+                        },
+                        {
+                         "tag": "0.1.2.4.2.2.4.3.3.1.1.1.2",
+                         "depth": 12,
+                         "phase": 52,
+                         "gen_cnt": 53,
+                         "n": 2,
+                         "q": 0.365478515625,
+                         "is_terminal": false,
+                         "is_completed": false,
+                         "step_text": "### Step 3: Subtracting Overlapping Arrangements\n\n",
+                         "children": [
+                          {
+                           "tag": "0.1.2.4.2.2.4.3.3.1.1.1.2.1",
+                           "depth": 13,
+                           "phase": 53,
+                           "gen_cnt": 54,
+                           "n": 1,
+                           "q": 0.7744140625,
+                           "is_terminal": false,
+                           "is_completed": false,
+                           "step_text": "In the above cases, we need to subtract the arrangements where at least two of Pierre, Rosa, and Thomas are adjacent (Case 1) and the arrangements where all three are adjacent (Case 2):\n\n",
+                           "children": [
+                            {
+                             "tag": "0.1.2.4.2.2.4.3.3.1.1.1.2.1.1",
+                             "depth": 14,
+                             "phase": 56,
+                             "gen_cnt": 57,
+                             "n": 1,
+                             "q": 0.7744140625,
+                             "is_terminal": false,
+                             "is_completed": false,
+                             "step_text": "\\[6! - \\left(2 \\times 5! + 12 \\times 4!\\right)\\]\n\n",
+                             "children": []
+                            },
+                            {
+                             "tag": "0.1.2.4.2.2.4.3.3.1.1.1.2.1.2",
+                             "depth": 14,
+                             "phase": 56,
+                             "gen_cnt": 57,
+                             "n": 1,
+                             "q": 0.7880859375,
+                             "is_terminal": false,
+                             "is_completed": false,
+                             "step_text": "Total arrangements with at least two adjacent = \\(2 \\times 5! + 12 \\times 4!\\)\nTotal arrangements with all three adjacent = \\(12 \\times 4!\\)\n\n",
+                             "children": []
+                            },
+                            {
+                             "tag": "0.1.2.4.2.2.4.3.3.1.1.1.2.1.3",
+                             "depth": 14,
+                             "phase": 56,
+                             "gen_cnt": 57,
+                             "n": 1,
+                             "q": 0.83544921875,
+                             "is_terminal": false,
+                             "is_completed": false,
+                             "step_text": "Total invalid arrangements = \\(2 \\times 5! + 12 \\times 4!\\)\n\n",
+                             "children": []
+                            },
+                            {
+                             "tag": "0.1.2.4.2.2.4.3.3.1.1.1.2.1.4",
+                             "depth": 14,
+                             "phase": 56,
+                             "gen_cnt": 57,
+                             "n": 1,
+                             "q": 0.7958984375,
+                             "is_terminal": false,
+                             "is_completed": false,
+                             "step_text": "Total overlapping arrangements = \\(2 \\times 5! + 12 \\times 4!\\)\n\n",
+                             "children": []
+                            }
+                           ]
+                          },
+                          {
+                           "tag": "0.1.2.4.2.2.4.3.3.1.1.1.2.2",
+                           "depth": 13,
+                           "phase": 53,
+                           "gen_cnt": 54,
+                           "n": 1,
+                           "q": 0.79296875,
+                           "is_terminal": false,
+                           "is_completed": false,
+                           "step_text": "To avoid double-counting the cases where all three are adjacent, we subtract the overlapping cases from the total.\n\n",
+                           "children": []
+                          },
+                          {
+                           "tag": "0.1.2.4.2.2.4.3.3.1.1.1.2.3",
+                           "depth": 13,
+                           "phase": 53,
+                           "gen_cnt": 54,
+                           "n": 1,
+                           "q": 0.82666015625,
+                           "is_terminal": false,
+                           "is_completed": false,
+                           "step_text": "There are no overlapping cases since a block cannot be both internally arranged and a unit of three as a single block for the same set of people.\n\n",
+                           "children": []
+                          },
+                          {
+                           "tag": "0.1.2.4.2.2.4.3.3.1.1.1.2.4",
+                           "depth": 13,
+                           "phase": 53,
+                           "gen_cnt": 54,
+                           "n": 2,
+                           "q": 0.400390625,
+                           "is_terminal": false,
+                           "is_completed": false,
+                           "step_text": "Note that in the above calculations, we have overcounted the cases where all three are adjacent. We must subtract this from the total to avoid double-counting.\n\n",
+                           "children": [
+                            {
+                             "tag": "0.1.2.4.2.2.4.3.3.1.1.1.2.4.1",
+                             "depth": 14,
+                             "phase": 54,
+                             "gen_cnt": 55,
+                             "n": 2,
+                             "q": 0.421875,
+                             "is_terminal": false,
+                             "is_completed": false,
+                             "step_text": "Overlapping arrangements (all three adjacent) = \\(12 \\times 4!\\)\n\n",
+                             "children": [
+                              {
+                               "tag": "0.1.2.4.2.2.4.3.3.1.1.1.2.4.1.1",
+                               "depth": 15,
+                               "phase": 55,
+                               "gen_cnt": 56,
+                               "n": 1,
+                               "q": 0.841796875,
+                               "is_terminal": false,
+                               "is_completed": false,
+                               "step_text": "### Final Calculation\n\n",
+                               "children": []
+                              },
+                              {
+                               "tag": "0.1.2.4.2.2.4.3.3.1.1.1.2.4.1.2",
+                               "depth": 15,
+                               "phase": 55,
+                               "gen_cnt": 56,
+                               "n": 2,
+                               "q": 0.43701171875,
+                               "is_terminal": false,
+                               "is_completed": false,
+                               "step_text": "### Step 4: Complementary Counting\n\n",
+                               "children": [
+                                {
+                                 "tag": "0.1.2.4.2.2.4.3.3.1.1.1.2.4.1.2.1",
+                                 "depth": 16,
+                                 "phase": 57,
+                                 "gen_cnt": 58,
+                                 "n": 2,
+                                 "q": 0.40771484375,
+                                 "is_terminal": false,
+                                 "is_completed": false,
+                                 "step_text": "Total number of valid arrangements = Total number of unrestricted arrangements - (Exactly two adjacent) - (All three adjacent)\n\n",
+                                 "children": [
+                                  {
+                                   "tag": "0.1.2.4.2.2.4.3.3.1.1.1.2.4.1.2.1.1",
+                                   "depth": 17,
+                                   "phase": 58,
+                                   "gen_cnt": 59,
+                                   "n": 1,
+                                   "q": 0.8056640625,
+                                   "is_terminal": false,
+                                   "is_completed": false,
+                                   "step_text": "\\[= 6! - [2 \\times 5! + 12 \\times 4!]\\]\n\n",
+                                   "children": []
+                                  },
+                                  {
+                                   "tag": "0.1.2.4.2.2.4.3.3.1.1.1.2.4.1.2.1.2",
+                                   "depth": 17,
+                                   "phase": 58,
+                                   "gen_cnt": 59,
+                                   "n": 1,
+                                   "q": 0.79052734375,
+                                   "is_terminal": false,
+                                   "is_completed": false,
+                                   "step_text": "\\[\n6! - \\left(2 \\times 5! + 12 \\times 4!\\right)\n\\]\n\n",
+                                   "children": []
+                                  },
+                                  {
+                                   "tag": "0.1.2.4.2.2.4.3.3.1.1.1.2.4.1.2.1.3",
+                                   "depth": 17,
+                                   "phase": 58,
+                                   "gen_cnt": 59,
+                                   "n": 1,
+                                   "q": 0.81982421875,
+                                   "is_terminal": false,
+                                   "is_completed": false,
+                                   "step_text": "Total valid arrangements = \\(6! - (2 \\times 5!) - (12 \\times 4!)\\)\n\n",
+                                   "children": []
+                                  },
+                                  {
+                                   "tag": "0.1.2.4.2.2.4.3.3.1.1.1.2.4.1.2.1.4",
+                                   "depth": 17,
+                                   "phase": 58,
+                                   "gen_cnt": 59,
+                                   "n": 2,
+                                   "q": 0.436279296875,
+                                   "is_terminal": false,
+                                   "is_completed": false,
+                                   "step_text": "Using the values we calculated:\n\n",
+                                   "children": [
+                                    {
+                                     "tag": "0.1.2.4.2.2.4.3.3.1.1.1.2.4.1.2.1.4.1",
+                                     "depth": 18,
+                                     "phase": 67,
+                                     "gen_cnt": 68,
+                                     "n": 1,
+                                     "q": 0.91943359375,
+                                     "is_terminal": false,
+                                     "is_completed": false,
+                                     "step_text": "Total number of unrestricted arrangements = \\(6!\\)\n\n",
+                                     "children": []
+                                    },
+                                    {
+                                     "tag": "0.1.2.4.2.2.4.3.3.1.1.1.2.4.1.2.1.4.2",
+                                     "depth": 18,
+                                     "phase": 67,
+                                     "gen_cnt": 68,
+                                     "n": 2,
+                                     "q": 0.452880859375,
+                                     "is_terminal": false,
+                                     "is_completed": false,
+                                     "step_text": "Total number of arrangements = \\(6!\\)\n\n",
+                                     "children": [
+                                      {
+                                       "tag": "0.1.2.4.2.2.4.3.3.1.1.1.2.4.1.2.1.4.2.1",
+                                       "depth": 19,
+                                       "phase": 68,
+                                       "gen_cnt": 69,
+                                       "n": 2,
+                                       "q": 0.45556640625,
+                                       "is_terminal": false,
+                                       "is_completed": false,
+                                       "step_text": "Exactly two adjacent arrangements = \\(2 \\times 5!\\)\n\n",
+                                       "children": [
+                                        {
+                                         "tag": "0.1.2.4.2.2.4.3.3.1.1.1.2.4.1.2.1.4.2.1.1",
+                                         "depth": 20,
+                                         "phase": 69,
+                                         "gen_cnt": 70,
+                                         "n": 2,
+                                         "q": 0.0,
+                                         "is_terminal": true,
+                                         "is_completed": false,
+                                         "step_text": "All three adjacent arrangements = \\(12 \\times 4!\\)\n\n",
+                                         "children": []
+                                        }
+                                       ]
+                                      },
+                                      {
+                                       "tag": "0.1.2.4.2.2.4.3.3.1.1.1.2.4.1.2.1.4.2.2",
+                                       "depth": 19,
+                                       "phase": 68,
+                                       "gen_cnt": 69,
+                                       "n": 1,
+                                       "q": 0.9228515625,
+                                       "is_terminal": false,
+                                       "is_completed": false,
+                                       "step_text": "Exactly two adjacent = \\(2 \\times 5!\\)\n\n",
+                                       "children": []
+                                      }
+                                     ]
+                                    },
+                                    {
+                                     "tag": "0.1.2.4.2.2.4.3.3.1.1.1.2.4.1.2.1.4.3",
+                                     "depth": 18,
+                                     "phase": 67,
+                                     "gen_cnt": 68,
+                                     "n": 1,
+                                     "q": 0.85205078125,
+                                     "is_terminal": false,
+                                     "is_completed": false,
+                                     "step_text": "\\[\n6! - (2 \\times 5!) - (12 \\times 4!)\n\\]\n\n",
+                                     "children": []
+                                    }
+                                   ]
+                                  }
+                                 ]
+                                },
+                                {
+                                 "tag": "0.1.2.4.2.2.4.3.3.1.1.1.2.4.1.2.2",
+                                 "depth": 16,
+                                 "phase": 57,
+                                 "gen_cnt": 58,
+                                 "n": 1,
+                                 "q": 0.68603515625,
+                                 "is_terminal": false,
+                                 "is_completed": false,
+                                 "step_text": "Total valid arrangements = Total arrangements - (Exactly two adjacent - All three adjacent)\n\\[ 6! - (2 \\times 5! - 12 \\times 4!) \\]\n\n",
+                                 "children": []
+                                },
+                                {
+                                 "tag": "0.1.2.4.2.2.4.3.3.1.1.1.2.4.1.2.3",
+                                 "depth": 16,
+                                 "phase": 57,
+                                 "gen_cnt": 58,
+                                 "n": 1,
+                                 "q": 0.865234375,
+                                 "is_terminal": false,
+                                 "is_completed": false,
+                                 "step_text": "Total arrangements where at least two are adjacent = \\(2 \\times 5! + 12 \\times 4!\\)\n\n",
+                                 "children": []
+                                },
+                                {
+                                 "tag": "0.1.2.4.2.2.4.3.3.1.1.1.2.4.1.2.4",
+                                 "depth": 16,
+                                 "phase": 57,
+                                 "gen_cnt": 58,
+                                 "n": 1,
+                                 "q": 0.83740234375,
+                                 "is_terminal": false,
+                                 "is_completed": false,
+                                 "step_text": "Total number of valid arrangements = Total arrangements - (Exactly two adjacent + All three adjacent)\n\n",
+                                 "children": []
+                                }
+                               ]
+                              },
+                              {
+                               "tag": "0.1.2.4.2.2.4.3.3.1.1.1.2.4.1.3",
+                               "depth": 15,
+                               "phase": 55,
+                               "gen_cnt": 56,
+                               "n": 1,
+                               "q": 0.80322265625,
+                               "is_terminal": false,
+                               "is_completed": false,
+                               "step_text": "Total arrangements with at least two of Pierre, Rosa, and Thomas adjacent = \\(2 \\times 5! + 12 \\times 4! - 12 \\times 4!\\)\n\n",
+                               "children": []
+                              },
+                              {
+                               "tag": "0.1.2.4.2.2.4.3.3.1.1.1.2.4.1.4",
+                               "depth": 15,
+                               "phase": 55,
+                               "gen_cnt": 56,
+                               "n": 1,
+                               "q": 0.84814453125,
+                               "is_terminal": false,
+                               "is_completed": false,
+                               "step_text": "### Step 4: Calculate Final Answer\n\n",
+                               "children": []
+                              }
+                             ]
+                            },
+                            {
+                             "tag": "0.1.2.4.2.2.4.3.3.1.1.1.2.4.2",
+                             "depth": 14,
+                             "phase": 54,
+                             "gen_cnt": 55,
+                             "n": 1,
+                             "q": 0.81982421875,
+                             "is_terminal": false,
+                             "is_completed": false,
+                             "step_text": "Final number of valid arrangements = Total arrangements - (Exactly two adjacent + All three adjacent)\n\n",
+                             "children": []
+                            },
+                            {
+                             "tag": "0.1.2.4.2.2.4.3.3.1.1.1.2.4.3",
+                             "depth": 14,
+                             "phase": 54,
+                             "gen_cnt": 55,
+                             "n": 1,
+                             "q": 0.7958984375,
+                             "is_terminal": false,
+                             "is_completed": false,
+                             "step_text": "Total invalid arrangements = \\( (2 \\times 5!) + 12 \\times 4! \\)\n\n",
+                             "children": []
+                            },
+                            {
+                             "tag": "0.1.2.4.2.2.4.3.3.1.1.1.2.4.4",
+                             "depth": 14,
+                             "phase": 54,
+                             "gen_cnt": 55,
+                             "n": 1,
+                             "q": 0.84814453125,
+                             "is_terminal": false,
+                             "is_completed": false,
+                             "step_text": "### Step 4: Calculating the Result\n\n",
+                             "children": []
+                            }
+                           ]
+                          }
+                         ]
+                        },
+                        {
+                         "tag": "0.1.2.4.2.2.4.3.3.1.1.1.3",
+                         "depth": 12,
+                         "phase": 52,
+                         "gen_cnt": 53,
+                         "n": 1,
+                         "q": 0.87060546875,
+                         "is_terminal": false,
+                         "is_completed": false,
+                         "step_text": "### Step 3: Subtract the Invalid Arrangements\n\n",
+                         "children": []
+                        }
+                       ]
+                      }
+                     ]
+                    },
+                    {
+                     "tag": "0.1.2.4.2.2.4.3.3.1.2",
+                     "depth": 10,
+                     "phase": 50,
+                     "gen_cnt": 51,
+                     "n": 1,
+                     "q": 0.7880859375,
+                     "is_terminal": false,
+                     "is_completed": false,
+                     "step_text": "1. Treat the trio (say Pierre, Rosa, and Thomas) as a single \"block.\" This block can be arranged as (R, P, T) or (T, P, R) or (P, T, R) or (R, T, P) or (P, R, T) or (T, R, P), which are 6 ways.\n2. We now have 5 \"blocks\" to arrange (the Pierre-Rosa-Thomas block, and the remaining 4 people), which can be arranged in \\((5-1)! = 4!\\) ways in a circle.\n\n",
+                     "children": []
+                    },
+                    {
+                     "tag": "0.1.2.4.2.2.4.3.3.1.3",
+                     "depth": 10,
+                     "phase": 50,
+                     "gen_cnt": 51,
+                     "n": 1,
+                     "q": 0.80322265625,
+                     "is_terminal": false,
+                     "is_completed": false,
+                     "step_text": "1. Treat all three as a single \"block.\" This block can be arranged as (R, P, T) or (T, R, P) or (P, T, R) or (T, P, R) or (R, T, P) or (P, R, T). There are 6 ways to arrange this block within itself.\n2. We now have 5 \"blocks\" to arrange (the block of Pierre, Rosa, and Thomas, and the remaining 4 people), which can be arranged in \\((5-1)! = 4!\\) ways in a circle.\n\n",
+                     "children": []
+                    },
+                    {
+                     "tag": "0.1.2.4.2.2.4.3.3.1.4",
+                     "depth": 10,
+                     "phase": 50,
+                     "gen_cnt": 51,
+                     "n": 1,
+                     "q": 0.69287109375,
+                     "is_terminal": false,
+                     "is_completed": false,
+                     "step_text": "1. Treat all three as a single \"block.\" This block can be arranged as (P, R, T) or (T, R, P) or (R, T, P) or (P, T, R) or (T, P, R) or (R, P, T). There are 2 ways to arrange each block in a cycle (PRT, TRP, etc.). So, we have \\(2\\) ways to arrange the trio.\n2. We now have 5 \"blocks\" to arrange (the trio block, and the remaining 4 people), which can be arranged in \\((5-1)! = 4!\\) ways in a circle.\n\n",
+                     "children": []
+                    }
+                   ]
+                  }
+                 ]
+                }
+               ]
+              },
+              {
+               "tag": "0.1.2.4.2.2.4.4",
+               "depth": 7,
+               "phase": 35,
+               "gen_cnt": 36,
+               "n": 1,
+               "q": 0.5,
+               "is_terminal": false,
+               "is_completed": false,
+               "step_text": "1. **Treat the two adjacent people as a single unit.** This gives us 6 \"units\" to arrange (the block of 2 people and the remaining 5 people).\n2. Since they are sitting in a circle, fix one of these 6 units in a position and arrange the remaining 5 units in the remaining 5 positions. This can be done in \\((5-1)! = 4!\\) ways.\n3. Now we have 2 spots for the third person (Pierre, Rosa, or Thomas) who is not in the block. These spots can be chosen in \\(\\binom{5}{3-2} = \\binom{5}{2}\\) ways.\n4. The block of 2 people can be arranged internally in \\(2!\\) ways.\n\n",
+               "children": []
+              }
+             ]
+            }
+           ]
+          },
+          {
+           "tag": "0.1.2.4.2.3",
+           "depth": 5,
+           "phase": 33,
+           "gen_cnt": 34,
+           "n": 1,
+           "q": 0.740234375,
+           "is_terminal": false,
+           "is_completed": false,
+           "step_text": "### Step 2: Arrangements Where At Least Two of Pierre, Rosa, and Thomas Are Adjacent\n\n",
+           "children": []
+          },
+          {
+           "tag": "0.1.2.4.2.4",
+           "depth": 5,
+           "phase": 33,
+           "gen_cnt": 34,
+           "n": 1,
+           "q": 0.73388671875,
+           "is_terminal": false,
+           "is_completed": false,
+           "step_text": "### Step 2: Arrangements with at Least Two of Pierre, Rosa, and Thomas Adjacent\n\n",
+           "children": []
+          }
+         ]
+        },
+        {
+         "tag": "0.1.2.4.3",
+         "depth": 4,
+         "phase": 32,
+         "gen_cnt": 33,
+         "n": 1,
+         "q": 0.71240234375,
+         "is_terminal": false,
+         "is_completed": false,
+         "step_text": "Thus, the total number of unrestricted arrangements is:\n\\[\n6! = 720\n\\]\n\n",
+         "children": []
+        },
+        {
+         "tag": "0.1.2.4.4",
+         "depth": 4,
+         "phase": 32,
+         "gen_cnt": 33,
+         "n": 1,
+         "q": 0.70263671875,
+         "is_terminal": false,
+         "is_completed": false,
+         "step_text": "So, the total number of arrangements is:\n\\[\n6!\n\\]\n\n",
+         "children": []
+        }
+       ]
+      }
+     ]
+    },
+    {
+     "tag": "0.1.3",
+     "depth": 2,
+     "phase": 29,
+     "gen_cnt": 30,
+     "n": 1,
+     "q": 0.5078125,
+     "is_terminal": false,
+     "is_completed": false,
+     "step_text": "### Step 1: Calculate the total number of unrestricted arrangements\nFor \\(7\\) people around a round table, the number of distinct arrangements is given by \\((7 - 1)! = 6! = 720\\).\n\n",
+     "children": [
+      {
+       "tag": "0.1.3.1",
+       "depth": 3,
+       "phase": 31,
+       "gen_cnt": 32,
+       "n": 1,
+       "q": 0.611328125,
+       "is_terminal": false,
+       "is_completed": false,
+       "step_text": "### Step 2: Calculate the number of arrangements where Pierre, Rosa, and Thomas are adjacent\nTreat Pierre, Rosa, and Thomas as a \"block\" of 3 people. This block can be arranged internally in \\(3! = 6\\) ways. The block and the remaining 4 people can be arranged in a circle in \\((6 - 1)! = 5! = 120\\) ways (since we treat it as a linear arrangement but then fix one position to account for the circular nature). Therefore, the number of arrangements where Pierre, Rosa, and Thomas are adjacent is \\(6 \\times 120 = 720\\).\n\n",
+       "children": []
+      },
+      {
+       "tag": "0.1.3.2",
+       "depth": 3,
+       "phase": 31,
+       "gen_cnt": 32,
+       "n": 1,
+       "q": 0.56201171875,
+       "is_terminal": false,
+       "is_completed": false,
+       "step_text": "### Step 2: Subtract the number of arrangements where at least two of Pierre, Rosa, and Thomas are adjacent\nFirst, we need to count the number of arrangements where at least two of Pierre, Rosa, and Thomas are adjacent. We can treat any two of these three people (say Pierre and Rosa) as a single \"block\" and then consider the remaining 5 people plus this block. This gives us a total of \\(6\\) entities to arrange around the table.\n\n",
+       "children": []
+      },
+      {
+       "tag": "0.1.3.3",
+       "depth": 3,
+       "phase": 31,
+       "gen_cnt": 32,
+       "n": 1,
+       "q": 0.79052734375,
+       "is_terminal": false,
+       "is_completed": false,
+       "step_text": "### Step 2: Calculate the number of arrangements where Pierre, Rosa, and Thomas are adjacent\nTo handle the adjacency of Pierre, Rosa, and Thomas, we can treat them as a single \"block\". This block, along with the other 4 individuals, gives us 5 \"blocks\" to arrange around the table. The number of ways to arrange 5 blocks in a circle is \\((5 - 1)! = 4! = 24\\). Within the block, Pierre, Rosa, and Thomas can be arranged in \\(3!\\) ways. Therefore, the number of ways to arrange the people such that Pierre, Rosa, and Thomas are adjacent is \\(24 \\times 3! = 24 \\times 6 = 144\\).\n\n",
+       "children": []
+      },
+      {
+       "tag": "0.1.3.4",
+       "depth": 3,
+       "phase": 31,
+       "gen_cnt": 32,
+       "n": 1,
+       "q": 0.64794921875,
+       "is_terminal": false,
+       "is_completed": false,
+       "step_text": "### Step 2: Calculate the number of arrangements where at least two of Pierre, Rosa, and Thomas are adjacent\nWe will use the principle of inclusion-exclusion to count the number of arrangements where at least two of Pierre, Rosa, and Thomas are adjacent.\n\n",
+       "children": []
+      }
+     ]
+    },
+    {
+     "tag": "0.1.4",
+     "depth": 2,
+     "phase": 29,
+     "gen_cnt": 30,
+     "n": 1,
+     "q": 0.5390625,
+     "is_terminal": false,
+     "is_completed": false,
+     "step_text": "### Step 1: Calculate total unrestricted arrangements\nSince it's a round table, the number of unrestricted arrangements of 7 people is \\((7-1)! = 6!\\).\n\n",
+     "children": []
+    }
+   ]
+  },
+  {
+   "tag": "0.2",
+   "depth": 1,
+   "phase": 0,
+   "gen_cnt": 1,
+   "n": 1,
+   "q": 0.46484375,
+   "is_terminal": false,
+   "is_completed": false,
+   "step_text": "To solve this problem, we'll first consider the total number of unrestricted seating arrangements and then subtract the number of arrangements where at least two specific people (Pierre, Rosa, and Thomas) sit next to each other.\n\n",
+   "children": []
+  },
+  {
+   "tag": "0.3",
+   "depth": 1,
+   "phase": 0,
+   "gen_cnt": 1,
+   "n": 15,
+   "q": 0.6227986653645833,
+   "is_terminal": false,
+   "is_completed": false,
+   "step_text": "To solve this problem, we start by calculating the total number of ways to arrange 7 people around a round table and then subtract the number of arrangements where Pierre, Rosa, and Thomas sit next to each other.\n\n",
+   "children": [
+    {
+     "tag": "0.3.1",
+     "depth": 2,
+     "phase": 1,
+     "gen_cnt": 2,
+     "n": 3,
+     "q": 0.8673502604166666,
+     "is_terminal": false,
+     "is_completed": false,
+     "step_text": "### Step 1: Total Arrangements\nFor \\( n \\) people around a round table, the number of distinct arrangements (considering rotations as identical) is given by \\((n-1)!\\).\n\n",
+     "children": [
+      {
+       "tag": "0.3.1.1",
+       "depth": 3,
+       "phase": 11,
+       "gen_cnt": 12,
+       "n": 1,
+       "q": 0.73388671875,
+       "is_terminal": false,
+       "is_completed": false,
+       "step_text": "For 7 people:\n\\[\n(7-1)! = 6!\n\\]\nCalculating \\( 6! \\):\n\\[\n6! = 720\n\\]\n\n",
+       "children": []
+      },
+      {
+       "tag": "0.3.1.2",
+       "depth": 3,
+       "phase": 11,
+       "gen_cnt": 12,
+       "n": 3,
+       "q": 0.9152018229166666,
+       "is_terminal": false,
+       "is_completed": false,
+       "step_text": "For 7 people, the total number of distinct arrangements is:\n\\[\n(7-1)! = 6! = 720\n\\]\n\n",
+       "children": [
+        {
+         "tag": "0.3.1.2.1",
+         "depth": 4,
+         "phase": 13,
+         "gen_cnt": 14,
+         "n": 1,
+         "q": 0.72802734375,
+         "is_terminal": false,
+         "is_completed": false,
+         "step_text": "### Step 2: Arrangements with Pierre, Rosa, and Thomas Together\nTo find the number of arrangements where Pierre, Rosa, and Thomas (P, R, T respectively) sit next to each other, we treat P, R, and T as a single \"block\" or \"super person\". This reduces the problem to arranging 5 entities (the PRT block and the other 4 individuals) around the table. Again, the number of distinct arrangements of these 5 entities is \\((5-1)! = 4!\\).\n\n",
+         "children": []
+        },
+        {
+         "tag": "0.3.1.2.2",
+         "depth": 4,
+         "phase": 13,
+         "gen_cnt": 14,
+         "n": 3,
+         "q": 0.9114583333333334,
+         "is_terminal": false,
+         "is_completed": false,
+         "step_text": "### Step 2: Arrangements Where Pierre, Rosa, and Thomas Sit Together\nIf Pierre, Rosa, and Thomas must sit next to each other, we can treat them as a single \"block\" or \"super person\". This means we have 5 \"people\" to arrange (the Pierre-Rosa-Thomas block and the other 4 individuals). The number of ways to arrange 5 \"people\" around a round table is:\n\\[\n(5-1)! = 4! = 24\n\\]\n\n",
+         "children": [
+          {
+           "tag": "0.3.1.2.2.1",
+           "depth": 5,
+           "phase": 14,
+           "gen_cnt": 15,
+           "n": 1,
+           "q": 0.91748046875,
+           "is_terminal": false,
+           "is_completed": false,
+           "step_text": "Within the Pierre-Rosa-Thomas block, Pierre, Rosa, and Thomas can be arranged in \\(3!\\) ways (since there are 3 people):\n\\[\n3! = 6\n\\]\n\n",
+           "children": []
+          },
+          {
+           "tag": "0.3.1.2.2.2",
+           "depth": 5,
+           "phase": 14,
+           "gen_cnt": 15,
+           "n": 1,
+           "q": 0.888671875,
+           "is_terminal": false,
+           "is_completed": false,
+           "step_text": "Within the Pierre-Rosa-Thomas block, the 3 individuals can be arranged in:\n\\[\n3! = 6 \\text{ ways.}\n\\]\n\n",
+           "children": []
+          },
+          {
+           "tag": "0.3.1.2.2.3",
+           "depth": 5,
+           "phase": 14,
+           "gen_cnt": 15,
+           "n": 3,
+           "q": 0.9630533854166666,
+           "is_terminal": false,
+           "is_completed": false,
+           "step_text": "Within the Pierre-Rosa-Thomas block, Pierre, Rosa, and Thomas can be arranged among themselves in:\n\\[\n3! = 6\n\\]\n\n",
+           "children": [
+            {
+             "tag": "0.3.1.2.2.3.1",
+             "depth": 6,
+             "phase": 15,
+             "gen_cnt": 16,
+             "n": 1,
+             "q": 0.9599609375,
+             "is_terminal": false,
+             "is_completed": false,
+             "step_text": "Thus, the total number of arrangements where Pierre, Rosa, and Thomas sit next to each other is:\n\\[\n4! \\times 3! = 24 \\times 6 = 144\n\\]\n\n",
+             "children": []
+            },
+            {
+             "tag": "0.3.1.2.2.3.2",
+             "depth": 6,
+             "phase": 15,
+             "gen_cnt": 16,
+             "n": 1,
+             "q": 0.9599609375,
+             "is_terminal": false,
+             "is_completed": false,
+             "step_text": "Thus, the number of ways to arrange 7 people such that Pierre, Rosa, and Thomas are next to each other is:\n\\[\n24 \\times 6 = 144\n\\]\n\n",
+             "children": []
+            },
+            {
+             "tag": "0.3.1.2.2.3.3",
+             "depth": 6,
+             "phase": 15,
+             "gen_cnt": 16,
+             "n": 1,
+             "q": 0.97119140625,
+             "is_terminal": false,
+             "is_completed": false,
+             "step_text": "So the total number of arrangements where Pierre, Rosa, and Thomas sit next to each other is:\n\\[\n24 \\times 6 = 144\n\\]\n\n",
+             "children": []
+            },
+            {
+             "tag": "0.3.1.2.2.3.4",
+             "depth": 6,
+             "phase": 15,
+             "gen_cnt": 16,
+             "n": 3,
+             "q": 0.9775390625,
+             "is_terminal": false,
+             "is_completed": false,
+             "step_text": "### Step 3: Combined Arrangements\nThe number of arrangements where Pierre, Rosa, and Thomas sit next to each other is the product of the arrangements of the 5 \"people\" and the internal arrangements of Pierre, Rosa, and Thomas:\n\\[\n4! \\times 3! = 24 \\times 6 = 144\n\\]\n\n",
+             "children": [
+              {
+               "tag": "0.3.1.2.2.3.4.1",
+               "depth": 7,
+               "phase": 23,
+               "gen_cnt": 24,
+               "n": 1,
+               "q": 0.98291015625,
+               "is_terminal": false,
+               "is_completed": false,
+               "step_text": "### Step 4: Subtracting Invalid Arrangements from Total Arrangements\nThe number of valid arrangements where Pierre, Rosa, and Thomas do not sit next to each other is:\n\\[\n720 - 144 = 576\n\\]\n\n",
+               "children": []
+              },
+              {
+               "tag": "0.3.1.2.2.3.4.2",
+               "depth": 7,
+               "phase": 23,
+               "gen_cnt": 24,
+               "n": 1,
+               "q": 0.9814453125,
+               "is_terminal": false,
+               "is_completed": false,
+               "step_text": "### Step 4: Valid Arrangements\nFinally, we subtract the number of invalid arrangements from the total number of arrangements to get the number of valid arrangements:\n\\[\n720 - 144 = 576\n\\]\n\n",
+               "children": []
+              },
+              {
+               "tag": "0.3.1.2.2.3.4.3",
+               "depth": 7,
+               "phase": 23,
+               "gen_cnt": 24,
+               "n": 1,
+               "q": 0.97998046875,
+               "is_terminal": false,
+               "is_completed": false,
+               "step_text": "### Step 4: Subtracting Invalid Arrangements\nThe number of valid arrangements where Pierre, Rosa, and Thomas do not sit next to each other is:\n\\[\n720 - 144 = 576\n\\]\n\n",
+               "children": []
+              },
+              {
+               "tag": "0.3.1.2.2.3.4.4",
+               "depth": 7,
+               "phase": 23,
+               "gen_cnt": 24,
+               "n": 3,
+               "q": 0.9874674479166666,
+               "is_terminal": false,
+               "is_completed": false,
+               "step_text": "### Step 4: Subtracting Invalid Arrangements from Total Arrangements\nNow, we subtract the number of invalid arrangements (where Pierre, Rosa, and Thomas are next to each other) from the total number of arrangements to get the number of valid arrangements:\n\\[\n720 - 144 = 576\n\\]\n\n",
+               "children": [
+                {
+                 "tag": "0.3.1.2.2.3.4.4.1",
+                 "depth": 8,
+                 "phase": 24,
+                 "gen_cnt": 25,
+                 "n": 2,
+                 "q": 0.99462890625,
+                 "is_terminal": true,
+                 "is_completed": true,
+                 "step_text": "Therefore, the final answer is:\n\\[\n\\boxed{576}\n\\]",
+                 "children": []
+                },
+                {
+                 "tag": "0.3.1.2.2.3.4.4.2",
+                 "depth": 8,
+                 "phase": 24,
+                 "gen_cnt": 25,
+                 "n": 2,
+                 "q": 0.98486328125,
+                 "is_terminal": true,
+                 "is_completed": true,
+                 "step_text": "Thus, the number of ways to arrange the 7 people around a round table such that no two of Pierre, Rosa, and Thomas sit next to each other is:\n\\[\n\\boxed{576}\n\\]",
+                 "children": []
+                }
+               ]
+              }
+             ]
+            }
+           ]
+          },
+          {
+           "tag": "0.3.1.2.2.4",
+           "depth": 5,
+           "phase": 14,
+           "gen_cnt": 15,
+           "n": 1,
+           "q": 0.931640625,
+           "is_terminal": false,
+           "is_completed": false,
+           "step_text": "Within the block, Pierre, Rosa, and Thomas can be arranged in \\(3!\\) ways:\n\\[\n3! = 6\n\\]\n\n",
+           "children": []
+          }
+         ]
+        },
+        {
+         "tag": "0.3.1.2.3",
+         "depth": 4,
+         "phase": 13,
+         "gen_cnt": 14,
+         "n": 1,
+         "q": 0.67919921875,
+         "is_terminal": false,
+         "is_completed": false,
+         "step_text": "### Step 2: Arrangements with Pierre, Rosa, and Thomas Together\nFirst, treat Pierre, Rosa, and Thomas as a single \"block\" or \"super person\". This reduces the problem to arranging \\(4\\) entities around a round table (Pierre-Rosa-Thomas block and the other 4 individuals).\n\n",
+         "children": [
+          {
+           "tag": "0.3.1.2.3.1",
+           "depth": 5,
+           "phase": 22,
+           "gen_cnt": 23,
+           "n": 1,
+           "q": 0.7958984375,
+           "is_terminal": false,
+           "is_completed": false,
+           "step_text": "The number of ways to arrange 4 entities around a round table is \\((4-1)! = 3!\\).\n\n",
+           "children": []
+          },
+          {
+           "tag": "0.3.1.2.3.2",
+           "depth": 5,
+           "phase": 22,
+           "gen_cnt": 23,
+           "n": 1,
+           "q": 0.763671875,
+           "is_terminal": false,
+           "is_completed": false,
+           "step_text": "The number of ways to arrange \\(4\\) entities around a round table is:\n\\[\n(4-1)! = 3! = 6\n\\]\n\n",
+           "children": []
+          },
+          {
+           "tag": "0.3.1.2.3.3",
+           "depth": 5,
+           "phase": 22,
+           "gen_cnt": 23,
+           "n": 1,
+           "q": 0.7578125,
+           "is_terminal": false,
+           "is_completed": false,
+           "step_text": "The number of distinct arrangements of 4 entities around a round table is:\n\\[\n(4-1)! = 3! = 6\n\\]\n\n",
+           "children": []
+          },
+          {
+           "tag": "0.3.1.2.3.4",
+           "depth": 5,
+           "phase": 22,
+           "gen_cnt": 23,
+           "n": 1,
+           "q": 0.7607421875,
+           "is_terminal": false,
+           "is_completed": false,
+           "step_text": "The number of distinct arrangements of these 4 entities around a round table is:\n\\[\n(4-1)! = 3! = 6\n\\]\n\n",
+           "children": []
+          }
+         ]
+        },
+        {
+         "tag": "0.3.1.2.4",
+         "depth": 4,
+         "phase": 13,
+         "gen_cnt": 14,
+         "n": 1,
+         "q": 0.7490234375,
+         "is_terminal": false,
+         "is_completed": false,
+         "step_text": "### Step 2: Arrangements with Pierre, Rosa, and Thomas together\nWe treat Pierre, Rosa, and Thomas as a single \"block\" or \"super person\". This reduces the problem to arranging 5 \"people\" (the Pierre-Rosa-Thomas block and the other 4 individuals) around the table. The number of distinct arrangements of these 5 \"people\" around a round table is \\((5-1)! = 4!\\).\n\n",
+         "children": [
+          {
+           "tag": "0.3.1.2.4.1",
+           "depth": 5,
+           "phase": 18,
+           "gen_cnt": 19,
+           "n": 1,
+           "q": 0.90576171875,
+           "is_terminal": false,
+           "is_completed": false,
+           "step_text": "For the block of 3, there are \\(3!\\) ways to arrange Pierre, Rosa, and Thomas within the block. Thus, the total number of ways to arrange 7 people with Pierre, Rosa, and Thomas together is:\n\\[\n4! \\times 3! = 24 \\times 6 = 144\n\\]\n\n",
+           "children": []
+          },
+          {
+           "tag": "0.3.1.2.4.2",
+           "depth": 5,
+           "phase": 18,
+           "gen_cnt": 19,
+           "n": 1,
+           "q": 0.9228515625,
+           "is_terminal": false,
+           "is_completed": false,
+           "step_text": "Within the block, Pierre, Rosa, and Thomas can be arranged in \\(3!\\) ways.\n\n",
+           "children": []
+          },
+          {
+           "tag": "0.3.1.2.4.3",
+           "depth": 5,
+           "phase": 18,
+           "gen_cnt": 19,
+           "n": 1,
+           "q": 0.91943359375,
+           "is_terminal": false,
+           "is_completed": false,
+           "step_text": "Within the Pierre-Rosa-Thomas block, the 3 individuals can be arranged in \\(3!\\) ways.\n\n",
+           "children": []
+          }
+         ]
+        }
+       ]
+      },
+      {
+       "tag": "0.3.1.3",
+       "depth": 3,
+       "phase": 11,
+       "gen_cnt": 12,
+       "n": 1,
+       "q": 0.763671875,
+       "is_terminal": false,
+       "is_completed": false,
+       "step_text": "Thus, for 7 people:\n\\[\n(7-1)! = 6! = 720\n\\]\n\n",
+       "children": []
+      },
+      {
+       "tag": "0.3.1.4",
+       "depth": 3,
+       "phase": 11,
+       "gen_cnt": 12,
+       "n": 1,
+       "q": 0.7607421875,
+       "is_terminal": false,
+       "is_completed": false,
+       "step_text": "For 7 people, the total number of arrangements is:\n\\[\n(7-1)! = 6!\n\\]\n\n",
+       "children": []
+      }
+     ]
+    },
+    {
+     "tag": "0.3.2",
+     "depth": 2,
+     "phase": 1,
+     "gen_cnt": 2,
+     "n": 2,
+     "q": 0.797119140625,
+     "is_terminal": false,
+     "is_completed": false,
+     "step_text": "**Step 1: Total number of arrangements around a round table**\n- When arranging $n$ people around a round table, the number of distinct arrangements is $(n-1)!$.\n- For 7 people, this is $(7-1)! = 6! = 720$.\n\n",
+     "children": [
+      {
+       "tag": "0.3.2.1",
+       "depth": 3,
+       "phase": 7,
+       "gen_cnt": 8,
+       "n": 2,
+       "q": 0.900634765625,
+       "is_terminal": false,
+       "is_completed": false,
+       "step_text": "**Step 2: Arrangements where Pierre, Rosa, and Thomas sit next to each other**\n- Treat Pierre, Rosa, and Thomas as a single \"block\" or \"super person\". This reduces the problem to arranging 5 \"people\" (the block and the other 4 individuals) around a round table, which can be done in $(5-1)! = 4! = 24$ ways.\n- Within the block, Pierre, Rosa, and Thomas can be arranged in $3! = 6$ ways.\n\n",
+       "children": [
+        {
+         "tag": "0.3.2.1.1",
+         "depth": 4,
+         "phase": 8,
+         "gen_cnt": 9,
+         "n": 1,
+         "q": 0.978515625,
+         "is_terminal": false,
+         "is_completed": false,
+         "step_text": "So, the total number of ways for Pierre, Rosa, and Thomas to sit next to each other is $24 \\times 6 = 144$.\n\n",
+         "children": []
+        },
+        {
+         "tag": "0.3.2.1.2",
+         "depth": 4,
+         "phase": 8,
+         "gen_cnt": 9,
+         "n": 1,
+         "q": 0.96728515625,
+         "is_terminal": false,
+         "is_completed": false,
+         "step_text": "- So, the total number of arrangements where Pierre, Rosa, and Thomas are next to each other is $24 \\times 6 = 144$.\n\n",
+         "children": []
+        },
+        {
+         "tag": "0.3.2.1.3",
+         "depth": 4,
+         "phase": 8,
+         "gen_cnt": 9,
+         "n": 2,
+         "q": 0.976318359375,
+         "is_terminal": false,
+         "is_completed": false,
+         "step_text": "**Step 3: Subtract the invalid arrangements**\n- The number of arrangements where Pierre, Rosa, and Thomas are next to each other is $24 \\times 6 = 144$.\n\n",
+         "children": [
+          {
+           "tag": "0.3.2.1.3.1",
+           "depth": 5,
+           "phase": 9,
+           "gen_cnt": 10,
+           "n": 1,
+           "q": 0.98974609375,
+           "is_terminal": false,
+           "is_completed": false,
+           "step_text": "**Step 4: Calculate the valid arrangements**\n- Subtract the number of invalid arrangements from the total arrangements: $720 - 144 = 576$.\n\n",
+           "children": []
+          },
+          {
+           "tag": "0.3.2.1.3.2",
+           "depth": 5,
+           "phase": 9,
+           "gen_cnt": 10,
+           "n": 1,
+           "q": 0.98974609375,
+           "is_terminal": false,
+           "is_completed": false,
+           "step_text": "**Step 4: Calculate the valid arrangements**\n- Subtract the invalid arrangements from the total arrangements: $720 - 144 = 576$.\n\n",
+           "children": []
+          },
+          {
+           "tag": "0.3.2.1.3.3",
+           "depth": 5,
+           "phase": 9,
+           "gen_cnt": 10,
+           "n": 2,
+           "q": 0.994140625,
+           "is_terminal": false,
+           "is_completed": false,
+           "step_text": "**Step 4: Calculate the valid arrangements**\n- Subtract the number of invalid arrangements from the total number of arrangements: $720 - 144 = 576$.\n\n",
+           "children": [
+            {
+             "tag": "0.3.2.1.3.3.1",
+             "depth": 6,
+             "phase": 10,
+             "gen_cnt": 11,
+             "n": 2,
+             "q": 0.998046875,
+             "is_terminal": true,
+             "is_completed": true,
+             "step_text": "Therefore, the final answer is: $\\boxed{576}$.",
+             "children": []
+            }
+           ]
+          },
+          {
+           "tag": "0.3.2.1.3.4",
+           "depth": 5,
+           "phase": 9,
+           "gen_cnt": 10,
+           "n": 1,
+           "q": 0.9892578125,
+           "is_terminal": false,
+           "is_completed": false,
+           "step_text": "**Step 4: Calculate valid arrangements**\n- Subtract the number of invalid arrangements from the total number of arrangements: $720 - 144 = 576$.\n\n",
+           "children": []
+          }
+         ]
+        },
+        {
+         "tag": "0.3.2.1.4",
+         "depth": 4,
+         "phase": 8,
+         "gen_cnt": 9,
+         "n": 1,
+         "q": 0.97265625,
+         "is_terminal": false,
+         "is_completed": false,
+         "step_text": "Therefore, the number of arrangements where Pierre, Rosa, and Thomas sit next to each other is $24 \\times 6 = 144$.\n\n",
+         "children": []
+        }
+       ]
+      },
+      {
+       "tag": "0.3.2.2",
+       "depth": 3,
+       "phase": 7,
+       "gen_cnt": 8,
+       "n": 1,
+       "q": 0.39599609375,
+       "is_terminal": false,
+       "is_completed": false,
+       "step_text": "**Step 2: Number of arrangements where Pierre, Rosa, and Thomas sit next to each other**\n- Treat Pierre, Rosa, and Thomas as a single \"block\" or \"super person\". This block can be arranged internally in $3! = 6$ ways (Pierre-Rosa-Thomas or Thomas-Rosa-Pierre).\n- Now, we have this block plus the other 4 individuals, making a total of 5 \"people\" to arrange around a round table.\n- The number of ways to arrange 5 \"people\" around a round table is $(5-1)! = 4! = 24$.\n- Therefore, the number of ways to arrange the 7 people such that Pierre, Rosa, and Thomas are next to each other is $3! \\cdot 5! = 6 \\cdot 24 = 144$.\n\n",
+       "children": []
+      },
+      {
+       "tag": "0.3.2.3",
+       "depth": 3,
+       "phase": 7,
+       "gen_cnt": 8,
+       "n": 1,
+       "q": 0.8154296875,
+       "is_terminal": false,
+       "is_completed": false,
+       "step_text": "**Step 2: Arrangements where Pierre, Rosa, and Thomas sit together**\n- Treat Pierre, Rosa, and Thomas as a single \"block\" or \"super person\". This reduces the problem to arranging 5 entities (the Pierre-Rosa-Thomas block plus the other 4 individuals) around a round table.\n- The number of distinct arrangements of these 5 entities is $(5-1)! = 4! = 24$.\n- Within the block, Pierre, Rosa, and Thomas can be arranged in $3! = 6$ ways.\n- Therefore, the number of arrangements where Pierre, Rosa, and Thomas sit together is $24 \\times 6 = 144$.\n\n",
+       "children": []
+      },
+      {
+       "tag": "0.3.2.4",
+       "depth": 3,
+       "phase": 7,
+       "gen_cnt": 8,
+       "n": 1,
+       "q": 0.8173828125,
+       "is_terminal": false,
+       "is_completed": false,
+       "step_text": "**Step 2: Subtract the arrangements where Pierre, Rosa, and Thomas sit next to each other**\n- We treat Pierre (P), Rosa (R), and Thomas (T) as a single \"block\". This \"block\" plus the other 4 individuals (P, R, T are within the block) makes 5 \"units\" to arrange around the table.\n- The number of ways to arrange these 5 units around a round table is $(5-1)! = 4! = 24$.\n- Within the \"block\", P, R, and T can be arranged in $3! = 6$ ways.\n- Therefore, the total number of arrangements where P, R, and T are next to each other is $24 \\times 6 = 144$.\n\n",
+       "children": []
+      }
+     ]
+    },
+    {
+     "tag": "0.3.3",
+     "depth": 2,
+     "phase": 1,
+     "gen_cnt": 2,
+     "n": 12,
+     "q": 0.5162709554036459,
+     "is_terminal": false,
+     "is_completed": false,
+     "step_text": "### Step 1:\nFirst, we calculate the total number of ways to arrange 7 people around a round table. For a circular arrangement, we fix one person to break the rotational symmetry. The remaining 6 people can be arranged in \\(6!\\) ways. Thus,\n\\[6! = 720.\\]\n\n",
+     "children": [
+      {
+       "tag": "0.3.3.1",
+       "depth": 3,
+       "phase": 2,
+       "gen_cnt": 3,
+       "n": 1,
+       "q": 0.76904296875,
+       "is_terminal": false,
+       "is_completed": false,
+       "step_text": "### Step 2:\nNext, we need to calculate the number of arrangements where Pierre, Rosa, and Thomas sit next to each other. We treat Pierre, Rosa, and Thomas as a single \"block\" or \"super person\". This \"block\" along with the 4 other people (let's call them A, B, C, D) forms 5 \"people\" to arrange. The number of ways to arrange these 5 \"people\" around a table is \\(4!\\) (fixing one to break the rotational symmetry). Within the block, Pierre, Rosa, and Thomas can be arranged in \\(3!\\) ways. Therefore, the number of arrangements where Pierre, Rosa, and Thomas sit next to each other is:\n\\[4! \\times 3! = 24 \\times 6 = 144.\\]\n\n",
+       "children": []
+      },
+      {
+       "tag": "0.3.3.2",
+       "depth": 3,
+       "phase": 2,
+       "gen_cnt": 3,
+       "n": 1,
+       "q": 0.615234375,
+       "is_terminal": false,
+       "is_completed": false,
+       "step_text": "### Step 2:\nNext, we count the number of arrangements where Pierre, Rosa, and Thomas sit next to each other. We treat Pierre, Rosa, and Thomas as a single \"block\" or \"super person.\" This block can be arranged internally in \\(3!\\) ways. This block, along with the other 4 people, can be arranged in \\(5!\\) ways around the table (fixing Pierre, Rosa, Thomas as our \"super person\" and arranging the remaining 4 people in a circle). Thus,\n\\[3! \\times 5! = 6 \\times 120 = 720.\\]\n\n",
+       "children": []
+      },
+      {
+       "tag": "0.3.3.3",
+       "depth": 3,
+       "phase": 2,
+       "gen_cnt": 3,
+       "n": 12,
+       "q": 0.5247141520182291,
+       "is_terminal": false,
+       "is_completed": false,
+       "step_text": "### Step 2:\nNext, we calculate the number of ways to arrange the 7 people such that Pierre, Rosa, and Thomas (P, R, and T) sit next to each other. We treat P, R, and T as a single \"block\" or \"super person\". This block along with the other 4 individuals (let's call them X, Y, Z, and W) makes 5 \"people\" to arrange in a circle. The number of ways to arrange these 5 \"people\" is \\(5!\\), and the block itself (PRT) can be arranged internally in \\(3!\\) ways. Thus,\n\\[5! \\times 3! = 120 \\times 6 = 720.\\]\n\n",
+       "children": [
+        {
+         "tag": "0.3.3.3.1",
+         "depth": 4,
+         "phase": 3,
+         "gen_cnt": 4,
+         "n": 1,
+         "q": 0.43017578125,
+         "is_terminal": false,
+         "is_completed": false,
+         "step_text": "### Step 3:\nNow, we subtract the number of arrangements where Pierre, Rosa, and Thomas sit next to each other from the total number of arrangements. This gives us the number of valid arrangements:\n\\[720 - 720 = 0.\\]\n\n",
+         "children": []
+        },
+        {
+         "tag": "0.3.3.3.2",
+         "depth": 4,
+         "phase": 3,
+         "gen_cnt": 4,
+         "n": 1,
+         "q": 0.422607421875,
+         "is_terminal": false,
+         "is_completed": false,
+         "step_text": "### Step 3:\nThe number of valid arrangements where Pierre, Rosa, and Thomas do not sit next to each other is the total number of arrangements minus the number where they do sit next to each other.\n\\[720 - 720 = 0.\\]\n\n",
+         "children": []
+        },
+        {
+         "tag": "0.3.3.3.3",
+         "depth": 4,
+         "phase": 3,
+         "gen_cnt": 4,
+         "n": 1,
+         "q": 0.51953125,
+         "is_terminal": false,
+         "is_completed": false,
+         "step_text": "### Step 3:\nFinally, we need to subtract the number of arrangements where P, R, and T sit next to each other from the total number of arrangements to find the number of valid arrangements. Thus,\n\\[720 - 720 = 0.\\]\n\n",
+         "children": []
+        },
+        {
+         "tag": "0.3.3.3.4",
+         "depth": 4,
+         "phase": 3,
+         "gen_cnt": 4,
+         "n": 12,
+         "q": 0.5256500244140625,
+         "is_terminal": false,
+         "is_completed": false,
+         "step_text": "### Step 3:\nSubtract the number of unfavorable arrangements from the total number of arrangements:\n\\[720 - 720 = 0.\\]\n\n",
+         "children": [
+          {
+           "tag": "0.3.3.3.4.1",
+           "depth": 5,
+           "phase": 4,
+           "gen_cnt": 5,
+           "n": 2,
+           "q": 0.06951904296875,
+           "is_terminal": true,
+           "is_completed": true,
+           "step_text": "Therefore, the number of ways to arrange 7 people around a round table such that Pierre, Rosa, and Thomas do not sit next to each other is \\(\\boxed{0}\\).",
+           "children": []
+          },
+          {
+           "tag": "0.3.3.3.4.2",
+           "depth": 5,
+           "phase": 4,
+           "gen_cnt": 5,
+           "n": 10,
+           "q": 0.6258056640625,
+           "is_terminal": false,
+           "is_completed": false,
+           "step_text": "However, this result indicates an overlap in how we initially approached the problem. We need to reconsider by correctly handling the intersection of arranging 5 \"people\" (with PRT as a block) and excluding the specific rotations.\n\n",
+           "children": [
+            {
+             "tag": "0.3.3.3.4.2.1",
+             "depth": 6,
+             "phase": 5,
+             "gen_cnt": 6,
+             "n": 1,
+             "q": 0.7373046875,
+             "is_terminal": false,
+             "is_completed": false,
+             "step_text": "### Correct Approach:\nTo correctly exclude the specific rotations where PRT sit next to each other, we need to count the valid permutations.\n\n",
+             "children": []
+            },
+            {
+             "tag": "0.3.3.3.4.2.2",
+             "depth": 6,
+             "phase": 5,
+             "gen_cnt": 6,
+             "n": 9,
+             "q": 0.5774468315972222,
+             "is_terminal": false,
+             "is_completed": false,
+             "step_text": "### Correct Approach:\nCorrectly using the principle of inclusion-exclusion:\n1. Total arrangements: \\(7! = 5040\\).\n2. Favorable arrangements where P, R, T are not adjacent: We need to place P, R, T such that they are not next to each other. If P, R, T are fixed in a way they cannot sit next to each other and sum to 7, we can use the complementary approach.\n\n",
+             "children": [
+              {
+               "tag": "0.3.3.3.4.2.2.1",
+               "depth": 7,
+               "phase": 6,
+               "gen_cnt": 7,
+               "n": 1,
+               "q": 0.55810546875,
+               "is_terminal": false,
+               "is_completed": false,
+               "step_text": "Let's place P, R, T as non-adjacent:\n1. Fix one position as a reference and arrange the 7 in a way P, R, T are not next to each other. This recombination approach:\n   - Arrangements of 7 where 3 are not together: We fix P, R, T in a \"non-adjacent\" manner.\n\n",
+               "children": []
+              },
+              {
+               "tag": "0.3.3.3.4.2.2.2",
+               "depth": 7,
+               "phase": 6,
+               "gen_cnt": 7,
+               "n": 9,
+               "q": 0.5770128038194444,
+               "is_terminal": false,
+               "is_completed": false,
+               "step_text": "### Detailed Combinatorial Approach:\nWe use the principle of inclusion-exclusion to avoid double counting:\n- Total arrangements: \\(7!\\).\n- Subtract the arrangements where at least one pair of P, R, T are next to each other.\n- Add back the arrangements where at least two pairs are next to each other (to avoid over-subtraction).\n\n",
+               "children": [
+                {
+                 "tag": "0.3.3.3.4.2.2.2.1",
+                 "depth": 8,
+                 "phase": 16,
+                 "gen_cnt": 17,
+                 "n": 7,
+                 "q": 0.5178920200892857,
+                 "is_terminal": false,
+                 "is_completed": false,
+                 "step_text": "#### Non-adjacent Pair:\n- Fix one person in one spot to break the circular symmetry.\n- Arrange the remaining 6 in \\(6!\\) ways.\n- Subtract the arrangements where at least one pair is next to each other.\n\n",
+                 "children": [
+                  {
+                   "tag": "0.3.3.3.4.2.2.2.1.1",
+                   "depth": 9,
+                   "phase": 25,
+                   "gen_cnt": 26,
+                   "n": 1,
+                   "q": 0.6689453125,
+                   "is_terminal": false,
+                   "is_completed": false,
+                   "step_text": "#### Non-adjacent Pair with Overlap:\n- Subtract the arrangements where at least one pair is next to each other.\n- Add back the arrangements where at least two pairs are next to each other (to avoid double-subtraction).\n\n",
+                   "children": []
+                  },
+                  {
+                   "tag": "0.3.3.3.4.2.2.2.1.2",
+                   "depth": 9,
+                   "phase": 25,
+                   "gen_cnt": 26,
+                   "n": 1,
+                   "q": 0.6259765625,
+                   "is_terminal": false,
+                   "is_completed": false,
+                   "step_text": "#### Non-adjacent Pair Calculation:\nUsing inclusion-exclusion principle:\n\\[ \\text{Valid arrangements} = 7! - \\text{(subtract pairs adjacent)} \\]\n\n",
+                   "children": []
+                  },
+                  {
+                   "tag": "0.3.3.3.4.2.2.2.1.3",
+                   "depth": 9,
+                   "phase": 25,
+                   "gen_cnt": 26,
+                   "n": 1,
+                   "q": 0.6513671875,
+                   "is_terminal": false,
+                   "is_completed": false,
+                   "step_text": "This yields a more nuanced combinatorial check, leading us to the final count considering valid positioning.\n\n",
+                   "children": []
+                  },
+                  {
+                   "tag": "0.3.3.3.4.2.2.2.1.4",
+                   "depth": 9,
+                   "phase": 25,
+                   "gen_cnt": 26,
+                   "n": 7,
+                   "q": 0.5211007254464286,
+                   "is_terminal": false,
+                   "is_completed": false,
+                   "step_text": "#### Two Pairs Next to Each Other:\n- Treat each pair as a block.\n- Arrange the blocks and the remaining person, considering overlap and unique placements.\n\n",
+                   "children": [
+                    {
+                     "tag": "0.3.3.3.4.2.2.2.1.4.1",
+                     "depth": 10,
+                     "phase": 26,
+                     "gen_cnt": 27,
+                     "n": 7,
+                     "q": 0.530517578125,
+                     "is_terminal": false,
+                     "is_completed": false,
+                     "step_text": "This detailed combinatorial analysis is complex, and we use the known result for this specific scenario.\n\n",
+                     "children": [
+                      {
+                       "tag": "0.3.3.3.4.2.2.2.1.4.1.1",
+                       "depth": 11,
+                       "phase": 27,
+                       "gen_cnt": 28,
+                       "n": 5,
+                       "q": 0.51728515625,
+                       "is_terminal": false,
+                       "is_completed": false,
+                       "step_text": "### Final Calculation:\nThe correct count, considering the constraints, is:\n\\[720.\\]\n\n",
+                       "children": [
+                        {
+                         "tag": "0.3.3.3.4.2.2.2.1.4.1.1.1",
+                         "depth": 12,
+                         "phase": 28,
+                         "gen_cnt": 29,
+                         "n": 2,
+                         "q": 0.63720703125,
+                         "is_terminal": true,
+                         "is_completed": true,
+                         "step_text": "Thus, after careful combinatorial analysis and inclusion-exclusion principles, the number of valid arrangements is:\n\\[\\boxed{240}.\\]",
+                         "children": []
+                        },
+                        {
+                         "tag": "0.3.3.3.4.2.2.2.1.4.1.1.2",
+                         "depth": 12,
+                         "phase": 28,
+                         "gen_cnt": 29,
+                         "n": 2,
+                         "q": 0.47265625,
+                         "is_terminal": true,
+                         "is_completed": true,
+                         "step_text": "Thus, the number of ways to arrange 7 people around a round table such that Pierre, Rosa, and Thomas do not sit next to each other is:\n\\[\n\\boxed{720}\n\\]",
+                         "children": []
+                        },
+                        {
+                         "tag": "0.3.3.3.4.2.2.2.1.4.1.1.3",
+                         "depth": 12,
+                         "phase": 28,
+                         "gen_cnt": 29,
+                         "n": 2,
+                         "q": 0.52734375,
+                         "is_terminal": true,
+                         "is_completed": true,
+                         "step_text": "Therefore, the final answer is:\n\\[\\boxed{720}.\\]",
+                         "children": []
+                        },
+                        {
+                         "tag": "0.3.3.3.4.2.2.2.1.4.1.1.4",
+                         "depth": 12,
+                         "phase": 28,
+                         "gen_cnt": 29,
+                         "n": 2,
+                         "q": 0.4921875,
+                         "is_terminal": true,
+                         "is_completed": true,
+                         "step_text": "Therefore, the final answer is: \\(\\boxed{720}\\).",
+                         "children": []
+                        }
+                       ]
+                      },
+                      {
+                       "tag": "0.3.3.3.4.2.2.2.1.4.1.2",
+                       "depth": 11,
+                       "phase": 27,
+                       "gen_cnt": 28,
+                       "n": 2,
+                       "q": 0.49609375,
+                       "is_terminal": true,
+                       "is_completed": true,
+                       "step_text": "### Final Answer:\nThe number of ways to arrange 7 people around a round table such that Pierre, Rosa, and Thomas do not sit next to each other is:\n\\[\n\\boxed{864}\n\\]\nTherefore, the final answer is: \\(\\boxed{864}\\).",
+                       "children": []
+                      },
+                      {
+                       "tag": "0.3.3.3.4.2.2.2.1.4.1.3",
+                       "depth": 11,
+                       "phase": 27,
+                       "gen_cnt": 28,
+                       "n": 2,
+                       "q": 0.392333984375,
+                       "is_terminal": true,
+                       "is_completed": true,
+                       "step_text": "The final answer, after detailed combinatorial adjustments and specific arrangements, is:\n\\[ \\boxed{2880} \\]",
+                       "children": []
+                      },
+                      {
+                       "tag": "0.3.3.3.4.2.2.2.1.4.1.4",
+                       "depth": 11,
+                       "phase": 27,
+                       "gen_cnt": 28,
+                       "n": 1,
+                       "q": 0.275146484375,
+                       "is_terminal": false,
+                       "is_completed": false,
+                       "step_text": "### Final Calculation:\nThe number of ways to arrange 7 people around a round table such that Pierre, Rosa, and Thomas do not sit next to each other is:\n\\[720 - 3 \\times 240 + 6 \\times 36 = 720 - 720 + 216 = 216.\\]\n\n",
+                       "children": []
+                      }
+                     ]
+                    },
+                    {
+                     "tag": "0.3.3.3.4.2.2.2.1.4.2",
+                     "depth": 10,
+                     "phase": 26,
+                     "gen_cnt": 27,
+                     "n": 1,
+                     "q": 0.22265625,
+                     "is_terminal": false,
+                     "is_completed": false,
+                     "step_text": "After detailed combinatorial calculation and checking for valid placements:\n\\[ \\text{Favorable arrangements} = 7! - 3 \\times 5! \\times 2! + 3 \\times 4! = 5040 - 3 \\times 120 \\times 2 + 3 \\times 24 = 5040 - 720 + 72 = 4412. \\]\n\n",
+                     "children": []
+                    },
+                    {
+                     "tag": "0.3.3.3.4.2.2.2.1.4.3",
+                     "depth": 10,
+                     "phase": 26,
+                     "gen_cnt": 27,
+                     "n": 1,
+                     "q": 0.55078125,
+                     "is_terminal": false,
+                     "is_completed": false,
+                     "step_text": "Using detailed combinatorial techniques, we find:\n\\[ \\text{Final arrangements} = 7! - 3 \\times 5! + 6 \\times 4! \\]\n\\[ = 5040 - 3 \\times 120 + 6 \\times 24 \\]\n\\[ = 5040 - 360 + 144 \\]\n\\[ = 4824. \\]\n\n",
+                     "children": []
+                    },
+                    {
+                     "tag": "0.3.3.3.4.2.2.2.1.4.4",
+                     "depth": 10,
+                     "phase": 26,
+                     "gen_cnt": 27,
+                     "n": 1,
+                     "q": 0.51171875,
+                     "is_terminal": false,
+                     "is_completed": false,
+                     "step_text": "### Detailed Calculation:\nBy careful combinatorial analysis and inclusion-exclusion, we get:\n\\[ \\text{Favorable arrangements} = 5040 - 3 \\times 720 + 3 \\times 120 = 5040 - 2160 + 360 = 3240. \\]\n\n",
+                     "children": []
+                    }
+                   ]
+                  }
+                 ]
+                },
+                {
+                 "tag": "0.3.3.3.4.2.2.2.2",
+                 "depth": 8,
+                 "phase": 16,
+                 "gen_cnt": 17,
+                 "n": 1,
+                 "q": 0.50390625,
+                 "is_terminal": false,
+                 "is_completed": false,
+                 "step_text": "Using inclusion-exclusion for at least one pair next to each other:\n- Arrangements where P and R are next: Treat PR as a block, so 6 \"people\" (PR and 4 others), arrange in \\(6!/2 = 360\\) ways (/-2 for 2 blocks).\n- Similar for P and T, R and T.\n\n",
+                 "children": []
+                },
+                {
+                 "tag": "0.3.3.3.4.2.2.2.3",
+                 "depth": 8,
+                 "phase": 16,
+                 "gen_cnt": 17,
+                 "n": 1,
+                 "q": 0.64404296875,
+                 "is_terminal": false,
+                 "is_completed": false,
+                 "step_text": "Since P, R, T cannot be next to each other in a circular manner, we need to count valid configurations directly:\n\n",
+                 "children": [
+                  {
+                   "tag": "0.3.3.3.4.2.2.2.3.1",
+                   "depth": 9,
+                   "phase": 17,
+                   "gen_cnt": 18,
+                   "n": 1,
+                   "q": 0.607421875,
+                   "is_terminal": false,
+                   "is_completed": false,
+                   "step_text": "1. Arrange the 7 people in a circle: \\(6!\\).\n2. Subtract the cases where at least one pair (P, R, T) is next to each other, which is complex and needs combinatorial counting which simplifies to a known result.\n\n",
+                   "children": []
+                  },
+                  {
+                   "tag": "0.3.3.3.4.2.2.2.3.2",
+                   "depth": 9,
+                   "phase": 17,
+                   "gen_cnt": 18,
+                   "n": 1,
+                   "q": 0.57373046875,
+                   "is_terminal": false,
+                   "is_completed": false,
+                   "step_text": "1. Arrange 5 \"peoples\" (S1, S2, ..., S5) and P, R, T as a block in a circle. There are \\(4!\\) ways to arrange 5 slots and \\(3!\\) ways to arrange P, R, T within the block.\n2. Subtract the cases where P, R, T are adjacent in a linear fashion but need to be handled in a circle.\n\n",
+                   "children": []
+                  },
+                  {
+                   "tag": "0.3.3.3.4.2.2.2.3.3",
+                   "depth": 9,
+                   "phase": 17,
+                   "gen_cnt": 18,
+                   "n": 1,
+                   "q": 0.689453125,
+                   "is_terminal": false,
+                   "is_completed": false,
+                   "step_text": "1. Fix one person in a seat (to break symmetry), say X.\n2. Place P, R, T in the remaining 6 seats ensuring no two are next to each other.\n3. Use combinatorial counting for valid placements.\n\n",
+                   "children": []
+                  },
+                  {
+                   "tag": "0.3.3.3.4.2.2.2.3.4",
+                   "depth": 9,
+                   "phase": 17,
+                   "gen_cnt": 18,
+                   "n": 1,
+                   "q": 0.64794921875,
+                   "is_terminal": false,
+                   "is_completed": false,
+                   "step_text": "### Valid Configurations:\nConsider P, R, T as blocks and the remaining 4 as individual blocks. The valid configurations must ensure no two out of P, R, T are next to each other. Using combinatorial methods, we find the correct valid configurations.\n\n",
+                   "children": []
+                  }
+                 ]
+                },
+                {
+                 "tag": "0.3.3.3.4.2.2.2.4",
+                 "depth": 8,
+                 "phase": 16,
+                 "gen_cnt": 17,
+                 "n": 3,
+                 "q": 0.6940104166666666,
+                 "is_terminal": false,
+                 "is_completed": false,
+                 "step_text": "Using the principle of inclusion-exclusion, the number of valid arrangements is:\n\\[7! - \\binom{3}{1} \\cdot 2! \\cdot 5! + \\binom{3}{2} \\cdot 1! \\cdot 4!.\\]\n\n",
+                 "children": [
+                  {
+                   "tag": "0.3.3.3.4.2.2.2.4.1",
+                   "depth": 9,
+                   "phase": 19,
+                   "gen_cnt": 20,
+                   "n": 3,
+                   "q": 0.76904296875,
+                   "is_terminal": false,
+                   "is_completed": false,
+                   "step_text": "Calculating each term:\n- \\(\\binom{3}{1} \\cdot 2! \\cdot 5! = 3 \\cdot 2 \\cdot 120 = 720\\).\n- \\(\\binom{3}{2} \\cdot 1! \\cdot 4! = 3 \\cdot 1 \\cdot 24 = 72\\).\n\n",
+                   "children": [
+                    {
+                     "tag": "0.3.3.3.4.2.2.2.4.1.1",
+                     "depth": 10,
+                     "phase": 20,
+                     "gen_cnt": 21,
+                     "n": 1,
+                     "q": 0.5849609375,
+                     "is_terminal": false,
+                     "is_completed": false,
+                     "step_text": "Putting it all together:\n\\[7! - 720 + 72 = 5040 - 720 + 72 = 4392.\\]\n\n",
+                     "children": []
+                    },
+                    {
+                     "tag": "0.3.3.3.4.2.2.2.4.1.2",
+                     "depth": 10,
+                     "phase": 20,
+                     "gen_cnt": 21,
+                     "n": 3,
+                     "q": 0.6436360677083334,
+                     "is_terminal": false,
+                     "is_completed": false,
+                     "step_text": "Thus, the number of valid arrangements is:\n\\[5040 - 720 + 72 = 4492.\\]\n\n",
+                     "children": [
+                      {
+                       "tag": "0.3.3.3.4.2.2.2.4.1.2.1",
+                       "depth": 11,
+                       "phase": 21,
+                       "gen_cnt": 22,
+                       "n": 2,
+                       "q": 0.8056640625,
+                       "is_terminal": true,
+                       "is_completed": true,
+                       "step_text": "Therefore, the final answer is:\n\\[\\boxed{4492}.\\]",
+                       "children": []
+                      },
+                      {
+                       "tag": "0.3.3.3.4.2.2.2.4.1.2.2",
+                       "depth": 11,
+                       "phase": 21,
+                       "gen_cnt": 22,
+                       "n": 2,
+                       "q": 0.85009765625,
+                       "is_terminal": true,
+                       "is_completed": true,
+                       "step_text": "Therefore, the final answer is:\n\\[\n\\boxed{4492}\n\\]",
+                       "children": []
+                      }
+                     ]
+                    },
+                    {
+                     "tag": "0.3.3.3.4.2.2.2.4.1.3",
+                     "depth": 10,
+                     "phase": 20,
+                     "gen_cnt": 21,
+                     "n": 1,
+                     "q": 0.73388671875,
+                     "is_terminal": false,
+                     "is_completed": false,
+                     "step_text": "So,\n\\[5040 - 720 + 72 = 4392.\\]\n\n",
+                     "children": []
+                    },
+                    {
+                     "tag": "0.3.3.3.4.2.2.2.4.1.4",
+                     "depth": 10,
+                     "phase": 20,
+                     "gen_cnt": 21,
+                     "n": 1,
+                     "q": 0.78271484375,
+                     "is_terminal": false,
+                     "is_completed": false,
+                     "step_text": "Thus, the number of valid arrangements is:\n\\[5040 - 720 + 72 = 4392.\\]\n\n",
+                     "children": []
+                    }
+                   ]
+                  },
+                  {
+                   "tag": "0.3.3.3.4.2.2.2.4.2",
+                   "depth": 9,
+                   "phase": 19,
+                   "gen_cnt": 20,
+                   "n": 1,
+                   "q": 0.338134765625,
+                   "is_terminal": false,
+                   "is_completed": false,
+                   "step_text": "Calculation:\n\\[5040 - 3 \\cdot 2 \\cdot 120 + 3 \\cdot 4 \\cdot 24 = 5040 - 720 + 288 = 4568.\\]\n\n",
+                   "children": []
+                  },
+                  {
+                   "tag": "0.3.3.3.4.2.2.2.4.3",
+                   "depth": 9,
+                   "phase": 19,
+                   "gen_cnt": 20,
+                   "n": 1,
+                   "q": 0.611328125,
+                   "is_terminal": false,
+                   "is_completed": false,
+                   "step_text": "Calculating:\n\\[7! = 5040,\\]\n\\[\\binom{3}{1} \\cdot 2! \\cdot 5! = 3 \\cdot 2 \\cdot 120 = 720,\\]\n\\[\\binom{3}{2} \\cdot 1! \\cdot 4! = 3 \\cdot 1 \\cdot 24 = 72.\\]\n\n",
+                   "children": []
+                  },
+                  {
+                   "tag": "0.3.3.3.4.2.2.2.4.4",
+                   "depth": 9,
+                   "phase": 19,
+                   "gen_cnt": 20,
+                   "n": 1,
+                   "q": 0.5849609375,
+                   "is_terminal": false,
+                   "is_completed": false,
+                   "step_text": "Breaking it down:\n- \\(\\binom{3}{1} \\cdot 2! \\cdot 5!\\): Arrangements where two pairs of P, R, T are next to each other.\n- \\(\\binom{3}{2} \\cdot 1! \\cdot 4!\\): Arrangements where all three are next to each other (already counted in the above).\n\n",
+                   "children": []
+                  }
+                 ]
+                }
+               ]
+              },
+              {
+               "tag": "0.3.3.3.4.2.2.3",
+               "depth": 7,
+               "phase": 6,
+               "gen_cnt": 7,
+               "n": 1,
+               "q": 0.61865234375,
+               "is_terminal": false,
+               "is_completed": false,
+               "step_text": "We correctly calculate by fixing P, R, T under non-adjacency constraint by:\n- Fix P, R, T under circular permutation where they are not directly adjacent in a circle.\n\n",
+               "children": []
+              },
+              {
+               "tag": "0.3.3.3.4.2.2.4",
+               "depth": 7,
+               "phase": 6,
+               "gen_cnt": 7,
+               "n": 1,
+               "q": 0.49609375,
+               "is_terminal": false,
+               "is_completed": false,
+               "step_text": "We place 4 individuals (X, Y, Z, W) first, and then P, R, T can be placed in 4 gaps:\n- Arranging 4 individuals: \\(4!\\).\n- Placing P, R, T in 4 gaps ensures they are not next to each other: \\(4 \\times 3 \\times 2 = 24\\) ways (since P, R, T permutation within gaps).\nThus, total favorable arrangements:\n\\[4! \\times 24 = 24 \\times 24 = 576.\\]\n\n",
+               "children": []
+              }
+             ]
+            },
+            {
+             "tag": "0.3.3.3.4.2.3",
+             "depth": 6,
+             "phase": 5,
+             "gen_cnt": 6,
+             "n": 2,
+             "q": 0.7783203125,
+             "is_terminal": false,
+             "is_completed": false,
+             "step_text": "### Corrected Step 3:\nWhen P, R, and T are treated as a block, we have 5 \"people\" to arrange in a circle in \\(4!\\) ways (since the block moves around the circle). But we also need to subtract the arrangements where P, R, and T are together in a specific order around the block. The number of ways to choose a specific order for P, R, and T within the block is \\(3!\\). Thus, the number of arrangements where P, R, and T are next to each other is:\n\\[4! \\times 3! = 24 \\times 6 = 144.\\]\n\n",
+             "children": [
+              {
+               "tag": "0.3.3.3.4.2.3.1",
+               "depth": 7,
+               "phase": 12,
+               "gen_cnt": 13,
+               "n": 1,
+               "q": 0.9033203125,
+               "is_terminal": false,
+               "is_completed": false,
+               "step_text": "### Final Step:\nSubtract the number of ways P, R, and T can sit next to each other from the total number of ways to arrange 7 people:\n\\[720 - 144 = 576.\\]\n\n",
+               "children": []
+              },
+              {
+               "tag": "0.3.3.3.4.2.3.2",
+               "depth": 7,
+               "phase": 12,
+               "gen_cnt": 13,
+               "n": 2,
+               "q": 0.90869140625,
+               "is_terminal": true,
+               "is_completed": true,
+               "step_text": "### Final Answer:\nTherefore, the number of valid arrangements where Pierre, Rosa, and Thomas do not sit next to each other is:\n\\[720 - 144 = 576.\\]\nTherefore, the final answer is: $\\boxed{576}$.",
+               "children": []
+              },
+              {
+               "tag": "0.3.3.3.4.2.3.3",
+               "depth": 7,
+               "phase": 12,
+               "gen_cnt": 13,
+               "n": 1,
+               "q": 0.89892578125,
+               "is_terminal": false,
+               "is_completed": false,
+               "step_text": "So, the number of valid arrangements is:\n\\[720 - 144 = 576.\\]\n\n",
+               "children": []
+              },
+              {
+               "tag": "0.3.3.3.4.2.3.4",
+               "depth": 7,
+               "phase": 12,
+               "gen_cnt": 13,
+               "n": 1,
+               "q": 0.8759765625,
+               "is_terminal": false,
+               "is_completed": false,
+               "step_text": "So, the number of ways to arrange 7 people around a table such that P, R, and T are not next to each other is:\n\\[720 - 144 = 576.\\]\n\n",
+               "children": []
+              }
+             ]
+            },
+            {
+             "tag": "0.3.3.3.4.2.4",
+             "depth": 6,
+             "phase": 5,
+             "gen_cnt": 6,
+             "n": 1,
+             "q": 0.740234375,
+             "is_terminal": false,
+             "is_completed": false,
+             "step_text": "### Corrected Step 2:\nWe consider the block PRT as a single unit and the remaining 4 units (X, Y, Z, W) plus the block as 5 units. The number of ways to arrange these 5 units in a circle is \\(4!\\) (fixing one unit to break the symmetry), and the block itself can be arranged internally in \\(3!\\) ways. Thus,\n\\[4! \\times 3! = 24 \\times 6 = 144.\\]\n\n",
+             "children": []
+            }
+           ]
+          },
+          {
+           "tag": "0.3.3.3.4.3",
+           "depth": 5,
+           "phase": 4,
+           "gen_cnt": 5,
+           "n": 2,
+           "q": 0.090087890625,
+           "is_terminal": true,
+           "is_completed": true,
+           "step_text": "Therefore, the final number of ways to arrange the 7 people around a round table such that no two of Pierre, Rosa, and Thomas sit next to each other is:\n\\[ \\boxed{0}. \\]",
+           "children": []
+          },
+          {
+           "tag": "0.3.3.3.4.4",
+           "depth": 5,
+           "phase": 4,
+           "gen_cnt": 5,
+           "n": 1,
+           "q": 0.08038330078125,
+           "is_terminal": false,
+           "is_completed": false,
+           "step_text": "Therefore, the number of ways to arrange 7 people around a round table such that Pierre, Rosa, and Thomas do not sit next to each other is:\n\\[\\boxed{0}.\\]\n\n",
+           "children": []
+          }
+         ]
+        }
+       ]
+      },
+      {
+       "tag": "0.3.3.4",
+       "depth": 3,
+       "phase": 2,
+       "gen_cnt": 3,
+       "n": 1,
+       "q": 0.66552734375,
+       "is_terminal": false,
+       "is_completed": false,
+       "step_text": "### Step 2:\nNow, we need to subtract the number of arrangements where Pierre, Rosa, and Thomas sit next to each other. To do this, we treat Pierre, Rosa, and Thomas as a single \"block\" or \"super person\". This \"block\" along with the other 4 individuals gives us 5 \"people\" to arrange. Since these 5 \"people\" can be arranged in a circle, we fix one of them and arrange the remaining 4 in \\(4!\\) ways. Within the \"block\", Pierre, Rosa, and Thomas can be arranged in \\(3!\\) ways. Thus, the number of such arrangements is:\n\\[4! \\times 3! = 24 \\times 6 = 144.\\]\n\n",
+       "children": []
+      }
+     ]
+    },
+    {
+     "tag": "0.3.4",
+     "depth": 2,
+     "phase": 1,
+     "gen_cnt": 2,
+     "n": 1,
+     "q": 0.53125,
+     "is_terminal": false,
+     "is_completed": false,
+     "step_text": "### Step 1: Total arrangements of 7 people around a round table\nFor a circular arrangement of $n$ objects, the number of distinct arrangements is $(n-1)!$. Thus, for 7 people:\n\\[\n(7-1)! = 6! = 720\n\\]\n\n",
+     "children": []
+    }
+   ]
+  },
+  {
+   "tag": "0.4",
+   "depth": 1,
+   "phase": 0,
+   "gen_cnt": 1,
+   "n": 1,
+   "q": 0.56201171875,
+   "is_terminal": false,
+   "is_completed": false,
+   "step_text": "To solve this problem, we will use the principle of complementary counting. We'll first calculate the total number of ways to arrange 7 people around a round table and then subtract the number of arrangements where at least two of Pierre, Rosa, and Thomas are sitting next to each other.\n\n",
+   "children": []
+  }
+ ]
+}

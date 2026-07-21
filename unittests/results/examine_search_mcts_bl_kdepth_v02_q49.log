@@ -1,0 +1,10710 @@
+
+-> p = 0
+gen_cnt = 1
+0.1
+   q-value = 0.9883
+   depth = 1
+   cost = 19
+   density = 0.1520
+   nvisit = 1.00
+   is_terminal = False
+0.2
+   q-value = 0.9888
+   depth = 1
+   cost = 19
+   density = 0.1520
+   nvisit = 1.00
+   is_terminal = False
+0.3
+   q-value = 0.9868
+   depth = 1
+   cost = 19
+   density = 0.1519
+   nvisit = 1.00
+   is_terminal = False
+0.4
+   q-value = 0.9897
+   depth = 1
+   cost = 19
+   density = 0.1521
+   nvisit = 1.00
+   is_terminal = False
+selected_leaf = 0.4
+selected = 0.4  density=0.1521  q=0.9897  nvisit=1
+
+-> p = 1
+gen_cnt = 2
+0.1
+   q-value = 0.9883
+   depth = 1
+   cost = 19
+   density = 0.1520
+   nvisit = 1.00
+   is_terminal = False
+0.2
+   q-value = 0.9888
+   depth = 1
+   cost = 19
+   density = 0.1520
+   nvisit = 1.00
+   is_terminal = False
+0.3
+   q-value = 0.9868
+   depth = 1
+   cost = 19
+   density = 0.1519
+   nvisit = 1.00
+   is_terminal = False
+0.4.1
+   q-value = 0.9702
+   depth = 2
+   cost = 18
+   density = 0.1539
+   nvisit = 1.00
+   is_terminal = False
+0.4.2
+   q-value = 0.9795
+   depth = 2
+   cost = 18
+   density = 0.1544
+   nvisit = 1.00
+   is_terminal = False
+0.4.3
+   q-value = 0.8579
+   depth = 2
+   cost = 18
+   density = 0.1477
+   nvisit = 1.00
+   is_terminal = False
+selected_leaf = 0.4.2
+selected = 0.4.2  density=0.1544  q=0.9795  nvisit=1
+
+-> p = 2
+gen_cnt = 3
+0.1
+   q-value = 0.9883
+   depth = 1
+   cost = 19
+   density = 0.1520
+   nvisit = 1.00
+   is_terminal = False
+0.2
+   q-value = 0.9888
+   depth = 1
+   cost = 19
+   density = 0.1520
+   nvisit = 1.00
+   is_terminal = False
+0.3
+   q-value = 0.9868
+   depth = 1
+   cost = 19
+   density = 0.1519
+   nvisit = 1.00
+   is_terminal = False
+0.4.1
+   q-value = 0.9702
+   depth = 2
+   cost = 18
+   density = 0.1539
+   nvisit = 1.00
+   is_terminal = False
+0.4.3
+   q-value = 0.8579
+   depth = 2
+   cost = 18
+   density = 0.1477
+   nvisit = 1.00
+   is_terminal = False
+0.4.2.1
+   q-value = 0.9458
+   depth = 3
+   cost = 17
+   density = 0.1556
+   nvisit = 1.00
+   is_terminal = False
+0.4.2.2
+   q-value = 0.6074
+   depth = 3
+   cost = 17
+   density = 0.1357
+   nvisit = 1.00
+   is_terminal = False
+0.4.2.3
+   q-value = 0.9004
+   depth = 3
+   cost = 17
+   density = 0.1530
+   nvisit = 1.00
+   is_terminal = False
+0.4.2.4
+   q-value = 0.9443
+   depth = 3
+   cost = 17
+   density = 0.1555
+   nvisit = 1.00
+   is_terminal = False
+selected_leaf = 0.4.2.1
+selected = 0.4.2.1  density=0.1556  q=0.9458  nvisit=1
+
+-> p = 3
+gen_cnt = 4
+0.1
+   q-value = 0.9883
+   depth = 1
+   cost = 19
+   density = 0.1520
+   nvisit = 1.00
+   is_terminal = False
+0.2
+   q-value = 0.9888
+   depth = 1
+   cost = 19
+   density = 0.1520
+   nvisit = 1.00
+   is_terminal = False
+0.3
+   q-value = 0.9868
+   depth = 1
+   cost = 19
+   density = 0.1519
+   nvisit = 1.00
+   is_terminal = False
+0.4.1
+   q-value = 0.9702
+   depth = 2
+   cost = 18
+   density = 0.1539
+   nvisit = 1.00
+   is_terminal = False
+0.4.3
+   q-value = 0.8579
+   depth = 2
+   cost = 18
+   density = 0.1477
+   nvisit = 1.00
+   is_terminal = False
+0.4.2.2
+   q-value = 0.6074
+   depth = 3
+   cost = 17
+   density = 0.1357
+   nvisit = 1.00
+   is_terminal = False
+0.4.2.3
+   q-value = 0.9004
+   depth = 3
+   cost = 17
+   density = 0.1530
+   nvisit = 1.00
+   is_terminal = False
+0.4.2.4
+   q-value = 0.9443
+   depth = 3
+   cost = 17
+   density = 0.1555
+   nvisit = 1.00
+   is_terminal = False
+0.4.2.1.1
+   q-value = 0.7090
+   depth = 4
+   cost = 16
+   density = 0.1443
+   nvisit = 1.00
+   is_terminal = False
+0.4.2.1.2
+   q-value = 0.7637
+   depth = 4
+   cost = 16
+   density = 0.1477
+   nvisit = 1.00
+   is_terminal = False
+0.4.2.1.3
+   q-value = 0.9380
+   depth = 4
+   cost = 16
+   density = 0.1586
+   nvisit = 1.00
+   is_terminal = False
+0.4.2.1.4
+   q-value = 0.8687
+   depth = 4
+   cost = 16
+   density = 0.1543
+   nvisit = 1.00
+   is_terminal = False
+selected_leaf = 0.4.2.1.3
+selected = 0.4.2.1.3  density=0.1586  q=0.9380  nvisit=1
+
+-> p = 4
+gen_cnt = 5
+0.1
+   q-value = 0.9883
+   depth = 1
+   cost = 19
+   density = 0.1520
+   nvisit = 1.00
+   is_terminal = False
+0.2
+   q-value = 0.9888
+   depth = 1
+   cost = 19
+   density = 0.1520
+   nvisit = 1.00
+   is_terminal = False
+0.3
+   q-value = 0.9868
+   depth = 1
+   cost = 19
+   density = 0.1519
+   nvisit = 1.00
+   is_terminal = False
+0.4.1
+   q-value = 0.9702
+   depth = 2
+   cost = 18
+   density = 0.1539
+   nvisit = 1.00
+   is_terminal = False
+0.4.3
+   q-value = 0.8579
+   depth = 2
+   cost = 18
+   density = 0.1477
+   nvisit = 1.00
+   is_terminal = False
+0.4.2.2
+   q-value = 0.6074
+   depth = 3
+   cost = 17
+   density = 0.1357
+   nvisit = 1.00
+   is_terminal = False
+0.4.2.3
+   q-value = 0.9004
+   depth = 3
+   cost = 17
+   density = 0.1530
+   nvisit = 1.00
+   is_terminal = False
+0.4.2.4
+   q-value = 0.9443
+   depth = 3
+   cost = 17
+   density = 0.1555
+   nvisit = 1.00
+   is_terminal = False
+0.4.2.1.1
+   q-value = 0.7090
+   depth = 4
+   cost = 16
+   density = 0.1443
+   nvisit = 1.00
+   is_terminal = False
+0.4.2.1.2
+   q-value = 0.7637
+   depth = 4
+   cost = 16
+   density = 0.1477
+   nvisit = 1.00
+   is_terminal = False
+0.4.2.1.4
+   q-value = 0.8687
+   depth = 4
+   cost = 16
+   density = 0.1543
+   nvisit = 1.00
+   is_terminal = False
+0.4.2.1.3.1
+   q-value = 0.8501
+   depth = 5
+   cost = 15
+   density = 0.1567
+   nvisit = 1.00
+   is_terminal = False
+0.4.2.1.3.2
+   q-value = 0.8457
+   depth = 5
+   cost = 15
+   density = 0.1564
+   nvisit = 1.00
+   is_terminal = False
+0.4.2.1.3.3
+   q-value = 0.8311
+   depth = 5
+   cost = 15
+   density = 0.1554
+   nvisit = 1.00
+   is_terminal = False
+0.4.2.1.3.4
+   q-value = 0.7339
+   depth = 5
+   cost = 15
+   density = 0.1489
+   nvisit = 1.00
+   is_terminal = False
+selected_leaf = 0.4.2.1.3.1
+selected = 0.4.2.1.3.1  density=0.1567  q=0.8501  nvisit=1
+
+-> p = 5
+gen_cnt = 6
+0.1
+   q-value = 0.9883
+   depth = 1
+   cost = 19
+   density = 0.1520
+   nvisit = 1.00
+   is_terminal = False
+0.2
+   q-value = 0.9888
+   depth = 1
+   cost = 19
+   density = 0.1520
+   nvisit = 1.00
+   is_terminal = False
+0.3
+   q-value = 0.9868
+   depth = 1
+   cost = 19
+   density = 0.1519
+   nvisit = 1.00
+   is_terminal = False
+0.4.1
+   q-value = 0.9702
+   depth = 2
+   cost = 18
+   density = 0.1539
+   nvisit = 1.00
+   is_terminal = False
+0.4.3
+   q-value = 0.8579
+   depth = 2
+   cost = 18
+   density = 0.1477
+   nvisit = 1.00
+   is_terminal = False
+0.4.2.2
+   q-value = 0.6074
+   depth = 3
+   cost = 17
+   density = 0.1357
+   nvisit = 1.00
+   is_terminal = False
+0.4.2.3
+   q-value = 0.9004
+   depth = 3
+   cost = 17
+   density = 0.1530
+   nvisit = 1.00
+   is_terminal = False
+0.4.2.4
+   q-value = 0.9443
+   depth = 3
+   cost = 17
+   density = 0.1555
+   nvisit = 1.00
+   is_terminal = False
+0.4.2.1.1
+   q-value = 0.7090
+   depth = 4
+   cost = 16
+   density = 0.1443
+   nvisit = 1.00
+   is_terminal = False
+0.4.2.1.2
+   q-value = 0.7637
+   depth = 4
+   cost = 16
+   density = 0.1477
+   nvisit = 1.00
+   is_terminal = False
+0.4.2.1.4
+   q-value = 0.8687
+   depth = 4
+   cost = 16
+   density = 0.1543
+   nvisit = 1.00
+   is_terminal = False
+0.4.2.1.3.2
+   q-value = 0.8457
+   depth = 5
+   cost = 15
+   density = 0.1564
+   nvisit = 1.00
+   is_terminal = False
+0.4.2.1.3.3
+   q-value = 0.8311
+   depth = 5
+   cost = 15
+   density = 0.1554
+   nvisit = 1.00
+   is_terminal = False
+0.4.2.1.3.4
+   q-value = 0.7339
+   depth = 5
+   cost = 15
+   density = 0.1489
+   nvisit = 1.00
+   is_terminal = False
+0.4.2.1.3.1.1
+   q-value = 0.9087
+   depth = 6
+   cost = 14
+   density = 0.1649
+   nvisit = 1.00
+   is_terminal = False
+selected_leaf = 0.4.2.1.3.1.1
+selected = 0.4.2.1.3.1.1  density=0.1649  q=0.9087  nvisit=1
+
+-> p = 6
+gen_cnt = 7
+0.1
+   q-value = 0.9883
+   depth = 1
+   cost = 19
+   density = 0.1520
+   nvisit = 1.00
+   is_terminal = False
+0.2
+   q-value = 0.9888
+   depth = 1
+   cost = 19
+   density = 0.1520
+   nvisit = 1.00
+   is_terminal = False
+0.3
+   q-value = 0.9868
+   depth = 1
+   cost = 19
+   density = 0.1519
+   nvisit = 1.00
+   is_terminal = False
+0.4.1
+   q-value = 0.9702
+   depth = 2
+   cost = 18
+   density = 0.1539
+   nvisit = 1.00
+   is_terminal = False
+0.4.3
+   q-value = 0.8579
+   depth = 2
+   cost = 18
+   density = 0.1477
+   nvisit = 1.00
+   is_terminal = False
+0.4.2.2
+   q-value = 0.6074
+   depth = 3
+   cost = 17
+   density = 0.1357
+   nvisit = 1.00
+   is_terminal = False
+0.4.2.3
+   q-value = 0.9004
+   depth = 3
+   cost = 17
+   density = 0.1530
+   nvisit = 1.00
+   is_terminal = False
+0.4.2.4
+   q-value = 0.9443
+   depth = 3
+   cost = 17
+   density = 0.1555
+   nvisit = 1.00
+   is_terminal = False
+0.4.2.1.1
+   q-value = 0.7090
+   depth = 4
+   cost = 16
+   density = 0.1443
+   nvisit = 1.00
+   is_terminal = False
+0.4.2.1.2
+   q-value = 0.7637
+   depth = 4
+   cost = 16
+   density = 0.1477
+   nvisit = 1.00
+   is_terminal = False
+0.4.2.1.4
+   q-value = 0.8687
+   depth = 4
+   cost = 16
+   density = 0.1543
+   nvisit = 1.00
+   is_terminal = False
+0.4.2.1.3.2
+   q-value = 0.8457
+   depth = 5
+   cost = 15
+   density = 0.1564
+   nvisit = 1.00
+   is_terminal = False
+0.4.2.1.3.3
+   q-value = 0.8311
+   depth = 5
+   cost = 15
+   density = 0.1554
+   nvisit = 1.00
+   is_terminal = False
+0.4.2.1.3.4
+   q-value = 0.7339
+   depth = 5
+   cost = 15
+   density = 0.1489
+   nvisit = 1.00
+   is_terminal = False
+0.4.2.1.3.1.1.1
+   q-value = 0.9434
+   depth = 7
+   cost = 13
+   density = 0.1726
+   nvisit = 1.00
+   is_terminal = False
+selected_leaf = 0.4.2.1.3.1.1.1
+selected = 0.4.2.1.3.1.1.1  density=0.1726  q=0.9434  nvisit=1
+
+-> p = 7
+gen_cnt = 8
+0.1
+   q-value = 0.9883
+   depth = 1
+   cost = 19
+   density = 0.1520
+   nvisit = 1.00
+   is_terminal = False
+0.2
+   q-value = 0.9888
+   depth = 1
+   cost = 19
+   density = 0.1520
+   nvisit = 1.00
+   is_terminal = False
+0.3
+   q-value = 0.9868
+   depth = 1
+   cost = 19
+   density = 0.1519
+   nvisit = 1.00
+   is_terminal = False
+0.4.1
+   q-value = 0.9702
+   depth = 2
+   cost = 18
+   density = 0.1539
+   nvisit = 1.00
+   is_terminal = False
+0.4.3
+   q-value = 0.8579
+   depth = 2
+   cost = 18
+   density = 0.1477
+   nvisit = 1.00
+   is_terminal = False
+0.4.2.2
+   q-value = 0.6074
+   depth = 3
+   cost = 17
+   density = 0.1357
+   nvisit = 1.00
+   is_terminal = False
+0.4.2.3
+   q-value = 0.9004
+   depth = 3
+   cost = 17
+   density = 0.1530
+   nvisit = 1.00
+   is_terminal = False
+0.4.2.4
+   q-value = 0.9443
+   depth = 3
+   cost = 17
+   density = 0.1555
+   nvisit = 1.00
+   is_terminal = False
+0.4.2.1.1
+   q-value = 0.7090
+   depth = 4
+   cost = 16
+   density = 0.1443
+   nvisit = 1.00
+   is_terminal = False
+0.4.2.1.2
+   q-value = 0.7637
+   depth = 4
+   cost = 16
+   density = 0.1477
+   nvisit = 1.00
+   is_terminal = False
+0.4.2.1.4
+   q-value = 0.8687
+   depth = 4
+   cost = 16
+   density = 0.1543
+   nvisit = 1.00
+   is_terminal = False
+0.4.2.1.3.2
+   q-value = 0.8457
+   depth = 5
+   cost = 15
+   density = 0.1564
+   nvisit = 1.00
+   is_terminal = False
+0.4.2.1.3.3
+   q-value = 0.8311
+   depth = 5
+   cost = 15
+   density = 0.1554
+   nvisit = 1.00
+   is_terminal = False
+0.4.2.1.3.4
+   q-value = 0.7339
+   depth = 5
+   cost = 15
+   density = 0.1489
+   nvisit = 1.00
+   is_terminal = False
+0.4.2.1.3.1.1.1.1
+   q-value = 0.9561
+   depth = 8
+   cost = 12
+   density = 0.1797
+   nvisit = 1.00
+   is_terminal = False
+0.4.2.1.3.1.1.1.2
+   q-value = 0.9561
+   depth = 8
+   cost = 12
+   density = 0.1797
+   nvisit = 1.00
+   is_terminal = False
+selected_leaf = 0.4.2.1.3.1.1.1.1
+selected = 0.4.2.1.3.1.1.1.1  density=0.1797  q=0.9561  nvisit=1
+
+-> p = 8
+gen_cnt = 9
+0.1
+   q-value = 0.9883
+   depth = 1
+   cost = 19
+   density = 0.1520
+   nvisit = 1.00
+   is_terminal = False
+0.2
+   q-value = 0.9888
+   depth = 1
+   cost = 19
+   density = 0.1520
+   nvisit = 1.00
+   is_terminal = False
+0.3
+   q-value = 0.9868
+   depth = 1
+   cost = 19
+   density = 0.1519
+   nvisit = 1.00
+   is_terminal = False
+0.4.1
+   q-value = 0.9702
+   depth = 2
+   cost = 18
+   density = 0.1539
+   nvisit = 1.00
+   is_terminal = False
+0.4.3
+   q-value = 0.8579
+   depth = 2
+   cost = 18
+   density = 0.1477
+   nvisit = 1.00
+   is_terminal = False
+0.4.2.2
+   q-value = 0.6074
+   depth = 3
+   cost = 17
+   density = 0.1357
+   nvisit = 1.00
+   is_terminal = False
+0.4.2.3
+   q-value = 0.9004
+   depth = 3
+   cost = 17
+   density = 0.1530
+   nvisit = 1.00
+   is_terminal = False
+0.4.2.4
+   q-value = 0.9443
+   depth = 3
+   cost = 17
+   density = 0.1555
+   nvisit = 1.00
+   is_terminal = False
+0.4.2.1.1
+   q-value = 0.7090
+   depth = 4
+   cost = 16
+   density = 0.1443
+   nvisit = 1.00
+   is_terminal = False
+0.4.2.1.2
+   q-value = 0.7637
+   depth = 4
+   cost = 16
+   density = 0.1477
+   nvisit = 1.00
+   is_terminal = False
+0.4.2.1.4
+   q-value = 0.8687
+   depth = 4
+   cost = 16
+   density = 0.1543
+   nvisit = 1.00
+   is_terminal = False
+0.4.2.1.3.2
+   q-value = 0.8457
+   depth = 5
+   cost = 15
+   density = 0.1564
+   nvisit = 1.00
+   is_terminal = False
+0.4.2.1.3.3
+   q-value = 0.8311
+   depth = 5
+   cost = 15
+   density = 0.1554
+   nvisit = 1.00
+   is_terminal = False
+0.4.2.1.3.4
+   q-value = 0.7339
+   depth = 5
+   cost = 15
+   density = 0.1489
+   nvisit = 1.00
+   is_terminal = False
+0.4.2.1.3.1.1.1.2
+   q-value = 0.9561
+   depth = 8
+   cost = 12
+   density = 0.1797
+   nvisit = 1.00
+   is_terminal = False
+0.4.2.1.3.1.1.1.1.1
+   q-value = 0.8418
+   depth = 9
+   cost = 11
+   density = 0.1765
+   nvisit = 1.00
+   is_terminal = False
+0.4.2.1.3.1.1.1.1.2
+   q-value = 0.6260
+   depth = 9
+   cost = 11
+   density = 0.1569
+   nvisit = 1.00
+   is_terminal = False
+0.4.2.1.3.1.1.1.1.3
+   q-value = 0.7153
+   depth = 9
+   cost = 11
+   density = 0.1650
+   nvisit = 1.00
+   is_terminal = False
+0.4.2.1.3.1.1.1.1.4
+   q-value = 0.9150
+   depth = 9
+   cost = 11
+   density = 0.1832
+   nvisit = 1.00
+   is_terminal = False
+selected_leaf = 0.4.2.1.3.1.1.1.1.4
+selected = 0.4.2.1.3.1.1.1.1.4  density=0.1832  q=0.9150  nvisit=1
+
+-> p = 9
+gen_cnt = 10
+0.1
+   q-value = 0.9883
+   depth = 1
+   cost = 19
+   density = 0.1520
+   nvisit = 1.00
+   is_terminal = False
+0.2
+   q-value = 0.9888
+   depth = 1
+   cost = 19
+   density = 0.1520
+   nvisit = 1.00
+   is_terminal = False
+0.3
+   q-value = 0.9868
+   depth = 1
+   cost = 19
+   density = 0.1519
+   nvisit = 1.00
+   is_terminal = False
+0.4.1
+   q-value = 0.9702
+   depth = 2
+   cost = 18
+   density = 0.1539
+   nvisit = 1.00
+   is_terminal = False
+0.4.3
+   q-value = 0.8579
+   depth = 2
+   cost = 18
+   density = 0.1477
+   nvisit = 1.00
+   is_terminal = False
+0.4.2.2
+   q-value = 0.6074
+   depth = 3
+   cost = 17
+   density = 0.1357
+   nvisit = 1.00
+   is_terminal = False
+0.4.2.3
+   q-value = 0.9004
+   depth = 3
+   cost = 17
+   density = 0.1530
+   nvisit = 1.00
+   is_terminal = False
+0.4.2.4
+   q-value = 0.9443
+   depth = 3
+   cost = 17
+   density = 0.1555
+   nvisit = 1.00
+   is_terminal = False
+0.4.2.1.1
+   q-value = 0.7090
+   depth = 4
+   cost = 16
+   density = 0.1443
+   nvisit = 1.00
+   is_terminal = False
+0.4.2.1.2
+   q-value = 0.7637
+   depth = 4
+   cost = 16
+   density = 0.1477
+   nvisit = 1.00
+   is_terminal = False
+0.4.2.1.4
+   q-value = 0.8687
+   depth = 4
+   cost = 16
+   density = 0.1543
+   nvisit = 1.00
+   is_terminal = False
+0.4.2.1.3.2
+   q-value = 0.8457
+   depth = 5
+   cost = 15
+   density = 0.1564
+   nvisit = 1.00
+   is_terminal = False
+0.4.2.1.3.3
+   q-value = 0.8311
+   depth = 5
+   cost = 15
+   density = 0.1554
+   nvisit = 1.00
+   is_terminal = False
+0.4.2.1.3.4
+   q-value = 0.7339
+   depth = 5
+   cost = 15
+   density = 0.1489
+   nvisit = 1.00
+   is_terminal = False
+0.4.2.1.3.1.1.1.2
+   q-value = 0.9561
+   depth = 8
+   cost = 12
+   density = 0.1797
+   nvisit = 1.00
+   is_terminal = False
+0.4.2.1.3.1.1.1.1.1
+   q-value = 0.8418
+   depth = 9
+   cost = 11
+   density = 0.1765
+   nvisit = 1.00
+   is_terminal = False
+0.4.2.1.3.1.1.1.1.2
+   q-value = 0.6260
+   depth = 9
+   cost = 11
+   density = 0.1569
+   nvisit = 1.00
+   is_terminal = False
+0.4.2.1.3.1.1.1.1.3
+   q-value = 0.7153
+   depth = 9
+   cost = 11
+   density = 0.1650
+   nvisit = 1.00
+   is_terminal = False
+0.4.2.1.3.1.1.1.1.4.1
+   q-value = 0.8579
+   depth = 10
+   cost = 10
+   density = 0.1858
+   nvisit = 1.00
+   is_terminal = False
+0.4.2.1.3.1.1.1.1.4.2
+   q-value = 0.8989
+   depth = 10
+   cost = 10
+   density = 0.1899
+   nvisit = 1.00
+   is_terminal = False
+0.4.2.1.3.1.1.1.1.4.3
+   q-value = 0.8613
+   depth = 10
+   cost = 10
+   density = 0.1861
+   nvisit = 1.00
+   is_terminal = False
+0.4.2.1.3.1.1.1.1.4.4
+   q-value = 0.8965
+   depth = 10
+   cost = 10
+   density = 0.1896
+   nvisit = 1.00
+   is_terminal = False
+selected_leaf = 0.4.2.1.3.1.1.1.1.4.2
+selected = 0.4.2.1.3.1.1.1.1.4.2  density=0.1899  q=0.8989  nvisit=1
+
+-> p = 10
+gen_cnt = 11
+0.1
+   q-value = 0.9883
+   depth = 1
+   cost = 19
+   density = 0.1520
+   nvisit = 1.00
+   is_terminal = False
+0.2
+   q-value = 0.9888
+   depth = 1
+   cost = 19
+   density = 0.1520
+   nvisit = 1.00
+   is_terminal = False
+0.3
+   q-value = 0.9868
+   depth = 1
+   cost = 19
+   density = 0.1519
+   nvisit = 1.00
+   is_terminal = False
+0.4.1
+   q-value = 0.9702
+   depth = 2
+   cost = 18
+   density = 0.1539
+   nvisit = 1.00
+   is_terminal = False
+0.4.3
+   q-value = 0.8579
+   depth = 2
+   cost = 18
+   density = 0.1477
+   nvisit = 1.00
+   is_terminal = False
+0.4.2.2
+   q-value = 0.6074
+   depth = 3
+   cost = 17
+   density = 0.1357
+   nvisit = 1.00
+   is_terminal = False
+0.4.2.3
+   q-value = 0.9004
+   depth = 3
+   cost = 17
+   density = 0.1530
+   nvisit = 1.00
+   is_terminal = False
+0.4.2.4
+   q-value = 0.9443
+   depth = 3
+   cost = 17
+   density = 0.1555
+   nvisit = 1.00
+   is_terminal = False
+0.4.2.1.1
+   q-value = 0.7090
+   depth = 4
+   cost = 16
+   density = 0.1443
+   nvisit = 1.00
+   is_terminal = False
+0.4.2.1.2
+   q-value = 0.7637
+   depth = 4
+   cost = 16
+   density = 0.1477
+   nvisit = 1.00
+   is_terminal = False
+0.4.2.1.4
+   q-value = 0.8687
+   depth = 4
+   cost = 16
+   density = 0.1543
+   nvisit = 1.00
+   is_terminal = False
+0.4.2.1.3.2
+   q-value = 0.8457
+   depth = 5
+   cost = 15
+   density = 0.1564
+   nvisit = 1.00
+   is_terminal = False
+0.4.2.1.3.3
+   q-value = 0.8311
+   depth = 5
+   cost = 15
+   density = 0.1554
+   nvisit = 1.00
+   is_terminal = False
+0.4.2.1.3.4
+   q-value = 0.7339
+   depth = 5
+   cost = 15
+   density = 0.1489
+   nvisit = 1.00
+   is_terminal = False
+0.4.2.1.3.1.1.1.2
+   q-value = 0.9561
+   depth = 8
+   cost = 12
+   density = 0.1797
+   nvisit = 1.00
+   is_terminal = False
+0.4.2.1.3.1.1.1.1.1
+   q-value = 0.8418
+   depth = 9
+   cost = 11
+   density = 0.1765
+   nvisit = 1.00
+   is_terminal = False
+0.4.2.1.3.1.1.1.1.2
+   q-value = 0.6260
+   depth = 9
+   cost = 11
+   density = 0.1569
+   nvisit = 1.00
+   is_terminal = False
+0.4.2.1.3.1.1.1.1.3
+   q-value = 0.7153
+   depth = 9
+   cost = 11
+   density = 0.1650
+   nvisit = 1.00
+   is_terminal = False
+0.4.2.1.3.1.1.1.1.4.1
+   q-value = 0.8579
+   depth = 10
+   cost = 10
+   density = 0.1858
+   nvisit = 1.00
+   is_terminal = False
+0.4.2.1.3.1.1.1.1.4.3
+   q-value = 0.8613
+   depth = 10
+   cost = 10
+   density = 0.1861
+   nvisit = 1.00
+   is_terminal = False
+0.4.2.1.3.1.1.1.1.4.4
+   q-value = 0.8965
+   depth = 10
+   cost = 10
+   density = 0.1896
+   nvisit = 1.00
+   is_terminal = False
+0.4.2.1.3.1.1.1.1.4.2.1
+   q-value = 0.9517
+   depth = 11
+   cost = 9
+   density = 0.2057
+   nvisit = 1.00
+   is_terminal = False
+0.4.2.1.3.1.1.1.1.4.2.2
+   q-value = 0.9565
+   depth = 11
+   cost = 9
+   density = 0.2063
+   nvisit = 1.00
+   is_terminal = False
+0.4.2.1.3.1.1.1.1.4.2.3
+   q-value = 0.9512
+   depth = 11
+   cost = 9
+   density = 0.2057
+   nvisit = 1.00
+   is_terminal = False
+0.4.2.1.3.1.1.1.1.4.2.4
+   q-value = 0.9590
+   depth = 11
+   cost = 9
+   density = 0.2066
+   nvisit = 1.00
+   is_terminal = False
+selected_leaf = 0.4.2.1.3.1.1.1.1.4.2.4
+selected = 0.4.2.1.3.1.1.1.1.4.2.4  density=0.2066  q=0.9590  nvisit=1
+
+-> p = 11
+gen_cnt = 12
+0.1
+   q-value = 0.9883
+   depth = 1
+   cost = 19
+   density = 0.1520
+   nvisit = 1.00
+   is_terminal = False
+0.2
+   q-value = 0.9888
+   depth = 1
+   cost = 19
+   density = 0.1520
+   nvisit = 1.00
+   is_terminal = False
+0.3
+   q-value = 0.9868
+   depth = 1
+   cost = 19
+   density = 0.1519
+   nvisit = 1.00
+   is_terminal = False
+0.4.1
+   q-value = 0.9702
+   depth = 2
+   cost = 18
+   density = 0.1539
+   nvisit = 1.00
+   is_terminal = False
+0.4.3
+   q-value = 0.8579
+   depth = 2
+   cost = 18
+   density = 0.1477
+   nvisit = 1.00
+   is_terminal = False
+0.4.2.2
+   q-value = 0.6074
+   depth = 3
+   cost = 17
+   density = 0.1357
+   nvisit = 1.00
+   is_terminal = False
+0.4.2.3
+   q-value = 0.9004
+   depth = 3
+   cost = 17
+   density = 0.1530
+   nvisit = 1.00
+   is_terminal = False
+0.4.2.4
+   q-value = 0.9443
+   depth = 3
+   cost = 17
+   density = 0.1555
+   nvisit = 1.00
+   is_terminal = False
+0.4.2.1.1
+   q-value = 0.7090
+   depth = 4
+   cost = 16
+   density = 0.1443
+   nvisit = 1.00
+   is_terminal = False
+0.4.2.1.2
+   q-value = 0.7637
+   depth = 4
+   cost = 16
+   density = 0.1477
+   nvisit = 1.00
+   is_terminal = False
+0.4.2.1.4
+   q-value = 0.8687
+   depth = 4
+   cost = 16
+   density = 0.1543
+   nvisit = 1.00
+   is_terminal = False
+0.4.2.1.3.2
+   q-value = 0.8457
+   depth = 5
+   cost = 15
+   density = 0.1564
+   nvisit = 1.00
+   is_terminal = False
+0.4.2.1.3.3
+   q-value = 0.8311
+   depth = 5
+   cost = 15
+   density = 0.1554
+   nvisit = 1.00
+   is_terminal = False
+0.4.2.1.3.4
+   q-value = 0.7339
+   depth = 5
+   cost = 15
+   density = 0.1489
+   nvisit = 1.00
+   is_terminal = False
+0.4.2.1.3.1.1.1.2
+   q-value = 0.9561
+   depth = 8
+   cost = 12
+   density = 0.1797
+   nvisit = 1.00
+   is_terminal = False
+0.4.2.1.3.1.1.1.1.1
+   q-value = 0.8418
+   depth = 9
+   cost = 11
+   density = 0.1765
+   nvisit = 1.00
+   is_terminal = False
+0.4.2.1.3.1.1.1.1.2
+   q-value = 0.6260
+   depth = 9
+   cost = 11
+   density = 0.1569
+   nvisit = 1.00
+   is_terminal = False
+0.4.2.1.3.1.1.1.1.3
+   q-value = 0.7153
+   depth = 9
+   cost = 11
+   density = 0.1650
+   nvisit = 1.00
+   is_terminal = False
+0.4.2.1.3.1.1.1.1.4.1
+   q-value = 0.8579
+   depth = 10
+   cost = 10
+   density = 0.1858
+   nvisit = 1.00
+   is_terminal = False
+0.4.2.1.3.1.1.1.1.4.3
+   q-value = 0.8613
+   depth = 10
+   cost = 10
+   density = 0.1861
+   nvisit = 1.00
+   is_terminal = False
+0.4.2.1.3.1.1.1.1.4.4
+   q-value = 0.8965
+   depth = 10
+   cost = 10
+   density = 0.1896
+   nvisit = 1.00
+   is_terminal = False
+0.4.2.1.3.1.1.1.1.4.2.1
+   q-value = 0.9517
+   depth = 11
+   cost = 9
+   density = 0.2057
+   nvisit = 1.00
+   is_terminal = False
+0.4.2.1.3.1.1.1.1.4.2.2
+   q-value = 0.9565
+   depth = 11
+   cost = 9
+   density = 0.2063
+   nvisit = 1.00
+   is_terminal = False
+0.4.2.1.3.1.1.1.1.4.2.3
+   q-value = 0.9512
+   depth = 11
+   cost = 9
+   density = 0.2057
+   nvisit = 1.00
+   is_terminal = False
+0.4.2.1.3.1.1.1.1.4.2.4.1
+   q-value = 0.9883
+   depth = 12
+   cost = 8
+   density = 0.2235
+   nvisit = 1.00
+   is_terminal = False
+selected_leaf = 0.4.2.1.3.1.1.1.1.4.2.4.1
+selected = 0.4.2.1.3.1.1.1.1.4.2.4.1  density=0.2235  q=0.9883  nvisit=1
+
+-> p = 12
+gen_cnt = 13
+0.1
+   q-value = 0.9883
+   depth = 1
+   cost = 19
+   density = 0.1520
+   nvisit = 1.00
+   is_terminal = False
+0.2
+   q-value = 0.9888
+   depth = 1
+   cost = 19
+   density = 0.1520
+   nvisit = 1.00
+   is_terminal = False
+0.3
+   q-value = 0.9868
+   depth = 1
+   cost = 19
+   density = 0.1519
+   nvisit = 1.00
+   is_terminal = False
+0.4.1
+   q-value = 0.9702
+   depth = 2
+   cost = 18
+   density = 0.1539
+   nvisit = 1.00
+   is_terminal = False
+0.4.3
+   q-value = 0.8579
+   depth = 2
+   cost = 18
+   density = 0.1477
+   nvisit = 1.00
+   is_terminal = False
+0.4.2.2
+   q-value = 0.6074
+   depth = 3
+   cost = 17
+   density = 0.1357
+   nvisit = 1.00
+   is_terminal = False
+0.4.2.3
+   q-value = 0.9004
+   depth = 3
+   cost = 17
+   density = 0.1530
+   nvisit = 1.00
+   is_terminal = False
+0.4.2.4
+   q-value = 0.9443
+   depth = 3
+   cost = 17
+   density = 0.1555
+   nvisit = 1.00
+   is_terminal = False
+0.4.2.1.1
+   q-value = 0.7090
+   depth = 4
+   cost = 16
+   density = 0.1443
+   nvisit = 1.00
+   is_terminal = False
+0.4.2.1.2
+   q-value = 0.7637
+   depth = 4
+   cost = 16
+   density = 0.1477
+   nvisit = 1.00
+   is_terminal = False
+0.4.2.1.4
+   q-value = 0.8687
+   depth = 4
+   cost = 16
+   density = 0.1543
+   nvisit = 1.00
+   is_terminal = False
+0.4.2.1.3.2
+   q-value = 0.8457
+   depth = 5
+   cost = 15
+   density = 0.1564
+   nvisit = 1.00
+   is_terminal = False
+0.4.2.1.3.3
+   q-value = 0.8311
+   depth = 5
+   cost = 15
+   density = 0.1554
+   nvisit = 1.00
+   is_terminal = False
+0.4.2.1.3.4
+   q-value = 0.7339
+   depth = 5
+   cost = 15
+   density = 0.1489
+   nvisit = 1.00
+   is_terminal = False
+0.4.2.1.3.1.1.1.2
+   q-value = 0.9561
+   depth = 8
+   cost = 12
+   density = 0.1797
+   nvisit = 1.00
+   is_terminal = False
+0.4.2.1.3.1.1.1.1.1
+   q-value = 0.8418
+   depth = 9
+   cost = 11
+   density = 0.1765
+   nvisit = 1.00
+   is_terminal = False
+0.4.2.1.3.1.1.1.1.2
+   q-value = 0.6260
+   depth = 9
+   cost = 11
+   density = 0.1569
+   nvisit = 1.00
+   is_terminal = False
+0.4.2.1.3.1.1.1.1.3
+   q-value = 0.7153
+   depth = 9
+   cost = 11
+   density = 0.1650
+   nvisit = 1.00
+   is_terminal = False
+0.4.2.1.3.1.1.1.1.4.1
+   q-value = 0.8579
+   depth = 10
+   cost = 10
+   density = 0.1858
+   nvisit = 1.00
+   is_terminal = False
+0.4.2.1.3.1.1.1.1.4.3
+   q-value = 0.8613
+   depth = 10
+   cost = 10
+   density = 0.1861
+   nvisit = 1.00
+   is_terminal = False
+0.4.2.1.3.1.1.1.1.4.4
+   q-value = 0.8965
+   depth = 10
+   cost = 10
+   density = 0.1896
+   nvisit = 1.00
+   is_terminal = False
+0.4.2.1.3.1.1.1.1.4.2.1
+   q-value = 0.9517
+   depth = 11
+   cost = 9
+   density = 0.2057
+   nvisit = 1.00
+   is_terminal = False
+0.4.2.1.3.1.1.1.1.4.2.2
+   q-value = 0.9565
+   depth = 11
+   cost = 9
+   density = 0.2063
+   nvisit = 1.00
+   is_terminal = False
+0.4.2.1.3.1.1.1.1.4.2.3
+   q-value = 0.9512
+   depth = 11
+   cost = 9
+   density = 0.2057
+   nvisit = 1.00
+   is_terminal = False
+0.4.2.1.3.1.1.1.1.4.2.4.1.1
+   q-value = 0.9966
+   depth = 13
+   cost = 7
+   density = 0.2424
+   nvisit = 1.00
+   is_terminal = False
+selected_leaf = 0.4.2.1.3.1.1.1.1.4.2.4.1.1
+selected = 0.4.2.1.3.1.1.1.1.4.2.4.1.1  density=0.2424  q=0.9966  nvisit=1
+
+-> p = 13
+gen_cnt = 14
+0.1
+   q-value = 0.9883
+   depth = 1
+   cost = 19
+   density = 0.1520
+   nvisit = 1.00
+   is_terminal = False
+0.2
+   q-value = 0.9888
+   depth = 1
+   cost = 19
+   density = 0.1520
+   nvisit = 1.00
+   is_terminal = False
+0.3
+   q-value = 0.9868
+   depth = 1
+   cost = 19
+   density = 0.1519
+   nvisit = 1.00
+   is_terminal = False
+0.4.1
+   q-value = 0.9702
+   depth = 2
+   cost = 18
+   density = 0.1539
+   nvisit = 1.00
+   is_terminal = False
+0.4.3
+   q-value = 0.8579
+   depth = 2
+   cost = 18
+   density = 0.1477
+   nvisit = 1.00
+   is_terminal = False
+0.4.2.2
+   q-value = 0.6074
+   depth = 3
+   cost = 17
+   density = 0.1357
+   nvisit = 1.00
+   is_terminal = False
+0.4.2.3
+   q-value = 0.9004
+   depth = 3
+   cost = 17
+   density = 0.1530
+   nvisit = 1.00
+   is_terminal = False
+0.4.2.4
+   q-value = 0.9443
+   depth = 3
+   cost = 17
+   density = 0.1555
+   nvisit = 1.00
+   is_terminal = False
+0.4.2.1.1
+   q-value = 0.7090
+   depth = 4
+   cost = 16
+   density = 0.1443
+   nvisit = 1.00
+   is_terminal = False
+0.4.2.1.2
+   q-value = 0.7637
+   depth = 4
+   cost = 16
+   density = 0.1477
+   nvisit = 1.00
+   is_terminal = False
+0.4.2.1.4
+   q-value = 0.8687
+   depth = 4
+   cost = 16
+   density = 0.1543
+   nvisit = 1.00
+   is_terminal = False
+0.4.2.1.3.2
+   q-value = 0.8457
+   depth = 5
+   cost = 15
+   density = 0.1564
+   nvisit = 1.00
+   is_terminal = False
+0.4.2.1.3.3
+   q-value = 0.8311
+   depth = 5
+   cost = 15
+   density = 0.1554
+   nvisit = 1.00
+   is_terminal = False
+0.4.2.1.3.4
+   q-value = 0.7339
+   depth = 5
+   cost = 15
+   density = 0.1489
+   nvisit = 1.00
+   is_terminal = False
+0.4.2.1.3.1.1.1.2
+   q-value = 0.9561
+   depth = 8
+   cost = 12
+   density = 0.1797
+   nvisit = 1.00
+   is_terminal = False
+0.4.2.1.3.1.1.1.1.1
+   q-value = 0.8418
+   depth = 9
+   cost = 11
+   density = 0.1765
+   nvisit = 1.00
+   is_terminal = False
+0.4.2.1.3.1.1.1.1.2
+   q-value = 0.6260
+   depth = 9
+   cost = 11
+   density = 0.1569
+   nvisit = 1.00
+   is_terminal = False
+0.4.2.1.3.1.1.1.1.3
+   q-value = 0.7153
+   depth = 9
+   cost = 11
+   density = 0.1650
+   nvisit = 1.00
+   is_terminal = False
+0.4.2.1.3.1.1.1.1.4.1
+   q-value = 0.8579
+   depth = 10
+   cost = 10
+   density = 0.1858
+   nvisit = 1.00
+   is_terminal = False
+0.4.2.1.3.1.1.1.1.4.3
+   q-value = 0.8613
+   depth = 10
+   cost = 10
+   density = 0.1861
+   nvisit = 1.00
+   is_terminal = False
+0.4.2.1.3.1.1.1.1.4.4
+   q-value = 0.8965
+   depth = 10
+   cost = 10
+   density = 0.1896
+   nvisit = 1.00
+   is_terminal = False
+0.4.2.1.3.1.1.1.1.4.2.1
+   q-value = 0.9517
+   depth = 11
+   cost = 9
+   density = 0.2057
+   nvisit = 1.00
+   is_terminal = False
+0.4.2.1.3.1.1.1.1.4.2.2
+   q-value = 0.9565
+   depth = 11
+   cost = 9
+   density = 0.2063
+   nvisit = 1.00
+   is_terminal = False
+0.4.2.1.3.1.1.1.1.4.2.3
+   q-value = 0.9512
+   depth = 11
+   cost = 9
+   density = 0.2057
+   nvisit = 1.00
+   is_terminal = False
+selected_leaf = 0.4.2.1.3.1.1.1.1.4.2.2
+selected = 0.4.2.1.3.1.1.1.1.4.2.2  density=0.2063  q=0.9565  nvisit=1
+
+-> p = 14
+gen_cnt = 15
+0.1
+   q-value = 0.9883
+   depth = 1
+   cost = 19
+   density = 0.1520
+   nvisit = 1.00
+   is_terminal = False
+0.2
+   q-value = 0.9888
+   depth = 1
+   cost = 19
+   density = 0.1520
+   nvisit = 1.00
+   is_terminal = False
+0.3
+   q-value = 0.9868
+   depth = 1
+   cost = 19
+   density = 0.1519
+   nvisit = 1.00
+   is_terminal = False
+0.4.1
+   q-value = 0.9702
+   depth = 2
+   cost = 18
+   density = 0.1539
+   nvisit = 1.00
+   is_terminal = False
+0.4.3
+   q-value = 0.8579
+   depth = 2
+   cost = 18
+   density = 0.1477
+   nvisit = 1.00
+   is_terminal = False
+0.4.2.2
+   q-value = 0.6074
+   depth = 3
+   cost = 17
+   density = 0.1357
+   nvisit = 1.00
+   is_terminal = False
+0.4.2.3
+   q-value = 0.9004
+   depth = 3
+   cost = 17
+   density = 0.1530
+   nvisit = 1.00
+   is_terminal = False
+0.4.2.4
+   q-value = 0.9443
+   depth = 3
+   cost = 17
+   density = 0.1555
+   nvisit = 1.00
+   is_terminal = False
+0.4.2.1.1
+   q-value = 0.7090
+   depth = 4
+   cost = 16
+   density = 0.1443
+   nvisit = 1.00
+   is_terminal = False
+0.4.2.1.2
+   q-value = 0.7637
+   depth = 4
+   cost = 16
+   density = 0.1477
+   nvisit = 1.00
+   is_terminal = False
+0.4.2.1.4
+   q-value = 0.8687
+   depth = 4
+   cost = 16
+   density = 0.1543
+   nvisit = 1.00
+   is_terminal = False
+0.4.2.1.3.2
+   q-value = 0.8457
+   depth = 5
+   cost = 15
+   density = 0.1564
+   nvisit = 1.00
+   is_terminal = False
+0.4.2.1.3.3
+   q-value = 0.8311
+   depth = 5
+   cost = 15
+   density = 0.1554
+   nvisit = 1.00
+   is_terminal = False
+0.4.2.1.3.4
+   q-value = 0.7339
+   depth = 5
+   cost = 15
+   density = 0.1489
+   nvisit = 1.00
+   is_terminal = False
+0.4.2.1.3.1.1.1.2
+   q-value = 0.9561
+   depth = 8
+   cost = 12
+   density = 0.1797
+   nvisit = 1.00
+   is_terminal = False
+0.4.2.1.3.1.1.1.1.1
+   q-value = 0.8418
+   depth = 9
+   cost = 11
+   density = 0.1765
+   nvisit = 1.00
+   is_terminal = False
+0.4.2.1.3.1.1.1.1.2
+   q-value = 0.6260
+   depth = 9
+   cost = 11
+   density = 0.1569
+   nvisit = 1.00
+   is_terminal = False
+0.4.2.1.3.1.1.1.1.3
+   q-value = 0.7153
+   depth = 9
+   cost = 11
+   density = 0.1650
+   nvisit = 1.00
+   is_terminal = False
+0.4.2.1.3.1.1.1.1.4.1
+   q-value = 0.8579
+   depth = 10
+   cost = 10
+   density = 0.1858
+   nvisit = 1.00
+   is_terminal = False
+0.4.2.1.3.1.1.1.1.4.3
+   q-value = 0.8613
+   depth = 10
+   cost = 10
+   density = 0.1861
+   nvisit = 1.00
+   is_terminal = False
+0.4.2.1.3.1.1.1.1.4.4
+   q-value = 0.8965
+   depth = 10
+   cost = 10
+   density = 0.1896
+   nvisit = 1.00
+   is_terminal = False
+0.4.2.1.3.1.1.1.1.4.2.1
+   q-value = 0.9517
+   depth = 11
+   cost = 9
+   density = 0.2057
+   nvisit = 1.00
+   is_terminal = False
+0.4.2.1.3.1.1.1.1.4.2.3
+   q-value = 0.9512
+   depth = 11
+   cost = 9
+   density = 0.2057
+   nvisit = 1.00
+   is_terminal = False
+0.4.2.1.3.1.1.1.1.4.2.2.1
+   q-value = 0.9878
+   depth = 12
+   cost = 8
+   density = 0.2235
+   nvisit = 1.00
+   is_terminal = False
+selected_leaf = 0.4.2.1.3.1.1.1.1.4.2.2.1
+selected = 0.4.2.1.3.1.1.1.1.4.2.2.1  density=0.2235  q=0.9878  nvisit=1
+
+-> p = 15
+gen_cnt = 16
+0.1
+   q-value = 0.9883
+   depth = 1
+   cost = 19
+   density = 0.1520
+   nvisit = 1.00
+   is_terminal = False
+0.2
+   q-value = 0.9888
+   depth = 1
+   cost = 19
+   density = 0.1520
+   nvisit = 1.00
+   is_terminal = False
+0.3
+   q-value = 0.9868
+   depth = 1
+   cost = 19
+   density = 0.1519
+   nvisit = 1.00
+   is_terminal = False
+0.4.1
+   q-value = 0.9702
+   depth = 2
+   cost = 18
+   density = 0.1539
+   nvisit = 1.00
+   is_terminal = False
+0.4.3
+   q-value = 0.8579
+   depth = 2
+   cost = 18
+   density = 0.1477
+   nvisit = 1.00
+   is_terminal = False
+0.4.2.2
+   q-value = 0.6074
+   depth = 3
+   cost = 17
+   density = 0.1357
+   nvisit = 1.00
+   is_terminal = False
+0.4.2.3
+   q-value = 0.9004
+   depth = 3
+   cost = 17
+   density = 0.1530
+   nvisit = 1.00
+   is_terminal = False
+0.4.2.4
+   q-value = 0.9443
+   depth = 3
+   cost = 17
+   density = 0.1555
+   nvisit = 1.00
+   is_terminal = False
+0.4.2.1.1
+   q-value = 0.7090
+   depth = 4
+   cost = 16
+   density = 0.1443
+   nvisit = 1.00
+   is_terminal = False
+0.4.2.1.2
+   q-value = 0.7637
+   depth = 4
+   cost = 16
+   density = 0.1477
+   nvisit = 1.00
+   is_terminal = False
+0.4.2.1.4
+   q-value = 0.8687
+   depth = 4
+   cost = 16
+   density = 0.1543
+   nvisit = 1.00
+   is_terminal = False
+0.4.2.1.3.2
+   q-value = 0.8457
+   depth = 5
+   cost = 15
+   density = 0.1564
+   nvisit = 1.00
+   is_terminal = False
+0.4.2.1.3.3
+   q-value = 0.8311
+   depth = 5
+   cost = 15
+   density = 0.1554
+   nvisit = 1.00
+   is_terminal = False
+0.4.2.1.3.4
+   q-value = 0.7339
+   depth = 5
+   cost = 15
+   density = 0.1489
+   nvisit = 1.00
+   is_terminal = False
+0.4.2.1.3.1.1.1.2
+   q-value = 0.9561
+   depth = 8
+   cost = 12
+   density = 0.1797
+   nvisit = 1.00
+   is_terminal = False
+0.4.2.1.3.1.1.1.1.1
+   q-value = 0.8418
+   depth = 9
+   cost = 11
+   density = 0.1765
+   nvisit = 1.00
+   is_terminal = False
+0.4.2.1.3.1.1.1.1.2
+   q-value = 0.6260
+   depth = 9
+   cost = 11
+   density = 0.1569
+   nvisit = 1.00
+   is_terminal = False
+0.4.2.1.3.1.1.1.1.3
+   q-value = 0.7153
+   depth = 9
+   cost = 11
+   density = 0.1650
+   nvisit = 1.00
+   is_terminal = False
+0.4.2.1.3.1.1.1.1.4.1
+   q-value = 0.8579
+   depth = 10
+   cost = 10
+   density = 0.1858
+   nvisit = 1.00
+   is_terminal = False
+0.4.2.1.3.1.1.1.1.4.3
+   q-value = 0.8613
+   depth = 10
+   cost = 10
+   density = 0.1861
+   nvisit = 1.00
+   is_terminal = False
+0.4.2.1.3.1.1.1.1.4.4
+   q-value = 0.8965
+   depth = 10
+   cost = 10
+   density = 0.1896
+   nvisit = 1.00
+   is_terminal = False
+0.4.2.1.3.1.1.1.1.4.2.1
+   q-value = 0.9517
+   depth = 11
+   cost = 9
+   density = 0.2057
+   nvisit = 1.00
+   is_terminal = False
+0.4.2.1.3.1.1.1.1.4.2.3
+   q-value = 0.9512
+   depth = 11
+   cost = 9
+   density = 0.2057
+   nvisit = 1.00
+   is_terminal = False
+0.4.2.1.3.1.1.1.1.4.2.2.1.1
+   q-value = 0.9966
+   depth = 13
+   cost = 7
+   density = 0.2424
+   nvisit = 1.00
+   is_terminal = False
+0.4.2.1.3.1.1.1.1.4.2.2.1.2
+   q-value = 0.9946
+   depth = 13
+   cost = 7
+   density = 0.2421
+   nvisit = 1.00
+   is_terminal = False
+selected_leaf = 0.4.2.1.3.1.1.1.1.4.2.2.1.1
+selected = 0.4.2.1.3.1.1.1.1.4.2.2.1.1  density=0.2424  q=0.9966  nvisit=1
+
+-> p = 16
+gen_cnt = 17
+0.1
+   q-value = 0.9883
+   depth = 1
+   cost = 19
+   density = 0.1520
+   nvisit = 1.00
+   is_terminal = False
+0.2
+   q-value = 0.9888
+   depth = 1
+   cost = 19
+   density = 0.1520
+   nvisit = 1.00
+   is_terminal = False
+0.3
+   q-value = 0.9868
+   depth = 1
+   cost = 19
+   density = 0.1519
+   nvisit = 1.00
+   is_terminal = False
+0.4.1
+   q-value = 0.9702
+   depth = 2
+   cost = 18
+   density = 0.1539
+   nvisit = 1.00
+   is_terminal = False
+0.4.3
+   q-value = 0.8579
+   depth = 2
+   cost = 18
+   density = 0.1477
+   nvisit = 1.00
+   is_terminal = False
+0.4.2.2
+   q-value = 0.6074
+   depth = 3
+   cost = 17
+   density = 0.1357
+   nvisit = 1.00
+   is_terminal = False
+0.4.2.3
+   q-value = 0.9004
+   depth = 3
+   cost = 17
+   density = 0.1530
+   nvisit = 1.00
+   is_terminal = False
+0.4.2.4
+   q-value = 0.9443
+   depth = 3
+   cost = 17
+   density = 0.1555
+   nvisit = 1.00
+   is_terminal = False
+0.4.2.1.1
+   q-value = 0.7090
+   depth = 4
+   cost = 16
+   density = 0.1443
+   nvisit = 1.00
+   is_terminal = False
+0.4.2.1.2
+   q-value = 0.7637
+   depth = 4
+   cost = 16
+   density = 0.1477
+   nvisit = 1.00
+   is_terminal = False
+0.4.2.1.4
+   q-value = 0.8687
+   depth = 4
+   cost = 16
+   density = 0.1543
+   nvisit = 1.00
+   is_terminal = False
+0.4.2.1.3.2
+   q-value = 0.8457
+   depth = 5
+   cost = 15
+   density = 0.1564
+   nvisit = 1.00
+   is_terminal = False
+0.4.2.1.3.3
+   q-value = 0.8311
+   depth = 5
+   cost = 15
+   density = 0.1554
+   nvisit = 1.00
+   is_terminal = False
+0.4.2.1.3.4
+   q-value = 0.7339
+   depth = 5
+   cost = 15
+   density = 0.1489
+   nvisit = 1.00
+   is_terminal = False
+0.4.2.1.3.1.1.1.2
+   q-value = 0.9561
+   depth = 8
+   cost = 12
+   density = 0.1797
+   nvisit = 1.00
+   is_terminal = False
+0.4.2.1.3.1.1.1.1.1
+   q-value = 0.8418
+   depth = 9
+   cost = 11
+   density = 0.1765
+   nvisit = 1.00
+   is_terminal = False
+0.4.2.1.3.1.1.1.1.2
+   q-value = 0.6260
+   depth = 9
+   cost = 11
+   density = 0.1569
+   nvisit = 1.00
+   is_terminal = False
+0.4.2.1.3.1.1.1.1.3
+   q-value = 0.7153
+   depth = 9
+   cost = 11
+   density = 0.1650
+   nvisit = 1.00
+   is_terminal = False
+0.4.2.1.3.1.1.1.1.4.1
+   q-value = 0.8579
+   depth = 10
+   cost = 10
+   density = 0.1858
+   nvisit = 1.00
+   is_terminal = False
+0.4.2.1.3.1.1.1.1.4.3
+   q-value = 0.8613
+   depth = 10
+   cost = 10
+   density = 0.1861
+   nvisit = 1.00
+   is_terminal = False
+0.4.2.1.3.1.1.1.1.4.4
+   q-value = 0.8965
+   depth = 10
+   cost = 10
+   density = 0.1896
+   nvisit = 1.00
+   is_terminal = False
+0.4.2.1.3.1.1.1.1.4.2.1
+   q-value = 0.9517
+   depth = 11
+   cost = 9
+   density = 0.2057
+   nvisit = 1.00
+   is_terminal = False
+0.4.2.1.3.1.1.1.1.4.2.3
+   q-value = 0.9512
+   depth = 11
+   cost = 9
+   density = 0.2057
+   nvisit = 1.00
+   is_terminal = False
+0.4.2.1.3.1.1.1.1.4.2.2.1.2
+   q-value = 0.9946
+   depth = 13
+   cost = 7
+   density = 0.2421
+   nvisit = 1.00
+   is_terminal = False
+selected_leaf = 0.4.2.1.3.1.1.1.1.4.2.2.1.2
+selected = 0.4.2.1.3.1.1.1.1.4.2.2.1.2  density=0.2421  q=0.9946  nvisit=1
+
+-> p = 17
+gen_cnt = 18
+0.1
+   q-value = 0.9883
+   depth = 1
+   cost = 19
+   density = 0.1520
+   nvisit = 1.00
+   is_terminal = False
+0.2
+   q-value = 0.9888
+   depth = 1
+   cost = 19
+   density = 0.1520
+   nvisit = 1.00
+   is_terminal = False
+0.3
+   q-value = 0.9868
+   depth = 1
+   cost = 19
+   density = 0.1519
+   nvisit = 1.00
+   is_terminal = False
+0.4.1
+   q-value = 0.9702
+   depth = 2
+   cost = 18
+   density = 0.1539
+   nvisit = 1.00
+   is_terminal = False
+0.4.3
+   q-value = 0.8579
+   depth = 2
+   cost = 18
+   density = 0.1477
+   nvisit = 1.00
+   is_terminal = False
+0.4.2.2
+   q-value = 0.6074
+   depth = 3
+   cost = 17
+   density = 0.1357
+   nvisit = 1.00
+   is_terminal = False
+0.4.2.3
+   q-value = 0.9004
+   depth = 3
+   cost = 17
+   density = 0.1530
+   nvisit = 1.00
+   is_terminal = False
+0.4.2.4
+   q-value = 0.9443
+   depth = 3
+   cost = 17
+   density = 0.1555
+   nvisit = 1.00
+   is_terminal = False
+0.4.2.1.1
+   q-value = 0.7090
+   depth = 4
+   cost = 16
+   density = 0.1443
+   nvisit = 1.00
+   is_terminal = False
+0.4.2.1.2
+   q-value = 0.7637
+   depth = 4
+   cost = 16
+   density = 0.1477
+   nvisit = 1.00
+   is_terminal = False
+0.4.2.1.4
+   q-value = 0.8687
+   depth = 4
+   cost = 16
+   density = 0.1543
+   nvisit = 1.00
+   is_terminal = False
+0.4.2.1.3.2
+   q-value = 0.8457
+   depth = 5
+   cost = 15
+   density = 0.1564
+   nvisit = 1.00
+   is_terminal = False
+0.4.2.1.3.3
+   q-value = 0.8311
+   depth = 5
+   cost = 15
+   density = 0.1554
+   nvisit = 1.00
+   is_terminal = False
+0.4.2.1.3.4
+   q-value = 0.7339
+   depth = 5
+   cost = 15
+   density = 0.1489
+   nvisit = 1.00
+   is_terminal = False
+0.4.2.1.3.1.1.1.2
+   q-value = 0.9561
+   depth = 8
+   cost = 12
+   density = 0.1797
+   nvisit = 1.00
+   is_terminal = False
+0.4.2.1.3.1.1.1.1.1
+   q-value = 0.8418
+   depth = 9
+   cost = 11
+   density = 0.1765
+   nvisit = 1.00
+   is_terminal = False
+0.4.2.1.3.1.1.1.1.2
+   q-value = 0.6260
+   depth = 9
+   cost = 11
+   density = 0.1569
+   nvisit = 1.00
+   is_terminal = False
+0.4.2.1.3.1.1.1.1.3
+   q-value = 0.7153
+   depth = 9
+   cost = 11
+   density = 0.1650
+   nvisit = 1.00
+   is_terminal = False
+0.4.2.1.3.1.1.1.1.4.1
+   q-value = 0.8579
+   depth = 10
+   cost = 10
+   density = 0.1858
+   nvisit = 1.00
+   is_terminal = False
+0.4.2.1.3.1.1.1.1.4.3
+   q-value = 0.8613
+   depth = 10
+   cost = 10
+   density = 0.1861
+   nvisit = 1.00
+   is_terminal = False
+0.4.2.1.3.1.1.1.1.4.4
+   q-value = 0.8965
+   depth = 10
+   cost = 10
+   density = 0.1896
+   nvisit = 1.00
+   is_terminal = False
+0.4.2.1.3.1.1.1.1.4.2.1
+   q-value = 0.9517
+   depth = 11
+   cost = 9
+   density = 0.2057
+   nvisit = 1.00
+   is_terminal = False
+0.4.2.1.3.1.1.1.1.4.2.3
+   q-value = 0.9512
+   depth = 11
+   cost = 9
+   density = 0.2057
+   nvisit = 1.00
+   is_terminal = False
+selected_leaf = 0.4.2.1.3.1.1.1.1.4.2.1
+selected = 0.4.2.1.3.1.1.1.1.4.2.1  density=0.2057  q=0.9517  nvisit=1
+
+-> p = 18
+gen_cnt = 19
+0.1
+   q-value = 0.9883
+   depth = 1
+   cost = 19
+   density = 0.1520
+   nvisit = 1.00
+   is_terminal = False
+0.2
+   q-value = 0.9888
+   depth = 1
+   cost = 19
+   density = 0.1520
+   nvisit = 1.00
+   is_terminal = False
+0.3
+   q-value = 0.9868
+   depth = 1
+   cost = 19
+   density = 0.1519
+   nvisit = 1.00
+   is_terminal = False
+0.4.1
+   q-value = 0.9702
+   depth = 2
+   cost = 18
+   density = 0.1539
+   nvisit = 1.00
+   is_terminal = False
+0.4.3
+   q-value = 0.8579
+   depth = 2
+   cost = 18
+   density = 0.1477
+   nvisit = 1.00
+   is_terminal = False
+0.4.2.2
+   q-value = 0.6074
+   depth = 3
+   cost = 17
+   density = 0.1357
+   nvisit = 1.00
+   is_terminal = False
+0.4.2.3
+   q-value = 0.9004
+   depth = 3
+   cost = 17
+   density = 0.1530
+   nvisit = 1.00
+   is_terminal = False
+0.4.2.4
+   q-value = 0.9443
+   depth = 3
+   cost = 17
+   density = 0.1555
+   nvisit = 1.00
+   is_terminal = False
+0.4.2.1.1
+   q-value = 0.7090
+   depth = 4
+   cost = 16
+   density = 0.1443
+   nvisit = 1.00
+   is_terminal = False
+0.4.2.1.2
+   q-value = 0.7637
+   depth = 4
+   cost = 16
+   density = 0.1477
+   nvisit = 1.00
+   is_terminal = False
+0.4.2.1.4
+   q-value = 0.8687
+   depth = 4
+   cost = 16
+   density = 0.1543
+   nvisit = 1.00
+   is_terminal = False
+0.4.2.1.3.2
+   q-value = 0.8457
+   depth = 5
+   cost = 15
+   density = 0.1564
+   nvisit = 1.00
+   is_terminal = False
+0.4.2.1.3.3
+   q-value = 0.8311
+   depth = 5
+   cost = 15
+   density = 0.1554
+   nvisit = 1.00
+   is_terminal = False
+0.4.2.1.3.4
+   q-value = 0.7339
+   depth = 5
+   cost = 15
+   density = 0.1489
+   nvisit = 1.00
+   is_terminal = False
+0.4.2.1.3.1.1.1.2
+   q-value = 0.9561
+   depth = 8
+   cost = 12
+   density = 0.1797
+   nvisit = 1.00
+   is_terminal = False
+0.4.2.1.3.1.1.1.1.1
+   q-value = 0.8418
+   depth = 9
+   cost = 11
+   density = 0.1765
+   nvisit = 1.00
+   is_terminal = False
+0.4.2.1.3.1.1.1.1.2
+   q-value = 0.6260
+   depth = 9
+   cost = 11
+   density = 0.1569
+   nvisit = 1.00
+   is_terminal = False
+0.4.2.1.3.1.1.1.1.3
+   q-value = 0.7153
+   depth = 9
+   cost = 11
+   density = 0.1650
+   nvisit = 1.00
+   is_terminal = False
+0.4.2.1.3.1.1.1.1.4.1
+   q-value = 0.8579
+   depth = 10
+   cost = 10
+   density = 0.1858
+   nvisit = 1.00
+   is_terminal = False
+0.4.2.1.3.1.1.1.1.4.3
+   q-value = 0.8613
+   depth = 10
+   cost = 10
+   density = 0.1861
+   nvisit = 1.00
+   is_terminal = False
+0.4.2.1.3.1.1.1.1.4.4
+   q-value = 0.8965
+   depth = 10
+   cost = 10
+   density = 0.1896
+   nvisit = 1.00
+   is_terminal = False
+0.4.2.1.3.1.1.1.1.4.2.3
+   q-value = 0.9512
+   depth = 11
+   cost = 9
+   density = 0.2057
+   nvisit = 1.00
+   is_terminal = False
+0.4.2.1.3.1.1.1.1.4.2.1.1
+   q-value = 0.9863
+   depth = 12
+   cost = 8
+   density = 0.2233
+   nvisit = 1.00
+   is_terminal = False
+selected_leaf = 0.4.2.1.3.1.1.1.1.4.2.1.1
+selected = 0.4.2.1.3.1.1.1.1.4.2.1.1  density=0.2233  q=0.9863  nvisit=1
+
+-> p = 19
+gen_cnt = 20
+0.1
+   q-value = 0.9883
+   depth = 1
+   cost = 19
+   density = 0.1520
+   nvisit = 1.00
+   is_terminal = False
+0.2
+   q-value = 0.9888
+   depth = 1
+   cost = 19
+   density = 0.1520
+   nvisit = 1.00
+   is_terminal = False
+0.3
+   q-value = 0.9868
+   depth = 1
+   cost = 19
+   density = 0.1519
+   nvisit = 1.00
+   is_terminal = False
+0.4.1
+   q-value = 0.9702
+   depth = 2
+   cost = 18
+   density = 0.1539
+   nvisit = 1.00
+   is_terminal = False
+0.4.3
+   q-value = 0.8579
+   depth = 2
+   cost = 18
+   density = 0.1477
+   nvisit = 1.00
+   is_terminal = False
+0.4.2.2
+   q-value = 0.6074
+   depth = 3
+   cost = 17
+   density = 0.1357
+   nvisit = 1.00
+   is_terminal = False
+0.4.2.3
+   q-value = 0.9004
+   depth = 3
+   cost = 17
+   density = 0.1530
+   nvisit = 1.00
+   is_terminal = False
+0.4.2.4
+   q-value = 0.9443
+   depth = 3
+   cost = 17
+   density = 0.1555
+   nvisit = 1.00
+   is_terminal = False
+0.4.2.1.1
+   q-value = 0.7090
+   depth = 4
+   cost = 16
+   density = 0.1443
+   nvisit = 1.00
+   is_terminal = False
+0.4.2.1.2
+   q-value = 0.7637
+   depth = 4
+   cost = 16
+   density = 0.1477
+   nvisit = 1.00
+   is_terminal = False
+0.4.2.1.4
+   q-value = 0.8687
+   depth = 4
+   cost = 16
+   density = 0.1543
+   nvisit = 1.00
+   is_terminal = False
+0.4.2.1.3.2
+   q-value = 0.8457
+   depth = 5
+   cost = 15
+   density = 0.1564
+   nvisit = 1.00
+   is_terminal = False
+0.4.2.1.3.3
+   q-value = 0.8311
+   depth = 5
+   cost = 15
+   density = 0.1554
+   nvisit = 1.00
+   is_terminal = False
+0.4.2.1.3.4
+   q-value = 0.7339
+   depth = 5
+   cost = 15
+   density = 0.1489
+   nvisit = 1.00
+   is_terminal = False
+0.4.2.1.3.1.1.1.2
+   q-value = 0.9561
+   depth = 8
+   cost = 12
+   density = 0.1797
+   nvisit = 1.00
+   is_terminal = False
+0.4.2.1.3.1.1.1.1.1
+   q-value = 0.8418
+   depth = 9
+   cost = 11
+   density = 0.1765
+   nvisit = 1.00
+   is_terminal = False
+0.4.2.1.3.1.1.1.1.2
+   q-value = 0.6260
+   depth = 9
+   cost = 11
+   density = 0.1569
+   nvisit = 1.00
+   is_terminal = False
+0.4.2.1.3.1.1.1.1.3
+   q-value = 0.7153
+   depth = 9
+   cost = 11
+   density = 0.1650
+   nvisit = 1.00
+   is_terminal = False
+0.4.2.1.3.1.1.1.1.4.1
+   q-value = 0.8579
+   depth = 10
+   cost = 10
+   density = 0.1858
+   nvisit = 1.00
+   is_terminal = False
+0.4.2.1.3.1.1.1.1.4.3
+   q-value = 0.8613
+   depth = 10
+   cost = 10
+   density = 0.1861
+   nvisit = 1.00
+   is_terminal = False
+0.4.2.1.3.1.1.1.1.4.4
+   q-value = 0.8965
+   depth = 10
+   cost = 10
+   density = 0.1896
+   nvisit = 1.00
+   is_terminal = False
+0.4.2.1.3.1.1.1.1.4.2.3
+   q-value = 0.9512
+   depth = 11
+   cost = 9
+   density = 0.2057
+   nvisit = 1.00
+   is_terminal = False
+0.4.2.1.3.1.1.1.1.4.2.1.1.2
+   q-value = 0.9961
+   depth = 13
+   cost = 7
+   density = 0.2423
+   nvisit = 1.00
+   is_terminal = False
+selected_leaf = 0.4.2.1.3.1.1.1.1.4.2.1.1.2
+selected = 0.4.2.1.3.1.1.1.1.4.2.1.1.2  density=0.2423  q=0.9961  nvisit=1
+
+-> p = 20
+gen_cnt = 21
+0.1
+   q-value = 0.9883
+   depth = 1
+   cost = 19
+   density = 0.1520
+   nvisit = 1.00
+   is_terminal = False
+0.2
+   q-value = 0.9888
+   depth = 1
+   cost = 19
+   density = 0.1520
+   nvisit = 1.00
+   is_terminal = False
+0.3
+   q-value = 0.9868
+   depth = 1
+   cost = 19
+   density = 0.1519
+   nvisit = 1.00
+   is_terminal = False
+0.4.1
+   q-value = 0.9702
+   depth = 2
+   cost = 18
+   density = 0.1539
+   nvisit = 1.00
+   is_terminal = False
+0.4.3
+   q-value = 0.8579
+   depth = 2
+   cost = 18
+   density = 0.1477
+   nvisit = 1.00
+   is_terminal = False
+0.4.2.2
+   q-value = 0.6074
+   depth = 3
+   cost = 17
+   density = 0.1357
+   nvisit = 1.00
+   is_terminal = False
+0.4.2.3
+   q-value = 0.9004
+   depth = 3
+   cost = 17
+   density = 0.1530
+   nvisit = 1.00
+   is_terminal = False
+0.4.2.4
+   q-value = 0.9443
+   depth = 3
+   cost = 17
+   density = 0.1555
+   nvisit = 1.00
+   is_terminal = False
+0.4.2.1.1
+   q-value = 0.7090
+   depth = 4
+   cost = 16
+   density = 0.1443
+   nvisit = 1.00
+   is_terminal = False
+0.4.2.1.2
+   q-value = 0.7637
+   depth = 4
+   cost = 16
+   density = 0.1477
+   nvisit = 1.00
+   is_terminal = False
+0.4.2.1.4
+   q-value = 0.8687
+   depth = 4
+   cost = 16
+   density = 0.1543
+   nvisit = 1.00
+   is_terminal = False
+0.4.2.1.3.2
+   q-value = 0.8457
+   depth = 5
+   cost = 15
+   density = 0.1564
+   nvisit = 1.00
+   is_terminal = False
+0.4.2.1.3.3
+   q-value = 0.8311
+   depth = 5
+   cost = 15
+   density = 0.1554
+   nvisit = 1.00
+   is_terminal = False
+0.4.2.1.3.4
+   q-value = 0.7339
+   depth = 5
+   cost = 15
+   density = 0.1489
+   nvisit = 1.00
+   is_terminal = False
+0.4.2.1.3.1.1.1.2
+   q-value = 0.9561
+   depth = 8
+   cost = 12
+   density = 0.1797
+   nvisit = 1.00
+   is_terminal = False
+0.4.2.1.3.1.1.1.1.1
+   q-value = 0.8418
+   depth = 9
+   cost = 11
+   density = 0.1765
+   nvisit = 1.00
+   is_terminal = False
+0.4.2.1.3.1.1.1.1.2
+   q-value = 0.6260
+   depth = 9
+   cost = 11
+   density = 0.1569
+   nvisit = 1.00
+   is_terminal = False
+0.4.2.1.3.1.1.1.1.3
+   q-value = 0.7153
+   depth = 9
+   cost = 11
+   density = 0.1650
+   nvisit = 1.00
+   is_terminal = False
+0.4.2.1.3.1.1.1.1.4.1
+   q-value = 0.8579
+   depth = 10
+   cost = 10
+   density = 0.1858
+   nvisit = 1.00
+   is_terminal = False
+0.4.2.1.3.1.1.1.1.4.3
+   q-value = 0.8613
+   depth = 10
+   cost = 10
+   density = 0.1861
+   nvisit = 1.00
+   is_terminal = False
+0.4.2.1.3.1.1.1.1.4.4
+   q-value = 0.8965
+   depth = 10
+   cost = 10
+   density = 0.1896
+   nvisit = 1.00
+   is_terminal = False
+0.4.2.1.3.1.1.1.1.4.2.3
+   q-value = 0.9512
+   depth = 11
+   cost = 9
+   density = 0.2057
+   nvisit = 1.00
+   is_terminal = False
+selected_leaf = 0.4.2.1.3.1.1.1.1.4.2.3
+selected = 0.4.2.1.3.1.1.1.1.4.2.3  density=0.2057  q=0.9512  nvisit=1
+
+-> p = 21
+gen_cnt = 22
+0.1
+   q-value = 0.9883
+   depth = 1
+   cost = 19
+   density = 0.1520
+   nvisit = 1.00
+   is_terminal = False
+0.2
+   q-value = 0.9888
+   depth = 1
+   cost = 19
+   density = 0.1520
+   nvisit = 1.00
+   is_terminal = False
+0.3
+   q-value = 0.9868
+   depth = 1
+   cost = 19
+   density = 0.1519
+   nvisit = 1.00
+   is_terminal = False
+0.4.1
+   q-value = 0.9702
+   depth = 2
+   cost = 18
+   density = 0.1539
+   nvisit = 1.00
+   is_terminal = False
+0.4.3
+   q-value = 0.8579
+   depth = 2
+   cost = 18
+   density = 0.1477
+   nvisit = 1.00
+   is_terminal = False
+0.4.2.2
+   q-value = 0.6074
+   depth = 3
+   cost = 17
+   density = 0.1357
+   nvisit = 1.00
+   is_terminal = False
+0.4.2.3
+   q-value = 0.9004
+   depth = 3
+   cost = 17
+   density = 0.1530
+   nvisit = 1.00
+   is_terminal = False
+0.4.2.4
+   q-value = 0.9443
+   depth = 3
+   cost = 17
+   density = 0.1555
+   nvisit = 1.00
+   is_terminal = False
+0.4.2.1.1
+   q-value = 0.7090
+   depth = 4
+   cost = 16
+   density = 0.1443
+   nvisit = 1.00
+   is_terminal = False
+0.4.2.1.2
+   q-value = 0.7637
+   depth = 4
+   cost = 16
+   density = 0.1477
+   nvisit = 1.00
+   is_terminal = False
+0.4.2.1.4
+   q-value = 0.8687
+   depth = 4
+   cost = 16
+   density = 0.1543
+   nvisit = 1.00
+   is_terminal = False
+0.4.2.1.3.2
+   q-value = 0.8457
+   depth = 5
+   cost = 15
+   density = 0.1564
+   nvisit = 1.00
+   is_terminal = False
+0.4.2.1.3.3
+   q-value = 0.8311
+   depth = 5
+   cost = 15
+   density = 0.1554
+   nvisit = 1.00
+   is_terminal = False
+0.4.2.1.3.4
+   q-value = 0.7339
+   depth = 5
+   cost = 15
+   density = 0.1489
+   nvisit = 1.00
+   is_terminal = False
+0.4.2.1.3.1.1.1.2
+   q-value = 0.9561
+   depth = 8
+   cost = 12
+   density = 0.1797
+   nvisit = 1.00
+   is_terminal = False
+0.4.2.1.3.1.1.1.1.1
+   q-value = 0.8418
+   depth = 9
+   cost = 11
+   density = 0.1765
+   nvisit = 1.00
+   is_terminal = False
+0.4.2.1.3.1.1.1.1.2
+   q-value = 0.6260
+   depth = 9
+   cost = 11
+   density = 0.1569
+   nvisit = 1.00
+   is_terminal = False
+0.4.2.1.3.1.1.1.1.3
+   q-value = 0.7153
+   depth = 9
+   cost = 11
+   density = 0.1650
+   nvisit = 1.00
+   is_terminal = False
+0.4.2.1.3.1.1.1.1.4.1
+   q-value = 0.8579
+   depth = 10
+   cost = 10
+   density = 0.1858
+   nvisit = 1.00
+   is_terminal = False
+0.4.2.1.3.1.1.1.1.4.3
+   q-value = 0.8613
+   depth = 10
+   cost = 10
+   density = 0.1861
+   nvisit = 1.00
+   is_terminal = False
+0.4.2.1.3.1.1.1.1.4.4
+   q-value = 0.8965
+   depth = 10
+   cost = 10
+   density = 0.1896
+   nvisit = 1.00
+   is_terminal = False
+0.4.2.1.3.1.1.1.1.4.2.3.1
+   q-value = 0.9854
+   depth = 12
+   cost = 8
+   density = 0.2232
+   nvisit = 1.00
+   is_terminal = False
+selected_leaf = 0.4.2.1.3.1.1.1.1.4.2.3.1
+selected = 0.4.2.1.3.1.1.1.1.4.2.3.1  density=0.2232  q=0.9854  nvisit=1
+
+-> p = 22
+gen_cnt = 23
+0.1
+   q-value = 0.9883
+   depth = 1
+   cost = 19
+   density = 0.1520
+   nvisit = 1.00
+   is_terminal = False
+0.2
+   q-value = 0.9888
+   depth = 1
+   cost = 19
+   density = 0.1520
+   nvisit = 1.00
+   is_terminal = False
+0.3
+   q-value = 0.9868
+   depth = 1
+   cost = 19
+   density = 0.1519
+   nvisit = 1.00
+   is_terminal = False
+0.4.1
+   q-value = 0.9702
+   depth = 2
+   cost = 18
+   density = 0.1539
+   nvisit = 1.00
+   is_terminal = False
+0.4.3
+   q-value = 0.8579
+   depth = 2
+   cost = 18
+   density = 0.1477
+   nvisit = 1.00
+   is_terminal = False
+0.4.2.2
+   q-value = 0.6074
+   depth = 3
+   cost = 17
+   density = 0.1357
+   nvisit = 1.00
+   is_terminal = False
+0.4.2.3
+   q-value = 0.9004
+   depth = 3
+   cost = 17
+   density = 0.1530
+   nvisit = 1.00
+   is_terminal = False
+0.4.2.4
+   q-value = 0.9443
+   depth = 3
+   cost = 17
+   density = 0.1555
+   nvisit = 1.00
+   is_terminal = False
+0.4.2.1.1
+   q-value = 0.7090
+   depth = 4
+   cost = 16
+   density = 0.1443
+   nvisit = 1.00
+   is_terminal = False
+0.4.2.1.2
+   q-value = 0.7637
+   depth = 4
+   cost = 16
+   density = 0.1477
+   nvisit = 1.00
+   is_terminal = False
+0.4.2.1.4
+   q-value = 0.8687
+   depth = 4
+   cost = 16
+   density = 0.1543
+   nvisit = 1.00
+   is_terminal = False
+0.4.2.1.3.2
+   q-value = 0.8457
+   depth = 5
+   cost = 15
+   density = 0.1564
+   nvisit = 1.00
+   is_terminal = False
+0.4.2.1.3.3
+   q-value = 0.8311
+   depth = 5
+   cost = 15
+   density = 0.1554
+   nvisit = 1.00
+   is_terminal = False
+0.4.2.1.3.4
+   q-value = 0.7339
+   depth = 5
+   cost = 15
+   density = 0.1489
+   nvisit = 1.00
+   is_terminal = False
+0.4.2.1.3.1.1.1.2
+   q-value = 0.9561
+   depth = 8
+   cost = 12
+   density = 0.1797
+   nvisit = 1.00
+   is_terminal = False
+0.4.2.1.3.1.1.1.1.1
+   q-value = 0.8418
+   depth = 9
+   cost = 11
+   density = 0.1765
+   nvisit = 1.00
+   is_terminal = False
+0.4.2.1.3.1.1.1.1.2
+   q-value = 0.6260
+   depth = 9
+   cost = 11
+   density = 0.1569
+   nvisit = 1.00
+   is_terminal = False
+0.4.2.1.3.1.1.1.1.3
+   q-value = 0.7153
+   depth = 9
+   cost = 11
+   density = 0.1650
+   nvisit = 1.00
+   is_terminal = False
+0.4.2.1.3.1.1.1.1.4.1
+   q-value = 0.8579
+   depth = 10
+   cost = 10
+   density = 0.1858
+   nvisit = 1.00
+   is_terminal = False
+0.4.2.1.3.1.1.1.1.4.3
+   q-value = 0.8613
+   depth = 10
+   cost = 10
+   density = 0.1861
+   nvisit = 1.00
+   is_terminal = False
+0.4.2.1.3.1.1.1.1.4.4
+   q-value = 0.8965
+   depth = 10
+   cost = 10
+   density = 0.1896
+   nvisit = 1.00
+   is_terminal = False
+0.4.2.1.3.1.1.1.1.4.2.3.1.1
+   q-value = 0.9922
+   depth = 13
+   cost = 7
+   density = 0.2417
+   nvisit = 1.00
+   is_terminal = False
+0.4.2.1.3.1.1.1.1.4.2.3.1.3
+   q-value = 0.9922
+   depth = 13
+   cost = 7
+   density = 0.2417
+   nvisit = 1.00
+   is_terminal = False
+0.4.2.1.3.1.1.1.1.4.2.3.1.4
+   q-value = 0.9941
+   depth = 13
+   cost = 7
+   density = 0.2420
+   nvisit = 1.00
+   is_terminal = False
+selected_leaf = 0.4.2.1.3.1.1.1.1.4.2.3.1.4
+selected = 0.4.2.1.3.1.1.1.1.4.2.3.1.4  density=0.2420  q=0.9941  nvisit=1
+
+-> p = 23
+gen_cnt = 24
+0.1
+   q-value = 0.9883
+   depth = 1
+   cost = 19
+   density = 0.1520
+   nvisit = 1.00
+   is_terminal = False
+0.2
+   q-value = 0.9888
+   depth = 1
+   cost = 19
+   density = 0.1520
+   nvisit = 1.00
+   is_terminal = False
+0.3
+   q-value = 0.9868
+   depth = 1
+   cost = 19
+   density = 0.1519
+   nvisit = 1.00
+   is_terminal = False
+0.4.1
+   q-value = 0.9702
+   depth = 2
+   cost = 18
+   density = 0.1539
+   nvisit = 1.00
+   is_terminal = False
+0.4.3
+   q-value = 0.8579
+   depth = 2
+   cost = 18
+   density = 0.1477
+   nvisit = 1.00
+   is_terminal = False
+0.4.2.2
+   q-value = 0.6074
+   depth = 3
+   cost = 17
+   density = 0.1357
+   nvisit = 1.00
+   is_terminal = False
+0.4.2.3
+   q-value = 0.9004
+   depth = 3
+   cost = 17
+   density = 0.1530
+   nvisit = 1.00
+   is_terminal = False
+0.4.2.4
+   q-value = 0.9443
+   depth = 3
+   cost = 17
+   density = 0.1555
+   nvisit = 1.00
+   is_terminal = False
+0.4.2.1.1
+   q-value = 0.7090
+   depth = 4
+   cost = 16
+   density = 0.1443
+   nvisit = 1.00
+   is_terminal = False
+0.4.2.1.2
+   q-value = 0.7637
+   depth = 4
+   cost = 16
+   density = 0.1477
+   nvisit = 1.00
+   is_terminal = False
+0.4.2.1.4
+   q-value = 0.8687
+   depth = 4
+   cost = 16
+   density = 0.1543
+   nvisit = 1.00
+   is_terminal = False
+0.4.2.1.3.2
+   q-value = 0.8457
+   depth = 5
+   cost = 15
+   density = 0.1564
+   nvisit = 1.00
+   is_terminal = False
+0.4.2.1.3.3
+   q-value = 0.8311
+   depth = 5
+   cost = 15
+   density = 0.1554
+   nvisit = 1.00
+   is_terminal = False
+0.4.2.1.3.4
+   q-value = 0.7339
+   depth = 5
+   cost = 15
+   density = 0.1489
+   nvisit = 1.00
+   is_terminal = False
+0.4.2.1.3.1.1.1.2
+   q-value = 0.9561
+   depth = 8
+   cost = 12
+   density = 0.1797
+   nvisit = 1.00
+   is_terminal = False
+0.4.2.1.3.1.1.1.1.1
+   q-value = 0.8418
+   depth = 9
+   cost = 11
+   density = 0.1765
+   nvisit = 1.00
+   is_terminal = False
+0.4.2.1.3.1.1.1.1.2
+   q-value = 0.6260
+   depth = 9
+   cost = 11
+   density = 0.1569
+   nvisit = 1.00
+   is_terminal = False
+0.4.2.1.3.1.1.1.1.3
+   q-value = 0.7153
+   depth = 9
+   cost = 11
+   density = 0.1650
+   nvisit = 1.00
+   is_terminal = False
+0.4.2.1.3.1.1.1.1.4.1
+   q-value = 0.8579
+   depth = 10
+   cost = 10
+   density = 0.1858
+   nvisit = 1.00
+   is_terminal = False
+0.4.2.1.3.1.1.1.1.4.3
+   q-value = 0.8613
+   depth = 10
+   cost = 10
+   density = 0.1861
+   nvisit = 1.00
+   is_terminal = False
+0.4.2.1.3.1.1.1.1.4.4
+   q-value = 0.8965
+   depth = 10
+   cost = 10
+   density = 0.1896
+   nvisit = 1.00
+   is_terminal = False
+0.4.2.1.3.1.1.1.1.4.2.3.1.1
+   q-value = 0.9922
+   depth = 13
+   cost = 7
+   density = 0.2417
+   nvisit = 1.00
+   is_terminal = False
+0.4.2.1.3.1.1.1.1.4.2.3.1.3
+   q-value = 0.9922
+   depth = 13
+   cost = 7
+   density = 0.2417
+   nvisit = 1.00
+   is_terminal = False
+selected_leaf = 0.4.2.1.3.1.1.1.1.4.2.3.1.1
+selected = 0.4.2.1.3.1.1.1.1.4.2.3.1.1  density=0.2417  q=0.9922  nvisit=1
+
+-> p = 24
+gen_cnt = 25
+0.1
+   q-value = 0.9883
+   depth = 1
+   cost = 19
+   density = 0.1520
+   nvisit = 1.00
+   is_terminal = False
+0.2
+   q-value = 0.9888
+   depth = 1
+   cost = 19
+   density = 0.1520
+   nvisit = 1.00
+   is_terminal = False
+0.3
+   q-value = 0.9868
+   depth = 1
+   cost = 19
+   density = 0.1519
+   nvisit = 1.00
+   is_terminal = False
+0.4.1
+   q-value = 0.9702
+   depth = 2
+   cost = 18
+   density = 0.1539
+   nvisit = 1.00
+   is_terminal = False
+0.4.3
+   q-value = 0.8579
+   depth = 2
+   cost = 18
+   density = 0.1477
+   nvisit = 1.00
+   is_terminal = False
+0.4.2.2
+   q-value = 0.6074
+   depth = 3
+   cost = 17
+   density = 0.1357
+   nvisit = 1.00
+   is_terminal = False
+0.4.2.3
+   q-value = 0.9004
+   depth = 3
+   cost = 17
+   density = 0.1530
+   nvisit = 1.00
+   is_terminal = False
+0.4.2.4
+   q-value = 0.9443
+   depth = 3
+   cost = 17
+   density = 0.1555
+   nvisit = 1.00
+   is_terminal = False
+0.4.2.1.1
+   q-value = 0.7090
+   depth = 4
+   cost = 16
+   density = 0.1443
+   nvisit = 1.00
+   is_terminal = False
+0.4.2.1.2
+   q-value = 0.7637
+   depth = 4
+   cost = 16
+   density = 0.1477
+   nvisit = 1.00
+   is_terminal = False
+0.4.2.1.4
+   q-value = 0.8687
+   depth = 4
+   cost = 16
+   density = 0.1543
+   nvisit = 1.00
+   is_terminal = False
+0.4.2.1.3.2
+   q-value = 0.8457
+   depth = 5
+   cost = 15
+   density = 0.1564
+   nvisit = 1.00
+   is_terminal = False
+0.4.2.1.3.3
+   q-value = 0.8311
+   depth = 5
+   cost = 15
+   density = 0.1554
+   nvisit = 1.00
+   is_terminal = False
+0.4.2.1.3.4
+   q-value = 0.7339
+   depth = 5
+   cost = 15
+   density = 0.1489
+   nvisit = 1.00
+   is_terminal = False
+0.4.2.1.3.1.1.1.2
+   q-value = 0.9561
+   depth = 8
+   cost = 12
+   density = 0.1797
+   nvisit = 1.00
+   is_terminal = False
+0.4.2.1.3.1.1.1.1.1
+   q-value = 0.8418
+   depth = 9
+   cost = 11
+   density = 0.1765
+   nvisit = 1.00
+   is_terminal = False
+0.4.2.1.3.1.1.1.1.2
+   q-value = 0.6260
+   depth = 9
+   cost = 11
+   density = 0.1569
+   nvisit = 1.00
+   is_terminal = False
+0.4.2.1.3.1.1.1.1.3
+   q-value = 0.7153
+   depth = 9
+   cost = 11
+   density = 0.1650
+   nvisit = 1.00
+   is_terminal = False
+0.4.2.1.3.1.1.1.1.4.1
+   q-value = 0.8579
+   depth = 10
+   cost = 10
+   density = 0.1858
+   nvisit = 1.00
+   is_terminal = False
+0.4.2.1.3.1.1.1.1.4.3
+   q-value = 0.8613
+   depth = 10
+   cost = 10
+   density = 0.1861
+   nvisit = 1.00
+   is_terminal = False
+0.4.2.1.3.1.1.1.1.4.4
+   q-value = 0.8965
+   depth = 10
+   cost = 10
+   density = 0.1896
+   nvisit = 1.00
+   is_terminal = False
+0.4.2.1.3.1.1.1.1.4.2.3.1.3
+   q-value = 0.9922
+   depth = 13
+   cost = 7
+   density = 0.2417
+   nvisit = 1.00
+   is_terminal = False
+selected_leaf = 0.4.2.1.3.1.1.1.1.4.2.3.1.3
+selected = 0.4.2.1.3.1.1.1.1.4.2.3.1.3  density=0.2417  q=0.9922  nvisit=1
+
+-> p = 25
+gen_cnt = 26
+0.1
+   q-value = 0.9883
+   depth = 1
+   cost = 19
+   density = 0.1520
+   nvisit = 1.00
+   is_terminal = False
+0.2
+   q-value = 0.9888
+   depth = 1
+   cost = 19
+   density = 0.1520
+   nvisit = 1.00
+   is_terminal = False
+0.3
+   q-value = 0.9868
+   depth = 1
+   cost = 19
+   density = 0.1519
+   nvisit = 1.00
+   is_terminal = False
+0.4.1
+   q-value = 0.9702
+   depth = 2
+   cost = 18
+   density = 0.1539
+   nvisit = 1.00
+   is_terminal = False
+0.4.3
+   q-value = 0.8579
+   depth = 2
+   cost = 18
+   density = 0.1477
+   nvisit = 1.00
+   is_terminal = False
+0.4.2.2
+   q-value = 0.6074
+   depth = 3
+   cost = 17
+   density = 0.1357
+   nvisit = 1.00
+   is_terminal = False
+0.4.2.3
+   q-value = 0.9004
+   depth = 3
+   cost = 17
+   density = 0.1530
+   nvisit = 1.00
+   is_terminal = False
+0.4.2.4
+   q-value = 0.9443
+   depth = 3
+   cost = 17
+   density = 0.1555
+   nvisit = 1.00
+   is_terminal = False
+0.4.2.1.1
+   q-value = 0.7090
+   depth = 4
+   cost = 16
+   density = 0.1443
+   nvisit = 1.00
+   is_terminal = False
+0.4.2.1.2
+   q-value = 0.7637
+   depth = 4
+   cost = 16
+   density = 0.1477
+   nvisit = 1.00
+   is_terminal = False
+0.4.2.1.4
+   q-value = 0.8687
+   depth = 4
+   cost = 16
+   density = 0.1543
+   nvisit = 1.00
+   is_terminal = False
+0.4.2.1.3.2
+   q-value = 0.8457
+   depth = 5
+   cost = 15
+   density = 0.1564
+   nvisit = 1.00
+   is_terminal = False
+0.4.2.1.3.3
+   q-value = 0.8311
+   depth = 5
+   cost = 15
+   density = 0.1554
+   nvisit = 1.00
+   is_terminal = False
+0.4.2.1.3.4
+   q-value = 0.7339
+   depth = 5
+   cost = 15
+   density = 0.1489
+   nvisit = 1.00
+   is_terminal = False
+0.4.2.1.3.1.1.1.2
+   q-value = 0.9561
+   depth = 8
+   cost = 12
+   density = 0.1797
+   nvisit = 1.00
+   is_terminal = False
+0.4.2.1.3.1.1.1.1.1
+   q-value = 0.8418
+   depth = 9
+   cost = 11
+   density = 0.1765
+   nvisit = 1.00
+   is_terminal = False
+0.4.2.1.3.1.1.1.1.2
+   q-value = 0.6260
+   depth = 9
+   cost = 11
+   density = 0.1569
+   nvisit = 1.00
+   is_terminal = False
+0.4.2.1.3.1.1.1.1.3
+   q-value = 0.7153
+   depth = 9
+   cost = 11
+   density = 0.1650
+   nvisit = 1.00
+   is_terminal = False
+0.4.2.1.3.1.1.1.1.4.1
+   q-value = 0.8579
+   depth = 10
+   cost = 10
+   density = 0.1858
+   nvisit = 1.00
+   is_terminal = False
+0.4.2.1.3.1.1.1.1.4.3
+   q-value = 0.8613
+   depth = 10
+   cost = 10
+   density = 0.1861
+   nvisit = 1.00
+   is_terminal = False
+0.4.2.1.3.1.1.1.1.4.4
+   q-value = 0.8965
+   depth = 10
+   cost = 10
+   density = 0.1896
+   nvisit = 1.00
+   is_terminal = False
+selected_leaf = 0.4.2.1.3.1.1.1.1.4.4
+selected = 0.4.2.1.3.1.1.1.1.4.4  density=0.1896  q=0.8965  nvisit=1
+
+-> p = 26
+gen_cnt = 27
+0.1
+   q-value = 0.9883
+   depth = 1
+   cost = 19
+   density = 0.1520
+   nvisit = 1.00
+   is_terminal = False
+0.2
+   q-value = 0.9888
+   depth = 1
+   cost = 19
+   density = 0.1520
+   nvisit = 1.00
+   is_terminal = False
+0.3
+   q-value = 0.9868
+   depth = 1
+   cost = 19
+   density = 0.1519
+   nvisit = 1.00
+   is_terminal = False
+0.4.1
+   q-value = 0.9702
+   depth = 2
+   cost = 18
+   density = 0.1539
+   nvisit = 1.00
+   is_terminal = False
+0.4.3
+   q-value = 0.8579
+   depth = 2
+   cost = 18
+   density = 0.1477
+   nvisit = 1.00
+   is_terminal = False
+0.4.2.2
+   q-value = 0.6074
+   depth = 3
+   cost = 17
+   density = 0.1357
+   nvisit = 1.00
+   is_terminal = False
+0.4.2.3
+   q-value = 0.9004
+   depth = 3
+   cost = 17
+   density = 0.1530
+   nvisit = 1.00
+   is_terminal = False
+0.4.2.4
+   q-value = 0.9443
+   depth = 3
+   cost = 17
+   density = 0.1555
+   nvisit = 1.00
+   is_terminal = False
+0.4.2.1.1
+   q-value = 0.7090
+   depth = 4
+   cost = 16
+   density = 0.1443
+   nvisit = 1.00
+   is_terminal = False
+0.4.2.1.2
+   q-value = 0.7637
+   depth = 4
+   cost = 16
+   density = 0.1477
+   nvisit = 1.00
+   is_terminal = False
+0.4.2.1.4
+   q-value = 0.8687
+   depth = 4
+   cost = 16
+   density = 0.1543
+   nvisit = 1.00
+   is_terminal = False
+0.4.2.1.3.2
+   q-value = 0.8457
+   depth = 5
+   cost = 15
+   density = 0.1564
+   nvisit = 1.00
+   is_terminal = False
+0.4.2.1.3.3
+   q-value = 0.8311
+   depth = 5
+   cost = 15
+   density = 0.1554
+   nvisit = 1.00
+   is_terminal = False
+0.4.2.1.3.4
+   q-value = 0.7339
+   depth = 5
+   cost = 15
+   density = 0.1489
+   nvisit = 1.00
+   is_terminal = False
+0.4.2.1.3.1.1.1.2
+   q-value = 0.9561
+   depth = 8
+   cost = 12
+   density = 0.1797
+   nvisit = 1.00
+   is_terminal = False
+0.4.2.1.3.1.1.1.1.1
+   q-value = 0.8418
+   depth = 9
+   cost = 11
+   density = 0.1765
+   nvisit = 1.00
+   is_terminal = False
+0.4.2.1.3.1.1.1.1.2
+   q-value = 0.6260
+   depth = 9
+   cost = 11
+   density = 0.1569
+   nvisit = 1.00
+   is_terminal = False
+0.4.2.1.3.1.1.1.1.3
+   q-value = 0.7153
+   depth = 9
+   cost = 11
+   density = 0.1650
+   nvisit = 1.00
+   is_terminal = False
+0.4.2.1.3.1.1.1.1.4.1
+   q-value = 0.8579
+   depth = 10
+   cost = 10
+   density = 0.1858
+   nvisit = 1.00
+   is_terminal = False
+0.4.2.1.3.1.1.1.1.4.3
+   q-value = 0.8613
+   depth = 10
+   cost = 10
+   density = 0.1861
+   nvisit = 1.00
+   is_terminal = False
+0.4.2.1.3.1.1.1.1.4.4.1
+   q-value = 0.9531
+   depth = 11
+   cost = 9
+   density = 0.2059
+   nvisit = 1.00
+   is_terminal = False
+0.4.2.1.3.1.1.1.1.4.4.2
+   q-value = 0.9585
+   depth = 11
+   cost = 9
+   density = 0.2065
+   nvisit = 1.00
+   is_terminal = False
+0.4.2.1.3.1.1.1.1.4.4.3
+   q-value = 0.9565
+   depth = 11
+   cost = 9
+   density = 0.2063
+   nvisit = 1.00
+   is_terminal = False
+selected_leaf = 0.4.2.1.3.1.1.1.1.4.4.2
+selected = 0.4.2.1.3.1.1.1.1.4.4.2  density=0.2065  q=0.9585  nvisit=1
+
+-> p = 27
+gen_cnt = 28
+0.1
+   q-value = 0.9883
+   depth = 1
+   cost = 19
+   density = 0.1520
+   nvisit = 1.00
+   is_terminal = False
+0.2
+   q-value = 0.9888
+   depth = 1
+   cost = 19
+   density = 0.1520
+   nvisit = 1.00
+   is_terminal = False
+0.3
+   q-value = 0.9868
+   depth = 1
+   cost = 19
+   density = 0.1519
+   nvisit = 1.00
+   is_terminal = False
+0.4.1
+   q-value = 0.9702
+   depth = 2
+   cost = 18
+   density = 0.1539
+   nvisit = 1.00
+   is_terminal = False
+0.4.3
+   q-value = 0.8579
+   depth = 2
+   cost = 18
+   density = 0.1477
+   nvisit = 1.00
+   is_terminal = False
+0.4.2.2
+   q-value = 0.6074
+   depth = 3
+   cost = 17
+   density = 0.1357
+   nvisit = 1.00
+   is_terminal = False
+0.4.2.3
+   q-value = 0.9004
+   depth = 3
+   cost = 17
+   density = 0.1530
+   nvisit = 1.00
+   is_terminal = False
+0.4.2.4
+   q-value = 0.9443
+   depth = 3
+   cost = 17
+   density = 0.1555
+   nvisit = 1.00
+   is_terminal = False
+0.4.2.1.1
+   q-value = 0.7090
+   depth = 4
+   cost = 16
+   density = 0.1443
+   nvisit = 1.00
+   is_terminal = False
+0.4.2.1.2
+   q-value = 0.7637
+   depth = 4
+   cost = 16
+   density = 0.1477
+   nvisit = 1.00
+   is_terminal = False
+0.4.2.1.4
+   q-value = 0.8687
+   depth = 4
+   cost = 16
+   density = 0.1543
+   nvisit = 1.00
+   is_terminal = False
+0.4.2.1.3.2
+   q-value = 0.8457
+   depth = 5
+   cost = 15
+   density = 0.1564
+   nvisit = 1.00
+   is_terminal = False
+0.4.2.1.3.3
+   q-value = 0.8311
+   depth = 5
+   cost = 15
+   density = 0.1554
+   nvisit = 1.00
+   is_terminal = False
+0.4.2.1.3.4
+   q-value = 0.7339
+   depth = 5
+   cost = 15
+   density = 0.1489
+   nvisit = 1.00
+   is_terminal = False
+0.4.2.1.3.1.1.1.2
+   q-value = 0.9561
+   depth = 8
+   cost = 12
+   density = 0.1797
+   nvisit = 1.00
+   is_terminal = False
+0.4.2.1.3.1.1.1.1.1
+   q-value = 0.8418
+   depth = 9
+   cost = 11
+   density = 0.1765
+   nvisit = 1.00
+   is_terminal = False
+0.4.2.1.3.1.1.1.1.2
+   q-value = 0.6260
+   depth = 9
+   cost = 11
+   density = 0.1569
+   nvisit = 1.00
+   is_terminal = False
+0.4.2.1.3.1.1.1.1.3
+   q-value = 0.7153
+   depth = 9
+   cost = 11
+   density = 0.1650
+   nvisit = 1.00
+   is_terminal = False
+0.4.2.1.3.1.1.1.1.4.1
+   q-value = 0.8579
+   depth = 10
+   cost = 10
+   density = 0.1858
+   nvisit = 1.00
+   is_terminal = False
+0.4.2.1.3.1.1.1.1.4.3
+   q-value = 0.8613
+   depth = 10
+   cost = 10
+   density = 0.1861
+   nvisit = 1.00
+   is_terminal = False
+0.4.2.1.3.1.1.1.1.4.4.1
+   q-value = 0.9531
+   depth = 11
+   cost = 9
+   density = 0.2059
+   nvisit = 1.00
+   is_terminal = False
+0.4.2.1.3.1.1.1.1.4.4.3
+   q-value = 0.9565
+   depth = 11
+   cost = 9
+   density = 0.2063
+   nvisit = 1.00
+   is_terminal = False
+0.4.2.1.3.1.1.1.1.4.4.2.1
+   q-value = 0.9897
+   depth = 12
+   cost = 8
+   density = 0.2237
+   nvisit = 1.00
+   is_terminal = False
+selected_leaf = 0.4.2.1.3.1.1.1.1.4.4.2.1
+selected = 0.4.2.1.3.1.1.1.1.4.4.2.1  density=0.2237  q=0.9897  nvisit=1
+
+-> p = 28
+gen_cnt = 29
+0.1
+   q-value = 0.9883
+   depth = 1
+   cost = 19
+   density = 0.1520
+   nvisit = 1.00
+   is_terminal = False
+0.2
+   q-value = 0.9888
+   depth = 1
+   cost = 19
+   density = 0.1520
+   nvisit = 1.00
+   is_terminal = False
+0.3
+   q-value = 0.9868
+   depth = 1
+   cost = 19
+   density = 0.1519
+   nvisit = 1.00
+   is_terminal = False
+0.4.1
+   q-value = 0.9702
+   depth = 2
+   cost = 18
+   density = 0.1539
+   nvisit = 1.00
+   is_terminal = False
+0.4.3
+   q-value = 0.8579
+   depth = 2
+   cost = 18
+   density = 0.1477
+   nvisit = 1.00
+   is_terminal = False
+0.4.2.2
+   q-value = 0.6074
+   depth = 3
+   cost = 17
+   density = 0.1357
+   nvisit = 1.00
+   is_terminal = False
+0.4.2.3
+   q-value = 0.9004
+   depth = 3
+   cost = 17
+   density = 0.1530
+   nvisit = 1.00
+   is_terminal = False
+0.4.2.4
+   q-value = 0.9443
+   depth = 3
+   cost = 17
+   density = 0.1555
+   nvisit = 1.00
+   is_terminal = False
+0.4.2.1.1
+   q-value = 0.7090
+   depth = 4
+   cost = 16
+   density = 0.1443
+   nvisit = 1.00
+   is_terminal = False
+0.4.2.1.2
+   q-value = 0.7637
+   depth = 4
+   cost = 16
+   density = 0.1477
+   nvisit = 1.00
+   is_terminal = False
+0.4.2.1.4
+   q-value = 0.8687
+   depth = 4
+   cost = 16
+   density = 0.1543
+   nvisit = 1.00
+   is_terminal = False
+0.4.2.1.3.2
+   q-value = 0.8457
+   depth = 5
+   cost = 15
+   density = 0.1564
+   nvisit = 1.00
+   is_terminal = False
+0.4.2.1.3.3
+   q-value = 0.8311
+   depth = 5
+   cost = 15
+   density = 0.1554
+   nvisit = 1.00
+   is_terminal = False
+0.4.2.1.3.4
+   q-value = 0.7339
+   depth = 5
+   cost = 15
+   density = 0.1489
+   nvisit = 1.00
+   is_terminal = False
+0.4.2.1.3.1.1.1.2
+   q-value = 0.9561
+   depth = 8
+   cost = 12
+   density = 0.1797
+   nvisit = 1.00
+   is_terminal = False
+0.4.2.1.3.1.1.1.1.1
+   q-value = 0.8418
+   depth = 9
+   cost = 11
+   density = 0.1765
+   nvisit = 1.00
+   is_terminal = False
+0.4.2.1.3.1.1.1.1.2
+   q-value = 0.6260
+   depth = 9
+   cost = 11
+   density = 0.1569
+   nvisit = 1.00
+   is_terminal = False
+0.4.2.1.3.1.1.1.1.3
+   q-value = 0.7153
+   depth = 9
+   cost = 11
+   density = 0.1650
+   nvisit = 1.00
+   is_terminal = False
+0.4.2.1.3.1.1.1.1.4.1
+   q-value = 0.8579
+   depth = 10
+   cost = 10
+   density = 0.1858
+   nvisit = 1.00
+   is_terminal = False
+0.4.2.1.3.1.1.1.1.4.3
+   q-value = 0.8613
+   depth = 10
+   cost = 10
+   density = 0.1861
+   nvisit = 1.00
+   is_terminal = False
+0.4.2.1.3.1.1.1.1.4.4.1
+   q-value = 0.9531
+   depth = 11
+   cost = 9
+   density = 0.2059
+   nvisit = 1.00
+   is_terminal = False
+0.4.2.1.3.1.1.1.1.4.4.3
+   q-value = 0.9565
+   depth = 11
+   cost = 9
+   density = 0.2063
+   nvisit = 1.00
+   is_terminal = False
+selected_leaf = 0.4.2.1.3.1.1.1.1.4.4.3
+selected = 0.4.2.1.3.1.1.1.1.4.4.3  density=0.2063  q=0.9565  nvisit=1
+
+-> p = 29
+gen_cnt = 30
+0.1
+   q-value = 0.9883
+   depth = 1
+   cost = 19
+   density = 0.1520
+   nvisit = 1.00
+   is_terminal = False
+0.2
+   q-value = 0.9888
+   depth = 1
+   cost = 19
+   density = 0.1520
+   nvisit = 1.00
+   is_terminal = False
+0.3
+   q-value = 0.9868
+   depth = 1
+   cost = 19
+   density = 0.1519
+   nvisit = 1.00
+   is_terminal = False
+0.4.1
+   q-value = 0.9702
+   depth = 2
+   cost = 18
+   density = 0.1539
+   nvisit = 1.00
+   is_terminal = False
+0.4.3
+   q-value = 0.8579
+   depth = 2
+   cost = 18
+   density = 0.1477
+   nvisit = 1.00
+   is_terminal = False
+0.4.2.2
+   q-value = 0.6074
+   depth = 3
+   cost = 17
+   density = 0.1357
+   nvisit = 1.00
+   is_terminal = False
+0.4.2.3
+   q-value = 0.9004
+   depth = 3
+   cost = 17
+   density = 0.1530
+   nvisit = 1.00
+   is_terminal = False
+0.4.2.4
+   q-value = 0.9443
+   depth = 3
+   cost = 17
+   density = 0.1555
+   nvisit = 1.00
+   is_terminal = False
+0.4.2.1.1
+   q-value = 0.7090
+   depth = 4
+   cost = 16
+   density = 0.1443
+   nvisit = 1.00
+   is_terminal = False
+0.4.2.1.2
+   q-value = 0.7637
+   depth = 4
+   cost = 16
+   density = 0.1477
+   nvisit = 1.00
+   is_terminal = False
+0.4.2.1.4
+   q-value = 0.8687
+   depth = 4
+   cost = 16
+   density = 0.1543
+   nvisit = 1.00
+   is_terminal = False
+0.4.2.1.3.2
+   q-value = 0.8457
+   depth = 5
+   cost = 15
+   density = 0.1564
+   nvisit = 1.00
+   is_terminal = False
+0.4.2.1.3.3
+   q-value = 0.8311
+   depth = 5
+   cost = 15
+   density = 0.1554
+   nvisit = 1.00
+   is_terminal = False
+0.4.2.1.3.4
+   q-value = 0.7339
+   depth = 5
+   cost = 15
+   density = 0.1489
+   nvisit = 1.00
+   is_terminal = False
+0.4.2.1.3.1.1.1.2
+   q-value = 0.9561
+   depth = 8
+   cost = 12
+   density = 0.1797
+   nvisit = 1.00
+   is_terminal = False
+0.4.2.1.3.1.1.1.1.1
+   q-value = 0.8418
+   depth = 9
+   cost = 11
+   density = 0.1765
+   nvisit = 1.00
+   is_terminal = False
+0.4.2.1.3.1.1.1.1.2
+   q-value = 0.6260
+   depth = 9
+   cost = 11
+   density = 0.1569
+   nvisit = 1.00
+   is_terminal = False
+0.4.2.1.3.1.1.1.1.3
+   q-value = 0.7153
+   depth = 9
+   cost = 11
+   density = 0.1650
+   nvisit = 1.00
+   is_terminal = False
+0.4.2.1.3.1.1.1.1.4.1
+   q-value = 0.8579
+   depth = 10
+   cost = 10
+   density = 0.1858
+   nvisit = 1.00
+   is_terminal = False
+0.4.2.1.3.1.1.1.1.4.3
+   q-value = 0.8613
+   depth = 10
+   cost = 10
+   density = 0.1861
+   nvisit = 1.00
+   is_terminal = False
+0.4.2.1.3.1.1.1.1.4.4.1
+   q-value = 0.9531
+   depth = 11
+   cost = 9
+   density = 0.2059
+   nvisit = 1.00
+   is_terminal = False
+0.4.2.1.3.1.1.1.1.4.4.3.1
+   q-value = 0.9893
+   depth = 12
+   cost = 8
+   density = 0.2237
+   nvisit = 1.00
+   is_terminal = False
+selected_leaf = 0.4.2.1.3.1.1.1.1.4.4.3.1
+selected = 0.4.2.1.3.1.1.1.1.4.4.3.1  density=0.2237  q=0.9893  nvisit=1
+
+-> p = 30
+gen_cnt = 31
+0.1
+   q-value = 0.9883
+   depth = 1
+   cost = 19
+   density = 0.1520
+   nvisit = 1.00
+   is_terminal = False
+0.2
+   q-value = 0.9888
+   depth = 1
+   cost = 19
+   density = 0.1520
+   nvisit = 1.00
+   is_terminal = False
+0.3
+   q-value = 0.9868
+   depth = 1
+   cost = 19
+   density = 0.1519
+   nvisit = 1.00
+   is_terminal = False
+0.4.1
+   q-value = 0.9702
+   depth = 2
+   cost = 18
+   density = 0.1539
+   nvisit = 1.00
+   is_terminal = False
+0.4.3
+   q-value = 0.8579
+   depth = 2
+   cost = 18
+   density = 0.1477
+   nvisit = 1.00
+   is_terminal = False
+0.4.2.2
+   q-value = 0.6074
+   depth = 3
+   cost = 17
+   density = 0.1357
+   nvisit = 1.00
+   is_terminal = False
+0.4.2.3
+   q-value = 0.9004
+   depth = 3
+   cost = 17
+   density = 0.1530
+   nvisit = 1.00
+   is_terminal = False
+0.4.2.4
+   q-value = 0.9443
+   depth = 3
+   cost = 17
+   density = 0.1555
+   nvisit = 1.00
+   is_terminal = False
+0.4.2.1.1
+   q-value = 0.7090
+   depth = 4
+   cost = 16
+   density = 0.1443
+   nvisit = 1.00
+   is_terminal = False
+0.4.2.1.2
+   q-value = 0.7637
+   depth = 4
+   cost = 16
+   density = 0.1477
+   nvisit = 1.00
+   is_terminal = False
+0.4.2.1.4
+   q-value = 0.8687
+   depth = 4
+   cost = 16
+   density = 0.1543
+   nvisit = 1.00
+   is_terminal = False
+0.4.2.1.3.2
+   q-value = 0.8457
+   depth = 5
+   cost = 15
+   density = 0.1564
+   nvisit = 1.00
+   is_terminal = False
+0.4.2.1.3.3
+   q-value = 0.8311
+   depth = 5
+   cost = 15
+   density = 0.1554
+   nvisit = 1.00
+   is_terminal = False
+0.4.2.1.3.4
+   q-value = 0.7339
+   depth = 5
+   cost = 15
+   density = 0.1489
+   nvisit = 1.00
+   is_terminal = False
+0.4.2.1.3.1.1.1.2
+   q-value = 0.9561
+   depth = 8
+   cost = 12
+   density = 0.1797
+   nvisit = 1.00
+   is_terminal = False
+0.4.2.1.3.1.1.1.1.1
+   q-value = 0.8418
+   depth = 9
+   cost = 11
+   density = 0.1765
+   nvisit = 1.00
+   is_terminal = False
+0.4.2.1.3.1.1.1.1.2
+   q-value = 0.6260
+   depth = 9
+   cost = 11
+   density = 0.1569
+   nvisit = 1.00
+   is_terminal = False
+0.4.2.1.3.1.1.1.1.3
+   q-value = 0.7153
+   depth = 9
+   cost = 11
+   density = 0.1650
+   nvisit = 1.00
+   is_terminal = False
+0.4.2.1.3.1.1.1.1.4.1
+   q-value = 0.8579
+   depth = 10
+   cost = 10
+   density = 0.1858
+   nvisit = 1.00
+   is_terminal = False
+0.4.2.1.3.1.1.1.1.4.3
+   q-value = 0.8613
+   depth = 10
+   cost = 10
+   density = 0.1861
+   nvisit = 1.00
+   is_terminal = False
+0.4.2.1.3.1.1.1.1.4.4.1
+   q-value = 0.9531
+   depth = 11
+   cost = 9
+   density = 0.2059
+   nvisit = 1.00
+   is_terminal = False
+0.4.2.1.3.1.1.1.1.4.4.3.1.1
+   q-value = 0.9956
+   depth = 13
+   cost = 7
+   density = 0.2422
+   nvisit = 1.00
+   is_terminal = False
+0.4.2.1.3.1.1.1.1.4.4.3.1.3
+   q-value = 0.9941
+   depth = 13
+   cost = 7
+   density = 0.2420
+   nvisit = 1.00
+   is_terminal = False
+selected_leaf = 0.4.2.1.3.1.1.1.1.4.4.3.1.1
+selected = 0.4.2.1.3.1.1.1.1.4.4.3.1.1  density=0.2422  q=0.9956  nvisit=1
+
+-> p = 31
+gen_cnt = 32
+0.1
+   q-value = 0.9883
+   depth = 1
+   cost = 19
+   density = 0.1520
+   nvisit = 1.00
+   is_terminal = False
+0.2
+   q-value = 0.9888
+   depth = 1
+   cost = 19
+   density = 0.1520
+   nvisit = 1.00
+   is_terminal = False
+0.3
+   q-value = 0.9868
+   depth = 1
+   cost = 19
+   density = 0.1519
+   nvisit = 1.00
+   is_terminal = False
+0.4.1
+   q-value = 0.9702
+   depth = 2
+   cost = 18
+   density = 0.1539
+   nvisit = 1.00
+   is_terminal = False
+0.4.3
+   q-value = 0.8579
+   depth = 2
+   cost = 18
+   density = 0.1477
+   nvisit = 1.00
+   is_terminal = False
+0.4.2.2
+   q-value = 0.6074
+   depth = 3
+   cost = 17
+   density = 0.1357
+   nvisit = 1.00
+   is_terminal = False
+0.4.2.3
+   q-value = 0.9004
+   depth = 3
+   cost = 17
+   density = 0.1530
+   nvisit = 1.00
+   is_terminal = False
+0.4.2.4
+   q-value = 0.9443
+   depth = 3
+   cost = 17
+   density = 0.1555
+   nvisit = 1.00
+   is_terminal = False
+0.4.2.1.1
+   q-value = 0.7090
+   depth = 4
+   cost = 16
+   density = 0.1443
+   nvisit = 1.00
+   is_terminal = False
+0.4.2.1.2
+   q-value = 0.7637
+   depth = 4
+   cost = 16
+   density = 0.1477
+   nvisit = 1.00
+   is_terminal = False
+0.4.2.1.4
+   q-value = 0.8687
+   depth = 4
+   cost = 16
+   density = 0.1543
+   nvisit = 1.00
+   is_terminal = False
+0.4.2.1.3.2
+   q-value = 0.8457
+   depth = 5
+   cost = 15
+   density = 0.1564
+   nvisit = 1.00
+   is_terminal = False
+0.4.2.1.3.3
+   q-value = 0.8311
+   depth = 5
+   cost = 15
+   density = 0.1554
+   nvisit = 1.00
+   is_terminal = False
+0.4.2.1.3.4
+   q-value = 0.7339
+   depth = 5
+   cost = 15
+   density = 0.1489
+   nvisit = 1.00
+   is_terminal = False
+0.4.2.1.3.1.1.1.2
+   q-value = 0.9561
+   depth = 8
+   cost = 12
+   density = 0.1797
+   nvisit = 1.00
+   is_terminal = False
+0.4.2.1.3.1.1.1.1.1
+   q-value = 0.8418
+   depth = 9
+   cost = 11
+   density = 0.1765
+   nvisit = 1.00
+   is_terminal = False
+0.4.2.1.3.1.1.1.1.2
+   q-value = 0.6260
+   depth = 9
+   cost = 11
+   density = 0.1569
+   nvisit = 1.00
+   is_terminal = False
+0.4.2.1.3.1.1.1.1.3
+   q-value = 0.7153
+   depth = 9
+   cost = 11
+   density = 0.1650
+   nvisit = 1.00
+   is_terminal = False
+0.4.2.1.3.1.1.1.1.4.1
+   q-value = 0.8579
+   depth = 10
+   cost = 10
+   density = 0.1858
+   nvisit = 1.00
+   is_terminal = False
+0.4.2.1.3.1.1.1.1.4.3
+   q-value = 0.8613
+   depth = 10
+   cost = 10
+   density = 0.1861
+   nvisit = 1.00
+   is_terminal = False
+0.4.2.1.3.1.1.1.1.4.4.1
+   q-value = 0.9531
+   depth = 11
+   cost = 9
+   density = 0.2059
+   nvisit = 1.00
+   is_terminal = False
+0.4.2.1.3.1.1.1.1.4.4.3.1.3
+   q-value = 0.9941
+   depth = 13
+   cost = 7
+   density = 0.2420
+   nvisit = 1.00
+   is_terminal = False
+selected_leaf = 0.4.2.1.3.1.1.1.1.4.4.3.1.3
+selected = 0.4.2.1.3.1.1.1.1.4.4.3.1.3  density=0.2420  q=0.9941  nvisit=1
+
+-> p = 32
+gen_cnt = 33
+0.1
+   q-value = 0.9883
+   depth = 1
+   cost = 19
+   density = 0.1520
+   nvisit = 1.00
+   is_terminal = False
+0.2
+   q-value = 0.9888
+   depth = 1
+   cost = 19
+   density = 0.1520
+   nvisit = 1.00
+   is_terminal = False
+0.3
+   q-value = 0.9868
+   depth = 1
+   cost = 19
+   density = 0.1519
+   nvisit = 1.00
+   is_terminal = False
+0.4.1
+   q-value = 0.9702
+   depth = 2
+   cost = 18
+   density = 0.1539
+   nvisit = 1.00
+   is_terminal = False
+0.4.3
+   q-value = 0.8579
+   depth = 2
+   cost = 18
+   density = 0.1477
+   nvisit = 1.00
+   is_terminal = False
+0.4.2.2
+   q-value = 0.6074
+   depth = 3
+   cost = 17
+   density = 0.1357
+   nvisit = 1.00
+   is_terminal = False
+0.4.2.3
+   q-value = 0.9004
+   depth = 3
+   cost = 17
+   density = 0.1530
+   nvisit = 1.00
+   is_terminal = False
+0.4.2.4
+   q-value = 0.9443
+   depth = 3
+   cost = 17
+   density = 0.1555
+   nvisit = 1.00
+   is_terminal = False
+0.4.2.1.1
+   q-value = 0.7090
+   depth = 4
+   cost = 16
+   density = 0.1443
+   nvisit = 1.00
+   is_terminal = False
+0.4.2.1.2
+   q-value = 0.7637
+   depth = 4
+   cost = 16
+   density = 0.1477
+   nvisit = 1.00
+   is_terminal = False
+0.4.2.1.4
+   q-value = 0.8687
+   depth = 4
+   cost = 16
+   density = 0.1543
+   nvisit = 1.00
+   is_terminal = False
+0.4.2.1.3.2
+   q-value = 0.8457
+   depth = 5
+   cost = 15
+   density = 0.1564
+   nvisit = 1.00
+   is_terminal = False
+0.4.2.1.3.3
+   q-value = 0.8311
+   depth = 5
+   cost = 15
+   density = 0.1554
+   nvisit = 1.00
+   is_terminal = False
+0.4.2.1.3.4
+   q-value = 0.7339
+   depth = 5
+   cost = 15
+   density = 0.1489
+   nvisit = 1.00
+   is_terminal = False
+0.4.2.1.3.1.1.1.2
+   q-value = 0.9561
+   depth = 8
+   cost = 12
+   density = 0.1797
+   nvisit = 1.00
+   is_terminal = False
+0.4.2.1.3.1.1.1.1.1
+   q-value = 0.8418
+   depth = 9
+   cost = 11
+   density = 0.1765
+   nvisit = 1.00
+   is_terminal = False
+0.4.2.1.3.1.1.1.1.2
+   q-value = 0.6260
+   depth = 9
+   cost = 11
+   density = 0.1569
+   nvisit = 1.00
+   is_terminal = False
+0.4.2.1.3.1.1.1.1.3
+   q-value = 0.7153
+   depth = 9
+   cost = 11
+   density = 0.1650
+   nvisit = 1.00
+   is_terminal = False
+0.4.2.1.3.1.1.1.1.4.1
+   q-value = 0.8579
+   depth = 10
+   cost = 10
+   density = 0.1858
+   nvisit = 1.00
+   is_terminal = False
+0.4.2.1.3.1.1.1.1.4.3
+   q-value = 0.8613
+   depth = 10
+   cost = 10
+   density = 0.1861
+   nvisit = 1.00
+   is_terminal = False
+0.4.2.1.3.1.1.1.1.4.4.1
+   q-value = 0.9531
+   depth = 11
+   cost = 9
+   density = 0.2059
+   nvisit = 1.00
+   is_terminal = False
+selected_leaf = 0.4.2.1.3.1.1.1.1.4.4.1
+selected = 0.4.2.1.3.1.1.1.1.4.4.1  density=0.2059  q=0.9531  nvisit=1
+
+-> p = 33
+gen_cnt = 34
+0.1
+   q-value = 0.9883
+   depth = 1
+   cost = 19
+   density = 0.1520
+   nvisit = 1.00
+   is_terminal = False
+0.2
+   q-value = 0.9888
+   depth = 1
+   cost = 19
+   density = 0.1520
+   nvisit = 1.00
+   is_terminal = False
+0.3
+   q-value = 0.9868
+   depth = 1
+   cost = 19
+   density = 0.1519
+   nvisit = 1.00
+   is_terminal = False
+0.4.1
+   q-value = 0.9702
+   depth = 2
+   cost = 18
+   density = 0.1539
+   nvisit = 1.00
+   is_terminal = False
+0.4.3
+   q-value = 0.8579
+   depth = 2
+   cost = 18
+   density = 0.1477
+   nvisit = 1.00
+   is_terminal = False
+0.4.2.2
+   q-value = 0.6074
+   depth = 3
+   cost = 17
+   density = 0.1357
+   nvisit = 1.00
+   is_terminal = False
+0.4.2.3
+   q-value = 0.9004
+   depth = 3
+   cost = 17
+   density = 0.1530
+   nvisit = 1.00
+   is_terminal = False
+0.4.2.4
+   q-value = 0.9443
+   depth = 3
+   cost = 17
+   density = 0.1555
+   nvisit = 1.00
+   is_terminal = False
+0.4.2.1.1
+   q-value = 0.7090
+   depth = 4
+   cost = 16
+   density = 0.1443
+   nvisit = 1.00
+   is_terminal = False
+0.4.2.1.2
+   q-value = 0.7637
+   depth = 4
+   cost = 16
+   density = 0.1477
+   nvisit = 1.00
+   is_terminal = False
+0.4.2.1.4
+   q-value = 0.8687
+   depth = 4
+   cost = 16
+   density = 0.1543
+   nvisit = 1.00
+   is_terminal = False
+0.4.2.1.3.2
+   q-value = 0.8457
+   depth = 5
+   cost = 15
+   density = 0.1564
+   nvisit = 1.00
+   is_terminal = False
+0.4.2.1.3.3
+   q-value = 0.8311
+   depth = 5
+   cost = 15
+   density = 0.1554
+   nvisit = 1.00
+   is_terminal = False
+0.4.2.1.3.4
+   q-value = 0.7339
+   depth = 5
+   cost = 15
+   density = 0.1489
+   nvisit = 1.00
+   is_terminal = False
+0.4.2.1.3.1.1.1.2
+   q-value = 0.9561
+   depth = 8
+   cost = 12
+   density = 0.1797
+   nvisit = 1.00
+   is_terminal = False
+0.4.2.1.3.1.1.1.1.1
+   q-value = 0.8418
+   depth = 9
+   cost = 11
+   density = 0.1765
+   nvisit = 1.00
+   is_terminal = False
+0.4.2.1.3.1.1.1.1.2
+   q-value = 0.6260
+   depth = 9
+   cost = 11
+   density = 0.1569
+   nvisit = 1.00
+   is_terminal = False
+0.4.2.1.3.1.1.1.1.3
+   q-value = 0.7153
+   depth = 9
+   cost = 11
+   density = 0.1650
+   nvisit = 1.00
+   is_terminal = False
+0.4.2.1.3.1.1.1.1.4.1
+   q-value = 0.8579
+   depth = 10
+   cost = 10
+   density = 0.1858
+   nvisit = 1.00
+   is_terminal = False
+0.4.2.1.3.1.1.1.1.4.3
+   q-value = 0.8613
+   depth = 10
+   cost = 10
+   density = 0.1861
+   nvisit = 1.00
+   is_terminal = False
+0.4.2.1.3.1.1.1.1.4.4.1.1
+   q-value = 0.9883
+   depth = 12
+   cost = 8
+   density = 0.2235
+   nvisit = 1.00
+   is_terminal = False
+selected_leaf = 0.4.2.1.3.1.1.1.1.4.4.1.1
+selected = 0.4.2.1.3.1.1.1.1.4.4.1.1  density=0.2235  q=0.9883  nvisit=1
+
+-> p = 34
+gen_cnt = 35
+0.1
+   q-value = 0.9883
+   depth = 1
+   cost = 19
+   density = 0.1520
+   nvisit = 1.00
+   is_terminal = False
+0.2
+   q-value = 0.9888
+   depth = 1
+   cost = 19
+   density = 0.1520
+   nvisit = 1.00
+   is_terminal = False
+0.3
+   q-value = 0.9868
+   depth = 1
+   cost = 19
+   density = 0.1519
+   nvisit = 1.00
+   is_terminal = False
+0.4.1
+   q-value = 0.9702
+   depth = 2
+   cost = 18
+   density = 0.1539
+   nvisit = 1.00
+   is_terminal = False
+0.4.3
+   q-value = 0.8579
+   depth = 2
+   cost = 18
+   density = 0.1477
+   nvisit = 1.00
+   is_terminal = False
+0.4.2.2
+   q-value = 0.6074
+   depth = 3
+   cost = 17
+   density = 0.1357
+   nvisit = 1.00
+   is_terminal = False
+0.4.2.3
+   q-value = 0.9004
+   depth = 3
+   cost = 17
+   density = 0.1530
+   nvisit = 1.00
+   is_terminal = False
+0.4.2.4
+   q-value = 0.9443
+   depth = 3
+   cost = 17
+   density = 0.1555
+   nvisit = 1.00
+   is_terminal = False
+0.4.2.1.1
+   q-value = 0.7090
+   depth = 4
+   cost = 16
+   density = 0.1443
+   nvisit = 1.00
+   is_terminal = False
+0.4.2.1.2
+   q-value = 0.7637
+   depth = 4
+   cost = 16
+   density = 0.1477
+   nvisit = 1.00
+   is_terminal = False
+0.4.2.1.4
+   q-value = 0.8687
+   depth = 4
+   cost = 16
+   density = 0.1543
+   nvisit = 1.00
+   is_terminal = False
+0.4.2.1.3.2
+   q-value = 0.8457
+   depth = 5
+   cost = 15
+   density = 0.1564
+   nvisit = 1.00
+   is_terminal = False
+0.4.2.1.3.3
+   q-value = 0.8311
+   depth = 5
+   cost = 15
+   density = 0.1554
+   nvisit = 1.00
+   is_terminal = False
+0.4.2.1.3.4
+   q-value = 0.7339
+   depth = 5
+   cost = 15
+   density = 0.1489
+   nvisit = 1.00
+   is_terminal = False
+0.4.2.1.3.1.1.1.2
+   q-value = 0.9561
+   depth = 8
+   cost = 12
+   density = 0.1797
+   nvisit = 1.00
+   is_terminal = False
+0.4.2.1.3.1.1.1.1.1
+   q-value = 0.8418
+   depth = 9
+   cost = 11
+   density = 0.1765
+   nvisit = 1.00
+   is_terminal = False
+0.4.2.1.3.1.1.1.1.2
+   q-value = 0.6260
+   depth = 9
+   cost = 11
+   density = 0.1569
+   nvisit = 1.00
+   is_terminal = False
+0.4.2.1.3.1.1.1.1.3
+   q-value = 0.7153
+   depth = 9
+   cost = 11
+   density = 0.1650
+   nvisit = 1.00
+   is_terminal = False
+0.4.2.1.3.1.1.1.1.4.1
+   q-value = 0.8579
+   depth = 10
+   cost = 10
+   density = 0.1858
+   nvisit = 1.00
+   is_terminal = False
+0.4.2.1.3.1.1.1.1.4.3
+   q-value = 0.8613
+   depth = 10
+   cost = 10
+   density = 0.1861
+   nvisit = 1.00
+   is_terminal = False
+0.4.2.1.3.1.1.1.1.4.4.1.1.1
+   q-value = 0.9966
+   depth = 13
+   cost = 7
+   density = 0.2424
+   nvisit = 1.00
+   is_terminal = False
+0.4.2.1.3.1.1.1.1.4.4.1.1.2
+   q-value = 0.9946
+   depth = 13
+   cost = 7
+   density = 0.2421
+   nvisit = 1.00
+   is_terminal = False
+selected_leaf = 0.4.2.1.3.1.1.1.1.4.4.1.1.1
+selected = 0.4.2.1.3.1.1.1.1.4.4.1.1.1  density=0.2424  q=0.9966  nvisit=1
+
+-> p = 35
+gen_cnt = 36
+0.1
+   q-value = 0.9883
+   depth = 1
+   cost = 19
+   density = 0.1520
+   nvisit = 1.00
+   is_terminal = False
+0.2
+   q-value = 0.9888
+   depth = 1
+   cost = 19
+   density = 0.1520
+   nvisit = 1.00
+   is_terminal = False
+0.3
+   q-value = 0.9868
+   depth = 1
+   cost = 19
+   density = 0.1519
+   nvisit = 1.00
+   is_terminal = False
+0.4.1
+   q-value = 0.9702
+   depth = 2
+   cost = 18
+   density = 0.1539
+   nvisit = 1.00
+   is_terminal = False
+0.4.3
+   q-value = 0.8579
+   depth = 2
+   cost = 18
+   density = 0.1477
+   nvisit = 1.00
+   is_terminal = False
+0.4.2.2
+   q-value = 0.6074
+   depth = 3
+   cost = 17
+   density = 0.1357
+   nvisit = 1.00
+   is_terminal = False
+0.4.2.3
+   q-value = 0.9004
+   depth = 3
+   cost = 17
+   density = 0.1530
+   nvisit = 1.00
+   is_terminal = False
+0.4.2.4
+   q-value = 0.9443
+   depth = 3
+   cost = 17
+   density = 0.1555
+   nvisit = 1.00
+   is_terminal = False
+0.4.2.1.1
+   q-value = 0.7090
+   depth = 4
+   cost = 16
+   density = 0.1443
+   nvisit = 1.00
+   is_terminal = False
+0.4.2.1.2
+   q-value = 0.7637
+   depth = 4
+   cost = 16
+   density = 0.1477
+   nvisit = 1.00
+   is_terminal = False
+0.4.2.1.4
+   q-value = 0.8687
+   depth = 4
+   cost = 16
+   density = 0.1543
+   nvisit = 1.00
+   is_terminal = False
+0.4.2.1.3.2
+   q-value = 0.8457
+   depth = 5
+   cost = 15
+   density = 0.1564
+   nvisit = 1.00
+   is_terminal = False
+0.4.2.1.3.3
+   q-value = 0.8311
+   depth = 5
+   cost = 15
+   density = 0.1554
+   nvisit = 1.00
+   is_terminal = False
+0.4.2.1.3.4
+   q-value = 0.7339
+   depth = 5
+   cost = 15
+   density = 0.1489
+   nvisit = 1.00
+   is_terminal = False
+0.4.2.1.3.1.1.1.2
+   q-value = 0.9561
+   depth = 8
+   cost = 12
+   density = 0.1797
+   nvisit = 1.00
+   is_terminal = False
+0.4.2.1.3.1.1.1.1.1
+   q-value = 0.8418
+   depth = 9
+   cost = 11
+   density = 0.1765
+   nvisit = 1.00
+   is_terminal = False
+0.4.2.1.3.1.1.1.1.2
+   q-value = 0.6260
+   depth = 9
+   cost = 11
+   density = 0.1569
+   nvisit = 1.00
+   is_terminal = False
+0.4.2.1.3.1.1.1.1.3
+   q-value = 0.7153
+   depth = 9
+   cost = 11
+   density = 0.1650
+   nvisit = 1.00
+   is_terminal = False
+0.4.2.1.3.1.1.1.1.4.1
+   q-value = 0.8579
+   depth = 10
+   cost = 10
+   density = 0.1858
+   nvisit = 1.00
+   is_terminal = False
+0.4.2.1.3.1.1.1.1.4.3
+   q-value = 0.8613
+   depth = 10
+   cost = 10
+   density = 0.1861
+   nvisit = 1.00
+   is_terminal = False
+0.4.2.1.3.1.1.1.1.4.4.1.1.2
+   q-value = 0.9946
+   depth = 13
+   cost = 7
+   density = 0.2421
+   nvisit = 1.00
+   is_terminal = False
+selected_leaf = 0.4.2.1.3.1.1.1.1.4.4.1.1.2
+selected = 0.4.2.1.3.1.1.1.1.4.4.1.1.2  density=0.2421  q=0.9946  nvisit=1
+
+-> p = 36
+gen_cnt = 37
+0.1
+   q-value = 0.9883
+   depth = 1
+   cost = 19
+   density = 0.1520
+   nvisit = 1.00
+   is_terminal = False
+0.2
+   q-value = 0.9888
+   depth = 1
+   cost = 19
+   density = 0.1520
+   nvisit = 1.00
+   is_terminal = False
+0.3
+   q-value = 0.9868
+   depth = 1
+   cost = 19
+   density = 0.1519
+   nvisit = 1.00
+   is_terminal = False
+0.4.1
+   q-value = 0.9702
+   depth = 2
+   cost = 18
+   density = 0.1539
+   nvisit = 1.00
+   is_terminal = False
+0.4.3
+   q-value = 0.8579
+   depth = 2
+   cost = 18
+   density = 0.1477
+   nvisit = 1.00
+   is_terminal = False
+0.4.2.2
+   q-value = 0.6074
+   depth = 3
+   cost = 17
+   density = 0.1357
+   nvisit = 1.00
+   is_terminal = False
+0.4.2.3
+   q-value = 0.9004
+   depth = 3
+   cost = 17
+   density = 0.1530
+   nvisit = 1.00
+   is_terminal = False
+0.4.2.4
+   q-value = 0.9443
+   depth = 3
+   cost = 17
+   density = 0.1555
+   nvisit = 1.00
+   is_terminal = False
+0.4.2.1.1
+   q-value = 0.7090
+   depth = 4
+   cost = 16
+   density = 0.1443
+   nvisit = 1.00
+   is_terminal = False
+0.4.2.1.2
+   q-value = 0.7637
+   depth = 4
+   cost = 16
+   density = 0.1477
+   nvisit = 1.00
+   is_terminal = False
+0.4.2.1.4
+   q-value = 0.8687
+   depth = 4
+   cost = 16
+   density = 0.1543
+   nvisit = 1.00
+   is_terminal = False
+0.4.2.1.3.2
+   q-value = 0.8457
+   depth = 5
+   cost = 15
+   density = 0.1564
+   nvisit = 1.00
+   is_terminal = False
+0.4.2.1.3.3
+   q-value = 0.8311
+   depth = 5
+   cost = 15
+   density = 0.1554
+   nvisit = 1.00
+   is_terminal = False
+0.4.2.1.3.4
+   q-value = 0.7339
+   depth = 5
+   cost = 15
+   density = 0.1489
+   nvisit = 1.00
+   is_terminal = False
+0.4.2.1.3.1.1.1.2
+   q-value = 0.9561
+   depth = 8
+   cost = 12
+   density = 0.1797
+   nvisit = 1.00
+   is_terminal = False
+0.4.2.1.3.1.1.1.1.1
+   q-value = 0.8418
+   depth = 9
+   cost = 11
+   density = 0.1765
+   nvisit = 1.00
+   is_terminal = False
+0.4.2.1.3.1.1.1.1.2
+   q-value = 0.6260
+   depth = 9
+   cost = 11
+   density = 0.1569
+   nvisit = 1.00
+   is_terminal = False
+0.4.2.1.3.1.1.1.1.3
+   q-value = 0.7153
+   depth = 9
+   cost = 11
+   density = 0.1650
+   nvisit = 1.00
+   is_terminal = False
+0.4.2.1.3.1.1.1.1.4.1
+   q-value = 0.8579
+   depth = 10
+   cost = 10
+   density = 0.1858
+   nvisit = 1.00
+   is_terminal = False
+0.4.2.1.3.1.1.1.1.4.3
+   q-value = 0.8613
+   depth = 10
+   cost = 10
+   density = 0.1861
+   nvisit = 1.00
+   is_terminal = False
+selected_leaf = 0.4.2.1.3.1.1.1.1.4.3
+selected = 0.4.2.1.3.1.1.1.1.4.3  density=0.1861  q=0.8613  nvisit=1
+
+-> p = 37
+gen_cnt = 38
+0.1
+   q-value = 0.9883
+   depth = 1
+   cost = 19
+   density = 0.1520
+   nvisit = 1.00
+   is_terminal = False
+0.2
+   q-value = 0.9888
+   depth = 1
+   cost = 19
+   density = 0.1520
+   nvisit = 1.00
+   is_terminal = False
+0.3
+   q-value = 0.9868
+   depth = 1
+   cost = 19
+   density = 0.1519
+   nvisit = 1.00
+   is_terminal = False
+0.4.1
+   q-value = 0.9702
+   depth = 2
+   cost = 18
+   density = 0.1539
+   nvisit = 1.00
+   is_terminal = False
+0.4.3
+   q-value = 0.8579
+   depth = 2
+   cost = 18
+   density = 0.1477
+   nvisit = 1.00
+   is_terminal = False
+0.4.2.2
+   q-value = 0.6074
+   depth = 3
+   cost = 17
+   density = 0.1357
+   nvisit = 1.00
+   is_terminal = False
+0.4.2.3
+   q-value = 0.9004
+   depth = 3
+   cost = 17
+   density = 0.1530
+   nvisit = 1.00
+   is_terminal = False
+0.4.2.4
+   q-value = 0.9443
+   depth = 3
+   cost = 17
+   density = 0.1555
+   nvisit = 1.00
+   is_terminal = False
+0.4.2.1.1
+   q-value = 0.7090
+   depth = 4
+   cost = 16
+   density = 0.1443
+   nvisit = 1.00
+   is_terminal = False
+0.4.2.1.2
+   q-value = 0.7637
+   depth = 4
+   cost = 16
+   density = 0.1477
+   nvisit = 1.00
+   is_terminal = False
+0.4.2.1.4
+   q-value = 0.8687
+   depth = 4
+   cost = 16
+   density = 0.1543
+   nvisit = 1.00
+   is_terminal = False
+0.4.2.1.3.2
+   q-value = 0.8457
+   depth = 5
+   cost = 15
+   density = 0.1564
+   nvisit = 1.00
+   is_terminal = False
+0.4.2.1.3.3
+   q-value = 0.8311
+   depth = 5
+   cost = 15
+   density = 0.1554
+   nvisit = 1.00
+   is_terminal = False
+0.4.2.1.3.4
+   q-value = 0.7339
+   depth = 5
+   cost = 15
+   density = 0.1489
+   nvisit = 1.00
+   is_terminal = False
+0.4.2.1.3.1.1.1.2
+   q-value = 0.9561
+   depth = 8
+   cost = 12
+   density = 0.1797
+   nvisit = 1.00
+   is_terminal = False
+0.4.2.1.3.1.1.1.1.1
+   q-value = 0.8418
+   depth = 9
+   cost = 11
+   density = 0.1765
+   nvisit = 1.00
+   is_terminal = False
+0.4.2.1.3.1.1.1.1.2
+   q-value = 0.6260
+   depth = 9
+   cost = 11
+   density = 0.1569
+   nvisit = 1.00
+   is_terminal = False
+0.4.2.1.3.1.1.1.1.3
+   q-value = 0.7153
+   depth = 9
+   cost = 11
+   density = 0.1650
+   nvisit = 1.00
+   is_terminal = False
+0.4.2.1.3.1.1.1.1.4.1
+   q-value = 0.8579
+   depth = 10
+   cost = 10
+   density = 0.1858
+   nvisit = 1.00
+   is_terminal = False
+0.4.2.1.3.1.1.1.1.4.3.1
+   q-value = 0.9307
+   depth = 11
+   cost = 9
+   density = 0.2034
+   nvisit = 1.00
+   is_terminal = False
+0.4.2.1.3.1.1.1.1.4.3.2
+   q-value = 0.9419
+   depth = 11
+   cost = 9
+   density = 0.2047
+   nvisit = 1.00
+   is_terminal = False
+0.4.2.1.3.1.1.1.1.4.3.3
+   q-value = 0.9380
+   depth = 11
+   cost = 9
+   density = 0.2042
+   nvisit = 1.00
+   is_terminal = False
+selected_leaf = 0.4.2.1.3.1.1.1.1.4.3.2
+selected = 0.4.2.1.3.1.1.1.1.4.3.2  density=0.2047  q=0.9419  nvisit=1
+
+-> p = 38
+gen_cnt = 39
+0.1
+   q-value = 0.9883
+   depth = 1
+   cost = 19
+   density = 0.1520
+   nvisit = 1.00
+   is_terminal = False
+0.2
+   q-value = 0.9888
+   depth = 1
+   cost = 19
+   density = 0.1520
+   nvisit = 1.00
+   is_terminal = False
+0.3
+   q-value = 0.9868
+   depth = 1
+   cost = 19
+   density = 0.1519
+   nvisit = 1.00
+   is_terminal = False
+0.4.1
+   q-value = 0.9702
+   depth = 2
+   cost = 18
+   density = 0.1539
+   nvisit = 1.00
+   is_terminal = False
+0.4.3
+   q-value = 0.8579
+   depth = 2
+   cost = 18
+   density = 0.1477
+   nvisit = 1.00
+   is_terminal = False
+0.4.2.2
+   q-value = 0.6074
+   depth = 3
+   cost = 17
+   density = 0.1357
+   nvisit = 1.00
+   is_terminal = False
+0.4.2.3
+   q-value = 0.9004
+   depth = 3
+   cost = 17
+   density = 0.1530
+   nvisit = 1.00
+   is_terminal = False
+0.4.2.4
+   q-value = 0.9443
+   depth = 3
+   cost = 17
+   density = 0.1555
+   nvisit = 1.00
+   is_terminal = False
+0.4.2.1.1
+   q-value = 0.7090
+   depth = 4
+   cost = 16
+   density = 0.1443
+   nvisit = 1.00
+   is_terminal = False
+0.4.2.1.2
+   q-value = 0.7637
+   depth = 4
+   cost = 16
+   density = 0.1477
+   nvisit = 1.00
+   is_terminal = False
+0.4.2.1.4
+   q-value = 0.8687
+   depth = 4
+   cost = 16
+   density = 0.1543
+   nvisit = 1.00
+   is_terminal = False
+0.4.2.1.3.2
+   q-value = 0.8457
+   depth = 5
+   cost = 15
+   density = 0.1564
+   nvisit = 1.00
+   is_terminal = False
+0.4.2.1.3.3
+   q-value = 0.8311
+   depth = 5
+   cost = 15
+   density = 0.1554
+   nvisit = 1.00
+   is_terminal = False
+0.4.2.1.3.4
+   q-value = 0.7339
+   depth = 5
+   cost = 15
+   density = 0.1489
+   nvisit = 1.00
+   is_terminal = False
+0.4.2.1.3.1.1.1.2
+   q-value = 0.9561
+   depth = 8
+   cost = 12
+   density = 0.1797
+   nvisit = 1.00
+   is_terminal = False
+0.4.2.1.3.1.1.1.1.1
+   q-value = 0.8418
+   depth = 9
+   cost = 11
+   density = 0.1765
+   nvisit = 1.00
+   is_terminal = False
+0.4.2.1.3.1.1.1.1.2
+   q-value = 0.6260
+   depth = 9
+   cost = 11
+   density = 0.1569
+   nvisit = 1.00
+   is_terminal = False
+0.4.2.1.3.1.1.1.1.3
+   q-value = 0.7153
+   depth = 9
+   cost = 11
+   density = 0.1650
+   nvisit = 1.00
+   is_terminal = False
+0.4.2.1.3.1.1.1.1.4.1
+   q-value = 0.8579
+   depth = 10
+   cost = 10
+   density = 0.1858
+   nvisit = 1.00
+   is_terminal = False
+0.4.2.1.3.1.1.1.1.4.3.1
+   q-value = 0.9307
+   depth = 11
+   cost = 9
+   density = 0.2034
+   nvisit = 1.00
+   is_terminal = False
+0.4.2.1.3.1.1.1.1.4.3.3
+   q-value = 0.9380
+   depth = 11
+   cost = 9
+   density = 0.2042
+   nvisit = 1.00
+   is_terminal = False
+0.4.2.1.3.1.1.1.1.4.3.2.1
+   q-value = 0.9863
+   depth = 12
+   cost = 8
+   density = 0.2233
+   nvisit = 1.00
+   is_terminal = False
+selected_leaf = 0.4.2.1.3.1.1.1.1.4.3.2.1
+selected = 0.4.2.1.3.1.1.1.1.4.3.2.1  density=0.2233  q=0.9863  nvisit=1
+
+-> p = 39
+gen_cnt = 40
+0.1
+   q-value = 0.9883
+   depth = 1
+   cost = 19
+   density = 0.1520
+   nvisit = 1.00
+   is_terminal = False
+0.2
+   q-value = 0.9888
+   depth = 1
+   cost = 19
+   density = 0.1520
+   nvisit = 1.00
+   is_terminal = False
+0.3
+   q-value = 0.9868
+   depth = 1
+   cost = 19
+   density = 0.1519
+   nvisit = 1.00
+   is_terminal = False
+0.4.1
+   q-value = 0.9702
+   depth = 2
+   cost = 18
+   density = 0.1539
+   nvisit = 1.00
+   is_terminal = False
+0.4.3
+   q-value = 0.8579
+   depth = 2
+   cost = 18
+   density = 0.1477
+   nvisit = 1.00
+   is_terminal = False
+0.4.2.2
+   q-value = 0.6074
+   depth = 3
+   cost = 17
+   density = 0.1357
+   nvisit = 1.00
+   is_terminal = False
+0.4.2.3
+   q-value = 0.9004
+   depth = 3
+   cost = 17
+   density = 0.1530
+   nvisit = 1.00
+   is_terminal = False
+0.4.2.4
+   q-value = 0.9443
+   depth = 3
+   cost = 17
+   density = 0.1555
+   nvisit = 1.00
+   is_terminal = False
+0.4.2.1.1
+   q-value = 0.7090
+   depth = 4
+   cost = 16
+   density = 0.1443
+   nvisit = 1.00
+   is_terminal = False
+0.4.2.1.2
+   q-value = 0.7637
+   depth = 4
+   cost = 16
+   density = 0.1477
+   nvisit = 1.00
+   is_terminal = False
+0.4.2.1.4
+   q-value = 0.8687
+   depth = 4
+   cost = 16
+   density = 0.1543
+   nvisit = 1.00
+   is_terminal = False
+0.4.2.1.3.2
+   q-value = 0.8457
+   depth = 5
+   cost = 15
+   density = 0.1564
+   nvisit = 1.00
+   is_terminal = False
+0.4.2.1.3.3
+   q-value = 0.8311
+   depth = 5
+   cost = 15
+   density = 0.1554
+   nvisit = 1.00
+   is_terminal = False
+0.4.2.1.3.4
+   q-value = 0.7339
+   depth = 5
+   cost = 15
+   density = 0.1489
+   nvisit = 1.00
+   is_terminal = False
+0.4.2.1.3.1.1.1.2
+   q-value = 0.9561
+   depth = 8
+   cost = 12
+   density = 0.1797
+   nvisit = 1.00
+   is_terminal = False
+0.4.2.1.3.1.1.1.1.1
+   q-value = 0.8418
+   depth = 9
+   cost = 11
+   density = 0.1765
+   nvisit = 1.00
+   is_terminal = False
+0.4.2.1.3.1.1.1.1.2
+   q-value = 0.6260
+   depth = 9
+   cost = 11
+   density = 0.1569
+   nvisit = 1.00
+   is_terminal = False
+0.4.2.1.3.1.1.1.1.3
+   q-value = 0.7153
+   depth = 9
+   cost = 11
+   density = 0.1650
+   nvisit = 1.00
+   is_terminal = False
+0.4.2.1.3.1.1.1.1.4.1
+   q-value = 0.8579
+   depth = 10
+   cost = 10
+   density = 0.1858
+   nvisit = 1.00
+   is_terminal = False
+0.4.2.1.3.1.1.1.1.4.3.1
+   q-value = 0.9307
+   depth = 11
+   cost = 9
+   density = 0.2034
+   nvisit = 1.00
+   is_terminal = False
+0.4.2.1.3.1.1.1.1.4.3.3
+   q-value = 0.9380
+   depth = 11
+   cost = 9
+   density = 0.2042
+   nvisit = 1.00
+   is_terminal = False
+0.4.2.1.3.1.1.1.1.4.3.2.1.1
+   q-value = 0.9917
+   depth = 13
+   cost = 7
+   density = 0.2417
+   nvisit = 1.00
+   is_terminal = False
+0.4.2.1.3.1.1.1.1.4.3.2.1.3
+   q-value = 0.9932
+   depth = 13
+   cost = 7
+   density = 0.2419
+   nvisit = 1.00
+   is_terminal = False
+selected_leaf = 0.4.2.1.3.1.1.1.1.4.3.2.1.3
+selected = 0.4.2.1.3.1.1.1.1.4.3.2.1.3  density=0.2419  q=0.9932  nvisit=1
+
+-> p = 40
+gen_cnt = 41
+0.1
+   q-value = 0.9883
+   depth = 1
+   cost = 19
+   density = 0.1520
+   nvisit = 1.00
+   is_terminal = False
+0.2
+   q-value = 0.9888
+   depth = 1
+   cost = 19
+   density = 0.1520
+   nvisit = 1.00
+   is_terminal = False
+0.3
+   q-value = 0.9868
+   depth = 1
+   cost = 19
+   density = 0.1519
+   nvisit = 1.00
+   is_terminal = False
+0.4.1
+   q-value = 0.9702
+   depth = 2
+   cost = 18
+   density = 0.1539
+   nvisit = 1.00
+   is_terminal = False
+0.4.3
+   q-value = 0.8579
+   depth = 2
+   cost = 18
+   density = 0.1477
+   nvisit = 1.00
+   is_terminal = False
+0.4.2.2
+   q-value = 0.6074
+   depth = 3
+   cost = 17
+   density = 0.1357
+   nvisit = 1.00
+   is_terminal = False
+0.4.2.3
+   q-value = 0.9004
+   depth = 3
+   cost = 17
+   density = 0.1530
+   nvisit = 1.00
+   is_terminal = False
+0.4.2.4
+   q-value = 0.9443
+   depth = 3
+   cost = 17
+   density = 0.1555
+   nvisit = 1.00
+   is_terminal = False
+0.4.2.1.1
+   q-value = 0.7090
+   depth = 4
+   cost = 16
+   density = 0.1443
+   nvisit = 1.00
+   is_terminal = False
+0.4.2.1.2
+   q-value = 0.7637
+   depth = 4
+   cost = 16
+   density = 0.1477
+   nvisit = 1.00
+   is_terminal = False
+0.4.2.1.4
+   q-value = 0.8687
+   depth = 4
+   cost = 16
+   density = 0.1543
+   nvisit = 1.00
+   is_terminal = False
+0.4.2.1.3.2
+   q-value = 0.8457
+   depth = 5
+   cost = 15
+   density = 0.1564
+   nvisit = 1.00
+   is_terminal = False
+0.4.2.1.3.3
+   q-value = 0.8311
+   depth = 5
+   cost = 15
+   density = 0.1554
+   nvisit = 1.00
+   is_terminal = False
+0.4.2.1.3.4
+   q-value = 0.7339
+   depth = 5
+   cost = 15
+   density = 0.1489
+   nvisit = 1.00
+   is_terminal = False
+0.4.2.1.3.1.1.1.2
+   q-value = 0.9561
+   depth = 8
+   cost = 12
+   density = 0.1797
+   nvisit = 1.00
+   is_terminal = False
+0.4.2.1.3.1.1.1.1.1
+   q-value = 0.8418
+   depth = 9
+   cost = 11
+   density = 0.1765
+   nvisit = 1.00
+   is_terminal = False
+0.4.2.1.3.1.1.1.1.2
+   q-value = 0.6260
+   depth = 9
+   cost = 11
+   density = 0.1569
+   nvisit = 1.00
+   is_terminal = False
+0.4.2.1.3.1.1.1.1.3
+   q-value = 0.7153
+   depth = 9
+   cost = 11
+   density = 0.1650
+   nvisit = 1.00
+   is_terminal = False
+0.4.2.1.3.1.1.1.1.4.1
+   q-value = 0.8579
+   depth = 10
+   cost = 10
+   density = 0.1858
+   nvisit = 1.00
+   is_terminal = False
+0.4.2.1.3.1.1.1.1.4.3.1
+   q-value = 0.9307
+   depth = 11
+   cost = 9
+   density = 0.2034
+   nvisit = 1.00
+   is_terminal = False
+0.4.2.1.3.1.1.1.1.4.3.3
+   q-value = 0.9380
+   depth = 11
+   cost = 9
+   density = 0.2042
+   nvisit = 1.00
+   is_terminal = False
+0.4.2.1.3.1.1.1.1.4.3.2.1.1
+   q-value = 0.9917
+   depth = 13
+   cost = 7
+   density = 0.2417
+   nvisit = 1.00
+   is_terminal = False
+selected_leaf = 0.4.2.1.3.1.1.1.1.4.3.2.1.1
+selected = 0.4.2.1.3.1.1.1.1.4.3.2.1.1  density=0.2417  q=0.9917  nvisit=1
+
+-> p = 41
+gen_cnt = 42
+0.1
+   q-value = 0.9883
+   depth = 1
+   cost = 19
+   density = 0.1520
+   nvisit = 1.00
+   is_terminal = False
+0.2
+   q-value = 0.9888
+   depth = 1
+   cost = 19
+   density = 0.1520
+   nvisit = 1.00
+   is_terminal = False
+0.3
+   q-value = 0.9868
+   depth = 1
+   cost = 19
+   density = 0.1519
+   nvisit = 1.00
+   is_terminal = False
+0.4.1
+   q-value = 0.9702
+   depth = 2
+   cost = 18
+   density = 0.1539
+   nvisit = 1.00
+   is_terminal = False
+0.4.3
+   q-value = 0.8579
+   depth = 2
+   cost = 18
+   density = 0.1477
+   nvisit = 1.00
+   is_terminal = False
+0.4.2.2
+   q-value = 0.6074
+   depth = 3
+   cost = 17
+   density = 0.1357
+   nvisit = 1.00
+   is_terminal = False
+0.4.2.3
+   q-value = 0.9004
+   depth = 3
+   cost = 17
+   density = 0.1530
+   nvisit = 1.00
+   is_terminal = False
+0.4.2.4
+   q-value = 0.9443
+   depth = 3
+   cost = 17
+   density = 0.1555
+   nvisit = 1.00
+   is_terminal = False
+0.4.2.1.1
+   q-value = 0.7090
+   depth = 4
+   cost = 16
+   density = 0.1443
+   nvisit = 1.00
+   is_terminal = False
+0.4.2.1.2
+   q-value = 0.7637
+   depth = 4
+   cost = 16
+   density = 0.1477
+   nvisit = 1.00
+   is_terminal = False
+0.4.2.1.4
+   q-value = 0.8687
+   depth = 4
+   cost = 16
+   density = 0.1543
+   nvisit = 1.00
+   is_terminal = False
+0.4.2.1.3.2
+   q-value = 0.8457
+   depth = 5
+   cost = 15
+   density = 0.1564
+   nvisit = 1.00
+   is_terminal = False
+0.4.2.1.3.3
+   q-value = 0.8311
+   depth = 5
+   cost = 15
+   density = 0.1554
+   nvisit = 1.00
+   is_terminal = False
+0.4.2.1.3.4
+   q-value = 0.7339
+   depth = 5
+   cost = 15
+   density = 0.1489
+   nvisit = 1.00
+   is_terminal = False
+0.4.2.1.3.1.1.1.2
+   q-value = 0.9561
+   depth = 8
+   cost = 12
+   density = 0.1797
+   nvisit = 1.00
+   is_terminal = False
+0.4.2.1.3.1.1.1.1.1
+   q-value = 0.8418
+   depth = 9
+   cost = 11
+   density = 0.1765
+   nvisit = 1.00
+   is_terminal = False
+0.4.2.1.3.1.1.1.1.2
+   q-value = 0.6260
+   depth = 9
+   cost = 11
+   density = 0.1569
+   nvisit = 1.00
+   is_terminal = False
+0.4.2.1.3.1.1.1.1.3
+   q-value = 0.7153
+   depth = 9
+   cost = 11
+   density = 0.1650
+   nvisit = 1.00
+   is_terminal = False
+0.4.2.1.3.1.1.1.1.4.1
+   q-value = 0.8579
+   depth = 10
+   cost = 10
+   density = 0.1858
+   nvisit = 1.00
+   is_terminal = False
+0.4.2.1.3.1.1.1.1.4.3.1
+   q-value = 0.9307
+   depth = 11
+   cost = 9
+   density = 0.2034
+   nvisit = 1.00
+   is_terminal = False
+0.4.2.1.3.1.1.1.1.4.3.3
+   q-value = 0.9380
+   depth = 11
+   cost = 9
+   density = 0.2042
+   nvisit = 1.00
+   is_terminal = False
+selected_leaf = 0.4.2.1.3.1.1.1.1.4.3.3
+selected = 0.4.2.1.3.1.1.1.1.4.3.3  density=0.2042  q=0.9380  nvisit=1
+
+-> p = 42
+gen_cnt = 43
+0.1
+   q-value = 0.9883
+   depth = 1
+   cost = 19
+   density = 0.1520
+   nvisit = 1.00
+   is_terminal = False
+0.2
+   q-value = 0.9888
+   depth = 1
+   cost = 19
+   density = 0.1520
+   nvisit = 1.00
+   is_terminal = False
+0.3
+   q-value = 0.9868
+   depth = 1
+   cost = 19
+   density = 0.1519
+   nvisit = 1.00
+   is_terminal = False
+0.4.1
+   q-value = 0.9702
+   depth = 2
+   cost = 18
+   density = 0.1539
+   nvisit = 1.00
+   is_terminal = False
+0.4.3
+   q-value = 0.8579
+   depth = 2
+   cost = 18
+   density = 0.1477
+   nvisit = 1.00
+   is_terminal = False
+0.4.2.2
+   q-value = 0.6074
+   depth = 3
+   cost = 17
+   density = 0.1357
+   nvisit = 1.00
+   is_terminal = False
+0.4.2.3
+   q-value = 0.9004
+   depth = 3
+   cost = 17
+   density = 0.1530
+   nvisit = 1.00
+   is_terminal = False
+0.4.2.4
+   q-value = 0.9443
+   depth = 3
+   cost = 17
+   density = 0.1555
+   nvisit = 1.00
+   is_terminal = False
+0.4.2.1.1
+   q-value = 0.7090
+   depth = 4
+   cost = 16
+   density = 0.1443
+   nvisit = 1.00
+   is_terminal = False
+0.4.2.1.2
+   q-value = 0.7637
+   depth = 4
+   cost = 16
+   density = 0.1477
+   nvisit = 1.00
+   is_terminal = False
+0.4.2.1.4
+   q-value = 0.8687
+   depth = 4
+   cost = 16
+   density = 0.1543
+   nvisit = 1.00
+   is_terminal = False
+0.4.2.1.3.2
+   q-value = 0.8457
+   depth = 5
+   cost = 15
+   density = 0.1564
+   nvisit = 1.00
+   is_terminal = False
+0.4.2.1.3.3
+   q-value = 0.8311
+   depth = 5
+   cost = 15
+   density = 0.1554
+   nvisit = 1.00
+   is_terminal = False
+0.4.2.1.3.4
+   q-value = 0.7339
+   depth = 5
+   cost = 15
+   density = 0.1489
+   nvisit = 1.00
+   is_terminal = False
+0.4.2.1.3.1.1.1.2
+   q-value = 0.9561
+   depth = 8
+   cost = 12
+   density = 0.1797
+   nvisit = 1.00
+   is_terminal = False
+0.4.2.1.3.1.1.1.1.1
+   q-value = 0.8418
+   depth = 9
+   cost = 11
+   density = 0.1765
+   nvisit = 1.00
+   is_terminal = False
+0.4.2.1.3.1.1.1.1.2
+   q-value = 0.6260
+   depth = 9
+   cost = 11
+   density = 0.1569
+   nvisit = 1.00
+   is_terminal = False
+0.4.2.1.3.1.1.1.1.3
+   q-value = 0.7153
+   depth = 9
+   cost = 11
+   density = 0.1650
+   nvisit = 1.00
+   is_terminal = False
+0.4.2.1.3.1.1.1.1.4.1
+   q-value = 0.8579
+   depth = 10
+   cost = 10
+   density = 0.1858
+   nvisit = 1.00
+   is_terminal = False
+0.4.2.1.3.1.1.1.1.4.3.1
+   q-value = 0.9307
+   depth = 11
+   cost = 9
+   density = 0.2034
+   nvisit = 1.00
+   is_terminal = False
+0.4.2.1.3.1.1.1.1.4.3.3.1
+   q-value = 0.9878
+   depth = 12
+   cost = 8
+   density = 0.2235
+   nvisit = 1.00
+   is_terminal = False
+selected_leaf = 0.4.2.1.3.1.1.1.1.4.3.3.1
+selected = 0.4.2.1.3.1.1.1.1.4.3.3.1  density=0.2235  q=0.9878  nvisit=1
+
+-> p = 43
+gen_cnt = 44
+0.1
+   q-value = 0.9883
+   depth = 1
+   cost = 19
+   density = 0.1520
+   nvisit = 1.00
+   is_terminal = False
+0.2
+   q-value = 0.9888
+   depth = 1
+   cost = 19
+   density = 0.1520
+   nvisit = 1.00
+   is_terminal = False
+0.3
+   q-value = 0.9868
+   depth = 1
+   cost = 19
+   density = 0.1519
+   nvisit = 1.00
+   is_terminal = False
+0.4.1
+   q-value = 0.9702
+   depth = 2
+   cost = 18
+   density = 0.1539
+   nvisit = 1.00
+   is_terminal = False
+0.4.3
+   q-value = 0.8579
+   depth = 2
+   cost = 18
+   density = 0.1477
+   nvisit = 1.00
+   is_terminal = False
+0.4.2.2
+   q-value = 0.6074
+   depth = 3
+   cost = 17
+   density = 0.1357
+   nvisit = 1.00
+   is_terminal = False
+0.4.2.3
+   q-value = 0.9004
+   depth = 3
+   cost = 17
+   density = 0.1530
+   nvisit = 1.00
+   is_terminal = False
+0.4.2.4
+   q-value = 0.9443
+   depth = 3
+   cost = 17
+   density = 0.1555
+   nvisit = 1.00
+   is_terminal = False
+0.4.2.1.1
+   q-value = 0.7090
+   depth = 4
+   cost = 16
+   density = 0.1443
+   nvisit = 1.00
+   is_terminal = False
+0.4.2.1.2
+   q-value = 0.7637
+   depth = 4
+   cost = 16
+   density = 0.1477
+   nvisit = 1.00
+   is_terminal = False
+0.4.2.1.4
+   q-value = 0.8687
+   depth = 4
+   cost = 16
+   density = 0.1543
+   nvisit = 1.00
+   is_terminal = False
+0.4.2.1.3.2
+   q-value = 0.8457
+   depth = 5
+   cost = 15
+   density = 0.1564
+   nvisit = 1.00
+   is_terminal = False
+0.4.2.1.3.3
+   q-value = 0.8311
+   depth = 5
+   cost = 15
+   density = 0.1554
+   nvisit = 1.00
+   is_terminal = False
+0.4.2.1.3.4
+   q-value = 0.7339
+   depth = 5
+   cost = 15
+   density = 0.1489
+   nvisit = 1.00
+   is_terminal = False
+0.4.2.1.3.1.1.1.2
+   q-value = 0.9561
+   depth = 8
+   cost = 12
+   density = 0.1797
+   nvisit = 1.00
+   is_terminal = False
+0.4.2.1.3.1.1.1.1.1
+   q-value = 0.8418
+   depth = 9
+   cost = 11
+   density = 0.1765
+   nvisit = 1.00
+   is_terminal = False
+0.4.2.1.3.1.1.1.1.2
+   q-value = 0.6260
+   depth = 9
+   cost = 11
+   density = 0.1569
+   nvisit = 1.00
+   is_terminal = False
+0.4.2.1.3.1.1.1.1.3
+   q-value = 0.7153
+   depth = 9
+   cost = 11
+   density = 0.1650
+   nvisit = 1.00
+   is_terminal = False
+0.4.2.1.3.1.1.1.1.4.1
+   q-value = 0.8579
+   depth = 10
+   cost = 10
+   density = 0.1858
+   nvisit = 1.00
+   is_terminal = False
+0.4.2.1.3.1.1.1.1.4.3.1
+   q-value = 0.9307
+   depth = 11
+   cost = 9
+   density = 0.2034
+   nvisit = 1.00
+   is_terminal = False
+0.4.2.1.3.1.1.1.1.4.3.3.1.1
+   q-value = 0.9941
+   depth = 13
+   cost = 7
+   density = 0.2420
+   nvisit = 1.00
+   is_terminal = False
+0.4.2.1.3.1.1.1.1.4.3.3.1.2
+   q-value = 0.9961
+   depth = 13
+   cost = 7
+   density = 0.2423
+   nvisit = 1.00
+   is_terminal = False
+selected_leaf = 0.4.2.1.3.1.1.1.1.4.3.3.1.2
+selected = 0.4.2.1.3.1.1.1.1.4.3.3.1.2  density=0.2423  q=0.9961  nvisit=1
+
+-> p = 44
+gen_cnt = 45
+0.1
+   q-value = 0.9883
+   depth = 1
+   cost = 19
+   density = 0.1520
+   nvisit = 1.00
+   is_terminal = False
+0.2
+   q-value = 0.9888
+   depth = 1
+   cost = 19
+   density = 0.1520
+   nvisit = 1.00
+   is_terminal = False
+0.3
+   q-value = 0.9868
+   depth = 1
+   cost = 19
+   density = 0.1519
+   nvisit = 1.00
+   is_terminal = False
+0.4.1
+   q-value = 0.9702
+   depth = 2
+   cost = 18
+   density = 0.1539
+   nvisit = 1.00
+   is_terminal = False
+0.4.3
+   q-value = 0.8579
+   depth = 2
+   cost = 18
+   density = 0.1477
+   nvisit = 1.00
+   is_terminal = False
+0.4.2.2
+   q-value = 0.6074
+   depth = 3
+   cost = 17
+   density = 0.1357
+   nvisit = 1.00
+   is_terminal = False
+0.4.2.3
+   q-value = 0.9004
+   depth = 3
+   cost = 17
+   density = 0.1530
+   nvisit = 1.00
+   is_terminal = False
+0.4.2.4
+   q-value = 0.9443
+   depth = 3
+   cost = 17
+   density = 0.1555
+   nvisit = 1.00
+   is_terminal = False
+0.4.2.1.1
+   q-value = 0.7090
+   depth = 4
+   cost = 16
+   density = 0.1443
+   nvisit = 1.00
+   is_terminal = False
+0.4.2.1.2
+   q-value = 0.7637
+   depth = 4
+   cost = 16
+   density = 0.1477
+   nvisit = 1.00
+   is_terminal = False
+0.4.2.1.4
+   q-value = 0.8687
+   depth = 4
+   cost = 16
+   density = 0.1543
+   nvisit = 1.00
+   is_terminal = False
+0.4.2.1.3.2
+   q-value = 0.8457
+   depth = 5
+   cost = 15
+   density = 0.1564
+   nvisit = 1.00
+   is_terminal = False
+0.4.2.1.3.3
+   q-value = 0.8311
+   depth = 5
+   cost = 15
+   density = 0.1554
+   nvisit = 1.00
+   is_terminal = False
+0.4.2.1.3.4
+   q-value = 0.7339
+   depth = 5
+   cost = 15
+   density = 0.1489
+   nvisit = 1.00
+   is_terminal = False
+0.4.2.1.3.1.1.1.2
+   q-value = 0.9561
+   depth = 8
+   cost = 12
+   density = 0.1797
+   nvisit = 1.00
+   is_terminal = False
+0.4.2.1.3.1.1.1.1.1
+   q-value = 0.8418
+   depth = 9
+   cost = 11
+   density = 0.1765
+   nvisit = 1.00
+   is_terminal = False
+0.4.2.1.3.1.1.1.1.2
+   q-value = 0.6260
+   depth = 9
+   cost = 11
+   density = 0.1569
+   nvisit = 1.00
+   is_terminal = False
+0.4.2.1.3.1.1.1.1.3
+   q-value = 0.7153
+   depth = 9
+   cost = 11
+   density = 0.1650
+   nvisit = 1.00
+   is_terminal = False
+0.4.2.1.3.1.1.1.1.4.1
+   q-value = 0.8579
+   depth = 10
+   cost = 10
+   density = 0.1858
+   nvisit = 1.00
+   is_terminal = False
+0.4.2.1.3.1.1.1.1.4.3.1
+   q-value = 0.9307
+   depth = 11
+   cost = 9
+   density = 0.2034
+   nvisit = 1.00
+   is_terminal = False
+0.4.2.1.3.1.1.1.1.4.3.3.1.1
+   q-value = 0.9941
+   depth = 13
+   cost = 7
+   density = 0.2420
+   nvisit = 1.00
+   is_terminal = False
+selected_leaf = 0.4.2.1.3.1.1.1.1.4.3.3.1.1
+selected = 0.4.2.1.3.1.1.1.1.4.3.3.1.1  density=0.2420  q=0.9941  nvisit=1
+
+-> p = 45
+gen_cnt = 46
+0.1
+   q-value = 0.9883
+   depth = 1
+   cost = 19
+   density = 0.1520
+   nvisit = 1.00
+   is_terminal = False
+0.2
+   q-value = 0.9888
+   depth = 1
+   cost = 19
+   density = 0.1520
+   nvisit = 1.00
+   is_terminal = False
+0.3
+   q-value = 0.9868
+   depth = 1
+   cost = 19
+   density = 0.1519
+   nvisit = 1.00
+   is_terminal = False
+0.4.1
+   q-value = 0.9702
+   depth = 2
+   cost = 18
+   density = 0.1539
+   nvisit = 1.00
+   is_terminal = False
+0.4.3
+   q-value = 0.8579
+   depth = 2
+   cost = 18
+   density = 0.1477
+   nvisit = 1.00
+   is_terminal = False
+0.4.2.2
+   q-value = 0.6074
+   depth = 3
+   cost = 17
+   density = 0.1357
+   nvisit = 1.00
+   is_terminal = False
+0.4.2.3
+   q-value = 0.9004
+   depth = 3
+   cost = 17
+   density = 0.1530
+   nvisit = 1.00
+   is_terminal = False
+0.4.2.4
+   q-value = 0.9443
+   depth = 3
+   cost = 17
+   density = 0.1555
+   nvisit = 1.00
+   is_terminal = False
+0.4.2.1.1
+   q-value = 0.7090
+   depth = 4
+   cost = 16
+   density = 0.1443
+   nvisit = 1.00
+   is_terminal = False
+0.4.2.1.2
+   q-value = 0.7637
+   depth = 4
+   cost = 16
+   density = 0.1477
+   nvisit = 1.00
+   is_terminal = False
+0.4.2.1.4
+   q-value = 0.8687
+   depth = 4
+   cost = 16
+   density = 0.1543
+   nvisit = 1.00
+   is_terminal = False
+0.4.2.1.3.2
+   q-value = 0.8457
+   depth = 5
+   cost = 15
+   density = 0.1564
+   nvisit = 1.00
+   is_terminal = False
+0.4.2.1.3.3
+   q-value = 0.8311
+   depth = 5
+   cost = 15
+   density = 0.1554
+   nvisit = 1.00
+   is_terminal = False
+0.4.2.1.3.4
+   q-value = 0.7339
+   depth = 5
+   cost = 15
+   density = 0.1489
+   nvisit = 1.00
+   is_terminal = False
+0.4.2.1.3.1.1.1.2
+   q-value = 0.9561
+   depth = 8
+   cost = 12
+   density = 0.1797
+   nvisit = 1.00
+   is_terminal = False
+0.4.2.1.3.1.1.1.1.1
+   q-value = 0.8418
+   depth = 9
+   cost = 11
+   density = 0.1765
+   nvisit = 1.00
+   is_terminal = False
+0.4.2.1.3.1.1.1.1.2
+   q-value = 0.6260
+   depth = 9
+   cost = 11
+   density = 0.1569
+   nvisit = 1.00
+   is_terminal = False
+0.4.2.1.3.1.1.1.1.3
+   q-value = 0.7153
+   depth = 9
+   cost = 11
+   density = 0.1650
+   nvisit = 1.00
+   is_terminal = False
+0.4.2.1.3.1.1.1.1.4.1
+   q-value = 0.8579
+   depth = 10
+   cost = 10
+   density = 0.1858
+   nvisit = 1.00
+   is_terminal = False
+0.4.2.1.3.1.1.1.1.4.3.1
+   q-value = 0.9307
+   depth = 11
+   cost = 9
+   density = 0.2034
+   nvisit = 1.00
+   is_terminal = False
+selected_leaf = 0.4.2.1.3.1.1.1.1.4.3.1
+selected = 0.4.2.1.3.1.1.1.1.4.3.1  density=0.2034  q=0.9307  nvisit=1
+
+-> p = 46
+gen_cnt = 47
+0.1
+   q-value = 0.9883
+   depth = 1
+   cost = 19
+   density = 0.1520
+   nvisit = 1.00
+   is_terminal = False
+0.2
+   q-value = 0.9888
+   depth = 1
+   cost = 19
+   density = 0.1520
+   nvisit = 1.00
+   is_terminal = False
+0.3
+   q-value = 0.9868
+   depth = 1
+   cost = 19
+   density = 0.1519
+   nvisit = 1.00
+   is_terminal = False
+0.4.1
+   q-value = 0.9702
+   depth = 2
+   cost = 18
+   density = 0.1539
+   nvisit = 1.00
+   is_terminal = False
+0.4.3
+   q-value = 0.8579
+   depth = 2
+   cost = 18
+   density = 0.1477
+   nvisit = 1.00
+   is_terminal = False
+0.4.2.2
+   q-value = 0.6074
+   depth = 3
+   cost = 17
+   density = 0.1357
+   nvisit = 1.00
+   is_terminal = False
+0.4.2.3
+   q-value = 0.9004
+   depth = 3
+   cost = 17
+   density = 0.1530
+   nvisit = 1.00
+   is_terminal = False
+0.4.2.4
+   q-value = 0.9443
+   depth = 3
+   cost = 17
+   density = 0.1555
+   nvisit = 1.00
+   is_terminal = False
+0.4.2.1.1
+   q-value = 0.7090
+   depth = 4
+   cost = 16
+   density = 0.1443
+   nvisit = 1.00
+   is_terminal = False
+0.4.2.1.2
+   q-value = 0.7637
+   depth = 4
+   cost = 16
+   density = 0.1477
+   nvisit = 1.00
+   is_terminal = False
+0.4.2.1.4
+   q-value = 0.8687
+   depth = 4
+   cost = 16
+   density = 0.1543
+   nvisit = 1.00
+   is_terminal = False
+0.4.2.1.3.2
+   q-value = 0.8457
+   depth = 5
+   cost = 15
+   density = 0.1564
+   nvisit = 1.00
+   is_terminal = False
+0.4.2.1.3.3
+   q-value = 0.8311
+   depth = 5
+   cost = 15
+   density = 0.1554
+   nvisit = 1.00
+   is_terminal = False
+0.4.2.1.3.4
+   q-value = 0.7339
+   depth = 5
+   cost = 15
+   density = 0.1489
+   nvisit = 1.00
+   is_terminal = False
+0.4.2.1.3.1.1.1.2
+   q-value = 0.9561
+   depth = 8
+   cost = 12
+   density = 0.1797
+   nvisit = 1.00
+   is_terminal = False
+0.4.2.1.3.1.1.1.1.1
+   q-value = 0.8418
+   depth = 9
+   cost = 11
+   density = 0.1765
+   nvisit = 1.00
+   is_terminal = False
+0.4.2.1.3.1.1.1.1.2
+   q-value = 0.6260
+   depth = 9
+   cost = 11
+   density = 0.1569
+   nvisit = 1.00
+   is_terminal = False
+0.4.2.1.3.1.1.1.1.3
+   q-value = 0.7153
+   depth = 9
+   cost = 11
+   density = 0.1650
+   nvisit = 1.00
+   is_terminal = False
+0.4.2.1.3.1.1.1.1.4.1
+   q-value = 0.8579
+   depth = 10
+   cost = 10
+   density = 0.1858
+   nvisit = 1.00
+   is_terminal = False
+0.4.2.1.3.1.1.1.1.4.3.1.1
+   q-value = 0.9854
+   depth = 12
+   cost = 8
+   density = 0.2232
+   nvisit = 1.00
+   is_terminal = False
+selected_leaf = 0.4.2.1.3.1.1.1.1.4.3.1.1
+selected = 0.4.2.1.3.1.1.1.1.4.3.1.1  density=0.2232  q=0.9854  nvisit=1
+
+-> p = 47
+gen_cnt = 48
+0.1
+   q-value = 0.9883
+   depth = 1
+   cost = 19
+   density = 0.1520
+   nvisit = 1.00
+   is_terminal = False
+0.2
+   q-value = 0.9888
+   depth = 1
+   cost = 19
+   density = 0.1520
+   nvisit = 1.00
+   is_terminal = False
+0.3
+   q-value = 0.9868
+   depth = 1
+   cost = 19
+   density = 0.1519
+   nvisit = 1.00
+   is_terminal = False
+0.4.1
+   q-value = 0.9702
+   depth = 2
+   cost = 18
+   density = 0.1539
+   nvisit = 1.00
+   is_terminal = False
+0.4.3
+   q-value = 0.8579
+   depth = 2
+   cost = 18
+   density = 0.1477
+   nvisit = 1.00
+   is_terminal = False
+0.4.2.2
+   q-value = 0.6074
+   depth = 3
+   cost = 17
+   density = 0.1357
+   nvisit = 1.00
+   is_terminal = False
+0.4.2.3
+   q-value = 0.9004
+   depth = 3
+   cost = 17
+   density = 0.1530
+   nvisit = 1.00
+   is_terminal = False
+0.4.2.4
+   q-value = 0.9443
+   depth = 3
+   cost = 17
+   density = 0.1555
+   nvisit = 1.00
+   is_terminal = False
+0.4.2.1.1
+   q-value = 0.7090
+   depth = 4
+   cost = 16
+   density = 0.1443
+   nvisit = 1.00
+   is_terminal = False
+0.4.2.1.2
+   q-value = 0.7637
+   depth = 4
+   cost = 16
+   density = 0.1477
+   nvisit = 1.00
+   is_terminal = False
+0.4.2.1.4
+   q-value = 0.8687
+   depth = 4
+   cost = 16
+   density = 0.1543
+   nvisit = 1.00
+   is_terminal = False
+0.4.2.1.3.2
+   q-value = 0.8457
+   depth = 5
+   cost = 15
+   density = 0.1564
+   nvisit = 1.00
+   is_terminal = False
+0.4.2.1.3.3
+   q-value = 0.8311
+   depth = 5
+   cost = 15
+   density = 0.1554
+   nvisit = 1.00
+   is_terminal = False
+0.4.2.1.3.4
+   q-value = 0.7339
+   depth = 5
+   cost = 15
+   density = 0.1489
+   nvisit = 1.00
+   is_terminal = False
+0.4.2.1.3.1.1.1.2
+   q-value = 0.9561
+   depth = 8
+   cost = 12
+   density = 0.1797
+   nvisit = 1.00
+   is_terminal = False
+0.4.2.1.3.1.1.1.1.1
+   q-value = 0.8418
+   depth = 9
+   cost = 11
+   density = 0.1765
+   nvisit = 1.00
+   is_terminal = False
+0.4.2.1.3.1.1.1.1.2
+   q-value = 0.6260
+   depth = 9
+   cost = 11
+   density = 0.1569
+   nvisit = 1.00
+   is_terminal = False
+0.4.2.1.3.1.1.1.1.3
+   q-value = 0.7153
+   depth = 9
+   cost = 11
+   density = 0.1650
+   nvisit = 1.00
+   is_terminal = False
+0.4.2.1.3.1.1.1.1.4.1
+   q-value = 0.8579
+   depth = 10
+   cost = 10
+   density = 0.1858
+   nvisit = 1.00
+   is_terminal = False
+0.4.2.1.3.1.1.1.1.4.3.1.1.3
+   q-value = 0.9941
+   depth = 13
+   cost = 7
+   density = 0.2420
+   nvisit = 1.00
+   is_terminal = False
+selected_leaf = 0.4.2.1.3.1.1.1.1.4.3.1.1.3
+selected = 0.4.2.1.3.1.1.1.1.4.3.1.1.3  density=0.2420  q=0.9941  nvisit=1
+
+-> p = 48
+gen_cnt = 49
+0.1
+   q-value = 0.9883
+   depth = 1
+   cost = 19
+   density = 0.1520
+   nvisit = 1.00
+   is_terminal = False
+0.2
+   q-value = 0.9888
+   depth = 1
+   cost = 19
+   density = 0.1520
+   nvisit = 1.00
+   is_terminal = False
+0.3
+   q-value = 0.9868
+   depth = 1
+   cost = 19
+   density = 0.1519
+   nvisit = 1.00
+   is_terminal = False
+0.4.1
+   q-value = 0.9702
+   depth = 2
+   cost = 18
+   density = 0.1539
+   nvisit = 1.00
+   is_terminal = False
+0.4.3
+   q-value = 0.8579
+   depth = 2
+   cost = 18
+   density = 0.1477
+   nvisit = 1.00
+   is_terminal = False
+0.4.2.2
+   q-value = 0.6074
+   depth = 3
+   cost = 17
+   density = 0.1357
+   nvisit = 1.00
+   is_terminal = False
+0.4.2.3
+   q-value = 0.9004
+   depth = 3
+   cost = 17
+   density = 0.1530
+   nvisit = 1.00
+   is_terminal = False
+0.4.2.4
+   q-value = 0.9443
+   depth = 3
+   cost = 17
+   density = 0.1555
+   nvisit = 1.00
+   is_terminal = False
+0.4.2.1.1
+   q-value = 0.7090
+   depth = 4
+   cost = 16
+   density = 0.1443
+   nvisit = 1.00
+   is_terminal = False
+0.4.2.1.2
+   q-value = 0.7637
+   depth = 4
+   cost = 16
+   density = 0.1477
+   nvisit = 1.00
+   is_terminal = False
+0.4.2.1.4
+   q-value = 0.8687
+   depth = 4
+   cost = 16
+   density = 0.1543
+   nvisit = 1.00
+   is_terminal = False
+0.4.2.1.3.2
+   q-value = 0.8457
+   depth = 5
+   cost = 15
+   density = 0.1564
+   nvisit = 1.00
+   is_terminal = False
+0.4.2.1.3.3
+   q-value = 0.8311
+   depth = 5
+   cost = 15
+   density = 0.1554
+   nvisit = 1.00
+   is_terminal = False
+0.4.2.1.3.4
+   q-value = 0.7339
+   depth = 5
+   cost = 15
+   density = 0.1489
+   nvisit = 1.00
+   is_terminal = False
+0.4.2.1.3.1.1.1.2
+   q-value = 0.9561
+   depth = 8
+   cost = 12
+   density = 0.1797
+   nvisit = 1.00
+   is_terminal = False
+0.4.2.1.3.1.1.1.1.1
+   q-value = 0.8418
+   depth = 9
+   cost = 11
+   density = 0.1765
+   nvisit = 1.00
+   is_terminal = False
+0.4.2.1.3.1.1.1.1.2
+   q-value = 0.6260
+   depth = 9
+   cost = 11
+   density = 0.1569
+   nvisit = 1.00
+   is_terminal = False
+0.4.2.1.3.1.1.1.1.3
+   q-value = 0.7153
+   depth = 9
+   cost = 11
+   density = 0.1650
+   nvisit = 1.00
+   is_terminal = False
+0.4.2.1.3.1.1.1.1.4.1
+   q-value = 0.8579
+   depth = 10
+   cost = 10
+   density = 0.1858
+   nvisit = 1.00
+   is_terminal = False
+selected_leaf = 0.4.2.1.3.1.1.1.1.4.1
+selected = 0.4.2.1.3.1.1.1.1.4.1  density=0.1858  q=0.8579  nvisit=1
+
+-> p = 49
+gen_cnt = 50
+0.1
+   q-value = 0.9883
+   depth = 1
+   cost = 19
+   density = 0.1520
+   nvisit = 1.00
+   is_terminal = False
+0.2
+   q-value = 0.9888
+   depth = 1
+   cost = 19
+   density = 0.1520
+   nvisit = 1.00
+   is_terminal = False
+0.3
+   q-value = 0.9868
+   depth = 1
+   cost = 19
+   density = 0.1519
+   nvisit = 1.00
+   is_terminal = False
+0.4.1
+   q-value = 0.9702
+   depth = 2
+   cost = 18
+   density = 0.1539
+   nvisit = 1.00
+   is_terminal = False
+0.4.3
+   q-value = 0.8579
+   depth = 2
+   cost = 18
+   density = 0.1477
+   nvisit = 1.00
+   is_terminal = False
+0.4.2.2
+   q-value = 0.6074
+   depth = 3
+   cost = 17
+   density = 0.1357
+   nvisit = 1.00
+   is_terminal = False
+0.4.2.3
+   q-value = 0.9004
+   depth = 3
+   cost = 17
+   density = 0.1530
+   nvisit = 1.00
+   is_terminal = False
+0.4.2.4
+   q-value = 0.9443
+   depth = 3
+   cost = 17
+   density = 0.1555
+   nvisit = 1.00
+   is_terminal = False
+0.4.2.1.1
+   q-value = 0.7090
+   depth = 4
+   cost = 16
+   density = 0.1443
+   nvisit = 1.00
+   is_terminal = False
+0.4.2.1.2
+   q-value = 0.7637
+   depth = 4
+   cost = 16
+   density = 0.1477
+   nvisit = 1.00
+   is_terminal = False
+0.4.2.1.4
+   q-value = 0.8687
+   depth = 4
+   cost = 16
+   density = 0.1543
+   nvisit = 1.00
+   is_terminal = False
+0.4.2.1.3.2
+   q-value = 0.8457
+   depth = 5
+   cost = 15
+   density = 0.1564
+   nvisit = 1.00
+   is_terminal = False
+0.4.2.1.3.3
+   q-value = 0.8311
+   depth = 5
+   cost = 15
+   density = 0.1554
+   nvisit = 1.00
+   is_terminal = False
+0.4.2.1.3.4
+   q-value = 0.7339
+   depth = 5
+   cost = 15
+   density = 0.1489
+   nvisit = 1.00
+   is_terminal = False
+0.4.2.1.3.1.1.1.2
+   q-value = 0.9561
+   depth = 8
+   cost = 12
+   density = 0.1797
+   nvisit = 1.00
+   is_terminal = False
+0.4.2.1.3.1.1.1.1.1
+   q-value = 0.8418
+   depth = 9
+   cost = 11
+   density = 0.1765
+   nvisit = 1.00
+   is_terminal = False
+0.4.2.1.3.1.1.1.1.2
+   q-value = 0.6260
+   depth = 9
+   cost = 11
+   density = 0.1569
+   nvisit = 1.00
+   is_terminal = False
+0.4.2.1.3.1.1.1.1.3
+   q-value = 0.7153
+   depth = 9
+   cost = 11
+   density = 0.1650
+   nvisit = 1.00
+   is_terminal = False
+0.4.2.1.3.1.1.1.1.4.1.2
+   q-value = 0.9531
+   depth = 11
+   cost = 9
+   density = 0.2059
+   nvisit = 1.00
+   is_terminal = False
+selected_leaf = 0.4.2.1.3.1.1.1.1.4.1.2
+selected = 0.4.2.1.3.1.1.1.1.4.1.2  density=0.2059  q=0.9531  nvisit=1
+
+-> p = 50
+gen_cnt = 51
+0.1
+   q-value = 0.9883
+   depth = 1
+   cost = 19
+   density = 0.1520
+   nvisit = 1.00
+   is_terminal = False
+0.2
+   q-value = 0.9888
+   depth = 1
+   cost = 19
+   density = 0.1520
+   nvisit = 1.00
+   is_terminal = False
+0.3
+   q-value = 0.9868
+   depth = 1
+   cost = 19
+   density = 0.1519
+   nvisit = 1.00
+   is_terminal = False
+0.4.1
+   q-value = 0.9702
+   depth = 2
+   cost = 18
+   density = 0.1539
+   nvisit = 1.00
+   is_terminal = False
+0.4.3
+   q-value = 0.8579
+   depth = 2
+   cost = 18
+   density = 0.1477
+   nvisit = 1.00
+   is_terminal = False
+0.4.2.2
+   q-value = 0.6074
+   depth = 3
+   cost = 17
+   density = 0.1357
+   nvisit = 1.00
+   is_terminal = False
+0.4.2.3
+   q-value = 0.9004
+   depth = 3
+   cost = 17
+   density = 0.1530
+   nvisit = 1.00
+   is_terminal = False
+0.4.2.4
+   q-value = 0.9443
+   depth = 3
+   cost = 17
+   density = 0.1555
+   nvisit = 1.00
+   is_terminal = False
+0.4.2.1.1
+   q-value = 0.7090
+   depth = 4
+   cost = 16
+   density = 0.1443
+   nvisit = 1.00
+   is_terminal = False
+0.4.2.1.2
+   q-value = 0.7637
+   depth = 4
+   cost = 16
+   density = 0.1477
+   nvisit = 1.00
+   is_terminal = False
+0.4.2.1.4
+   q-value = 0.8687
+   depth = 4
+   cost = 16
+   density = 0.1543
+   nvisit = 1.00
+   is_terminal = False
+0.4.2.1.3.2
+   q-value = 0.8457
+   depth = 5
+   cost = 15
+   density = 0.1564
+   nvisit = 1.00
+   is_terminal = False
+0.4.2.1.3.3
+   q-value = 0.8311
+   depth = 5
+   cost = 15
+   density = 0.1554
+   nvisit = 1.00
+   is_terminal = False
+0.4.2.1.3.4
+   q-value = 0.7339
+   depth = 5
+   cost = 15
+   density = 0.1489
+   nvisit = 1.00
+   is_terminal = False
+0.4.2.1.3.1.1.1.2
+   q-value = 0.9561
+   depth = 8
+   cost = 12
+   density = 0.1797
+   nvisit = 1.00
+   is_terminal = False
+0.4.2.1.3.1.1.1.1.1
+   q-value = 0.8418
+   depth = 9
+   cost = 11
+   density = 0.1765
+   nvisit = 1.00
+   is_terminal = False
+0.4.2.1.3.1.1.1.1.2
+   q-value = 0.6260
+   depth = 9
+   cost = 11
+   density = 0.1569
+   nvisit = 1.00
+   is_terminal = False
+0.4.2.1.3.1.1.1.1.3
+   q-value = 0.7153
+   depth = 9
+   cost = 11
+   density = 0.1650
+   nvisit = 1.00
+   is_terminal = False
+selected_leaf = 0.4.2.1.3.1.1.1.2
+selected = 0.4.2.1.3.1.1.1.2  density=0.1797  q=0.9561  nvisit=1
+
+-> p = 51
+gen_cnt = 52
+0.1
+   q-value = 0.9883
+   depth = 1
+   cost = 19
+   density = 0.1520
+   nvisit = 1.00
+   is_terminal = False
+0.2
+   q-value = 0.9888
+   depth = 1
+   cost = 19
+   density = 0.1520
+   nvisit = 1.00
+   is_terminal = False
+0.3
+   q-value = 0.9868
+   depth = 1
+   cost = 19
+   density = 0.1519
+   nvisit = 1.00
+   is_terminal = False
+0.4.1
+   q-value = 0.9702
+   depth = 2
+   cost = 18
+   density = 0.1539
+   nvisit = 1.00
+   is_terminal = False
+0.4.3
+   q-value = 0.8579
+   depth = 2
+   cost = 18
+   density = 0.1477
+   nvisit = 1.00
+   is_terminal = False
+0.4.2.2
+   q-value = 0.6074
+   depth = 3
+   cost = 17
+   density = 0.1357
+   nvisit = 1.00
+   is_terminal = False
+0.4.2.3
+   q-value = 0.9004
+   depth = 3
+   cost = 17
+   density = 0.1530
+   nvisit = 1.00
+   is_terminal = False
+0.4.2.4
+   q-value = 0.9443
+   depth = 3
+   cost = 17
+   density = 0.1555
+   nvisit = 1.00
+   is_terminal = False
+0.4.2.1.1
+   q-value = 0.7090
+   depth = 4
+   cost = 16
+   density = 0.1443
+   nvisit = 1.00
+   is_terminal = False
+0.4.2.1.2
+   q-value = 0.7637
+   depth = 4
+   cost = 16
+   density = 0.1477
+   nvisit = 1.00
+   is_terminal = False
+0.4.2.1.4
+   q-value = 0.8687
+   depth = 4
+   cost = 16
+   density = 0.1543
+   nvisit = 1.00
+   is_terminal = False
+0.4.2.1.3.2
+   q-value = 0.8457
+   depth = 5
+   cost = 15
+   density = 0.1564
+   nvisit = 1.00
+   is_terminal = False
+0.4.2.1.3.3
+   q-value = 0.8311
+   depth = 5
+   cost = 15
+   density = 0.1554
+   nvisit = 1.00
+   is_terminal = False
+0.4.2.1.3.4
+   q-value = 0.7339
+   depth = 5
+   cost = 15
+   density = 0.1489
+   nvisit = 1.00
+   is_terminal = False
+0.4.2.1.3.1.1.1.1.1
+   q-value = 0.8418
+   depth = 9
+   cost = 11
+   density = 0.1765
+   nvisit = 1.00
+   is_terminal = False
+0.4.2.1.3.1.1.1.1.2
+   q-value = 0.6260
+   depth = 9
+   cost = 11
+   density = 0.1569
+   nvisit = 1.00
+   is_terminal = False
+0.4.2.1.3.1.1.1.1.3
+   q-value = 0.7153
+   depth = 9
+   cost = 11
+   density = 0.1650
+   nvisit = 1.00
+   is_terminal = False
+0.4.2.1.3.1.1.1.2.1
+   q-value = 0.9019
+   depth = 9
+   cost = 11
+   density = 0.1820
+   nvisit = 1.00
+   is_terminal = False
+0.4.2.1.3.1.1.1.2.2
+   q-value = 0.9136
+   depth = 9
+   cost = 11
+   density = 0.1831
+   nvisit = 1.00
+   is_terminal = False
+0.4.2.1.3.1.1.1.2.3
+   q-value = 0.8809
+   depth = 9
+   cost = 11
+   density = 0.1801
+   nvisit = 1.00
+   is_terminal = False
+0.4.2.1.3.1.1.1.2.4
+   q-value = 0.9033
+   depth = 9
+   cost = 11
+   density = 0.1821
+   nvisit = 1.00
+   is_terminal = False
+selected_leaf = 0.4.2.1.3.1.1.1.2.2
+selected = 0.4.2.1.3.1.1.1.2.2  density=0.1831  q=0.9136  nvisit=1
+
+-> p = 52
+gen_cnt = 53
+0.1
+   q-value = 0.9883
+   depth = 1
+   cost = 19
+   density = 0.1520
+   nvisit = 1.00
+   is_terminal = False
+0.2
+   q-value = 0.9888
+   depth = 1
+   cost = 19
+   density = 0.1520
+   nvisit = 1.00
+   is_terminal = False
+0.3
+   q-value = 0.9868
+   depth = 1
+   cost = 19
+   density = 0.1519
+   nvisit = 1.00
+   is_terminal = False
+0.4.1
+   q-value = 0.9702
+   depth = 2
+   cost = 18
+   density = 0.1539
+   nvisit = 1.00
+   is_terminal = False
+0.4.3
+   q-value = 0.8579
+   depth = 2
+   cost = 18
+   density = 0.1477
+   nvisit = 1.00
+   is_terminal = False
+0.4.2.2
+   q-value = 0.6074
+   depth = 3
+   cost = 17
+   density = 0.1357
+   nvisit = 1.00
+   is_terminal = False
+0.4.2.3
+   q-value = 0.9004
+   depth = 3
+   cost = 17
+   density = 0.1530
+   nvisit = 1.00
+   is_terminal = False
+0.4.2.4
+   q-value = 0.9443
+   depth = 3
+   cost = 17
+   density = 0.1555
+   nvisit = 1.00
+   is_terminal = False
+0.4.2.1.1
+   q-value = 0.7090
+   depth = 4
+   cost = 16
+   density = 0.1443
+   nvisit = 1.00
+   is_terminal = False
+0.4.2.1.2
+   q-value = 0.7637
+   depth = 4
+   cost = 16
+   density = 0.1477
+   nvisit = 1.00
+   is_terminal = False
+0.4.2.1.4
+   q-value = 0.8687
+   depth = 4
+   cost = 16
+   density = 0.1543
+   nvisit = 1.00
+   is_terminal = False
+0.4.2.1.3.2
+   q-value = 0.8457
+   depth = 5
+   cost = 15
+   density = 0.1564
+   nvisit = 1.00
+   is_terminal = False
+0.4.2.1.3.3
+   q-value = 0.8311
+   depth = 5
+   cost = 15
+   density = 0.1554
+   nvisit = 1.00
+   is_terminal = False
+0.4.2.1.3.4
+   q-value = 0.7339
+   depth = 5
+   cost = 15
+   density = 0.1489
+   nvisit = 1.00
+   is_terminal = False
+0.4.2.1.3.1.1.1.1.1
+   q-value = 0.8418
+   depth = 9
+   cost = 11
+   density = 0.1765
+   nvisit = 1.00
+   is_terminal = False
+0.4.2.1.3.1.1.1.1.2
+   q-value = 0.6260
+   depth = 9
+   cost = 11
+   density = 0.1569
+   nvisit = 1.00
+   is_terminal = False
+0.4.2.1.3.1.1.1.1.3
+   q-value = 0.7153
+   depth = 9
+   cost = 11
+   density = 0.1650
+   nvisit = 1.00
+   is_terminal = False
+0.4.2.1.3.1.1.1.2.1
+   q-value = 0.9019
+   depth = 9
+   cost = 11
+   density = 0.1820
+   nvisit = 1.00
+   is_terminal = False
+0.4.2.1.3.1.1.1.2.3
+   q-value = 0.8809
+   depth = 9
+   cost = 11
+   density = 0.1801
+   nvisit = 1.00
+   is_terminal = False
+0.4.2.1.3.1.1.1.2.4
+   q-value = 0.9033
+   depth = 9
+   cost = 11
+   density = 0.1821
+   nvisit = 1.00
+   is_terminal = False
+0.4.2.1.3.1.1.1.2.2.1
+   q-value = 0.9609
+   depth = 10
+   cost = 10
+   density = 0.1961
+   nvisit = 1.00
+   is_terminal = False
+0.4.2.1.3.1.1.1.2.2.2
+   q-value = 0.9653
+   depth = 10
+   cost = 10
+   density = 0.1965
+   nvisit = 1.00
+   is_terminal = False
+selected_leaf = 0.4.2.1.3.1.1.1.2.2.2
+selected = 0.4.2.1.3.1.1.1.2.2.2  density=0.1965  q=0.9653  nvisit=1
+
+-> p = 53
+gen_cnt = 54
+0.1
+   q-value = 0.9883
+   depth = 1
+   cost = 19
+   density = 0.1520
+   nvisit = 1.00
+   is_terminal = False
+0.2
+   q-value = 0.9888
+   depth = 1
+   cost = 19
+   density = 0.1520
+   nvisit = 1.00
+   is_terminal = False
+0.3
+   q-value = 0.9868
+   depth = 1
+   cost = 19
+   density = 0.1519
+   nvisit = 1.00
+   is_terminal = False
+0.4.1
+   q-value = 0.9702
+   depth = 2
+   cost = 18
+   density = 0.1539
+   nvisit = 1.00
+   is_terminal = False
+0.4.3
+   q-value = 0.8579
+   depth = 2
+   cost = 18
+   density = 0.1477
+   nvisit = 1.00
+   is_terminal = False
+0.4.2.2
+   q-value = 0.6074
+   depth = 3
+   cost = 17
+   density = 0.1357
+   nvisit = 1.00
+   is_terminal = False
+0.4.2.3
+   q-value = 0.9004
+   depth = 3
+   cost = 17
+   density = 0.1530
+   nvisit = 1.00
+   is_terminal = False
+0.4.2.4
+   q-value = 0.9443
+   depth = 3
+   cost = 17
+   density = 0.1555
+   nvisit = 1.00
+   is_terminal = False
+0.4.2.1.1
+   q-value = 0.7090
+   depth = 4
+   cost = 16
+   density = 0.1443
+   nvisit = 1.00
+   is_terminal = False
+0.4.2.1.2
+   q-value = 0.7637
+   depth = 4
+   cost = 16
+   density = 0.1477
+   nvisit = 1.00
+   is_terminal = False
+0.4.2.1.4
+   q-value = 0.8687
+   depth = 4
+   cost = 16
+   density = 0.1543
+   nvisit = 1.00
+   is_terminal = False
+0.4.2.1.3.2
+   q-value = 0.8457
+   depth = 5
+   cost = 15
+   density = 0.1564
+   nvisit = 1.00
+   is_terminal = False
+0.4.2.1.3.3
+   q-value = 0.8311
+   depth = 5
+   cost = 15
+   density = 0.1554
+   nvisit = 1.00
+   is_terminal = False
+0.4.2.1.3.4
+   q-value = 0.7339
+   depth = 5
+   cost = 15
+   density = 0.1489
+   nvisit = 1.00
+   is_terminal = False
+0.4.2.1.3.1.1.1.1.1
+   q-value = 0.8418
+   depth = 9
+   cost = 11
+   density = 0.1765
+   nvisit = 1.00
+   is_terminal = False
+0.4.2.1.3.1.1.1.1.2
+   q-value = 0.6260
+   depth = 9
+   cost = 11
+   density = 0.1569
+   nvisit = 1.00
+   is_terminal = False
+0.4.2.1.3.1.1.1.1.3
+   q-value = 0.7153
+   depth = 9
+   cost = 11
+   density = 0.1650
+   nvisit = 1.00
+   is_terminal = False
+0.4.2.1.3.1.1.1.2.1
+   q-value = 0.9019
+   depth = 9
+   cost = 11
+   density = 0.1820
+   nvisit = 1.00
+   is_terminal = False
+0.4.2.1.3.1.1.1.2.3
+   q-value = 0.8809
+   depth = 9
+   cost = 11
+   density = 0.1801
+   nvisit = 1.00
+   is_terminal = False
+0.4.2.1.3.1.1.1.2.4
+   q-value = 0.9033
+   depth = 9
+   cost = 11
+   density = 0.1821
+   nvisit = 1.00
+   is_terminal = False
+0.4.2.1.3.1.1.1.2.2.1
+   q-value = 0.9609
+   depth = 10
+   cost = 10
+   density = 0.1961
+   nvisit = 1.00
+   is_terminal = False
+0.4.2.1.3.1.1.1.2.2.2.1
+   q-value = 0.9619
+   depth = 11
+   cost = 9
+   density = 0.2069
+   nvisit = 1.00
+   is_terminal = False
+selected_leaf = 0.4.2.1.3.1.1.1.2.2.2.1
+selected = 0.4.2.1.3.1.1.1.2.2.2.1  density=0.2069  q=0.9619  nvisit=1
+
+-> p = 54
+gen_cnt = 55
+0.1
+   q-value = 0.9883
+   depth = 1
+   cost = 19
+   density = 0.1520
+   nvisit = 1.00
+   is_terminal = False
+0.2
+   q-value = 0.9888
+   depth = 1
+   cost = 19
+   density = 0.1520
+   nvisit = 1.00
+   is_terminal = False
+0.3
+   q-value = 0.9868
+   depth = 1
+   cost = 19
+   density = 0.1519
+   nvisit = 1.00
+   is_terminal = False
+0.4.1
+   q-value = 0.9702
+   depth = 2
+   cost = 18
+   density = 0.1539
+   nvisit = 1.00
+   is_terminal = False
+0.4.3
+   q-value = 0.8579
+   depth = 2
+   cost = 18
+   density = 0.1477
+   nvisit = 1.00
+   is_terminal = False
+0.4.2.2
+   q-value = 0.6074
+   depth = 3
+   cost = 17
+   density = 0.1357
+   nvisit = 1.00
+   is_terminal = False
+0.4.2.3
+   q-value = 0.9004
+   depth = 3
+   cost = 17
+   density = 0.1530
+   nvisit = 1.00
+   is_terminal = False
+0.4.2.4
+   q-value = 0.9443
+   depth = 3
+   cost = 17
+   density = 0.1555
+   nvisit = 1.00
+   is_terminal = False
+0.4.2.1.1
+   q-value = 0.7090
+   depth = 4
+   cost = 16
+   density = 0.1443
+   nvisit = 1.00
+   is_terminal = False
+0.4.2.1.2
+   q-value = 0.7637
+   depth = 4
+   cost = 16
+   density = 0.1477
+   nvisit = 1.00
+   is_terminal = False
+0.4.2.1.4
+   q-value = 0.8687
+   depth = 4
+   cost = 16
+   density = 0.1543
+   nvisit = 1.00
+   is_terminal = False
+0.4.2.1.3.2
+   q-value = 0.8457
+   depth = 5
+   cost = 15
+   density = 0.1564
+   nvisit = 1.00
+   is_terminal = False
+0.4.2.1.3.3
+   q-value = 0.8311
+   depth = 5
+   cost = 15
+   density = 0.1554
+   nvisit = 1.00
+   is_terminal = False
+0.4.2.1.3.4
+   q-value = 0.7339
+   depth = 5
+   cost = 15
+   density = 0.1489
+   nvisit = 1.00
+   is_terminal = False
+0.4.2.1.3.1.1.1.1.1
+   q-value = 0.8418
+   depth = 9
+   cost = 11
+   density = 0.1765
+   nvisit = 1.00
+   is_terminal = False
+0.4.2.1.3.1.1.1.1.2
+   q-value = 0.6260
+   depth = 9
+   cost = 11
+   density = 0.1569
+   nvisit = 1.00
+   is_terminal = False
+0.4.2.1.3.1.1.1.1.3
+   q-value = 0.7153
+   depth = 9
+   cost = 11
+   density = 0.1650
+   nvisit = 1.00
+   is_terminal = False
+0.4.2.1.3.1.1.1.2.1
+   q-value = 0.9019
+   depth = 9
+   cost = 11
+   density = 0.1820
+   nvisit = 1.00
+   is_terminal = False
+0.4.2.1.3.1.1.1.2.3
+   q-value = 0.8809
+   depth = 9
+   cost = 11
+   density = 0.1801
+   nvisit = 1.00
+   is_terminal = False
+0.4.2.1.3.1.1.1.2.4
+   q-value = 0.9033
+   depth = 9
+   cost = 11
+   density = 0.1821
+   nvisit = 1.00
+   is_terminal = False
+0.4.2.1.3.1.1.1.2.2.1
+   q-value = 0.9609
+   depth = 10
+   cost = 10
+   density = 0.1961
+   nvisit = 1.00
+   is_terminal = False
+selected_leaf = 0.4.2.1.3.1.1.1.2.2.1
+selected = 0.4.2.1.3.1.1.1.2.2.1  density=0.1961  q=0.9609  nvisit=1
+
+-> p = 55
+gen_cnt = 56
+0.1
+   q-value = 0.9883
+   depth = 1
+   cost = 19
+   density = 0.1520
+   nvisit = 1.00
+   is_terminal = False
+0.2
+   q-value = 0.9888
+   depth = 1
+   cost = 19
+   density = 0.1520
+   nvisit = 1.00
+   is_terminal = False
+0.3
+   q-value = 0.9868
+   depth = 1
+   cost = 19
+   density = 0.1519
+   nvisit = 1.00
+   is_terminal = False
+0.4.1
+   q-value = 0.9702
+   depth = 2
+   cost = 18
+   density = 0.1539
+   nvisit = 1.00
+   is_terminal = False
+0.4.3
+   q-value = 0.8579
+   depth = 2
+   cost = 18
+   density = 0.1477
+   nvisit = 1.00
+   is_terminal = False
+0.4.2.2
+   q-value = 0.6074
+   depth = 3
+   cost = 17
+   density = 0.1357
+   nvisit = 1.00
+   is_terminal = False
+0.4.2.3
+   q-value = 0.9004
+   depth = 3
+   cost = 17
+   density = 0.1530
+   nvisit = 1.00
+   is_terminal = False
+0.4.2.4
+   q-value = 0.9443
+   depth = 3
+   cost = 17
+   density = 0.1555
+   nvisit = 1.00
+   is_terminal = False
+0.4.2.1.1
+   q-value = 0.7090
+   depth = 4
+   cost = 16
+   density = 0.1443
+   nvisit = 1.00
+   is_terminal = False
+0.4.2.1.2
+   q-value = 0.7637
+   depth = 4
+   cost = 16
+   density = 0.1477
+   nvisit = 1.00
+   is_terminal = False
+0.4.2.1.4
+   q-value = 0.8687
+   depth = 4
+   cost = 16
+   density = 0.1543
+   nvisit = 1.00
+   is_terminal = False
+0.4.2.1.3.2
+   q-value = 0.8457
+   depth = 5
+   cost = 15
+   density = 0.1564
+   nvisit = 1.00
+   is_terminal = False
+0.4.2.1.3.3
+   q-value = 0.8311
+   depth = 5
+   cost = 15
+   density = 0.1554
+   nvisit = 1.00
+   is_terminal = False
+0.4.2.1.3.4
+   q-value = 0.7339
+   depth = 5
+   cost = 15
+   density = 0.1489
+   nvisit = 1.00
+   is_terminal = False
+0.4.2.1.3.1.1.1.1.1
+   q-value = 0.8418
+   depth = 9
+   cost = 11
+   density = 0.1765
+   nvisit = 1.00
+   is_terminal = False
+0.4.2.1.3.1.1.1.1.2
+   q-value = 0.6260
+   depth = 9
+   cost = 11
+   density = 0.1569
+   nvisit = 1.00
+   is_terminal = False
+0.4.2.1.3.1.1.1.1.3
+   q-value = 0.7153
+   depth = 9
+   cost = 11
+   density = 0.1650
+   nvisit = 1.00
+   is_terminal = False
+0.4.2.1.3.1.1.1.2.1
+   q-value = 0.9019
+   depth = 9
+   cost = 11
+   density = 0.1820
+   nvisit = 1.00
+   is_terminal = False
+0.4.2.1.3.1.1.1.2.3
+   q-value = 0.8809
+   depth = 9
+   cost = 11
+   density = 0.1801
+   nvisit = 1.00
+   is_terminal = False
+0.4.2.1.3.1.1.1.2.4
+   q-value = 0.9033
+   depth = 9
+   cost = 11
+   density = 0.1821
+   nvisit = 1.00
+   is_terminal = False
+selected_leaf = 0.4.2.1.3.1.1.1.2.4
+selected = 0.4.2.1.3.1.1.1.2.4  density=0.1821  q=0.9033  nvisit=1
+
+-> p = 56
+gen_cnt = 57
+0.1
+   q-value = 0.9883
+   depth = 1
+   cost = 19
+   density = 0.1520
+   nvisit = 1.00
+   is_terminal = False
+0.2
+   q-value = 0.9888
+   depth = 1
+   cost = 19
+   density = 0.1520
+   nvisit = 1.00
+   is_terminal = False
+0.3
+   q-value = 0.9868
+   depth = 1
+   cost = 19
+   density = 0.1519
+   nvisit = 1.00
+   is_terminal = False
+0.4.1
+   q-value = 0.9702
+   depth = 2
+   cost = 18
+   density = 0.1539
+   nvisit = 1.00
+   is_terminal = False
+0.4.3
+   q-value = 0.8579
+   depth = 2
+   cost = 18
+   density = 0.1477
+   nvisit = 1.00
+   is_terminal = False
+0.4.2.2
+   q-value = 0.6074
+   depth = 3
+   cost = 17
+   density = 0.1357
+   nvisit = 1.00
+   is_terminal = False
+0.4.2.3
+   q-value = 0.9004
+   depth = 3
+   cost = 17
+   density = 0.1530
+   nvisit = 1.00
+   is_terminal = False
+0.4.2.4
+   q-value = 0.9443
+   depth = 3
+   cost = 17
+   density = 0.1555
+   nvisit = 1.00
+   is_terminal = False
+0.4.2.1.1
+   q-value = 0.7090
+   depth = 4
+   cost = 16
+   density = 0.1443
+   nvisit = 1.00
+   is_terminal = False
+0.4.2.1.2
+   q-value = 0.7637
+   depth = 4
+   cost = 16
+   density = 0.1477
+   nvisit = 1.00
+   is_terminal = False
+0.4.2.1.4
+   q-value = 0.8687
+   depth = 4
+   cost = 16
+   density = 0.1543
+   nvisit = 1.00
+   is_terminal = False
+0.4.2.1.3.2
+   q-value = 0.8457
+   depth = 5
+   cost = 15
+   density = 0.1564
+   nvisit = 1.00
+   is_terminal = False
+0.4.2.1.3.3
+   q-value = 0.8311
+   depth = 5
+   cost = 15
+   density = 0.1554
+   nvisit = 1.00
+   is_terminal = False
+0.4.2.1.3.4
+   q-value = 0.7339
+   depth = 5
+   cost = 15
+   density = 0.1489
+   nvisit = 1.00
+   is_terminal = False
+0.4.2.1.3.1.1.1.1.1
+   q-value = 0.8418
+   depth = 9
+   cost = 11
+   density = 0.1765
+   nvisit = 1.00
+   is_terminal = False
+0.4.2.1.3.1.1.1.1.2
+   q-value = 0.6260
+   depth = 9
+   cost = 11
+   density = 0.1569
+   nvisit = 1.00
+   is_terminal = False
+0.4.2.1.3.1.1.1.1.3
+   q-value = 0.7153
+   depth = 9
+   cost = 11
+   density = 0.1650
+   nvisit = 1.00
+   is_terminal = False
+0.4.2.1.3.1.1.1.2.1
+   q-value = 0.9019
+   depth = 9
+   cost = 11
+   density = 0.1820
+   nvisit = 1.00
+   is_terminal = False
+0.4.2.1.3.1.1.1.2.3
+   q-value = 0.8809
+   depth = 9
+   cost = 11
+   density = 0.1801
+   nvisit = 1.00
+   is_terminal = False
+0.4.2.1.3.1.1.1.2.4.1
+   q-value = 0.9731
+   depth = 10
+   cost = 10
+   density = 0.1973
+   nvisit = 1.00
+   is_terminal = False
+0.4.2.1.3.1.1.1.2.4.2
+   q-value = 0.9663
+   depth = 10
+   cost = 10
+   density = 0.1966
+   nvisit = 1.00
+   is_terminal = False
+selected_leaf = 0.4.2.1.3.1.1.1.2.4.1
+selected = 0.4.2.1.3.1.1.1.2.4.1  density=0.1973  q=0.9731  nvisit=1
+
+-> p = 57
+gen_cnt = 58
+0.1
+   q-value = 0.9883
+   depth = 1
+   cost = 19
+   density = 0.1520
+   nvisit = 1.00
+   is_terminal = False
+0.2
+   q-value = 0.9888
+   depth = 1
+   cost = 19
+   density = 0.1520
+   nvisit = 1.00
+   is_terminal = False
+0.3
+   q-value = 0.9868
+   depth = 1
+   cost = 19
+   density = 0.1519
+   nvisit = 1.00
+   is_terminal = False
+0.4.1
+   q-value = 0.9702
+   depth = 2
+   cost = 18
+   density = 0.1539
+   nvisit = 1.00
+   is_terminal = False
+0.4.3
+   q-value = 0.8579
+   depth = 2
+   cost = 18
+   density = 0.1477
+   nvisit = 1.00
+   is_terminal = False
+0.4.2.2
+   q-value = 0.6074
+   depth = 3
+   cost = 17
+   density = 0.1357
+   nvisit = 1.00
+   is_terminal = False
+0.4.2.3
+   q-value = 0.9004
+   depth = 3
+   cost = 17
+   density = 0.1530
+   nvisit = 1.00
+   is_terminal = False
+0.4.2.4
+   q-value = 0.9443
+   depth = 3
+   cost = 17
+   density = 0.1555
+   nvisit = 1.00
+   is_terminal = False
+0.4.2.1.1
+   q-value = 0.7090
+   depth = 4
+   cost = 16
+   density = 0.1443
+   nvisit = 1.00
+   is_terminal = False
+0.4.2.1.2
+   q-value = 0.7637
+   depth = 4
+   cost = 16
+   density = 0.1477
+   nvisit = 1.00
+   is_terminal = False
+0.4.2.1.4
+   q-value = 0.8687
+   depth = 4
+   cost = 16
+   density = 0.1543
+   nvisit = 1.00
+   is_terminal = False
+0.4.2.1.3.2
+   q-value = 0.8457
+   depth = 5
+   cost = 15
+   density = 0.1564
+   nvisit = 1.00
+   is_terminal = False
+0.4.2.1.3.3
+   q-value = 0.8311
+   depth = 5
+   cost = 15
+   density = 0.1554
+   nvisit = 1.00
+   is_terminal = False
+0.4.2.1.3.4
+   q-value = 0.7339
+   depth = 5
+   cost = 15
+   density = 0.1489
+   nvisit = 1.00
+   is_terminal = False
+0.4.2.1.3.1.1.1.1.1
+   q-value = 0.8418
+   depth = 9
+   cost = 11
+   density = 0.1765
+   nvisit = 1.00
+   is_terminal = False
+0.4.2.1.3.1.1.1.1.2
+   q-value = 0.6260
+   depth = 9
+   cost = 11
+   density = 0.1569
+   nvisit = 1.00
+   is_terminal = False
+0.4.2.1.3.1.1.1.1.3
+   q-value = 0.7153
+   depth = 9
+   cost = 11
+   density = 0.1650
+   nvisit = 1.00
+   is_terminal = False
+0.4.2.1.3.1.1.1.2.1
+   q-value = 0.9019
+   depth = 9
+   cost = 11
+   density = 0.1820
+   nvisit = 1.00
+   is_terminal = False
+0.4.2.1.3.1.1.1.2.3
+   q-value = 0.8809
+   depth = 9
+   cost = 11
+   density = 0.1801
+   nvisit = 1.00
+   is_terminal = False
+0.4.2.1.3.1.1.1.2.4.2
+   q-value = 0.9663
+   depth = 10
+   cost = 10
+   density = 0.1966
+   nvisit = 1.00
+   is_terminal = False
+0.4.2.1.3.1.1.1.2.4.1.1
+   q-value = 0.9878
+   depth = 11
+   cost = 9
+   density = 0.2098
+   nvisit = 1.00
+   is_terminal = False
+selected_leaf = 0.4.2.1.3.1.1.1.2.4.1.1
+selected = 0.4.2.1.3.1.1.1.2.4.1.1  density=0.2098  q=0.9878  nvisit=1
+
+-> p = 58
+gen_cnt = 59
+0.1
+   q-value = 0.9883
+   depth = 1
+   cost = 19
+   density = 0.1520
+   nvisit = 1.00
+   is_terminal = False
+0.2
+   q-value = 0.9888
+   depth = 1
+   cost = 19
+   density = 0.1520
+   nvisit = 1.00
+   is_terminal = False
+0.3
+   q-value = 0.9868
+   depth = 1
+   cost = 19
+   density = 0.1519
+   nvisit = 1.00
+   is_terminal = False
+0.4.1
+   q-value = 0.9702
+   depth = 2
+   cost = 18
+   density = 0.1539
+   nvisit = 1.00
+   is_terminal = False
+0.4.3
+   q-value = 0.8579
+   depth = 2
+   cost = 18
+   density = 0.1477
+   nvisit = 1.00
+   is_terminal = False
+0.4.2.2
+   q-value = 0.6074
+   depth = 3
+   cost = 17
+   density = 0.1357
+   nvisit = 1.00
+   is_terminal = False
+0.4.2.3
+   q-value = 0.9004
+   depth = 3
+   cost = 17
+   density = 0.1530
+   nvisit = 1.00
+   is_terminal = False
+0.4.2.4
+   q-value = 0.9443
+   depth = 3
+   cost = 17
+   density = 0.1555
+   nvisit = 1.00
+   is_terminal = False
+0.4.2.1.1
+   q-value = 0.7090
+   depth = 4
+   cost = 16
+   density = 0.1443
+   nvisit = 1.00
+   is_terminal = False
+0.4.2.1.2
+   q-value = 0.7637
+   depth = 4
+   cost = 16
+   density = 0.1477
+   nvisit = 1.00
+   is_terminal = False
+0.4.2.1.4
+   q-value = 0.8687
+   depth = 4
+   cost = 16
+   density = 0.1543
+   nvisit = 1.00
+   is_terminal = False
+0.4.2.1.3.2
+   q-value = 0.8457
+   depth = 5
+   cost = 15
+   density = 0.1564
+   nvisit = 1.00
+   is_terminal = False
+0.4.2.1.3.3
+   q-value = 0.8311
+   depth = 5
+   cost = 15
+   density = 0.1554
+   nvisit = 1.00
+   is_terminal = False
+0.4.2.1.3.4
+   q-value = 0.7339
+   depth = 5
+   cost = 15
+   density = 0.1489
+   nvisit = 1.00
+   is_terminal = False
+0.4.2.1.3.1.1.1.1.1
+   q-value = 0.8418
+   depth = 9
+   cost = 11
+   density = 0.1765
+   nvisit = 1.00
+   is_terminal = False
+0.4.2.1.3.1.1.1.1.2
+   q-value = 0.6260
+   depth = 9
+   cost = 11
+   density = 0.1569
+   nvisit = 1.00
+   is_terminal = False
+0.4.2.1.3.1.1.1.1.3
+   q-value = 0.7153
+   depth = 9
+   cost = 11
+   density = 0.1650
+   nvisit = 1.00
+   is_terminal = False
+0.4.2.1.3.1.1.1.2.1
+   q-value = 0.9019
+   depth = 9
+   cost = 11
+   density = 0.1820
+   nvisit = 1.00
+   is_terminal = False
+0.4.2.1.3.1.1.1.2.3
+   q-value = 0.8809
+   depth = 9
+   cost = 11
+   density = 0.1801
+   nvisit = 1.00
+   is_terminal = False
+0.4.2.1.3.1.1.1.2.4.2
+   q-value = 0.9663
+   depth = 10
+   cost = 10
+   density = 0.1966
+   nvisit = 1.00
+   is_terminal = False
+selected_leaf = 0.4.2.1.3.1.1.1.2.4.2
+selected = 0.4.2.1.3.1.1.1.2.4.2  density=0.1966  q=0.9663  nvisit=1
+
+-> p = 59
+gen_cnt = 60
+0.1
+   q-value = 0.9883
+   depth = 1
+   cost = 19
+   density = 0.1520
+   nvisit = 1.00
+   is_terminal = False
+0.2
+   q-value = 0.9888
+   depth = 1
+   cost = 19
+   density = 0.1520
+   nvisit = 1.00
+   is_terminal = False
+0.3
+   q-value = 0.9868
+   depth = 1
+   cost = 19
+   density = 0.1519
+   nvisit = 1.00
+   is_terminal = False
+0.4.1
+   q-value = 0.9702
+   depth = 2
+   cost = 18
+   density = 0.1539
+   nvisit = 1.00
+   is_terminal = False
+0.4.3
+   q-value = 0.8579
+   depth = 2
+   cost = 18
+   density = 0.1477
+   nvisit = 1.00
+   is_terminal = False
+0.4.2.2
+   q-value = 0.6074
+   depth = 3
+   cost = 17
+   density = 0.1357
+   nvisit = 1.00
+   is_terminal = False
+0.4.2.3
+   q-value = 0.9004
+   depth = 3
+   cost = 17
+   density = 0.1530
+   nvisit = 1.00
+   is_terminal = False
+0.4.2.4
+   q-value = 0.9443
+   depth = 3
+   cost = 17
+   density = 0.1555
+   nvisit = 1.00
+   is_terminal = False
+0.4.2.1.1
+   q-value = 0.7090
+   depth = 4
+   cost = 16
+   density = 0.1443
+   nvisit = 1.00
+   is_terminal = False
+0.4.2.1.2
+   q-value = 0.7637
+   depth = 4
+   cost = 16
+   density = 0.1477
+   nvisit = 1.00
+   is_terminal = False
+0.4.2.1.4
+   q-value = 0.8687
+   depth = 4
+   cost = 16
+   density = 0.1543
+   nvisit = 1.00
+   is_terminal = False
+0.4.2.1.3.2
+   q-value = 0.8457
+   depth = 5
+   cost = 15
+   density = 0.1564
+   nvisit = 1.00
+   is_terminal = False
+0.4.2.1.3.3
+   q-value = 0.8311
+   depth = 5
+   cost = 15
+   density = 0.1554
+   nvisit = 1.00
+   is_terminal = False
+0.4.2.1.3.4
+   q-value = 0.7339
+   depth = 5
+   cost = 15
+   density = 0.1489
+   nvisit = 1.00
+   is_terminal = False
+0.4.2.1.3.1.1.1.1.1
+   q-value = 0.8418
+   depth = 9
+   cost = 11
+   density = 0.1765
+   nvisit = 1.00
+   is_terminal = False
+0.4.2.1.3.1.1.1.1.2
+   q-value = 0.6260
+   depth = 9
+   cost = 11
+   density = 0.1569
+   nvisit = 1.00
+   is_terminal = False
+0.4.2.1.3.1.1.1.1.3
+   q-value = 0.7153
+   depth = 9
+   cost = 11
+   density = 0.1650
+   nvisit = 1.00
+   is_terminal = False
+0.4.2.1.3.1.1.1.2.1
+   q-value = 0.9019
+   depth = 9
+   cost = 11
+   density = 0.1820
+   nvisit = 1.00
+   is_terminal = False
+0.4.2.1.3.1.1.1.2.3
+   q-value = 0.8809
+   depth = 9
+   cost = 11
+   density = 0.1801
+   nvisit = 1.00
+   is_terminal = False
+0.4.2.1.3.1.1.1.2.4.2.2
+   q-value = 0.9873
+   depth = 11
+   cost = 9
+   density = 0.2097
+   nvisit = 1.00
+   is_terminal = False
+selected_leaf = 0.4.2.1.3.1.1.1.2.4.2.2
+selected = 0.4.2.1.3.1.1.1.2.4.2.2  density=0.2097  q=0.9873  nvisit=1
+
+-> p = 60
+gen_cnt = 61
+0.1
+   q-value = 0.9883
+   depth = 1
+   cost = 19
+   density = 0.1520
+   nvisit = 1.00
+   is_terminal = False
+0.2
+   q-value = 0.9888
+   depth = 1
+   cost = 19
+   density = 0.1520
+   nvisit = 1.00
+   is_terminal = False
+0.3
+   q-value = 0.9868
+   depth = 1
+   cost = 19
+   density = 0.1519
+   nvisit = 1.00
+   is_terminal = False
+0.4.1
+   q-value = 0.9702
+   depth = 2
+   cost = 18
+   density = 0.1539
+   nvisit = 1.00
+   is_terminal = False
+0.4.3
+   q-value = 0.8579
+   depth = 2
+   cost = 18
+   density = 0.1477
+   nvisit = 1.00
+   is_terminal = False
+0.4.2.2
+   q-value = 0.6074
+   depth = 3
+   cost = 17
+   density = 0.1357
+   nvisit = 1.00
+   is_terminal = False
+0.4.2.3
+   q-value = 0.9004
+   depth = 3
+   cost = 17
+   density = 0.1530
+   nvisit = 1.00
+   is_terminal = False
+0.4.2.4
+   q-value = 0.9443
+   depth = 3
+   cost = 17
+   density = 0.1555
+   nvisit = 1.00
+   is_terminal = False
+0.4.2.1.1
+   q-value = 0.7090
+   depth = 4
+   cost = 16
+   density = 0.1443
+   nvisit = 1.00
+   is_terminal = False
+0.4.2.1.2
+   q-value = 0.7637
+   depth = 4
+   cost = 16
+   density = 0.1477
+   nvisit = 1.00
+   is_terminal = False
+0.4.2.1.4
+   q-value = 0.8687
+   depth = 4
+   cost = 16
+   density = 0.1543
+   nvisit = 1.00
+   is_terminal = False
+0.4.2.1.3.2
+   q-value = 0.8457
+   depth = 5
+   cost = 15
+   density = 0.1564
+   nvisit = 1.00
+   is_terminal = False
+0.4.2.1.3.3
+   q-value = 0.8311
+   depth = 5
+   cost = 15
+   density = 0.1554
+   nvisit = 1.00
+   is_terminal = False
+0.4.2.1.3.4
+   q-value = 0.7339
+   depth = 5
+   cost = 15
+   density = 0.1489
+   nvisit = 1.00
+   is_terminal = False
+0.4.2.1.3.1.1.1.1.1
+   q-value = 0.8418
+   depth = 9
+   cost = 11
+   density = 0.1765
+   nvisit = 1.00
+   is_terminal = False
+0.4.2.1.3.1.1.1.1.2
+   q-value = 0.6260
+   depth = 9
+   cost = 11
+   density = 0.1569
+   nvisit = 1.00
+   is_terminal = False
+0.4.2.1.3.1.1.1.1.3
+   q-value = 0.7153
+   depth = 9
+   cost = 11
+   density = 0.1650
+   nvisit = 1.00
+   is_terminal = False
+0.4.2.1.3.1.1.1.2.1
+   q-value = 0.9019
+   depth = 9
+   cost = 11
+   density = 0.1820
+   nvisit = 1.00
+   is_terminal = False
+0.4.2.1.3.1.1.1.2.3
+   q-value = 0.8809
+   depth = 9
+   cost = 11
+   density = 0.1801
+   nvisit = 1.00
+   is_terminal = False
+selected_leaf = 0.4.2.1.3.1.1.1.2.1
+selected = 0.4.2.1.3.1.1.1.2.1  density=0.1820  q=0.9019  nvisit=1
+
+-> p = 61
+gen_cnt = 62
+0.4.1
+   q-value = 0.9702
+   depth = 2
+   cost = 18
+   density = 0.1539
+   nvisit = 1.00
+   is_terminal = False
+0.4.3
+   q-value = 0.8579
+   depth = 2
+   cost = 18
+   density = 0.1477
+   nvisit = 1.00
+   is_terminal = False
+0.4.2.2
+   q-value = 0.6074
+   depth = 3
+   cost = 17
+   density = 0.1357
+   nvisit = 1.00
+   is_terminal = False
+0.4.2.3
+   q-value = 0.9004
+   depth = 3
+   cost = 17
+   density = 0.1530
+   nvisit = 1.00
+   is_terminal = False
+0.4.2.4
+   q-value = 0.9443
+   depth = 3
+   cost = 17
+   density = 0.1555
+   nvisit = 1.00
+   is_terminal = False
+0.4.2.1.1
+   q-value = 0.7090
+   depth = 4
+   cost = 16
+   density = 0.1443
+   nvisit = 1.00
+   is_terminal = False
+0.4.2.1.2
+   q-value = 0.7637
+   depth = 4
+   cost = 16
+   density = 0.1477
+   nvisit = 1.00
+   is_terminal = False
+0.4.2.1.4
+   q-value = 0.8687
+   depth = 4
+   cost = 16
+   density = 0.1543
+   nvisit = 1.00
+   is_terminal = False
+0.4.2.1.3.2
+   q-value = 0.8457
+   depth = 5
+   cost = 15
+   density = 0.1564
+   nvisit = 1.00
+   is_terminal = False
+0.4.2.1.3.3
+   q-value = 0.8311
+   depth = 5
+   cost = 15
+   density = 0.1554
+   nvisit = 1.00
+   is_terminal = False
+0.4.2.1.3.4
+   q-value = 0.7339
+   depth = 5
+   cost = 15
+   density = 0.1489
+   nvisit = 1.00
+   is_terminal = False
+0.4.2.1.3.1.1.1.1.1
+   q-value = 0.8418
+   depth = 9
+   cost = 11
+   density = 0.1765
+   nvisit = 1.00
+   is_terminal = False
+0.4.2.1.3.1.1.1.1.2
+   q-value = 0.6260
+   depth = 9
+   cost = 11
+   density = 0.1569
+   nvisit = 1.00
+   is_terminal = False
+0.4.2.1.3.1.1.1.1.3
+   q-value = 0.7153
+   depth = 9
+   cost = 11
+   density = 0.1650
+   nvisit = 1.00
+   is_terminal = False
+0.4.2.1.3.1.1.1.2.3
+   q-value = 0.8809
+   depth = 9
+   cost = 11
+   density = 0.1801
+   nvisit = 1.00
+   is_terminal = False
+0.4.2.1.3.1.1.1.2.1.1
+   q-value = 0.9766
+   depth = 10
+   cost = 10
+   density = 0.1977
+   nvisit = 1.00
+   is_terminal = False
+0.4.2.1.3.1.1.1.2.1.2
+   q-value = 0.9751
+   depth = 10
+   cost = 10
+   density = 0.1975
+   nvisit = 1.00
+   is_terminal = False
+0.4.2.1.3.1.1.1.2.1.3
+   q-value = 0.9688
+   depth = 10
+   cost = 10
+   density = 0.1969
+   nvisit = 1.00
+   is_terminal = False
+selected_leaf = 0.4.2.1.3.1.1.1.2.1.1
+selected = 0.4.2.1.3.1.1.1.2.1.1  density=0.1977  q=0.9766  nvisit=1
+
+-> p = 62
+gen_cnt = 63
+0.4.2.2
+   q-value = 0.6074
+   depth = 3
+   cost = 17
+   density = 0.1357
+   nvisit = 1.00
+   is_terminal = False
+0.4.2.3
+   q-value = 0.9004
+   depth = 3
+   cost = 17
+   density = 0.1530
+   nvisit = 1.00
+   is_terminal = False
+0.4.2.4
+   q-value = 0.9443
+   depth = 3
+   cost = 17
+   density = 0.1555
+   nvisit = 1.00
+   is_terminal = False
+0.4.2.1.1
+   q-value = 0.7090
+   depth = 4
+   cost = 16
+   density = 0.1443
+   nvisit = 1.00
+   is_terminal = False
+0.4.2.1.2
+   q-value = 0.7637
+   depth = 4
+   cost = 16
+   density = 0.1477
+   nvisit = 1.00
+   is_terminal = False
+0.4.2.1.4
+   q-value = 0.8687
+   depth = 4
+   cost = 16
+   density = 0.1543
+   nvisit = 1.00
+   is_terminal = False
+0.4.2.1.3.2
+   q-value = 0.8457
+   depth = 5
+   cost = 15
+   density = 0.1564
+   nvisit = 1.00
+   is_terminal = False
+0.4.2.1.3.3
+   q-value = 0.8311
+   depth = 5
+   cost = 15
+   density = 0.1554
+   nvisit = 1.00
+   is_terminal = False
+0.4.2.1.3.4
+   q-value = 0.7339
+   depth = 5
+   cost = 15
+   density = 0.1489
+   nvisit = 1.00
+   is_terminal = False
+0.4.2.1.3.1.1.1.1.1
+   q-value = 0.8418
+   depth = 9
+   cost = 11
+   density = 0.1765
+   nvisit = 1.00
+   is_terminal = False
+0.4.2.1.3.1.1.1.1.2
+   q-value = 0.6260
+   depth = 9
+   cost = 11
+   density = 0.1569
+   nvisit = 1.00
+   is_terminal = False
+0.4.2.1.3.1.1.1.1.3
+   q-value = 0.7153
+   depth = 9
+   cost = 11
+   density = 0.1650
+   nvisit = 1.00
+   is_terminal = False
+0.4.2.1.3.1.1.1.2.3
+   q-value = 0.8809
+   depth = 9
+   cost = 11
+   density = 0.1801
+   nvisit = 1.00
+   is_terminal = False
+0.4.2.1.3.1.1.1.2.1.2
+   q-value = 0.9751
+   depth = 10
+   cost = 10
+   density = 0.1975
+   nvisit = 1.00
+   is_terminal = False
+0.4.2.1.3.1.1.1.2.1.3
+   q-value = 0.9688
+   depth = 10
+   cost = 10
+   density = 0.1969
+   nvisit = 1.00
+   is_terminal = False
+0.4.2.1.3.1.1.1.2.1.1.1
+   q-value = 0.9844
+   depth = 11
+   cost = 9
+   density = 0.2094
+   nvisit = 1.00
+   is_terminal = False
+selected_leaf = 0.4.2.1.3.1.1.1.2.1.1.1
+selected = 0.4.2.1.3.1.1.1.2.1.1.1  density=0.2094  q=0.9844  nvisit=1
+
+-> p = 63
+gen_cnt = 64
+0.4.2.1.1
+   q-value = 0.7090
+   depth = 4
+   cost = 16
+   density = 0.1443
+   nvisit = 1.00
+   is_terminal = False
+0.4.2.1.2
+   q-value = 0.7637
+   depth = 4
+   cost = 16
+   density = 0.1477
+   nvisit = 1.00
+   is_terminal = False
+0.4.2.1.4
+   q-value = 0.8687
+   depth = 4
+   cost = 16
+   density = 0.1543
+   nvisit = 1.00
+   is_terminal = False
+0.4.2.1.3.2
+   q-value = 0.8457
+   depth = 5
+   cost = 15
+   density = 0.1564
+   nvisit = 1.00
+   is_terminal = False
+0.4.2.1.3.3
+   q-value = 0.8311
+   depth = 5
+   cost = 15
+   density = 0.1554
+   nvisit = 1.00
+   is_terminal = False
+0.4.2.1.3.4
+   q-value = 0.7339
+   depth = 5
+   cost = 15
+   density = 0.1489
+   nvisit = 1.00
+   is_terminal = False
+0.4.2.1.3.1.1.1.1.1
+   q-value = 0.8418
+   depth = 9
+   cost = 11
+   density = 0.1765
+   nvisit = 1.00
+   is_terminal = False
+0.4.2.1.3.1.1.1.1.2
+   q-value = 0.6260
+   depth = 9
+   cost = 11
+   density = 0.1569
+   nvisit = 1.00
+   is_terminal = False
+0.4.2.1.3.1.1.1.1.3
+   q-value = 0.7153
+   depth = 9
+   cost = 11
+   density = 0.1650
+   nvisit = 1.00
+   is_terminal = False
+0.4.2.1.3.1.1.1.2.3
+   q-value = 0.8809
+   depth = 9
+   cost = 11
+   density = 0.1801
+   nvisit = 1.00
+   is_terminal = False
+0.4.2.1.3.1.1.1.2.1.2
+   q-value = 0.9751
+   depth = 10
+   cost = 10
+   density = 0.1975
+   nvisit = 1.00
+   is_terminal = False
+0.4.2.1.3.1.1.1.2.1.3
+   q-value = 0.9688
+   depth = 10
+   cost = 10
+   density = 0.1969
+   nvisit = 1.00
+   is_terminal = False
+selected_leaf = 0.4.2.1.3.1.1.1.2.1.2
+selected = 0.4.2.1.3.1.1.1.2.1.2  density=0.1975  q=0.9751  nvisit=1
+
+-> p = 64
+gen_cnt = 65
+0.4.2.1.3.2
+   q-value = 0.8457
+   depth = 5
+   cost = 15
+   density = 0.1564
+   nvisit = 1.00
+   is_terminal = False
+0.4.2.1.3.3
+   q-value = 0.8311
+   depth = 5
+   cost = 15
+   density = 0.1554
+   nvisit = 1.00
+   is_terminal = False
+0.4.2.1.3.4
+   q-value = 0.7339
+   depth = 5
+   cost = 15
+   density = 0.1489
+   nvisit = 1.00
+   is_terminal = False
+0.4.2.1.3.1.1.1.1.1
+   q-value = 0.8418
+   depth = 9
+   cost = 11
+   density = 0.1765
+   nvisit = 1.00
+   is_terminal = False
+0.4.2.1.3.1.1.1.1.2
+   q-value = 0.6260
+   depth = 9
+   cost = 11
+   density = 0.1569
+   nvisit = 1.00
+   is_terminal = False
+0.4.2.1.3.1.1.1.1.3
+   q-value = 0.7153
+   depth = 9
+   cost = 11
+   density = 0.1650
+   nvisit = 1.00
+   is_terminal = False
+0.4.2.1.3.1.1.1.2.3
+   q-value = 0.8809
+   depth = 9
+   cost = 11
+   density = 0.1801
+   nvisit = 1.00
+   is_terminal = False
+0.4.2.1.3.1.1.1.2.1.3
+   q-value = 0.9688
+   depth = 10
+   cost = 10
+   density = 0.1969
+   nvisit = 1.00
+   is_terminal = False
+0.4.2.1.3.1.1.1.2.1.2.1
+   q-value = 0.9946
+   depth = 11
+   cost = 9
+   density = 0.2105
+   nvisit = 1.00
+   is_terminal = False
+0.4.2.1.3.1.1.1.2.1.2.3
+   q-value = 0.9849
+   depth = 11
+   cost = 9
+   density = 0.2094
+   nvisit = 1.00
+   is_terminal = False
+selected_leaf = 0.4.2.1.3.1.1.1.2.1.2.1
+selected = 0.4.2.1.3.1.1.1.2.1.2.1  density=0.2105  q=0.9946  nvisit=1
+
+-> p = 65
+gen_cnt = 66
+0.4.2.1.3.1.1.1.1.1
+   q-value = 0.8418
+   depth = 9
+   cost = 11
+   density = 0.1765
+   nvisit = 1.00
+   is_terminal = False
+0.4.2.1.3.1.1.1.1.2
+   q-value = 0.6260
+   depth = 9
+   cost = 11
+   density = 0.1569
+   nvisit = 1.00
+   is_terminal = False
+0.4.2.1.3.1.1.1.1.3
+   q-value = 0.7153
+   depth = 9
+   cost = 11
+   density = 0.1650
+   nvisit = 1.00
+   is_terminal = False
+0.4.2.1.3.1.1.1.2.3
+   q-value = 0.8809
+   depth = 9
+   cost = 11
+   density = 0.1801
+   nvisit = 1.00
+   is_terminal = False
+0.4.2.1.3.1.1.1.2.1.3
+   q-value = 0.9688
+   depth = 10
+   cost = 10
+   density = 0.1969
+   nvisit = 1.00
+   is_terminal = False
+0.4.2.1.3.1.1.1.2.1.2.3
+   q-value = 0.9849
+   depth = 11
+   cost = 9
+   density = 0.2094
+   nvisit = 1.00
+   is_terminal = False
+selected_leaf = 0.4.2.1.3.1.1.1.2.1.2.3
+selected = 0.4.2.1.3.1.1.1.2.1.2.3  density=0.2094  q=0.9849  nvisit=1
+
+-> p = 66
+gen_cnt = 67
+0.4.2.1.3.1.1.1.1.1
+   q-value = 0.8418
+   depth = 9
+   cost = 11
+   density = 0.1765
+   nvisit = 1.00
+   is_terminal = False
+0.4.2.1.3.1.1.1.1.2
+   q-value = 0.6260
+   depth = 9
+   cost = 11
+   density = 0.1569
+   nvisit = 1.00
+   is_terminal = False
+0.4.2.1.3.1.1.1.1.3
+   q-value = 0.7153
+   depth = 9
+   cost = 11
+   density = 0.1650
+   nvisit = 1.00
+   is_terminal = False
+0.4.2.1.3.1.1.1.2.3
+   q-value = 0.8809
+   depth = 9
+   cost = 11
+   density = 0.1801
+   nvisit = 1.00
+   is_terminal = False
+0.4.2.1.3.1.1.1.2.1.3
+   q-value = 0.9688
+   depth = 10
+   cost = 10
+   density = 0.1969
+   nvisit = 1.00
+   is_terminal = False
+selected_leaf = 0.4.2.1.3.1.1.1.2.1.3
+selected = 0.4.2.1.3.1.1.1.2.1.3  density=0.1969  q=0.9688  nvisit=1
+
+-> p = 67
+gen_cnt = 68
+0.4.2.1.3.1.1.1.1.1
+   q-value = 0.8418
+   depth = 9
+   cost = 11
+   density = 0.1765
+   nvisit = 1.00
+   is_terminal = False
+0.4.2.1.3.1.1.1.1.2
+   q-value = 0.6260
+   depth = 9
+   cost = 11
+   density = 0.1569
+   nvisit = 1.00
+   is_terminal = False
+0.4.2.1.3.1.1.1.1.3
+   q-value = 0.7153
+   depth = 9
+   cost = 11
+   density = 0.1650
+   nvisit = 1.00
+   is_terminal = False
+0.4.2.1.3.1.1.1.2.3
+   q-value = 0.8809
+   depth = 9
+   cost = 11
+   density = 0.1801
+   nvisit = 1.00
+   is_terminal = False
+selected_leaf = 0.4.2.1.3.1.1.1.2.3
+selected = 0.4.2.1.3.1.1.1.2.3  density=0.1801  q=0.8809  nvisit=1
+
+-> p = 68
+gen_cnt = 69
+0.4.2.1.3.1.1.1.1.1
+   q-value = 0.8418
+   depth = 9
+   cost = 11
+   density = 0.1765
+   nvisit = 1.00
+   is_terminal = False
+0.4.2.1.3.1.1.1.1.2
+   q-value = 0.6260
+   depth = 9
+   cost = 11
+   density = 0.1569
+   nvisit = 1.00
+   is_terminal = False
+0.4.2.1.3.1.1.1.1.3
+   q-value = 0.7153
+   depth = 9
+   cost = 11
+   density = 0.1650
+   nvisit = 1.00
+   is_terminal = False
+0.4.2.1.3.1.1.1.2.3.1
+   q-value = 0.8789
+   depth = 10
+   cost = 10
+   density = 0.1879
+   nvisit = 1.00
+   is_terminal = False
+0.4.2.1.3.1.1.1.2.3.2
+   q-value = 0.8931
+   depth = 10
+   cost = 10
+   density = 0.1893
+   nvisit = 1.00
+   is_terminal = False
+0.4.2.1.3.1.1.1.2.3.3
+   q-value = 0.4883
+   depth = 10
+   cost = 10
+   density = 0.1488
+   nvisit = 1.00
+   is_terminal = False
+0.4.2.1.3.1.1.1.2.3.4
+   q-value = 0.8687
+   depth = 10
+   cost = 10
+   density = 0.1869
+   nvisit = 1.00
+   is_terminal = False
+selected_leaf = 0.4.2.1.3.1.1.1.2.3.2
+selected = 0.4.2.1.3.1.1.1.2.3.2  density=0.1893  q=0.8931  nvisit=1
+
+-> p = 69
+gen_cnt = 70
+0.4.2.1.3.1.1.1.2.3.1
+   q-value = 0.8789
+   depth = 10
+   cost = 10
+   density = 0.1879
+   nvisit = 1.00
+   is_terminal = False
+0.4.2.1.3.1.1.1.2.3.3
+   q-value = 0.4883
+   depth = 10
+   cost = 10
+   density = 0.1488
+   nvisit = 1.00
+   is_terminal = False
+0.4.2.1.3.1.1.1.2.3.4
+   q-value = 0.8687
+   depth = 10
+   cost = 10
+   density = 0.1869
+   nvisit = 1.00
+   is_terminal = False
+0.4.2.1.3.1.1.1.2.3.2.1
+   q-value = 0.9546
+   depth = 11
+   cost = 9
+   density = 0.2061
+   nvisit = 1.00
+   is_terminal = False
+0.4.2.1.3.1.1.1.2.3.2.2
+   q-value = 0.9448
+   depth = 11
+   cost = 9
+   density = 0.2050
+   nvisit = 1.00
+   is_terminal = False
+0.4.2.1.3.1.1.1.2.3.2.3
+   q-value = 0.9502
+   depth = 11
+   cost = 9
+   density = 0.2056
+   nvisit = 1.00
+   is_terminal = False
+0.4.2.1.3.1.1.1.2.3.2.4
+   q-value = 0.9604
+   depth = 11
+   cost = 9
+   density = 0.2067
+   nvisit = 1.00
+   is_terminal = False
+selected_leaf = 0.4.2.1.3.1.1.1.2.3.2.4
+selected = 0.4.2.1.3.1.1.1.2.3.2.4  density=0.2067  q=0.9604  nvisit=1
+
+-> p = 70
+gen_cnt = 71
+0.4.2.1.3.1.1.1.2.3.2.1
+   q-value = 0.9546
+   depth = 11
+   cost = 9
+   density = 0.2061
+   nvisit = 1.00
+   is_terminal = False
+0.4.2.1.3.1.1.1.2.3.2.2
+   q-value = 0.9448
+   depth = 11
+   cost = 9
+   density = 0.2050
+   nvisit = 1.00
+   is_terminal = False
+0.4.2.1.3.1.1.1.2.3.2.3
+   q-value = 0.9502
+   depth = 11
+   cost = 9
+   density = 0.2056
+   nvisit = 1.00
+   is_terminal = False
+0.4.2.1.3.1.1.1.2.3.2.4.1
+   q-value = 0.9888
+   depth = 12
+   cost = 8
+   density = 0.2236
+   nvisit = 1.00
+   is_terminal = False
+selected_leaf = 0.4.2.1.3.1.1.1.2.3.2.4.1
+selected = 0.4.2.1.3.1.1.1.2.3.2.4.1  density=0.2236  q=0.9888  nvisit=1
+
+-> p = 71
+gen_cnt = 72
+0.4.2.1.3.1.1.1.2.3.2.4.1.3
+   q-value = 0.9941
+   depth = 13
+   cost = 7
+   density = 0.2420
+   nvisit = 1.00
+   is_terminal = False
+0.4.2.1.3.1.1.1.2.3.2.4.1.4
+   q-value = 0.9956
+   depth = 13
+   cost = 7
+   density = 0.2422
+   nvisit = 1.00
+   is_terminal = False
+selected_leaf = 0.4.2.1.3.1.1.1.2.3.2.4.1.4
+selected = 0.4.2.1.3.1.1.1.2.3.2.4.1.4  density=0.2422  q=0.9956  nvisit=1
+
+-> p = 72
+gen_cnt = 73
+0.4.2.1.3.1.1.1.2.3.2.4.1.3
+   q-value = 0.9941
+   depth = 13
+   cost = 7
+   density = 0.2420
+   nvisit = 1.00
+   is_terminal = False
+selected_leaf = 0.4.2.1.3.1.1.1.2.3.2.4.1.3
+selected = 0.4.2.1.3.1.1.1.2.3.2.4.1.3  density=0.2420  q=0.9941  nvisit=1
+
+-> p = 73
+gen_cnt = 74
+0.1
+   q-value = 0.9883
+   depth = 1
+   cost = 19
+   density = 0.1520
+   nvisit = 1.00
+   is_terminal = False
+0.2
+   q-value = 0.9888
+   depth = 1
+   cost = 19
+   density = 0.1520
+   nvisit = 1.00
+   is_terminal = False
+0.3
+   q-value = 0.9868
+   depth = 1
+   cost = 19
+   density = 0.1519
+   nvisit = 1.00
+   is_terminal = False
+0.4.1
+   q-value = 0.9702
+   depth = 2
+   cost = 18
+   density = 0.1539
+   nvisit = 1.00
+   is_terminal = False
+0.4.3
+   q-value = 0.8579
+   depth = 2
+   cost = 18
+   density = 0.1477
+   nvisit = 1.00
+   is_terminal = False
+0.4.2.2
+   q-value = 0.6074
+   depth = 3
+   cost = 17
+   density = 0.1357
+   nvisit = 1.00
+   is_terminal = False
+0.4.2.3
+   q-value = 0.9004
+   depth = 3
+   cost = 17
+   density = 0.1530
+   nvisit = 1.00
+   is_terminal = False
+0.4.2.4
+   q-value = 0.9443
+   depth = 3
+   cost = 17
+   density = 0.1555
+   nvisit = 1.00
+   is_terminal = False
+0.4.2.1.1
+   q-value = 0.7090
+   depth = 4
+   cost = 16
+   density = 0.1443
+   nvisit = 1.00
+   is_terminal = False
+0.4.2.1.2
+   q-value = 0.7637
+   depth = 4
+   cost = 16
+   density = 0.1477
+   nvisit = 1.00
+   is_terminal = False
+0.4.2.1.4
+   q-value = 0.8687
+   depth = 4
+   cost = 16
+   density = 0.1543
+   nvisit = 1.00
+   is_terminal = False
+0.4.2.1.3.2
+   q-value = 0.8457
+   depth = 5
+   cost = 15
+   density = 0.1564
+   nvisit = 1.00
+   is_terminal = False
+0.4.2.1.3.3
+   q-value = 0.8311
+   depth = 5
+   cost = 15
+   density = 0.1554
+   nvisit = 1.00
+   is_terminal = False
+0.4.2.1.3.4
+   q-value = 0.7339
+   depth = 5
+   cost = 15
+   density = 0.1489
+   nvisit = 1.00
+   is_terminal = False
+0.4.2.1.3.1.1.1.1.1
+   q-value = 0.8418
+   depth = 9
+   cost = 11
+   density = 0.1765
+   nvisit = 1.00
+   is_terminal = False
+0.4.2.1.3.1.1.1.1.2
+   q-value = 0.6260
+   depth = 9
+   cost = 11
+   density = 0.1569
+   nvisit = 1.00
+   is_terminal = False
+0.4.2.1.3.1.1.1.1.3
+   q-value = 0.7153
+   depth = 9
+   cost = 11
+   density = 0.1650
+   nvisit = 1.00
+   is_terminal = False
+0.4.2.1.3.1.1.1.2.3.1
+   q-value = 0.8789
+   depth = 10
+   cost = 10
+   density = 0.1879
+   nvisit = 1.00
+   is_terminal = False
+0.4.2.1.3.1.1.1.2.3.3
+   q-value = 0.4883
+   depth = 10
+   cost = 10
+   density = 0.1488
+   nvisit = 1.00
+   is_terminal = False
+0.4.2.1.3.1.1.1.2.3.4
+   q-value = 0.8687
+   depth = 10
+   cost = 10
+   density = 0.1869
+   nvisit = 1.00
+   is_terminal = False
+0.4.2.1.3.1.1.1.2.3.2.1
+   q-value = 0.9546
+   depth = 11
+   cost = 9
+   density = 0.2061
+   nvisit = 1.00
+   is_terminal = False
+0.4.2.1.3.1.1.1.2.3.2.2
+   q-value = 0.9448
+   depth = 11
+   cost = 9
+   density = 0.2050
+   nvisit = 1.00
+   is_terminal = False
+0.4.2.1.3.1.1.1.2.3.2.3
+   q-value = 0.9502
+   depth = 11
+   cost = 9
+   density = 0.2056
+   nvisit = 1.00
+   is_terminal = False
+selected_leaf = 0.4.2.1.3.1.1.1.2.3.2.1
+selected = 0.4.2.1.3.1.1.1.2.3.2.1  density=0.2061  q=0.9546  nvisit=1
+
+-> p = 74
+gen_cnt = 75
+0.1
+   q-value = 0.9883
+   depth = 1
+   cost = 19
+   density = 0.1520
+   nvisit = 1.00
+   is_terminal = False
+0.2
+   q-value = 0.9888
+   depth = 1
+   cost = 19
+   density = 0.1520
+   nvisit = 1.00
+   is_terminal = False
+0.3
+   q-value = 0.9868
+   depth = 1
+   cost = 19
+   density = 0.1519
+   nvisit = 1.00
+   is_terminal = False
+0.4.1
+   q-value = 0.9702
+   depth = 2
+   cost = 18
+   density = 0.1539
+   nvisit = 1.00
+   is_terminal = False
+0.4.3
+   q-value = 0.8579
+   depth = 2
+   cost = 18
+   density = 0.1477
+   nvisit = 1.00
+   is_terminal = False
+0.4.2.2
+   q-value = 0.6074
+   depth = 3
+   cost = 17
+   density = 0.1357
+   nvisit = 1.00
+   is_terminal = False
+0.4.2.3
+   q-value = 0.9004
+   depth = 3
+   cost = 17
+   density = 0.1530
+   nvisit = 1.00
+   is_terminal = False
+0.4.2.4
+   q-value = 0.9443
+   depth = 3
+   cost = 17
+   density = 0.1555
+   nvisit = 1.00
+   is_terminal = False
+0.4.2.1.1
+   q-value = 0.7090
+   depth = 4
+   cost = 16
+   density = 0.1443
+   nvisit = 1.00
+   is_terminal = False
+0.4.2.1.2
+   q-value = 0.7637
+   depth = 4
+   cost = 16
+   density = 0.1477
+   nvisit = 1.00
+   is_terminal = False
+0.4.2.1.4
+   q-value = 0.8687
+   depth = 4
+   cost = 16
+   density = 0.1543
+   nvisit = 1.00
+   is_terminal = False
+0.4.2.1.3.2
+   q-value = 0.8457
+   depth = 5
+   cost = 15
+   density = 0.1564
+   nvisit = 1.00
+   is_terminal = False
+0.4.2.1.3.3
+   q-value = 0.8311
+   depth = 5
+   cost = 15
+   density = 0.1554
+   nvisit = 1.00
+   is_terminal = False
+0.4.2.1.3.4
+   q-value = 0.7339
+   depth = 5
+   cost = 15
+   density = 0.1489
+   nvisit = 1.00
+   is_terminal = False
+0.4.2.1.3.1.1.1.1.1
+   q-value = 0.8418
+   depth = 9
+   cost = 11
+   density = 0.1765
+   nvisit = 1.00
+   is_terminal = False
+0.4.2.1.3.1.1.1.1.2
+   q-value = 0.6260
+   depth = 9
+   cost = 11
+   density = 0.1569
+   nvisit = 1.00
+   is_terminal = False
+0.4.2.1.3.1.1.1.1.3
+   q-value = 0.7153
+   depth = 9
+   cost = 11
+   density = 0.1650
+   nvisit = 1.00
+   is_terminal = False
+0.4.2.1.3.1.1.1.2.3.1
+   q-value = 0.8789
+   depth = 10
+   cost = 10
+   density = 0.1879
+   nvisit = 1.00
+   is_terminal = False
+0.4.2.1.3.1.1.1.2.3.3
+   q-value = 0.4883
+   depth = 10
+   cost = 10
+   density = 0.1488
+   nvisit = 1.00
+   is_terminal = False
+0.4.2.1.3.1.1.1.2.3.4
+   q-value = 0.8687
+   depth = 10
+   cost = 10
+   density = 0.1869
+   nvisit = 1.00
+   is_terminal = False
+0.4.2.1.3.1.1.1.2.3.2.2
+   q-value = 0.9448
+   depth = 11
+   cost = 9
+   density = 0.2050
+   nvisit = 1.00
+   is_terminal = False
+0.4.2.1.3.1.1.1.2.3.2.3
+   q-value = 0.9502
+   depth = 11
+   cost = 9
+   density = 0.2056
+   nvisit = 1.00
+   is_terminal = False
+0.4.2.1.3.1.1.1.2.3.2.1.1
+   q-value = 0.9878
+   depth = 12
+   cost = 8
+   density = 0.2235
+   nvisit = 1.00
+   is_terminal = False
+selected_leaf = 0.4.2.1.3.1.1.1.2.3.2.1.1
+selected = 0.4.2.1.3.1.1.1.2.3.2.1.1  density=0.2235  q=0.9878  nvisit=1
+
+-> p = 75
+gen_cnt = 76
+0.1
+   q-value = 0.9883
+   depth = 1
+   cost = 19
+   density = 0.1520
+   nvisit = 1.00
+   is_terminal = False
+0.2
+   q-value = 0.9888
+   depth = 1
+   cost = 19
+   density = 0.1520
+   nvisit = 1.00
+   is_terminal = False
+0.3
+   q-value = 0.9868
+   depth = 1
+   cost = 19
+   density = 0.1519
+   nvisit = 1.00
+   is_terminal = False
+0.4.1
+   q-value = 0.9702
+   depth = 2
+   cost = 18
+   density = 0.1539
+   nvisit = 1.00
+   is_terminal = False
+0.4.3
+   q-value = 0.8579
+   depth = 2
+   cost = 18
+   density = 0.1477
+   nvisit = 1.00
+   is_terminal = False
+0.4.2.2
+   q-value = 0.6074
+   depth = 3
+   cost = 17
+   density = 0.1357
+   nvisit = 1.00
+   is_terminal = False
+0.4.2.3
+   q-value = 0.9004
+   depth = 3
+   cost = 17
+   density = 0.1530
+   nvisit = 1.00
+   is_terminal = False
+0.4.2.4
+   q-value = 0.9443
+   depth = 3
+   cost = 17
+   density = 0.1555
+   nvisit = 1.00
+   is_terminal = False
+0.4.2.1.1
+   q-value = 0.7090
+   depth = 4
+   cost = 16
+   density = 0.1443
+   nvisit = 1.00
+   is_terminal = False
+0.4.2.1.2
+   q-value = 0.7637
+   depth = 4
+   cost = 16
+   density = 0.1477
+   nvisit = 1.00
+   is_terminal = False
+0.4.2.1.4
+   q-value = 0.8687
+   depth = 4
+   cost = 16
+   density = 0.1543
+   nvisit = 1.00
+   is_terminal = False
+0.4.2.1.3.2
+   q-value = 0.8457
+   depth = 5
+   cost = 15
+   density = 0.1564
+   nvisit = 1.00
+   is_terminal = False
+0.4.2.1.3.3
+   q-value = 0.8311
+   depth = 5
+   cost = 15
+   density = 0.1554
+   nvisit = 1.00
+   is_terminal = False
+0.4.2.1.3.4
+   q-value = 0.7339
+   depth = 5
+   cost = 15
+   density = 0.1489
+   nvisit = 1.00
+   is_terminal = False
+0.4.2.1.3.1.1.1.1.1
+   q-value = 0.8418
+   depth = 9
+   cost = 11
+   density = 0.1765
+   nvisit = 1.00
+   is_terminal = False
+0.4.2.1.3.1.1.1.1.2
+   q-value = 0.6260
+   depth = 9
+   cost = 11
+   density = 0.1569
+   nvisit = 1.00
+   is_terminal = False
+0.4.2.1.3.1.1.1.1.3
+   q-value = 0.7153
+   depth = 9
+   cost = 11
+   density = 0.1650
+   nvisit = 1.00
+   is_terminal = False
+0.4.2.1.3.1.1.1.2.3.1
+   q-value = 0.8789
+   depth = 10
+   cost = 10
+   density = 0.1879
+   nvisit = 1.00
+   is_terminal = False
+0.4.2.1.3.1.1.1.2.3.3
+   q-value = 0.4883
+   depth = 10
+   cost = 10
+   density = 0.1488
+   nvisit = 1.00
+   is_terminal = False
+0.4.2.1.3.1.1.1.2.3.4
+   q-value = 0.8687
+   depth = 10
+   cost = 10
+   density = 0.1869
+   nvisit = 1.00
+   is_terminal = False
+0.4.2.1.3.1.1.1.2.3.2.2
+   q-value = 0.9448
+   depth = 11
+   cost = 9
+   density = 0.2050
+   nvisit = 1.00
+   is_terminal = False
+0.4.2.1.3.1.1.1.2.3.2.3
+   q-value = 0.9502
+   depth = 11
+   cost = 9
+   density = 0.2056
+   nvisit = 1.00
+   is_terminal = False
+0.4.2.1.3.1.1.1.2.3.2.1.1.2
+   q-value = 0.9966
+   depth = 13
+   cost = 7
+   density = 0.2424
+   nvisit = 1.00
+   is_terminal = False
+selected_leaf = 0.4.2.1.3.1.1.1.2.3.2.1.1.2
+selected = 0.4.2.1.3.1.1.1.2.3.2.1.1.2  density=0.2424  q=0.9966  nvisit=1
+
+-> p = 76
+gen_cnt = 77
+0.1
+   q-value = 0.9883
+   depth = 1
+   cost = 19
+   density = 0.1520
+   nvisit = 1.00
+   is_terminal = False
+0.2
+   q-value = 0.9888
+   depth = 1
+   cost = 19
+   density = 0.1520
+   nvisit = 1.00
+   is_terminal = False
+0.3
+   q-value = 0.9868
+   depth = 1
+   cost = 19
+   density = 0.1519
+   nvisit = 1.00
+   is_terminal = False
+0.4.1
+   q-value = 0.9702
+   depth = 2
+   cost = 18
+   density = 0.1539
+   nvisit = 1.00
+   is_terminal = False
+0.4.3
+   q-value = 0.8579
+   depth = 2
+   cost = 18
+   density = 0.1477
+   nvisit = 1.00
+   is_terminal = False
+0.4.2.2
+   q-value = 0.6074
+   depth = 3
+   cost = 17
+   density = 0.1357
+   nvisit = 1.00
+   is_terminal = False
+0.4.2.3
+   q-value = 0.9004
+   depth = 3
+   cost = 17
+   density = 0.1530
+   nvisit = 1.00
+   is_terminal = False
+0.4.2.4
+   q-value = 0.9443
+   depth = 3
+   cost = 17
+   density = 0.1555
+   nvisit = 1.00
+   is_terminal = False
+0.4.2.1.1
+   q-value = 0.7090
+   depth = 4
+   cost = 16
+   density = 0.1443
+   nvisit = 1.00
+   is_terminal = False
+0.4.2.1.2
+   q-value = 0.7637
+   depth = 4
+   cost = 16
+   density = 0.1477
+   nvisit = 1.00
+   is_terminal = False
+0.4.2.1.4
+   q-value = 0.8687
+   depth = 4
+   cost = 16
+   density = 0.1543
+   nvisit = 1.00
+   is_terminal = False
+0.4.2.1.3.2
+   q-value = 0.8457
+   depth = 5
+   cost = 15
+   density = 0.1564
+   nvisit = 1.00
+   is_terminal = False
+0.4.2.1.3.3
+   q-value = 0.8311
+   depth = 5
+   cost = 15
+   density = 0.1554
+   nvisit = 1.00
+   is_terminal = False
+0.4.2.1.3.4
+   q-value = 0.7339
+   depth = 5
+   cost = 15
+   density = 0.1489
+   nvisit = 1.00
+   is_terminal = False
+0.4.2.1.3.1.1.1.1.1
+   q-value = 0.8418
+   depth = 9
+   cost = 11
+   density = 0.1765
+   nvisit = 1.00
+   is_terminal = False
+0.4.2.1.3.1.1.1.1.2
+   q-value = 0.6260
+   depth = 9
+   cost = 11
+   density = 0.1569
+   nvisit = 1.00
+   is_terminal = False
+0.4.2.1.3.1.1.1.1.3
+   q-value = 0.7153
+   depth = 9
+   cost = 11
+   density = 0.1650
+   nvisit = 1.00
+   is_terminal = False
+0.4.2.1.3.1.1.1.2.3.1
+   q-value = 0.8789
+   depth = 10
+   cost = 10
+   density = 0.1879
+   nvisit = 1.00
+   is_terminal = False
+0.4.2.1.3.1.1.1.2.3.3
+   q-value = 0.4883
+   depth = 10
+   cost = 10
+   density = 0.1488
+   nvisit = 1.00
+   is_terminal = False
+0.4.2.1.3.1.1.1.2.3.4
+   q-value = 0.8687
+   depth = 10
+   cost = 10
+   density = 0.1869
+   nvisit = 1.00
+   is_terminal = False
+0.4.2.1.3.1.1.1.2.3.2.2
+   q-value = 0.9448
+   depth = 11
+   cost = 9
+   density = 0.2050
+   nvisit = 1.00
+   is_terminal = False
+0.4.2.1.3.1.1.1.2.3.2.3
+   q-value = 0.9502
+   depth = 11
+   cost = 9
+   density = 0.2056
+   nvisit = 1.00
+   is_terminal = False
+selected_leaf = 0.4.2.1.3.1.1.1.2.3.2.3
+selected = 0.4.2.1.3.1.1.1.2.3.2.3  density=0.2056  q=0.9502  nvisit=1
+
+-> p = 77
+gen_cnt = 78
+0.1
+   q-value = 0.9883
+   depth = 1
+   cost = 19
+   density = 0.1520
+   nvisit = 1.00
+   is_terminal = False
+0.2
+   q-value = 0.9888
+   depth = 1
+   cost = 19
+   density = 0.1520
+   nvisit = 1.00
+   is_terminal = False
+0.3
+   q-value = 0.9868
+   depth = 1
+   cost = 19
+   density = 0.1519
+   nvisit = 1.00
+   is_terminal = False
+0.4.1
+   q-value = 0.9702
+   depth = 2
+   cost = 18
+   density = 0.1539
+   nvisit = 1.00
+   is_terminal = False
+0.4.3
+   q-value = 0.8579
+   depth = 2
+   cost = 18
+   density = 0.1477
+   nvisit = 1.00
+   is_terminal = False
+0.4.2.2
+   q-value = 0.6074
+   depth = 3
+   cost = 17
+   density = 0.1357
+   nvisit = 1.00
+   is_terminal = False
+0.4.2.3
+   q-value = 0.9004
+   depth = 3
+   cost = 17
+   density = 0.1530
+   nvisit = 1.00
+   is_terminal = False
+0.4.2.4
+   q-value = 0.9443
+   depth = 3
+   cost = 17
+   density = 0.1555
+   nvisit = 1.00
+   is_terminal = False
+0.4.2.1.1
+   q-value = 0.7090
+   depth = 4
+   cost = 16
+   density = 0.1443
+   nvisit = 1.00
+   is_terminal = False
+0.4.2.1.2
+   q-value = 0.7637
+   depth = 4
+   cost = 16
+   density = 0.1477
+   nvisit = 1.00
+   is_terminal = False
+0.4.2.1.4
+   q-value = 0.8687
+   depth = 4
+   cost = 16
+   density = 0.1543
+   nvisit = 1.00
+   is_terminal = False
+0.4.2.1.3.2
+   q-value = 0.8457
+   depth = 5
+   cost = 15
+   density = 0.1564
+   nvisit = 1.00
+   is_terminal = False
+0.4.2.1.3.3
+   q-value = 0.8311
+   depth = 5
+   cost = 15
+   density = 0.1554
+   nvisit = 1.00
+   is_terminal = False
+0.4.2.1.3.4
+   q-value = 0.7339
+   depth = 5
+   cost = 15
+   density = 0.1489
+   nvisit = 1.00
+   is_terminal = False
+0.4.2.1.3.1.1.1.1.1
+   q-value = 0.8418
+   depth = 9
+   cost = 11
+   density = 0.1765
+   nvisit = 1.00
+   is_terminal = False
+0.4.2.1.3.1.1.1.1.2
+   q-value = 0.6260
+   depth = 9
+   cost = 11
+   density = 0.1569
+   nvisit = 1.00
+   is_terminal = False
+0.4.2.1.3.1.1.1.1.3
+   q-value = 0.7153
+   depth = 9
+   cost = 11
+   density = 0.1650
+   nvisit = 1.00
+   is_terminal = False
+0.4.2.1.3.1.1.1.2.3.1
+   q-value = 0.8789
+   depth = 10
+   cost = 10
+   density = 0.1879
+   nvisit = 1.00
+   is_terminal = False
+0.4.2.1.3.1.1.1.2.3.3
+   q-value = 0.4883
+   depth = 10
+   cost = 10
+   density = 0.1488
+   nvisit = 1.00
+   is_terminal = False
+0.4.2.1.3.1.1.1.2.3.4
+   q-value = 0.8687
+   depth = 10
+   cost = 10
+   density = 0.1869
+   nvisit = 1.00
+   is_terminal = False
+0.4.2.1.3.1.1.1.2.3.2.2
+   q-value = 0.9448
+   depth = 11
+   cost = 9
+   density = 0.2050
+   nvisit = 1.00
+   is_terminal = False
+0.4.2.1.3.1.1.1.2.3.2.3.1
+   q-value = 0.9863
+   depth = 12
+   cost = 8
+   density = 0.2233
+   nvisit = 1.00
+   is_terminal = False
+selected_leaf = 0.4.2.1.3.1.1.1.2.3.2.3.1
+selected = 0.4.2.1.3.1.1.1.2.3.2.3.1  density=0.2233  q=0.9863  nvisit=1
+
+-> p = 78
+gen_cnt = 79
+0.1
+   q-value = 0.9883
+   depth = 1
+   cost = 19
+   density = 0.1520
+   nvisit = 1.00
+   is_terminal = False
+0.2
+   q-value = 0.9888
+   depth = 1
+   cost = 19
+   density = 0.1520
+   nvisit = 1.00
+   is_terminal = False
+0.3
+   q-value = 0.9868
+   depth = 1
+   cost = 19
+   density = 0.1519
+   nvisit = 1.00
+   is_terminal = False
+0.4.1
+   q-value = 0.9702
+   depth = 2
+   cost = 18
+   density = 0.1539
+   nvisit = 1.00
+   is_terminal = False
+0.4.3
+   q-value = 0.8579
+   depth = 2
+   cost = 18
+   density = 0.1477
+   nvisit = 1.00
+   is_terminal = False
+0.4.2.2
+   q-value = 0.6074
+   depth = 3
+   cost = 17
+   density = 0.1357
+   nvisit = 1.00
+   is_terminal = False
+0.4.2.3
+   q-value = 0.9004
+   depth = 3
+   cost = 17
+   density = 0.1530
+   nvisit = 1.00
+   is_terminal = False
+0.4.2.4
+   q-value = 0.9443
+   depth = 3
+   cost = 17
+   density = 0.1555
+   nvisit = 1.00
+   is_terminal = False
+0.4.2.1.1
+   q-value = 0.7090
+   depth = 4
+   cost = 16
+   density = 0.1443
+   nvisit = 1.00
+   is_terminal = False
+0.4.2.1.2
+   q-value = 0.7637
+   depth = 4
+   cost = 16
+   density = 0.1477
+   nvisit = 1.00
+   is_terminal = False
+0.4.2.1.4
+   q-value = 0.8687
+   depth = 4
+   cost = 16
+   density = 0.1543
+   nvisit = 1.00
+   is_terminal = False
+0.4.2.1.3.2
+   q-value = 0.8457
+   depth = 5
+   cost = 15
+   density = 0.1564
+   nvisit = 1.00
+   is_terminal = False
+0.4.2.1.3.3
+   q-value = 0.8311
+   depth = 5
+   cost = 15
+   density = 0.1554
+   nvisit = 1.00
+   is_terminal = False
+0.4.2.1.3.4
+   q-value = 0.7339
+   depth = 5
+   cost = 15
+   density = 0.1489
+   nvisit = 1.00
+   is_terminal = False
+0.4.2.1.3.1.1.1.1.1
+   q-value = 0.8418
+   depth = 9
+   cost = 11
+   density = 0.1765
+   nvisit = 1.00
+   is_terminal = False
+0.4.2.1.3.1.1.1.1.2
+   q-value = 0.6260
+   depth = 9
+   cost = 11
+   density = 0.1569
+   nvisit = 1.00
+   is_terminal = False
+0.4.2.1.3.1.1.1.1.3
+   q-value = 0.7153
+   depth = 9
+   cost = 11
+   density = 0.1650
+   nvisit = 1.00
+   is_terminal = False
+0.4.2.1.3.1.1.1.2.3.1
+   q-value = 0.8789
+   depth = 10
+   cost = 10
+   density = 0.1879
+   nvisit = 1.00
+   is_terminal = False
+0.4.2.1.3.1.1.1.2.3.3
+   q-value = 0.4883
+   depth = 10
+   cost = 10
+   density = 0.1488
+   nvisit = 1.00
+   is_terminal = False
+0.4.2.1.3.1.1.1.2.3.4
+   q-value = 0.8687
+   depth = 10
+   cost = 10
+   density = 0.1869
+   nvisit = 1.00
+   is_terminal = False
+0.4.2.1.3.1.1.1.2.3.2.2
+   q-value = 0.9448
+   depth = 11
+   cost = 9
+   density = 0.2050
+   nvisit = 1.00
+   is_terminal = False
+0.4.2.1.3.1.1.1.2.3.2.3.1.1
+   q-value = 0.9946
+   depth = 13
+   cost = 7
+   density = 0.2421
+   nvisit = 1.00
+   is_terminal = False
+0.4.2.1.3.1.1.1.2.3.2.3.1.2
+   q-value = 0.9956
+   depth = 13
+   cost = 7
+   density = 0.2422
+   nvisit = 1.00
+   is_terminal = False
+selected_leaf = 0.4.2.1.3.1.1.1.2.3.2.3.1.2
+selected = 0.4.2.1.3.1.1.1.2.3.2.3.1.2  density=0.2422  q=0.9956  nvisit=1
+
+-> p = 79
+gen_cnt = 80
+run out of budget!

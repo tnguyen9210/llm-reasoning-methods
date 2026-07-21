@@ -1,0 +1,30 @@
+{
+  "method": "mcts_bl_kdepth_v02",
+  "question_idx_level5": 0,
+  "seconds": 202.92534947395325,
+  "gen_budget": 80,
+  "q_total_gens": 80,
+  "q_last_phase": 79,
+  "phase_depths": [],
+  "q_nodes_max_depth": 152,
+  "n_completions": 4,
+  "n_completed_nodes": 4,
+  "comp_depth": [
+    2,
+    20,
+    20,
+    20
+  ],
+  "comp_phase": [
+    1,
+    56,
+    77,
+    77
+  ],
+  "comp_gen": [
+    2,
+    57,
+    78,
+    78
+  ]
+}
