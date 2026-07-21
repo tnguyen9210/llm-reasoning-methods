@@ -64,7 +64,7 @@ from utils.configs import (
     BLMCTSCntConfig, BLMCTSCntV02Config,
     BLMCTSKubeV01Config, BLMCTSKubeV02Config,
     BLMCTSKdepthV01Config, BLMCTSKdepthV02Config,
-    BLMCTSSemConfig,
+    BLMCTSSemConfig, BLMCTSSemV02Config,
     config_hash, config_name, level_dir, results_root, MANIFEST_FILE,
 )
 
@@ -135,6 +135,9 @@ _cs.store(
 )
 _cs.store(
     group="search", name="mcts_bl_sem_v01_schema", node=BLMCTSSemConfig,
+)
+_cs.store(
+    group="search", name="mcts_bl_sem_v02_schema", node=BLMCTSSemV02Config,
 )
 
 
@@ -321,6 +324,7 @@ _METHOD_TO_ROOT = {
     "mcts_bl_kdepth_v01": "mcts_bl_kdepth_v01_prm800k",
     "mcts_bl_kdepth_v02": "mcts_bl_kdepth_v02_prm800k",
     "mcts_bl_sem_v01": "mcts_bl_sem_v01_prm800k",
+    "mcts_bl_sem_v02": "mcts_bl_sem_v02_prm800k",
 }
 
 _METHOD_TO_LAUNCHER = {
@@ -335,6 +339,7 @@ _METHOD_TO_LAUNCHER = {
     "mcts_bl_kdepth_v01": "generate_mcts_bl_cnt.py",
     "mcts_bl_kdepth_v02": "generate_mcts_bl_cnt.py",
     "mcts_bl_sem_v01": "generate_mcts_sem.py",
+    "mcts_bl_sem_v02": "generate_mcts_sem.py",
 }
 
 # method= -> the `group:` label used by the docs/exp-comp-*.md files'
@@ -369,6 +374,7 @@ _METHOD_TO_GROUP = {
     "mcts_bl_kdepth_v01": "kdepth-mcts-bl",
     "mcts_bl_kdepth_v02": "kdepth-mcts-bl-v02",
     "mcts_bl_sem_v01": "sem-mcts-bl",
+    "mcts_bl_sem_v02": "sem-mcts-bl-v02",
 }
 
 # Group SELECTOR maps: a manifest records resolved *values*, not which

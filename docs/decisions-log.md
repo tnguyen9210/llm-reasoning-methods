@@ -14,6 +14,44 @@ scaffold, it also gets a standalone file in [decisions/](decisions/);
 the log entry then carries a one-line pointer to it rather than
 repeating the full writeup.
 
+## 2026-07-20 — Search, Refactor: `mcts_bl_sem_v01` loop reordered to generate→expand→select, matching v01's shape
+
+**Context:** Tuan asked for `mcts_bl_sem_search_v01_00_00` to align
+with `mcts_bl_cnt_search_v01_00_00`, the same request already applied
+to `mcts_bl_kube_v01`/`mcts_bl_kdepth_v01` on 2026-07-17. sem's loop
+still read select-first (pick the globally best frontier leaf via the
+diversity-adjusted value, then expand or backprop it) — the one BL
+sibling not yet rotated to v01's generate → expand → select order.
+**Decision:** reorder only, same as the prior two siblings: each
+iteration now expands (or backprops) `current_node`, adds children to
+the frontier, then selects the next node globally across the whole
+frontier — `current_node` initialized to `agent.root` rather than
+root sitting in `leaf_nodes` awaiting its own first selection. No
+config field changed; every existing `config_hash` is untouched.
+**Why this one needed an extra check the other two didn't:** sem's
+"global" `ds_alpha_schedule` reads a selection-count clock `t` at
+each call to `select_leaf_from_list`, previously fed by the loop
+index `p` directly (one selection per iteration under the old shape).
+Under the reorder, `t` had to become its own counter, incremented
+once per selection immediately before the call — get this wrong and
+every "global"-schedule cell's diversity bonus silently shifts by one
+selection's worth of `sqrt(log t)` growth for the rest of the run.
+Verified with a standalone state-machine harness (7 cases mirroring
+the kube/kdepth harness's coverage — generous budget, budget cutoff
+mid-expand, early terminals, root-at-max-depth, phase-cap binding,
+fast-draining frontier, wide branching) asserting not just that the
+same nodes get selected in the same order, but that `t` at each
+selection call is bit-for-bit identical between the two loop shapes.
+All 7 pass. `select_leaf_from_list`'s singleton-frontier fast path
+(previously commented as the "root-only first iteration" case) no
+longer fires on the root specifically — root is consumed directly as
+`current_node` at the first iteration without going through
+selection at all — so the comment was corrected to describe what the
+branch actually guards (any singleton frontier, which can still recur
+later in a search); the guarded behavior itself is unchanged, since
+root's `embeds` field was always `None` and `_fold_covariance`
+already no-ops on it, so the removed call was a no-op either way.
+
 ## 2026-07-19 — Search, Feature: `mcts_bl_cnt_v02` gains a selectable frontier score (`score_mode`): one-hop parent blend vs. full-path decayed subtree value
 
 **Context:** Tuan plans one sweep directly comparing the two

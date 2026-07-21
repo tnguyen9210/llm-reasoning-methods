@@ -816,6 +816,63 @@ class BLMCTSSemConfig(SearchConfig):
 
 
 @dataclass
+class BLMCTSSemV02Config(BLMCTSSemConfig):
+    """Semantic MCTS with best-first frontier selection, delayed-eager
+    terminal handling, and a selectable path-aware value term
+    (mcts_bl_sem_search_v02_00_00).
+
+    Subclasses BLMCTSSemConfig (v01); inherits every diversity /
+    embedding / covariance knob unchanged. Two v02 additions:
+
+    1. Terminal split + DELAYED eager backprop (unconditional): a
+       terminal child never enters the leaf frontier; it is queued at
+       creation and, one step after the following selection resolves,
+       both backpropped AND folded into the diversity covariance V.
+       No flag -- v01 vs v02 is a version comparison. See the v02
+       search module's docstring and docs/decisions-log.md 2026-07-20.
+
+    2. A selectable frontier VALUE term, `score_mode` (added
+       2026-07-20). The frontier score is always
+
+           ds_beta * q_term(leaf) + ds_alpha * sched * sqrt(x^T V^-1 x)
+
+       score_mode swaps ONLY q_term -- the diversity/exploration term
+       (sqrt(x^T V^-1 x)) is untouched, unlike BLMCTSCntV02Config where
+       score_mode also swaps the exploration term (UCB1 -> AZ). So
+       ds_alpha/ds_beta stay comparable across modes here.
+
+         score_mode="own" (default) -- q_term = q(leaf). Byte-identical
+             to BLMCTSSemConfig (v01) selection; the exact-v01 control
+             arm, and the default so runs already on disk keep their
+             behavior. (bl_cnt_v02 defaults to parent_blend instead --
+             it was born with score_mode; bl_sem_v02 was not.)
+
+         score_mode="parent_blend" -- one-hop blend (Option 1):
+             q_term = alpha*q(leaf) + (1-alpha)*q(parent)
+           Makes a backpropped parent value readable to selection (it
+           is otherwise write-only to the q channel). alpha in [0, 1];
+           alpha=1.0 recovers "own" exactly.
+
+         score_mode="path_decay" -- full-path decayed subtree value
+             (Option 2, value term only -- the AlphaZero u-term has no
+             analog here, the diversity term stays):
+             q_term = sum_k gamma^k * q(ancestor_k) / sum_k gamma^k
+                      (k = 0 at the leaf, walking to the root)
+           gamma in [0, 1]: gamma=1 is a plain path average; gamma=0
+           reads only the leaf's own q, i.e. equals "own".
+
+       The cross-mode knobs are idle by design (alpha unused unless
+       "parent_blend"; gamma unused unless "path_decay").
+    """
+    method: str = "mcts_bl_sem_v02"
+    score_mode: str = "own"       # "own" | "parent_blend" | "path_decay"
+    alpha: float = 0.8            # parent_blend only: own-q vs.
+                                   # parent-q blend; 1.0 = "own"
+    gamma: float = 0.8             # path_decay only: per-hop decay;
+                                   # 0.0 = "own"
+
+
+@dataclass
 class BoNConfig(SearchConfig):
     """Best-of-N search params. n completions sampled per question
     in a single expansion (no tree), so depth/lookahead are unused."""

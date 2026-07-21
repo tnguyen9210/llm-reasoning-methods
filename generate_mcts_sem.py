@@ -21,11 +21,13 @@ from core import (
     mcts_sem_search_v01_00_00,
     mcts_sem_search_v02_00_00,
     mcts_bl_sem_search_v01_00_00,
+    mcts_bl_sem_search_v02_00_00,
 )
 from core.reward_models import build_prm
 from core.scoring import build_scored_dataset
 from utils.configs import (
     ExpConfig, MCTSSemV01Config, MCTSSemV02Config, BLMCTSSemConfig,
+    BLMCTSSemV02Config,
     config_name,
     level_dir, results_root, write_manifest, load_wandb_run_id,
     save_timing_state, load_timing_state,
@@ -43,6 +45,7 @@ algo_dict = {
     "mcts_sem_v01": mcts_sem_search_v01_00_00,
     "mcts_sem_v02": mcts_sem_search_v02_00_00,
     "mcts_bl_sem_v01": mcts_bl_sem_search_v01_00_00,
+    "mcts_bl_sem_v02": mcts_bl_sem_search_v02_00_00,
 }
 
 # Register the structured schemas so the YAML binds onto typed,
@@ -56,6 +59,9 @@ cs.store(group="search", name="mcts_sem_v01_schema", node=MCTSSemV01Config)
 cs.store(group="search", name="mcts_sem_v02_schema", node=MCTSSemV02Config)
 cs.store(
     group="search", name="mcts_bl_sem_v01_schema", node=BLMCTSSemConfig,
+)
+cs.store(
+    group="search", name="mcts_bl_sem_v02_schema", node=BLMCTSSemV02Config,
 )
 
 

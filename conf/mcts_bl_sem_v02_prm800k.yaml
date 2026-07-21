@@ -1,0 +1,43 @@
+defaults:
+  - exp_schema           # the ExpConfig dataclass (structured config)
+  - llm: llama_1b
+  - prm: llama_prm
+  - data: prm800k
+  - search: mcts_bl_sem_v02
+  - _self_
+  - override hydra/job_logging: disabled
+  - override hydra/hydra_logging: disabled
+
+hydra:
+  output_subdir: null
+  run:
+    dir: .
+
+# base path interpolated by the group files (${base_dir}/...)
+base_dir: /groups/chichengz/tnn/datasets
+
+algo: mcts_bl_sem_v02
+
+# generation params (group: gen) — only overrides vs GenConfig defaults
+gen:
+  temperature: 0.8
+  max_tokens: 2048
+  top_p: 1.0
+  seed: 0
+  agg_strategy: last
+  filter_duplicates: true
+  date_string: "Aug 1 2025"
+
+# mcts_bl_sem_v02 sources diversity embeds from the PRM, so there is
+# NO second (pooling) vLLM engine — only the generative engine + PRM.
+# gmu is the FRACTION OF TOTAL GPU vLLM may use for weights + KV cache
+# + activations (NOT "leave room for the PRM" — the HF PRM allocates
+# separately). 0.3 matches mcts_cnt / mcts_sem_v02 so the generator
+# budget is identical across methods. Raise via CLI for larger weights.
+llm:
+  gpu_memory_utilization: 0.3
+
+# run-level params (group: run)
+run:
+  num_trials: 2
+  num_questions: -1      # -1 = use full dataset

@@ -1,23 +1,64 @@
 """
-Budget-Limited Semantic MCTS v01: best-first frontier selection with
-embedding-based diversity (the "mcts_bl_sem_v01" method).
+Budget-Limited Semantic MCTS v02: best-first frontier selection with
+embedding-based diversity, plus delayed-eager terminal-node handling
+that also folds terminals into the diversity covariance (the
+"mcts_bl_sem_v02" method).
 
-Frontier counterpart of mcts_sem_search_v02_00_00, exactly as
-mcts_bl_cnt_search_v01_00_00 is the frontier counterpart of
-mcts_cnt_search_v01_00_00: instead of phase-based root-to-leaf walks,
-maintain an explicit `leaf_nodes` frontier and select globally across
-all current leaves each iteration. bl_cnt's PUCT criterion is replaced
-by the sem family's diversity-adjusted value.
+Sibling: mcts_bl_sem_search_v01_00_00.py (unmodified baseline). v02 is
+the semantic analog of mcts_bl_cnt_search_v02_00_00's delayed-eager
+terminal backprop, extended with the one thing the count-based variant
+has no equivalent of: the diversity covariance V. Two changes relative
+to v01:
 
-Loop shape shared with mcts_bl_cnt_search_v01_00_00.py, including the
-generate -> expand -> select ordering (aligned 2026-07-20 — see
-docs/decisions-log.md; this file previously used an older select-first
-loop shape, matching mcts_bl_kube/kdepth_v01 before their own 2026-07-17
-alignment — the algorithm and every selection is unchanged, only the
-reading order of the loop body moved to match v01's).
+  1. Terminal split + DELAYED eager backprop (as in bl_cnt v02). v01
+     pushes every freshly created child -- terminal or not -- onto
+     `leaf_nodes`; a terminal only backprops if it later WINS a
+     frontier selection, which under the diversity-adjusted score it
+     may never do (a max-depth terminal carries negative_reward and a
+     completed leaf competes on q + diversity like anything else).
+     v02 instead QUEUES a terminal child (never puts it on the
+     frontier) and flushes the queue right after the VERY NEXT
+     selection resolves -- not immediately at creation. The one-step
+     delay is deliberate (same rationale as bl_cnt v02, 2026-07-18):
+     backpropping a same-batch terminal sibling immediately, before
+     the selection ranking its non-terminal siblings, would leak
+     information causally CONCURRENT with those candidates (produced by
+     the same _generate_candidates call) into the selection choosing
+     among them. Delaying by exactly one step bounds propagation (one
+     step, never the unbounded "maybe never" of v01's lazy scheme)
+     without ever letting a terminal influence the selection among its
+     own siblings.
+  2. Terminal covariance fold (sem-specific; bl_cnt v02 has NO analog).
+     Under v01 only the SELECTED node's embedding folds into V (inside
+     select_leaf_from_list). Since v02 terminals never win a selection,
+     they would never touch V -- so v02 folds every queued terminal's
+     embedding into V at flush time, alongside its backprop. Both
+     terminal kinds fold (EOS-completed AND max-depth dead-ends): V
+     models "semantic directions the search has reached", and a
+     terminal marks reached territory regardless of why it stopped.
+     The fold is delayed to the SAME flush point as the backprop, so
+     the one-step-delay contract holds for the covariance channel too:
+     a same-batch terminal is absent from V for the selection ranking
+     its live siblings, present for every selection after. Folding at
+     creation instead would leak via V even with a delayed backprop.
+     (V-fold is commutative -- V = V + sum uu^T -- so the winner's own
+     fold and the pending terminals' folds within one iteration
+     compose to the same V regardless of order; only WHICH selection
+     first sees a terminal is governed by the flush timing, which the
+     contract fixes.)
+
+Everything else -- embedding extraction, _diverse_select,
+select_leaf_from_list, _fold_covariance, the ds_alpha schedule,
+candidate generation, node classes, output shape -- is unchanged from
+v01. The loop shape (generate -> expand -> select) is also unchanged;
+only WHICH children enter leaf_nodes at expand time (non-terminals
+only), and WHEN a terminal's backprop + V-fold are applied (delayed
+one step, not at creation / not lazily-maybe-never), differ.
 
 Algorithm
-    Initialize leaf_nodes = [], gen_cnt = 0, current = root
+    Initialize leaf_nodes = [], gen_cnt = 0, current = root,
+        pending = []  (queued terminals: NOT yet backpropped, NOT yet
+        folded into V -- see the flush timing below)
     While gen_cnt < gen_budget:
         If current.is_terminal:
             Backprop: update_recursive(current.q_value(), root)
@@ -26,7 +67,9 @@ Algorithm
                     dedupe, embed (PRM hidden states by default),
                     score with PRM, attach as current's children
             gen_cnt += 1
-            Add children to leaf_nodes
+            For each child:
+                If child.is_terminal: pending.append(child)  -- QUEUED
+                Else: leaf_nodes.append(child)
         t += 1  (selections so far, 1-indexed; first selection is t=1)
         current = argmax_{x in leaf_nodes}
             ds_beta*q(x) + ds_alpha*sched(t,x)*sqrt(x^T V^-1 x);
@@ -34,19 +77,26 @@ Algorithm
         Fold current's embedding into V (rank-1; skipped for the
         root, which has no embedding and is only ever selected alone
         on the first iteration)
+        For each node in pending:
+            Backprop: update_recursive(node.q_value(), root)
+            Fold node's embedding into V
+        pending = []
 
-    The loop body is ordered generate -> expand -> select to mirror
-    mcts_bl_cnt_search_v01_00_00.py's walk step; the selection SCOPE
-    stays global (the whole leaf frontier — the children just
-    expanded compete against every older leaf), not per-parent. This
-    is a rotation of the older select-first loop: the same nodes are
-    selected in the same order by the same diversity-adjusted value,
-    AND the `t` fed to the "global" ds_alpha schedule at each
-    selection is unchanged (verified behavior-preserving with a
-    state-machine harness — the reorder only changes when in the loop
-    body t is computed and where current_node is read from, not what
-    gets selected, what t equals at each selection, or when
-    gen_cnt/phase caps trigger).
+    Delayed-eager flush timing: the flush (backprop + V-fold of every
+    queued terminal) happens AFTER Select, so the selection picking
+    `current` for THIS iteration reads only q/V state that predates
+    THIS iteration's own Expand -- a same-batch terminal sibling can
+    influence neither the q ranking nor the V geometry of the
+    selection choosing among its siblings. The flush also runs before
+    EITHER early-exit (gen_budget exhausted, leaf_nodes empty), so a
+    phase whose entire batch is terminal (frontier empties, loop about
+    to break) still applies its pending backprops + folds -- no queued
+    node is ever silently dropped. Verified against the one-step-delay
+    contract (same-batch invisibility in BOTH the q and V channels,
+    next-step visibility, no-drop) by a standalone state-machine
+    harness over 8 edge cases (budget cutoff mid-batch, all-terminal
+    batch, root-at-max-depth, phase-cap, single-child chain, wide
+    multi-terminal batch) -- see docs/decisions-log.md 2026-07-20.
 
 ds_alpha schedule (config.search.ds_alpha_schedule)
     "global" (default) — sched = sqrt(log(1 + t)), t = frontier
@@ -81,7 +131,9 @@ utils/configs.py for the semantics; BLMCTSSemConfig carries its own
 copies of these fields (a fresh SearchConfig subclass, not inherited)
 with matching defaults.
 
-Variant lineage: docs/algorithms.md.
+Variant lineage: docs/algorithms.md,
+docs/decisions-log.md 2026-07-20 (delayed-eager terminal backprop +
+terminal covariance fold; harness verification).
 """
 
 import random
@@ -636,13 +688,26 @@ class MCTS(BaseTree):
 
         new_node.update(candidate_score)
         current_node.children.append(new_node)
+        return new_node
 
     def expand_node(
         self, current_node, infos, embeds, scores, phase, gen_cnt,
     ):
-        """Append one child per (info, embedding, score) tuple."""
+        """Append one child per (info, embedding, score) tuple. Returns
+        the list of newly created children (this call's batch only), so
+        the caller can split it into terminal / non-terminal without
+        relying on `current_node.children` holding nothing else -- each
+        node is expanded exactly once, but returning the batch directly
+        keeps that invariant local to this method (mirrors bl_cnt v02).
+        """
+        new_children = []
         for info, emb, score in zip(infos, embeds, scores):
-            self.create_child(current_node, info, emb, score, phase, gen_cnt)
+            new_children.append(
+                self.create_child(
+                    current_node, info, emb, score, phase, gen_cnt,
+                )
+            )
+        return new_children
 
     # ----- Selection ------------------------------------------------- #
 
@@ -678,12 +743,62 @@ class MCTS(BaseTree):
                 self.V, np.eye(self.V.shape[0], dtype=self.cov_dtype)
             )
 
+    def _node_q_score(self, node) -> float:
+        """The frontier value term for `node`, per config.search.
+        score_mode. This is the ONLY thing score_mode swaps -- the
+        diversity term sqrt(x^T V^-1 x) is unaffected (unlike
+        mcts_bl_cnt_v02, whose score_mode also swaps the exploration
+        term). Fed as one entry of `q_scores` into _diverse_select.
+
+          "own" (default): the leaf's own q -- exact v01 behavior.
+
+          "parent_blend" (Option 1): one-hop blend
+              alpha*q(leaf) + (1-alpha)*q(parent)
+            so a backpropped parent value becomes readable to
+            selection (otherwise write-only to the q channel). The
+            root has no parent -> fall back to the leaf's own q.
+            alpha=1.0 recovers "own".
+
+          "path_decay" (Option 2, value term only): gamma-decayed
+            average of q over the leaf-to-root path,
+              sum_k gamma^k q(ancestor_k) / sum_k gamma^k, k=0 at leaf.
+            gamma=1 is a plain path average; gamma=0 equals "own".
+            The AlphaZero u-term of bl_cnt's path_decay has no analog
+            here (the diversity term is the exploration signal), so
+            only the value average transplants.
+        """
+        mode = self.config.search.score_mode
+        if mode == "own":
+            return node.q_value()
+
+        if mode == "parent_blend":
+            alpha = self.config.search.alpha
+            parent = node.parent
+            q_parent = parent.q_value() if parent is not None \
+                else node.q_value()
+            return alpha * node.q_value() + (1 - alpha) * q_parent
+
+        if mode == "path_decay":
+            gamma = self.config.search.gamma
+            acc, norm, depth, cur = 0.0, 0.0, 0, node
+            while cur is not None:
+                w = gamma ** depth
+                acc += w * cur.q_value()
+                norm += w
+                depth += 1
+                cur = cur.parent
+            return acc / norm if norm > 0 else node.q_value()
+
+        raise ValueError(f"unknown score_mode: {mode!r}")
+
     def select_leaf_from_list(self, nodes: List[Any], t: int):
         """Pick the frontier node maximizing
-        ds_beta*q + ds_alpha*sched*sqrt(x^T V^-1 x), then fold the
+        ds_beta*q_term + ds_alpha*sched*sqrt(x^T V^-1 x), then fold the
         winner's embedding into the covariance. Operates on the
         BL-MCTS global leaf frontier — the sem analog of
-        mcts_bl_cnt's select_child_from_list.
+        mcts_bl_cnt's select_child_from_list. `q_term` is the
+        score_mode-selected value (see _node_q_score); the diversity
+        term is independent of score_mode.
 
         `t` is the global iteration counter (frontier selections so
         far); only the "global" schedule reads it. Every value is
@@ -705,7 +820,7 @@ class MCTS(BaseTree):
         q_values: List[float] = []
         embeds: List[Any] = []
         for node in nodes:
-            q_values.append(node.q_value())
+            q_values.append(self._node_q_score(node))
             embeds.append(node.embeds)
             logging.fatal(f"{node.tag}")
             logging.fatal(f"   q-value = {node.q_value():0.4f}")
@@ -887,9 +1002,15 @@ def mcts_search(question, agent, config, llm_vllm, llm_vllm_embeds, prm):
     terminal), then selects the next node by diversity-adjusted value
     globally across the leaf frontier — generate -> expand -> select,
     mirroring mcts_bl_cnt_search_v01_00_00.py's walk step, with the
-    freshly expanded children competing against every older leaf at
-    that selection. Only expansions charge gen_cnt. `t` (selections
-    so far, 1-indexed) feeds the "global" ds_alpha schedule.
+    freshly expanded children (non-terminal ones) competing against
+    every older leaf at that selection. Only expansions charge
+    gen_cnt. `t` (selections so far, 1-indexed) feeds the "global"
+    ds_alpha schedule.
+
+    v02: terminal children created this step are NOT frontiered; they
+    are queued and flushed (backprop + V-fold) right after the next
+    selection resolves (or before a loop exit) — the delayed-eager
+    handling described in the module docstring.
     """
     tokenizer = llm_vllm.get_tokenizer()
     # Template selection (mirrors generate_mcts_cnt): default is the
@@ -923,6 +1044,30 @@ def mcts_search(question, agent, config, llm_vllm, llm_vllm_embeds, prm):
     phase_depths: List[int] = []
     leaf_nodes: List[Any] = []
     current_node = agent.root
+    # Delayed-eager queue: this step's newly created terminal children
+    # are held here (not backpropped, not folded into V yet) so THIS
+    # step's selection reads only q/V state that existed before this
+    # step's own generation call. Flushing a same-batch terminal
+    # immediately -- into either the q values or the covariance V --
+    # would let information causally concurrent with the candidates
+    # being ranked leak into the selection choosing among them.
+    # Flushed unconditionally right after selection resolves (or right
+    # before any loop exit, so a phase whose children are ALL terminal
+    # still gets its backprops + folds applied even though leaf_nodes
+    # ends up empty). See the module docstring's flush-timing note.
+    pending_terminals: List[Any] = []
+
+    def flush_pending():
+        # Backprop AND fold each queued terminal. The fold is the
+        # sem-specific addition over bl_cnt v02: terminals never win a
+        # selection (never on the frontier), so this is the only place
+        # their embedding enters V. Both terminal kinds fold. V-fold is
+        # commutative, so doing it here (after the winner's own fold in
+        # select_leaf_from_list) yields the same V as any other order.
+        for node in pending_terminals:
+            agent.backprop(node)
+            agent._fold_covariance(node)
+        pending_terminals.clear()
 
     for p in range(config.search.num_phases):
         logging.fatal(f"\n-> p = {p}")
@@ -938,17 +1083,27 @@ def mcts_search(question, agent, config, llm_vllm, llm_vllm_embeds, prm):
                 tokenizer, llm_vllm, llm_vllm_embeds, prm,
                 response_start_idx, sampling_params,
             )
-            agent.expand_node(current_node, infos, embeds, scores, p, gen_cnt)
-            for child in current_node.children:
-                leaf_nodes.append(child)
+            new_children = agent.expand_node(
+                current_node, infos, embeds, scores, p, gen_cnt,
+            )
+            # Terminal split: terminals are queued (delayed backprop +
+            # V-fold), never entering leaf_nodes; only non-terminals
+            # compete for the selection immediately below.
+            for child in new_children:
+                if child.is_terminal:
+                    pending_terminals.append(child)
+                else:
+                    leaf_nodes.append(child)
 
         logging.fatal(f"gen_cnt = {gen_cnt}")
         if gen_cnt >= config.search.gen_budget:
             logging.fatal("run out of budget!")
+            flush_pending()
             break
 
         if not leaf_nodes:
             logging.fatal("leaf_nodes is empty — stopping.")
+            flush_pending()
             break
 
         # Select the next node with highest diversity-adjusted value
@@ -959,6 +1114,14 @@ def mcts_search(question, agent, config, llm_vllm, llm_vllm_embeds, prm):
         t += 1
         current_node = agent.select_leaf_from_list(leaf_nodes, t)
         leaf_nodes.remove(current_node)
+
+        # Flush now: this step's terminal outcomes are no longer
+        # concurrent with a selection in progress -- the next
+        # iteration's selection (and, if current_node is itself
+        # terminal, that node's own backprop) may read them. This is
+        # the one-step delay: same-batch invisible, next-step visible,
+        # in BOTH the q and V channels.
+        flush_pending()
 
         logging.fatal(
             f"selected = {current_node.tag}  "
