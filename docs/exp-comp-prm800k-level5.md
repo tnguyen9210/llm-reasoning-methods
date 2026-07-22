@@ -84,7 +84,7 @@ Two activities, two shapes:
 |---|---|---|---|---|---|---|---|
 | cnt-mcts | 2 | scored | .3619<br>±.0294 | .2724 | .2127 | .1903 | 2.98 |
 | sem-mcts | 2 | scored | .3433<br>±.0291 | .2537 | .1978 | .1679 | 4.85 |
-| cnt-mcts-bl-v01 | — | planned | — | — | — | — | — |
+| cnt-mcts-bl-v01 | 2 | scored | .2313<br>±.0258 | .2090 | .1940 | .1940 | 2.74 |
 | kube-mcts-bl-v01 | — | planned | — | — | — | — | — |
 | kdepth-mcts-bl-v01 | — | planned | — | — | — | — | — |
 | sem-mcts-bl-v01 | — | planned | — | — | — | — | — |
@@ -96,7 +96,7 @@ Two activities, two shapes:
 |---|---|---|---|---|---|---|---|
 | cnt-mcts | 2 | scored | .5522<br>±.0304 | .4291 | .4104 | .3619 | 5.13 |
 | sem-mcts | 2 | scored | .5784<br>±.0302 | .4403 | .4291 | .3881 | 6.93 |
-| cnt-mcts-bl-v01 | 2 | scored | .3731<br>±.0296 | .3209 | .3321 | .3209 | — |
+| cnt-mcts-bl-v01 | 2 | scored | .3731<br>±.0296 | .3209 | .3321 | .3209 | 4.76 |
 | kube-mcts-bl-v01 | 2 | scored | .4851<br>±.0306 | .3918 | .3769 | .3731 | — |
 | kdepth-mcts-bl-v01 | 2 | scored | .5000<br>±.0306 | .4104 | .4030 | .3955 | — |
 | sem-mcts-bl-v01 | — | planned | — | — | — | — | — |
@@ -121,7 +121,7 @@ Two activities, two shapes:
 |---|---|---|---|---|---|---|---|
 | cnt-mcts | 2 | scored | .7537<br>±.0264 | .6157 | .5784 | .5634 | 4.19 |
 | sem-mcts | 2 | scored | .7873<br>±.0250 | .6045 | .5634 | .5634 | 5.54 |
-| cnt-mcts-bl-v01 | 2 | scored | .6343<br>±.0295 | .5709 | .5672 | .5522 | — |
+| cnt-mcts-bl-v01 | 2 | scored | .6343<br>±.0295 | .5709 | .5672 | .5522 | 3.97 |
 | kube-mcts-bl-v01 | 2 | scored | .7164<br>±.0276 | .6157 | .5858 | .5746 | — |
 | kdepth-mcts-bl-v01 | — | planned | — | — | — | — | — |
 | sem-mcts-bl-v01 | 2 | scored | .7537<br>±.0264 | .5597 | .5037 | .4478 | — |
@@ -132,7 +132,7 @@ Two activities, two shapes:
 |---|---|---|---|---|---|---|---|
 | cnt-mcts | 2 | scored | .7575<br>±.0262 | .6418 | .6455 | .6269 | 3.37 |
 | sem-mcts | 2 | scored | .7500<br>±.0265 | .6343 | .6157 | .6007 | 4.79 |
-| cnt-mcts-bl-v01 | 2 | scored | .4366<br>±.0304 | .4142 | .4104 | .3955 | — |
+| cnt-mcts-bl-v01 | 2 | scored | .4366<br>±.0304 | .4142 | .4104 | .3955 | 3.31 |
 | kube-mcts-bl-v01 | 2 | scored | .6493<br>±.0292 | .5784 | .5672 | .5522 | — |
 | kdepth-mcts-bl-v01 | 2 | scored | .6455<br>±.0293 | .5522 | .5485 | .5336 | — |
 | sem-mcts-bl-v01 | 2 | scored | .6567<br>±.0291 | .5410 | .4627 | .4552 | — |
@@ -703,15 +703,23 @@ Two activities, two shapes:
 
 | llm | trials | status | pass@gb | naive@gb | wei@gb | maj@gb | hr/trial |
 |---|---|---|---|---|---|---|---|
-| llama-1b fp16 | — | planned | — | — | — | — | — |
-| llama-3b fp16 | — | planned | — | — | — | — | — |
-| qwen-3b fp16 | — | planned | — | — | — | — | — |
-| qwen-7b gptq-int4 | — | planned | — | — | — | — | — |
-| qwen-math-1.5b fp16 | — | planned | — | — | — | — | — |
+| llama-1b fp16 | 2 | scored | .2313<br>±.0258 | .2090<br>±.0249 | .1940<br>±.0242 | .1940<br>±.0242 | 2.74 |
+| llama-3b fp16 | 2 | scored | .3731<br>±.0296 | .3209<br>±.0286 | .3321<br>±.0288 | .3209<br>±.0286 | 4.76 |
+| qwen-3b fp16 | — | running (1/2) | — | — | — | — | — |
+| qwen-7b gptq-int4 | 2 | scored | .6343<br>±.0295 | .5709<br>±.0303 | .5672<br>±.0303 | .5522<br>±.0304 | 3.97 |
+| qwen-math-1.5b fp16 | 2 | scored | .4366<br>±.0304 | .4142<br>±.0301 | .4104<br>±.0301 | .3955<br>±.0299 | 3.31 |
 
-> **Analysis.** No level-5 data yet — nothing to take away.
-> **Limitations / follow-up:** entire table planned; launch is
-> the level-4 counterpart's command plus `data.level=5`.
+> **Analysis.** 4/5 cells scored (2026-07-21); qwen-3b mid-run.
+> bl-v01 trails cnt-mcts on every model — qwen-7b gptq .6343 vs
+> .7873 pass@gb (−.15); qwen-math-1.5b .4366 vs .7164 (−.28, the
+> largest gap). The math specialist's advantage largely vanishes
+> under the uniform baseline: qwen-math-1.5b (.4366) barely
+> clears llama-3b (.3731), while it is a top model under
+> cnt-mcts. Remaining ordering is size/family-consistent:
+> llama-1b < llama-3b < qwen-math-1.5b < qwen-7b gptq.
+> **Limitations / follow-up:** qwen-3b pending (1/2 trials,
+> ~4.26 hr/trial). Queue-only block — no experiments.yaml
+> entries to flip (per 2026-07-20 note in queue.yaml).
 
 ### cnt-mcts-bl-v02
 
