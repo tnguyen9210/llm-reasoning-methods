@@ -29,3 +29,4 @@ Decisions motivated by a finding go in
 
 - [prm-batch-size-throughput-memory.md](exp-findings/prm-batch-size-throughput-memory.md) — prm_batch_size sweep: throughput/memory tradeoff + why the pass@gb gap isn't statistically real
 - [ds-alpha-diversity-bonus-plateau.md](exp-findings/ds-alpha-diversity-bonus-plateau.md) — 2026-06-24, ds_alpha is a switch not a dial: 0→10 is a large real jump, 10→1000 is flat within noise
+- [bl-frontier-depth-allocation.md](exp-findings/bl-frontier-depth-allocation.md) — 2026-07-20, the four mcts_bl_*_v02 frontier scores allocate the same 80-expansion budget to different tree depths: kdepth tunnels (272 max-depth dead-ends), sem fans out shallow, kube balanced/robust, cnt mid-depth but stalls to 0 completions on 2/5 problems (behavioral, n=1/cell, not accuracy)

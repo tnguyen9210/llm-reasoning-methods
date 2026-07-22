@@ -323,6 +323,11 @@ class MCTS(BaseTree):
     """
     completed_nodes: List[Type[BaseNode]] = []
     cnt_node_max_depth: int = 0
+    # Winning frontier score of the most recent select_child_from_list
+    # call; stashed rather than returned so the selector signature is
+    # unchanged. Read each phase into phase_selected_score. NaN until
+    # the first selection.
+    last_selected_score: float = float("nan")
 
     def create_node(self, parent=None):
         return MCTSNode(parent=parent)
@@ -454,6 +459,8 @@ class MCTS(BaseTree):
             logging.fatal(f"   is_terminal = {node.is_terminal}")
 
         selected_node = random.choice(best_nodes)
+        # Stash the winning frontier score for phase_selected_score.
+        self.last_selected_score = float(best_value)
         logging.fatal(f"selected_leaf = {selected_node.tag}")
         return selected_node
 
@@ -544,6 +551,16 @@ def _generate_candidates(
 # Main search loop                                                      #
 # --------------------------------------------------------------------- #
 
+def _count_nodes(root) -> int:
+    """Total nodes in the tree rooted at `root` (iterative)."""
+    total, stack = 0, [root]
+    while stack:
+        node = stack.pop()
+        total += 1
+        stack.extend(node.children)
+    return total
+
+
 def mcts_search(question, agent, config, llm_vllm, prm):
     """Run budget-limited best-first MCTS on a single `question`.
 
@@ -585,6 +602,11 @@ def mcts_search(question, agent, config, llm_vllm, prm):
     gen_cnt = 0
     p = 0
     phase_depths: List[int] = []
+    # Per-phase exploration diagnostics (one entry per selection). See
+    # the results-dict assembly in _search for scope/meaning.
+    phase_selected_depth: List[int] = []
+    phase_selected_q: List[float] = []
+    phase_selected_score: List[float] = []
     leaf_nodes: List[Any] = []
     current_node = agent.root
     # Delayed-eager backprop queue: this step's newly created terminal
@@ -672,10 +694,16 @@ def mcts_search(question, agent, config, llm_vllm, prm):
             agent.backprop(child)
         pending_terminal_backprops = []
 
-        selected_score = agent.frontier_score(current_node)
+        # Record which node this phase chose to expand: depth (the
+        # shallow-vs-deep signal), q-value, and the winning frontier
+        # score stashed inside the selector.
+        phase_selected_depth.append(current_node.depth)
+        phase_selected_q.append(current_node.q_value())
+        phase_selected_score.append(agent.last_selected_score)
+
         logging.fatal(
             f"selected = {current_node.tag}  "
-            f"score={selected_score:.4f}  "
+            f"score={agent.last_selected_score:.4f}  "
             f"q={current_node.q_value():.4f}  "
             f"nvisit={current_node.visit_count()}"
         )
@@ -696,9 +724,19 @@ def mcts_search(question, agent, config, llm_vllm, prm):
         comp_phase.append(node.phase)
         comp_gen.append(node.gen_cnt)
 
+    # Tree-shape scalars (see docs/findings/exp-findings/
+    # bl-frontier-depth-allocation.md): completed = EOS/length
+    # terminals; terminal = completed + max-depth dead-ends; total =
+    # every node created.
+    q_nodes_completed = len(agent.completed_nodes)
+    q_nodes_terminal = q_nodes_completed + agent.cnt_node_max_depth
+    q_nodes_total = _count_nodes(agent.root)
+
     return (
         completions, comp_depth, comp_phase, comp_gen,
         gen_cnt, p, phase_depths, agent.cnt_node_max_depth,
+        phase_selected_depth, phase_selected_q, phase_selected_score,
+        q_nodes_total, q_nodes_terminal, q_nodes_completed,
     )
 
 
@@ -717,6 +755,12 @@ def _search(batch_of_questions, config, trial_idx, llm_vllm, prm):
     batch_q_last_phase = [[] for _ in range(n)]
     batch_phase_depths = [[] for _ in range(n)]
     batch_q_nodes_max_depth = [[] for _ in range(n)]
+    batch_phase_selected_depth = [[] for _ in range(n)]
+    batch_phase_selected_q = [[] for _ in range(n)]
+    batch_phase_selected_score = [[] for _ in range(n)]
+    batch_q_nodes_total = [[] for _ in range(n)]
+    batch_q_nodes_terminal = [[] for _ in range(n)]
+    batch_q_nodes_completed = [[] for _ in range(n)]
 
     for q_idx, question in enumerate(batch_of_questions):
         seed = 100_000 + trial_idx
@@ -730,6 +774,8 @@ def _search(batch_of_questions, config, trial_idx, llm_vllm, prm):
             completions, comp_depth, comp_phase, comp_gen,
             q_total_gens, q_last_phase, phase_depths,
             q_nodes_max_depth,
+            phase_selected_depth, phase_selected_q, phase_selected_score,
+            q_nodes_total, q_nodes_terminal, q_nodes_completed,
         ) = mcts_search(question, agent, config, llm_vllm, prm)
 
         batch_completions[q_idx] = completions
@@ -740,6 +786,12 @@ def _search(batch_of_questions, config, trial_idx, llm_vllm, prm):
         batch_q_last_phase[q_idx] = q_last_phase
         batch_phase_depths[q_idx] = phase_depths
         batch_q_nodes_max_depth[q_idx] = q_nodes_max_depth
+        batch_phase_selected_depth[q_idx] = phase_selected_depth
+        batch_phase_selected_q[q_idx] = phase_selected_q
+        batch_phase_selected_score[q_idx] = phase_selected_score
+        batch_q_nodes_total[q_idx] = q_nodes_total
+        batch_q_nodes_terminal[q_idx] = q_nodes_terminal
+        batch_q_nodes_completed[q_idx] = q_nodes_completed
 
     # Output keys use scope prefixes: comp_* = per completion,
     # q_* = per-question scalar, phase_* = per-question array
@@ -762,4 +814,22 @@ def _search(batch_of_questions, config, trial_idx, llm_vllm, prm):
     results["phase_depths"] = batch_phase_depths
     # q_nodes_max_depth: per question, # nodes that hit max depth.
     results["q_nodes_max_depth"] = batch_q_nodes_max_depth
+    # --- exploration diagnostics (added 2026-07-20; see docs/findings/
+    # exp-findings/bl-frontier-depth-allocation.md). Same keys across
+    # all bl_* variants so downstream reads them uniformly. ---
+    # phase_selected_depth: per question, per-phase depth of the node
+    # chosen for expansion — the shallow-vs-deep exploration signal.
+    results["phase_selected_depth"] = batch_phase_selected_depth
+    # phase_selected_q: per question, per-phase q-value of that node.
+    results["phase_selected_q"] = batch_phase_selected_q
+    # phase_selected_score: per question, per-phase WINNING frontier
+    # score (per-family; within-method diagnostic, NOT cross-comparable).
+    results["phase_selected_score"] = batch_phase_selected_score
+    # q_nodes_total: per question, total nodes created.
+    results["q_nodes_total"] = batch_q_nodes_total
+    # q_nodes_terminal: per question, # terminal nodes (completed +
+    # max-depth dead-ends).
+    results["q_nodes_terminal"] = batch_q_nodes_terminal
+    # q_nodes_completed: per question, # EOS/length-completed nodes.
+    results["q_nodes_completed"] = batch_q_nodes_completed
     return results

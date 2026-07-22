@@ -153,8 +153,12 @@ def load_models(cfg, takes_embeds):
 
 
 def run_one(method, q_idx, question, cfg, core_mod, takes_embeds,
-            llm_vllm, llm_vllm_embeds, prm, out_dir, trial_idx=0):
-    tag = f"{method}_q{q_idx}"
+            llm_vllm, llm_vllm_embeds, prm, out_dir, trial_idx=0,
+            tag_suffix=""):
+    # tag_suffix distinguishes multiple config arms of the SAME method
+    # (e.g. a depth_alpha sweep of mcts_bl_kdepth_v01) so their output
+    # files do not collide.
+    tag = f"{method}{tag_suffix}_q{q_idx}"
     log_path = os.path.join(out_dir, f"examine_search_{tag}.log")
     tree_path = os.path.join(out_dir, f"examine_search_tree_{tag}.json")
     summ_path = os.path.join(out_dir, f"examine_summary_{tag}.json")
@@ -185,7 +189,10 @@ def run_one(method, q_idx, question, cfg, core_mod, takes_embeds,
     try:
         (completions, comp_depth, comp_phase, comp_gen,
          q_total_gens, q_last_phase, phase_depths,
-         q_nodes_max_depth) = core_mod.mcts_search(*search_args)
+         q_nodes_max_depth,
+         phase_selected_depth, phase_selected_q, phase_selected_score,
+         q_nodes_total, q_nodes_terminal,
+         q_nodes_completed) = core_mod.mcts_search(*search_args)
     finally:
         root_logger.removeHandler(fh)
         fh.close()
@@ -198,6 +205,7 @@ def run_one(method, q_idx, question, cfg, core_mod, takes_embeds,
 
     summary = {
         "method": method,
+        "tag_suffix": tag_suffix,
         "question_idx_level5": q_idx,
         "seconds": elapsed,
         "gen_budget": cfg.search.gen_budget,
@@ -210,6 +218,15 @@ def run_one(method, q_idx, question, cfg, core_mod, takes_embeds,
         "comp_depth": comp_depth,
         "comp_phase": comp_phase,
         "comp_gen": comp_gen,
+        # New per-phase exploration trace + tree scalars (the six keys
+        # now recorded by every bl core; see docs/decisions/
+        # bl-search-tree-diagnostics.md).
+        "phase_selected_depth": phase_selected_depth,
+        "phase_selected_q": phase_selected_q,
+        "phase_selected_score": phase_selected_score,
+        "q_nodes_total": q_nodes_total,
+        "q_nodes_terminal": q_nodes_terminal,
+        "q_nodes_completed": q_nodes_completed,
     }
     with open(summ_path, "w", encoding="utf-8") as f:
         json.dump(summary, f, indent=2, ensure_ascii=False)
@@ -236,6 +253,17 @@ def main():
                              "results"),
         help="output dir (default: unittests/results next to this file)",
     )
+    ap.add_argument(
+        "--overrides", default="",
+        help="comma-separated extra Hydra overrides appended to the "
+             "compose list, e.g. search.depth_alpha=0.5",
+    )
+    ap.add_argument(
+        "--tag-suffix", default="",
+        help="suffix appended to the method name in output filenames, "
+             "to distinguish config arms of the same method "
+             "(e.g. _a0.5 for a depth_alpha sweep)",
+    )
     args = ap.parse_args()
 
     methods = [m.strip() for m in args.methods.split(",") if m.strip()]
@@ -251,6 +279,7 @@ def main():
         f"data.level={args.level}",
         f"search.gen_budget={args.budget}",
     ]
+    overrides += [o.strip() for o in args.overrides.split(",") if o.strip()]
 
     # Group methods by whether they need the embeds engine so we
     # only rebuild models when the (llm, embeds-need) actually
@@ -275,7 +304,7 @@ def main():
             question = dataset[q_idx][cfg.data.question_field]
             run_one(method, q_idx, question, cfg, core_mod,
                     takes_embeds, llm_vllm, llm_vllm_embeds, prm,
-                    args.out)
+                    args.out, tag_suffix=args.tag_suffix)
 
         # Free GPU before the next method's engines load.
         del llm_vllm, llm_vllm_embeds, prm
