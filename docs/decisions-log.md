@@ -14,6 +14,31 @@ scaffold, it also gets a standalone file in [decisions/](decisions/);
 the log entry then carries a one-line pointer to it rather than
 repeating the full writeup.
 
+## 2026-07-20 — Search, Instrumentation: record six exploration-diagnostic keys in every bl_* results dict
+
+**Context:** the results dict recorded outcomes but almost nothing
+about *where* in the tree the fixed expansion budget was spent, so
+reproducing the depth-allocation finding
+([findings/exp-findings/bl-frontier-depth-allocation.md](findings/exp-findings/bl-frontier-depth-allocation.md))
+required the special `unittests/examine_driver.py` tree dump on a
+handful of questions. **Decision:** add six per-question keys —
+`phase_selected_depth` / `phase_selected_q` / `phase_selected_score`
+(per-phase arrays) and `q_nodes_total` / `q_nodes_terminal` /
+`q_nodes_completed` (scalars) — to all 8 bl cores with identical names
+(key-parity is load-bearing; verified byte-identical key sets and a
+uniform 14-tuple `mcts_search` return across the 8). The winning
+frontier score is captured by stashing it on `agent.last_selected_score`
+inside each selector (a declared field, like `cnt_node_max_depth`), so
+no selector signature changes. Dropped a proposed `phase_frontier_size`
+(grows near-linearly for all methods; its slope is a downstream
+consequence of selected-depth + terminal counts, not independent).
+Smoke-tested all 4 families offline: keys populate, and
+`phase_selected_score` carries the correct per-family scale
+(PUCT/density/depth-density/diversity-value). Tree-*structure* keys
+(depth histogram, branching-by-depth, q-by-depth, visit Gini) discussed
+and deferred to a follow-up. Full writeup:
+[decisions/bl-search-tree-diagnostics.md](decisions/bl-search-tree-diagnostics.md).
+
 ## 2026-07-20 — Search, Refactor: `mcts_bl_sem_v01` loop reordered to generate→expand→select, matching v01's shape
 
 **Context:** Tuan asked for `mcts_bl_sem_search_v01_00_00` to align
@@ -76,7 +101,22 @@ then, so it can't be edited in place). `path_decay`'s formula:
 root) plus `cpuct*sqrt(N_parent)/(1+N_leaf)` — the AlphaZero
 exploration shape, NOT v01's UCB1, so **cpuct is not comparable
 across modes** (sweep it per mode); the only exact-v01 control arm
-remains `parent_blend, alpha=1.0`. Log labels in the selection
+remains `parent_blend, alpha=1.0`. **P(x) intentionally omitted:**
+canonical AlphaZero PUCT is
+`P(x)*cpuct*sqrt(N_parent)/(1+N_leaf)`, with `P(x)` the policy
+network's prior over a fixed action set. This repo has no policy
+head and no per-child prior — the "actions" are free-form
+LLM-generated steps, not an enumerable set with a scalar `P` each
+— so the code uses the AlphaZero-shaped bonus *without* the prior
+factor (effectively `P(x)`≡const, folded into `cpuct`). Hence
+"AlphaZero-shaped," not "AlphaZero," in the code docstrings. This
+is Option 2, not the prior-carrying Option 3 of
+[decisions/bl-cnt-path-aware-frontier-score-design.md](decisions/bl-cnt-path-aware-frontier-score-design.md)
+§4.5 — Option 3 (a `prior_p` field fed from normalized sibling
+scores) was considered there and deliberately not built; if a
+usable per-child prior (e.g. normalized sibling log-probs) is
+ever added, it slots into the `P(x)` position and only then is
+the term genuinely PUCT. Log labels in the selection
 methods were made mode-neutral (`score =`, not `puct =`).
 `config_hash` for existing v02 YAMLs changed (two new fields) —
 safe, zero recorded v02 runs. The earlier design-space discussion

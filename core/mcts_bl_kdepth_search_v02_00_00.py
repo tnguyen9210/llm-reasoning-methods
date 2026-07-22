@@ -1,7 +1,7 @@
 """
 Budget-Limited MCTS with best-first leaf selection (depth-shaping
 knapsack density, no embeddings) -- v02: delayed-eager terminal
-backprop, hygiene only, no formula change.
+backprop AND a selectable path-aware value term (score_mode).
 
 Sibling: mcts_bl_kdepth_search_v01_00_00.py (unmodified). v02 applies
 the SAME terminal-split + delayed-eager-backprop fix as
@@ -17,29 +17,42 @@ written for the KUBE sibling but the affordability mechanics are
 identical here -- both files share the same feasibility filter).
 
 NOTE on delayed-vs-immediate here specifically: unlike the cnt/kube
-siblings, the delay is BEHAVIORALLY INERT in this file --
-depth_density() (see below) reads neither a parent's q_value() nor
-its visit_count(), so there is no channel through which "was this
-terminal's backprop flushed before or after the immediately-following
-selection" could ever change a ranking. The delayed-flush queue
-pattern is kept anyway, for structural consistency with the cnt/kube
-v02 siblings (same invariant to reason about across all three files),
-not because it changes anything this file's selection formula reads.
+siblings, the delay is BEHAVIORALLY INERT in this file -- the
+frontier value term reads q_value(s) (own, parent, or path) that are
+all already-frozen before the flush, and the delayed-flush queue is
+emptied strictly AFTER the immediately-following selection resolves,
+so no terminal's outcome can leak into the selection ranking among
+the candidates its own generation produced. The queue pattern is
+kept for structural consistency with the cnt/kube v02 siblings.
 
-Unlike the other two v02 siblings, `depth_density()` is UNCHANGED --
-byte-identical to v01's. Per the design doc §7.2: `depth_density`
-reads only a leaf's own frozen q_value, its own depth, and two
-constants (depth_beta, depth_alpha) -- "No visit_count/parent_visit/
-global-clock term anywhere," by explicit design. There is no channel
-in this formula that WHEN a node backprops, or what a parent's
-q_value is, could ever reach -- so "no backprop timing -- eager,
-lazy, or never -- can change which non-terminal node gets expanded
-next" (§7.2, verbatim). Consequently this v02 does NOT add a
-parent-blend or any alpha knob: there is nothing designed for it to
-blend, and inventing one is explicitly out of scope of the existing
-design doc (a decision confirmed 2026-07-17 when this file was
-written -- see docs/decisions/bl-cnt-v02-eager-backprop-path-aware.md
-"kdepth scope").
+Selectable value term (score_mode), aligned with
+mcts_bl_kube_search_v02_00_00.py's two modes (2026-07-21). The blend
+touches ONLY the density's q-term; kdepth's DEPTH bonus and cost are
+its exploration signal and stay untouched. This resolves the design
+doc's §7.2 "no channel to blend" objection: that is correct for the
+depth BONUS (no visit/parent-visit/clock term to blend), but the
+density also carries a plain q-term, which IS blendable exactly as
+bl_cnt/bl_kube blend theirs (see
+docs/decisions-log.md 2026-07-21). The two scorers share no code and
+are joined only by MCTS.frontier_score -- the loser of the planned
+sweep is expected to be deleted (a pure-deletion diff).
+
+  score_mode="parent_blend" (default) -- one-hop blend:
+      blended_q = alpha*q(leaf) + (1-alpha)*q(parent)
+      density = (blended_q + depth_beta*(1-depth_frac**depth_alpha))
+                / cost
+    alpha=1.0 recovers v01's depth_density EXACTLY (own-q only) --
+    the ONLY exact-v01 control arm.
+
+  score_mode="path_decay" -- full-path decayed value:
+      q_path = sum_k gamma^k q(ancestor_k) / sum_k gamma^k
+      density = (q_path + depth_beta*(1-depth_frac**depth_alpha))
+                / cost
+    Same gamma-decayed leaf->root value walk as the kube sibling's
+    path_decay; only the bonus differs (kdepth keeps its DEPTH bonus,
+    kube uses an AlphaZero-shaped VISIT bonus). No clock/schedule
+    here -- kdepth's bonus is depth-based, not visit- or time-clocked.
+    gamma=0.0 reads only the leaf's own q (NOT a v01 control arm).
 
 What this v02 actually changes, concretely:
   - A terminal child is queued at creation (inside the expand step)
@@ -48,23 +61,21 @@ What this v02 actually changes, concretely:
     very next selection resolves -- see the NOTE above on why this
     delay is inert here despite being load-bearing in the cnt/kube
     siblings.
-  - Ranking among NON-terminal nodes is provably unchanged: every
-    non-terminal node that would have been in leaf_nodes under v01
-    is in leaf_nodes under v02 too, at the same relative order
-    relevant to depth_density's inputs (depth_density reads only
-    depth/q_value/constants -- none of which the terminal-split
-    touches for a non-terminal node). The only removed events are
-    terminal-selection phases (a phase that, in v01, does nothing
-    but re-select an already-known dead-end and immediately
-    backprop it) -- pure overhead removed, not a ranking change.
+  - The terminal-split removes only terminal-selection phases (a
+    phase that, in v01, does nothing but re-select an already-known
+    dead-end and immediately backprop it) -- pure overhead removed.
+    Under score_mode="parent_blend", alpha=1.0, the surviving
+    non-terminal ranking is exactly v01's (own-q + depth bonus).
   - The kube_affordable feasibility fallback becomes reachable again
     (dead-ends can no longer keep the "affordable" set permanently
     non-empty), and the frontier stops accumulating permanently-
     stuck dead-end clutter.
 
 Everything else -- expansion, backprop, node classes, candidate
-generation, output shape, depth_density, the kube_affordable filter,
-the cost<=0 -inf guard, the loop shape -- is unchanged from v01.
+generation, output shape, the kube_affordable filter, the cost<=0
+-inf guard, the loop shape -- is unchanged from v01. Only the value
+term of the frontier density is now score_mode-selectable (the depth
+bonus and cost mapping are shared across modes).
 
 Algorithm
     Initialize completion_list = [], leaf_nodes = [], gen_cnt = 0,
@@ -97,7 +108,7 @@ Algorithm
                       mcts_bl_kube_search_v02_00_00.py's docstring
                       "Note on the now-dead is_terminal clause",
                       identical situation here)
-        Select: current = argmax_{x in candidates} depth_density(x);
+        Select: current = argmax_{x in candidates} frontier_score(x);
                 remove current from leaf_nodes
         For each node in pending:
             Backprop: update_recursive(node.q_value(), root)
@@ -105,20 +116,20 @@ Algorithm
 
     The loop body ordering, selection SCOPE, and behavior-preservation
     of the generate -> expand -> select rotation are unchanged from
-    v01 -- see that module's docstring. Only the terminal-split
-    described above differs; depth_density itself is byte-identical
-    to v01's, and the flush's timing (immediately after Select, or
-    before either early-exit point) is inert given what
-    depth_density reads -- see the NOTE above.
+    v01 -- see that module's docstring. The frontier score is now
+    score_mode-selectable (MCTS.frontier_score dispatches to the two
+    node methods); the flush's timing is inert given that the value
+    term reads only already-frozen q_values -- see the NOTE above.
 
-Selection criterion: identical to v01 -- see that module's docstring
-(depth_density, cost mapping, f_a(z) depth-decay shape). This v02
-does not change the formula.
+Selection criterion: (value_term + depth bonus) / cost, where the
+value term is score_mode-selectable (parent_blend / path_decay, see
+above and MCTS.frontier_score); the depth bonus f_a(z) and cost
+mapping are shared with v01 -- see that module's docstring.
 
 Variant lineage: docs/algorithms.md,
 docs/decisions/bl-cnt-path-aware-frontier-score-design.md §7.2
-(design -- establishes the goal is unreachable via backprop timing
-alone in this variant), docs/decisions/
+(design -- the "no channel to blend" analysis, resolved for the
+q-term 2026-07-21, see docs/decisions-log.md), docs/decisions/
 bl-cnt-v02-eager-backprop-path-aware.md (this implementation).
 """
 
@@ -200,28 +211,101 @@ class MCTSNode(BaseNode):
             return
         self.parent.update_recursive(value, start_node)
 
-    def depth_density(
+    def _depth_bonus(
         self, max_depth: int, depth_beta: float, depth_alpha: float,
     ) -> float:
-        """Depth-shaping knapsack index: (q_value + depth bonus) / cost.
+        """kdepth's exploration signal: depth_beta*(1-depth_frac**
+        depth_alpha). Shared by both score_modes -- ONLY the value
+        term (q vs. blended-q vs. path-decayed q) differs between
+        modes; the depth bonus and cost mapping are identical (see
+        module docstring / the two density methods below).
 
-        Byte-identical to mcts_bl_kdepth_search_v01_00_00.py's --
-        this v02 does not change the formula (see module docstring).
+        depth_frac = depth / max_depth: 1 at the root (max bonus),
+        0 at max_depth (no bonus) -- monotonically prefers shallower
+        nodes. No visit-count term -- depth replaces visits as the
+        exploration pressure (this is kdepth's identity).
+        """
+        depth_frac = self.depth / max_depth
+        return depth_beta * (1.0 - depth_frac ** depth_alpha)
+
+    def parent_blend_depth_density(
+        self, max_depth: int, depth_beta: float, depth_alpha: float,
+        alpha: float,
+    ) -> float:
+        """v02 score_mode="parent_blend": one-hop blend of own q with
+        the parent's, plus the depth bonus, divided by cost.
+
+        density = (alpha*q(self) + (1-alpha)*q(parent)
+                   + depth_beta*(1-depth_frac**depth_alpha)) / cost
+
+        The value blend mirrors
+        mcts_bl_cnt_search_v02_00_00.py's / mcts_bl_kube_search_v02_
+        00_00.py's parent blend, but hooks kdepth's DEPTH bonus (not
+        a visit bonus) -- kdepth has no visit/clock term to blend
+        into, only the plain q-term of its density (see module
+        docstring).
+
+        alpha=1.0 recovers mcts_bl_kdepth_search_v01_00_00.py's
+        depth_density() EXACTLY (own-q only) -- the built-in v01
+        control arm.
 
         cost = max_depth - depth; nodes at or past max_depth get
-        density = -inf (guard — should already be terminal).
-        bonus = depth_beta * (1 - depth_frac**depth_alpha),
-        depth_frac = depth / max_depth: 1 at the root (max bonus),
-        0 at max_depth (no bonus) — monotonically prefers shallower
-        nodes. No visit-count/confidence term (see module docstring).
+        density = -inf (guard -- should already be terminal), as v01.
         """
         cost = max_depth - self.depth
         if cost <= 0:
             return -float("inf")
-        q = self.q_value() if self.visit_count() > 0 else 0.0
-        depth_frac = self.depth / max_depth
-        bonus = depth_beta * (1.0 - depth_frac ** depth_alpha)
+        own_q = self.q_value() if self.visit_count() > 0 else 0.0
+        if self.parent and self.parent.visit_count() > 0:
+            parent_q = self.parent.q_value()
+        else:
+            parent_q = own_q
+        q = alpha * own_q + (1 - alpha) * parent_q
+        bonus = self._depth_bonus(max_depth, depth_beta, depth_alpha)
         return (q + bonus) / cost
+
+    def path_decay_depth_density(
+        self, max_depth: int, depth_beta: float, depth_alpha: float,
+        gamma: float,
+    ) -> float:
+        """v02 score_mode="path_decay": gamma-decayed average of
+        q_value along the leaf->root path, plus the depth bonus,
+        divided by cost.
+
+        q_path = sum_k gamma^k * q(ancestor_k) / sum_k gamma^k
+                 (k = 0 at this leaf, walking to the root; the k=0
+                 weight is 1 even at gamma=0, so norm > 0 always)
+        density = (q_path + depth_beta*(1-depth_frac**depth_alpha))
+                  / cost
+
+        The q_path value walk is IDENTICAL to
+        mcts_bl_kube_search_v02_00_00.py's path_decay_kube_density;
+        the two differ only in the bonus -- kdepth keeps its DEPTH
+        bonus, kube uses an AlphaZero-shaped VISIT bonus. No clock
+        or schedule here: kdepth's bonus is depth-based, not visit-
+        or time-clocked (see module docstring).
+
+        gamma=0.0 reads only the leaf's own q -- NOT a v01 control
+        arm (v01 == parent_blend alpha=1.0). cost<=0 -> -inf.
+
+        Deliberately shares NO code with parent_blend_depth_density:
+        the two score_modes are sweep arms and the loser is expected
+        to be deleted afterward -- independence keeps that removal a
+        pure deletion (see MCTS.frontier_score).
+        """
+        cost = max_depth - self.depth
+        if cost <= 0:
+            return -float("inf")
+        node, acc, norm, k = self, 0.0, 0.0, 0
+        while node is not None:
+            q = node.q_value() if node.visit_count() > 0 else 0.0
+            acc += (gamma ** k) * q
+            norm += gamma ** k
+            k += 1
+            node = node.parent
+        q_path = acc / norm
+        bonus = self._depth_bonus(max_depth, depth_beta, depth_alpha)
+        return (q_path + bonus) / cost
 
     def __repr__(self):
         return (
@@ -270,6 +354,11 @@ class MCTS(BaseTree):
     """
     completed_nodes: List[Type[BaseNode]] = []
     cnt_node_max_depth: int = 0
+    # Winning depth-discounted KUBE density of the most recent
+    # select_child_from_list call; stashed rather than returned so the
+    # selector signature is unchanged. Read each phase into
+    # phase_selected_score. NaN until the first selection.
+    last_selected_score: float = float("nan")
 
     def create_node(self, parent=None):
         return MCTSNode(parent=parent)
@@ -326,13 +415,36 @@ class MCTS(BaseTree):
 
     # ----- Selection ------------------------------------------------- #
 
-    def select_child_from_list(self, nodes: List[Any], residual: int):
-        """Pick the node with highest depth-shaping density from an
-        arbitrary list, uniform random tie-break.
+    def frontier_score(self, node) -> float:
+        """Score a frontier leaf per config.search.score_mode -- the
+        single point where the mode choice is read. Each mode's
+        scorer is self-contained on MCTSNode; removing a mode is one
+        branch here plus one node method (the modes are sweep arms,
+        and the loser is expected to be deleted after the sweep).
 
-        Byte-identical selection logic to v01's -- see that module's
-        docstring. density(x) = (q_value(x) + depth_beta*(1-
-        depth_frac(x)**depth_alpha)) / (max_depth - depth(x))
+        No `t`/clock argument (unlike the kube sibling): kdepth's
+        bonus is depth-based, not visit- or time-clocked.
+        """
+        s = self.config.search
+        if s.score_mode == "parent_blend":
+            return node.parent_blend_depth_density(
+                s.max_depth, s.depth_beta, s.depth_alpha, s.alpha)
+        if s.score_mode == "path_decay":
+            return node.path_decay_depth_density(
+                s.max_depth, s.depth_beta, s.depth_alpha, s.gamma)
+        raise ValueError(
+            f"unknown score_mode: {s.score_mode!r} "
+            "(expected 'parent_blend' or 'path_decay')"
+        )
+
+    def select_child_from_list(self, nodes: List[Any], residual: int):
+        """Pick the node with the highest depth-shaping density (per
+        score_mode) from an arbitrary list, uniform random tie-break.
+
+        density(x) = (value_term(x) + depth_beta*(1-depth_frac(x)**
+        depth_alpha)) / (max_depth - depth(x)) -- see frontier_score
+        / the module docstring for the two score_modes; only the
+        value term differs (the depth bonus and cost are shared).
 
         If config.search.kube_affordable, first restrict to nodes
         whose worst-case completion cost fits the residual generation
@@ -343,8 +455,6 @@ class MCTS(BaseTree):
         now-dead is_terminal clause", identical situation here.
         """
         max_depth = self.config.search.max_depth
-        depth_beta = self.config.search.depth_beta
-        depth_alpha = self.config.search.depth_alpha
 
         if self.config.search.kube_affordable:
             affordable = [
@@ -359,7 +469,7 @@ class MCTS(BaseTree):
         best_nodes: List[Any] = []
 
         for node in nodes:
-            density = node.depth_density(max_depth, depth_beta, depth_alpha)
+            density = self.frontier_score(node)
             if density == best_value:
                 best_nodes.append(node)
             elif density > best_value:
@@ -375,6 +485,8 @@ class MCTS(BaseTree):
             logging.fatal(f"   is_terminal = {node.is_terminal}")
 
         selected_node = random.choice(best_nodes)
+        # Stash the winning density for phase_selected_score.
+        self.last_selected_score = float(best_value)
         logging.fatal(f"selected_leaf = {selected_node.tag}")
         return selected_node
 
@@ -465,6 +577,16 @@ def _generate_candidates(
 # Main search loop                                                      #
 # --------------------------------------------------------------------- #
 
+def _count_nodes(root) -> int:
+    """Total nodes in the tree rooted at `root` (iterative)."""
+    total, stack = 0, [root]
+    while stack:
+        node = stack.pop()
+        total += 1
+        stack.extend(node.children)
+    return total
+
+
 def mcts_search(question, agent, config, llm_vllm, prm):
     """Run budget-limited best-first MCTS on a single `question`.
 
@@ -503,6 +625,11 @@ def mcts_search(question, agent, config, llm_vllm, prm):
     gen_cnt = 0
     p = 0
     phase_depths: List[int] = []
+    # Per-phase exploration diagnostics (one entry per selection). See
+    # the results-dict assembly in _search for scope/meaning.
+    phase_selected_depth: List[int] = []
+    phase_selected_q: List[float] = []
+    phase_selected_score: List[float] = []
     leaf_nodes: List[Any] = []
     current_node = agent.root
     # Delayed-eager backprop queue: see
@@ -576,13 +703,16 @@ def mcts_search(question, agent, config, llm_vllm, prm):
             agent.backprop(child)
         pending_terminal_backprops = []
 
-        selected_density = current_node.depth_density(
-            config.search.max_depth, config.search.depth_beta,
-            config.search.depth_alpha,
-        )
+        # Record which node this phase chose to expand: depth (the
+        # shallow-vs-deep signal), q-value, and the winning density
+        # stashed inside the selector.
+        phase_selected_depth.append(current_node.depth)
+        phase_selected_q.append(current_node.q_value())
+        phase_selected_score.append(agent.last_selected_score)
+
         logging.fatal(
             f"selected = {current_node.tag}  "
-            f"density={selected_density:.4f}  "
+            f"density={agent.last_selected_score:.4f}  "
             f"q={current_node.q_value():.4f}  "
             f"nvisit={current_node.visit_count()}"
         )
@@ -603,9 +733,19 @@ def mcts_search(question, agent, config, llm_vllm, prm):
         comp_phase.append(node.phase)
         comp_gen.append(node.gen_cnt)
 
+    # Tree-shape scalars (see docs/findings/exp-findings/
+    # bl-frontier-depth-allocation.md): completed = EOS/length
+    # terminals; terminal = completed + max-depth dead-ends; total =
+    # every node created.
+    q_nodes_completed = len(agent.completed_nodes)
+    q_nodes_terminal = q_nodes_completed + agent.cnt_node_max_depth
+    q_nodes_total = _count_nodes(agent.root)
+
     return (
         completions, comp_depth, comp_phase, comp_gen,
         gen_cnt, p, phase_depths, agent.cnt_node_max_depth,
+        phase_selected_depth, phase_selected_q, phase_selected_score,
+        q_nodes_total, q_nodes_terminal, q_nodes_completed,
     )
 
 
@@ -624,6 +764,12 @@ def _search(batch_of_questions, config, trial_idx, llm_vllm, prm):
     batch_q_last_phase = [[] for _ in range(n)]
     batch_phase_depths = [[] for _ in range(n)]
     batch_q_nodes_max_depth = [[] for _ in range(n)]
+    batch_phase_selected_depth = [[] for _ in range(n)]
+    batch_phase_selected_q = [[] for _ in range(n)]
+    batch_phase_selected_score = [[] for _ in range(n)]
+    batch_q_nodes_total = [[] for _ in range(n)]
+    batch_q_nodes_terminal = [[] for _ in range(n)]
+    batch_q_nodes_completed = [[] for _ in range(n)]
 
     for q_idx, question in enumerate(batch_of_questions):
         seed = 100_000 + trial_idx
@@ -637,6 +783,8 @@ def _search(batch_of_questions, config, trial_idx, llm_vllm, prm):
             completions, comp_depth, comp_phase, comp_gen,
             q_total_gens, q_last_phase, phase_depths,
             q_nodes_max_depth,
+            phase_selected_depth, phase_selected_q, phase_selected_score,
+            q_nodes_total, q_nodes_terminal, q_nodes_completed,
         ) = mcts_search(question, agent, config, llm_vllm, prm)
 
         batch_completions[q_idx] = completions
@@ -647,6 +795,12 @@ def _search(batch_of_questions, config, trial_idx, llm_vllm, prm):
         batch_q_last_phase[q_idx] = q_last_phase
         batch_phase_depths[q_idx] = phase_depths
         batch_q_nodes_max_depth[q_idx] = q_nodes_max_depth
+        batch_phase_selected_depth[q_idx] = phase_selected_depth
+        batch_phase_selected_q[q_idx] = phase_selected_q
+        batch_phase_selected_score[q_idx] = phase_selected_score
+        batch_q_nodes_total[q_idx] = q_nodes_total
+        batch_q_nodes_terminal[q_idx] = q_nodes_terminal
+        batch_q_nodes_completed[q_idx] = q_nodes_completed
 
     # Output keys use scope prefixes: comp_* = per completion,
     # q_* = per-question scalar, phase_* = per-question array
@@ -669,4 +823,22 @@ def _search(batch_of_questions, config, trial_idx, llm_vllm, prm):
     results["phase_depths"] = batch_phase_depths
     # q_nodes_max_depth: per question, # nodes that hit max depth.
     results["q_nodes_max_depth"] = batch_q_nodes_max_depth
+    # --- exploration diagnostics (added 2026-07-20; see docs/findings/
+    # exp-findings/bl-frontier-depth-allocation.md). Same keys across
+    # all bl_* variants so downstream reads them uniformly. ---
+    # phase_selected_depth: per question, per-phase depth of the node
+    # chosen for expansion — the shallow-vs-deep exploration signal.
+    results["phase_selected_depth"] = batch_phase_selected_depth
+    # phase_selected_q: per question, per-phase q-value of that node.
+    results["phase_selected_q"] = batch_phase_selected_q
+    # phase_selected_score: per question, per-phase WINNING frontier
+    # score (per-family; within-method diagnostic, NOT cross-comparable).
+    results["phase_selected_score"] = batch_phase_selected_score
+    # q_nodes_total: per question, total nodes created.
+    results["q_nodes_total"] = batch_q_nodes_total
+    # q_nodes_terminal: per question, # terminal nodes (completed +
+    # max-depth dead-ends).
+    results["q_nodes_terminal"] = batch_q_nodes_terminal
+    # q_nodes_completed: per question, # EOS/length-completed nodes.
+    results["q_nodes_completed"] = batch_q_nodes_completed
     return results

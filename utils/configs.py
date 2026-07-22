@@ -528,32 +528,58 @@ class BLMCTSKdepthV01Config(SearchConfig):
 
 @dataclass
 class BLMCTSKdepthV02Config(SearchConfig):
-    """Depth-shaping knapsack MCTS with eager terminal backprop only
-    -- no formula change.
+    """Depth-shaping knapsack MCTS with delayed-eager terminal
+    backprop and a selectable path-aware VALUE term (score_mode).
 
     v02 of BLMCTSKdepthV01Config's family -- see
     docs/decisions/bl-cnt-v02-eager-backprop-path-aware.md §
-    "kdepth scope" for why this v02 is hygiene-only, and
-    docs/decisions/bl-cnt-path-aware-frontier-score-design.md §7.2
-    for the analysis establishing the goal is unreachable via
-    backprop timing alone here: depth_density() reads only a leaf's
-    own frozen q_value, its own depth, and two constants -- no
-    visit-count or parent-q channel exists at all for a blend to hook
-    into, so "no backprop timing -- eager, lazy, or never -- can
-    change which non-terminal node gets expanded next" (§7.2,
-    verbatim).
+    "kdepth scope" and
+    docs/decisions/bl-cnt-path-aware-frontier-score-design.md §7.2.
 
-    One change relative to BLMCTSKdepthV01Config, in
-    core/mcts_bl_kdepth_search_v02_00_00.py: terminal split +
-    delayed-eager backprop. A terminal child is queued at creation
-    (backpropped right after the immediately following selection;
-    timing provably inert here, applied for cross-file consistency)
-    and never enters the leaf frontier -- fixes the same permanently-
-    stuck-dead-end / kube_affordable-fallback-suppression defect
-    BLMCTSKubeV02Config's docstring describes (this file shares the
-    identical feasibility filter). depth_density() itself is BYTE-
-    IDENTICAL to BLMCTSKdepthV01Config's -- no alpha knob, since
-    there is nothing designed for it to blend.
+    Two changes relative to BLMCTSKdepthV01Config, both in
+    core/mcts_bl_kdepth_search_v02_00_00.py:
+
+      1. Terminal split + DELAYED eager backprop. A terminal child
+         is queued at creation (backpropped right after the
+         immediately following selection; timing provably inert
+         here, applied for cross-file consistency) and never enters
+         the leaf frontier -- fixes the same permanently-stuck-dead-
+         end / kube_affordable-fallback-suppression defect
+         BLMCTSKubeV02Config's docstring describes (identical
+         feasibility filter here).
+
+      2. A selectable path-aware frontier score, `score_mode`
+         (aligned with BLMCTSKubeV02Config's two modes; the loser of
+         the planned sweep is expected to be DELETED -- the two
+         scorers share no code, joined only by MCTS.frontier_score).
+
+         The blend touches ONLY the density's q-term; kdepth's depth
+         bonus and cost are its exploration signal and stay untouched
+         (this resolves §7.2's "no channel to blend" -- correct for
+         the depth BONUS, but the density carries a plain q-term that
+         IS blendable, exactly as bl_cnt/bl_kube blend theirs):
+
+         score_mode="parent_blend" (default) -- one-hop blend:
+             blended_q = alpha*q(leaf) + (1-alpha)*q(parent)
+             density = (blended_q + depth_beta*(1-depth_frac**
+                       depth_alpha)) / cost
+           alpha=1.0 recovers BLMCTSKdepthV01Config's exact
+           depth_density -- the ONLY exact-v01 control arm.
+
+         score_mode="path_decay" -- full-path decayed value:
+             q_path = sum_k gamma^k q(ancestor_k) / sum_k gamma^k
+             density = (q_path + depth_beta*(1-depth_frac**
+                       depth_alpha)) / cost
+           Same gamma-decayed leaf->root value walk as
+           BLMCTSKubeV02Config's path_decay; only the bonus differs
+           (kdepth keeps its DEPTH bonus, kube uses an AlphaZero-
+           shaped VISIT bonus). No clock/schedule here: kdepth's
+           bonus is depth-based, not visit- or time-clocked.
+           gamma=0.0 reads only the leaf's own q (NOT a v01 control
+           arm -- v01 is alpha=1.0 under parent_blend).
+
+         The cross-mode knob is idle by design (alpha unused under
+         "path_decay", gamma unused under "parent_blend").
     """
     method: str = "mcts_bl_kdepth_v02"
     num_phases: int = 1000
@@ -562,6 +588,13 @@ class BLMCTSKdepthV02Config(SearchConfig):
     depth_alpha: float = 1.0        # depth-bonus exponent
     kube_affordable: bool = True    # restrict argmax to affordable
                                     # nodes (knapsack feasibility step)
+    score_mode: str = "parent_blend"   # "parent_blend" | "path_decay"
+    alpha: float = 0.8            # parent_blend only: own-q vs.
+                                   # parent-q blend; 1.0 = the exact
+                                   # BLMCTSKdepthV01Config depth_density
+                                   # (no-blend control arm -- include
+                                   # in sweeps)
+    gamma: float = 0.8             # path_decay only: per-hop decay
 
     # PRM forward-pass micro-batch *inside* the search loop (distinct
     # from prm.score_batch_size, which scores the final dataset). Kept
