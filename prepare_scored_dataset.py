@@ -44,6 +44,10 @@ from core.scoring import build_scored_dataset
 from utils.configs import (
     ExpConfig, BoNConfig, MCTSCntConfig,
     MCTSSemV01Config, MCTSSemV02Config, resolve_result_dir,
+    BLMCTSCntConfig, BLMCTSCntV02Config,
+    BLMCTSKubeV01Config, BLMCTSKubeV02Config,
+    BLMCTSKdepthV01Config, BLMCTSKdepthV02Config,
+    BLMCTSSemConfig, BLMCTSSemV02Config,
 )
 from utils.load_data import load_data_hf
 
@@ -55,6 +59,32 @@ cs.store(group="search", name="bon_schema", node=BoNConfig)
 cs.store(group="search", name="mcts_cnt_schema", node=MCTSCntConfig)
 cs.store(group="search", name="mcts_sem_v01_schema", node=MCTSSemV01Config)
 cs.store(group="search", name="mcts_sem_v02_schema", node=MCTSSemV02Config)
+cs.store(
+    group="search", name="mcts_bl_cnt_v01_schema", node=BLMCTSCntConfig,
+)
+cs.store(
+    group="search", name="mcts_bl_cnt_v02_schema", node=BLMCTSCntV02Config,
+)
+cs.store(
+    group="search", name="mcts_bl_kube_v01_schema", node=BLMCTSKubeV01Config,
+)
+cs.store(
+    group="search", name="mcts_bl_kube_v02_schema", node=BLMCTSKubeV02Config,
+)
+cs.store(
+    group="search", name="mcts_bl_kdepth_v01_schema",
+    node=BLMCTSKdepthV01Config,
+)
+cs.store(
+    group="search", name="mcts_bl_kdepth_v02_schema",
+    node=BLMCTSKdepthV02Config,
+)
+cs.store(
+    group="search", name="mcts_bl_sem_v01_schema", node=BLMCTSSemConfig,
+)
+cs.store(
+    group="search", name="mcts_bl_sem_v02_schema", node=BLMCTSSemV02Config,
+)
 
 
 @hydra.main(

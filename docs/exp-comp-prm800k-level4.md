@@ -106,6 +106,8 @@ instead of one wide sparse grid.)
 | kdepth-mcts-bl-v01 | 2 | scored | .7227<br>±.0280 | .6680<br>±.0295 | .6758<br>±.0293 | .6445<br>±.0300 | 3.25 |
 | sem-mcts-bl-v01 | — | failed | — | — | — | — | — |
 
+<!-- TEMPORARILY HIDDEN (2026-07-21): llama-3b gptq block. Restore
+     by uncommenting. bl rows still unrun; cnt/sem-mcts scored.
 **llama-3b gptq**
 
 | algorithm | trials | status | pass@gb | naive@gb | wei@gb | maj@gb | hr/trial |
@@ -116,6 +118,7 @@ instead of one wide sparse grid.)
 | kube-mcts-bl-v01 | — | planned | — | — | — | — | — |
 | kdepth-mcts-bl-v01 | — | planned | — | — | — | — | — |
 | sem-mcts-bl-v01 | — | planned | — | — | — | — | — |
+-->
 
 **qwen-3b fp16**
 
@@ -128,6 +131,9 @@ instead of one wide sparse grid.)
 | kdepth-mcts-bl-v01 | 2 | scored | .8164<br>±.0242 | .7539<br>±.0270 | .7461<br>±.0273 | .7344<br>±.0277 | 3.00 |
 | sem-mcts-bl-v01 | 2 | scored | .8320<br>±.0234 | .6836<br>±.0291 | .6484<br>±.0299 | .6016<br>±.0307 | 5.19 |
 
+<!-- TEMPORARILY HIDDEN (2026-07-21): qwen-3b gptq-int4 block. Restore
+     by uncommenting. cnt/kube/kdepth-bl rows unrun; cnt/sem-mcts and
+     sem-mcts-bl-v01 scored.
 **qwen-3b gptq-int4**
 
 | algorithm | trials | status | pass@gb | naive@gb | wei@gb | maj@gb | hr/trial |
@@ -138,6 +144,7 @@ instead of one wide sparse grid.)
 | kube-mcts-bl-v01 | — | planned | — | — | — | — | — |
 | kdepth-mcts-bl-v01 | — | planned | — | — | — | — | — |
 | sem-mcts-bl-v01 | 2 | scored | .7422<br>±.0274 | .6133<br>±.0305 | .5625<br>±.0311 | .5273<br>±.0313 | 4.18 |
+-->
 
 **qwen-7b gptq-int4**
 

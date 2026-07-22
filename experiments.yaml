@@ -3421,3 +3421,149 @@
   priority: 1
   note: level-5 qwen-3b kdepth-mcts-bl-v01 model family/size/quant
     comparison cell, cfg-235547c5
+# --- planned: kdepth-mcts-bl-v01 level-5 model-family grid, depth_alpha=0.5
+#     (concave depth bonus, depth_beta=2.0). Feeds
+#     level5-kdepth-bl-v01-model-family-qwen-da0.5.
+- launcher: generate_mcts_bl_cnt.py
+  hash: "f444475a"
+  config_root: mcts_bl_kdepth_v01_prm800k
+  overrides:
+    llm: llama_1b
+    prm: qwen_prm
+    data.level: 5
+    search.depth_alpha: 0.5
+  trials: 2
+  feeds: [level5-kdepth-bl-v01-model-family-qwen-da0.5]
+  group: kdepth-mcts-bl
+  priority: 2
+  recorded: false
+  note: level-5 qwen-PRM kdepth-v01 depth_alpha=0.5 llama-1b fp16
+- launcher: generate_mcts_bl_cnt.py
+  hash: "7af034c2"
+  config_root: mcts_bl_kdepth_v01_prm800k
+  overrides:
+    llm: llama_3b
+    prm: qwen_prm
+    data.level: 5
+    search.depth_alpha: 0.5
+  trials: 2
+  feeds: [level5-kdepth-bl-v01-model-family-qwen-da0.5]
+  group: kdepth-mcts-bl
+  priority: 2
+  recorded: false
+  note: level-5 qwen-PRM kdepth-v01 depth_alpha=0.5 llama-3b fp16
+- launcher: generate_mcts_bl_cnt.py
+  hash: "6351671c"
+  config_root: mcts_bl_kdepth_v01_prm800k
+  overrides:
+    llm: qwen_3b
+    prm: qwen_prm
+    data.level: 5
+    search.depth_alpha: 0.5
+  trials: 2
+  feeds: [level5-kdepth-bl-v01-model-family-qwen-da0.5]
+  group: kdepth-mcts-bl
+  priority: 2
+  recorded: false
+  note: level-5 qwen-PRM kdepth-v01 depth_alpha=0.5 qwen-3b fp16
+- launcher: generate_mcts_bl_cnt.py
+  hash: "6ce1b23b"
+  config_root: mcts_bl_kdepth_v01_prm800k
+  overrides:
+    llm: qwen_7b_gptq_int4
+    prm: qwen_prm
+    data.level: 5
+    search.depth_alpha: 0.5
+  trials: 2
+  feeds: [level5-kdepth-bl-v01-model-family-qwen-da0.5]
+  group: kdepth-mcts-bl
+  priority: 2
+  recorded: false
+  note: level-5 qwen-PRM kdepth-v01 depth_alpha=0.5 qwen-7b gptq-int4
+- launcher: generate_mcts_bl_cnt.py
+  hash: "c0818914"
+  config_root: mcts_bl_kdepth_v01_prm800k
+  overrides:
+    llm: qwen_math_1_5b
+    prm: qwen_prm
+    data.level: 5
+    search.depth_alpha: 0.5
+  trials: 2
+  feeds: [level5-kdepth-bl-v01-model-family-qwen-da0.5]
+  group: kdepth-mcts-bl
+  priority: 2
+  recorded: false
+  note: level-5 qwen-PRM kdepth-v01 depth_alpha=0.5 qwen-math-1.5b fp16
+# --- planned: kdepth-mcts-bl-v01 level-5 model-family grid, depth_alpha=2.0
+#     (convex depth bonus, depth_beta=2.0). Feeds
+#     level5-kdepth-bl-v01-model-family-qwen-da2.0.
+- launcher: generate_mcts_bl_cnt.py
+  hash: "cf3ae971"
+  config_root: mcts_bl_kdepth_v01_prm800k
+  overrides:
+    llm: llama_1b
+    prm: qwen_prm
+    data.level: 5
+    search.depth_alpha: 2.0
+  trials: 2
+  feeds: [level5-kdepth-bl-v01-model-family-qwen-da2.0]
+  group: kdepth-mcts-bl
+  priority: 2
+  recorded: false
+  note: level-5 qwen-PRM kdepth-v01 depth_alpha=2.0 llama-1b fp16
+- launcher: generate_mcts_bl_cnt.py
+  hash: "9f1c1cb6"
+  config_root: mcts_bl_kdepth_v01_prm800k
+  overrides:
+    llm: llama_3b
+    prm: qwen_prm
+    data.level: 5
+    search.depth_alpha: 2.0
+  trials: 2
+  feeds: [level5-kdepth-bl-v01-model-family-qwen-da2.0]
+  group: kdepth-mcts-bl
+  priority: 2
+  recorded: false
+  note: level-5 qwen-PRM kdepth-v01 depth_alpha=2.0 llama-3b fp16
+- launcher: generate_mcts_bl_cnt.py
+  hash: "20f1a25c"
+  config_root: mcts_bl_kdepth_v01_prm800k
+  overrides:
+    llm: qwen_3b
+    prm: qwen_prm
+    data.level: 5
+    search.depth_alpha: 2.0
+  trials: 2
+  feeds: [level5-kdepth-bl-v01-model-family-qwen-da2.0]
+  group: kdepth-mcts-bl
+  priority: 2
+  recorded: false
+  note: level-5 qwen-PRM kdepth-v01 depth_alpha=2.0 qwen-3b fp16
+- launcher: generate_mcts_bl_cnt.py
+  hash: "574331da"
+  config_root: mcts_bl_kdepth_v01_prm800k
+  overrides:
+    llm: qwen_7b_gptq_int4
+    prm: qwen_prm
+    data.level: 5
+    search.depth_alpha: 2.0
+  trials: 2
+  feeds: [level5-kdepth-bl-v01-model-family-qwen-da2.0]
+  group: kdepth-mcts-bl
+  priority: 2
+  recorded: false
+  note: level-5 qwen-PRM kdepth-v01 depth_alpha=2.0 qwen-7b gptq-int4
+- launcher: generate_mcts_bl_cnt.py
+  hash: "ad001285"
+  config_root: mcts_bl_kdepth_v01_prm800k
+  overrides:
+    llm: qwen_math_1_5b
+    prm: qwen_prm
+    data.level: 5
+    search.depth_alpha: 2.0
+  trials: 2
+  feeds: [level5-kdepth-bl-v01-model-family-qwen-da2.0]
+  group: kdepth-mcts-bl
+  priority: 2
+  recorded: false
+  note: level-5 qwen-PRM kdepth-v01 depth_alpha=2.0 qwen-math-1.5b fp16

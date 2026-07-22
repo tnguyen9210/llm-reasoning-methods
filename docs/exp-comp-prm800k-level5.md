@@ -67,64 +67,89 @@ Two activities, two shapes:
 > `docs/decisions/bl-kdepth-knapsack-bonus.md` for the
 > algorithms.
 
+> Each cell is the **best available** result for that (algorithm,
+> model) pair by pass@gb (tie → wei@gb). Non-bl rows (`cnt-mcts`,
+> `sem-mcts`) pull from their own model-family QwenPRM tables below;
+> `sem-mcts` takes the better of its ds_alpha=1/10 arms. The four
+> `*-bl-v01` rows pull the best config from that family's tuning
+> tables (kube: parent_blend arms; kdepth: the depth_alpha sweep;
+> sem-bl: ds_alpha=1/10). bl-v01 SEMs are from direct
+> compute_stats scoring (2 trials); hr/trial not captured for those.
+
+<!-- TEMPORARILY HIDDEN (2026-07-21): llama-1b fp16 block. Restore by
+     uncommenting. bl rows unrun; cnt/sem-mcts scored.
 **llama-1b fp16**
 
 | algorithm | trials | status | pass@gb | naive@gb | wei@gb | maj@gb | hr/trial |
 |---|---|---|---|---|---|---|---|
-| cnt-mcts | — | planned | — | — | — | — | — |
-| sem-mcts | — | planned | — | — | — | — | — |
+| cnt-mcts | 2 | scored | .3619<br>±.0294 | .2724 | .2127 | .1903 | 2.98 |
+| sem-mcts | 2 | scored | .3433<br>±.0291 | .2537 | .1978 | .1679 | 4.85 |
 | cnt-mcts-bl-v01 | — | planned | — | — | — | — | — |
 | kube-mcts-bl-v01 | — | planned | — | — | — | — | — |
 | kdepth-mcts-bl-v01 | — | planned | — | — | — | — | — |
 | sem-mcts-bl-v01 | — | planned | — | — | — | — | — |
+-->
 
 **llama-3b fp16**
 
 | algorithm | trials | status | pass@gb | naive@gb | wei@gb | maj@gb | hr/trial |
 |---|---|---|---|---|---|---|---|
-| cnt-mcts | — | planned | — | — | — | — | — |
-| sem-mcts | — | planned | — | — | — | — | — |
-| cnt-mcts-bl-v01 | — | planned | — | — | — | — | — |
-| kube-mcts-bl-v01 | — | planned | — | — | — | — | — |
-| kdepth-mcts-bl-v01 | — | planned | — | — | — | — | — |
+| cnt-mcts | 2 | scored | .5522<br>±.0304 | .4291 | .4104 | .3619 | 5.13 |
+| sem-mcts | 2 | scored | .5784<br>±.0302 | .4403 | .4291 | .3881 | 6.93 |
+| cnt-mcts-bl-v01 | 2 | scored | .3731<br>±.0296 | .3209 | .3321 | .3209 | — |
+| kube-mcts-bl-v01 | 2 | scored | .4851<br>±.0306 | .3918 | .3769 | .3731 | — |
+| kdepth-mcts-bl-v01 | 2 | scored | .5000<br>±.0306 | .4104 | .4030 | .3955 | — |
 | sem-mcts-bl-v01 | — | planned | — | — | — | — | — |
 
+<!-- TEMPORARILY HIDDEN (2026-07-21): qwen-3b fp16 block. Restore by
+     uncommenting. bl rows unrun; cnt/sem-mcts scored.
 **qwen-3b fp16**
 
 | algorithm | trials | status | pass@gb | naive@gb | wei@gb | maj@gb | hr/trial |
 |---|---|---|---|---|---|---|---|
-| cnt-mcts | — | planned | — | — | — | — | — |
-| sem-mcts | — | planned | — | — | — | — | — |
+| cnt-mcts | 2 | scored | .6978<br>±.0281 | .5896 | .5896 | .5410 | 4.63 |
+| sem-mcts | 2 | scored | .6903<br>±.0283 | .5784 | .5597 | .5373 | 6.20 |
 | cnt-mcts-bl-v01 | — | planned | — | — | — | — | — |
 | kube-mcts-bl-v01 | — | planned | — | — | — | — | — |
 | kdepth-mcts-bl-v01 | — | planned | — | — | — | — | — |
 | sem-mcts-bl-v01 | — | planned | — | — | — | — | — |
+-->
 
 **qwen-7b gptq-int4**
 
 | algorithm | trials | status | pass@gb | naive@gb | wei@gb | maj@gb | hr/trial |
 |---|---|---|---|---|---|---|---|
-| cnt-mcts | — | planned | — | — | — | — | — |
-| sem-mcts | — | planned | — | — | — | — | — |
-| cnt-mcts-bl-v01 | — | planned | — | — | — | — | — |
-| kube-mcts-bl-v01 | — | planned | — | — | — | — | — |
+| cnt-mcts | 2 | scored | .7537<br>±.0264 | .6157 | .5784 | .5634 | 4.19 |
+| sem-mcts | 2 | scored | .7873<br>±.0250 | .6045 | .5634 | .5634 | 5.54 |
+| cnt-mcts-bl-v01 | 2 | scored | .6343<br>±.0295 | .5709 | .5672 | .5522 | — |
+| kube-mcts-bl-v01 | 2 | scored | .7164<br>±.0276 | .6157 | .5858 | .5746 | — |
 | kdepth-mcts-bl-v01 | — | planned | — | — | — | — | — |
-| sem-mcts-bl-v01 | — | planned | — | — | — | — | — |
+| sem-mcts-bl-v01 | 2 | scored | .7537<br>±.0264 | .5597 | .5037 | .4478 | — |
 
 **qwen-math-1.5b fp16**
 
 | algorithm | trials | status | pass@gb | naive@gb | wei@gb | maj@gb | hr/trial |
 |---|---|---|---|---|---|---|---|
-| cnt-mcts | — | planned | — | — | — | — | — |
-| sem-mcts | — | planned | — | — | — | — | — |
-| cnt-mcts-bl-v01 | — | planned | — | — | — | — | — |
-| kube-mcts-bl-v01 | — | planned | — | — | — | — | — |
-| kdepth-mcts-bl-v01 | — | planned | — | — | — | — | — |
-| sem-mcts-bl-v01 | — | planned | — | — | — | — | — |
+| cnt-mcts | 2 | scored | .7575<br>±.0262 | .6418 | .6455 | .6269 | 3.37 |
+| sem-mcts | 2 | scored | .7500<br>±.0265 | .6343 | .6157 | .6007 | 4.79 |
+| cnt-mcts-bl-v01 | 2 | scored | .4366<br>±.0304 | .4142 | .4104 | .3955 | — |
+| kube-mcts-bl-v01 | 2 | scored | .6493<br>±.0292 | .5784 | .5672 | .5522 | — |
+| kdepth-mcts-bl-v01 | 2 | scored | .6455<br>±.0293 | .5522 | .5485 | .5336 | — |
+| sem-mcts-bl-v01 | 2 | scored | .6567<br>±.0291 | .5410 | .4627 | .4552 | — |
 
-> **Analysis.** No level-5 data yet — nothing to take away.
-> **Limitations / follow-up:** entire table planned; launch is
-> the level-4 counterpart's command plus `data.level=5`.
+> **Analysis.** Best-available snapshot, partially filled. Where
+> data exists, the ordering is model-driven: qwen-math-1.5b and
+> qwen-7b-gptq top every algorithm (pass@gb .65–.79), llama-1b
+> trails (.34–.36). Among algorithms on the filled cells,
+> non-bl cnt/sem-mcts lead their bl counterparts on the same model
+> (e.g. qwen-7b: sem-mcts .7873 vs sem-bl-v01 .7537; cnt-mcts .7537
+> vs cnt-bl-v01 .6343). Within the bl families, kube-bl-v01 is the
+> strongest baseline (qwen-7b .7164, qwenmath .6493).
+> **Limitations / follow-up:** gaps remain — llama-1b and qwen-3b
+> bl rows, qwen-7b kdepth, qwenmath sem-mcts all still planned/
+> unrun. bl-v01 cells come from fresh compute_stats scoring not yet
+> written into the per-family tables above, so those tables still
+> show `planned` for the same configs.
 
 ---
 
@@ -793,39 +818,128 @@ Two activities, two shapes:
 > agg_strategy=`last`, bs-4, d-20, b=80, prm_batch_size=1,
 > level=5.
 >
-> ⚠️ 3/9 cells scored, rest planned. kube_c is NOT comparable
+> ⚠️ 9/9 cells scored (2 trials each). kube_c is NOT comparable
 > across the two modes (different bonus shapes: log form vs. AZ
 > form) — compare kube_c values within a mode only. The alpha=1.0
 > row is the exact v01 control arm; path_decay has no
 > v01-equivalent arm.
 >
-> **W&B:** alpha=1.0 `26ty6v7n`, alpha=0.8 `z15wgie9`,
-> path_decay gamma=0.8/kube_c=0.5 `nvcah979`.
+> **W&B:** parent_blend alpha=1.0 `26ty6v7n`, alpha=0.8 `z15wgie9`,
+> alpha=0.6 `fxcn54og`; path_decay gamma=0.8/kube_c=0.5 `nvcah979`,
+> gamma=0.5/kube_c=2.0 `69mrzt65`, gamma=0.8/kube_c=2.0 `mi5gfiwv`,
+> gamma=1.0/kube_c=2.0 `ugkxb2de`, gamma=1.0/kube_c=0.5 `cs0rfgii`,
+> gamma=0.5/kube_c=0.5 `gthxems1`.
 
 | score_mode | alpha | gamma | kube_c | trials | status | pass@gb | naive@gb | wei@gb | maj@gb | hr/trial |
 |---|---|---|---|---|---|---|---|---|---|---|
 | parent_blend | 1.0 | — | — | 2 | scored | .6381<br>±.0294 | .5485<br>±.0305 | .5112<br>±.0306 | .5224<br>±.0306 | — |
 | parent_blend | 0.8 | — | — | 2 | scored | .6194<br>±.0297 | .5299<br>±.0305 | .5224<br>±.0306 | .5037<br>±.0306 | — |
-| parent_blend | 0.6 | — | — | — | planned | — | — | — | — | — |
-| path_decay | — | 1.0 | 2.0 | — | planned | — | — | — | — | — |
-| path_decay | — | 0.8 | 2.0 | — | planned | — | — | — | — | — |
-| path_decay | — | 0.5 | 2.0 | — | planned | — | — | — | — | — |
-| path_decay | — | 1.0 | 0.5 | — | planned | — | — | — | — | — |
+| parent_blend | 0.6 | — | — | 2 | scored | .6082<br>±.0299 | .5149<br>±.0306 | .5075<br>±.0306 | .4925<br>±.0306 | — |
+| path_decay | — | 1.0 | 2.0 | 2 | scored | .6082<br>±.0299 | .5149<br>±.0306 | .4776<br>±.0306 | .4739<br>±.0306 | — |
+| path_decay | — | 0.8 | 2.0 | 2 | scored | .6157<br>±.0298 | .5261<br>±.0306 | .4925<br>±.0306 | .4701<br>±.0305 | — |
+| path_decay | — | 0.5 | 2.0 | 2 | scored | .6269<br>±.0296 | .5112<br>±.0306 | .5000<br>±.0306 | .4851<br>±.0306 | — |
+| path_decay | — | 1.0 | 0.5 | 2 | scored | .6269<br>±.0296 | .5187<br>±.0306 | .4664<br>±.0305 | .4440<br>±.0304 | — |
 | path_decay | — | 0.8 | 0.5 | 2 | scored | .6269<br>±.0296 | .5261<br>±.0306 | .4813<br>±.0306 | .4813<br>±.0306 | — |
-| path_decay | — | 0.5 | 0.5 | — | planned | — | — | — | — | — |
+| path_decay | — | 0.5 | 0.5 | 2 | scored | .6231<br>±.0297 | .5187<br>±.0306 | .4925<br>±.0306 | .4888<br>±.0306 | — |
 
-> **Analysis.** No data yet — nothing to take away. Once filled,
-> the reads mirror the cnt table's three (blend vs. v01 control;
-> gamma at kube_c=0.5 vs. 2.0; best arm per mode), plus the
-> cross-family read this table uniquely enables: same-arm
-> kube-vs-cnt cells isolate the effect of cost normalization on
-> each score_mode. The winning mode is the survivor; the loser is
-> slated for deletion (docs/decisions-log.md 2026-07-19).
-> **Limitations / follow-up:** all cells planned — see
+> **Analysis.** All 9 cells scored. `parent_blend, alpha=1.0`
+> (pass@gb .6381 — the v01 control, no blend) is the best arm
+> overall; parent_blend is monotone in alpha (1.0 > 0.8 > 0.6),
+> i.e. blending toward the parent's q consistently hurts here.
+> path_decay tops out at .6269 (three tied cells: gamma=0.5/
+> kube_c=2.0, gamma=1.0/kube_c=0.5, gamma=0.8/kube_c=0.5) with no
+> clean gamma trend, and trails the best parent_blend cell. Reads
+> mirror the cnt table's three (blend vs. v01 control; gamma at
+> kube_c=0.5 vs. 2.0; best arm per mode), plus the cross-family
+> read this table uniquely enables: same-arm kube-vs-cnt cells
+> isolate the effect of cost normalization on each score_mode. The
+> winning mode is the survivor; the loser is slated for deletion
+> (docs/decisions-log.md 2026-07-19).
+> **Limitations / follow-up:** all 9 cells scored — see
 > experiments.yaml group `kube-mcts-bl-v02`, feeds
 > `level5-kube-bl-v02-score-mode-qwen3b`. kube_schedule=global not
 > swept here (would double the grid); a separate global-schedule
 > table is a later decision.
+
+#### model family, size, quantization comparison (QwenPRM, parent_blend/alpha=0.8)
+> **Compares:** model family, size, and quantization jointly at
+> the winning-candidate frontier score `score_mode=parent_blend`
+> with `alpha=0.8` — same 5-model/quant grid as cnt-mcts-bl-v01's
+> equivalent table above, so a direct kube_v02-vs-cnt-v01 (and,
+> across the bl families' model-family tables) read is possible
+> once filled. The qwen-3b cell is the **exact same run** as the
+> `parent_blend/alpha=0.8` arm of the score_mode sweep above
+> (cfg-a027f260, W&B `z15wgie9`) — reused, not re-run.
+>
+> **Fixed:** method=`mcts_bl_kube_v02`, **score_mode=parent_blend,
+> alpha=0.8**, kube_schedule=`parent`, kube_c=2.0 (default),
+> kube_affordable=true (default), prm=qwen, agg_strategy=`last`,
+> bs-4, d-20, b=80, prm_batch_size=1, level=5, tmpl=model-family
+> default (native for Qwen, custom for Llama).
+>
+> ⚠️ 1/5 cells scored (qwen-3b, reused from the score_mode sweep);
+> the other 4 planned.
+>
+> **W&B:** qwen-3b `z15wgie9`; others none yet (no runs exist).
+
+| llm | trials | status | pass@gb | naive@gb | wei@gb | maj@gb | hr/trial |
+|---|---|---|---|---|---|---|---|
+| llama-1b fp16 | — | planned | — | — | — | — | — |
+| llama-3b fp16 | — | planned | — | — | — | — | — |
+| qwen-3b fp16 | 2 | scored | .6194<br>±.0297 | .5299<br>±.0305 | .5224<br>±.0306 | .5037<br>±.0306 | — |
+| qwen-7b gptq-int4 | — | planned | — | — | — | — | — |
+| qwen-math-1.5b fp16 | — | planned | — | — | — | — | — |
+
+> **Analysis.** Only the qwen-3b cell is filled (pass@gb .6194).
+> Once the other four land, the key read is how parent_blend's
+> one-hop q-blend generalizes across model families and sizes at
+> the fixed alpha=0.8, and — cell-for-cell against the analogous
+> cnt-mcts-bl and kdepth-mcts-bl model-family tables — whether the
+> /cost normalization helps or hurts per model.
+> **Limitations / follow-up:** 4 cells planned — see
+> experiments.yaml group `kube-mcts-bl-v02`, feeds
+> `level5-kube-bl-v02-model-family-parent-blend-qwen`. qwen-3b
+> feeds both this table and the score_mode-sweep table.
+
+#### model family, size, quantization comparison (QwenPRM, parent_blend/alpha=1.0)
+> **Compares:** the same 5-model/quant grid as the
+> `parent_blend/alpha=0.8` table above, but at **alpha=1.0** — the
+> exact-v01 control arm (no parent blend: `blended_q = q(leaf)`,
+> recovering `BLMCTSKubeV01Config`'s kube_density exactly). Read
+> against the alpha=0.8 table, this isolates whether the one-hop
+> q-blend helps or hurts per model family. On qwen-3b the control
+> currently wins (.6381 vs .6194), so this table tests whether
+> that holds across models. qwen-3b reuses the score_mode sweep's
+> alpha=1.0 arm (cfg-4db0f6ff, W&B `26ty6v7n`).
+>
+> **Fixed:** method=`mcts_bl_kube_v02`, **score_mode=parent_blend,
+> alpha=1.0**, kube_schedule=`parent`, kube_c=2.0 (default),
+> kube_affordable=true (default), prm=qwen, agg_strategy=`last`,
+> bs-4, d-20, b=80, prm_batch_size=1, level=5, tmpl=model-family
+> default (native for Qwen, custom for Llama).
+>
+> ⚠️ 1/5 cells scored (qwen-3b, reused from the score_mode sweep);
+> the other 4 planned.
+>
+> **W&B:** qwen-3b `26ty6v7n`; others none yet (no runs exist).
+
+| llm | trials | status | pass@gb | naive@gb | wei@gb | maj@gb | hr/trial |
+|---|---|---|---|---|---|---|---|
+| llama-1b fp16 | — | planned | — | — | — | — | — |
+| llama-3b fp16 | — | planned | — | — | — | — | — |
+| qwen-3b fp16 | 2 | scored | .6381<br>±.0294 | .5485<br>±.0305 | .5112<br>±.0306 | .5224<br>±.0306 | — |
+| qwen-7b gptq-int4 | — | planned | — | — | — | — | — |
+| qwen-math-1.5b fp16 | — | planned | — | — | — | — | — |
+
+> **Analysis.** Only the qwen-3b cell is filled (pass@gb .6381,
+> above the alpha=0.8 cell's .6194). Once the other four land, the
+> key read is the per-model alpha=1.0-vs-0.8 delta — whether
+> "no blend beats blend" is a qwen-3b quirk or holds across the
+> family.
+> **Limitations / follow-up:** 4 cells planned — see
+> experiments.yaml group `kube-mcts-bl-v02`, feeds
+> `level5-kube-bl-v02-model-family-parent-blend-a1.0-qwen`. qwen-3b
+> feeds both this table and the score_mode-sweep table.
 
 ### kdepth-mcts-bl-v01
 
@@ -854,8 +968,211 @@ Two activities, two shapes:
 > **Limitations / follow-up:** entire table planned; launch is
 > the level-4 counterpart's command plus `data.level=5`.
 
-### sem-mcts-bl (v01)
+#### model family, size, quantization comparison (QwenPRM, depth_alpha=0.5)
+> **Compares:** model family, size, and quantization jointly —
+> same 5-model/quant grid as the `depth_alpha=1.0` table above,
+> but with a **concave** depth-bonus curve (`f(z)=1-z^0.5`, bonus
+> stays high deeper into the tree). Read against the α=1.0 and
+> α=2.0 tables, this isolates how the depth-bonus curvature
+> interacts with model family/size at fixed `depth_beta=2.0`.
+>
+> **Fixed:** method=`mcts_bl_kdepth_v01`, prm=qwen, agg_strategy=
+> `last`, depth_beta=2.0, **depth_alpha=0.5**, kube_affordable=true
+> (default), bs-4, d-20, b=80, prm_batch_size=1, tmpl=model-family
+> default (native for Qwen, custom for Llama).
+>
+> ⚠️ Entirely planned, no runs yet.
+>
+> **W&B:** none yet (no runs exist).
 
+| llm | trials | status | pass@gb | naive@gb | wei@gb | maj@gb | hr/trial |
+|---|---|---|---|---|---|---|---|
+| llama-1b fp16 | — | planned | — | — | — | — | — |
+| llama-3b fp16 | — | planned | — | — | — | — | — |
+| qwen-3b fp16 | — | planned | — | — | — | — | — |
+| qwen-7b gptq-int4 | — | planned | — | — | — | — | — |
+| qwen-math-1.5b fp16 | — | planned | — | — | — | — | — |
+
+> **Analysis.** No data yet — nothing to take away. Once filled,
+> the key read is whether a concave (depth-tolerant) bonus helps
+> or hurts relative to the linear α=1.0 baseline, and whether
+> that effect is consistent across model families.
+> **Limitations / follow-up:** all cells planned — see
+> experiments.yaml group `kdepth-mcts-bl`, feeds
+> `level5-kdepth-bl-v01-model-family-qwen-da0.5`.
+
+#### model family, size, quantization comparison (QwenPRM, depth_alpha=2.0)
+> **Compares:** model family, size, and quantization jointly —
+> same 5-model/quant grid as the `depth_alpha=1.0` table above,
+> but with a **convex** depth-bonus curve (`f(z)=1-z^2`, bonus
+> collapses fast → strongly favors shallow nodes). The α=2.0
+> counterpart to the α=0.5 table, so the three tables
+> (0.5/1.0/2.0) span the curvature axis at fixed
+> `depth_beta=2.0`.
+>
+> **Fixed:** method=`mcts_bl_kdepth_v01`, prm=qwen, agg_strategy=
+> `last`, depth_beta=2.0, **depth_alpha=2.0**, kube_affordable=true
+> (default), bs-4, d-20, b=80, prm_batch_size=1, tmpl=model-family
+> default (native for Qwen, custom for Llama).
+>
+> ⚠️ 1/5 cells scored (qwen-math-1.5b); the other 4 planned.
+>
+> **W&B:** qwen-math-1.5b on disk as cfg-ad001285 (scored via
+> prepare_scored_dataset + compute_stats_basics, 2 trials); no
+> W&B run id captured. Others: none yet.
+
+| llm | trials | status | pass@gb | naive@gb | wei@gb | maj@gb | hr/trial |
+|---|---|---|---|---|---|---|---|
+| llama-1b fp16 | — | planned | — | — | — | — | — |
+| llama-3b fp16 | — | planned | — | — | — | — | — |
+| qwen-3b fp16 | — | planned | — | — | — | — | — |
+| qwen-7b gptq-int4 | — | planned | — | — | — | — | — |
+| qwen-math-1.5b fp16 | 2 | scored | .6455<br>±.0293 | .5522<br>±.0304 | .5485<br>±.0305 | .5336<br>±.0305 | — |
+
+> **Analysis.** One data point so far (qwen-math-1.5b): pass@gb
+> .6455 ± .0293 at α=2.0. For the same model/quant the α=0.5
+> and α=1.0 tables give the cross-curvature comparison; the
+> full read (whether the convex, shallow-favoring bonus shifts
+> realized depth and accuracy relative to α=1.0, and whether
+> `1/cost` deep-node inflation cancels it) waits on the other 4
+> cells (see docs/decisions/bl-kdepth-knapsack-bonus.md).
+> **Limitations / follow-up:** all cells planned — see
+> experiments.yaml group `kdepth-mcts-bl`, feeds
+> `level5-kdepth-bl-v01-model-family-qwen-da2.0`.
+
+### kdepth-mcts-bl-v02
+
+#### score_mode sweep: parent_blend (alpha) vs. path_decay (gamma) (qwen-3b, QwenPRM)
+> **Compares:** the two selectable v02 frontier densities
+> head-to-head, mirroring the kube-mcts-bl-v02 score_mode sweep
+> above — but on kdepth's density, whose exploration term is the
+> fixed DEPTH bonus (`depth_beta*(1-depth_frac**depth_alpha)`),
+> not a visit/clock bonus. So the score_mode blend here touches
+> ONLY the value (q) term; the depth bonus and `/cost` are shared
+> across both modes (see docs/decisions-log.md 2026-07-21). There
+> is no `kube_c` axis (kdepth has no bonus coefficient to sweep —
+> `depth_beta`/`depth_alpha` are held fixed), so path_decay varies
+> gamma alone. The read: does path-aware value (one-hop parent
+> blend, or gamma-decayed full path) beat plain own-q under a
+> depth-shaped frontier?
+>
+> **Fixed:** method=`mcts_bl_kdepth_v02`, depth_beta=2.0,
+> depth_alpha=1.0, kube_affordable=true, llm=qwen-3b fp16 (native
+> tmpl), prm=qwen, agg_strategy=`last`, bs-4, d-20, b=80,
+> prm_batch_size=1, level=5.
+>
+> ⚠️ Entirely planned, no runs yet. The `parent_blend, alpha=1.0`
+> row is the exact v01 control arm (own-q only, recovers
+> `BLMCTSKdepthV01Config`'s depth_density exactly);
+> `path_decay, gamma=0.0` would also reduce to own-q but is NOT
+> included as a distinct control (v01 == parent_blend alpha=1.0).
+>
+> **W&B:** none yet (no runs exist).
+
+| score_mode | alpha | gamma | trials | status | pass@gb | naive@gb | wei@gb | maj@gb | hr/trial |
+|---|---|---|---|---|---|---|---|---|---|
+| parent_blend | 1.0 | — | — | planned | — | — | — | — | — |
+| parent_blend | 0.8 | — | — | planned | — | — | — | — | — |
+| parent_blend | 0.6 | — | — | planned | — | — | — | — | — |
+| path_decay | — | 1.0 | — | planned | — | — | — | — | — |
+| path_decay | — | 0.8 | — | planned | — | — | — | — | — |
+| path_decay | — | 0.5 | — | planned | — | — | — | — | — |
+
+> **Analysis.** No data yet — nothing to take away. Once filled,
+> the key reads are: (1) whether any path-aware value beats the
+> alpha=1.0 own-q control under a depth-shaped frontier (the
+> kube-v02 sweep found the control won there — does that hold
+> when the exploration term is depth, not visits?); (2)
+> parent_blend's alpha trend; (3) path_decay's gamma trend; and
+> (4) the cross-family read against the kube-v02 and cnt-v02
+> score_mode sweeps — same value-blend, different exploration
+> term (depth vs. AZ-visit vs. PUCT-visit).
+> **Limitations / follow-up:** all 6 cells planned — see
+> experiments.yaml group `kdepth-mcts-bl`, feeds
+> `level5-kdepth-bl-v02-score-mode-qwen3b`. depth_beta/depth_alpha
+> not swept here (fixed at the v01 defaults); a curvature ×
+> score_mode grid is a later decision.
+
+#### model family, size, quantization comparison (QwenPRM, parent_blend/alpha=0.8)
+> **Compares:** model family, size, and quantization jointly at
+> `score_mode=parent_blend` with `alpha=0.8` — same 5-model/quant
+> grid as kdepth-mcts-bl-v01's and kube-mcts-bl-v02's equivalent
+> tables, so a direct v01-vs-v02 (blend vs. no channel) and
+> cross-family (kdepth vs. kube) read is possible once filled. The
+> qwen-3b cell is the **exact same run** as the
+> `parent_blend/alpha=0.8` arm of the score_mode sweep above
+> (cfg-414a9f81) — reused, not re-run.
+>
+> **Fixed:** method=`mcts_bl_kdepth_v02`, **score_mode=parent_blend,
+> alpha=0.8**, depth_beta=2.0, depth_alpha=1.0, kube_affordable=true
+> (default), prm=qwen, agg_strategy=`last`, bs-4, d-20, b=80,
+> prm_batch_size=1, level=5, tmpl=model-family default (native for
+> Qwen, custom for Llama).
+>
+> ⚠️ Entirely planned, no runs yet (qwen-3b reuses the score_mode
+> sweep's alpha=0.8 arm once that runs).
+>
+> **W&B:** none yet (no runs exist).
+
+| llm | trials | status | pass@gb | naive@gb | wei@gb | maj@gb | hr/trial |
+|---|---|---|---|---|---|---|---|
+| llama-1b fp16 | — | planned | — | — | — | — | — |
+| llama-3b fp16 | — | planned | — | — | — | — | — |
+| qwen-3b fp16 | — | planned | — | — | — | — | — |
+| qwen-7b gptq-int4 | — | planned | — | — | — | — | — |
+| qwen-math-1.5b fp16 | — | planned | — | — | — | — | — |
+
+> **Analysis.** No data yet. Once filled, the key read is how
+> parent_blend's one-hop q-blend generalizes across model families
+> at fixed alpha=0.8 under a depth-shaped frontier, and —
+> cell-for-cell against the kube-v02 and cnt-v02 model-family
+> tables — whether the depth bonus (vs. visit bonus) helps or
+> hurts per model.
+> **Limitations / follow-up:** all 5 cells planned — see
+> experiments.yaml group `kdepth-mcts-bl`, feeds
+> `level5-kdepth-bl-v02-model-family-parent-blend-qwen`. qwen-3b
+> feeds both this table and the score_mode-sweep table.
+
+#### model family, size, quantization comparison (QwenPRM, parent_blend/alpha=1.0)
+> **Compares:** the same 5-model/quant grid as the
+> `parent_blend/alpha=0.8` table above, but at **alpha=1.0** — the
+> exact-v01 control arm (no parent blend: `blended_q = q(leaf)`,
+> recovering `BLMCTSKdepthV01Config`'s depth_density exactly). Read
+> against the alpha=0.8 table, this isolates whether the one-hop
+> q-blend helps or hurts per model family under a depth-shaped
+> frontier. qwen-3b reuses the score_mode sweep's alpha=1.0 arm
+> (cfg-0483dfe8).
+>
+> **Fixed:** method=`mcts_bl_kdepth_v02`, **score_mode=parent_blend,
+> alpha=1.0**, depth_beta=2.0, depth_alpha=1.0, kube_affordable=true
+> (default), prm=qwen, agg_strategy=`last`, bs-4, d-20, b=80,
+> prm_batch_size=1, level=5, tmpl=model-family default (native for
+> Qwen, custom for Llama).
+>
+> ⚠️ Entirely planned, no runs yet (qwen-3b reuses the score_mode
+> sweep's alpha=1.0 arm once that runs).
+>
+> **W&B:** none yet (no runs exist).
+
+| llm | trials | status | pass@gb | naive@gb | wei@gb | maj@gb | hr/trial |
+|---|---|---|---|---|---|---|---|
+| llama-1b fp16 | — | planned | — | — | — | — | — |
+| llama-3b fp16 | — | planned | — | — | — | — | — |
+| qwen-3b fp16 | — | planned | — | — | — | — | — |
+| qwen-7b gptq-int4 | — | planned | — | — | — | — | — |
+| qwen-math-1.5b fp16 | — | planned | — | — | — | — | — |
+
+> **Analysis.** No data yet. Once filled, the key read is the
+> per-model alpha=1.0-vs-0.8 delta — whether "no blend beats
+> blend" (as the kube-v02 sweep found on qwen-3b) holds across the
+> family under a depth-shaped frontier.
+> **Limitations / follow-up:** all 5 cells planned — see
+> experiments.yaml group `kdepth-mcts-bl`, feeds
+> `level5-kdepth-bl-v02-model-family-parent-blend-a1.0-qwen`.
+> qwen-3b feeds both this table and the score_mode-sweep table.
+
+### sem-mcts-bl-v01
+could you help me add these sem-mcts-bl-v01 experiments to queue, all priority=1 except priority for llama-1b and qweb-3b=1.7
 #### model family, size, quantization comparison (QwenPRM, lam=0.01/ds_alpha=10)
 > **Compares:** model family, size, and quantization jointly —
 > same 5-model/quant grid as cnt-mcts-bl-v01's equivalent table
@@ -922,6 +1239,53 @@ Two activities, two shapes:
 > search.lam=0.01 search.ds_alpha=1` (NOTE: `lam=0.01`, not the
 > level-4 bl_sem_v01 tables' `lam=0.1`; anchored to the sem_v02
 > `lam=0.01` checkpoint, see Compares).
+
+### sem-mcts-bl-v02
+
+#### model family, size, quantization comparison (QwenPRM, parent_blend/alpha=1.0, lam=0.01/ds_alpha=10)
+> **Compares:** model family, size, and quantization jointly for
+> sem-mcts-bl-v02 at its selectable frontier value term fixed to
+> `score_mode=parent_blend, alpha=1.0` (the no-blend control:
+> `q_term = q(leaf)`, byte-identical to `score_mode=own`), with the
+> diversity knobs pinned to the same `lam=0.01/ds_alpha=10`
+> (`w_eff=100`) checkpoint as the sem-mcts-bl-v01 table above and
+> sem-mcts (v02)'s tables — so bl_sem_v02-vs-bl_sem_v01 and, cell-
+> for-cell, bl_sem_v02-vs-kube_v02 (both at parent_blend/alpha=1.0)
+> reads are possible once filled.
+>
+> **Fixed:** method=`mcts_bl_sem_v02`, **score_mode=parent_blend,
+> alpha=1.0**, embeds_source=prm, **lam=0.01, ds_alpha=10**
+> (`w_eff=100`), ds_beta=1.0 (default), ds_alpha_schedule=global
+> (default), prm=qwen, agg_strategy=`last`, bs-4, d-20, b=80,
+> prm_batch_size=1, level=5, tmpl=model-family default (native for
+> Qwen, custom for Llama).
+>
+> ⚠️ Entirely planned, no runs yet.
+>
+> **W&B:** none yet (no runs exist).
+
+| llm | trials | status | pass@gb | naive@gb | wei@gb | maj@gb | hr/trial |
+|---|---|---|---|---|---|---|---|
+| llama-1b fp16 | — | planned | — | — | — | — | — |
+| llama-3b fp16 | — | planned | — | — | — | — | — |
+| qwen-3b fp16 | — | planned | — | — | — | — | — |
+| qwen-7b gptq-int4 | — | planned | — | — | — | — | — |
+| qwen-math-1.5b fp16 | — | planned | — | — | — | — | — |
+
+> **Analysis.** No data yet — nothing to take away. Once filled,
+> the key reads are (1) bl_sem_v02 vs. bl_sem_v01 at the same
+> lam/ds_alpha — what the v02 eager-terminal + score_mode machinery
+> buys on the diversity family, and (2) the cell-for-cell
+> parent_blend/alpha=1.0 comparison against the kube-mcts-bl-v02
+> model-family table, isolating the diversity value term vs. the
+> KUBE density at a shared no-blend control.
+> **Limitations / follow-up:** entire table planned — see
+> experiments.yaml group `sem-mcts-bl` (feeds
+> `level5-sem-bl-v02-model-family-parent-blend-a1.0-qwen`). Launch
+> per cell: `generate_mcts_sem.py --config-name
+> mcts_bl_sem_v02_prm800k llm=<model> prm=qwen_prm data.level=5
+> search.score_mode=parent_blend search.alpha=1.0 search.lam=0.01
+> search.ds_alpha=10`.
 
 ## Tuning tables [gen_budget=160, 320, …] *(future)*
 > Add a new `## Tuning tables [gen_budget=N]` section, then
