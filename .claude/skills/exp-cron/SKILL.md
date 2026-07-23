@@ -65,7 +65,7 @@ Round a non-clean INTERVAL to the nearest expressible cadence
 and tell Tuan what you rounded to.
 
 Write the **stop-time** (now + DURATION, absolute local time) to
-`orchestration/exp_cron_stop.txt` (gitignored dir). Second line:
+`orchestration/runtime/exp_cron_stop.txt` (gitignored dir). Second line:
 the cron job id (for clean manual teardown). This file is the
 bound the firings read.
 
@@ -92,8 +92,8 @@ Woken by `/exp-cron TICK sentinel=S stop_at=T`:
 1. **Check the clock FIRST.** If now ≥ T (window over):
    - `CronList` → find the job whose prompt contains sentinel
      `S` → `CronDelete` it. (Fallback: id on line 2 of
-     `orchestration/exp_cron_stop.txt`.)
-   - Clear `orchestration/exp_cron_stop.txt`.
+     `orchestration/runtime/exp_cron_stop.txt`.)
+   - Clear `orchestration/runtime/exp_cron_stop.txt`.
    - Final report (§6). Do NOT launch again.
 2. Else (inside the window): run one launch pass (§5), report
    prefixed `exp-cron launch (window ends T)`. Leave the cron
@@ -111,14 +111,14 @@ Each firing does exactly this:
    squeue -u tnguyen9210 -h -t R -o "%i %P %N %L"
    ```
    Keep rows whose partition starts with `gpu`. Rewrite
-   `orchestration/jobs.yaml`'s `jobs:` list (one
+   `orchestration/runtime/jobs.yaml`'s `jobs:` list (one
    `- <jobid>   # <node> (<%L> left)` line each), carrying
    `exclude:` over unchanged (it is load-bearing — a jupyter
    session Tuan opened looks idle). Capture `%L` (time
    remaining) per job for the walltime guard.
 2. **Read the worklist.**
    ```
-   python status.py --queue
+   python orchestration/status.py --queue
    ```
    Each entry prints as a `# id ledger prio expected_hr hash`
    comment plus its exact launch command, priority-sorted.
@@ -146,7 +146,7 @@ Each firing does exactly this:
      firing (a fresh launch takes ~1-2 min to occupy its GPU —
      never re-probe a claimed job and double-book it).
    - Targeted Edit on that entry in its ledger file
-     (`experiments/<ledger>.yaml`; `--queue` printed the
+     (`orchestration/ledgers/<ledger>.yaml`; `--queue` printed the
      ledger): `status: inqueue -> running`, and append
      ```
      launch:

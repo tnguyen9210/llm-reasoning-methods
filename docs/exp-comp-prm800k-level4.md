@@ -692,7 +692,7 @@ instead of one wide sparse grid.)
 > graphs. Informal because that cell is a separate v01-flavor
 > run, not this table's False arm.
 > **Limitations / follow-up:** ledger
-> experiments/prm800k-level4.yaml (`cnt-mcts-e829c53b`), feeds
+> orchestration/ledgers/prm800k-level4.yaml (`cnt-mcts-e829c53b`), feeds
 > `tbl-adf2f8`. The controlled read needs the False-arm rerun.
 
 #### model family, size, quantization comparison

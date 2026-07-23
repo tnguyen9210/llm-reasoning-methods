@@ -2027,7 +2027,12 @@
   trials: 2
   feeds: []
   group: sem-mcts-bl
-  status: inqueue
+  status: running
+  launch:
+    job_id: 23344018
+    node: r5u25n1
+    pid: 1810910
+    at: 2026-07-23 11:02
   priority: 2
   history:
     - {at: 2026-07-22 22:15, job_id: null, outcome: stalled,

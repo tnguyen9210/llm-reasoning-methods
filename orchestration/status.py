@@ -1,5 +1,5 @@
-"""Reconcile declared experiment intent (experiments.yaml) against
-on-disk artifacts and W&B, and print a per-entry status.
+"""Reconcile declared experiment intent (orchestration/ledgers/*.yaml)
+against on-disk artifacts and W&B, and print a per-entry status.
 
 This is the read-only "computed state" layer. The yaml is the
 append-only ledger of what you MEANT to run; this script overlays
@@ -20,20 +20,20 @@ Statuses
   orphan    a result dir whose hash matches NO yaml entry
             (printed only by --backfill / --orphans)
 
-Usage
------
-  python status.py                      # all entries, no W&B call
-  python status.py --wandb              # also classify partial->stalled
-  python status.py --status stalled
-  python status.py --group sem-mcts
-  python status.py --done --not-recorded
-  python status.py --planned --priority 1
-  python status.py --backfill           # emit yaml for orphan dirs
-  python status.py --planned --commands # launch cmds for planned entries
-  python status.py --verify             # assert all hashes still match
-  python status.py --check mcts_cnt_prm800k llm=qwen_3b prm=qwen_prm \
-                          search.gen_budget=320   # probe a candidate cell
-  python status.py --verify --jobs 1    # force serial (debugging)
+Usage (from the repo root)
+--------------------------
+  python orchestration/status.py           # all entries, no W&B call
+  python orchestration/status.py --wandb   # classify partial->stalled
+  python orchestration/status.py --status stalled
+  python orchestration/status.py --group sem-mcts
+  python orchestration/status.py --done --not-recorded
+  python orchestration/status.py --planned --priority 1
+  python orchestration/status.py --backfill  # yaml for orphan dirs
+  python orchestration/status.py --planned --commands  # launch cmds
+  python orchestration/status.py --verify  # assert hashes still match
+  python orchestration/status.py --check mcts_cnt_prm800k \
+      llm=qwen_3b prm=qwen_prm search.gen_budget=320  # probe a cell
+  python orchestration/status.py --verify --jobs 1  # force serial
 
 Per-entry composes run in parallel forked workers by default
 (min(48, workload) -- the nodes have 96 CPU threads, 48 assumed
@@ -59,7 +59,14 @@ import yaml
 from hydra import compose, initialize_config_dir
 from hydra.core.config_store import ConfigStore
 
-from utils.configs import (
+# status.py lives in orchestration/; the repo root (conf/, docs/,
+# results/, utils/) is one level up. Put it on sys.path so repo
+# imports resolve when invoked as `python orchestration/status.py`.
+ROOT = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
+if ROOT not in sys.path:
+    sys.path.insert(0, ROOT)
+
+from utils.configs import (  # noqa: E402
     ExpConfig, MCTSCntConfig, MCTSSemV01Config, MCTSSemV02Config,
     BLMCTSCntConfig, BLMCTSCntV02Config,
     BLMCTSKubeV01Config, BLMCTSKubeV02Config,
@@ -68,10 +75,9 @@ from utils.configs import (
     config_hash, config_name, level_dir, results_root, MANIFEST_FILE,
 )
 
-ROOT = os.path.dirname(os.path.abspath(__file__))
 CONF_DIR = f"{ROOT}/conf"
 QUEUE_FILE = f"{ROOT}/experiments.yaml"   # legacy single-file ledger
-LEDGER_DIR = f"{ROOT}/experiments"        # per-doc ledgers (v2)
+LEDGER_DIR = f"{ROOT}/orchestration/ledgers"   # per-doc ledgers (v2)
 RESULTS_DIR = f"{ROOT}/results"
 
 # Ledger stem <-> tracking doc. `misc` collects entries with no
@@ -263,10 +269,10 @@ def normalize_overrides(raw):
 
 
 def load_ledgers():
-    """Load every per-doc ledger under experiments/ into one flat
-    list, annotating each entry with `_ledger` (its file stem) and
-    `overrides_list`. Falls back to the legacy single-file
-    experiments.yaml (stem "legacy") when experiments/ is absent,
+    """Load every per-doc ledger under orchestration/ledgers/ into
+    one flat list, annotating each entry with `_ledger` (its file
+    stem) and `overrides_list`. Falls back to the legacy single-file
+    experiments.yaml (stem "legacy") when the ledgers dir is absent,
     so this works before, during, and after the v2 migration."""
     entries = []
     paths = sorted(glob.glob(f"{LEDGER_DIR}/*.yaml"))
@@ -1252,7 +1258,7 @@ def main():
             print("# no un-queued result dirs found (nothing to backfill)")
             return
         print(f"# {len(new)} un-queued result dir(s) -- review and append "
-              f"to experiments.yaml:")
+              f"to the matching orchestration/ledgers/*.yaml:")
         # Strip the helper keys' leading underscore note for readability.
         print(yaml.safe_dump(new, sort_keys=False, allow_unicode=True))
         return

@@ -32,17 +32,18 @@ GPUs, flip ledger status, exit.
 
 ## 1. Files
 
-- `experiments/*.yaml` — per-doc ledgers (workflow v2). The ONLY
-  fields this skill touches, via targeted Edit on one entry at a
-  time (never a full-file rewrite): `status: inqueue -> running`
-  and the appended `launch: {job_id, node, pid, at}` block.
-- `orchestration/jobs.yaml` — allocation pool. `exclude:` (jobs
-  to never touch — PRESERVE across refreshes) and `jobs:`
-  (auto-rewritten every cycle from squeue).
+- `orchestration/ledgers/*.yaml` — per-doc ledgers (workflow
+  v2). The ONLY fields this skill touches, via targeted Edit on
+  one entry at a time (never a full-file rewrite): `status:
+  inqueue -> running` and the appended
+  `launch: {job_id, node, pid, at}` block.
+- `orchestration/runtime/jobs.yaml` — allocation pool.
+  `exclude:` (jobs to never touch — PRESERVE across refreshes)
+  and `jobs:` (auto-rewritten every cycle from squeue).
 
 Never read the raw ledgers for the worklist — that is what
-`python status.py --queue` is for (compact, priority-sorted,
-with ready-to-run commands).
+`python orchestration/status.py --queue` is for (compact,
+priority-sorted, with ready-to-run commands).
 
 ## 2. Refresh the allocation pool
 
@@ -60,7 +61,7 @@ jobs never appear (`-t R`) — correct: you cannot
 ## 3. Read the worklist
 
 ```
-python status.py --queue
+python orchestration/status.py --queue
 ```
 
 Each entry prints as a `# id ledger prio expected_hr hash`
@@ -109,7 +110,8 @@ disown
   cycle (a fresh launch takes ~1-2 min to occupy its GPU —
   never re-probe a claimed job).
 - Then a **targeted Edit on that entry in its ledger file**
-  (`experiments/<ledger>.yaml`; `--queue` printed the ledger):
+  (`orchestration/ledgers/<ledger>.yaml`; `--queue` printed
+  the ledger):
   - `status: inqueue` -> `status: running`
   - append:
     ```

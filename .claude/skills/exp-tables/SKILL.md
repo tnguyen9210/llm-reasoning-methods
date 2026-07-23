@@ -14,8 +14,9 @@ Creates two synchronized artifacts from one intent statement:
 1. a `####` comparison table in the right `docs/exp-comp-*.md`,
    every row's `status` reflecting repo reality, and
 2. matching entries in that doc's ledger
-   (`experiments/<stem>.yaml`) — `status: planned` for net-new
-   cells, REUSED entries for cells that already exist anywhere.
+   (`orchestration/ledgers/<stem>.yaml`) — `status: planned`
+   for net-new cells, REUSED entries for cells that already
+   exist anywhere.
 
 It does NOT launch runs (`exp-run`) and does NOT commit.
 
@@ -80,7 +81,7 @@ sibling tables.
 1. **Resolve cells** (model × varied values + fixed overrides).
 2. **Dedup every cell:**
    ```
-   python status.py --dedup <config_root> <key=val> ...
+   python orchestration/status.py --dedup <config_root> <key=val> ...
    ```
    Record `hash, on_disk, n_done, n_scored, matches`. All new
    hashes must be distinct (a within-set collision = spec bug;
@@ -94,7 +95,7 @@ sibling tables.
    Reused scored cells get their numbers copied from the doc
    cell the matched entry's `feeds` points at (token-cheap, no
    recompute); other reused cells get the entry's live status.
-5. **Ledger writes** in `experiments/<stem>.yaml`:
+5. **Ledger writes** in `orchestration/ledgers/<stem>.yaml`:
    - net-new cell -> append (bottom, never reorder):
      ```yaml
      - id: <human-id, queue-style>
@@ -110,17 +111,18 @@ sibling tables.
      ```
    - matched cell -> targeted Edit on the existing entry: append
      this table's feeds key to its `feeds:` list. Nothing else.
-6. **Mint the table's stable ID:** `python status.py
-   --mint-table-ids --apply` stamps a
+6. **Mint the table's stable ID:** `python
+   orchestration/status.py --mint-table-ids --apply` stamps a
    `<!-- table-id: tbl-xxxxxx -->` line under the new heading
    (immutable, survives retitles; see
    docs/decisions/stable-table-ids.md). Prefer that tbl-id in
    the new entries' `feeds:` (with a `# <table>` comment); the
    human feeds key still works but is only a label.
-7. **Re-verify:** `python status.py --verify --ledger <stem>`
-   (composes + global id/hash uniqueness) and eyeball
-   `python status.py --sync-doc <stem>` (dry-run) — it should
-   propose no changes to your fresh table.
+7. **Re-verify:** `python orchestration/status.py --verify
+   --ledger <stem>` (composes + global id/hash uniqueness) and
+   eyeball `python orchestration/status.py --sync-doc <stem>`
+   (dry-run) — it should propose no changes to your fresh
+   table.
 8. **Report**: N cells (new/reused/scored), the feeds key, and
    what to do next: Tuan reviews + sets `status: inqueue` +
    `priority` on the rows he wants run (on request, apply that

@@ -23,5 +23,7 @@ zlogs/
 .claude/settings.local.json
 .claude/scheduled_tasks.lock
 
-# Orchestrator: local-only, not pushed (Tuan's request 2026-07-13)
-orchestration/
+# Orchestration runtime state (jobs.yaml, cron stop files): local-only,
+# not pushed (Tuan's request 2026-07-13; narrowed from orchestration/ on
+# 2026-07-23 when status.py + ledgers/ moved in — those are tracked)
+orchestration/runtime/

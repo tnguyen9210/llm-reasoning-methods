@@ -7,5 +7,5 @@
 Full content in git history (last in-repo revision: ea8b0fa).
 Mechanism summary: every `####` table carries an immutable
 `<!-- table-id: tbl-xxxxxx -->`; mint via
-`python status.py --mint-table-ids --apply`; ledger `feeds`
-accepts tbl-ids or legacy keys.
+`python orchestration/status.py --mint-table-ids --apply`;
+ledger `feeds` accepts tbl-ids or legacy keys.

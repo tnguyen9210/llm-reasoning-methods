@@ -34,7 +34,7 @@ old workflow starved on.
 ## 1. Input — one command, never raw ledgers
 
 ```
-python status.py --check-running [--ledger STEM]
+python orchestration/status.py --check-running [--ledger STEM]
 ```
 
 One line per `running` entry:
@@ -83,8 +83,8 @@ entries as "blocked: needs GPU scoring".
 2. Audit-write every doc cell the entry's `feeds` names (§4).
 3. Targeted Edit in the entry's ledger: `status: running ->
    scored`.
-4. After all entries of a doc: `python status.py --sync-doc
-   <stem> --apply` to settle remaining status cells
+4. After all entries of a doc: `python orchestration/status.py
+   --sync-doc <stem> --apply` to settle remaining status cells
    (conservative; its report lists anything it wouldn't touch).
 
 ### stalled / missing -> mark failed, REPORT (never relaunch)

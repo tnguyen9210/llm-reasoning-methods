@@ -1,6 +1,12 @@
 """One-time migration: experiments.yaml + orchestration/queue.yaml
 -> per-doc ledgers under experiments/ (workflow v2).
 
+HISTORICAL -- completed 2026-07-22; its inputs were retired
+2026-07-23 and the tooling then moved (status.py ->
+orchestration/, ledgers -> orchestration/ledgers/), so the
+`import status` below no longer resolves. Kept for the record;
+do not run.
+
 Merges the 225-entry append-only ledger with the 151-entry
 orchestration queue into per-doc ledger files, one per tracking
 doc (experiments/<stem>.yaml <-> docs/exp-comp-<stem>.md), seeding

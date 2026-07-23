@@ -803,7 +803,7 @@ Two activities, two shapes:
 > search branches most. pd searches deeper (depth ~11 vs ~9)
 > and keeps ~1.7x more completions on the same 80-gen budget.
 > **Limitations / follow-up:** ledger
-> experiments/prm800k-level5.yaml, feeds
+> orchestration/ledgers/prm800k-level5.yaml, feeds
 > `level5-cnt-bl-v02-score-mode-qwen3b`. Single model (qwen-3b);
 > extend path_decay g1.0 to the 5-model grid if the v03
 > decision confirms.
@@ -916,7 +916,7 @@ Two activities, two shapes:
 > optimum-shift question this table was built for — still needs
 > the 7 inqueue cells.
 > **Limitations / follow-up:** ledger
-> experiments/prm800k-level5.yaml, feeds
+> orchestration/ledgers/prm800k-level5.yaml, feeds
 > `level5-kube-bl-v01-kubec-sweep-qwen`. 7 cells inqueue
 > (qwen-3b c8.0, qwen-7b + qwen-math sweeps); 5 cells failed
 > (llama-3b c0.1/c0.5/c8.0, qwen-3b c0.1/c0.5) — died to the
@@ -1137,7 +1137,7 @@ Two activities, two shapes:
 > All 5 launched 2026-07-22 (llama-1b/3b + qwen-3b 09:30;
 > qwen-7b + qwen-math-1.5b 11:22).
 > **Limitations / follow-up:** ledger
-> experiments/prm800k-level5.yaml, feeds
+> orchestration/ledgers/prm800k-level5.yaml, feeds
 > `level5-kube-bl-v02-model-family-parent-blend-a0.0-qwen`.
 > Single-alpha ablation; only worth extending if the 0.0-vs-1.0
 > gap is surprisingly small.
@@ -1217,7 +1217,7 @@ Two activities, two shapes:
 > Consequence: the 4 kube-a0.8 model-family requeues
 > (`kube-bl-v02-l5-mf-a0.8-*`, inqueue) lose their motivation —
 > Tuan to decide run vs. drop. Ledger:
-> experiments/prm800k-level5.yaml
+> orchestration/ledgers/prm800k-level5.yaml
 > (`kube-bl-v02-l5-ac-sweep-llama3b-*`), feeds
 > `level5-kube-bl-v02-alpha-kubec-sweep-llama3b`.
 
@@ -1422,7 +1422,7 @@ Two activities, two shapes:
 > the kube ac-sweep's flat-alpha verdict and the cnt score-mode
 > sweep's weak pb arms.
 > **Limitations / follow-up:** ledger
-> experiments/prm800k-level5.yaml, feeds
+> orchestration/ledgers/prm800k-level5.yaml, feeds
 > `level5-kdepth-bl-v02-model-family-parent-blend-qwen`. qwen-3b
 > feeds both this table and the score_mode-sweep table. hr/trial
 > missing for 4 cells (scored before the timing convention).

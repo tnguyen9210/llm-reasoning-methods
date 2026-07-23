@@ -27,11 +27,11 @@ NOT go into the tracking system.
   "the launcher exited 0 and produced
   `generate_...--trial-000.jsonl`", full stop.
 - a tracked experiment — **no ledger entry**
-  (`experiments/*.yaml`), no `feeds`, no lifecycle status.
+  (`orchestration/ledgers/*.yaml`), no `feeds`, no lifecycle
+  status.
   Smoke runs are throwaway.
-- a determinism test — that's the separate
-  `smoke_test_determinism.sh` (double-run + byte-diff); out of
-  scope here.
+- a determinism test (double-run + byte-diff); out of scope
+  here.
 
 The boundary is enforced by isolation (below) + the fact that
 `status.py` already ignores the smoketest dir
