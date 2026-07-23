@@ -259,9 +259,12 @@
   feeds:
   - sem-mcts/proj-cov-sweep
   group: sem-mcts
-  status: running
+  status: failed
   priority: 1
-  note: llama-1b sparse512/exact
+  history:
+    - {at: 2026-07-22 22:15, job_id: null, outcome: stalled,
+       trials_done: 1}
+  note: llama-1b sparse512/exact; wandb=failed at 1/2 trials
 - id: sem-mcts-cbc0a340
   launcher: generate_mcts_sem.py
   hash: cbc0a340
@@ -457,7 +460,7 @@
   feeds:
   - sem-mcts/ds_alpha-sweep-qwen
   group: sem-mcts
-  status: running
+  status: scored
   priority: 2
   note: qwen-PRM ds_alpha=1000 llama-3b
 - id: cnt-mcts-98a07b8d
@@ -472,7 +475,7 @@
   feeds:
   - cnt-mcts/model-family-b320-qwen
   group: cnt-mcts
-  status: running
+  status: scored
   priority: 2
   note: b=320 qwen-PRM llama-1b fp16
 - id: cnt-mcts-01426e44
@@ -487,7 +490,7 @@
   feeds:
   - cnt-mcts/model-family-b320-qwen
   group: cnt-mcts
-  status: running
+  status: scored
   priority: 2
   note: b=320 qwen-PRM llama-3b fp16
 - id: cnt-mcts-355533ed
@@ -517,7 +520,7 @@
   feeds:
   - cnt-mcts/model-family-b320-qwen
   group: cnt-mcts
-  status: running
+  status: scored
   priority: 2
   note: b=320 qwen-PRM qwen-3b fp16
 - id: cnt-mcts-9fe5eaf8
@@ -547,7 +550,7 @@
   feeds:
   - cnt-mcts/model-family-b320-qwen
   group: cnt-mcts
-  status: running
+  status: scored
   priority: 2
   note: b=320 qwen-PRM qwen-7b gptq-int4
 - id: cnt-mcts-aa2a9f51
@@ -562,7 +565,7 @@
   feeds:
   - cnt-mcts/model-family-b320-qwen
   group: cnt-mcts
-  status: running
+  status: scored
   priority: 2
   note: b=320 qwen-PRM qwen-math-1.5b fp16
 - id: sem-mcts-2d22ccd4
@@ -591,7 +594,7 @@
   feeds:
   - sem-mcts/model-family-qwen
   group: sem-mcts
-  status: running
+  status: scored
   priority: 2
   note: qwen-PRM sem model-family llama-3b gptq
 - id: sem-mcts-77cae091
@@ -605,7 +608,7 @@
   feeds:
   - sem-mcts/model-family-qwen
   group: sem-mcts
-  status: running
+  status: scored
   priority: 2
   note: qwen-PRM sem model-family qwen-3b fp16
 - id: sem-mcts-7095316b
@@ -619,7 +622,7 @@
   feeds:
   - sem-mcts/model-family-qwen
   group: sem-mcts
-  status: running
+  status: scored
   priority: 2
   note: qwen-PRM sem model-family qwen-3b gptq-int4
 - id: sem-mcts-e7041715
@@ -633,7 +636,7 @@
   feeds:
   - sem-mcts/model-family-qwen
   group: sem-mcts
-  status: running
+  status: scored
   priority: 2
   note: qwen-PRM sem model-family qwen-7b gptq-int4
 - id: sem-mcts-019ecd02
@@ -692,7 +695,7 @@
   trials: 2
   feeds: []
   group: cnt-mcts
-  status: running
+  status: scored
   priority: 2
   note: backfilled from mcts_cnt_v01--level-4--Qwen2.5-Math-1.5B--rlhflow--d-20--bs-4--b-080--cfg-082d0098
     (run_id twiher6b)
@@ -707,7 +710,7 @@
   trials: 2
   feeds: []
   group: cnt-mcts
-  status: running
+  status: scored
   priority: 2
   note: backfilled from mcts_cnt_v01--level-4--Qwen2.5-Math-1.5B--qwen--d-20--bs-4--b-080--cfg-0a9a4e49
     (run_id jxux0dfm)
@@ -720,7 +723,7 @@
   trials: 2
   feeds: []
   group: cnt-mcts
-  status: running
+  status: scored
   priority: 2
   note: backfilled from mcts_cnt_v01--level-4--Qwen2.5-3B-GPTQ-Int4--rlhflow--d-20--bs-4--b-080--cfg-0ad81fba
     (run_id bigbjzi4)
@@ -736,7 +739,7 @@
   trials: 2
   feeds: []
   group: sem-mcts
-  status: running
+  status: scored
   priority: 2
   note: backfilled from mcts_sem_v02--level-4--Llama3.2-3B--qwen--d-20--bs-4--b-080--cfg-0c3fa88a
     (run_id j21xcutg)
@@ -750,7 +753,7 @@
   trials: 2
   feeds: []
   group: sem-mcts
-  status: running
+  status: scored
   priority: 2
   note: backfilled from mcts_sem_v02--level-4--Llama3.2-1B--qwen--d-20--bs-4--b-080--cfg-0ce0ce69
     (run_id mimxgvdw)
@@ -795,7 +798,7 @@
   trials: 2
   feeds: []
   group: cnt-mcts
-  status: running
+  status: scored
   priority: 2
   note: backfilled from mcts_cnt_v01--level-4--Llama3.2-1B--qwen--d-20--bs-4--b-080--cfg-22e7e576
     (run_id cqbxegfu)
@@ -810,7 +813,7 @@
   trials: 2
   feeds: []
   group: sem-mcts
-  status: running
+  status: scored
   priority: 2
   note: backfilled from mcts_sem_v02--level-4--Llama3.2-3B--qwen--d-20--bs-4--b-080--cfg-23f6c64a
     (run_id 77unmq5h)
@@ -826,7 +829,7 @@
   trials: 2
   feeds: []
   group: sem-mcts
-  status: running
+  status: scored
   priority: 2
   note: backfilled from mcts_sem_v02--level-4--Llama3.2-3B--qwen--d-20--bs-4--b-080--cfg-259e346e
     (run_id 3xmmtguk)
@@ -891,7 +894,7 @@
   trials: 2
   feeds: []
   group: cnt-mcts
-  status: running
+  status: scored
   priority: 2
   note: backfilled from mcts_cnt_v01--level-4--Qwen2.5-3B--rlhflow--d-20--bs-4--b-080--cfg-32a800f3
     (run_id t2p3vkvb)
@@ -907,7 +910,7 @@
   trials: 2
   feeds: []
   group: sem-mcts
-  status: running
+  status: scored
   priority: 2
   note: backfilled from mcts_sem_v02--level-4--Llama3.2-3B--qwen--d-20--bs-4--b-080--cfg-35c18945
     (run_id 2wdq0fmr)
@@ -953,7 +956,7 @@
   trials: 2
   feeds: []
   group: cnt-mcts
-  status: running
+  status: scored
   priority: 2
   note: backfilled from mcts_cnt_v01--level-4--Qwen2.5-3B-GPTQ-Int4--qwen--d-20--bs-4--b-080--cfg-3959399a
     (run_id pr4yz0v3)
@@ -1000,7 +1003,7 @@
   trials: 2
   feeds: []
   group: sem-mcts
-  status: running
+  status: scored
   priority: 2
   note: backfilled from mcts_sem_v02--level-4--Llama3.2-1B--qwen--d-20--bs-4--b-080--cfg-40d6abdb
     (run_id mdjpp3fp)
@@ -1047,7 +1050,7 @@
   trials: 2
   feeds: []
   group: cnt-mcts
-  status: running
+  status: scored
   priority: 2
   note: backfilled from mcts_cnt_v01--level-4--Qwen2.5-3B--rlhflow--d-20--bs-4--b-080--cfg-4ab9d22e
     (run_id u8oyi72y)
@@ -1166,7 +1169,7 @@
   trials: 2
   feeds: []
   group: sem-mcts
-  status: running
+  status: scored
   priority: 2
   note: backfilled from mcts_sem_v02--level-4--Llama3.2-1B--qwen--d-20--bs-4--b-080--cfg-720b0505
     (run_id wkh4mdwk)
@@ -1180,7 +1183,7 @@
   trials: 2
   feeds: []
   group: cnt-mcts
-  status: running
+  status: scored
   priority: 2
   note: backfilled from mcts_cnt_v01--level-4--Qwen2.5-Math-1.5B--rlhflow--d-20--bs-4--b-080--cfg-76aff934
     (run_id 8z45o3c5)
@@ -1240,7 +1243,7 @@
   trials: 2
   feeds: []
   group: cnt-mcts
-  status: running
+  status: scored
   priority: 2
   note: backfilled from mcts_cnt_v01--level-4--Qwen2.5-3B--qwen--d-20--bs-4--b-080--cfg-902a2e9a
     (run_id 1gce9zr6)
@@ -1255,7 +1258,7 @@
   trials: 2
   feeds: []
   group: cnt-mcts
-  status: running
+  status: scored
   priority: 2
   note: backfilled from mcts_cnt_v01--level-4--Qwen2.5-Math-1.5B--qwen--d-20--bs-4--b-080--cfg-90f77992
     (run_id 0a9vqg73)
@@ -1296,7 +1299,7 @@
   trials: 2
   feeds: []
   group: cnt-mcts
-  status: running
+  status: scored
   priority: 2
   note: backfilled from mcts_cnt_v01--level-4--Llama3.2-1B--rlhflow--d-20--bs-4--b-080--cfg-9b77a678
     (run_id w0e8cidi)
@@ -1359,7 +1362,7 @@
   trials: 2
   feeds: []
   group: sem-mcts
-  status: running
+  status: scored
   priority: 2
   note: backfilled from mcts_sem_v02--level-4--Llama3.2-3B--qwen--d-20--bs-4--b-080--cfg-ae450961
     (run_id zyheqs7l)
@@ -1392,7 +1395,7 @@
   trials: 2
   feeds: []
   group: sem-mcts
-  status: running
+  status: scored
   priority: 2
   note: backfilled from mcts_sem_v02--level-4--Llama3.2-3B--qwen--d-20--bs-4--b-080--cfg-af62a80b
     (run_id iso8ux18)
@@ -1468,7 +1471,7 @@
   trials: 2
   feeds: []
   group: cnt-mcts
-  status: running
+  status: scored
   priority: 2
   note: backfilled from mcts_cnt_v01--level-4--Llama3.2-3B--rlhflow--d-20--bs-4--b-080--cfg-ba452066
     (run_id 87yk0nf9)
@@ -1481,7 +1484,7 @@
   trials: 2
   feeds: []
   group: cnt-mcts
-  status: running
+  status: scored
   priority: 2
   note: backfilled from mcts_cnt_v01--level-4--Qwen2.5-3B--rlhflow--d-20--bs-4--b-080--cfg-bb778e7b
     (run_id gg9cvlx5)
@@ -1494,7 +1497,7 @@
   trials: 2
   feeds: []
   group: cnt-mcts
-  status: running
+  status: scored
   priority: 2
   note: backfilled from mcts_cnt_v01--level-4--Llama3.2-3B-GPTQ--rlhflow--d-20--bs-4--b-080--cfg-be0b29f3
     (run_id c9qcq6dk)
@@ -1508,7 +1511,7 @@
   trials: 2
   feeds: []
   group: cnt-mcts
-  status: running
+  status: scored
   priority: 2
   note: backfilled from mcts_cnt_v01--level-4--Qwen2.5-7B-GPTQ-Int4--qwen--d-20--bs-4--b-080--cfg-bea935c7
     (run_id pk4vy32g)
@@ -1553,7 +1556,7 @@
   trials: 2
   feeds: []
   group: sem-mcts
-  status: running
+  status: scored
   priority: 2
   note: backfilled from mcts_sem_v02--level-4--Llama3.2-3B--qwen--d-20--bs-4--b-080--cfg-c9afd826
     (run_id e5t3shoh)
@@ -1569,7 +1572,7 @@
   trials: 2
   feeds: []
   group: sem-mcts
-  status: running
+  status: scored
   priority: 2
   note: backfilled from mcts_sem_v02--level-4--Llama3.2-3B--qwen--d-20--bs-4--b-080--cfg-cb4ca30c
     (run_id b4g7hjrn)
@@ -1598,7 +1601,7 @@
   trials: 2
   feeds: []
   group: sem-mcts
-  status: running
+  status: scored
   priority: 2
   note: backfilled from mcts_sem_v02--level-4--Llama3.2-1B--qwen--d-20--bs-4--b-080--cfg-e1e8503f
     (run_id neevs4k1)
@@ -1611,7 +1614,7 @@
   trials: 2
   feeds: []
   group: cnt-mcts
-  status: running
+  status: scored
   priority: 2
   note: backfilled from mcts_cnt_v01--level-4--Qwen2.5-7B-GPTQ-Int4--rlhflow--d-20--bs-4--b-080--cfg-e32bd042
     (run_id qumxbcc8)
@@ -1674,7 +1677,7 @@
   trials: 2
   feeds: []
   group: sem-mcts
-  status: running
+  status: scored
   priority: 2
   note: backfilled from mcts_sem_v02--level-4--Llama3.2-1B--qwen--d-20--bs-4--b-080--cfg-f5a51c3a
     (run_id to6m79v2)
@@ -1719,7 +1722,7 @@
   trials: 2
   feeds: []
   group: cnt-mcts
-  status: running
+  status: scored
   priority: 2
   note: backfilled from mcts_cnt_v01--level-4--Qwen2.5-Math-1.5B--rlhflow--d-20--bs-4--b-080--cfg-fbdc4cc0
     (run_id am09p6gf)
@@ -2017,8 +2020,11 @@
   trials: 2
   feeds: []
   group: sem-mcts-bl
-  status: running
+  status: failed
   priority: 2
+  history:
+    - {at: 2026-07-22 22:15, job_id: null, outcome: stalled,
+       trials_done: 1}
   note: FAILED -- w_eff=10 llama-3b fp16 cell (config-hash 3ca318f6, run_id
     yf562ig8). Trial 0 completed (6.19h); trial 1 crashed mid-search with
     vLLM "decoder prompt (length 5000) ... longer than the maximum model length

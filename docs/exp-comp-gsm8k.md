@@ -299,22 +299,26 @@ Two activities, two shapes:
 | llama-1b | qwen | **1.0** | **10** | **10** | 2 | scored | .8887<br>±.0139 | .8398<br>±.0162 | .7871<br>±.0181 | .7480<br>±.0192 | 4.18 |
 | llama-1b | qwen | 0.1 | 3.16 | 10 | 2 | scored | .8965<br>±.0135 | .8398<br>±.0162 | .7969<br>±.0178 | .7539<br>±.0191 | 4.26 |
 | llama-1b | qwen | **0.01** | **1.0** | **10** | 2 | scored | .8965<br>±.0135 | .8555<br>±.0156 | .8105<br>±.0173 | .7871<br>±.0181 | 4.20 |
-| llama-1b | qwen | 1.0 | 100 | 100 | 0/2 | running | — | — | — | — | — |
-| llama-1b | qwen | 0.1 | 31.6 | 100 | 0/2 | running | — | — | — | — | — |
-| llama-1b | qwen | 0.01 | 10 | 100 | 0/2 | running | — | — | — | — | — |
+| llama-1b | qwen | 1.0 | 100 | 100 | 2 | scored | .8828<br>±.0142 | .8066<br>±.0175 | .6934<br>±.0204 | .6348<br>±.0213 | 4.43 |
+| llama-1b | qwen | 0.1 | 31.6 | 100 | 2 | scored | .9141<br>±.0124 | .8320<br>±.0165 | .7324<br>±.0196 | .6797<br>±.0206 | 4.47 |
+| llama-1b | qwen | 0.01 | 10 | 100 | 2 | scored | .9004<br>±.0132 | .8242<br>±.0168 | .7383<br>±.0194 | .6855<br>±.0205 | 4.30 |
 | llama-1b | qwen | 1.0 | 1000 | 1000 | — | planned | — | — | — | — | — |
 | llama-1b | qwen | 0.1 | 316.2 | 1000 | — | planned | — | — | — | — | — |
 | llama-1b | qwen | 0.01 | 100 | 1000 | — | planned | — | — | — | — | — |
 
-> **Analysis.** 3/22 cells scored (2 trials each, n=256). The
-> `w_eff=10` step is fully resolved: pass@gb .8887/.8965/.8965
-> (`lam=1.0/0.1/0.01`) — all within 1 SEM of each other, no
-> `lam`-dependence signal, matching the PRM800K-level5 pattern at
-> this checkpoint. The `w_eff=100` step (3 cells) is currently
-> running.
-> **Limitations / follow-up:** `w_eff=100` in flight;
-> `w_eff=0.1/0.3/1000` and the `w_eff=0` gap-closer remain
-> unlaunched.
+> **Analysis.** 6/22 cells scored (2 trials each, n=256). The
+> `w_eff=10` step: pass@gb .8887/.8965/.8965 (`lam=1.0/0.1/
+> 0.01`) — all within 1 SEM, no `lam`-dependence, matching the
+> PRM800K-level5 pattern. `w_eff=100`: .8828/.9141/.9004 — a
+> wider spread with `lam=1.0` lowest (~1.5 SEM below `lam=0.1`),
+> the same weak `lam=1.0`-lags direction seen on qwen-math at
+> this checkpoint. Selection metrics degrade at `w_eff=100` vs
+> `10` across all three `lam` (e.g. maj .63-.69 vs .75-.79) —
+> over-weighted diversity hurts the vote on the weakest model
+> even though coverage holds.
+> **Limitations / follow-up:** feeds
+> `gsm8k-sem-lam-dsalpha-sweep-llama1b`. `w_eff=0.1/0.3/1000`
+> and the `w_eff=0` gap-closer remain unlaunched.
 
 #### lam / ds_alpha joint sweep (llama-3b)
 > **Compares:** the same `lam`/`ds_alpha` joint-tuning question as
@@ -356,8 +360,10 @@ Two activities, two shapes:
 > (.9648/.9688/.9648) — a hair higher than `w_eff=10` across the
 > board, all within 1 SEM of each other and of `w_eff=10`. No
 > `lam` effect visible at this budget/dataset.
-> **Limitations / follow-up:** `w_eff=0.1/0.3/1000` and the
-> `w_eff=0` gap-closer remain unlaunched; only 2 trials/cell.
+> **Limitations / follow-up:** feeds
+> `gsm8k-sem-lam-dsalpha-sweep-llama3b`. `w_eff=0.1/0.3/1000`
+> and the `w_eff=0` gap-closer remain unlaunched; only 2
+> trials/cell.
 
 #### lam / ds_alpha joint sweep (qwen-math-1.5b)
 > **Compares:** the same `lam`/`ds_alpha` joint-tuning question as
@@ -401,10 +407,11 @@ Two activities, two shapes:
 > the lowest of the three (vs. .9668 for both `lam=0.1`/`0.01`) —
 > consistent with the level-5 direction at that checkpoint. All
 > gaps are within ~1-2 SEM.
-> **Limitations / follow-up:** `w_eff=0.1/0.3/1000` and the
-> `w_eff=0` gap-closer remain unlaunched; only 2 trials/cell, so
-> the direction flip between checkpoints is suggestive, not
-> conclusive.
+> **Limitations / follow-up:** feeds
+> `gsm8k-sem-lam-dsalpha-sweep-qwenmath15b`.
+> `w_eff=0.1/0.3/1000` and the `w_eff=0` gap-closer remain
+> unlaunched; only 2 trials/cell, so the direction flip between
+> checkpoints is suggestive, not conclusive.
 
 #### lam / ds_alpha joint sweep (qwen-7b gptq-int4)
 > **Compares:** the same `lam`/`ds_alpha` joint-tuning question as
@@ -446,8 +453,10 @@ Two activities, two shapes:
 > table in this GSM8K sweep so far — echoing the same flatness
 > seen at PRM800K-level5 for this model. No clear `lam` effect at
 > either checkpoint.
-> **Limitations / follow-up:** `w_eff=0.1/0.3/1000` and the
-> `w_eff=0` gap-closer remain unlaunched; only 2 trials/cell.
+> **Limitations / follow-up:** feeds
+> `gsm8k-sem-lam-dsalpha-sweep-qwen7bgptq`.
+> `w_eff=0.1/0.3/1000` and the `w_eff=0` gap-closer remain
+> unlaunched; only 2 trials/cell.
 
 #### model family, size, quantization comparison (RLHFlowPRM)
 > **Compares:** model family, size, and quantization jointly —

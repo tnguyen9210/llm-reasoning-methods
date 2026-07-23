@@ -24,9 +24,10 @@
     prm: qwen_prm
     data: aime2025
   trials: 4
-  feeds: []
+  feeds:
+  - aime2025-cnt-model-family-qwen
   group: cnt-mcts
-  status: running
+  status: scored
   priority: 1.5
   expected_hr: 4
   launch:
@@ -45,9 +46,10 @@
     prm: qwen_prm
     data: aime2025
   trials: 4
-  feeds: []
+  feeds:
+  - aime2025-cnt-model-family-qwen
   group: cnt-mcts
-  status: running
+  status: scored
   priority: 1.5
   expected_hr: 6
   launch:
@@ -66,9 +68,10 @@
     prm: qwen_prm
     data: aime2025
   trials: 4
-  feeds: []
+  feeds:
+  - aime2025-cnt-model-family-qwen
   group: cnt-mcts
-  status: running
+  status: scored
   priority: 1.5
   expected_hr: 5
   launch:
@@ -86,9 +89,10 @@
     prm: qwen_prm
     data: aime2025
   trials: 4
-  feeds: []
+  feeds:
+  - aime2025-cnt-model-family-qwen
   group: cnt-mcts
-  status: running
+  status: scored
   priority: 1.5
   expected_hr: 5
   launch:
@@ -107,9 +111,10 @@
     prm: qwen_prm
     data: aime2025
   trials: 4
-  feeds: []
+  feeds:
+  - aime2025-cnt-model-family-qwen
   group: cnt-mcts
-  status: running
+  status: scored
   priority: 1.5
   expected_hr: 4
   launch:
@@ -130,9 +135,11 @@
     search.ds_alpha: 1.0
     data: aime2025
   trials: 4
-  feeds: []
+  feeds:
+  - aime2025-sem-centermode-lam0.01-weff10
+  - aime2025-sem-lam-dsalpha-sweep-llama1b
   group: sem-mcts
-  status: running
+  status: scored
   priority: 1.4
   expected_hr: 5
   launch:
@@ -153,9 +160,11 @@
     search.ds_alpha: 1.0
     data: aime2025
   trials: 4
-  feeds: []
+  feeds:
+  - aime2025-sem-centermode-lam0.01-weff10
+  - aime2025-sem-lam-dsalpha-sweep-llama3b
   group: sem-mcts
-  status: running
+  status: scored
   priority: 1.4
   expected_hr: 7
   launch:
@@ -176,9 +185,10 @@
     search.ds_alpha: 1.0
     data: aime2025
   trials: 4
-  feeds: []
+  feeds:
+  - aime2025-sem-centermode-lam0.01-weff10
   group: sem-mcts
-  status: running
+  status: scored
   priority: 1.4
   expected_hr: 6
   launch:
@@ -199,9 +209,11 @@
     search.ds_alpha: 1.0
     data: aime2025
   trials: 4
-  feeds: []
+  feeds:
+  - aime2025-sem-centermode-lam0.01-weff10
+  - aime2025-sem-lam-dsalpha-sweep-qwen7bgptq
   group: sem-mcts
-  status: running
+  status: scored
   priority: 1.4
   expected_hr: 6
   launch:
@@ -222,9 +234,11 @@
     search.ds_alpha: 1.0
     data: aime2025
   trials: 4
-  feeds: []
+  feeds:
+  - aime2025-sem-centermode-lam0.01-weff10
+  - aime2025-sem-lam-dsalpha-sweep-qwenmath15b
   group: sem-mcts
-  status: running
+  status: scored
   priority: 1.4
   expected_hr: 5
   launch:
@@ -245,9 +259,11 @@
     search.ds_alpha: 10
     data: aime2025
   trials: 4
-  feeds: []
+  feeds:
+  - aime2025-sem-centermode-lam0.01-weff100
+  - aime2025-sem-lam-dsalpha-sweep-llama1b
   group: sem-mcts
-  status: running
+  status: scored
   priority: 1.4
   expected_hr: 5
   launch:
@@ -268,9 +284,11 @@
     search.ds_alpha: 10
     data: aime2025
   trials: 4
-  feeds: []
+  feeds:
+  - aime2025-sem-centermode-lam0.01-weff100
+  - aime2025-sem-lam-dsalpha-sweep-llama3b
   group: sem-mcts
-  status: running
+  status: scored
   priority: 1.4
   expected_hr: 7
   launch:
@@ -291,9 +309,10 @@
     search.ds_alpha: 10
     data: aime2025
   trials: 4
-  feeds: []
+  feeds:
+  - aime2025-sem-centermode-lam0.01-weff100
   group: sem-mcts
-  status: running
+  status: scored
   priority: 1.4
   expected_hr: 6
   launch:
@@ -314,9 +333,11 @@
     search.ds_alpha: 10
     data: aime2025
   trials: 4
-  feeds: []
+  feeds:
+  - aime2025-sem-centermode-lam0.01-weff100
+  - aime2025-sem-lam-dsalpha-sweep-qwen7bgptq
   group: sem-mcts
-  status: running
+  status: scored
   priority: 1.4
   expected_hr: 6
   launch:
@@ -337,9 +358,11 @@
     search.ds_alpha: 10
     data: aime2025
   trials: 4
-  feeds: []
+  feeds:
+  - aime2025-sem-centermode-lam0.01-weff100
+  - aime2025-sem-lam-dsalpha-sweep-qwenmath15b
   group: sem-mcts
-  status: running
+  status: scored
   priority: 1.4
   expected_hr: 5
   launch:
@@ -362,9 +385,10 @@
     search.embeds_center_mode: local
     data: aime2025
   trials: 4
-  feeds: []
+  feeds:
+  - aime2025-sem-centermode-lam0.01-weff10
   group: sem-mcts
-  status: running
+  status: scored
   priority: 1.4
   expected_hr: 5
   launch:
@@ -387,9 +411,10 @@
     search.embeds_center_mode: local
     data: aime2025
   trials: 4
-  feeds: []
+  feeds:
+  - aime2025-sem-centermode-lam0.01-weff10
   group: sem-mcts
-  status: running
+  status: scored
   priority: 1.4
   expected_hr: 7
   launch:
@@ -412,9 +437,10 @@
     search.embeds_center_mode: local
     data: aime2025
   trials: 4
-  feeds: []
+  feeds:
+  - aime2025-sem-centermode-lam0.01-weff10
   group: sem-mcts
-  status: running
+  status: scored
   priority: 1.4
   expected_hr: 6
   launch:
@@ -437,9 +463,10 @@
     search.embeds_center_mode: local
     data: aime2025
   trials: 4
-  feeds: []
+  feeds:
+  - aime2025-sem-centermode-lam0.01-weff10
   group: sem-mcts
-  status: running
+  status: scored
   priority: 1.4
   expected_hr: 6
   launch:
@@ -462,9 +489,10 @@
     search.embeds_center_mode: local
     data: aime2025
   trials: 4
-  feeds: []
+  feeds:
+  - aime2025-sem-centermode-lam0.01-weff10
   group: sem-mcts
-  status: running
+  status: scored
   priority: 1.4
   expected_hr: 5
   launch:
@@ -487,9 +515,10 @@
     search.embeds_center_mode: local
     data: aime2025
   trials: 4
-  feeds: []
+  feeds:
+  - aime2025-sem-centermode-lam0.01-weff100
   group: sem-mcts
-  status: running
+  status: scored
   priority: 1.4
   expected_hr: 5
   launch:
@@ -512,9 +541,10 @@
     search.embeds_center_mode: local
     data: aime2025
   trials: 4
-  feeds: []
+  feeds:
+  - aime2025-sem-centermode-lam0.01-weff100
   group: sem-mcts
-  status: running
+  status: scored
   priority: 1.4
   expected_hr: 7
   launch:
@@ -537,9 +567,10 @@
     search.embeds_center_mode: local
     data: aime2025
   trials: 4
-  feeds: []
+  feeds:
+  - aime2025-sem-centermode-lam0.01-weff100
   group: sem-mcts
-  status: running
+  status: scored
   priority: 1.4
   expected_hr: 6
   launch:
@@ -562,9 +593,10 @@
     search.embeds_center_mode: local
     data: aime2025
   trials: 4
-  feeds: []
+  feeds:
+  - aime2025-sem-centermode-lam0.01-weff100
   group: sem-mcts
-  status: running
+  status: scored
   priority: 1.4
   expected_hr: 6
   launch:
@@ -587,9 +619,10 @@
     search.embeds_center_mode: local
     data: aime2025
   trials: 4
-  feeds: []
+  feeds:
+  - aime2025-sem-centermode-lam0.01-weff100
   group: sem-mcts
-  status: running
+  status: scored
   priority: 1.4
   expected_hr: 5
   launch:

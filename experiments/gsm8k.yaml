@@ -109,9 +109,10 @@
     search.ds_alpha: 10
     data: gsm8k
   trials: 2
-  feeds: []
+  feeds:
+  - gsm8k-sem-lam-dsalpha-sweep-qwen7bgptq
   group: sem-mcts
-  status: running
+  status: scored
   priority: 2
   expected_hr: 4
   launch:
@@ -132,9 +133,10 @@
     search.ds_alpha: 3.16
     data: gsm8k
   trials: 2
-  feeds: []
+  feeds:
+  - gsm8k-sem-lam-dsalpha-sweep-qwen7bgptq
   group: sem-mcts
-  status: running
+  status: scored
   priority: 2
   expected_hr: 4
   launch:
@@ -155,9 +157,10 @@
     search.ds_alpha: 1.0
     data: gsm8k
   trials: 2
-  feeds: []
+  feeds:
+  - gsm8k-sem-lam-dsalpha-sweep-qwen7bgptq
   group: sem-mcts
-  status: running
+  status: scored
   priority: 2
   expected_hr: 4
   launch:
@@ -178,9 +181,10 @@
     search.ds_alpha: 100
     data: gsm8k
   trials: 2
-  feeds: []
+  feeds:
+  - gsm8k-sem-lam-dsalpha-sweep-qwen7bgptq
   group: sem-mcts
-  status: running
+  status: scored
   priority: 2
   expected_hr: 4
   launch:
@@ -201,9 +205,10 @@
     search.ds_alpha: 31.6
     data: gsm8k
   trials: 2
-  feeds: []
+  feeds:
+  - gsm8k-sem-lam-dsalpha-sweep-qwen7bgptq
   group: sem-mcts
-  status: running
+  status: scored
   priority: 2
   expected_hr: 4
   launch:
@@ -224,9 +229,10 @@
     search.ds_alpha: 10
     data: gsm8k
   trials: 2
-  feeds: []
+  feeds:
+  - gsm8k-sem-lam-dsalpha-sweep-qwen7bgptq
   group: sem-mcts
-  status: running
+  status: scored
   priority: 2
   expected_hr: 4
   launch:
@@ -247,9 +253,10 @@
     search.ds_alpha: 10
     data: gsm8k
   trials: 2
-  feeds: []
+  feeds:
+  - gsm8k-sem-lam-dsalpha-sweep-qwenmath15b
   group: sem-mcts
-  status: running
+  status: scored
   priority: 2
   expected_hr: 4
   launch:
@@ -270,9 +277,10 @@
     search.ds_alpha: 3.16
     data: gsm8k
   trials: 2
-  feeds: []
+  feeds:
+  - gsm8k-sem-lam-dsalpha-sweep-qwenmath15b
   group: sem-mcts
-  status: running
+  status: scored
   priority: 2
   expected_hr: 4
   launch:
@@ -293,9 +301,10 @@
     search.ds_alpha: 1.0
     data: gsm8k
   trials: 2
-  feeds: []
+  feeds:
+  - gsm8k-sem-lam-dsalpha-sweep-qwenmath15b
   group: sem-mcts
-  status: running
+  status: scored
   priority: 2
   expected_hr: 4
   launch:
@@ -316,9 +325,10 @@
     search.ds_alpha: 100
     data: gsm8k
   trials: 2
-  feeds: []
+  feeds:
+  - gsm8k-sem-lam-dsalpha-sweep-qwenmath15b
   group: sem-mcts
-  status: running
+  status: scored
   priority: 2
   expected_hr: 4
   launch:
@@ -339,9 +349,10 @@
     search.ds_alpha: 31.6
     data: gsm8k
   trials: 2
-  feeds: []
+  feeds:
+  - gsm8k-sem-lam-dsalpha-sweep-qwenmath15b
   group: sem-mcts
-  status: running
+  status: scored
   priority: 2
   expected_hr: 4
   launch:
@@ -362,9 +373,10 @@
     search.ds_alpha: 10
     data: gsm8k
   trials: 2
-  feeds: []
+  feeds:
+  - gsm8k-sem-lam-dsalpha-sweep-qwenmath15b
   group: sem-mcts
-  status: running
+  status: scored
   priority: 2
   expected_hr: 4
   launch:
@@ -385,9 +397,10 @@
     search.ds_alpha: 10
     data: gsm8k
   trials: 2
-  feeds: []
+  feeds:
+  - gsm8k-sem-lam-dsalpha-sweep-llama3b
   group: sem-mcts
-  status: running
+  status: scored
   priority: 2
   expected_hr: 5
   launch:
@@ -408,9 +421,10 @@
     search.ds_alpha: 3.16
     data: gsm8k
   trials: 2
-  feeds: []
+  feeds:
+  - gsm8k-sem-lam-dsalpha-sweep-llama3b
   group: sem-mcts
-  status: running
+  status: scored
   priority: 2
   expected_hr: 5
   launch:
@@ -431,9 +445,10 @@
     search.ds_alpha: 1.0
     data: gsm8k
   trials: 2
-  feeds: []
+  feeds:
+  - gsm8k-sem-lam-dsalpha-sweep-llama3b
   group: sem-mcts
-  status: running
+  status: scored
   priority: 2
   expected_hr: 5
   launch:
@@ -454,9 +469,10 @@
     search.ds_alpha: 100
     data: gsm8k
   trials: 2
-  feeds: []
+  feeds:
+  - gsm8k-sem-lam-dsalpha-sweep-llama3b
   group: sem-mcts
-  status: running
+  status: scored
   priority: 2
   expected_hr: 5
   launch:
@@ -477,9 +493,10 @@
     search.ds_alpha: 31.6
     data: gsm8k
   trials: 2
-  feeds: []
+  feeds:
+  - gsm8k-sem-lam-dsalpha-sweep-llama3b
   group: sem-mcts
-  status: running
+  status: scored
   priority: 2
   expected_hr: 5
   launch:
@@ -500,9 +517,10 @@
     search.ds_alpha: 10
     data: gsm8k
   trials: 2
-  feeds: []
+  feeds:
+  - gsm8k-sem-lam-dsalpha-sweep-llama3b
   group: sem-mcts
-  status: running
+  status: scored
   priority: 2
   expected_hr: 5
   launch:
@@ -523,9 +541,10 @@
     search.ds_alpha: 10
     data: gsm8k
   trials: 2
-  feeds: []
+  feeds:
+  - gsm8k-sem-lam-dsalpha-sweep-llama1b
   group: sem-mcts
-  status: running
+  status: scored
   priority: 2
   expected_hr: 3
   launch:
@@ -546,9 +565,10 @@
     search.ds_alpha: 3.16
     data: gsm8k
   trials: 2
-  feeds: []
+  feeds:
+  - gsm8k-sem-lam-dsalpha-sweep-llama1b
   group: sem-mcts
-  status: running
+  status: scored
   priority: 2
   expected_hr: 3
   launch:
@@ -569,9 +589,10 @@
     search.ds_alpha: 1.0
     data: gsm8k
   trials: 2
-  feeds: []
+  feeds:
+  - gsm8k-sem-lam-dsalpha-sweep-llama1b
   group: sem-mcts
-  status: running
+  status: scored
   priority: 2
   expected_hr: 3
   launch:
@@ -592,9 +613,10 @@
     search.ds_alpha: 100
     data: gsm8k
   trials: 2
-  feeds: []
+  feeds:
+  - gsm8k-sem-lam-dsalpha-sweep-llama1b
   group: sem-mcts
-  status: running
+  status: scored
   priority: 2
   expected_hr: 3
   launch:
@@ -615,9 +637,10 @@
     search.ds_alpha: 31.6
     data: gsm8k
   trials: 2
-  feeds: []
+  feeds:
+  - gsm8k-sem-lam-dsalpha-sweep-llama1b
   group: sem-mcts
-  status: running
+  status: scored
   priority: 2
   expected_hr: 3
   launch:
@@ -638,9 +661,10 @@
     search.ds_alpha: 10
     data: gsm8k
   trials: 2
-  feeds: []
+  feeds:
+  - gsm8k-sem-lam-dsalpha-sweep-llama1b
   group: sem-mcts
-  status: running
+  status: scored
   priority: 2
   expected_hr: 3
   launch:
