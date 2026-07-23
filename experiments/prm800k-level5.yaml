@@ -1534,6 +1534,7 @@
   trials: 2
   feeds:
   - level5-kube-bl-v01-model-family-qwen3b
+  - level5-kube-bl-v01-kubec-sweep-qwen
   group: kube-mcts-bl
   status: scored
   priority: 1.7
@@ -2214,6 +2215,7 @@
   trials: 2
   feeds:
   - level5-kube-bl-v01-model-family-qwen
+  - level5-kube-bl-v01-kubec-sweep-qwen
   group: kube-mcts-bl-v01
   status: scored
   priority: 1
@@ -2235,6 +2237,7 @@
   trials: 2
   feeds:
   - level5-kube-bl-v01-model-family-qwen
+  - level5-kube-bl-v01-kubec-sweep-qwen
   group: kube-mcts-bl-v01
   status: scored
   priority: 1
@@ -2256,6 +2259,7 @@
   trials: 2
   feeds:
   - level5-kube-bl-v01-model-family-qwen
+  - level5-kube-bl-v01-kubec-sweep-qwen
   group: kube-mcts-bl-v01
   status: scored
   priority: 1
@@ -2277,6 +2281,7 @@
   trials: 2
   feeds:
   - level5-kube-bl-v01-model-family-qwen
+  - level5-kube-bl-v01-kubec-sweep-qwen
   group: kube-mcts-bl-v01
   status: scored
   priority: 1.7
@@ -2832,7 +2837,7 @@
   trials: 2
   feeds: []
   group: kdepth-mcts-bl-v02
-  status: failed
+  status: running
   priority: 1.7
   expected_hr: 8
   launch:
@@ -2845,8 +2850,9 @@
        trials_done: 1}
     - {at: 2026-07-22 12:14, job_id: 23338589, outcome: stalled,
        trials_done: 1}
-    - {at: 2026-07-22 20:36, job_id: 23344632, outcome: stalled,
-       trials_done: 1}
+  note: 20:36 false alarm -- wandb said crashed but the process was
+    alive on 23344632 (probed 22:20, 2h13m elapsed); W&B crashed
+    state is a heartbeat lapse, not proof of death
   note: migrated from queue (id kdepth-bl-v02-l5-mf-a0.8-llama1b); feeds pending
 - id: kdepth-bl-v02-l5-mf-a0.8-llama3b
   launcher: generate_mcts_bl_cnt.py
@@ -3235,7 +3241,7 @@
   trials: 2
   feeds: []
   group: kube-mcts-bl-v02
-  status: planned
+  status: running
   priority: 1.8
   expected_hr: 8
   launch:
@@ -3259,7 +3265,7 @@
   trials: 2
   feeds: []
   group: kube-mcts-bl-v02
-  status: planned
+  status: running
   priority: 1.8
   expected_hr: 8
   launch:
@@ -3283,7 +3289,7 @@
   trials: 2
   feeds: []
   group: kube-mcts-bl-v02
-  status: planned
+  status: running
   priority: 1.8
   expected_hr: 8
   launch:
@@ -3307,7 +3313,7 @@
   trials: 2
   feeds: []
   group: kube-mcts-bl-v02
-  status: planned
+  status: running
   priority: 1.8
   expected_hr: 8
   launch:
@@ -3317,3 +3323,283 @@
     at: 2026-07-22 14:04
   note: migrated from queue (id kube-bl-v02-l5-ac-sweep-llama3b-a0.5-c2.0);
     feeds pending
+- id: kube-bl-v01-l5-kubec-llama1b-c0.1
+  launcher: generate_mcts_bl_cnt.py
+  hash: "e666ea63"
+  config_root: mcts_bl_kube_v01_prm800k
+  overrides:
+    llm: llama_1b
+    prm: qwen_prm
+    data.level: 5
+    search.kube_c: 0.1
+  trials: 2
+  feeds:
+  - level5-kube-bl-v01-kubec-sweep-qwen
+  group: kube-mcts-bl
+  status: running
+  priority: 2
+  expected_hr: 8
+  launch:
+    job_id: 23343523
+    node: r5u31n1
+    pid: 1455731
+    at: 2026-07-22 22:09
+  note: kube_c sweep 0.1 llama1b
+- id: kube-bl-v01-l5-kubec-llama1b-c0.5
+  launcher: generate_mcts_bl_cnt.py
+  hash: "82c526cb"
+  config_root: mcts_bl_kube_v01_prm800k
+  overrides:
+    llm: llama_1b
+    prm: qwen_prm
+    data.level: 5
+    search.kube_c: 0.5
+  trials: 2
+  feeds:
+  - level5-kube-bl-v01-kubec-sweep-qwen
+  group: kube-mcts-bl
+  status: running
+  priority: 2
+  expected_hr: 8
+  launch:
+    job_id: 23337597
+    node: r5u09n1
+    pid: 1455732
+    at: 2026-07-22 22:09
+  note: kube_c sweep 0.5 llama1b
+- id: kube-bl-v01-l5-kubec-llama1b-c8.0
+  launcher: generate_mcts_bl_cnt.py
+  hash: "e1708c21"
+  config_root: mcts_bl_kube_v01_prm800k
+  overrides:
+    llm: llama_1b
+    prm: qwen_prm
+    data.level: 5
+    search.kube_c: 8.0
+  trials: 2
+  feeds:
+  - level5-kube-bl-v01-kubec-sweep-qwen
+  group: kube-mcts-bl
+  status: running
+  priority: 2
+  expected_hr: 8
+  launch:
+    job_id: 23341676
+    node: r5u35n1
+    pid: 1455733
+    at: 2026-07-22 22:09
+  note: kube_c sweep 8.0 llama1b
+- id: kube-bl-v01-l5-kubec-llama3b-c0.1
+  launcher: generate_mcts_bl_cnt.py
+  hash: "a74a37ab"
+  config_root: mcts_bl_kube_v01_prm800k
+  overrides:
+    llm: llama_3b
+    prm: qwen_prm
+    data.level: 5
+    search.kube_c: 0.1
+  trials: 2
+  feeds:
+  - level5-kube-bl-v01-kubec-sweep-qwen
+  group: kube-mcts-bl
+  status: running
+  priority: 2
+  expected_hr: 8
+  launch:
+    job_id: 23335925
+    node: r5u11n1
+    pid: 1556198
+    at: 2026-07-22 23:10
+  note: kube_c sweep 0.1 llama3b
+- id: kube-bl-v01-l5-kubec-llama3b-c0.5
+  launcher: generate_mcts_bl_cnt.py
+  hash: "14e0f736"
+  config_root: mcts_bl_kube_v01_prm800k
+  overrides:
+    llm: llama_3b
+    prm: qwen_prm
+    data.level: 5
+    search.kube_c: 0.5
+  trials: 2
+  feeds:
+  - level5-kube-bl-v01-kubec-sweep-qwen
+  group: kube-mcts-bl
+  status: running
+  priority: 2
+  expected_hr: 8
+  launch:
+    job_id: 23338589
+    node: r5u35n1
+    pid: 1556199
+    at: 2026-07-22 23:10
+  note: kube_c sweep 0.5 llama3b
+- id: kube-bl-v01-l5-kubec-llama3b-c8.0
+  launcher: generate_mcts_bl_cnt.py
+  hash: "a5af7aea"
+  config_root: mcts_bl_kube_v01_prm800k
+  overrides:
+    llm: llama_3b
+    prm: qwen_prm
+    data.level: 5
+    search.kube_c: 8.0
+  trials: 2
+  feeds:
+  - level5-kube-bl-v01-kubec-sweep-qwen
+  group: kube-mcts-bl
+  status: inqueue
+  priority: 2
+  expected_hr: 8
+  note: kube_c sweep 8.0 llama3b
+- id: kube-bl-v01-l5-kubec-qwen3b-c0.1
+  launcher: generate_mcts_bl_cnt.py
+  hash: "318e4e7d"
+  config_root: mcts_bl_kube_v01_prm800k
+  overrides:
+    llm: qwen_3b
+    prm: qwen_prm
+    data.level: 5
+    search.kube_c: 0.1
+  trials: 2
+  feeds:
+  - level5-kube-bl-v01-kubec-sweep-qwen
+  group: kube-mcts-bl
+  status: inqueue
+  priority: 2
+  expected_hr: 8
+  note: kube_c sweep 0.1 qwen3b
+- id: kube-bl-v01-l5-kubec-qwen3b-c0.5
+  launcher: generate_mcts_bl_cnt.py
+  hash: "aab2e8f6"
+  config_root: mcts_bl_kube_v01_prm800k
+  overrides:
+    llm: qwen_3b
+    prm: qwen_prm
+    data.level: 5
+    search.kube_c: 0.5
+  trials: 2
+  feeds:
+  - level5-kube-bl-v01-kubec-sweep-qwen
+  group: kube-mcts-bl
+  status: inqueue
+  priority: 2
+  expected_hr: 8
+  note: kube_c sweep 0.5 qwen3b
+- id: kube-bl-v01-l5-kubec-qwen3b-c8.0
+  launcher: generate_mcts_bl_cnt.py
+  hash: "c2986d28"
+  config_root: mcts_bl_kube_v01_prm800k
+  overrides:
+    llm: qwen_3b
+    prm: qwen_prm
+    data.level: 5
+    search.kube_c: 8.0
+  trials: 2
+  feeds:
+  - level5-kube-bl-v01-kubec-sweep-qwen
+  group: kube-mcts-bl
+  status: inqueue
+  priority: 2
+  expected_hr: 8
+  note: kube_c sweep 8.0 qwen3b
+- id: kube-bl-v01-l5-kubec-qwen7bgptq-c0.1
+  launcher: generate_mcts_bl_cnt.py
+  hash: "7812d1d0"
+  config_root: mcts_bl_kube_v01_prm800k
+  overrides:
+    llm: qwen_7b_gptq_int4
+    prm: qwen_prm
+    data.level: 5
+    search.kube_c: 0.1
+  trials: 2
+  feeds:
+  - level5-kube-bl-v01-kubec-sweep-qwen
+  group: kube-mcts-bl
+  status: inqueue
+  priority: 2
+  expected_hr: 8
+  note: kube_c sweep 0.1 qwen7bgptq
+- id: kube-bl-v01-l5-kubec-qwen7bgptq-c0.5
+  launcher: generate_mcts_bl_cnt.py
+  hash: "6ba11d82"
+  config_root: mcts_bl_kube_v01_prm800k
+  overrides:
+    llm: qwen_7b_gptq_int4
+    prm: qwen_prm
+    data.level: 5
+    search.kube_c: 0.5
+  trials: 2
+  feeds:
+  - level5-kube-bl-v01-kubec-sweep-qwen
+  group: kube-mcts-bl
+  status: inqueue
+  priority: 2
+  expected_hr: 8
+  note: kube_c sweep 0.5 qwen7bgptq
+- id: kube-bl-v01-l5-kubec-qwen7bgptq-c8.0
+  launcher: generate_mcts_bl_cnt.py
+  hash: "1b3de827"
+  config_root: mcts_bl_kube_v01_prm800k
+  overrides:
+    llm: qwen_7b_gptq_int4
+    prm: qwen_prm
+    data.level: 5
+    search.kube_c: 8.0
+  trials: 2
+  feeds:
+  - level5-kube-bl-v01-kubec-sweep-qwen
+  group: kube-mcts-bl
+  status: inqueue
+  priority: 2
+  expected_hr: 8
+  note: kube_c sweep 8.0 qwen7bgptq
+- id: kube-bl-v01-l5-kubec-qwenmath15b-c0.1
+  launcher: generate_mcts_bl_cnt.py
+  hash: "44a0be2c"
+  config_root: mcts_bl_kube_v01_prm800k
+  overrides:
+    llm: qwen_math_1_5b
+    prm: qwen_prm
+    data.level: 5
+    search.kube_c: 0.1
+  trials: 2
+  feeds:
+  - level5-kube-bl-v01-kubec-sweep-qwen
+  group: kube-mcts-bl
+  status: inqueue
+  priority: 2
+  expected_hr: 8
+  note: kube_c sweep 0.1 qwenmath15b
+- id: kube-bl-v01-l5-kubec-qwenmath15b-c0.5
+  launcher: generate_mcts_bl_cnt.py
+  hash: "1be4e5c6"
+  config_root: mcts_bl_kube_v01_prm800k
+  overrides:
+    llm: qwen_math_1_5b
+    prm: qwen_prm
+    data.level: 5
+    search.kube_c: 0.5
+  trials: 2
+  feeds:
+  - level5-kube-bl-v01-kubec-sweep-qwen
+  group: kube-mcts-bl
+  status: inqueue
+  priority: 2
+  expected_hr: 8
+  note: kube_c sweep 0.5 qwenmath15b
+- id: kube-bl-v01-l5-kubec-qwenmath15b-c8.0
+  launcher: generate_mcts_bl_cnt.py
+  hash: "8c88ffa9"
+  config_root: mcts_bl_kube_v01_prm800k
+  overrides:
+    llm: qwen_math_1_5b
+    prm: qwen_prm
+    data.level: 5
+    search.kube_c: 8.0
+  trials: 2
+  feeds:
+  - level5-kube-bl-v01-kubec-sweep-qwen
+  group: kube-mcts-bl
+  status: inqueue
+  priority: 2
+  expected_hr: 8
+  note: kube_c sweep 8.0 qwenmath15b

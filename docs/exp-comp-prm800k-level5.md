@@ -829,6 +829,68 @@ Two activities, two shapes:
 > (`kube-bl-v01-l5-*` entries, all done — deletable after this
 > recording); no experiments.yaml entries.
 
+#### kube_c sweep × model family (QwenPRM)
+> **Compares:** sensitivity of kube-bl-v01 to the KUBE
+> exploration coefficient `kube_c`, swept {0.1, 0.5, 2.0, 8.0}
+> on the full 5-model/quant grid. 2.0 is the default (those 5
+> cells are the exact runs of the model-family table above —
+> reused, not re-run); 0.1/0.5 probe below it, 8.0 brackets
+> above. Unlike the v02 alpha × kube_c joint sweep (llama-3b,
+> parent_blend), this is a clean 1-D sweep — v01 has no
+> score_mode/alpha knob, so kube_c is the only exploration
+> scale and up/down bracketing is unaliased. Per-model read:
+> whether the KUBE advantage over cnt-bl-v01 (seen at 2.0 on
+> every model) is robust to the bonus scale, and whether the
+> optimum shifts with model strength.
+>
+> **Fixed:** method=`mcts_bl_kube_v01`, prm=qwen,
+> agg_strategy=`last`, kube_schedule=parent,
+> kube_affordable=true, bs-4, d-20, b=80, prm_batch_size=1,
+> level=5, tmpl=model-family default (native for Qwen, custom
+> for Llama).
+>
+> ⚠️ kube_c values are NOT comparable to the v02 tables'
+> (different bonus shapes across modes).
+>
+> **W&B:** kube_c=2.0 reused — llama-1b `gu5l0k7p`, llama-3b
+> `rywqssh0`, qwen-3b `79kyy2a7`, qwen-7b gptq `tmtery3w`,
+> qwen-math-1.5b `ktgdyyfx`; others none yet.
+
+| llm | kube_c | trials | status | pass@gb | naive@gb | wei@gb | maj@gb | hr/trial |
+|---|---|---|---|---|---|---|---|---|
+| llama-1b fp16 | 0.1 | — | running | — | — | — | — | — |
+| llama-1b fp16 | 0.5 | — | running | — | — | — | — | — |
+| llama-1b fp16 | 2.0 | 2 | scored | .3060<br>±.0282 | .2612<br>±.0269 | .2463<br>±.0264 | .2276<br>±.0257 | 3.11 |
+| llama-1b fp16 | 8.0 | — | running | — | — | — | — | — |
+| llama-3b fp16 | 0.1 | — | inqueue | — | — | — | — | — |
+| llama-3b fp16 | 0.5 | — | inqueue | — | — | — | — | — |
+| llama-3b fp16 | 2.0 | 2 | scored | .4851<br>±.0306 | .3918<br>±.0299 | .3769<br>±.0297 | .3731<br>±.0296 | 4.65 |
+| llama-3b fp16 | 8.0 | — | inqueue | — | — | — | — | — |
+| qwen-3b fp16 | 0.1 | — | inqueue | — | — | — | — | — |
+| qwen-3b fp16 | 0.5 | — | inqueue | — | — | — | — | — |
+| qwen-3b fp16 | 2.0 | 2 | scored | .6157<br>±.0298 | .5410<br>±.0305 | .5224<br>±.0306 | .5075<br>±.0306 | 4.10 |
+| qwen-3b fp16 | 8.0 | — | inqueue | — | — | — | — | — |
+| qwen-7b gptq-int4 | 0.1 | — | inqueue | — | — | — | — | — |
+| qwen-7b gptq-int4 | 0.5 | — | inqueue | — | — | — | — | — |
+| qwen-7b gptq-int4 | 2.0 | 2 | scored | .7164<br>±.0276 | .6157<br>±.0298 | .5858<br>±.0301 | .5746<br>±.0303 | 3.43 |
+| qwen-7b gptq-int4 | 8.0 | — | inqueue | — | — | — | — | — |
+| qwen-math-1.5b fp16 | 0.1 | — | inqueue | — | — | — | — | — |
+| qwen-math-1.5b fp16 | 0.5 | — | inqueue | — | — | — | — | — |
+| qwen-math-1.5b fp16 | 2.0 | 2 | scored | .6493<br>±.0292 | .5784<br>±.0302 | .5672<br>±.0303 | .5522<br>±.0304 | 3.25 |
+| qwen-math-1.5b fp16 | 8.0 | — | inqueue | — | — | — | — | — |
+
+> **Analysis.** 5/20 cells scored (the kube_c=2.0 column,
+> reused from the model-family table above). No sweep data yet.
+> Once filled, the key reads are: per-model optimum location
+> (does the best kube_c shift down for weaker models, whose
+> value signal is noisier?), and whether 8.0 over-explores
+> uniformly (the AZ-shaped v02 experience suggests large
+> coefficients can swamp the value term).
+> **Limitations / follow-up:** ledger
+> experiments/prm800k-level5.yaml, feeds
+> `level5-kube-bl-v01-kubec-sweep-qwen`. 15 cells inqueue
+> (priority 2, queued 2026-07-22).
+
 ### kube-mcts-bl-v02
 
 #### score_mode sweep: parent_blend (alpha) vs. path_decay (gamma × kube_c) (qwen-3b, QwenPRM)
@@ -1283,7 +1345,7 @@ Two activities, two shapes:
 
 | llm | trials | status | pass@gb | naive@gb | wei@gb | maj@gb | hr/trial |
 |---|---|---|---|---|---|---|---|
-| llama-1b fp16 | — | failed | — | — | — | — | — |
+| llama-1b fp16 | — | running | — | — | — | — | — |
 | llama-3b fp16 | 2 | scored | .4776<br>±.0306 | .4104<br>±.0301 | .3993<br>±.0300 | .3993<br>±.0300 | — |
 | qwen-3b fp16 | 2 | scored | .6231<br>±.0297 | .5709<br>±.0303 | .5522<br>±.0304 | .5410<br>±.0305 | — |
 | qwen-7b gptq-int4 | 2 | scored | .7239<br>±.0274 | .6194<br>±.0297 | .6231<br>±.0297 | .6157<br>±.0298 | — |
