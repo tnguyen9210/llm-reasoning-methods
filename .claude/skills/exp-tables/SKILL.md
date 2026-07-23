@@ -110,11 +110,18 @@ sibling tables.
      ```
    - matched cell -> targeted Edit on the existing entry: append
      this table's feeds key to its `feeds:` list. Nothing else.
-6. **Re-verify:** `python status.py --verify --ledger <stem>`
+6. **Mint the table's stable ID:** `python status.py
+   --mint-table-ids --apply` stamps a
+   `<!-- table-id: tbl-xxxxxx -->` line under the new heading
+   (immutable, survives retitles; see
+   docs/decisions/stable-table-ids.md). Prefer that tbl-id in
+   the new entries' `feeds:` (with a `# <table>` comment); the
+   human feeds key still works but is only a label.
+7. **Re-verify:** `python status.py --verify --ledger <stem>`
    (composes + global id/hash uniqueness) and eyeball
    `python status.py --sync-doc <stem>` (dry-run) — it should
    propose no changes to your fresh table.
-7. **Report**: N cells (new/reused/scored), the feeds key, and
+8. **Report**: N cells (new/reused/scored), the feeds key, and
    what to do next: Tuan reviews + sets `status: inqueue` +
    `priority` on the rows he wants run (on request, apply that
    edit for him), then `/exp-run` drains them.
@@ -126,7 +133,9 @@ Unchanged from the old skill — blockquote preamble
 blockquote with **Limitations / follow-up** naming the feeds
 key. Wrap ~72 chars; scored cells `.NNNN<br>±.NNNN`; planned
 rows all `—`. The Limitations line MUST name the feeds key in
-backticks — `--sync-doc` and exp-check row-matching key off it.
+backticks — `--sync-doc` and exp-check row-matching key off it
+(or off the `<!-- table-id -->`; either identifier works, the
+tbl-id is the durable one).
 
 ## 6. Failure modes
 

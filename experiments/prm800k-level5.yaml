@@ -1218,7 +1218,7 @@
   feeds:
   - level5-cnt-bl-v02-score-mode-qwen3b
   group: cnt-mcts-bl-v02
-  status: running
+  status: scored
   priority: 2
   expected_hr: 8
   launch:
@@ -1757,7 +1757,7 @@
   feeds:
   - level5-kdepth-bl-v01-model-family-qwen-da2.0
   group: kdepth-mcts-bl
-  status: running
+  status: failed
   priority: 1
   expected_hr: 8
   launch:
@@ -1766,6 +1766,7 @@
     pid: 1319314
     at: 2026-07-22 20:07
   history:
+    - {at: '2026-07-23 05:20', job_id: 23335926, outcome: stalled, trials_done: 1}
     - {at: 2026-07-22 18:05, job_id: 23335926, outcome: missing,
        trials_done: 0}
   note: level-5 qwen-PRM kdepth-v01 depth_alpha=2.0 qwen-7b gptq-int4
@@ -2389,7 +2390,7 @@
   trials: 2
   feeds: []
   group: sem-mcts-bl-v01
-  status: planned
+  status: failed
   priority: 1
   expected_hr: 8
   launch:
@@ -2398,6 +2399,8 @@
     pid: 591251
     at: 2026-07-21 08:31
   note: migrated from queue (id sem-bl-v01-l5-llama3b); feeds pending
+  history:
+    - {at: '2026-07-23 05:23', job_id: 23343523, outcome: crashed, trials_done: 0, note: vllm max_model_len 5000 overflow (W&B ub3yo16a)}
 - id: sem-bl-v01-l5-qwen7bgptq
   launcher: generate_mcts_sem.py
   hash: d1ba922b
@@ -2457,7 +2460,7 @@
   trials: 2
   feeds: []
   group: sem-mcts-bl-v01
-  status: planned
+  status: failed
   priority: 1.7
   expected_hr: 8
   launch:
@@ -2466,6 +2469,8 @@
     pid: 747877
     at: 2026-07-21 22:02
   note: migrated from queue (id sem-bl-v01-l5-llama1b); feeds pending
+  history:
+    - {at: '2026-07-23 05:23', job_id: 23344632, outcome: crashed, trials_done: 0, note: vllm max_model_len 5000 overflow (W&B 7g8pnggo)}
 - id: sem-bl-v01-l5-qwen3b
   launcher: generate_mcts_sem.py
   hash: 2f26fae3
@@ -2598,7 +2603,7 @@
   trials: 2
   feeds: []
   group: sem-mcts-bl-v02
-  status: planned
+  status: failed
   priority: 0.7
   expected_hr: 8
   launch:
@@ -2607,6 +2612,8 @@
     pid: 515865
     at: 2026-07-21 00:39
   note: migrated from queue (id sem-bl-v02-l5-mf-a1.0-llama3b); feeds pending
+  history:
+    - {at: '2026-07-23 05:23', job_id: 23335926, outcome: crashed, trials_done: 0, note: vllm max_model_len 5000 overflow (W&B m4fdm1v8)}
 - id: sem-bl-v02-l5-mf-a1.0-qwen7bgptq
   launcher: generate_mcts_sem.py
   hash: 1c88c591
@@ -2673,7 +2680,7 @@
   trials: 2
   feeds: []
   group: sem-mcts-bl-v02
-  status: planned
+  status: failed
   priority: 1.7
   expected_hr: 8
   launch:
@@ -2682,6 +2689,8 @@
     pid: 747880
     at: 2026-07-21 22:02
   note: migrated from queue (id sem-bl-v02-l5-mf-a1.0-llama1b); feeds pending
+  history:
+    - {at: '2026-07-23 05:23', job_id: 23338588, outcome: crashed, trials_done: 0, note: vllm max_model_len 5000 overflow (W&B a5o8bg96)}
 - id: sem-bl-v02-l5-mf-a1.0-qwen3b
   launcher: generate_mcts_sem.py
   hash: 546c30d1
@@ -2835,9 +2844,10 @@
     search.score_mode: parent_blend
     search.alpha: 0.8
   trials: 2
-  feeds: []
+  feeds:
+  - level5-kdepth-bl-v02-model-family-parent-blend-qwen
   group: kdepth-mcts-bl-v02
-  status: running
+  status: scored
   priority: 1.7
   expected_hr: 8
   launch:
@@ -2961,7 +2971,7 @@
   trials: 2
   feeds: []
   group: kube-mcts-bl-v02
-  status: running
+  status: inqueue
   priority: 2
   expected_hr: 8
   launch:
@@ -2970,6 +2980,8 @@
     pid: 933350
     at: 2026-07-22 17:59
   note: migrated from queue (id kube-bl-v02-l5-mf-a0.8-llama1b); feeds pending
+  history:
+    - {at: '2026-07-23 05:20', job_id: 23335908, outcome: stalled, trials_done: 1}
 - id: kube-bl-v02-l5-mf-a0.8-llama3b
   launcher: generate_mcts_bl_cnt.py
   hash: 30c3825d
@@ -2983,7 +2995,7 @@
   trials: 2
   feeds: []
   group: kube-mcts-bl-v02
-  status: running
+  status: inqueue
   priority: 2
   expected_hr: 8
   launch:
@@ -2992,6 +3004,8 @@
     pid: 933351
     at: 2026-07-22 17:59
   note: migrated from queue (id kube-bl-v02-l5-mf-a0.8-llama3b); feeds pending
+  history:
+    - {at: '2026-07-23 05:20', job_id: 23335922, outcome: stalled, trials_done: 1}
 - id: kube-bl-v02-l5-mf-a0.8-qwen7bgptq
   launcher: generate_mcts_bl_cnt.py
   hash: 6abe121c
@@ -3005,7 +3019,7 @@
   trials: 2
   feeds: []
   group: kube-mcts-bl-v02
-  status: running
+  status: inqueue
   priority: 2
   expected_hr: 8
   launch:
@@ -3015,6 +3029,8 @@
     at: 2026-07-22 18:40
   note: migrated from queue (id kube-bl-v02-l5-mf-a0.8-qwen7bgptq); feeds
     pending
+  history:
+    - {at: '2026-07-23 05:20', job_id: 23344018, outcome: stalled, trials_done: 1}
 - id: kube-bl-v02-l5-mf-a0.8-qwenmath15b
   launcher: generate_mcts_bl_cnt.py
   hash: 4c6e2887
@@ -3028,7 +3044,7 @@
   trials: 2
   feeds: []
   group: kube-mcts-bl-v02
-  status: running
+  status: inqueue
   priority: 2
   expected_hr: 8
   launch:
@@ -3038,6 +3054,8 @@
     at: 2026-07-22 20:07
   note: migrated from queue (id kube-bl-v02-l5-mf-a0.8-qwenmath15b); feeds
     pending
+  history:
+    - {at: '2026-07-23 05:20', job_id: 23338588, outcome: stalled, trials_done: 0}
 - id: kube-bl-v02-l5-mf-a0.0-llama1b
   launcher: generate_mcts_bl_cnt.py
   hash: 7d6c3899
@@ -3167,9 +3185,10 @@
     search.alpha: 1.0
     search.kube_c: 0.5
   trials: 2
-  feeds: []
+  feeds:
+  - level5-kube-bl-v02-alpha-kubec-sweep-llama3b
   group: kube-mcts-bl-v02
-  status: planned
+  status: scored
   priority: 1.8
   expected_hr: 8
   launch:
@@ -3191,9 +3210,10 @@
     search.alpha: 1.0
     search.kube_c: 0.1
   trials: 2
-  feeds: []
+  feeds:
+  - level5-kube-bl-v02-alpha-kubec-sweep-llama3b
   group: kube-mcts-bl-v02
-  status: planned
+  status: scored
   priority: 1.8
   expected_hr: 8
   launch:
@@ -3215,9 +3235,10 @@
     search.alpha: 0.8
     search.kube_c: 0.5
   trials: 2
-  feeds: []
+  feeds:
+  - level5-kube-bl-v02-alpha-kubec-sweep-llama3b
   group: kube-mcts-bl-v02
-  status: planned
+  status: scored
   priority: 1.8
   expected_hr: 8
   launch:
@@ -3239,9 +3260,10 @@
     search.alpha: 0.8
     search.kube_c: 0.1
   trials: 2
-  feeds: []
+  feeds:
+  - level5-kube-bl-v02-alpha-kubec-sweep-llama3b
   group: kube-mcts-bl-v02
-  status: running
+  status: scored
   priority: 1.8
   expected_hr: 8
   launch:
@@ -3263,9 +3285,10 @@
     search.alpha: 0.5
     search.kube_c: 0.5
   trials: 2
-  feeds: []
+  feeds:
+  - level5-kube-bl-v02-alpha-kubec-sweep-llama3b
   group: kube-mcts-bl-v02
-  status: running
+  status: scored
   priority: 1.8
   expected_hr: 8
   launch:
@@ -3287,9 +3310,10 @@
     search.alpha: 0.5
     search.kube_c: 0.1
   trials: 2
-  feeds: []
+  feeds:
+  - level5-kube-bl-v02-alpha-kubec-sweep-llama3b
   group: kube-mcts-bl-v02
-  status: running
+  status: scored
   priority: 1.8
   expected_hr: 8
   launch:
@@ -3311,9 +3335,10 @@
     search.alpha: 0.5
     search.kube_c: 2.0
   trials: 2
-  feeds: []
+  feeds:
+  - level5-kube-bl-v02-alpha-kubec-sweep-llama3b
   group: kube-mcts-bl-v02
-  status: running
+  status: scored
   priority: 1.8
   expected_hr: 8
   launch:
@@ -3336,7 +3361,7 @@
   feeds:
   - level5-kube-bl-v01-kubec-sweep-qwen
   group: kube-mcts-bl
-  status: running
+  status: scored
   priority: 2
   expected_hr: 8
   launch:
@@ -3358,7 +3383,7 @@
   feeds:
   - level5-kube-bl-v01-kubec-sweep-qwen
   group: kube-mcts-bl
-  status: running
+  status: scored
   priority: 2
   expected_hr: 8
   launch:
@@ -3380,7 +3405,7 @@
   feeds:
   - level5-kube-bl-v01-kubec-sweep-qwen
   group: kube-mcts-bl
-  status: running
+  status: scored
   priority: 2
   expected_hr: 8
   launch:
@@ -3402,7 +3427,7 @@
   feeds:
   - level5-kube-bl-v01-kubec-sweep-qwen
   group: kube-mcts-bl
-  status: running
+  status: failed
   priority: 2
   expected_hr: 8
   launch:
@@ -3411,6 +3436,8 @@
     pid: 1556198
     at: 2026-07-22 23:10
   note: kube_c sweep 0.1 llama3b
+  history:
+    - {at: '2026-07-23 05:20', job_id: 23335925, outcome: stalled, trials_done: 0}
 - id: kube-bl-v01-l5-kubec-llama3b-c0.5
   launcher: generate_mcts_bl_cnt.py
   hash: "14e0f736"
@@ -3424,7 +3451,7 @@
   feeds:
   - level5-kube-bl-v01-kubec-sweep-qwen
   group: kube-mcts-bl
-  status: running
+  status: failed
   priority: 2
   expected_hr: 8
   launch:
@@ -3433,6 +3460,8 @@
     pid: 1556199
     at: 2026-07-22 23:10
   note: kube_c sweep 0.5 llama3b
+  history:
+    - {at: '2026-07-23 05:20', job_id: 23338589, outcome: stalled, trials_done: 0}
 - id: kube-bl-v01-l5-kubec-llama3b-c8.0
   launcher: generate_mcts_bl_cnt.py
   hash: "a5af7aea"
@@ -3446,7 +3475,7 @@
   feeds:
   - level5-kube-bl-v01-kubec-sweep-qwen
   group: kube-mcts-bl
-  status: running
+  status: failed
   priority: 2
   expected_hr: 8
   launch:
@@ -3455,6 +3484,8 @@
     pid: 1556813
     at: 2026-07-22 23:13
   note: kube_c sweep 8.0 llama3b
+  history:
+    - {at: '2026-07-23 05:20', job_id: 23338597, outcome: stalled, trials_done: 0}
 - id: kube-bl-v01-l5-kubec-qwen3b-c0.1
   launcher: generate_mcts_bl_cnt.py
   hash: "318e4e7d"
@@ -3468,7 +3499,7 @@
   feeds:
   - level5-kube-bl-v01-kubec-sweep-qwen
   group: kube-mcts-bl
-  status: running
+  status: failed
   priority: 2
   expected_hr: 8
   launch:
@@ -3477,6 +3508,8 @@
     pid: 1564591
     at: 2026-07-22 23:38
   note: kube_c sweep 0.1 qwen3b
+  history:
+    - {at: '2026-07-23 05:20', job_id: 23344632, outcome: stalled, trials_done: 0}
 - id: kube-bl-v01-l5-kubec-qwen3b-c0.5
   launcher: generate_mcts_bl_cnt.py
   hash: "aab2e8f6"
@@ -3490,7 +3523,7 @@
   feeds:
   - level5-kube-bl-v01-kubec-sweep-qwen
   group: kube-mcts-bl
-  status: running
+  status: failed
   priority: 2
   expected_hr: 8
   launch:
@@ -3499,6 +3532,8 @@
     pid: 1564592
     at: 2026-07-22 23:38
   note: kube_c sweep 0.5 qwen3b
+  history:
+    - {at: '2026-07-23 05:20', job_id: 23335892, outcome: stalled, trials_done: 0}
 - id: kube-bl-v01-l5-kubec-qwen3b-c8.0
   launcher: generate_mcts_bl_cnt.py
   hash: "c2986d28"

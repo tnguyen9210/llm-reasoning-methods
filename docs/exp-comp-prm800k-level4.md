@@ -334,6 +334,7 @@ instead of one wide sparse grid.)
 > backfilled; `generated` = raw output, not scored.
 
 #### custom vs native template comparison
+<!-- table-id: tbl-c1962a -->
 > **Compares:** `tmpl` (custom vs. native chat template) — the
 > only varying knob; all other knobs held at default and dropped
 > as columns. Kept as separate per-model tables (rather than one
@@ -416,6 +417,7 @@ instead of one wide sparse grid.)
 > compares within their own pair, not across precision.
 
 #### prm_batch_size sweep
+<!-- table-id: tbl-0642eb -->
 > **Compares:** the in-loop PRM scoring micro-batch
 > (`search.prm_batch_size`, [utils/configs.py](../utils/configs.py))
 > — same search config otherwise, so pass@gb should be ~flat
@@ -462,6 +464,7 @@ instead of one wide sparse grid.)
 > [findings/exp-findings/prm-batch-size-throughput-memory.md](findings/exp-findings/prm-batch-size-throughput-memory.md).
 
 #### rlhflow vs qwen PRM comparison
+<!-- table-id: tbl-ab03de -->
 > **Compares:** `prm.kind` (Llama-8B-PRM "rlhflow" vs
 > Qwen-Math-7B-PRM "qwen") — the *scoring* model, not the policy
 > LLM. Both PRMs support scoring via `PRM_REGISTRY`/`build_prm()`
@@ -522,6 +525,7 @@ instead of one wide sparse grid.)
 > to fully isolate `prm.kind` from `prm_batch_size`.
 
 #### enforce_eager comparison
+<!-- table-id: tbl-bfab79 -->
 > **Compares:** `llm.enforce_eager` (vLLM's CUDA-graph toggle —
 > `True` disables CUDA graphs, `False`/default uses them) at
 > fixed model.
@@ -561,6 +565,7 @@ instead of one wide sparse grid.)
 > values run yet, so this can't be checked for generality.
 
 #### model family, size, quantization comparison
+<!-- table-id: tbl-8ca223 -->
 > **Compares:** model family, size, and quantization jointly —
 > `llm` is a single combined string (model-precision) rather
 > than split columns, since this varies model+precision per row
@@ -614,6 +619,7 @@ instead of one wide sparse grid.)
 > from there; rows to be filled in as reruns land.
 
 #### custom vs native template comparison
+<!-- table-id: tbl-55d130 -->
 
 | llm | tmpl | trials | status | pass@gb | naive@gb | wei@gb | maj@gb | hr/trial |
 |---|---|---|---|---|---|---|---|---|
@@ -645,6 +651,7 @@ instead of one wide sparse grid.)
 | qwen-7b gptq-int4 | native | — | to rerun | — | — | — | — | — |
 
 #### prm_batch_size sweep
+<!-- table-id: tbl-b5bc59 -->
 
 | prm | prm_bs | trials | status | pass@gb | hr/trial | peak GPU mem (GB) |
 |---|---|---|---|---|---|---|
@@ -655,6 +662,7 @@ instead of one wide sparse grid.)
 | qwen | 4 | — | to rerun | — | — | — |
 
 #### rlhflow vs qwen PRM comparison
+<!-- table-id: tbl-ef6f98 -->
 
 | llm | prm | prmbs | trials | status | pass@gb | naive@gb | wei@gb | maj@gb | hr/trial |
 |---|---|---|---|---|---|---|---|---|---|
@@ -668,13 +676,15 @@ instead of one wide sparse grid.)
 | qwen-math-1.5b | qwen | 1 | — | to rerun | — | — | — | — | — |
 
 #### enforce_eager comparison
+<!-- table-id: tbl-adf2f8 -->
 
 | llm | prm | enforce_eager | trials | status | pass@gb | naive@gb | wei@gb | maj@gb | hr/trial |
 |---|---|---|---|---|---|---|---|---|---|
 | llama-3b | rlhflow | False (default) | — | to rerun | — | — | — | — | — |
-| llama-3b | rlhflow | True | — | to rerun | — | — | — | — | — |
+| llama-3b | rlhflow | True | 2 | scored | .7461<br>±.0273 | .5039<br>±.0313 | .6016<br>±.0307 | .5938<br>±.0308 | 4.65 |
 
 #### model family, size, quantization comparison
+<!-- table-id: tbl-702925 -->
 > **Fixed:** method=`mcts_cnt_v01`, prm=rlhflow, agg_strategy=
 > `last`, cpuct=2.0, bs-4, d-20, b=80, prm_batch_size=1 (default,
 > unlike the pre-fix `### cnt-mcts` table's GPTQ rows which used
@@ -719,6 +729,7 @@ instead of one wide sparse grid.)
 > for the full write-up.
 
 #### model family, size, quantization comparison (qwen PRM)
+<!-- table-id: tbl-6fe5a2 -->
 > **Fixed:** method=`mcts_cnt_v01`, prm=qwen, agg_strategy=
 > `last`, cpuct=2.0, bs-4, d-20, b=80, prm_batch_size=1 (default,
 > matched across every row — same rationale as the rlhflow
@@ -742,6 +753,7 @@ instead of one wide sparse grid.)
 | qwen-math-1.5b fp16 | 2 | scored | .8906<br>±.0195 | .8008<br>±.0250 | .8047<br>±.0248 | .7891<br>±.0255 | 2.84 |
 
 #### agg_strategy comparison (qwen-3b, qwen-math-1.5b)
+<!-- table-id: tbl-3ea294 -->
 > **Compares:** `gen.agg_strategy` (`"min"` | `"prod"` | `"last"` —
 > `core/scoring.py::aggregate_scores`) — how a candidate's
 > per-step PRM scores collapse to one scalar. `"last"` is every
@@ -811,6 +823,7 @@ instead of one wide sparse grid.)
 > see `core/mcts_sem_search_v02_00_00.py:select_child`).
 
 #### embeds_proj × cov_update sweep (v02)
+<!-- table-id: tbl-860167 -->
 > **Compares:** a 2×2-per-model grid instead of two single-knob
 > sweeps. `embeds_proj`: `none` feeds the PRM's raw 4096-dim
 > hidden state into the covariance bonus; `sparse512` JL-projects
@@ -880,6 +893,7 @@ instead of one wide sparse grid.)
 > still entirely `planned`.
 
 #### embeds_strategy × scope sweep (v02, qwen PRM)
+<!-- table-id: tbl-82c90f -->
 > **Compares:** how the PRM hidden state is pooled into the
 > covariance bonus — `embeds_strategy` (`last` = final-token
 > hidden state vs. `avg` = mean over tokens) crossed with
@@ -959,6 +973,7 @@ instead of one wide sparse grid.)
 > axis, since v01 supports it.
 
 #### ds_alpha sweep (v02)
+<!-- table-id: tbl-1c9c2c -->
 > **Compares:** `ds_alpha`, the diversity-bonus weight in
 > `q_val = ds_beta*score + ds_alpha*diversity` (scaled by
 > `sqrt(log(1 + parent_visits))` on subsequent visits; see
@@ -1018,6 +1033,7 @@ instead of one wide sparse grid.)
 > plateau as final.
 
 #### ds_alpha sweep (v02, qwen PRM)
+<!-- table-id: tbl-93c239 -->
 > **Compares:** the same `ds_alpha` diversity-bonus sweep as the
 > table above, but with `prm=qwen` (Qwen-Math-7B-PRM) as the
 > scoring model instead of `prm=rlhflow` (Llama-8B-PRM). Reading
@@ -1073,6 +1089,7 @@ instead of one wide sparse grid.)
 > table already establishes the 0→on jump.
 
 #### lam / ds_alpha joint sweep (v02, llama-1b, step 1 done)
+<!-- table-id: tbl-0efc55 -->
 > **Compares:** whether `lam` (the ridge constant setting `V`'s
 > initial scale, `V_0 = lam*I`) and `ds_alpha` are truly redundant
 > along the derived invariant `w_eff = ds_alpha/sqrt(lam)`, or
@@ -1167,6 +1184,7 @@ instead of one wide sparse grid.)
 > pass@gb itself shows no `lam` effect anywhere in the completed grid.
 
 #### lam / ds_alpha joint sweep (v02, llama-3b, step 1 done)
+<!-- table-id: tbl-f50e22 -->
 > **Compares:** the same `lam`/`ds_alpha` joint-tuning question as
 > the llama-1b table above, on llama-3b. **This is the table queued
 > to run first** — llama-3b has no existing `ds_alpha=0` baseline
@@ -1247,6 +1265,7 @@ instead of one wide sparse grid.)
 > are worth running next.
 
 #### lam / ds_alpha joint sweep (v02, qwen-math-1.5b)
+<!-- table-id: tbl-7491b1 -->
 > **Compares:** two `w_eff` checkpoints at `lam=0.1` against the
 > existing `lam=0.01` baseline in the `ds_alpha sweep (v02, qwen
 > PRM)` table above — a spot-check on qwen-math-1.5b, not a full
@@ -1286,6 +1305,7 @@ instead of one wide sparse grid.)
 > step-1 check like the other two tables.
 
 #### model family, size, quantization comparison
+<!-- table-id: tbl-0c4ffd -->
 > **Compares:** model family, size, and quantization jointly —
 > same shape as cnt-mcts's table above, for cross-method
 > comparability.
@@ -1332,6 +1352,7 @@ instead of one wide sparse grid.)
 > n=2, so accuracy gaps within ~1 SEM should be read as ties.
 
 #### model family, size, quantization comparison (qwen PRM)
+<!-- table-id: tbl-352d94 -->
 > **Compares:** the same 7-model family/size/quantization sweep
 > as the sem table above, but scored with `prm=qwen`
 > (Qwen-Math-7B-PRM) instead of the default `prm=rlhflow`
@@ -1394,6 +1415,7 @@ instead of one wide sparse grid.)
 > pattern.
 
 #### rlhflow vs qwen PRM comparison
+<!-- table-id: tbl-b4c266 -->
 > **Compares:** `prm.kind` (Llama-8B-PRM "rlhflow" vs
 > Qwen-Math-7B-PRM "qwen") — the *scoring* model, not the policy
 > LLM. Scoring-side counterpart to the cnt-mcts table of the same
@@ -1450,6 +1472,7 @@ instead of one wide sparse grid.)
 > the way qwen-math-1.5b already is.
 
 #### agg_strategy comparison (qwen-3b, qwen-math-1.5b)
+<!-- table-id: tbl-baf795 -->
 > **Compares:** `gen.agg_strategy` (`"min"` | `"prod"` | `"last"` —
 > `core/scoring.py::aggregate_scores`) — how a candidate's
 > per-step PRM scores collapse to one scalar. Scoring-side
@@ -1480,6 +1503,7 @@ instead of one wide sparse grid.)
 | qwen-math-1.5b | qwen | last | 2 | scored (pre-fix backup) | .8750<br>±.0207 | .7969<br>±.0252 | .7734<br>±.0262 | .7578<br>±.0268 | 3.96 |
 
 #### agg_strategy comparison (qwen-3b, qwen-math-1.5b, lam=0.1, w_eff=10)
+<!-- table-id: tbl-b1e565 -->
 > **Compares:** same `gen.agg_strategy` knob as the table above, at
 > `lam=0.1` instead of the default `lam=0.01` — matched `w_eff` (via
 > `w_eff = ds_alpha/sqrt(lam)`) rather than matched `ds_alpha`, so
@@ -1525,6 +1549,7 @@ instead of one wide sparse grid.)
 > `experiments.yaml` (all rlhflow-PRM cells for both models).
 
 #### agg_strategy comparison (qwen-3b, qwen-math-1.5b, lam=0.1, w_eff=100)
+<!-- table-id: tbl-db5810 -->
 > **Compares:** same as the `w_eff=10` table above, at the next
 > `w_eff` checkpoint.
 >
@@ -1570,6 +1595,7 @@ instead of one wide sparse grid.)
 > data lands.
 
 #### LLM vs PRM embeds comparison
+<!-- table-id: tbl-1eed5c -->
 > **Compares:** the diversity-embedding *source* — v01 sources
 > from the policy LLM (2nd vLLM engine); v02 sources from the
 > PRM. One table per model, at matched template, for the
@@ -1625,6 +1651,7 @@ instead of one wide sparse grid.)
 > replace it, or remove it.)
 
 #### model family, size, quantization comparison (qwen PRM)
+<!-- table-id: tbl-deb9f9 -->
 > **Compares:** model family, size, and quantization jointly —
 > same 7-model/quant grid as cnt-mcts (updated)'s equivalent
 > table above, so a direct bl_cnt-vs-cnt read is possible once
@@ -1688,6 +1715,7 @@ instead of one wide sparse grid.)
 > algorithm and its schedule/feasibility design.
 
 #### model family, size, quantization comparison (qwen PRM)
+<!-- table-id: tbl-fbd467 -->
 > **Compares:** model family, size, and quantization jointly —
 > same 7-model/quant grid as cnt-mcts-bl-v01's equivalent table
 > above, so a direct v01-vs-v02 (PUCT-vs-KUBE) read is possible
@@ -1748,6 +1776,7 @@ instead of one wide sparse grid.)
 > intended).
 
 #### model family, size, quantization comparison (qwen PRM)
+<!-- table-id: tbl-7367f8 -->
 > **Compares:** model family, size, and quantization jointly —
 > same 7-model/quant grid as cnt-mcts-bl-v01's equivalent table
 > above, so a direct bl_cnt-v01-vs-v03 (and, once v02 has runs,
@@ -1804,6 +1833,7 @@ instead of one wide sparse grid.)
 > the algorithm and its `ds_alpha_schedule` design.
 
 #### model family, size, quantization comparison (qwen PRM, w_eff=100)
+<!-- table-id: tbl-ed6194 -->
 > **Compares:** model family, size, and quantization jointly —
 > same 7-model/quant grid as cnt-mcts-bl-v01's equivalent table
 > above, so a direct bl_sem-vs-bl_cnt read is possible once both
@@ -1855,6 +1885,7 @@ instead of one wide sparse grid.)
 > no sweep along those axes yet for this algorithm.
 
 #### model family, size, quantization comparison (qwen PRM, w_eff=10)
+<!-- table-id: tbl-7fec69 -->
 > **Compares:** same 7-model/quant grid as the `w_eff=100` table
 > above, at one order of magnitude lower effective diversity
 > weight — the two tables together give a first (coarse) read on
@@ -1918,6 +1949,7 @@ instead of one wide sparse grid.)
 ### cnt-mcts
 
 #### model family comparison (b=320, qwen PRM)
+<!-- table-id: tbl-4e21d6 -->
 > **Compares:** a 5-model family/size sweep (llama-1b, llama-3b
 > fp16, qwen-3b fp16, qwen-7b gptq-int4, qwen-math-1.5b — GPTQ
 > variants llama-3b gptq and qwen-3b gptq-int4 excluded, out of
@@ -1969,6 +2001,7 @@ instead of one wide sparse grid.)
 ### sem-mcts
 
 #### model family comparison (b=320, qwen PRM, lam=0.1, w_eff=10)
+<!-- table-id: tbl-e144a5 -->
 > **Compares:** a 5-model family/size sweep (llama-1b, llama-3b
 > fp16, qwen-3b fp16, qwen-7b gptq-int4, qwen-math-1.5b — GPTQ
 > variants llama-3b gptq and qwen-3b gptq-int4 excluded, out of
@@ -2025,6 +2058,7 @@ instead of one wide sparse grid.)
 > single-axis isolation isn't possible yet.
 
 #### model family comparison (b=320, qwen PRM, lam=0.1, w_eff=100)
+<!-- table-id: tbl-179d62 -->
 > **Compares:** identical setup to the `w_eff=10` table above
 > (same 5-model scope — GPTQ variants llama-3b gptq and qwen-3b
 > gptq-int4 excluded, out of scope for this table), at

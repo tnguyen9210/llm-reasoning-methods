@@ -142,6 +142,7 @@ Two activities, two shapes:
 ### cnt-mcts
 
 #### model family, size, quantization comparison (RLHFlowPRM)
+<!-- table-id: tbl-266060 -->
 > **Fixed:** method=`mcts_cnt_v01`, prm=rlhflow, agg_strategy=
 > `last`, cpuct=2.0, bs-4, d-20, b=80, prm_batch_size=1,
 > tmpl=model-family default (native for Qwen, custom for Llama).
@@ -157,6 +158,7 @@ Two activities, two shapes:
 | qwen-math-1.5b fp16 | — | planned | — | — | — | — | — |
 
 #### model family, size, quantization comparison (QwenPRM)
+<!-- table-id: tbl-ed4d78 -->
 > **Fixed:** method=`mcts_cnt_v01`, prm=qwen, agg_strategy=
 > `last`, cpuct=2.0, bs-4, d-20, b=80, prm_batch_size=1,
 > tmpl=model-family default (native for Qwen, custom for Llama).
@@ -193,6 +195,7 @@ Two activities, two shapes:
 > than raw compute cost.
 
 #### agg_strategy comparison (qwen-3b, qwen-math-1.5b)
+<!-- table-id: tbl-829582 -->
 > **Compares:** `gen.agg_strategy` (`"min"` | `"prod"` | `"last"` —
 > `core/scoring.py::aggregate_scores`) — how a candidate's
 > per-step PRM scores collapse to one scalar. `"last"` is every
@@ -214,6 +217,7 @@ Two activities, two shapes:
 ### sem-mcts (v02)
 
 #### embeds_strategy × scope sweep (QwenPRM)
+<!-- table-id: tbl-08eeb2 -->
 > **Compares:** how the PRM hidden state is pooled into the
 > covariance bonus — `embeds_strategy` (`last` = final-token
 > hidden state vs. `avg` = mean over tokens) crossed with
@@ -254,6 +258,7 @@ Two activities, two shapes:
 > `response` axis, since v01 supports it.
 
 #### lam / ds_alpha joint sweep (llama-1b)
+<!-- table-id: tbl-e948d5 -->
 > **Compares:** whether `lam` and `ds_alpha` affect selection
 > primarily through the effective diversity weight
 > `w_eff = ds_alpha / sqrt(lam)`, or whether `lam` also has
@@ -321,6 +326,7 @@ Two activities, two shapes:
 > and the `w_eff=0` gap-closer remain unlaunched.
 
 #### lam / ds_alpha joint sweep (llama-3b)
+<!-- table-id: tbl-652a5a -->
 > **Compares:** the same `lam`/`ds_alpha` joint-tuning question as
 > the llama-1b table above, on llama-3b.
 >
@@ -366,6 +372,7 @@ Two activities, two shapes:
 > trials/cell.
 
 #### lam / ds_alpha joint sweep (qwen-math-1.5b)
+<!-- table-id: tbl-f04cff -->
 > **Compares:** the same `lam`/`ds_alpha` joint-tuning question as
 > the llama-1b/llama-3b tables above, on qwen-math-1.5b.
 >
@@ -414,6 +421,7 @@ Two activities, two shapes:
 > checkpoints is suggestive, not conclusive.
 
 #### lam / ds_alpha joint sweep (qwen-7b gptq-int4)
+<!-- table-id: tbl-0f10a8 -->
 > **Compares:** the same `lam`/`ds_alpha` joint-tuning question as
 > the llama-1b/llama-3b/qwen-math-1.5b tables above, on qwen-7b
 > gptq-int4.
@@ -459,6 +467,7 @@ Two activities, two shapes:
 > unlaunched; only 2 trials/cell.
 
 #### model family, size, quantization comparison (RLHFlowPRM)
+<!-- table-id: tbl-daaba3 -->
 > **Compares:** model family, size, and quantization jointly —
 > same shape as cnt-mcts's table above, for cross-method
 > comparability.
@@ -482,6 +491,7 @@ Two activities, two shapes:
 > the level-5 counterpart's command with `data=gsm8k`.
 
 #### model family, size, quantization comparison (QwenPRM)
+<!-- table-id: tbl-4afa3e -->
 > **Compares:** the same 5-model family/size/quantization sweep
 > as the RLHFlowPRM table above, but scored with `prm=qwen`
 > (Qwen-Math-7B-PRM) instead of the default `prm=rlhflow`
@@ -509,6 +519,7 @@ Two activities, two shapes:
 
 
 #### agg_strategy comparison (qwen-3b, qwen-math-1.5b)
+<!-- table-id: tbl-f65982 -->
 > **Compares:** `gen.agg_strategy` (`"min"` | `"prod"` | `"last"` —
 > `core/scoring.py::aggregate_scores`) — how a candidate's
 > per-step PRM scores collapse to one scalar. Scoring-side
@@ -528,6 +539,7 @@ Two activities, two shapes:
 | qwen-math-1.5b | qwen | last | — | planned | — | — | — | — | — |
 
 #### agg_strategy comparison (qwen-3b, qwen-math-1.5b, lam=0.1, w_eff=10)
+<!-- table-id: tbl-2812aa -->
 > **Compares:** same `gen.agg_strategy` knob as the table above, at
 > `lam=0.1` instead of the default `lam=0.01` — matched `w_eff` (via
 > `w_eff = ds_alpha/sqrt(lam)`) rather than matched `ds_alpha`, so
@@ -553,6 +565,7 @@ Two activities, two shapes:
 > the level-5 counterpart's command with `data=gsm8k`.
 
 #### agg_strategy comparison (qwen-3b, qwen-math-1.5b, lam=0.1, w_eff=100)
+<!-- table-id: tbl-307c26 -->
 > **Compares:** same as the `w_eff=10` table above, at the next
 > `w_eff` checkpoint.
 >
@@ -578,6 +591,7 @@ Two activities, two shapes:
 ### cnt-mcts-bl-v01
 
 #### model family, size, quantization comparison (QwenPRM)
+<!-- table-id: tbl-7e915f -->
 > **Compares:** model family, size, and quantization jointly —
 > same 5-model/quant grid as cnt-mcts's equivalent
 > table above, so a direct bl_cnt-vs-cnt read is possible once
@@ -602,6 +616,7 @@ Two activities, two shapes:
 ### kube-mcts-bl-v01
 
 #### model family, size, quantization comparison (QwenPRM)
+<!-- table-id: tbl-7cd83c -->
 > **Compares:** model family, size, and quantization jointly —
 > same 5-model/quant grid as cnt-mcts-bl-v01's equivalent table
 > above, so a direct v01-vs-v02 (PUCT-vs-KUBE) read is possible
@@ -629,6 +644,7 @@ Two activities, two shapes:
 ### kdepth-mcts-bl-v01
 
 #### model family, size, quantization comparison (QwenPRM)
+<!-- table-id: tbl-ca40d6 -->
 > **Compares:** model family, size, and quantization jointly —
 > same 5-model/quant grid as cnt-mcts-bl-v01's equivalent table
 > above, so a direct bl_cnt-v01-vs-v03 (and, once v02 has runs,
@@ -656,6 +672,7 @@ Two activities, two shapes:
 ### sem-mcts-bl
 
 #### model family, size, quantization comparison (QwenPRM, w_eff=100)
+<!-- table-id: tbl-24aacc -->
 > **Compares:** model family, size, and quantization jointly —
 > same 5-model/quant grid as cnt-mcts-bl-v01's equivalent table
 > above, so a direct bl_sem-vs-bl_cnt read is possible once both
@@ -687,6 +704,7 @@ Two activities, two shapes:
 > the level-5 counterpart's command with `data=gsm8k`.
 
 #### model family, size, quantization comparison (QwenPRM, w_eff=10)
+<!-- table-id: tbl-2f7693 -->
 > **Compares:** same 5-model/quant grid as the `w_eff=100` table
 > above, at one order of magnitude lower effective diversity
 > weight — the two tables together give a first (coarse) read on
@@ -726,6 +744,7 @@ Two activities, two shapes:
 ### cnt-mcts
 
 #### model family comparison (b=320, QwenPRM)
+<!-- table-id: tbl-5f6056 -->
 > **Compares:** the same 5-model family/size/quantization sweep
 > as the `[gen_budget=80]` table above, but at
 > `search.gen_budget=320` (4× the b=80 budget) with
@@ -763,6 +782,7 @@ Two activities, two shapes:
 ### sem-mcts
 
 #### model family comparison (b=320, QwenPRM, lam=0.1, w_eff=10)
+<!-- table-id: tbl-1142d9 -->
 > **Compares:** the same 5-model family/size/quantization sweep
 > as the `[gen_budget=80]` sem-mcts (QwenPRM) table above, but
 > at `search.gen_budget=320` (4× the b=80 budget) and at
@@ -803,6 +823,7 @@ Two activities, two shapes:
 > the level-5 counterpart's command with `data=gsm8k`.
 
 #### model family comparison (b=320, QwenPRM, lam=0.1, w_eff=100)
+<!-- table-id: tbl-8bd25e -->
 > **Compares:** identical setup to the `w_eff=10` table above,
 > at `ds_alpha=31.6` instead of `3.16` (10× the diversity
 > weight, same `lam=0.1`) — the b=320 counterpart of the

@@ -149,6 +149,12 @@ Per cell the entry feeds:
 - `feeds` names a cell you can't find -> "feeds key X has no
   matching cell"; skip that write, still count the entry's other
   cells.
+- `feeds` values may be a stable table-id (`tbl-xxxxxx`, the
+  `<!-- table-id -->` under the table's heading) or a legacy
+  human key — both resolve; prefer the tbl-id when wiring new
+  entries. `--sync-doc`'s "orphan feeds" lines list entries
+  whose feeds match no table (see
+  docs/decisions/stable-table-ids.md).
 - One entry can feed several cells — handle each; flip
   `status: scored` only when EVERY fed cell was written cleanly.
 

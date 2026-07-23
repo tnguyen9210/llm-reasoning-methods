@@ -662,10 +662,10 @@ def check_running(entries, jobs=None):
 # ------------------------------------------------------------------ #
 # --sync-doc: rewrite table STATUS CELLS from ledger truth.           #
 # Conservative v1 (the one status.py writer, and it writes docs      #
-# only): syncs ONLY tables whose blockquote names a feeds key, and    #
-# ONLY rows that match exactly one entry (bijective). Never touches   #
-# numbers; never downgrades a scored cell (reported as a mismatch     #
-# instead). Everything unmatched is listed, never guessed.            #
+# only): syncs ONLY tables identified by a stable table-id and/or a   #
+# feeds key, and ONLY rows that match exactly one entry (bijective).  #
+# Never touches numbers; never downgrades a scored cell (reported as  #
+# a mismatch instead). Everything unmatched is listed, never guessed. #
 # ------------------------------------------------------------------ #
 _DOC_LLM_ALIASES = {
     "llama-1b": "llama_1b", "llama-3b": "llama_3b",
@@ -676,9 +676,10 @@ _DOC_LLM_ALIASES = {
     "qwen-7b gptq-int4": "qwen_7b_gptq_int4",
     "qwen-math-1.5b": "qwen_math_1_5b",
     "qwen-math-7b": "qwen_math_7b",
-    # prm column shorthands (doc cells name the PRM bare)
+    # prm column shorthands (doc cells name the PRM bare; rlhflow
+    # is the llama_prm group's display nickname)
     "qwen": "qwen_prm",
-    "rlhflow": "rlhflow_prm",
+    "rlhflow": "llama_prm",
 }
 
 _FEEDS_RE = None  # compiled lazily in _section_feeds_key
@@ -694,6 +695,28 @@ def _section_feeds_key(section_text):
         _FEEDS_RE = re.compile(
             r"feeds\s*(?:>\s*)?\n?\s*(?:>\s*)?`([\w./-]+)`")
     m = _FEEDS_RE.search(section_text)
+    return m.group(1) if m else None
+
+
+# Stable table IDs (2026-07-23): every #### table carries an opaque
+# `<!-- table-id: tbl-xxxxxx -->` line directly under its heading,
+# minted once (--mint-table-ids) and never renamed. Ledger `feeds`
+# may name either the tbl-id or the legacy human feeds key; the
+# matcher accepts both, so human keys can be relabeled or dropped
+# without breaking the ledger<->doc join. Design:
+# docs/decisions/stable-table-ids.md.
+_TABLE_ID_RE = None  # compiled lazily in _section_table_id
+
+
+def _section_table_id(section_text):
+    """Extract the stable `<!-- table-id: tbl-xxxxxx -->` a table
+    carries, or None."""
+    import re
+    global _TABLE_ID_RE
+    if _TABLE_ID_RE is None:
+        _TABLE_ID_RE = re.compile(
+            r"<!--\s*table-id:\s*(tbl-[0-9a-f]{6,8})\s*-->")
+    m = _TABLE_ID_RE.search(section_text)
     return m.group(1) if m else None
 
 
@@ -756,9 +779,10 @@ def sync_doc(doc_path, entries, apply=False):
         lines = fin.read().splitlines(keepends=True)
 
     report = {"patched": [], "mismatches": [], "skipped": [],
-              "unsynced_tables": []}
+              "unsynced_tables": [], "orphan_feeds": []}
 
     # Split into sections at #### headings.
+    doc_idents = set()
     sec_starts = [i for i, ln in enumerate(lines)
                   if ln.startswith("#### ")]
     for si, start in enumerate(sec_starts):
@@ -766,14 +790,20 @@ def sync_doc(doc_path, entries, apply=False):
                else len(lines))
         text = "".join(lines[start:end])
         key = _section_feeds_key(text)
+        tid = _section_table_id(text)
+        idents = {k for k in (tid, key) if k}
+        doc_idents |= idents
         title = lines[start].strip("# \n")
-        if key is None:
-            report["unsynced_tables"].append((title, "no feeds key"))
-            continue
-        fed = [e for e in entries if key in (e.get("feeds") or [])]
-        if not fed:
+        if not idents:
             report["unsynced_tables"].append(
-                (title, f"no entries feed `{key}`"))
+                (title, "no table-id / feeds key"))
+            continue
+        fed = [e for e in entries
+               if idents & set(e.get("feeds") or [])]
+        if not fed:
+            label = " / ".join(f"`{k}`" for k in sorted(idents))
+            report["unsynced_tables"].append(
+                (title, f"no entries feed {label}"))
             continue
 
         # Varied keys: override keys whose values differ (or are
@@ -859,10 +889,73 @@ def sync_doc(doc_path, entries, apply=False):
                 (title, e.get("id") or "?", f"{cur} -> {new}", ri))
             lines[ri] = "|".join(cells)
 
+    # Lint: entry feeds that resolve to nothing in this doc --
+    # catches renamed keys, typos, and stale wiring.
+    for e in entries:
+        for f in (e.get("feeds") or []):
+            if f not in doc_idents:
+                report["orphan_feeds"].append((e.get("id") or "?", f))
+
     if apply and report["patched"]:
         with open(doc_path, "w", encoding="utf-8") as fout:
             fout.write("".join(lines))
     return report
+
+
+def mint_table_ids(apply=False):
+    """Ensure every #### table in every tracked doc carries a stable
+    `<!-- table-id: tbl-xxxxxx -->` line (inserted directly under the
+    heading). Existing IDs are never rewritten; duplicate IDs are
+    reported. IDs are unique across ALL docs (6 hex chars, collision-
+    checked at mint time). Returns
+    {doc_path: {"existing": n, "minted": [(line0, title, id)]}},
+    plus a "dups" list of (id, locations)."""
+    import re
+    import secrets
+    id_re = re.compile(r"<!--\s*table-id:\s*(tbl-[0-9a-f]{6,8})\s*-->")
+    docs = [(stem, p) for stem, p in LEDGER_DOC.items() if p]
+
+    # Pass 1: read everything, collect existing IDs globally.
+    texts, seen, dups = {}, {}, []
+    for _, p in docs:
+        with open(p, encoding="utf-8") as fin:
+            texts[p] = fin.read().splitlines(keepends=True)
+        for i, ln in enumerate(texts[p]):
+            m = id_re.search(ln)
+            if m:
+                tid = m.group(1)
+                loc = f"{os.path.basename(p)}:L{i + 1}"
+                if tid in seen:
+                    dups.append((tid, seen[tid], loc))
+                else:
+                    seen[tid] = loc
+
+    # Pass 2: mint per doc, insert bottom-up (keeps line numbers).
+    out = {"dups": dups}
+    for _, p in docs:
+        lines = texts[p]
+        sec_starts = [i for i, ln in enumerate(lines)
+                      if ln.startswith("#### ")]
+        minted, existing = [], 0
+        for si, start in enumerate(sec_starts):
+            end = (sec_starts[si + 1] if si + 1 < len(sec_starts)
+                   else len(lines))
+            if id_re.search("".join(lines[start:end])):
+                existing += 1
+                continue
+            while True:
+                tid = "tbl-" + secrets.token_hex(3)
+                if tid not in seen:
+                    break
+            seen[tid] = f"{os.path.basename(p)}:L{start + 1}"
+            minted.append((start, lines[start].strip("# \n"), tid))
+        for start, _, tid in sorted(minted, reverse=True):
+            lines.insert(start + 1, f"<!-- table-id: {tid} -->\n")
+        if apply and minted:
+            with open(p, "w", encoding="utf-8") as fout:
+                fout.write("".join(lines))
+        out[p] = {"existing": existing, "minted": minted}
+    return out
 
 
 # ------------------------------------------------------------------ #
@@ -1029,7 +1122,13 @@ def main():
                          "ledger stem from ledger truth (dry-run "
                          "unless --apply)")
     ap.add_argument("--apply", action="store_true",
-                    help="with --sync-doc: actually write the doc")
+                    help="with --sync-doc / --mint-table-ids: "
+                         "actually write the doc(s)")
+    ap.add_argument("--mint-table-ids", action="store_true",
+                    dest="mint_table_ids",
+                    help="ensure every #### table in every tracked "
+                         "doc carries a stable <!-- table-id --> "
+                         "(dry-run unless --apply)")
     ap.add_argument("--backfill", action="store_true",
                     help="emit yaml entries for result dirs not in the queue")
     ap.add_argument("--commands", action="store_true",
@@ -1046,6 +1145,22 @@ def main():
     args = ap.parse_args()
 
     queue = load_ledgers()
+
+    if args.mint_table_ids:
+        out = mint_table_ids(apply=args.apply)
+        mode = "APPLIED" if args.apply else "DRY RUN"
+        print(f"# --mint-table-ids [{mode}]")
+        for p, rep in out.items():
+            if p == "dups":
+                continue
+            print(f"  {os.path.basename(p)}: "
+                  f"existing={rep['existing']} "
+                  f"minted={len(rep['minted'])}")
+            for start, title, tid in rep["minted"]:
+                print(f"    + L{start + 1} {tid}  {title}")
+        for tid, a, b in out["dups"]:
+            print(f"  !! DUPLICATE table-id {tid}: {a} AND {b}")
+        return
 
     if args.check or args.dedup:
         spec = args.check or args.dedup
@@ -1075,10 +1190,13 @@ def main():
             print(f"  ~ skip {title}: {row}: {msg}")
         for title, msg in rep["unsynced_tables"]:
             print(f"  - unsynced: {title}: {msg}")
+        for eid, f in rep["orphan_feeds"]:
+            print(f"  ? orphan feeds: {eid}: `{f}` matches no table")
         print(f"# patched={len(rep['patched'])} "
               f"mismatches={len(rep['mismatches'])} "
               f"skipped={len(rep['skipped'])} "
-              f"unsynced={len(rep['unsynced_tables'])}")
+              f"unsynced={len(rep['unsynced_tables'])} "
+              f"orphans={len(rep['orphan_feeds'])}")
         return
 
     if args.check_running:

@@ -680,9 +680,9 @@
     prm: qwen_prm
     search.method: mcts_cnt
   trials: 2
-  feeds: []
+  feeds: [tbl-6fe5a2]   # L4 b80 model-family (qwen PRM)
   group: cnt-mcts
-  status: running
+  status: scored
   priority: 2
   note: backfilled from mcts_cnt--level-4--Qwen2.5-3B--qwen--d-20--bs-4--b-080--cfg-076f1b3f
     (run_id 9kxy56vs)
@@ -769,9 +769,9 @@
   trials: 2
   feeds: []
   group: cnt-mcts
-  status: running
+  status: scored
   priority: 2
-  note: backfilled from mcts_cnt--level-4--Llama3.2-3B-GPTQ--qwen--d-20--bs-4--b-320--cfg-11326e47
+  note: backfilled from mcts_cnt--level-4--Llama3.2-3B-GPTQ--qwen--d-20--bs-4--b-320--cfg-11326e47; scored 2026-07-23, no doc cell (b320 table excludes GPTQ variants)
     (run_id p0bfobev)
 - id: sem-mcts-bl-1c3aa934
   launcher: generate_mcts_sem.py
@@ -936,13 +936,14 @@
   hash: 39024cc5
   config_root: mcts_cnt_prm800k
   overrides:
+    llm: llama_1b
     prm: qwen_prm
     search.method: mcts_cnt
     search.gen_budget: 320
   trials: 2
-  feeds: []
+  feeds: [tbl-4e21d6]   # L4 b320 model-family (qwen PRM)
   group: cnt-mcts
-  status: running
+  status: scored
   priority: 2
   note: backfilled from mcts_cnt--level-4--Llama3.2-1B--qwen--d-20--bs-4--b-320--cfg-39024cc5
     (run_id 0ag3uxi1)
@@ -1034,9 +1035,9 @@
     search.method: mcts_cnt
     search.gen_budget: 320
   trials: 2
-  feeds: []
+  feeds: [tbl-4e21d6]   # L4 b320 model-family (qwen PRM)
   group: cnt-mcts
-  status: running
+  status: scored
   priority: 2
   note: backfilled from mcts_cnt--level-4--Qwen2.5-3B--qwen--d-20--bs-4--b-320--cfg-43be7dfa
     (run_id tn7cft7k)
@@ -1064,9 +1065,9 @@
     search.method: mcts_cnt
     search.gen_budget: 320
   trials: 2
-  feeds: []
+  feeds: [tbl-4e21d6]   # L4 b320 model-family (qwen PRM)
   group: cnt-mcts
-  status: running
+  status: scored
   priority: 2
   note: backfilled from mcts_cnt--level-4--Qwen2.5-7B-GPTQ-Int4--qwen--d-20--bs-4--b-320--cfg-4ff0cf1e
     (run_id gxu398jn)
@@ -1080,9 +1081,9 @@
     search.method: mcts_cnt
     search.gen_budget: 320
   trials: 2
-  feeds: []
+  feeds: [tbl-4e21d6]   # L4 b320 model-family (qwen PRM)
   group: cnt-mcts
-  status: running
+  status: scored
   priority: 2
   note: backfilled from mcts_cnt--level-4--Qwen2.5-Math-1.5B--qwen--d-20--bs-4--b-320--cfg-520f87c8
     (run_id h2ofp3ti)
@@ -1212,9 +1213,9 @@
     search.method: mcts_cnt
     search.gen_budget: 320
   trials: 2
-  feeds: []
+  feeds: [tbl-4e21d6]   # L4 b320 model-family (qwen PRM)
   group: cnt-mcts
-  status: running
+  status: scored
   priority: 2
   note: backfilled from mcts_cnt--level-4--Llama3.2-3B--qwen--d-20--bs-4--b-320--cfg-8ce1ea23
     (run_id ky73v26e)
@@ -1226,9 +1227,9 @@
     llm: llama_3b_gptq
     prm: qwen_prm
   trials: 2
-  feeds: []
+  feeds: [tbl-6fe5a2]   # L4 b80 model-family (qwen PRM)
   group: cnt-mcts
-  status: running
+  status: scored
   priority: 2
   note: backfilled from mcts_cnt_v01--level-4--Llama3.2-3B-GPTQ--qwen--d-20--bs-4--b-080--cfg-8db79188
     (run_id 34hihgfu)
@@ -1346,9 +1347,9 @@
   trials: 2
   feeds: []
   group: cnt-mcts
-  status: running
+  status: scored
   priority: 2
-  note: backfilled from mcts_cnt--level-4--Qwen2.5-3B-GPTQ-Int4--qwen--d-20--bs-4--b-320--cfg-ac3def03
+  note: backfilled from mcts_cnt--level-4--Qwen2.5-3B-GPTQ-Int4--qwen--d-20--bs-4--b-320--cfg-ac3def03; scored 2026-07-23, no doc cell (b320 table excludes GPTQ variants)
     (run_id 5j0ryst8)
 - id: sem-mcts-ae450961
   launcher: generate_mcts_sem.py
@@ -1441,9 +1442,9 @@
     prm: qwen_prm
     gen.agg_strategy: prod
   trials: 2
-  feeds: []
+  feeds: [tbl-3ea294]   # L4 agg_strategy comparison
   group: cnt-mcts
-  status: running
+  status: scored
   priority: 2
   note: backfilled from mcts_cnt_v01--level-4--Qwen2.5-3B--qwen--d-20--bs-4--b-080--cfg-b7f043a2
     (run_id z9g695wc)
@@ -1456,9 +1457,9 @@
     prm: qwen_prm
     search.method: mcts_cnt
   trials: 2
-  feeds: []
+  feeds: [tbl-6fe5a2]   # L4 b80 model-family (qwen PRM)
   group: cnt-mcts
-  status: running
+  status: scored
   priority: 2
   note: backfilled from mcts_cnt--level-4--Qwen2.5-Math-1.5B--qwen--d-20--bs-4--b-080--cfg-b9bdc323
     (run_id 9skdu6r4)
@@ -1585,9 +1586,9 @@
     prm: qwen_prm
     search.method: mcts_cnt
   trials: 2
-  feeds: []
+  feeds: [tbl-6fe5a2]   # L4 b80 model-family (qwen PRM)
   group: cnt-mcts
-  status: running
+  status: scored
   priority: 2
   note: backfilled from mcts_cnt--level-4--Llama3.2-3B--qwen--d-20--bs-4--b-080--cfg-d13c8fc3
     (run_id 5opc7rii)
@@ -1623,13 +1624,14 @@
   hash: e829c53b
   config_root: mcts_cnt_prm800k
   overrides:
+    prm: llama_prm
     llm: llama_3b
     search.method: mcts_cnt
     llm.enforce_eager: true
   trials: 2
-  feeds: []
+  feeds: [tbl-adf2f8]   # L4 enforce_eager comparison
   group: cnt-mcts
-  status: running
+  status: scored
   priority: 2
   note: backfilled from mcts_cnt--level-4--Llama3.2-3B--rlhflow--d-20--bs-4--b-080--cfg-e829c53b
     (run_id e5ki98he)

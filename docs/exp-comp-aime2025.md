@@ -144,6 +144,7 @@ Two activities, two shapes:
 ### cnt-mcts
 
 #### model family, size, quantization comparison (RLHFlowPRM)
+<!-- table-id: tbl-161a03 -->
 > **Fixed:** method=`mcts_cnt_v01`, prm=rlhflow, agg_strategy=
 > `last`, cpuct=2.0, bs-4, d-20, b=80, prm_batch_size=1,
 > tmpl=model-family default (native for Qwen, custom for Llama),
@@ -161,6 +162,7 @@ Two activities, two shapes:
 | qwen-math-1.5b fp16 | — | planned | — | — | — | — | — |
 
 #### model family, size, quantization comparison (QwenPRM)
+<!-- table-id: tbl-e742a7 -->
 > **Fixed:** method=`mcts_cnt_v01`, prm=qwen, agg_strategy=
 > `last`, cpuct=2.0, bs-4, d-20, b=80, prm_batch_size=1,
 > tmpl=model-family default (native for Qwen, custom for Llama),
@@ -195,6 +197,7 @@ Two activities, two shapes:
 > entirely planned.
 
 #### agg_strategy comparison (qwen-3b, qwen-math-1.5b)
+<!-- table-id: tbl-6dad4f -->
 > **Compares:** `gen.agg_strategy` (`"min"` | `"prod"` | `"last"` —
 > `core/scoring.py::aggregate_scores`) — how a candidate's
 > per-step PRM scores collapse to one scalar. `"last"` is every
@@ -217,6 +220,7 @@ Two activities, two shapes:
 ### sem-mcts (v02)
 
 #### embeds_strategy × scope sweep (QwenPRM)
+<!-- table-id: tbl-0c55e1 -->
 > **Compares:** how the PRM hidden state is pooled into the
 > covariance bonus — `embeds_strategy` (`last` = final-token
 > hidden state vs. `avg` = mean over tokens) crossed with
@@ -258,6 +262,7 @@ Two activities, two shapes:
 > `response` axis, since v01 supports it.
 
 #### lam / ds_alpha joint sweep (llama-1b)
+<!-- table-id: tbl-b1a6d9 -->
 > **Compares:** whether `lam` and `ds_alpha` affect selection
 > primarily through the effective diversity weight
 > `w_eff = ds_alpha / sqrt(lam)`, or whether `lam` also has
@@ -320,6 +325,7 @@ Two activities, two shapes:
 > with the centermode tables' `none` rows below.
 
 #### lam / ds_alpha joint sweep (llama-3b)
+<!-- table-id: tbl-d0ed2a -->
 > **Compares:** the same `lam`/`ds_alpha` joint-tuning question as
 > the llama-1b table above, on llama-3b.
 >
@@ -361,6 +367,7 @@ Two activities, two shapes:
 > with the centermode tables' `none` rows below.
 
 #### lam / ds_alpha joint sweep (qwen-math-1.5b)
+<!-- table-id: tbl-8bf48f -->
 > **Compares:** the same `lam`/`ds_alpha` joint-tuning question as
 > the llama-1b/llama-3b tables above, on qwen-math-1.5b.
 >
@@ -402,6 +409,7 @@ Two activities, two shapes:
 > with the centermode tables' `none` rows below.
 
 #### lam / ds_alpha joint sweep (qwen-7b gptq-int4)
+<!-- table-id: tbl-ba8af1 -->
 > **Compares:** the same `lam`/`ds_alpha` joint-tuning question as
 > the llama-1b/llama-3b/qwen-math-1.5b tables above, on qwen-7b
 > gptq-int4.
@@ -444,6 +452,7 @@ Two activities, two shapes:
 > with the centermode tables' `none` rows below.
 
 #### embeds_center_mode comparison (lam=0.01/ds_alpha=1)
+<!-- table-id: tbl-4f8220 -->
 > **Compares:** `embeds_center_mode="local"` (rep_exp-style
 > sibling-group centering) against `embeds_center=false` (no
 > centering — today's default). `"fixed"` mode isn't in this table
@@ -493,6 +502,7 @@ Two activities, two shapes:
 > exists for AIME2025.
 
 #### embeds_center_mode comparison (lam=0.01/ds_alpha=10)
+<!-- table-id: tbl-ddf79e -->
 > **Compares:** same as the `ds_alpha=1` table above, at the next
 > `w_eff` checkpoint (`w_eff = ds_alpha/sqrt(lam) = 100`).
 >
@@ -532,6 +542,7 @@ Two activities, two shapes:
 > until more trials accumulate.
 
 #### agg_strategy comparison (qwen-3b, qwen-math-1.5b, lam=0.01/ds_alpha=1)
+<!-- table-id: tbl-6ef336 -->
 > **Compares:** `gen.agg_strategy` (`"min"` | `"prod"` | `"last"` —
 > `core/scoring.py::aggregate_scores`) — how a candidate's per-step
 > PRM scores collapse to one scalar — at `lam=0.01, ds_alpha=1.0`
@@ -558,6 +569,7 @@ Two activities, two shapes:
 > the GSM8K counterpart's command with `data=aime2025`.
 
 #### agg_strategy comparison (qwen-3b, qwen-math-1.5b, lam=0.01/ds_alpha=10)
+<!-- table-id: tbl-4498f8 -->
 > **Compares:** same as the `ds_alpha=1.0` table above, at the next
 > `w_eff` checkpoint (`w_eff = ds_alpha/sqrt(lam) = 100`).
 >
@@ -581,6 +593,7 @@ Two activities, two shapes:
 > the GSM8K counterpart's command with `data=aime2025`.
 
 #### model family, size, quantization comparison (QwenPRM, lam=0.01/ds_alpha=1)
+<!-- table-id: tbl-cfd7cf -->
 > **Compares:** model family, size, and quantization jointly,
 > scored with `prm=qwen` (Qwen-Math-7B-PRM), at `lam=0.01,
 > ds_alpha=1.0` (`w_eff = ds_alpha/sqrt(lam) = 10`) — the same
@@ -615,6 +628,7 @@ Two activities, two shapes:
 > wide; treat as directional only.
 
 #### model family, size, quantization comparison (QwenPRM, lam=0.01/ds_alpha=10)
+<!-- table-id: tbl-878af9 -->
 > **Compares:** same as the `ds_alpha=1` table above, at the next
 > `w_eff` checkpoint (`w_eff = ds_alpha/sqrt(lam) = 100`).
 >
@@ -649,6 +663,7 @@ Two activities, two shapes:
 ### cnt-mcts-bl-v01
 
 #### model family, size, quantization comparison (QwenPRM)
+<!-- table-id: tbl-6f004c -->
 > **Compares:** model family, size, and quantization jointly —
 > same 5-model/quant grid as cnt-mcts's equivalent
 > table above, so a direct bl_cnt-vs-cnt read is possible once
@@ -674,6 +689,7 @@ Two activities, two shapes:
 ### kube-mcts-bl-v01
 
 #### model family, size, quantization comparison (QwenPRM)
+<!-- table-id: tbl-b7bcda -->
 > **Compares:** model family, size, and quantization jointly —
 > same 5-model/quant grid as cnt-mcts-bl-v01's equivalent table
 > above, so a direct v01-vs-v02 (PUCT-vs-KUBE) read is possible
@@ -702,6 +718,7 @@ Two activities, two shapes:
 ### kdepth-mcts-bl-v01
 
 #### model family, size, quantization comparison (QwenPRM)
+<!-- table-id: tbl-3721dc -->
 > **Compares:** model family, size, and quantization jointly —
 > same 5-model/quant grid as cnt-mcts-bl-v01's equivalent table
 > above, so a direct bl_cnt-v01-vs-v03 (and, once v02 has runs,
@@ -730,6 +747,7 @@ Two activities, two shapes:
 ### sem-mcts-bl
 
 #### model family, size, quantization comparison (QwenPRM, w_eff=100)
+<!-- table-id: tbl-52c07f -->
 > **Compares:** model family, size, and quantization jointly —
 > same 5-model/quant grid as cnt-mcts-bl-v01's equivalent table
 > above, so a direct bl_sem-vs-bl_cnt read is possible once both
@@ -762,6 +780,7 @@ Two activities, two shapes:
 > the GSM8K counterpart's command with `data=aime2025`.
 
 #### model family, size, quantization comparison (QwenPRM, w_eff=10)
+<!-- table-id: tbl-4ddab6 -->
 > **Compares:** same 5-model/quant grid as the `w_eff=100` table
 > above, at one order of magnitude lower effective diversity
 > weight — the two tables together give a first (coarse) read on
@@ -801,6 +820,7 @@ Two activities, two shapes:
 ### cnt-mcts
 
 #### model family comparison (b=320, QwenPRM)
+<!-- table-id: tbl-f31bf0 -->
 > **Compares:** the same 5-model family/size/quantization sweep
 > as the `[gen_budget=80]` table above, but at
 > `search.gen_budget=320` (4× the b=80 budget) with
@@ -841,6 +861,7 @@ Two activities, two shapes:
 ### sem-mcts
 
 #### model family comparison (b=320, QwenPRM, lam=0.1, w_eff=10)
+<!-- table-id: tbl-b2d2d2 -->
 > **Compares:** the same 5-model family/size/quantization sweep
 > as the `[gen_budget=80]` sem-mcts (QwenPRM) table above, but
 > at `search.gen_budget=320` (4× the b=80 budget) and at
@@ -882,6 +903,7 @@ Two activities, two shapes:
 > the GSM8K counterpart's command with `data=aime2025`.
 
 #### model family comparison (b=320, QwenPRM, lam=0.1, w_eff=100)
+<!-- table-id: tbl-9d68e9 -->
 > **Compares:** identical setup to the `w_eff=10` table above,
 > at `ds_alpha=31.6` instead of `3.16` (10× the diversity
 > weight, same `lam=0.1`) — the b=320 counterpart of the

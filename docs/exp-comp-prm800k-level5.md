@@ -169,6 +169,7 @@ Two activities, two shapes:
 ### cnt-mcts
 
 #### model family, size, quantization comparison (RLHFlowPRM)
+<!-- table-id: tbl-d6065d -->
 > **Fixed:** method=`mcts_cnt_v01`, prm=rlhflow, agg_strategy=
 > `last`, cpuct=2.0, bs-4, d-20, b=80, prm_batch_size=1,
 > tmpl=model-family default (native for Qwen, custom for Llama).
@@ -184,6 +185,7 @@ Two activities, two shapes:
 | qwen-math-1.5b fp16 | — | planned | — | — | — | — | — |
 
 #### model family, size, quantization comparison (QwenPRM)
+<!-- table-id: tbl-afdda0 -->
 > **Fixed:** method=`mcts_cnt_v01`, prm=qwen, agg_strategy=
 > `last`, cpuct=2.0, bs-4, d-20, b=80, prm_batch_size=1,
 > tmpl=model-family default (native for Qwen, custom for Llama).
@@ -203,6 +205,7 @@ Two activities, two shapes:
 | qwen-math-1.5b fp16 | 2 | scored | .7575<br>±.0262 | .6418<br>±.0293 | .6455<br>±.0293 | .6269<br>±.0296 | 3.37 |
 
 #### agg_strategy comparison (qwen-3b, qwen-math-1.5b)
+<!-- table-id: tbl-a45ce2 -->
 > **Compares:** `gen.agg_strategy` (`"min"` | `"prod"` | `"last"` —
 > `core/scoring.py::aggregate_scores`) — how a candidate's
 > per-step PRM scores collapse to one scalar. `"last"` is every
@@ -224,6 +227,7 @@ Two activities, two shapes:
 ### sem-mcts (v02)
 
 #### embeds_strategy × scope sweep (QwenPRM)
+<!-- table-id: tbl-666cb6 -->
 > **Compares:** how the PRM hidden state is pooled into the
 > covariance bonus — `embeds_strategy` (`last` = final-token
 > hidden state vs. `avg` = mean over tokens) crossed with
@@ -264,6 +268,7 @@ Two activities, two shapes:
 > `response` axis, since v01 supports it.
 
 #### lam / ds_alpha joint sweep (llama-1b)
+<!-- table-id: tbl-a554c7 -->
 > **Compares:** whether `lam` and `ds_alpha` affect selection
 > primarily through the effective diversity weight
 > `w_eff = ds_alpha / sqrt(lam)`, or whether `lam` also has
@@ -332,6 +337,7 @@ Two activities, two shapes:
 > SEMs); `w_eff=0` and `w_eff=0.1, lam=1.0` still pending.
 
 #### lam / ds_alpha joint sweep (llama-3b)
+<!-- table-id: tbl-591232 -->
 > **Compares:** the same `lam`/`ds_alpha` joint-tuning question as
 > the llama-1b table above, on llama-3b.
 >
@@ -380,6 +386,7 @@ Two activities, two shapes:
 > lam-driven spreads above are suggestive, not conclusive.
 
 #### lam / ds_alpha joint sweep (qwen-math-1.5b)
+<!-- table-id: tbl-a12d4f -->
 > **Compares:** the same `lam`/`ds_alpha` joint-tuning question as
 > the llama-1b/llama-3b tables above, on qwen-math-1.5b.
 >
@@ -430,6 +437,7 @@ Two activities, two shapes:
 > low-trend above is suggestive, not conclusive.
 
 #### lam / ds_alpha joint sweep (qwen-7b gptq-int4)
+<!-- table-id: tbl-21bde4 -->
 > **Compares:** the same `lam`/`ds_alpha` joint-tuning question as
 > the llama-1b/llama-3b/qwen-math-1.5b tables above, on qwen-7b
 > gptq-int4.
@@ -478,6 +486,7 @@ Two activities, two shapes:
 > `w_eff=0` gap-closer; only 2 trials/cell.
 
 #### embeds_center_mode comparison (lam=0.01/ds_alpha=1)
+<!-- table-id: tbl-e58353 -->
 > **Compares:** `embeds_center_mode="local"` (rep_exp-style
 > sibling-group centering) against `embeds_center=false` (no
 > centering — today's default). `"fixed"` mode isn't in this table
@@ -529,6 +538,7 @@ Two activities, two shapes:
 > for how the fixed-mean file is built and loaded).
 
 #### embeds_center_mode comparison (lam=0.01/ds_alpha=10)
+<!-- table-id: tbl-2e75f2 -->
 > **Compares:** same as the `ds_alpha=1` table above, at the next
 > `w_eff` checkpoint (`w_eff = ds_alpha/sqrt(lam) = 100`).
 >
@@ -580,6 +590,7 @@ Two activities, two shapes:
 > n=2 trials/cell throughout.
 
 #### agg_strategy comparison (qwen-3b, qwen-math-1.5b, lam=0.01/ds_alpha=1)
+<!-- table-id: tbl-ae7863 -->
 > **Compares:** `gen.agg_strategy` (`"min"` | `"prod"` | `"last"` —
 > `core/scoring.py::aggregate_scores`) — how a candidate's per-step
 > PRM scores collapse to one scalar — at `lam=0.01, ds_alpha=1.0`
@@ -605,6 +616,7 @@ Two activities, two shapes:
 > the level-4 counterpart's command plus `data.level=5`.
 
 #### agg_strategy comparison (qwen-3b, qwen-math-1.5b, lam=0.01/ds_alpha=10)
+<!-- table-id: tbl-4cc5b9 -->
 > **Compares:** same as the `ds_alpha=1.0` table above, at the next
 > `w_eff` checkpoint (`w_eff = ds_alpha/sqrt(lam) = 100`).
 >
@@ -627,6 +639,7 @@ Two activities, two shapes:
 > the level-4 counterpart's command plus `data.level=5`.
 
 #### model family, size, quantization comparison (QwenPRM, lam=0.01/ds_alpha=1)
+<!-- table-id: tbl-73533c -->
 > **Compares:** model family, size, and quantization jointly,
 > scored with `prm=qwen` (Qwen-Math-7B-PRM), at `lam=0.01,
 > ds_alpha=1.0` (`w_eff = ds_alpha/sqrt(lam) = 10`) — the same
@@ -661,6 +674,7 @@ Two activities, two shapes:
 > checkpoint.
 
 #### model family, size, quantization comparison (QwenPRM, lam=0.01/ds_alpha=10)
+<!-- table-id: tbl-cf8fea -->
 > **Compares:** same as the `ds_alpha=1` table above, at the next
 > `w_eff` checkpoint (`w_eff = ds_alpha/sqrt(lam) = 100`).
 >
@@ -696,6 +710,7 @@ Two activities, two shapes:
 ### cnt-mcts-bl-v01
 
 #### model family, size, quantization comparison (QwenPRM)
+<!-- table-id: tbl-6557b7 -->
 > **Compares:** model family, size, and quantization jointly —
 > same 5-model/quant grid as cnt-mcts's equivalent
 > table above, so a direct bl_cnt-vs-cnt read is possible once
@@ -728,6 +743,7 @@ Two activities, two shapes:
 ### cnt-mcts-bl-v02
 
 #### score_mode sweep: parent_blend (alpha) vs. path_decay (gamma × cpuct) (qwen-3b, QwenPRM)
+<!-- table-id: tbl-249fa2 -->
 > **Compares:** the two selectable v02 frontier scores head-to-head
 > on one model. parent_blend arms sweep `alpha` (one-hop blend of a
 > leaf's q with its parent's) at the file-default cpuct=2.0;
@@ -764,7 +780,7 @@ Two activities, two shapes:
 | parent_blend | 0.6 | — | 2.0 | 2 | scored | .4701<br>±.0305 | .4478<br>±.0304 | .4366<br>±.0304 | .4291<br>±.0303 | 4.39 |
 | path_decay | — | 1.0 | 2.0 | 2 | scored | .6493<br>±.0292 | .5522<br>±.0304 | .5522<br>±.0304 | .5410<br>±.0305 | 4.41 |
 | path_decay | — | 0.8 | 2.0 | 2 | scored | .6418<br>±.0293 | .5746<br>±.0303 | .5634<br>±.0304 | .5485<br>±.0305 | 4.39 |
-| path_decay | — | 0.5 | 2.0 | — | running | — | — | — | — | — |
+| path_decay | — | 0.5 | 2.0 | 2 | scored | .5485<br>±.0305 | .5224<br>±.0306 | .5336<br>±.0305 | .5149<br>±.0306 | 4.35 |
 | path_decay | — | 1.0 | 0.5 | 2 | scored | .6194<br>±.0297 | .5821<br>±.0302 | .5746<br>±.0303 | .5560<br>±.0304 | 4.31 |
 | path_decay | — | 0.8 | 0.5 | 2 | scored | .6082<br>±.0299 | .5821<br>±.0302 | .5709<br>±.0303 | .5560<br>±.0304 | 4.52 |
 | path_decay | — | 0.5 | 0.5 | 2 | scored | .5746<br>±.0303 | .5373<br>±.0305 | .5261<br>±.0306 | .5261<br>±.0306 | 4.54 |
@@ -792,6 +808,7 @@ Two activities, two shapes:
 ### kube-mcts-bl-v01
 
 #### model family, size, quantization comparison (QwenPRM)
+<!-- table-id: tbl-622bce -->
 > **Compares:** model family, size, and quantization jointly —
 > same 5-model/quant grid as cnt-mcts-bl-v01's equivalent table
 > above, so a direct v01-vs-v02 (PUCT-vs-KUBE) read is possible
@@ -830,6 +847,7 @@ Two activities, two shapes:
 > recording); no experiments.yaml entries.
 
 #### kube_c sweep × model family (QwenPRM)
+<!-- table-id: tbl-61a2b9 -->
 > **Compares:** sensitivity of kube-bl-v01 to the KUBE
 > exploration coefficient `kube_c`, swept {0.1, 0.5, 2.0, 8.0}
 > on the full 5-model/quant grid. 2.0 is the default (those 5
@@ -858,16 +876,16 @@ Two activities, two shapes:
 
 | llm | kube_c | trials | status | pass@gb | naive@gb | wei@gb | maj@gb | hr/trial |
 |---|---|---|---|---|---|---|---|---|
-| llama-1b fp16 | 0.1 | — | running | — | — | — | — | — |
-| llama-1b fp16 | 0.5 | — | running | — | — | — | — | — |
+| llama-1b fp16 | 0.1 | 2 | scored | .3134<br>±.0284 | .2649<br>±.0270 | .2313<br>±.0258 | .2239<br>±.0255 | 3.10 |
+| llama-1b fp16 | 0.5 | 2 | scored | .3172<br>±.0285 | .2612<br>±.0269 | .2500<br>±.0265 | .2388<br>±.0261 | 3.11 |
 | llama-1b fp16 | 2.0 | 2 | scored | .3060<br>±.0282 | .2612<br>±.0269 | .2463<br>±.0264 | .2276<br>±.0257 | 3.11 |
-| llama-1b fp16 | 8.0 | — | running | — | — | — | — | — |
-| llama-3b fp16 | 0.1 | — | inqueue | — | — | — | — | — |
-| llama-3b fp16 | 0.5 | — | inqueue | — | — | — | — | — |
+| llama-1b fp16 | 8.0 | 2 | scored | .3097<br>±.0283 | .2612<br>±.0269 | .2537<br>±.0266 | .2463<br>±.0264 | 3.14 |
+| llama-3b fp16 | 0.1 | — | failed | — | — | — | — | — |
+| llama-3b fp16 | 0.5 | — | failed | — | — | — | — | — |
 | llama-3b fp16 | 2.0 | 2 | scored | .4851<br>±.0306 | .3918<br>±.0299 | .3769<br>±.0297 | .3731<br>±.0296 | 4.65 |
-| llama-3b fp16 | 8.0 | — | inqueue | — | — | — | — | — |
-| qwen-3b fp16 | 0.1 | — | inqueue | — | — | — | — | — |
-| qwen-3b fp16 | 0.5 | — | inqueue | — | — | — | — | — |
+| llama-3b fp16 | 8.0 | — | failed | — | — | — | — | — |
+| qwen-3b fp16 | 0.1 | — | failed | — | — | — | — | — |
+| qwen-3b fp16 | 0.5 | — | failed | — | — | — | — | — |
 | qwen-3b fp16 | 2.0 | 2 | scored | .6157<br>±.0298 | .5410<br>±.0305 | .5224<br>±.0306 | .5075<br>±.0306 | 4.10 |
 | qwen-3b fp16 | 8.0 | — | inqueue | — | — | — | — | — |
 | qwen-7b gptq-int4 | 0.1 | — | inqueue | — | — | — | — | — |
@@ -894,6 +912,7 @@ Two activities, two shapes:
 ### kube-mcts-bl-v02
 
 #### score_mode sweep: parent_blend (alpha) vs. path_decay (gamma × kube_c) (qwen-3b, QwenPRM)
+<!-- table-id: tbl-dac772 -->
 > **Compares:** the two selectable v02 frontier densities
 > head-to-head, mirroring the cnt-mcts-bl-v02 score_mode sweep
 > above cell-for-cell (same model, PRM, level, budget, arm grid) —
@@ -957,6 +976,7 @@ Two activities, two shapes:
 > table is a later decision.
 
 #### model family, size, quantization comparison (QwenPRM, parent_blend/alpha=0.8)
+<!-- table-id: tbl-c85c90 -->
 > **Compares:** model family, size, and quantization jointly at
 > the winning-candidate frontier score `score_mode=parent_blend`
 > with `alpha=0.8` — same 5-model/quant grid as cnt-mcts-bl-v01's
@@ -1000,6 +1020,7 @@ Two activities, two shapes:
 > feeds both this table and the score_mode-sweep table.
 
 #### model family, size, quantization comparison (QwenPRM, parent_blend/alpha=1.0)
+<!-- table-id: tbl-3fb9a1 -->
 > **Compares:** the same 5-model/quant grid as the
 > `parent_blend/alpha=0.8` table above, but at **alpha=1.0** — the
 > exact-v01 control arm (no parent blend: `blended_q = q(leaf)`,
@@ -1049,6 +1070,7 @@ Two activities, two shapes:
 > feeds both this table and the score_mode-sweep table.
 
 #### model family, size, quantization comparison (QwenPRM, parent_blend/alpha=0.0)
+<!-- table-id: tbl-a55139 -->
 > **Compares:** the same 5-model/quant grid at the **value-blindness
 > extreme alpha=0.0** — the leaf's own q is ignored entirely and
 > every child is scored by its parent's q alone
@@ -1107,6 +1129,7 @@ Two activities, two shapes:
 > gap is surprisingly small.
 
 #### alpha × kube_c joint sweep (llama-3b, QwenPRM, parent_blend)
+<!-- table-id: tbl-a9e420 -->
 > **Compares:** the parent_blend value-composition knob `alpha`
 > jointly with the exploration scale `kube_c`, as a 3×3 factorial
 > — NOT two sequential 1-D sweeps. The two parameters are
@@ -1146,14 +1169,14 @@ Two activities, two shapes:
 | alpha | kube_c | trials | status | pass@gb | naive@gb | wei@gb | maj@gb | hr/trial |
 |---|---|---|---|---|---|---|---|---|
 | 1.0 | 2.0 | 2 | scored | .4851<br>±.0306 | .3881<br>±.0298 | .3881<br>±.0298 | .3731<br>±.0296 | 4.67 |
-| 1.0 | 0.5 | — | running | — | — | — | — | — |
-| 1.0 | 0.1 | — | running | — | — | — | — | — |
+| 1.0 | 0.5 | 2 | scored | .5037<br>±.0306 | .4328<br>±.0303 | .4104<br>±.0301 | .3881<br>±.0298 | 4.61 |
+| 1.0 | 0.1 | 2 | scored | .4888<br>±.0306 | .4030<br>±.0300 | .3918<br>±.0299 | .3694<br>±.0295 | 4.75 |
 | 0.8 | 2.0 | — | inqueue | — | — | — | — | — |
-| 0.8 | 0.5 | — | running | — | — | — | — | — |
-| 0.8 | 0.1 | — | running | — | — | — | — | — |
-| 0.5 | 2.0 | — | inqueue | — | — | — | — | — |
-| 0.5 | 0.5 | — | running | — | — | — | — | — |
-| 0.5 | 0.1 | — | running | — | — | — | — | — |
+| 0.8 | 0.5 | 2 | scored | .5037<br>±.0306 | .4478<br>±.0304 | .4142<br>±.0301 | .3955<br>±.0299 | 4.62 |
+| 0.8 | 0.1 | 2 | scored | .4776<br>±.0306 | .4179<br>±.0302 | .4179<br>±.0302 | .3993<br>±.0300 | 4.64 |
+| 0.5 | 2.0 | 2 | scored | .4776<br>±.0306 | .4067<br>±.0301 | .3806<br>±.0297 | .3731<br>±.0296 | 4.71 |
+| 0.5 | 0.5 | 2 | scored | .4888<br>±.0306 | .4142<br>±.0301 | .3843<br>±.0298 | .3806<br>±.0297 | 4.58 |
+| 0.5 | 0.1 | 2 | scored | .4963<br>±.0306 | .4030<br>±.0300 | .3993<br>±.0300 | .3955<br>±.0299 | 4.61 |
 
 > **Analysis.** No scored cells yet — nothing to take away. Once
 > filled, the decision rule: if alpha separates only at low
@@ -1163,16 +1186,18 @@ Two activities, two shapes:
 > winning (alpha, kube_c) pair + the alpha=1.0 control then
 > propagate to the other models' grids — the full 3×3 is NOT
 > repeated per model.
-> **Limitations / follow-up:** 7 cells net-new, ~8h/trial each —
-> queue-only block (orchestration/queue.yaml
-> `kube-bl-v02-l5-ac-sweep-llama3b-*`), no experiments.yaml
-> entries yet. 2 trials/cell → SEM ~±.03; effects under ~.06
-> pass@gb are not resolvable. Single model (llama-3b); the
-> propagation step, not this table, covers generalization.
+> **Limitations / follow-up:** 7 cells net-new, ~8h/trial each.
+> Ledger: experiments/prm800k-level5.yaml
+> (`kube-bl-v02-l5-ac-sweep-llama3b-*`), feeds
+> `level5-kube-bl-v02-alpha-kubec-sweep-llama3b`. 2 trials/cell
+> → SEM ~±.03; effects under ~.06 pass@gb are not resolvable.
+> Single model (llama-3b); the propagation step, not this
+> table, covers generalization.
 
 ### kdepth-mcts-bl-v01
 
 #### model family, size, quantization comparison (QwenPRM)
+<!-- table-id: tbl-d1a3ce -->
 > **Compares:** model family, size, and quantization jointly —
 > same 5-model/quant grid as cnt-mcts-bl-v01's equivalent table
 > above, so a direct bl_cnt-v01-vs-v03 (and, once v02 has runs,
@@ -1198,6 +1223,7 @@ Two activities, two shapes:
 > the level-4 counterpart's command plus `data.level=5`.
 
 #### model family, size, quantization comparison (QwenPRM, depth_alpha=0.5)
+<!-- table-id: tbl-43590e -->
 > **Compares:** model family, size, and quantization jointly —
 > same 5-model/quant grid as the `depth_alpha=1.0` table above,
 > but with a **concave** depth-bonus curve (`f(z)=1-z^0.5`, bonus
@@ -1231,6 +1257,7 @@ Two activities, two shapes:
 > `level5-kdepth-bl-v01-model-family-qwen-da0.5`.
 
 #### model family, size, quantization comparison (QwenPRM, depth_alpha=2.0)
+<!-- table-id: tbl-9d088e -->
 > **Compares:** model family, size, and quantization jointly —
 > same 5-model/quant grid as the `depth_alpha=1.0` table above,
 > but with a **convex** depth-bonus curve (`f(z)=1-z^2`, bonus
@@ -1255,7 +1282,7 @@ Two activities, two shapes:
 | llama-1b fp16 | 2 | scored | .3022<br>±.0281 | .2500<br>±.0265 | .2276<br>±.0257 | .2127<br>±.0250 | 3.22 |
 | llama-3b fp16 | 2 | scored | .5000<br>±.0306 | .4104<br>±.0301 | .4030<br>±.0300 | .3955<br>±.0299 | 4.78 |
 | qwen-3b fp16 | 2 | scored | .6082<br>±.0299 | .5224<br>±.0306 | .5224<br>±.0306 | .5075<br>±.0306 | 3.92 |
-| qwen-7b gptq-int4 | — | running | — | — | — | — | — |
+| qwen-7b gptq-int4 | — | failed | — | — | — | — | — |
 | qwen-math-1.5b fp16 | 2 | scored | .6455<br>±.0293 | .5522<br>±.0304 | .5485<br>±.0305 | .5336<br>±.0305 |  3.26 |
 
 > **Analysis.** One data point so far (qwen-math-1.5b): pass@gb
@@ -1272,6 +1299,7 @@ Two activities, two shapes:
 ### kdepth-mcts-bl-v02
 
 #### score_mode sweep: parent_blend (alpha) vs. path_decay (gamma) (qwen-3b, QwenPRM)
+<!-- table-id: tbl-1b443b -->
 > **Compares:** the two selectable v02 frontier densities
 > head-to-head, mirroring the kube-mcts-bl-v02 score_mode sweep
 > above — but on kdepth's density, whose exploration term is the
@@ -1323,6 +1351,7 @@ Two activities, two shapes:
 > score_mode grid is a later decision.
 
 #### model family, size, quantization comparison (QwenPRM, parent_blend/alpha=0.8)
+<!-- table-id: tbl-2fe92e -->
 > **Compares:** model family, size, and quantization jointly at
 > `score_mode=parent_blend` with `alpha=0.8` — same 5-model/quant
 > grid as kdepth-mcts-bl-v01's and kube-mcts-bl-v02's equivalent
@@ -1345,7 +1374,7 @@ Two activities, two shapes:
 
 | llm | trials | status | pass@gb | naive@gb | wei@gb | maj@gb | hr/trial |
 |---|---|---|---|---|---|---|---|
-| llama-1b fp16 | — | running | — | — | — | — | — |
+| llama-1b fp16 | 2 | scored | .3134<br>±.0284 | .2724<br>±.0272 | .2575<br>±.0268 | .2537<br>±.0266 | 3.05 |
 | llama-3b fp16 | 2 | scored | .4776<br>±.0306 | .4104<br>±.0301 | .3993<br>±.0300 | .3993<br>±.0300 | — |
 | qwen-3b fp16 | 2 | scored | .6231<br>±.0297 | .5709<br>±.0303 | .5522<br>±.0304 | .5410<br>±.0305 | — |
 | qwen-7b gptq-int4 | 2 | scored | .7239<br>±.0274 | .6194<br>±.0297 | .6231<br>±.0297 | .6157<br>±.0298 | — |
@@ -1363,6 +1392,7 @@ Two activities, two shapes:
 > feeds both this table and the score_mode-sweep table.
 
 #### model family, size, quantization comparison (QwenPRM, parent_blend/alpha=1.0)
+<!-- table-id: tbl-76f66a -->
 > **Compares:** the same 5-model/quant grid as the
 > `parent_blend/alpha=0.8` table above, but at **alpha=1.0** — the
 > exact-v01 control arm (no parent blend: `blended_q = q(leaf)`,
@@ -1403,6 +1433,7 @@ Two activities, two shapes:
 ### sem-mcts-bl-v01
 could you help me add these sem-mcts-bl-v01 experiments to queue, all priority=1 except priority for llama-1b and qweb-3b=1.7
 #### model family, size, quantization comparison (QwenPRM, lam=0.01/ds_alpha=10)
+<!-- table-id: tbl-c43f9b -->
 > **Compares:** model family, size, and quantization jointly —
 > same 5-model/quant grid as cnt-mcts-bl-v01's equivalent table
 > above, so a direct bl_sem-vs-bl_cnt read is possible once both
@@ -1438,6 +1469,7 @@ could you help me add these sem-mcts-bl-v01 experiments to queue, all priority=1
 > to the sem_v02 `lam=0.01` checkpoint, see Compares).
 
 #### model family, size, quantization comparison (QwenPRM, lam=0.01/ds_alpha=1)
+<!-- table-id: tbl-369e81 -->
 > **Compares:** same 5-model/quant grid as the `lam=0.01/
 > ds_alpha=10` table above, at one order of magnitude lower
 > effective diversity weight — the two tables together give a
@@ -1472,6 +1504,7 @@ could you help me add these sem-mcts-bl-v01 experiments to queue, all priority=1
 ### sem-mcts-bl-v02
 
 #### model family, size, quantization comparison (QwenPRM, parent_blend/alpha=1.0, lam=0.01/ds_alpha=10)
+<!-- table-id: tbl-e9dbbb -->
 > **Compares:** model family, size, and quantization jointly for
 > sem-mcts-bl-v02 at its selectable frontier value term fixed to
 > `score_mode=parent_blend, alpha=1.0` (the no-blend control:
@@ -1527,6 +1560,7 @@ could you help me add these sem-mcts-bl-v01 experiments to queue, all priority=1
 ### cnt-mcts
 
 #### model family comparison (b=320, QwenPRM)
+<!-- table-id: tbl-867868 -->
 > **Compares:** the same 5-model family/size/quantization sweep
 > as the `[gen_budget=80]` table above, but at
 > `search.gen_budget=320` (4× the b=80 budget) with
@@ -1563,6 +1597,7 @@ could you help me add these sem-mcts-bl-v01 experiments to queue, all priority=1
 ### sem-mcts
 
 #### model family comparison (b=320, QwenPRM, lam=0.1, w_eff=10)
+<!-- table-id: tbl-900e87 -->
 > **Compares:** the same 5-model family/size/quantization sweep
 > as the `[gen_budget=80]` sem-mcts (QwenPRM) table above, but
 > at `search.gen_budget=320` (4× the b=80 budget) and at
@@ -1606,6 +1641,7 @@ could you help me add these sem-mcts-bl-v01 experiments to queue, all priority=1
 > the level-4 counterpart's command plus `data.level=5`.
 
 #### model family comparison (b=320, QwenPRM, lam=0.1, w_eff=100)
+<!-- table-id: tbl-01c466 -->
 > **Compares:** identical setup to the `w_eff=10` table above,
 > at `ds_alpha=31.6` instead of `3.16` (10× the diversity
 > weight, same `lam=0.1`) — the b=320 counterpart of the
