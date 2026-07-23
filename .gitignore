@@ -27,3 +27,7 @@ zlogs/
 # not pushed (Tuan's request 2026-07-13; narrowed from orchestration/ on
 # 2026-07-23 when status.py + ledgers/ moved in — those are tracked)
 orchestration/runtime/
+
+# Legacy code archive: local-only reference copy, untracked since
+# 2026-07-23 (repo-root cleanup; history keeps the old revisions)
+archive/
