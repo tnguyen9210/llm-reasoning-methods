@@ -683,6 +683,18 @@ instead of one wide sparse grid.)
 | llama-3b | rlhflow | False (default) | — | to rerun | — | — | — | — | — |
 | llama-3b | rlhflow | True | 2 | scored | .7461<br>±.0273 | .5039<br>±.0313 | .6016<br>±.0307 | .5938<br>±.0308 | 4.65 |
 
+> **Analysis.** True arm scored 2026-07-23 (the mcts_cnt rerun,
+> W&B `e5ki98he`); the False arm still awaits its rerun.
+> Informal cross-check against the rlhflow model-family table's
+> llama-3b fp16 cell below (.7422, 4.44 hr, eager off): accuracy
+> unchanged (< 1 SEM) and eager costs ~5% wall-clock —
+> consistent with `enforce_eager=True` only disabling CUDA
+> graphs. Informal because that cell is a separate v01-flavor
+> run, not this table's False arm.
+> **Limitations / follow-up:** ledger
+> experiments/prm800k-level4.yaml (`cnt-mcts-e829c53b`), feeds
+> `tbl-adf2f8`. The controlled read needs the False-arm rerun.
+
 #### model family, size, quantization comparison
 <!-- table-id: tbl-702925 -->
 > **Fixed:** method=`mcts_cnt_v01`, prm=rlhflow, agg_strategy=

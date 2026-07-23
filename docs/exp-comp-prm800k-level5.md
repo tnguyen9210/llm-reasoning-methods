@@ -770,8 +770,9 @@ Two activities, two shapes:
 > v01 control arm (recovers v01's puct identically); path_decay
 > has no v01-equivalent arm.
 >
-> **W&B:** pb-a1.0 `uu7p59lq`, pd-g1.0-c0.5 `gx1u385h`; others
-> none yet.
+> **W&B:** pb-a1.0 `uu7p59lq`, pd-g1.0-c0.5 `gx1u385h`,
+> pd-g0.5-c2.0 `9k378zhj`; remaining arms' ids not recorded
+> here (see result dirs).
 
 | score_mode | alpha | gamma | cpuct | trials | status | pass@gb | naive@gb | wei@gb | maj@gb | hr/trial |
 |---|---|---|---|---|---|---|---|---|---|---|
@@ -785,9 +786,9 @@ Two activities, two shapes:
 | path_decay | — | 0.8 | 0.5 | 2 | scored | .6082<br>±.0299 | .5821<br>±.0302 | .5709<br>±.0303 | .5560<br>±.0304 | 4.52 |
 | path_decay | — | 0.5 | 0.5 | 2 | scored | .5746<br>±.0303 | .5373<br>±.0305 | .5261<br>±.0306 | .5261<br>±.0306 | 4.54 |
 
-> **Analysis.** 8/9 arms scored (2026-07-22). The three reads:
-> (1) one-hop blending does NOT help — pb arms sit at
-> .4403/.4403/.4701 (a0.6 nominally best, within 1 SEM);
+> **Analysis.** 9/9 arms scored (final cell 2026-07-23). The
+> three reads: (1) one-hop blending does NOT help — pb arms sit
+> at .4403/.4403/.4701 (a0.6 nominally best, within 1 SEM);
 > (2) gamma is NOT scale-dominated: path_decay wins at BOTH
 > cpuct values, and cpuct=2.0 is nominally better (g1.0: .6493
 > vs .6194) — so the pd-vs-pb gap is attributable to the PATH
@@ -796,10 +797,12 @@ Two activities, two shapes:
 > (~6 SEM) at equal cost — **path_decay is the survivor** for
 > cnt-v02; gamma ordering is monotone (1.0 > 0.8 > 0.5 at both
 > scales), i.e. the plain full-path average is best and decay
-> only hurts. pd searches deeper (depth ~11 vs ~9) and keeps
-> ~1.7x more completions on the same 80-gen budget.
-> **Limitations / follow-up:** pd-g0.5-c2.0 still running
-> (3rd launch, gpu_standard). Ledger:
+> only hurts. The last cell sharpens this: the g0.5 penalty
+> compounds with exploration scale (−.10 vs g1.0 at cpuct=2.0,
+> −.04 at 0.5) — aggressive decay is worst exactly where the
+> search branches most. pd searches deeper (depth ~11 vs ~9)
+> and keeps ~1.7x more completions on the same 80-gen budget.
+> **Limitations / follow-up:** ledger
 > experiments/prm800k-level5.yaml, feeds
 > `level5-cnt-bl-v02-score-mode-qwen3b`. Single model (qwen-3b);
 > extend path_decay g1.0 to the 5-model grid if the v03
@@ -872,7 +875,8 @@ Two activities, two shapes:
 >
 > **W&B:** kube_c=2.0 reused — llama-1b `gu5l0k7p`, llama-3b
 > `rywqssh0`, qwen-3b `79kyy2a7`, qwen-7b gptq `tmtery3w`,
-> qwen-math-1.5b `ktgdyyfx`; others none yet.
+> qwen-math-1.5b `ktgdyyfx`; llama-1b sweep — c0.1 `ciaa0mnv`,
+> c0.5 `bgrjt17l`, c8.0 `2nuo4pt9`; others none yet.
 
 | llm | kube_c | trials | status | pass@gb | naive@gb | wei@gb | maj@gb | hr/trial |
 |---|---|---|---|---|---|---|---|---|
@@ -897,17 +901,27 @@ Two activities, two shapes:
 | qwen-math-1.5b fp16 | 2.0 | 2 | scored | .6493<br>±.0292 | .5784<br>±.0302 | .5672<br>±.0303 | .5522<br>±.0304 | 3.25 |
 | qwen-math-1.5b fp16 | 8.0 | — | inqueue | — | — | — | — | — |
 
-> **Analysis.** 5/20 cells scored (the kube_c=2.0 column,
-> reused from the model-family table above). No sweep data yet.
-> Once filled, the key reads are: per-model optimum location
-> (does the best kube_c shift down for weaker models, whose
-> value signal is noisier?), and whether 8.0 over-explores
-> uniformly (the AZ-shaped v02 experience suggests large
-> coefficients can swamp the value term).
+> **Analysis.** 8/20 scored (2026-07-23): the llama-1b row is
+> complete plus the reused kube_c=2.0 column. First per-model
+> read (llama-1b): **no optimum** — pass@gb spans .3060–.3172
+> (well under 1 SEM) across an 80× kube_c range; naive is
+> byte-identical (.2612–.2649, a one-question spread) and
+> wei/maj drift up ~.02 with c (< 1 SEM). c=8.0 does NOT
+> over-explore for llama-1b (.3097 ≈ row mean) — the
+> AZ-style bonus-swamping concern does not materialize at this
+> budget. Same conclusion as the v02 alpha × kube_c sweep below
+> (llama-3b, also flat): at b=80/level-5 the llama searches are
+> value-noise-dominated, and the exploration scale is
+> second-order. Whether that holds for the stronger qwens — the
+> optimum-shift question this table was built for — still needs
+> the 7 inqueue cells.
 > **Limitations / follow-up:** ledger
 > experiments/prm800k-level5.yaml, feeds
-> `level5-kube-bl-v01-kubec-sweep-qwen`. 15 cells inqueue
-> (priority 2, queued 2026-07-22).
+> `level5-kube-bl-v01-kubec-sweep-qwen`. 7 cells inqueue
+> (qwen-3b c8.0, qwen-7b + qwen-math sweeps); 5 cells failed
+> (llama-3b c0.1/c0.5/c8.0, qwen-3b c0.1/c0.5) — died to the
+> 2026-07-22 results-disk-full incident; disk moved to /groups
+> 2026-07-23 so a requeue is safe once Tuan approves.
 
 ### kube-mcts-bl-v02
 
@@ -1155,16 +1169,19 @@ Two activities, two shapes:
 > kube_affordable=true (default), prm=qwen, agg_strategy=`last`,
 > bs-4, d-20, b=80, prm_batch_size=1, level=5.
 >
-> ⚠️ 1/9 cells scored — the (alpha=1.0, kube_c=2.0) cell is the
-> **exact same run** as the alpha=1.0 model-family table's
-> llama-3b cell (cfg-63051bb1), reused, not re-run. The
+> ⚠️ 8/9 cells scored (2026-07-23) — the (alpha=1.0, kube_c=2.0)
+> cell is the **exact same run** as the alpha=1.0 model-family
+> table's llama-3b cell (cfg-63051bb1), reused, not re-run. The
 > (alpha=0.8, kube_c=2.0) cell will likewise reuse the alpha=0.8
 > model-family table's llama-3b cell once that queue entry runs
 > (`kube-bl-v02-l5-mf-a0.8-llama3b`). The other 7 are net-new.
 > kube_c is NOT numerically comparable to cnt-v02's cpuct
 > (different bonus shapes).
 >
-> **W&B:** (1.0, 2.0) `apcu4aqr`; others none yet.
+> **W&B:** (1.0, 2.0) `apcu4aqr`, (1.0, 0.5) `xb9bpt5y`,
+> (1.0, 0.1) `na9zpn1u`, (0.8, 0.5) `2qd6obc0`, (0.8, 0.1)
+> `q45ropnt`, (0.5, 2.0) `w19d5y18`, (0.5, 0.5) `fpit1vuv`,
+> (0.5, 0.1) `eb34obcy`.
 
 | alpha | kube_c | trials | status | pass@gb | naive@gb | wei@gb | maj@gb | hr/trial |
 |---|---|---|---|---|---|---|---|---|
@@ -1178,21 +1195,31 @@ Two activities, two shapes:
 | 0.5 | 0.5 | 2 | scored | .4888<br>±.0306 | .4142<br>±.0301 | .3843<br>±.0298 | .3806<br>±.0297 | 4.58 |
 | 0.5 | 0.1 | 2 | scored | .4963<br>±.0306 | .4030<br>±.0300 | .3993<br>±.0300 | .3955<br>±.0299 | 4.61 |
 
-> **Analysis.** No scored cells yet — nothing to take away. Once
-> filled, the decision rule: if alpha separates only at low
-> kube_c, fix the low-c regime and tune alpha there; if the
-> alpha=1.0 column dominates everywhere, one-hop blending is dead
-> for kube and the model-family grids stay at alpha=1.0; the
-> winning (alpha, kube_c) pair + the alpha=1.0 control then
-> propagate to the other models' grids — the full 3×3 is NOT
-> repeated per model.
-> **Limitations / follow-up:** 7 cells net-new, ~8h/trial each.
-> Ledger: experiments/prm800k-level5.yaml
+> **Analysis.** 8/9 scored (2026-07-23). The grid is FLAT:
+> pass@gb spans .4776–.5037 — under 1 SEM — across a 20× kube_c
+> swing and the full alpha range; no cell separates. Against the
+> designed reads: (1) no kube_c main effect down the alpha=1.0
+> column (.4851/.5037/.4888); (2) no alpha spread at low kube_c
+> (c0.1: .4888/.4776/.4963) — the regime where blending had to
+> show up if scale-domination was masking it; (3) constant-ratio
+> pairs are equal too. Verdict per the pre-registered rule:
+> **flat everywhere → one-hop blending is dead for kube-v02**;
+> the model-family grids stay at alpha=1.0. The kube_c
+> insensitivity itself is a finding, echoing the kube-v01
+> llama-1b row above: at b=80/level-5 the llamas look
+> value-noise-dominated, not exploration-scale-dominated.
+> naive/wei/maj move ≤ 2 SEM with no consistent pattern;
+> hr/trial is flat (4.58–4.75).
+> **Limitations / follow-up:** 2 trials/cell → SEM ~±.03; "flat"
+> means no effect ≥ .06 pass@gb resolvable, not zero effect.
+> Single model (llama-3b). The pending (0.8, 2.0) cell cannot
+> change the verdict (its row and column are already flat).
+> Consequence: the 4 kube-a0.8 model-family requeues
+> (`kube-bl-v02-l5-mf-a0.8-*`, inqueue) lose their motivation —
+> Tuan to decide run vs. drop. Ledger:
+> experiments/prm800k-level5.yaml
 > (`kube-bl-v02-l5-ac-sweep-llama3b-*`), feeds
-> `level5-kube-bl-v02-alpha-kubec-sweep-llama3b`. 2 trials/cell
-> → SEM ~±.03; effects under ~.06 pass@gb are not resolvable.
-> Single model (llama-3b); the propagation step, not this
-> table, covers generalization.
+> `level5-kube-bl-v02-alpha-kubec-sweep-llama3b`.
 
 ### kdepth-mcts-bl-v01
 
@@ -1367,10 +1394,11 @@ Two activities, two shapes:
 > prm_batch_size=1, level=5, tmpl=model-family default (native for
 > Qwen, custom for Llama).
 >
-> ⚠️ Entirely planned, no runs yet (qwen-3b reuses the score_mode
-> sweep's alpha=0.8 arm once that runs).
+> ⚠️ 5/5 scored (llama-1b completed 2026-07-23). qwen-3b reuses
+> the score_mode sweep's alpha=0.8 arm (cfg-414a9f81).
 >
-> **W&B:** none yet (no runs exist).
+> **W&B:** llama-1b `2ucgri6p`; other cells' ids not recorded
+> here (see result dirs).
 
 | llm | trials | status | pass@gb | naive@gb | wei@gb | maj@gb | hr/trial |
 |---|---|---|---|---|---|---|---|
@@ -1380,16 +1408,26 @@ Two activities, two shapes:
 | qwen-7b gptq-int4 | 2 | scored | .7239<br>±.0274 | .6194<br>±.0297 | .6231<br>±.0297 | .6157<br>±.0298 | — |
 | qwen-math-1.5b fp16 | 2 | scored | .6679<br>±.0288 | .5933<br>±.0301 | .5896<br>±.0301 | .5746<br>±.0303 | — |
 
-> **Analysis.** No data yet. Once filled, the key read is how
-> parent_blend's one-hop q-blend generalizes across model families
-> at fixed alpha=0.8 under a depth-shaped frontier, and —
-> cell-for-cell against the kube-v02 and cnt-v02 model-family
-> tables — whether the depth bonus (vs. visit bonus) helps or
-> hurts per model.
-> **Limitations / follow-up:** all 5 cells planned — see
-> experiments.yaml group `kdepth-mcts-bl`, feeds
+> **Analysis.** 5/5 scored (2026-07-23). Family ordering is the
+> standard one (qwen-7b .7239 > qwen-math .6679 > qwen-3b .6231
+> > llama-3b .4776 > llama-1b .3134) — same ranking as every
+> other method's model-family table. Cell-for-cell against
+> kube-v01's kube_c=2.0 column (visit bonus): kdepth-a0.8 is
+> nominally ahead on 4/5 models (+.007 to +.019) but every gap
+> is under 1 SEM — **depth bonus ≈ visit bonus** at this
+> budget/trial count. Blend-vs-control read (vs the alpha=1.0
+> table below) is only available on qwen-3b so far: a0.8 .6231
+> vs a1.0 .6381 (−.015, ~0.5 SEM) — no sign the one-hop blend
+> helps under a depth-shaped frontier either, consistent with
+> the kube ac-sweep's flat-alpha verdict and the cnt score-mode
+> sweep's weak pb arms.
+> **Limitations / follow-up:** ledger
+> experiments/prm800k-level5.yaml, feeds
 > `level5-kdepth-bl-v02-model-family-parent-blend-qwen`. qwen-3b
-> feeds both this table and the score_mode-sweep table.
+> feeds both this table and the score_mode-sweep table. hr/trial
+> missing for 4 cells (scored before the timing convention).
+> The full blend-vs-control read needs the alpha=1.0 grid's
+> remaining models.
 
 #### model family, size, quantization comparison (QwenPRM, parent_blend/alpha=1.0)
 <!-- table-id: tbl-76f66a -->
