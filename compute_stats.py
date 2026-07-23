@@ -32,8 +32,8 @@ from utils.configs import (
     ExpConfig, BoNConfig, MCTSCntConfig, BLMCTSCntConfig,
     BLMCTSCntV02Config, BLMCTSKubeV01Config, BLMCTSKubeV02Config,
     BLMCTSKdepthV01Config, BLMCTSKdepthV02Config, BLMCTSSemConfig,
-    MCTSSemV01Config, MCTSSemV02Config, resolve_result_dir,
-    load_wandb_run_id,
+    BLMCTSSemV02Config, MCTSSemV01Config, MCTSSemV02Config,
+    resolve_result_dir, load_wandb_run_id,
 )
 
 from datasets.utils.logging import set_verbosity_error
@@ -67,6 +67,9 @@ cs.store(group="search", name="mcts_sem_v01_schema", node=MCTSSemV01Config)
 cs.store(group="search", name="mcts_sem_v02_schema", node=MCTSSemV02Config)
 cs.store(
     group="search", name="mcts_bl_sem_v01_schema", node=BLMCTSSemConfig,
+)
+cs.store(
+    group="search", name="mcts_bl_sem_v02_schema", node=BLMCTSSemV02Config,
 )
 
 

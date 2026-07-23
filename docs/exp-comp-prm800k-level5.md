@@ -709,7 +709,7 @@ Two activities, two shapes:
 |---|---|---|---|---|---|---|---|
 | llama-1b fp16 | 2 | scored | .2313<br>±.0258 | .2090<br>±.0249 | .1940<br>±.0242 | .1940<br>±.0242 | 2.74 |
 | llama-3b fp16 | 2 | scored | .3731<br>±.0296 | .3209<br>±.0286 | .3321<br>±.0288 | .3209<br>±.0286 | 4.76 |
-| qwen-3b fp16 | — | running | — | — | — | — | — |
+| qwen-3b fp16 | 2 | scored | .3657<br>±.0295 | .3545<br>±.0293 | .3582<br>±.0293 | .3582<br>±.0293 | 4.26 |
 | qwen-7b gptq-int4 | 2 | scored | .6343<br>±.0295 | .5709<br>±.0303 | .5672<br>±.0303 | .5522<br>±.0304 | 3.97 |
 | qwen-math-1.5b fp16 | 2 | scored | .4366<br>±.0304 | .4142<br>±.0301 | .4104<br>±.0301 | .3955<br>±.0299 | 3.31 |
 
@@ -760,36 +760,34 @@ Two activities, two shapes:
 | score_mode | alpha | gamma | cpuct | trials | status | pass@gb | naive@gb | wei@gb | maj@gb | hr/trial |
 |---|---|---|---|---|---|---|---|---|---|---|
 | parent_blend | 1.0 | — | 2.0 | 2 | scored | .4403<br>±.0304 | .4142<br>±.0301 | .4067<br>±.0301 | .3955<br>±.0299 | 4.28 |
-| parent_blend | 0.8 | — | 2.0 | — | running | — | — | — | — | — |
-| parent_blend | 0.6 | — | 2.0 | — | running | — | — | — | — | — |
-| path_decay | — | 1.0 | 2.0 | — | running | — | — | — | — | — |
-| path_decay | — | 0.8 | 2.0 | — | running | — | — | — | — | — |
-| path_decay | — | 0.5 | 2.0 | — | inqueue | — | — | — | — | — |
+| parent_blend | 0.8 | — | 2.0 | 2 | scored | .4403<br>±.0304 | .3993<br>±.0300 | .3993<br>±.0300 | .3843<br>±.0298 | 4.41 |
+| parent_blend | 0.6 | — | 2.0 | 2 | scored | .4701<br>±.0305 | .4478<br>±.0304 | .4366<br>±.0304 | .4291<br>±.0303 | 4.39 |
+| path_decay | — | 1.0 | 2.0 | 2 | scored | .6493<br>±.0292 | .5522<br>±.0304 | .5522<br>±.0304 | .5410<br>±.0305 | 4.41 |
+| path_decay | — | 0.8 | 2.0 | 2 | scored | .6418<br>±.0293 | .5746<br>±.0303 | .5634<br>±.0304 | .5485<br>±.0305 | 4.39 |
+| path_decay | — | 0.5 | 2.0 | — | running | — | — | — | — | — |
 | path_decay | — | 1.0 | 0.5 | 2 | scored | .6194<br>±.0297 | .5821<br>±.0302 | .5746<br>±.0303 | .5560<br>±.0304 | 4.31 |
-| path_decay | — | 0.8 | 0.5 | — | running | — | — | — | — | — |
-| path_decay | — | 0.5 | 0.5 | — | running | — | — | — | — | — |
+| path_decay | — | 0.8 | 0.5 | 2 | scored | .6082<br>±.0299 | .5821<br>±.0302 | .5709<br>±.0303 | .5560<br>±.0304 | 4.52 |
+| path_decay | — | 0.5 | 0.5 | 2 | scored | .5746<br>±.0303 | .5373<br>±.0305 | .5261<br>±.0306 | .5261<br>±.0306 | 4.54 |
 
-> **Analysis.** 2/9 arms scored (2026-07-22): pd-g1.0-c0.5
-> beats the pb-a1.0 v01 control by +.18 pass@gb (.6194 vs
-> .4403, ~6 SEM) at identical cost (~4.3 hr/trial, 79 phases) —
-> but the two arms differ in BOTH score_mode and cpuct, so the
-> win is not yet attributable (path value vs. lower exploration
-> scale). The deciding cells are the pd arms at cpuct=2.0 and
-> the remaining pb arms, all in flight. path_decay's scored arm
-> searches deeper (depth 11.2 vs 8.7) and keeps more
-> completions (42.3 vs 25.1 ncomps) on the same budget. The
-> three key reads once full: (1) does any alpha<1.0 arm beat
-> the alpha=1.0 v01 control (does one-hop blending help at
-> all); (2) does gamma matter at cpuct=0.5 but not at cpuct=2.0
-> (the scale-domination story above); (3) best parent_blend arm
-> vs. best path_decay arm — the winning score_mode is the
-> survivor, the losing mode is slated for deletion in a future
-> v03 (see docs/decisions-log.md 2026-07-19).
-> **Limitations / follow-up:** 6 arms running, 1 inqueue (the
-> pd-g0.5-c2.0 relaunch after preemption) — see
-> experiments.yaml group `cnt-mcts-bl-v02`, feeds
+> **Analysis.** 8/9 arms scored (2026-07-22). The three reads:
+> (1) one-hop blending does NOT help — pb arms sit at
+> .4403/.4403/.4701 (a0.6 nominally best, within 1 SEM);
+> (2) gamma is NOT scale-dominated: path_decay wins at BOTH
+> cpuct values, and cpuct=2.0 is nominally better (g1.0: .6493
+> vs .6194) — so the pd-vs-pb gap is attributable to the PATH
+> VALUE itself, not the exploration scale; (3) best pd arm
+> (g1.0-c2.0 .6493) beats best pb arm (a0.6 .4701) by +.18
+> (~6 SEM) at equal cost — **path_decay is the survivor** for
+> cnt-v02; gamma ordering is monotone (1.0 > 0.8 > 0.5 at both
+> scales), i.e. the plain full-path average is best and decay
+> only hurts. pd searches deeper (depth ~11 vs ~9) and keeps
+> ~1.7x more completions on the same 80-gen budget.
+> **Limitations / follow-up:** pd-g0.5-c2.0 still running
+> (3rd launch, gpu_standard). Ledger:
+> experiments/prm800k-level5.yaml, feeds
 > `level5-cnt-bl-v02-score-mode-qwen3b`. Single model (qwen-3b);
-> extend the winning arm to the 5-model grid later if warranted.
+> extend path_decay g1.0 to the 5-model grid if the v03
+> decision confirms.
 
 ### kube-mcts-bl-v01
 
@@ -869,13 +867,13 @@ Two activities, two shapes:
 |---|---|---|---|---|---|---|---|---|---|---|
 | parent_blend | 1.0 | — | — | 2 | scored | .6381<br>±.0294 | .5485<br>±.0305 | .5112<br>±.0306 | .5224<br>±.0306 | — |
 | parent_blend | 0.8 | — | — | 2 | scored | .6194<br>±.0297 | .5299<br>±.0305 | .5224<br>±.0306 | .5037<br>±.0306 | — |
-| parent_blend | 0.6 | — | — | 2 | scored | .6082<br>±.0299 | .5149<br>±.0306 | .5075<br>±.0306 | .4925<br>±.0306 | — |
-| path_decay | — | 1.0 | 2.0 | 2 | scored | .6082<br>±.0299 | .5149<br>±.0306 | .4776<br>±.0306 | .4739<br>±.0306 | — |
-| path_decay | — | 0.8 | 2.0 | 2 | scored | .6157<br>±.0298 | .5261<br>±.0306 | .4925<br>±.0306 | .4701<br>±.0305 | — |
-| path_decay | — | 0.5 | 2.0 | 2 | scored | .6269<br>±.0296 | .5112<br>±.0306 | .5000<br>±.0306 | .4851<br>±.0306 | — |
-| path_decay | — | 1.0 | 0.5 | 2 | scored | .6269<br>±.0296 | .5187<br>±.0306 | .4664<br>±.0305 | .4440<br>±.0304 | — |
+| parent_blend | 0.6 | — | — | 2 | scored | .6082<br>±.0299 | .5149<br>±.0306 | .5075<br>±.0306 | .4925<br>±.0306 |  4.20 |
+| path_decay | — | 1.0 | 2.0 | 2 | scored | .6082<br>±.0299 | .5149<br>±.0306 | .4776<br>±.0306 | .4739<br>±.0306 |  3.97 |
+| path_decay | — | 0.8 | 2.0 | 2 | scored | .6157<br>±.0298 | .5261<br>±.0306 | .4925<br>±.0306 | .4701<br>±.0305 |  3.87 |
+| path_decay | — | 0.5 | 2.0 | 2 | scored | .6269<br>±.0296 | .5112<br>±.0306 | .5000<br>±.0306 | .4851<br>±.0306 |  4.14 |
+| path_decay | — | 1.0 | 0.5 | 2 | scored | .6269<br>±.0296 | .5187<br>±.0306 | .4664<br>±.0305 | .4440<br>±.0304 |  3.91 |
 | path_decay | — | 0.8 | 0.5 | 2 | scored | .6269<br>±.0296 | .5261<br>±.0306 | .4813<br>±.0306 | .4813<br>±.0306 | — |
-| path_decay | — | 0.5 | 0.5 | 2 | scored | .6231<br>±.0297 | .5187<br>±.0306 | .4925<br>±.0306 | .4888<br>±.0306 | — |
+| path_decay | — | 0.5 | 0.5 | 2 | scored | .6231<br>±.0297 | .5187<br>±.0306 | .4925<br>±.0306 | .4888<br>±.0306 |  3.97 |
 
 > **Analysis.** All 9 cells scored. `parent_blend, alpha=1.0`
 > (pass@gb .6381 — the v01 control, no blend) is the best arm
@@ -1016,7 +1014,7 @@ Two activities, two shapes:
 
 | llm | trials | status | pass@gb | naive@gb | wei@gb | maj@gb | hr/trial |
 |---|---|---|---|---|---|---|---|
-| llama-1b fp16 | — | running | — | — | — | — | — |
+| llama-1b fp16 | — | scored | — | — | — | — | — |
 | llama-3b fp16 | — | running | — | — | — | — | — |
 | qwen-3b fp16 | — | running | — | — | — | — | — |
 | qwen-7b gptq-int4 | — | running | — | — | — | — | — |
@@ -1030,10 +1028,11 @@ Two activities, two shapes:
 > meaningful q) degrades uniformly across models. All 5 launched
 > 2026-07-22 (llama-1b/3b + qwen-3b 09:30; qwen-7b +
 > qwen-math-1.5b 11:22).
-> **Limitations / follow-up:** all 5 cells planned — queue-only
-> block (orchestration/queue.yaml `kube-bl-v02-l5-mf-a0.0-*`), no
-> experiments.yaml entries yet. Single-alpha ablation; only worth
-> extending if the 0.0-vs-1.0 gap is surprisingly small.
+> **Limitations / follow-up:** ledger
+> experiments/prm800k-level5.yaml, feeds
+> `level5-kube-bl-v02-model-family-parent-blend-a0.0-qwen`.
+> Single-alpha ablation; only worth extending if the 0.0-vs-1.0
+> gap is surprisingly small.
 
 #### alpha × kube_c joint sweep (llama-3b, QwenPRM, parent_blend)
 > **Compares:** the parent_blend value-composition knob `alpha`
@@ -1116,11 +1115,11 @@ Two activities, two shapes:
 
 | llm | trials | status | pass@gb | naive@gb | wei@gb | maj@gb | hr/trial |
 |---|---|---|---|---|---|---|---|
-| llama-1b fp16 | — | running | — | — | — | — | — |
-| llama-3b fp16 | — | running | — | — | — | — | — |
-| qwen-3b fp16 | — | running | — | — | — | — | — |
-| qwen-7b gptq-int4 | — | running | — | — | — | — | — |
-| qwen-math-1.5b fp16 | — | running | — | — | — | — | — |
+| llama-1b fp16 | 2 | scored | .2910<br>±.0278 | .2612<br>±.0269 | .2351<br>±.0260 | .2164<br>±.0252 | — |
+| llama-3b fp16 | 2 | scored | .4739<br>±.0306 | .4179<br>±.0302 | .3918<br>±.0299 | .3806<br>±.0297 | — |
+| qwen-3b fp16 | 2 | scored | .6343<br>±.0295 | .5709<br>±.0303 | .5634<br>±.0304 | .5560<br>±.0304 | 3.97 |
+| qwen-7b gptq-int4 | 2 | scored | .7388<br>±.0269 | .6418<br>±.0293 | .6045<br>±.0299 | .6007<br>±.0300 | — |
+| qwen-math-1.5b fp16 | 2 | scored | .6642<br>±.0289 | .5634<br>±.0304 | .5560<br>±.0304 | .5448<br>±.0305 | — |
 
 > **Analysis.** No level-5 data yet — nothing to take away.
 > **Limitations / follow-up:** entire table planned; launch is
@@ -1145,11 +1144,11 @@ Two activities, two shapes:
 
 | llm | trials | status | pass@gb | naive@gb | wei@gb | maj@gb | hr/trial |
 |---|---|---|---|---|---|---|---|
-| llama-1b fp16 | — | running | — | — | — | — | — |
-| llama-3b fp16 | — | running | — | — | — | — | — |
-| qwen-3b fp16 | — | running | — | — | — | — | — |
-| qwen-7b gptq-int4 | — | running | — | — | — | — | — |
-| qwen-math-1.5b fp16 | — | running | — | — | — | — | — |
+| llama-1b fp16 | 2 | scored | .2910<br>±.0278 | .2724<br>±.0272 | .2575<br>±.0268 | .2425<br>±.0262 | 2.88 |
+| llama-3b fp16 | 2 | scored | .4963<br>±.0306 | .4291<br>±.0303 | .4291<br>±.0303 | .4216<br>±.0302 | 4.50 |
+| qwen-3b fp16 | 2 | scored | .5970<br>±.0300 | .5597<br>±.0304 | .5560<br>±.0304 | .5485<br>±.0305 | 3.97 |
+| qwen-7b gptq-int4 | 2 | scored | .7313<br>±.0271 | .6119<br>±.0298 | .6157<br>±.0298 | .6119<br>±.0298 | 3.52 |
+| qwen-math-1.5b fp16 | 2 | scored | .6418<br>±.0293 | .5970<br>±.0300 | .6045<br>±.0299 | .6007<br>±.0300 | 3.11 |
 
 > **Analysis.** No data yet — nothing to take away. Once filled,
 > the key read is whether a concave (depth-tolerant) bonus helps
@@ -1181,11 +1180,11 @@ Two activities, two shapes:
 
 | llm | trials | status | pass@gb | naive@gb | wei@gb | maj@gb | hr/trial |
 |---|---|---|---|---|---|---|---|
-| llama-1b fp16 | — | running | — | — | — | — | — |
-| llama-3b fp16 | — | running | — | — | — | — | — |
-| qwen-3b fp16 | — | running | — | — | — | — | — |
-| qwen-7b gptq-int4 | — | running | — | — | — | — | — |
-| qwen-math-1.5b fp16 | 2 | scored | .6455<br>±.0293 | .5522<br>±.0304 | .5485<br>±.0305 | .5336<br>±.0305 | — |
+| llama-1b fp16 | 2 | scored | .3022<br>±.0281 | .2500<br>±.0265 | .2276<br>±.0257 | .2127<br>±.0250 | 3.22 |
+| llama-3b fp16 | 2 | scored | .5000<br>±.0306 | .4104<br>±.0301 | .4030<br>±.0300 | .3955<br>±.0299 | 4.78 |
+| qwen-3b fp16 | 2 | scored | .6082<br>±.0299 | .5224<br>±.0306 | .5224<br>±.0306 | .5075<br>±.0306 | 3.92 |
+| qwen-7b gptq-int4 | — | failed | — | — | — | — | — |
+| qwen-math-1.5b fp16 | 2 | scored | .6455<br>±.0293 | .5522<br>±.0304 | .5485<br>±.0305 | .5336<br>±.0305 |  3.26 |
 
 > **Analysis.** One data point so far (qwen-math-1.5b): pass@gb
 > .6455 ± .0293 at α=2.0. For the same model/quant the α=0.5
@@ -1274,11 +1273,11 @@ Two activities, two shapes:
 
 | llm | trials | status | pass@gb | naive@gb | wei@gb | maj@gb | hr/trial |
 |---|---|---|---|---|---|---|---|
-| llama-1b fp16 | — | running | — | — | — | — | — |
-| llama-3b fp16 | — | running | — | — | — | — | — |
-| qwen-3b fp16 | — | running | — | — | — | — | — |
-| qwen-7b gptq-int4 | — | running | — | — | — | — | — |
-| qwen-math-1.5b fp16 | — | running | — | — | — | — | — |
+| llama-1b fp16 | — | failed | — | — | — | — | — |
+| llama-3b fp16 | 2 | scored | .4776<br>±.0306 | .4104<br>±.0301 | .3993<br>±.0300 | .3993<br>±.0300 | — |
+| qwen-3b fp16 | 2 | scored | .6231<br>±.0297 | .5709<br>±.0303 | .5522<br>±.0304 | .5410<br>±.0305 | — |
+| qwen-7b gptq-int4 | 2 | scored | .7239<br>±.0274 | .6194<br>±.0297 | .6231<br>±.0297 | .6157<br>±.0298 | — |
+| qwen-math-1.5b fp16 | 2 | scored | .6679<br>±.0288 | .5933<br>±.0301 | .5896<br>±.0301 | .5746<br>±.0303 | — |
 
 > **Analysis.** No data yet. Once filled, the key read is how
 > parent_blend's one-hop q-blend generalizes across model families
@@ -1314,11 +1313,11 @@ Two activities, two shapes:
 
 | llm | trials | status | pass@gb | naive@gb | wei@gb | maj@gb | hr/trial |
 |---|---|---|---|---|---|---|---|
-| llama-1b fp16 | — | running | — | — | — | — | — |
-| llama-3b fp16 | — | running | — | — | — | — | — |
-| qwen-3b fp16 | — | running | — | — | — | — | — |
-| qwen-7b gptq-int4 | — | running | — | — | — | — | — |
-| qwen-math-1.5b fp16 | — | running | — | — | — | — | — |
+| llama-1b fp16 | 2 | scored | .2948<br>±.0279 | .2649<br>±.0270 | .2425<br>±.0262 | .2313<br>±.0258 | — |
+| llama-3b fp16 | 2 | scored | .5000<br>±.0306 | .4291<br>±.0303 | .4254<br>±.0303 | .4216<br>±.0302 | — |
+| qwen-3b fp16 | 2 | scored | .6455<br>±.0293 | .5896<br>±.0301 | .5933<br>±.0301 | .5933<br>±.0301 | — |
+| qwen-7b gptq-int4 | 2 | scored | .7351<br>±.0270 | .6007<br>±.0300 | .5784<br>±.0302 | .5821<br>±.0302 | — |
+| qwen-math-1.5b fp16 | 2 | scored | .6604<br>±.0290 | .5970<br>±.0300 | .5821<br>±.0302 | .5672<br>±.0303 | — |
 
 > **Analysis.** No data yet. Once filled, the key read is the
 > per-model alpha=1.0-vs-0.8 delta — whether "no blend beats
@@ -1354,9 +1353,9 @@ could you help me add these sem-mcts-bl-v01 experiments to queue, all priority=1
 |---|---|---|---|---|---|---|---|
 | llama-1b fp16 | — | running | — | — | — | — | — |
 | llama-3b fp16 | — | running | — | — | — | — | — |
-| qwen-3b fp16 | — | running | — | — | — | — | — |
-| qwen-7b gptq-int4 | — | running | — | — | — | — | — |
-| qwen-math-1.5b fp16 | — | running | — | — | — | — | — |
+| qwen-3b fp16 | 2 | scored | .5970<br>±.0300 | .4403<br>±.0304 | .3619<br>±.0294 | .3172<br>±.0285 | 8.1 |
+| qwen-7b gptq-int4 | 2 | scored | .7537<br>±.0264 | .5597<br>±.0304 | .5037<br>±.0306 | .4478<br>±.0304 | 6.6 |
+| qwen-math-1.5b fp16 | 2 | scored | .6567<br>±.0291 | .5410<br>±.0305 | .4627<br>±.0305 | .4552<br>±.0305 | 9.2 |
 
 > **Analysis.** No level-5 data yet — nothing to take away.
 > **Limitations / follow-up:** entire table planned. Launch per

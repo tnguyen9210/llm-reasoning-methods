@@ -1097,7 +1097,7 @@
   feeds:
   - level5-cnt-bl-v02-score-mode-qwen3b
   group: cnt-mcts-bl-v02
-  status: running
+  status: scored
   priority: 2
   expected_hr: 8
   launch:
@@ -1121,7 +1121,7 @@
   feeds:
   - level5-cnt-bl-v02-score-mode-qwen3b
   group: cnt-mcts-bl-v02
-  status: running
+  status: scored
   priority: 2
   expected_hr: 8
   launch:
@@ -1144,7 +1144,7 @@
   feeds:
   - level5-cnt-bl-v02-score-mode-qwen3b
   group: cnt-mcts-bl-v02
-  status: running
+  status: scored
   priority: 2
   expected_hr: 8
   launch:
@@ -1168,7 +1168,7 @@
   feeds:
   - level5-cnt-bl-v02-score-mode-qwen3b
   group: cnt-mcts-bl-v02
-  status: running
+  status: scored
   priority: 2
   expected_hr: 8
   launch:
@@ -1193,7 +1193,7 @@
   feeds:
   - level5-cnt-bl-v02-score-mode-qwen3b
   group: cnt-mcts-bl-v02
-  status: running
+  status: scored
   priority: 2
   expected_hr: 8
   launch:
@@ -1218,7 +1218,7 @@
   feeds:
   - level5-cnt-bl-v02-score-mode-qwen3b
   group: cnt-mcts-bl-v02
-  status: planned
+  status: running
   priority: 2
   expected_hr: 8
   launch:
@@ -1243,7 +1243,7 @@
   feeds:
   - level5-cnt-bl-v02-score-mode-qwen3b
   group: cnt-mcts-bl-v02
-  status: running
+  status: scored
   priority: 2
   expected_hr: 8
   launch:
@@ -1268,7 +1268,7 @@
   feeds:
   - level5-cnt-bl-v02-score-mode-qwen3b
   group: cnt-mcts-bl-v02
-  status: running
+  status: scored
   priority: 2
   expected_hr: 8
   launch:
@@ -1293,7 +1293,7 @@
   feeds:
   - level5-cnt-bl-v02-score-mode-qwen3b
   group: cnt-mcts-bl-v02
-  status: running
+  status: scored
   priority: 2
   expected_hr: 8
   launch:
@@ -1364,7 +1364,7 @@
   feeds:
   - level5-kube-bl-v02-score-mode-qwen3b
   group: kube-mcts-bl-v02
-  status: running
+  status: scored
   priority: 1
   expected_hr: 8
   launch:
@@ -1388,7 +1388,7 @@
   feeds:
   - level5-kube-bl-v02-score-mode-qwen3b
   group: kube-mcts-bl-v02
-  status: running
+  status: scored
   priority: 1
   expected_hr: 8
   launch:
@@ -1413,7 +1413,7 @@
   feeds:
   - level5-kube-bl-v02-score-mode-qwen3b
   group: kube-mcts-bl-v02
-  status: running
+  status: scored
   priority: 1
   expected_hr: 8
   launch:
@@ -1438,7 +1438,7 @@
   feeds:
   - level5-kube-bl-v02-score-mode-qwen3b
   group: kube-mcts-bl-v02
-  status: running
+  status: scored
   priority: 1
   expected_hr: 8
   launch:
@@ -1463,7 +1463,7 @@
   feeds:
   - level5-kube-bl-v02-score-mode-qwen3b
   group: kube-mcts-bl-v02
-  status: running
+  status: scored
   priority: 1
   expected_hr: 8
   launch:
@@ -1513,7 +1513,7 @@
   feeds:
   - level5-kube-bl-v02-score-mode-qwen3b
   group: kube-mcts-bl-v02
-  status: running
+  status: scored
   priority: 1
   expected_hr: 8
   launch:
@@ -1535,7 +1535,7 @@
   feeds:
   - level5-kube-bl-v01-model-family-qwen3b
   group: kube-mcts-bl
-  status: running
+  status: scored
   priority: 1.7
   expected_hr: 8
   launch:
@@ -1557,7 +1557,7 @@
   feeds:
   - level5-kdepth-bl-v01-model-family-qwen3b
   group: kdepth-mcts-bl
-  status: running
+  status: scored
   priority: 1.7
   expected_hr: 8
   launch:
@@ -1580,7 +1580,7 @@
   feeds:
   - level5-kdepth-bl-v01-model-family-qwen-da0.5
   group: kdepth-mcts-bl
-  status: running
+  status: scored
   priority: 1.7
   expected_hr: 8
   launch:
@@ -1602,7 +1602,7 @@
   feeds:
   - level5-kdepth-bl-v01-model-family-qwen-da0.5
   group: kdepth-mcts-bl
-  status: running
+  status: scored
   priority: 1.5
   expected_hr: 8
   launch:
@@ -1624,7 +1624,7 @@
   feeds:
   - level5-kdepth-bl-v01-model-family-qwen-da0.5
   group: kdepth-mcts-bl
-  status: running
+  status: scored
   priority: 1.7
   expected_hr: 8
   launch:
@@ -1646,7 +1646,7 @@
   feeds:
   - level5-kdepth-bl-v01-model-family-qwen-da0.5
   group: kdepth-mcts-bl
-  status: running
+  status: scored
   priority: 1
   expected_hr: 8
   launch:
@@ -1668,7 +1668,7 @@
   feeds:
   - level5-kdepth-bl-v01-model-family-qwen-da0.5
   group: kdepth-mcts-bl
-  status: running
+  status: scored
   priority: 1
   expected_hr: 8
   launch:
@@ -1690,7 +1690,7 @@
   feeds:
   - level5-kdepth-bl-v01-model-family-qwen-da2.0
   group: kdepth-mcts-bl
-  status: running
+  status: scored
   priority: 1.7
   expected_hr: 8
   launch:
@@ -1712,7 +1712,7 @@
   feeds:
   - level5-kdepth-bl-v01-model-family-qwen-da2.0
   group: kdepth-mcts-bl
-  status: running
+  status: scored
   priority: 1
   expected_hr: 8
   launch:
@@ -1734,7 +1734,7 @@
   feeds:
   - level5-kdepth-bl-v01-model-family-qwen-da2.0
   group: kdepth-mcts-bl
-  status: running
+  status: scored
   priority: 1.7
   expected_hr: 8
   launch:
@@ -1756,7 +1756,7 @@
   feeds:
   - level5-kdepth-bl-v01-model-family-qwen-da2.0
   group: kdepth-mcts-bl
-  status: running
+  status: failed
   priority: 1
   expected_hr: 8
   launch:
@@ -1764,6 +1764,9 @@
     node: r5u11n1
     pid: 507565
     at: 2026-07-21 00:30
+  history:
+    - {at: 2026-07-22 18:05, job_id: 23335926, outcome: missing,
+       trials_done: 0}
   note: level-5 qwen-PRM kdepth-v01 depth_alpha=2.0 qwen-7b gptq-int4
 - id: kdepth-bl-v01-l5-da2-qwenmath15b
   launcher: generate_mcts_bl_cnt.py
@@ -1778,7 +1781,7 @@
   feeds:
   - level5-kdepth-bl-v01-model-family-qwen-da2.0
   group: kdepth-mcts-bl
-  status: running
+  status: scored
   priority: 1
   expected_hr: 8
   launch:
@@ -1800,9 +1803,10 @@
     search.embeds_center_mode: local
     data.level: 5
   trials: 2
-  feeds: []
+  feeds:
+  - level5-sem-centermode-lam0.01-weff10
   group: sem-mcts
-  status: running
+  status: scored
   priority: 1
   expected_hr: 5
   launch:
@@ -1825,9 +1829,10 @@
     search.embeds_center_mode: local
     data.level: 5
   trials: 2
-  feeds: []
+  feeds:
+  - level5-sem-centermode-lam0.01-weff10
   group: sem-mcts
-  status: running
+  status: scored
   priority: 1
   expected_hr: 7
   launch:
@@ -1848,9 +1853,10 @@
     search.ds_alpha: 1.0
     data.level: 5
   trials: 2
-  feeds: []
+  feeds:
+  - level5-sem-centermode-lam0.01-weff10
   group: sem-mcts
-  status: running
+  status: scored
   priority: 1
   expected_hr: 5
   launch:
@@ -1873,9 +1879,10 @@
     search.embeds_center_mode: local
     data.level: 5
   trials: 2
-  feeds: []
+  feeds:
+  - level5-sem-centermode-lam0.01-weff10
   group: sem-mcts
-  status: running
+  status: scored
   priority: 1
   expected_hr: 5
   launch:
@@ -1898,9 +1905,10 @@
     search.embeds_center_mode: local
     data.level: 5
   trials: 2
-  feeds: []
+  feeds:
+  - level5-sem-centermode-lam0.01-weff10
   group: sem-mcts
-  status: running
+  status: scored
   priority: 1
   expected_hr: 6
   launch:
@@ -1923,9 +1931,10 @@
     search.embeds_center_mode: local
     data.level: 5
   trials: 2
-  feeds: []
+  feeds:
+  - level5-sem-centermode-lam0.01-weff10
   group: sem-mcts
-  status: running
+  status: scored
   priority: 1
   expected_hr: 5
   launch:
@@ -1948,9 +1957,10 @@
     search.embeds_center_mode: local
     data.level: 5
   trials: 2
-  feeds: []
+  feeds:
+  - level5-sem-centermode-lam0.01-weff100
   group: sem-mcts
-  status: running
+  status: scored
   priority: 1
   expected_hr: 5
   launch:
@@ -1973,9 +1983,10 @@
     search.embeds_center_mode: local
     data.level: 5
   trials: 2
-  feeds: []
+  feeds:
+  - level5-sem-centermode-lam0.01-weff100
   group: sem-mcts
-  status: running
+  status: scored
   priority: 1
   expected_hr: 7
   launch:
@@ -1996,9 +2007,10 @@
     search.ds_alpha: 10
     data.level: 5
   trials: 2
-  feeds: []
+  feeds:
+  - level5-sem-centermode-lam0.01-weff100
   group: sem-mcts
-  status: running
+  status: scored
   priority: 1
   expected_hr: 5
   launch:
@@ -2021,9 +2033,10 @@
     search.embeds_center_mode: local
     data.level: 5
   trials: 2
-  feeds: []
+  feeds:
+  - level5-sem-centermode-lam0.01-weff100
   group: sem-mcts
-  status: running
+  status: scored
   priority: 1
   expected_hr: 5
   launch:
@@ -2046,9 +2059,10 @@
     search.embeds_center_mode: local
     data.level: 5
   trials: 2
-  feeds: []
+  feeds:
+  - level5-sem-centermode-lam0.01-weff100
   group: sem-mcts
-  status: running
+  status: scored
   priority: 1
   expected_hr: 6
   launch:
@@ -2071,9 +2085,10 @@
     search.embeds_center_mode: local
     data.level: 5
   trials: 2
-  feeds: []
+  feeds:
+  - level5-sem-centermode-lam0.01-weff100
   group: sem-mcts
-  status: running
+  status: scored
   priority: 1
   expected_hr: 5
   launch:
@@ -2092,9 +2107,10 @@
     prm: qwen_prm
     data.level: 5
   trials: 2
-  feeds: []
+  feeds:
+  - level5-cnt-bl-v01-model-family-qwen
   group: cnt-mcts-bl-v01
-  status: running
+  status: scored
   priority: 1
   expected_hr: 8
   launch:
@@ -2112,9 +2128,10 @@
     prm: qwen_prm
     data.level: 5
   trials: 2
-  feeds: []
+  feeds:
+  - level5-cnt-bl-v01-model-family-qwen
   group: cnt-mcts-bl-v01
-  status: running
+  status: scored
   priority: 1
   expected_hr: 8
   launch:
@@ -2132,9 +2149,10 @@
     prm: qwen_prm
     data.level: 5
   trials: 2
-  feeds: []
+  feeds:
+  - level5-cnt-bl-v01-model-family-qwen
   group: cnt-mcts-bl-v01
-  status: running
+  status: scored
   priority: 1
   expected_hr: 8
   launch:
@@ -2152,9 +2170,10 @@
     prm: qwen_prm
     data.level: 5
   trials: 2
-  feeds: []
+  feeds:
+  - level5-cnt-bl-v01-model-family-qwen
   group: cnt-mcts-bl-v01
-  status: running
+  status: scored
   priority: 1.7
   expected_hr: 8
   launch:
@@ -2172,9 +2191,10 @@
     prm: qwen_prm
     data.level: 5
   trials: 2
-  feeds: []
+  feeds:
+  - level5-cnt-bl-v01-model-family-qwen
   group: cnt-mcts-bl-v01
-  status: running
+  status: scored
   priority: 1.7
   expected_hr: 8
   launch:
@@ -2192,9 +2212,10 @@
     prm: qwen_prm
     data.level: 5
   trials: 2
-  feeds: []
+  feeds:
+  - level5-kube-bl-v01-model-family-qwen
   group: kube-mcts-bl-v01
-  status: running
+  status: scored
   priority: 1
   expected_hr: 8
   launch:
@@ -2212,9 +2233,10 @@
     prm: qwen_prm
     data.level: 5
   trials: 2
-  feeds: []
+  feeds:
+  - level5-kube-bl-v01-model-family-qwen
   group: kube-mcts-bl-v01
-  status: running
+  status: scored
   priority: 1
   expected_hr: 8
   launch:
@@ -2232,9 +2254,10 @@
     prm: qwen_prm
     data.level: 5
   trials: 2
-  feeds: []
+  feeds:
+  - level5-kube-bl-v01-model-family-qwen
   group: kube-mcts-bl-v01
-  status: running
+  status: scored
   priority: 1
   expected_hr: 8
   launch:
@@ -2252,9 +2275,10 @@
     prm: qwen_prm
     data.level: 5
   trials: 2
-  feeds: []
+  feeds:
+  - level5-kube-bl-v01-model-family-qwen
   group: kube-mcts-bl-v01
-  status: running
+  status: scored
   priority: 1.7
   expected_hr: 8
   launch:
@@ -2272,9 +2296,10 @@
     prm: qwen_prm
     data.level: 5
   trials: 2
-  feeds: []
+  feeds:
+  - level5-kdepth-bl-v01-model-family-qwen
   group: kdepth-mcts-bl-v01
-  status: running
+  status: scored
   priority: 1.5
   expected_hr: 8
   launch:
@@ -2292,9 +2317,10 @@
     prm: qwen_prm
     data.level: 5
   trials: 2
-  feeds: []
+  feeds:
+  - level5-kdepth-bl-v01-model-family-qwen
   group: kdepth-mcts-bl-v01
-  status: running
+  status: scored
   priority: 1.5
   expected_hr: 8
   launch:
@@ -2312,9 +2338,10 @@
     prm: qwen_prm
     data.level: 5
   trials: 2
-  feeds: []
+  feeds:
+  - level5-kdepth-bl-v01-model-family-qwen
   group: kdepth-mcts-bl-v01
-  status: running
+  status: scored
   priority: 1.5
   expected_hr: 8
   launch:
@@ -2332,9 +2359,10 @@
     prm: qwen_prm
     data.level: 5
   trials: 2
-  feeds: []
+  feeds:
+  - level5-kdepth-bl-v01-model-family-qwen
   group: kdepth-mcts-bl-v01
-  status: running
+  status: scored
   priority: 1.7
   expected_hr: 8
   launch:
@@ -2376,9 +2404,10 @@
     search.lam: 0.01
     search.ds_alpha: 10
   trials: 2
-  feeds: []
+  feeds:
+  - level5-sem-bl-v01-model-family-weff100-qwen
   group: sem-mcts-bl-v01
-  status: running
+  status: scored
   priority: 1
   expected_hr: 8
   launch:
@@ -2398,9 +2427,10 @@
     search.lam: 0.01
     search.ds_alpha: 10
   trials: 2
-  feeds: []
+  feeds:
+  - level5-sem-bl-v01-model-family-weff100-qwen
   group: sem-mcts-bl-v01
-  status: running
+  status: scored
   priority: 1
   expected_hr: 8
   launch:
@@ -2442,9 +2472,10 @@
     search.lam: 0.01
     search.ds_alpha: 10
   trials: 2
-  feeds: []
+  feeds:
+  - level5-sem-bl-v01-model-family-weff100-qwen
   group: sem-mcts-bl-v01
-  status: running
+  status: scored
   priority: 1.7
   expected_hr: 8
   launch:
@@ -2464,9 +2495,10 @@
     search.score_mode: parent_blend
     search.alpha: 1.0
   trials: 2
-  feeds: []
+  feeds:
+  - level5-kube-bl-v02-model-family-parent-blend-a1.0-qwen
   group: kube-mcts-bl-v02
-  status: running
+  status: scored
   priority: 1
   expected_hr: 8
   launch:
@@ -2486,9 +2518,10 @@
     search.score_mode: parent_blend
     search.alpha: 1.0
   trials: 2
-  feeds: []
+  feeds:
+  - level5-kube-bl-v02-model-family-parent-blend-a1.0-qwen
   group: kube-mcts-bl-v02
-  status: running
+  status: scored
   priority: 1
   expected_hr: 8
   launch:
@@ -2509,9 +2542,10 @@
     search.score_mode: parent_blend
     search.alpha: 1.0
   trials: 2
-  feeds: []
+  feeds:
+  - level5-kube-bl-v02-model-family-parent-blend-a1.0-qwen
   group: kube-mcts-bl-v02
-  status: running
+  status: scored
   priority: 1
   expected_hr: 8
   launch:
@@ -2532,9 +2566,10 @@
     search.score_mode: parent_blend
     search.alpha: 1.0
   trials: 2
-  feeds: []
+  feeds:
+  - level5-kube-bl-v02-model-family-parent-blend-a1.0-qwen
   group: kube-mcts-bl-v02
-  status: running
+  status: scored
   priority: 1.7
   expected_hr: 8
   launch:
@@ -2580,7 +2615,8 @@
     search.lam: 0.01
     search.ds_alpha: 10
   trials: 2
-  feeds: []
+  feeds:
+  - level5-sem-bl-v02-model-family-parent-blend-a1.0-qwen
   group: sem-mcts-bl-v02
   status: running
   priority: 0.7
@@ -2604,7 +2640,8 @@
     search.lam: 0.01
     search.ds_alpha: 10
   trials: 2
-  feeds: []
+  feeds:
+  - level5-sem-bl-v02-model-family-parent-blend-a1.0-qwen
   group: sem-mcts-bl-v02
   status: running
   priority: 0.7
@@ -2653,7 +2690,8 @@
     search.lam: 0.01
     search.ds_alpha: 10
   trials: 2
-  feeds: []
+  feeds:
+  - level5-sem-bl-v02-model-family-parent-blend-a1.0-qwen
   group: sem-mcts-bl-v02
   status: running
   priority: 1.7
@@ -2675,9 +2713,10 @@
     search.score_mode: parent_blend
     search.alpha: 1.0
   trials: 2
-  feeds: []
+  feeds:
+  - level5-kdepth-bl-v02-model-family-parent-blend-a1.0-qwen
   group: kdepth-mcts-bl-v02
-  status: running
+  status: scored
   priority: 1
   expected_hr: 8
   launch:
@@ -2697,9 +2736,10 @@
     search.score_mode: parent_blend
     search.alpha: 1.0
   trials: 2
-  feeds: []
+  feeds:
+  - level5-kdepth-bl-v02-model-family-parent-blend-a1.0-qwen
   group: kdepth-mcts-bl-v02
-  status: running
+  status: scored
   priority: 1
   expected_hr: 8
   launch:
@@ -2720,9 +2760,10 @@
     search.score_mode: parent_blend
     search.alpha: 1.0
   trials: 2
-  feeds: []
+  feeds:
+  - level5-kdepth-bl-v02-model-family-parent-blend-a1.0-qwen
   group: kdepth-mcts-bl-v02
-  status: running
+  status: scored
   priority: 1
   expected_hr: 8
   launch:
@@ -2743,9 +2784,10 @@
     search.score_mode: parent_blend
     search.alpha: 1.0
   trials: 2
-  feeds: []
+  feeds:
+  - level5-kdepth-bl-v02-model-family-parent-blend-a1.0-qwen
   group: kdepth-mcts-bl-v02
-  status: running
+  status: scored
   priority: 1.7
   expected_hr: 8
   launch:
@@ -2765,9 +2807,10 @@
     search.score_mode: parent_blend
     search.alpha: 1.0
   trials: 2
-  feeds: []
+  feeds:
+  - level5-kdepth-bl-v02-model-family-parent-blend-a1.0-qwen
   group: kdepth-mcts-bl-v02
-  status: running
+  status: scored
   priority: 1.7
   expected_hr: 8
   launch:
@@ -2789,7 +2832,7 @@
   trials: 2
   feeds: []
   group: kdepth-mcts-bl-v02
-  status: running
+  status: failed
   priority: 1.7
   expected_hr: 8
   launch:
@@ -2797,6 +2840,11 @@
     node: r5u35n1
     pid: 840285
     at: 2026-07-22 12:12
+  history:
+    - {at: 2026-07-22 02:01, job_id: 23338597, outcome: stalled,
+       trials_done: 1}
+    - {at: 2026-07-22 12:14, job_id: 23338589, outcome: stalled,
+       trials_done: 1}
   note: migrated from queue (id kdepth-bl-v02-l5-mf-a0.8-llama1b); feeds pending
 - id: kdepth-bl-v02-l5-mf-a0.8-llama3b
   launcher: generate_mcts_bl_cnt.py
@@ -2809,9 +2857,10 @@
     search.score_mode: parent_blend
     search.alpha: 0.8
   trials: 2
-  feeds: []
+  feeds:
+  - level5-kdepth-bl-v02-model-family-parent-blend-qwen
   group: kdepth-mcts-bl-v02
-  status: running
+  status: scored
   priority: 1.7
   expected_hr: 8
   launch:
@@ -2831,9 +2880,10 @@
     search.score_mode: parent_blend
     search.alpha: 0.8
   trials: 2
-  feeds: []
+  feeds:
+  - level5-kdepth-bl-v02-model-family-parent-blend-qwen
   group: kdepth-mcts-bl-v02
-  status: running
+  status: scored
   priority: 1.7
   expected_hr: 8
   launch:
@@ -2853,9 +2903,10 @@
     search.score_mode: parent_blend
     search.alpha: 0.8
   trials: 2
-  feeds: []
+  feeds:
+  - level5-kdepth-bl-v02-model-family-parent-blend-qwen
   group: kdepth-mcts-bl-v02
-  status: running
+  status: scored
   priority: 1.7
   expected_hr: 8
   launch:
@@ -2876,9 +2927,10 @@
     search.score_mode: parent_blend
     search.alpha: 0.8
   trials: 2
-  feeds: []
+  feeds:
+  - level5-kdepth-bl-v02-model-family-parent-blend-qwen
   group: kdepth-mcts-bl-v02
-  status: running
+  status: scored
   priority: 1.7
   expected_hr: 8
   launch:
@@ -2901,9 +2953,14 @@
   trials: 2
   feeds: []
   group: kube-mcts-bl-v02
-  status: inqueue
+  status: running
   priority: 2
   expected_hr: 8
+  launch:
+    job_id: 23335908
+    node: r5u09n1
+    pid: 933350
+    at: 2026-07-22 17:59
   note: migrated from queue (id kube-bl-v02-l5-mf-a0.8-llama1b); feeds pending
 - id: kube-bl-v02-l5-mf-a0.8-llama3b
   launcher: generate_mcts_bl_cnt.py
@@ -2918,9 +2975,14 @@
   trials: 2
   feeds: []
   group: kube-mcts-bl-v02
-  status: inqueue
+  status: running
   priority: 2
   expected_hr: 8
+  launch:
+    job_id: 23335922
+    node: r5u11n1
+    pid: 933351
+    at: 2026-07-22 17:59
   note: migrated from queue (id kube-bl-v02-l5-mf-a0.8-llama3b); feeds pending
 - id: kube-bl-v02-l5-mf-a0.8-qwen7bgptq
   launcher: generate_mcts_bl_cnt.py
@@ -2935,9 +2997,14 @@
   trials: 2
   feeds: []
   group: kube-mcts-bl-v02
-  status: inqueue
+  status: running
   priority: 2
   expected_hr: 8
+  launch:
+    job_id: 23344018
+    node: r5u25n1
+    pid: 1047753
+    at: 2026-07-22 18:40
   note: migrated from queue (id kube-bl-v02-l5-mf-a0.8-qwen7bgptq); feeds
     pending
 - id: kube-bl-v02-l5-mf-a0.8-qwenmath15b
@@ -2969,9 +3036,10 @@
     search.score_mode: parent_blend
     search.alpha: 0.0
   trials: 2
-  feeds: []
+  feeds:
+  - level5-kube-bl-v02-model-family-parent-blend-a0.0-qwen
   group: kube-mcts-bl-v02
-  status: running
+  status: scored
   priority: 1.5
   expected_hr: 8
   launch:
@@ -2991,7 +3059,8 @@
     search.score_mode: parent_blend
     search.alpha: 0.0
   trials: 2
-  feeds: []
+  feeds:
+  - level5-kube-bl-v02-model-family-parent-blend-a0.0-qwen
   group: kube-mcts-bl-v02
   status: running
   priority: 1.5
@@ -3013,7 +3082,8 @@
     search.score_mode: parent_blend
     search.alpha: 0.0
   trials: 2
-  feeds: []
+  feeds:
+  - level5-kube-bl-v02-model-family-parent-blend-a0.0-qwen
   group: kube-mcts-bl-v02
   status: running
   priority: 1.5
@@ -3035,7 +3105,8 @@
     search.score_mode: parent_blend
     search.alpha: 0.0
   trials: 2
-  feeds: []
+  feeds:
+  - level5-kube-bl-v02-model-family-parent-blend-a0.0-qwen
   group: kube-mcts-bl-v02
   status: running
   priority: 1.5
@@ -3058,7 +3129,8 @@
     search.score_mode: parent_blend
     search.alpha: 0.0
   trials: 2
-  feeds: []
+  feeds:
+  - level5-kube-bl-v02-model-family-parent-blend-a0.0-qwen
   group: kube-mcts-bl-v02
   status: running
   priority: 1.5
