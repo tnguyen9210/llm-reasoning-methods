@@ -70,8 +70,25 @@ from utils.configs import (
 
 ROOT = os.path.dirname(os.path.abspath(__file__))
 CONF_DIR = f"{ROOT}/conf"
-QUEUE_FILE = f"{ROOT}/experiments.yaml"
+QUEUE_FILE = f"{ROOT}/experiments.yaml"   # legacy single-file ledger
+LEDGER_DIR = f"{ROOT}/experiments"        # per-doc ledgers (v2)
 RESULTS_DIR = f"{ROOT}/results"
+
+# Ledger stem <-> tracking doc. `misc` collects entries with no
+# current doc (legacy levels, parked work); it has no doc to sync.
+LEDGER_DOC = {
+    "prm800k-level5": f"{ROOT}/docs/exp-comp-prm800k-level5.md",
+    "prm800k-level4": f"{ROOT}/docs/exp-comp-prm800k-level4.md",
+    "gsm8k": f"{ROOT}/docs/exp-comp-gsm8k.md",
+    "aime2025": f"{ROOT}/docs/exp-comp-aime2025.md",
+    "misc": None,
+}
+
+# Lifecycle statuses stored on v2 ledger entries (the `status:`
+# field). Distinct from the COMPUTED statuses in the module
+# docstring (planned/partial/stalled/done), which reconcile disk
+# state and remain the default listing's vocabulary.
+LIFECYCLE_STATUSES = ("planned", "inqueue", "running", "scored", "failed")
 
 # Parallelism: the compute nodes provide 96 CPU threads; default to
 # a conservative 48-worker cap (Tuan's standing rule, 2026-07-19).
@@ -179,6 +196,14 @@ def count_done(result_dir):
     return len(glob.glob(f"{result_dir}/*--trial-*.done"))
 
 
+def count_scored(result_dir, run_name):
+    """Number of SCORED trial datasets in a result dir. The scored
+    file is `{run_name}--trial-NNN.jsonl` (no `generate_` prefix --
+    that's the raw dump). Scoring happens inline in the launcher or
+    via prepare_scored_dataset.py."""
+    return len(glob.glob(f"{result_dir}/{run_name}--trial-*.jsonl"))
+
+
 def wandb_state(run_id):
     """W&B run state string (running/finished/crashed/killed/...) or
     None if unknown. Lazy import so the no-network path stays fast."""
@@ -237,14 +262,35 @@ def normalize_overrides(raw):
     return list(raw)
 
 
-def load_queue():
-    if not os.path.exists(QUEUE_FILE):
-        return []
-    with open(QUEUE_FILE, encoding="utf-8") as fin:
-        entries = yaml.safe_load(fin) or []
+def load_ledgers():
+    """Load every per-doc ledger under experiments/ into one flat
+    list, annotating each entry with `_ledger` (its file stem) and
+    `overrides_list`. Falls back to the legacy single-file
+    experiments.yaml (stem "legacy") when experiments/ is absent,
+    so this works before, during, and after the v2 migration."""
+    entries = []
+    paths = sorted(glob.glob(f"{LEDGER_DIR}/*.yaml"))
+    if paths:
+        for path in paths:
+            stem = os.path.splitext(os.path.basename(path))[0]
+            with open(path, encoding="utf-8") as fin:
+                part = yaml.safe_load(fin) or []
+            for e in part:
+                e["_ledger"] = stem
+            entries += part
+    elif os.path.exists(QUEUE_FILE):
+        with open(QUEUE_FILE, encoding="utf-8") as fin:
+            entries = yaml.safe_load(fin) or []
+        for e in entries:
+            e["_ledger"] = "legacy"
     for e in entries:
         e["overrides_list"] = normalize_overrides(e.get("overrides"))
     return entries
+
+
+def load_queue():
+    """Back-compat alias; the v2 name is load_ledgers()."""
+    return load_ledgers()
 
 
 def _entry_hash(entry):
@@ -528,20 +574,334 @@ def launch_command(entry):
 # per-cell primitive the exp-new-comparison-table skill calls, not    #
 # re-deriving hashes itself -- one source of truth for compose/hash.  #
 # ------------------------------------------------------------------ #
-def check_candidate(config_root, overrides, queue, jobs=None):
+def check_candidate(config_root, overrides, queue, jobs=None,
+                    with_matches=False):
+    """--check / --dedup primitive. with_matches=True (--dedup)
+    additionally reports every ledger entry sharing the candidate's
+    hash: which ledger file, its id, lifecycle status, and feeds --
+    so the exp-tables skill can REUSE the run (copy status +
+    numbers from the fed doc cell) instead of double-queueing."""
     cfg = compose_cfg(config_root, overrides)
     h = config_hash(cfg)
     name = config_name(cfg)
     rdir = find_dir_by_hash(cfg)
     on_disk = rdir is not None
     n_done = count_done(rdir) if on_disk else 0
-    collision = any(
-        eh == h for eh, _ in entry_hashes(queue, jobs, use_stored=True))
-    return {
+    hashes = entry_hashes(queue, jobs, use_stored=True)
+    collision = any(eh == h for eh, _ in hashes)
+    info = {
         "hash": h, "name": name, "on_disk": on_disk,
         "n_done": n_done, "ledger_collision": collision,
         "dir": os.path.basename(rdir) if on_disk else None,
     }
+    if with_matches:
+        info["matches"] = [
+            {"ledger": e.get("_ledger"), "id": e.get("id"),
+             "status": e.get("status"),
+             "feeds": e.get("feeds") or []}
+            for e, (eh, _) in zip(queue, hashes) if eh == h
+        ]
+        if on_disk:
+            info["n_scored"] = count_scored(rdir, name)
+    return info
+
+
+# ------------------------------------------------------------------ #
+# --check-running: verdict every `running` entry. THE exp-check      #
+# skill's entire input -- it never reads raw ledgers. Verdicts:      #
+#   missing        no result dir for this hash                       #
+#   finished       n_done >= trials (detail: scored=k/N, wandb)      #
+#   still-running  W&B says the run is alive -- ALWAYS untouched     #
+#   stalled        dir exists, incomplete, W&B not running           #
+# ------------------------------------------------------------------ #
+def _verdict_worker(entry):
+    """entry -> dict row. Worker-safe: exceptions become an ERROR
+    verdict. Uses load_wandb_run_id (manifest + legacy sidecar),
+    NOT a manifest-only read."""
+    from utils.configs import load_wandb_run_id
+    try:
+        cfg = compose_cfg(
+            entry["config_root"], entry.get("overrides_list", []))
+        name = config_name(cfg)
+        trials = int(entry.get("trials", 1))
+        rdir = find_dir_by_hash(cfg)
+        row = {
+            "id": entry.get("id") or entry.get("note") or "?",
+            "ledger": entry.get("_ledger"),
+            "trials": trials,
+        }
+        if rdir is None:
+            row.update(verdict="missing", n_done=0, scored=0,
+                       wandb=None, dir=None)
+            return row
+        n_done = count_done(rdir)
+        n_scored = count_scored(rdir, name)
+        run_id = load_wandb_run_id(rdir)
+        state = wandb_state(run_id)
+        row.update(n_done=n_done, scored=n_scored, wandb=state,
+                   dir=os.path.basename(rdir))
+        if n_done >= trials:
+            row["verdict"] = "finished"
+        elif state == "running":
+            row["verdict"] = "still-running"
+        else:
+            row["verdict"] = "stalled"
+        return row
+    except Exception as ex:
+        return {"id": entry.get("id") or "?", "verdict": "ERROR",
+                "err": f"{type(ex).__name__}: {ex}"}
+
+
+def check_running(entries, jobs=None):
+    """Verdict rows for every entry with lifecycle status
+    `running`, in ledger order."""
+    running = [e for e in entries if e.get("status") == "running"]
+    return _pmap(_verdict_worker, running, jobs)
+
+
+# ------------------------------------------------------------------ #
+# --sync-doc: rewrite table STATUS CELLS from ledger truth.           #
+# Conservative v1 (the one status.py writer, and it writes docs      #
+# only): syncs ONLY tables whose blockquote names a feeds key, and    #
+# ONLY rows that match exactly one entry (bijective). Never touches   #
+# numbers; never downgrades a scored cell (reported as a mismatch     #
+# instead). Everything unmatched is listed, never guessed.            #
+# ------------------------------------------------------------------ #
+_DOC_LLM_ALIASES = {
+    "llama-1b": "llama_1b", "llama-3b": "llama_3b",
+    "llama-3b-gptq": "llama_3b_gptq",
+    "llama-3b gptq": "llama_3b_gptq",
+    "qwen-3b": "qwen_3b",
+    "qwen-3b gptq-int4": "qwen_3b_gptq_int4",
+    "qwen-7b gptq-int4": "qwen_7b_gptq_int4",
+    "qwen-math-1.5b": "qwen_math_1_5b",
+    "qwen-math-7b": "qwen_math_7b",
+}
+
+_FEEDS_RE = None  # compiled lazily in _section_feeds_key
+
+
+def _section_feeds_key(section_text):
+    """Extract the feeds key a table's blockquote names, or None.
+    Recognized shapes: 'feeds `key`', 'feeds\\n> `key`',
+    'experiments.yaml group `g`, feeds `key`'."""
+    import re
+    global _FEEDS_RE
+    if _FEEDS_RE is None:
+        _FEEDS_RE = re.compile(
+            r"feeds\s*(?:>\s*)?\n?\s*(?:>\s*)?`([\w./-]+)`")
+    m = _FEEDS_RE.search(section_text)
+    return m.group(1) if m else None
+
+
+def _norm_cell(cell):
+    """Normalize a table cell for matching: strip bold/backticks/
+    trailing qualifiers like 'fp16'."""
+    c = cell.strip().strip("*`").strip()
+    c = c.replace(" fp16", "")
+    return c.lower()
+
+
+def _cell_matches(cell, value):
+    """Does a (normalized) row cell denote this override value?"""
+    c = _norm_cell(cell)
+    if c in ("—", "-", ""):
+        return None  # not applicable in this row -- neutral
+    v = str(value)
+    if c == v.lower():
+        return True
+    if c in _DOC_LLM_ALIASES and _DOC_LLM_ALIASES[c] == v:
+        return True
+    try:
+        return abs(float(c) - float(v)) < 1e-9
+    except (TypeError, ValueError):
+        return False
+
+
+def _entry_value(entry, key):
+    """The entry's effective value for an override key, or None if
+    the entry doesn't set it (conf default -- v1 does not compose
+    to resolve defaults; unmatched rows surface in the report)."""
+    ov = entry.get("overrides") or {}
+    if isinstance(ov, dict):
+        return ov.get(key)
+    for item in entry.get("overrides_list", []):
+        k, _, v = item.partition("=")
+        if k == key:
+            return v
+    return None
+
+
+def _map_columns(headers, varied_keys):
+    """header index -> override key, for headers that name a varied
+    key ('alpha' -> search.alpha; 'llm' -> llm)."""
+    out = {}
+    for i, htxt in enumerate(headers):
+        h = htxt.strip().lower()
+        for k in varied_keys:
+            tail = k.rsplit(".", 1)[-1].lower()
+            if h == k.lower() or h == tail:
+                out[i] = k
+                break
+    return out
+
+
+def sync_doc(doc_path, entries, apply=False):
+    """Patch status cells in `doc_path` from ledger truth. Returns
+    a report dict; writes only when apply=True."""
+    with open(doc_path, encoding="utf-8") as fin:
+        lines = fin.read().splitlines(keepends=True)
+
+    report = {"patched": [], "mismatches": [], "skipped": [],
+              "unsynced_tables": []}
+
+    # Split into sections at #### headings.
+    sec_starts = [i for i, ln in enumerate(lines)
+                  if ln.startswith("#### ")]
+    for si, start in enumerate(sec_starts):
+        end = (sec_starts[si + 1] if si + 1 < len(sec_starts)
+               else len(lines))
+        text = "".join(lines[start:end])
+        key = _section_feeds_key(text)
+        title = lines[start].strip("# \n")
+        if key is None:
+            report["unsynced_tables"].append((title, "no feeds key"))
+            continue
+        fed = [e for e in entries if key in (e.get("feeds") or [])]
+        if not fed:
+            report["unsynced_tables"].append(
+                (title, f"no entries feed `{key}`"))
+            continue
+
+        # Varied keys: override keys whose values differ (or are
+        # not universally present) across the fed entries.
+        all_keys = set()
+        for e in fed:
+            ov = e.get("overrides") or {}
+            all_keys |= set(ov if isinstance(ov, dict) else [])
+        varied = [k for k in sorted(all_keys)
+                  if len({str(_entry_value(e, k)) for e in fed}) > 1]
+        if not varied and len(fed) > 1:
+            report["unsynced_tables"].append(
+                (title, "entries indistinguishable (no varied keys)"))
+            continue
+
+        # Locate the table: first run of | lines with a status col.
+        trows = [i for i in range(start, end)
+                 if lines[i].lstrip().startswith("|")]
+        if len(trows) < 3:
+            report["unsynced_tables"].append((title, "no table"))
+            continue
+        headers = [h for h in lines[trows[0]].strip().split("|")]
+        try:
+            status_col = [h.strip().lower()
+                          for h in headers].index("status")
+        except ValueError:
+            report["unsynced_tables"].append(
+                (title, "no status column"))
+            continue
+        colmap = _map_columns(headers, varied)
+
+        matched_entries = set()
+        for ri in trows[2:]:  # skip header + separator
+            cells = lines[ri].split("|")
+            if len(cells) <= status_col:
+                continue
+            cands = []
+            for e in fed:
+                ok = True
+                for ci, k in colmap.items():
+                    if ci >= len(cells):
+                        continue
+                    hit = _cell_matches(cells[ci], _entry_value(e, k))
+                    if hit is False:
+                        ok = False
+                        break
+                if ok:
+                    cands.append(e)
+            if len(cands) != 1:
+                report["skipped"].append(
+                    (title, lines[ri].strip()[:60],
+                     f"{len(cands)} candidate entries"))
+                continue
+            e = cands[0]
+            eid = id(e)
+            if eid in matched_entries:
+                report["skipped"].append(
+                    (title, lines[ri].strip()[:60],
+                     "entry already matched another row"))
+                continue
+            matched_entries.add(eid)
+            cur = cells[status_col].strip()
+            new = e.get("status") or "planned"
+            if _norm_cell(cur) == new:
+                continue
+            if cur.startswith("scored") and new != "scored":
+                report["mismatches"].append(
+                    (title, lines[ri].strip()[:60],
+                     f"doc says {cur!r}, ledger says {new!r} -- "
+                     f"NOT downgrading"))
+                continue
+            cells[status_col] = f" {new} "
+            report["patched"].append(
+                (title, e.get("id") or "?", f"{cur} -> {new}", ri))
+            lines[ri] = "|".join(cells)
+
+    if apply and report["patched"]:
+        with open(doc_path, "w", encoding="utf-8") as fout:
+            fout.write("".join(lines))
+    return report
+
+
+# ------------------------------------------------------------------ #
+# --queue: the run-cycle worklist. Entries whose lifecycle status is  #
+# `inqueue`, sorted by (priority asc, ledger, file order) -- the      #
+# exp-run skill consumes exactly this, never the raw ledgers.         #
+# ------------------------------------------------------------------ #
+def list_queue(entries):
+    """inqueue entries in drain order. Missing priority sorts last
+    (matches the old orchestrator's rule)."""
+    work = [
+        (i, e) for i, e in enumerate(entries)
+        if e.get("status") == "inqueue"
+    ]
+    work.sort(key=lambda ie: (
+        ie[1].get("priority") is None,
+        ie[1].get("priority") or 0,
+        ie[1].get("_ledger", ""),
+        ie[0],
+    ))
+    return [e for _, e in work]
+
+
+def uniqueness_problems(entries):
+    """Global duplicate-id / duplicate-hash detection across all
+    ledgers. Duplicate hashes mean two entries compose to the same
+    result dir (double-queue / re-run collision); duplicate ids
+    break targeted edits."""
+    problems = []
+    seen_id, seen_hash = {}, {}
+    for e in entries:
+        eid = e.get("id")
+        if eid:
+            if eid in seen_id:
+                problems.append((
+                    eid,
+                    f"duplicate id (also in {seen_id[eid]}, "
+                    f"this one in {e.get('_ledger')})"))
+            else:
+                seen_id[eid] = e.get("_ledger")
+        h = e.get("hash")
+        if h:
+            h = str(h)
+            if h in seen_hash:
+                problems.append((
+                    e.get("id") or e.get("note") or h,
+                    f"duplicate hash {h} (also entry "
+                    f"'{seen_hash[h]}')"))
+            else:
+                seen_hash[h] = e.get("id") or e.get("note") or "?"
+    return problems
 
 
 # ------------------------------------------------------------------ #
@@ -602,6 +962,9 @@ def matches_entry_filters(entry, args):
         return False
     if args.priority is not None and entry.get("priority") != args.priority:
         return False
+    if getattr(args, "ledger", None) and \
+            entry.get("_ledger") != args.ledger:
+        return False
     return True
 
 
@@ -635,6 +998,26 @@ def main():
                     dest="not_recorded",
                     help="exclude entries already written into the doc")
     ap.add_argument("--priority", type=int, help="only this priority level")
+    ap.add_argument("--ledger",
+                    help="only entries from this per-doc ledger stem "
+                         "(e.g. prm800k-level5)")
+    ap.add_argument("--queue", action="store_true",
+                    help="list inqueue entries in drain order "
+                         "(priority asc) with launch commands")
+    ap.add_argument("--check-running", action="store_true",
+                    dest="check_running",
+                    help="verdict every running entry: finished | "
+                         "still-running | stalled | missing")
+    ap.add_argument("--dedup", nargs="+", metavar="ROOT OVERRIDE",
+                    help="like --check, plus every ledger entry "
+                         "sharing the candidate's hash (file, id, "
+                         "status, feeds)")
+    ap.add_argument("--sync-doc", dest="sync_doc", metavar="STEM",
+                    help="patch status cells in the doc for this "
+                         "ledger stem from ledger truth (dry-run "
+                         "unless --apply)")
+    ap.add_argument("--apply", action="store_true",
+                    help="with --sync-doc: actually write the doc")
     ap.add_argument("--backfill", action="store_true",
                     help="emit yaml entries for result dirs not in the queue")
     ap.add_argument("--commands", action="store_true",
@@ -650,23 +1033,83 @@ def main():
                          "1 = serial)")
     args = ap.parse_args()
 
-    queue = load_queue()
+    queue = load_ledgers()
 
-    if args.check:
-        root, overrides = args.check[0], args.check[1:]
-        info = check_candidate(root, overrides, queue, args.jobs)
+    if args.check or args.dedup:
+        spec = args.check or args.dedup
+        root, overrides = spec[0], spec[1:]
+        info = check_candidate(root, overrides, queue, args.jobs,
+                               with_matches=bool(args.dedup))
         print(yaml.safe_dump(info, sort_keys=False, allow_unicode=True),
               end="")
+        return
+
+    if args.sync_doc:
+        doc = LEDGER_DOC.get(args.sync_doc)
+        if doc is None:
+            print(f"# no doc for ledger stem {args.sync_doc!r} "
+                  f"(known: {sorted(k for k, v in LEDGER_DOC.items() if v)})")
+            sys.exit(1)
+        scope = [e for e in queue
+                 if e.get("_ledger") == args.sync_doc]
+        rep = sync_doc(doc, scope, apply=args.apply)
+        mode = "APPLIED" if args.apply else "DRY RUN"
+        print(f"# --sync-doc {args.sync_doc} [{mode}]")
+        for title, eid, change, ri in rep["patched"]:
+            print(f"  patch L{ri + 1}: {eid}: {change}   ({title})")
+        for title, row, msg in rep["mismatches"]:
+            print(f"  ! MISMATCH {title}: {row}: {msg}")
+        for title, row, msg in rep["skipped"]:
+            print(f"  ~ skip {title}: {row}: {msg}")
+        for title, msg in rep["unsynced_tables"]:
+            print(f"  - unsynced: {title}: {msg}")
+        print(f"# patched={len(rep['patched'])} "
+              f"mismatches={len(rep['mismatches'])} "
+              f"skipped={len(rep['skipped'])} "
+              f"unsynced={len(rep['unsynced_tables'])}")
+        return
+
+    if args.check_running:
+        scope = [e for e in queue if matches_entry_filters(e, args)]
+        rows = check_running(scope, args.jobs)
+        if not rows:
+            print("# no running entries")
+            return
+        for r in rows:
+            if r["verdict"] == "ERROR":
+                print(f"{r['id']}  ERROR  {r['err']}")
+                continue
+            print(f"{r['id']}  {r['verdict']}  "
+                  f"{r['n_done']}/{r['trials']}  "
+                  f"scored={r['scored']}/{r['trials']}  "
+                  f"wandb={r['wandb']}  dir={r['dir']}")
+        return
+
+    if args.queue:
+        scope = [e for e in queue if matches_entry_filters(e, args)]
+        work = list_queue(scope)
+        if not work:
+            print("# queue empty (no inqueue entries)")
+            return
+        for e in work:
+            eid = e.get("id") or e.get("note") or "?"
+            prio = e.get("priority", "-")
+            hr = e.get("expected_hr", "-")
+            print(f"# {eid}  ledger={e.get('_ledger')}  prio={prio}"
+                  f"  expected_hr={hr}  hash={e.get('hash')}")
+            print(launch_command(e))
         return
 
     if args.verify:
         scope = [e for e in queue if matches_entry_filters(e, args)]
         scope_note = (f" (scoped: {len(scope)}/{len(queue)})"
                       if len(scope) != len(queue) else "")
-        problems = verify_queue(scope, args.jobs)
+        problems = uniqueness_problems(queue)  # always global
+        problems += verify_queue(scope, args.jobs)
         if not problems:
             print(f"# OK: all {len(scope)} entries compose and match "
-                  f"their recorded hash{scope_note}")
+                  f"their recorded hash{scope_note}; ids/hashes "
+                  f"globally unique")
             return
         print(f"# {len(problems)} problem(s){scope_note}:")
         for label, msg in problems:

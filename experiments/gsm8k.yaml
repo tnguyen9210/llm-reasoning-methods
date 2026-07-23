@@ -1,0 +1,652 @@
+# Per-doc experiment ledger (workflow v2) -- one entry per
+# launchable run, cradle to grave. Companion doc:
+#   docs/exp-comp-gsm8k.md
+#
+# status: planned | inqueue | running | scored | failed
+#   planned  -> table cell exists, not queued yet
+#   inqueue  -> Tuan queued it (priority: lower drains first)
+#   running  -> launched (launch: block records where)
+#   scored   -> stats computed AND written into the doc
+#   failed   -> crash/stall/missing detected by exp-check;
+#               requeue (-> inqueue) only on Tuan's say-so
+# `hash:` is written once at append time; --verify audits drift.
+# Commands are DERIVED (launcher + config_root + overrides +
+# trials); never store a command string.
+# Migrated 2026-07-22 by scripts/migrate_ledger.py from
+# experiments.yaml + orchestration/queue.yaml.
+
+- id: cnt-mcts-4c6eeea3
+  launcher: generate_mcts_cnt.py
+  hash: 4c6eeea3
+  config_root: mcts_cnt_prm800k
+  overrides:
+    llm: llama_1b
+    prm: qwen_prm
+    data: gsm8k
+  trials: 2
+  feeds:
+  - gsm8k-cnt-model-family-qwen
+  group: cnt-mcts
+  status: scored
+  priority: 2
+  note: gsm8k llama-1b fp16, cfg-4c6eeea3, run_id 1zihpeib; pass@gb .9023±.0131
+    (docs/exp-comp-gsm8k.md "model family, size, quantization comparison (QwenPRM)")
+- id: cnt-mcts-f4e9d64e
+  launcher: generate_mcts_cnt.py
+  hash: f4e9d64e
+  config_root: mcts_cnt_prm800k
+  overrides:
+    llm: qwen_7b_gptq_int4
+    prm: qwen_prm
+    data: gsm8k
+  trials: 2
+  feeds:
+  - gsm8k-cnt-model-family-qwen
+  group: cnt-mcts
+  status: scored
+  priority: 2
+  note: gsm8k qwen-7b gptq-int4, cfg-f4e9d64e, run_id hlbqb0ib; pass@gb .9727±.0072
+    (docs/exp-comp-gsm8k.md "model family, size, quantization comparison (QwenPRM)")
+- id: cnt-mcts-ba773291
+  launcher: generate_mcts_cnt.py
+  hash: ba773291
+  config_root: mcts_cnt_prm800k
+  overrides:
+    llm: llama_3b
+    prm: qwen_prm
+    data: gsm8k
+  trials: 2
+  feeds:
+  - gsm8k-cnt-model-family-qwen
+  group: cnt-mcts
+  status: scored
+  priority: 2
+  note: gsm8k llama-3b fp16, cfg-ba773291, run_id 2tqufnuv; pass@gb .9668±.0079
+    (docs/exp-comp-gsm8k.md "model family, size, quantization comparison (QwenPRM)");
+    trial-001 scoring initially failed (skipped by compute_stats.py) and completed
+    naturally on a later pass -- did not use prepare_scored_dataset.py recovery.
+- id: cnt-mcts-47bff566
+  launcher: generate_mcts_cnt.py
+  hash: 47bff566
+  config_root: mcts_cnt_prm800k
+  overrides:
+    llm: qwen_3b
+    prm: qwen_prm
+    data: gsm8k
+  trials: 2
+  feeds:
+  - gsm8k-cnt-model-family-qwen
+  group: cnt-mcts
+  status: scored
+  priority: 2
+  note: gsm8k qwen-3b fp16, cfg-47bff566, run_id 8msypaw8; pass@gb .9707±.0075
+    (docs/exp-comp-gsm8k.md "model family, size, quantization comparison (QwenPRM)")
+- id: cnt-mcts-5a20db26
+  launcher: generate_mcts_cnt.py
+  hash: 5a20db26
+  config_root: mcts_cnt_prm800k
+  overrides:
+    llm: qwen_math_1_5b
+    prm: qwen_prm
+    data: gsm8k
+  trials: 2
+  feeds:
+  - gsm8k-cnt-model-family-qwen
+  group: cnt-mcts
+  status: scored
+  priority: 2
+  note: gsm8k qwen-math-1.5b fp16, cfg-5a20db26, run_id hy6vvm9b; pass@gb
+    .9766±.0067 (docs/exp-comp-gsm8k.md "model family, size, quantization
+    comparison (QwenPRM)")
+- id: sem-mcts-gsm8k-qwen7bgptq-lam1.0-weff10
+  launcher: generate_mcts_sem.py
+  hash: 50142b32
+  config_root: mcts_sem_v02_prm800k
+  overrides:
+    llm: qwen_7b_gptq_int4
+    prm: qwen_prm
+    search.lam: 1.0
+    search.ds_alpha: 10
+    data: gsm8k
+  trials: 2
+  feeds: []
+  group: sem-mcts
+  status: running
+  priority: 2
+  expected_hr: 4
+  launch:
+    job_id: 22868129
+    node: r5u03n1
+    pid: 655510
+    at: 2026-07-14 05:18
+  note: migrated from queue (id sem-mcts-gsm8k-qwen7bgptq-lam1.0-weff10);
+    feeds pending
+- id: sem-mcts-gsm8k-qwen7bgptq-lam0.1-weff10
+  launcher: generate_mcts_sem.py
+  hash: 9da21097
+  config_root: mcts_sem_v02_prm800k
+  overrides:
+    llm: qwen_7b_gptq_int4
+    prm: qwen_prm
+    search.lam: 0.1
+    search.ds_alpha: 3.16
+    data: gsm8k
+  trials: 2
+  feeds: []
+  group: sem-mcts
+  status: running
+  priority: 2
+  expected_hr: 4
+  launch:
+    job_id: 23166029
+    node: r5u03n1
+    pid: 655637
+    at: 2026-07-14 05:18
+  note: migrated from queue (id sem-mcts-gsm8k-qwen7bgptq-lam0.1-weff10);
+    feeds pending
+- id: sem-mcts-gsm8k-qwen7bgptq-lam0.01-weff10
+  launcher: generate_mcts_sem.py
+  hash: 2a614b71
+  config_root: mcts_sem_v02_prm800k
+  overrides:
+    llm: qwen_7b_gptq_int4
+    prm: qwen_prm
+    search.lam: 0.01
+    search.ds_alpha: 1.0
+    data: gsm8k
+  trials: 2
+  feeds: []
+  group: sem-mcts
+  status: running
+  priority: 2
+  expected_hr: 4
+  launch:
+    job_id: 23166031
+    node: r5u09n1
+    pid: 655710
+    at: 2026-07-14 05:18
+  note: migrated from queue (id sem-mcts-gsm8k-qwen7bgptq-lam0.01-weff10);
+    feeds pending
+- id: sem-mcts-gsm8k-qwen7bgptq-lam1.0-weff100
+  launcher: generate_mcts_sem.py
+  hash: ca3b210c
+  config_root: mcts_sem_v02_prm800k
+  overrides:
+    llm: qwen_7b_gptq_int4
+    prm: qwen_prm
+    search.lam: 1.0
+    search.ds_alpha: 100
+    data: gsm8k
+  trials: 2
+  feeds: []
+  group: sem-mcts
+  status: running
+  priority: 2
+  expected_hr: 4
+  launch:
+    job_id: 23176919
+    node: r5u35n1
+    pid: 655800
+    at: 2026-07-14 05:18
+  note: migrated from queue (id sem-mcts-gsm8k-qwen7bgptq-lam1.0-weff100);
+    feeds pending
+- id: sem-mcts-gsm8k-qwen7bgptq-lam0.1-weff100
+  launcher: generate_mcts_sem.py
+  hash: 33643f5e
+  config_root: mcts_sem_v02_prm800k
+  overrides:
+    llm: qwen_7b_gptq_int4
+    prm: qwen_prm
+    search.lam: 0.1
+    search.ds_alpha: 31.6
+    data: gsm8k
+  trials: 2
+  feeds: []
+  group: sem-mcts
+  status: running
+  priority: 2
+  expected_hr: 4
+  launch:
+    job_id: 23179734
+    node: r5u37n1
+    pid: 655887
+    at: 2026-07-14 05:18
+  note: migrated from queue (id sem-mcts-gsm8k-qwen7bgptq-lam0.1-weff100);
+    feeds pending
+- id: sem-mcts-gsm8k-qwen7bgptq-lam0.01-weff100
+  launcher: generate_mcts_sem.py
+  hash: c8f62b28
+  config_root: mcts_sem_v02_prm800k
+  overrides:
+    llm: qwen_7b_gptq_int4
+    prm: qwen_prm
+    search.lam: 0.01
+    search.ds_alpha: 10
+    data: gsm8k
+  trials: 2
+  feeds: []
+  group: sem-mcts
+  status: running
+  priority: 2
+  expected_hr: 4
+  launch:
+    job_id: 23176910
+    node: r5u05n1
+    pid: 655966
+    at: 2026-07-14 05:18
+  note: migrated from queue (id sem-mcts-gsm8k-qwen7bgptq-lam0.01-weff100);
+    feeds pending
+- id: sem-mcts-gsm8k-qwenmath15b-lam1.0-weff10
+  launcher: generate_mcts_sem.py
+  hash: d09e6393
+  config_root: mcts_sem_v02_prm800k
+  overrides:
+    llm: qwen_math_1_5b
+    prm: qwen_prm
+    search.lam: 1.0
+    search.ds_alpha: 10
+    data: gsm8k
+  trials: 2
+  feeds: []
+  group: sem-mcts
+  status: running
+  priority: 2
+  expected_hr: 4
+  launch:
+    job_id: 23176288
+    node: r5u05n1
+    pid: 656185
+    at: 2026-07-14 05:18
+  note: migrated from queue (id sem-mcts-gsm8k-qwenmath15b-lam1.0-weff10);
+    feeds pending
+- id: sem-mcts-gsm8k-qwenmath15b-lam0.1-weff10
+  launcher: generate_mcts_sem.py
+  hash: d7dc3c57
+  config_root: mcts_sem_v02_prm800k
+  overrides:
+    llm: qwen_math_1_5b
+    prm: qwen_prm
+    search.lam: 0.1
+    search.ds_alpha: 3.16
+    data: gsm8k
+  trials: 2
+  feeds: []
+  group: sem-mcts
+  status: running
+  priority: 2
+  expected_hr: 4
+  launch:
+    job_id: 23166089
+    node: r5u35n1
+    pid: 656249
+    at: 2026-07-14 05:18
+  note: migrated from queue (id sem-mcts-gsm8k-qwenmath15b-lam0.1-weff10);
+    feeds pending
+- id: sem-mcts-gsm8k-qwenmath15b-lam0.01-weff10
+  launcher: generate_mcts_sem.py
+  hash: 10591cfb
+  config_root: mcts_sem_v02_prm800k
+  overrides:
+    llm: qwen_math_1_5b
+    prm: qwen_prm
+    search.lam: 0.01
+    search.ds_alpha: 1.0
+    data: gsm8k
+  trials: 2
+  feeds: []
+  group: sem-mcts
+  status: running
+  priority: 2
+  expected_hr: 4
+  launch:
+    job_id: 23166091
+    node: r5u37n1
+    pid: 656316
+    at: 2026-07-14 05:18
+  note: migrated from queue (id sem-mcts-gsm8k-qwenmath15b-lam0.01-weff10);
+    feeds pending
+- id: sem-mcts-gsm8k-qwenmath15b-lam1.0-weff100
+  launcher: generate_mcts_sem.py
+  hash: 9aef268f
+  config_root: mcts_sem_v02_prm800k
+  overrides:
+    llm: qwen_math_1_5b
+    prm: qwen_prm
+    search.lam: 1.0
+    search.ds_alpha: 100
+    data: gsm8k
+  trials: 2
+  feeds: []
+  group: sem-mcts
+  status: running
+  priority: 2
+  expected_hr: 4
+  launch:
+    job_id: 23166092
+    node: r5u37n1
+    pid: 656380
+    at: 2026-07-14 05:18
+  note: migrated from queue (id sem-mcts-gsm8k-qwenmath15b-lam1.0-weff100);
+    feeds pending
+- id: sem-mcts-gsm8k-qwenmath15b-lam0.1-weff100
+  launcher: generate_mcts_sem.py
+  hash: 47bd9f0f
+  config_root: mcts_sem_v02_prm800k
+  overrides:
+    llm: qwen_math_1_5b
+    prm: qwen_prm
+    search.lam: 0.1
+    search.ds_alpha: 31.6
+    data: gsm8k
+  trials: 2
+  feeds: []
+  group: sem-mcts
+  status: running
+  priority: 2
+  expected_hr: 4
+  launch:
+    job_id: 23166076
+    node: r5u11n1
+    pid: 656444
+    at: 2026-07-14 05:18
+  note: migrated from queue (id sem-mcts-gsm8k-qwenmath15b-lam0.1-weff100);
+    feeds pending
+- id: sem-mcts-gsm8k-qwenmath15b-lam0.01-weff100
+  launcher: generate_mcts_sem.py
+  hash: 80259cbc
+  config_root: mcts_sem_v02_prm800k
+  overrides:
+    llm: qwen_math_1_5b
+    prm: qwen_prm
+    search.lam: 0.01
+    search.ds_alpha: 10
+    data: gsm8k
+  trials: 2
+  feeds: []
+  group: sem-mcts
+  status: running
+  priority: 2
+  expected_hr: 4
+  launch:
+    job_id: 23166077
+    node: r5u35n1
+    pid: 656509
+    at: 2026-07-14 05:18
+  note: migrated from queue (id sem-mcts-gsm8k-qwenmath15b-lam0.01-weff100);
+    feeds pending
+- id: sem-mcts-gsm8k-llama3b-lam1.0-weff10
+  launcher: generate_mcts_sem.py
+  hash: e0bed1a8
+  config_root: mcts_sem_v02_prm800k
+  overrides:
+    llm: llama_3b
+    prm: qwen_prm
+    search.lam: 1.0
+    search.ds_alpha: 10
+    data: gsm8k
+  trials: 2
+  feeds: []
+  group: sem-mcts
+  status: running
+  priority: 2
+  expected_hr: 5
+  launch:
+    job_id: 23176911
+    node: r5u05n1
+    pid: 698171
+    at: 2026-07-14 06:27
+  note: migrated from queue (id sem-mcts-gsm8k-llama3b-lam1.0-weff10); feeds
+    pending
+- id: sem-mcts-gsm8k-llama3b-lam0.1-weff10
+  launcher: generate_mcts_sem.py
+  hash: 99c25b4f
+  config_root: mcts_sem_v02_prm800k
+  overrides:
+    llm: llama_3b
+    prm: qwen_prm
+    search.lam: 0.1
+    search.ds_alpha: 3.16
+    data: gsm8k
+  trials: 2
+  feeds: []
+  group: sem-mcts
+  status: running
+  priority: 2
+  expected_hr: 5
+  launch:
+    job_id: 23176913
+    node: r5u05n1
+    pid: 698179
+    at: 2026-07-14 06:27
+  note: migrated from queue (id sem-mcts-gsm8k-llama3b-lam0.1-weff10); feeds
+    pending
+- id: sem-mcts-gsm8k-llama3b-lam0.01-weff10
+  launcher: generate_mcts_sem.py
+  hash: '81737463'
+  config_root: mcts_sem_v02_prm800k
+  overrides:
+    llm: llama_3b
+    prm: qwen_prm
+    search.lam: 0.01
+    search.ds_alpha: 1.0
+    data: gsm8k
+  trials: 2
+  feeds: []
+  group: sem-mcts
+  status: running
+  priority: 2
+  expected_hr: 5
+  launch:
+    job_id: 23166090
+    node: r5u35n1
+    pid: 698206
+    at: 2026-07-14 06:27
+  note: migrated from queue (id sem-mcts-gsm8k-llama3b-lam0.01-weff10); feeds
+    pending
+- id: sem-mcts-gsm8k-llama3b-lam1.0-weff100
+  launcher: generate_mcts_sem.py
+  hash: fc7f2a2f
+  config_root: mcts_sem_v02_prm800k
+  overrides:
+    llm: llama_3b
+    prm: qwen_prm
+    search.lam: 1.0
+    search.ds_alpha: 100
+    data: gsm8k
+  trials: 2
+  feeds: []
+  group: sem-mcts
+  status: running
+  priority: 2
+  expected_hr: 5
+  launch:
+    job_id: 23186864
+    node: r5u11n1
+    pid: 958915
+    at: 2026-07-14 20:50
+  note: migrated from queue (id sem-mcts-gsm8k-llama3b-lam1.0-weff100); feeds
+    pending
+- id: sem-mcts-gsm8k-llama3b-lam0.1-weff100
+  launcher: generate_mcts_sem.py
+  hash: 58d93a54
+  config_root: mcts_sem_v02_prm800k
+  overrides:
+    llm: llama_3b
+    prm: qwen_prm
+    search.lam: 0.1
+    search.ds_alpha: 31.6
+    data: gsm8k
+  trials: 2
+  feeds: []
+  group: sem-mcts
+  status: running
+  priority: 2
+  expected_hr: 5
+  launch:
+    job_id: 23166029
+    node: r5u03n1
+    pid: 780170
+    at: 2026-07-14 07:41
+  note: migrated from queue (id sem-mcts-gsm8k-llama3b-lam0.1-weff100); feeds
+    pending
+- id: sem-mcts-gsm8k-llama3b-lam0.01-weff100
+  launcher: generate_mcts_sem.py
+  hash: 3c17fefa
+  config_root: mcts_sem_v02_prm800k
+  overrides:
+    llm: llama_3b
+    prm: qwen_prm
+    search.lam: 0.01
+    search.ds_alpha: 10
+    data: gsm8k
+  trials: 2
+  feeds: []
+  group: sem-mcts
+  status: running
+  priority: 2
+  expected_hr: 5
+  launch:
+    job_id: 23166031
+    node: r5u09n1
+    pid: 780276
+    at: 2026-07-14 07:41
+  note: migrated from queue (id sem-mcts-gsm8k-llama3b-lam0.01-weff100); feeds
+    pending
+- id: sem-mcts-gsm8k-llama1b-lam1.0-weff10
+  launcher: generate_mcts_sem.py
+  hash: 5b10bc18
+  config_root: mcts_sem_v02_prm800k
+  overrides:
+    llm: llama_1b
+    prm: qwen_prm
+    search.lam: 1.0
+    search.ds_alpha: 10
+    data: gsm8k
+  trials: 2
+  feeds: []
+  group: sem-mcts
+  status: running
+  priority: 2
+  expected_hr: 3
+  launch:
+    job_id: 23176919
+    node: r5u35n1
+    pid: 780401
+    at: 2026-07-14 07:41
+  note: migrated from queue (id sem-mcts-gsm8k-llama1b-lam1.0-weff10); feeds
+    pending
+- id: sem-mcts-gsm8k-llama1b-lam0.1-weff10
+  launcher: generate_mcts_sem.py
+  hash: 60fb1f4d
+  config_root: mcts_sem_v02_prm800k
+  overrides:
+    llm: llama_1b
+    prm: qwen_prm
+    search.lam: 0.1
+    search.ds_alpha: 3.16
+    data: gsm8k
+  trials: 2
+  feeds: []
+  group: sem-mcts
+  status: running
+  priority: 2
+  expected_hr: 3
+  launch:
+    job_id: 23179734
+    node: r5u37n1
+    pid: 780574
+    at: 2026-07-14 07:41
+  note: migrated from queue (id sem-mcts-gsm8k-llama1b-lam0.1-weff10); feeds
+    pending
+- id: sem-mcts-gsm8k-llama1b-lam0.01-weff10
+  launcher: generate_mcts_sem.py
+  hash: e5a08d0f
+  config_root: mcts_sem_v02_prm800k
+  overrides:
+    llm: llama_1b
+    prm: qwen_prm
+    search.lam: 0.01
+    search.ds_alpha: 1.0
+    data: gsm8k
+  trials: 2
+  feeds: []
+  group: sem-mcts
+  status: running
+  priority: 2
+  expected_hr: 3
+  launch:
+    job_id: 23216409
+    node: r5u09n1
+    pid: 3233607
+    at: 2026-07-15 22:07
+  note: migrated from queue (id sem-mcts-gsm8k-llama1b-lam0.01-weff10); feeds
+    pending
+- id: sem-mcts-gsm8k-llama1b-lam1.0-weff100
+  launcher: generate_mcts_sem.py
+  hash: 78a9fa43
+  config_root: mcts_sem_v02_prm800k
+  overrides:
+    llm: llama_1b
+    prm: qwen_prm
+    search.lam: 1.0
+    search.ds_alpha: 100
+    data: gsm8k
+  trials: 2
+  feeds: []
+  group: sem-mcts
+  status: running
+  priority: 2
+  expected_hr: 3
+  launch:
+    job_id: 23186899
+    node: r5u03n1
+    pid: 3278359
+    at: 2026-07-16 10:18
+  note: migrated from queue (id sem-mcts-gsm8k-llama1b-lam1.0-weff100); feeds
+    pending
+- id: sem-mcts-gsm8k-llama1b-lam0.1-weff100
+  launcher: generate_mcts_sem.py
+  hash: 17567eb0
+  config_root: mcts_sem_v02_prm800k
+  overrides:
+    llm: llama_1b
+    prm: qwen_prm
+    search.lam: 0.1
+    search.ds_alpha: 31.6
+    data: gsm8k
+  trials: 2
+  feeds: []
+  group: sem-mcts
+  status: running
+  priority: 2
+  expected_hr: 3
+  launch:
+    job_id: 23176919
+    node: r5u35n1
+    pid: 3278622
+    at: 2026-07-16 10:19
+  note: migrated from queue (id sem-mcts-gsm8k-llama1b-lam0.1-weff100); feeds
+    pending
+- id: sem-mcts-gsm8k-llama1b-lam0.01-weff100
+  launcher: generate_mcts_sem.py
+  hash: b098a5a3
+  config_root: mcts_sem_v02_prm800k
+  overrides:
+    llm: llama_1b
+    prm: qwen_prm
+    search.lam: 0.01
+    search.ds_alpha: 10
+    data: gsm8k
+  trials: 2
+  feeds: []
+  group: sem-mcts
+  status: running
+  priority: 2
+  expected_hr: 3
+  launch:
+    job_id: 23216408
+    node: r5u09n1
+    pid: 3278814
+    at: 2026-07-16 10:20
+  note: migrated from queue (id sem-mcts-gsm8k-llama1b-lam0.01-weff100); feeds
+    pending

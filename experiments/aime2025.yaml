@@ -1,0 +1,601 @@
+# Per-doc experiment ledger (workflow v2) -- one entry per
+# launchable run, cradle to grave. Companion doc:
+#   docs/exp-comp-aime2025.md
+#
+# status: planned | inqueue | running | scored | failed
+#   planned  -> table cell exists, not queued yet
+#   inqueue  -> Tuan queued it (priority: lower drains first)
+#   running  -> launched (launch: block records where)
+#   scored   -> stats computed AND written into the doc
+#   failed   -> crash/stall/missing detected by exp-check;
+#               requeue (-> inqueue) only on Tuan's say-so
+# `hash:` is written once at append time; --verify audits drift.
+# Commands are DERIVED (launcher + config_root + overrides +
+# trials); never store a command string.
+# Migrated 2026-07-22 by scripts/migrate_ledger.py from
+# experiments.yaml + orchestration/queue.yaml.
+
+- id: cnt-mcts-aime2025-llama1b-qwenprm
+  launcher: generate_mcts_cnt.py
+  hash: 80c10f2f
+  config_root: mcts_cnt_prm800k
+  overrides:
+    llm: llama_1b
+    prm: qwen_prm
+    data: aime2025
+  trials: 4
+  feeds: []
+  group: cnt-mcts
+  status: running
+  priority: 1.5
+  expected_hr: 4
+  launch:
+    job_id: 23191807
+    node: r5u11n1
+    pid: 1185016
+    at: 2026-07-15 11:28
+  note: migrated from queue (id cnt-mcts-aime2025-llama1b-qwenprm); feeds
+    pending
+- id: cnt-mcts-aime2025-llama3b-qwenprm
+  launcher: generate_mcts_cnt.py
+  hash: 58ea16f9
+  config_root: mcts_cnt_prm800k
+  overrides:
+    llm: llama_3b
+    prm: qwen_prm
+    data: aime2025
+  trials: 4
+  feeds: []
+  group: cnt-mcts
+  status: running
+  priority: 1.5
+  expected_hr: 6
+  launch:
+    job_id: 23191808
+    node: r5u11n1
+    pid: 1185123
+    at: 2026-07-15 11:28
+  note: migrated from queue (id cnt-mcts-aime2025-llama3b-qwenprm); feeds
+    pending
+- id: cnt-mcts-aime2025-qwen3b-qwenprm
+  launcher: generate_mcts_cnt.py
+  hash: e2871fb0
+  config_root: mcts_cnt_prm800k
+  overrides:
+    llm: qwen_3b
+    prm: qwen_prm
+    data: aime2025
+  trials: 4
+  feeds: []
+  group: cnt-mcts
+  status: running
+  priority: 1.5
+  expected_hr: 5
+  launch:
+    job_id: 23179734
+    node: r5u37n1
+    pid: 1185224
+    at: 2026-07-15 11:29
+  note: migrated from queue (id cnt-mcts-aime2025-qwen3b-qwenprm); feeds pending
+- id: cnt-mcts-aime2025-qwen7bgptq-qwenprm
+  launcher: generate_mcts_cnt.py
+  hash: b7fd81d4
+  config_root: mcts_cnt_prm800k
+  overrides:
+    llm: qwen_7b_gptq_int4
+    prm: qwen_prm
+    data: aime2025
+  trials: 4
+  feeds: []
+  group: cnt-mcts
+  status: running
+  priority: 1.5
+  expected_hr: 5
+  launch:
+    job_id: 23176913
+    node: r5u05n1
+    pid: 1185314
+    at: 2026-07-15 11:29
+  note: migrated from queue (id cnt-mcts-aime2025-qwen7bgptq-qwenprm); feeds
+    pending
+- id: cnt-mcts-aime2025-qwenmath15b-qwenprm
+  launcher: generate_mcts_cnt.py
+  hash: 8814a406
+  config_root: mcts_cnt_prm800k
+  overrides:
+    llm: qwen_math_1_5b
+    prm: qwen_prm
+    data: aime2025
+  trials: 4
+  feeds: []
+  group: cnt-mcts
+  status: running
+  priority: 1.5
+  expected_hr: 4
+  launch:
+    job_id: 23176288
+    node: r5u05n1
+    pid: 1185400
+    at: 2026-07-15 11:29
+  note: migrated from queue (id cnt-mcts-aime2025-qwenmath15b-qwenprm); feeds
+    pending
+- id: sem-mcts-aime2025-llama1b-qwenprm-lam0.01-weff10
+  launcher: generate_mcts_sem.py
+  hash: 71ab31e2
+  config_root: mcts_sem_v02_prm800k
+  overrides:
+    llm: llama_1b
+    prm: qwen_prm
+    search.lam: 0.01
+    search.ds_alpha: 1.0
+    data: aime2025
+  trials: 4
+  feeds: []
+  group: sem-mcts
+  status: running
+  priority: 1.4
+  expected_hr: 5
+  launch:
+    job_id: 23176910
+    node: r5u05n1
+    pid: 975150
+    at: 2026-07-14 23:36
+  note: migrated from queue (id sem-mcts-aime2025-llama1b-qwenprm-lam0.01-weff10);
+    feeds pending
+- id: sem-mcts-aime2025-llama3b-qwenprm-lam0.01-weff10
+  launcher: generate_mcts_sem.py
+  hash: c47f1292
+  config_root: mcts_sem_v02_prm800k
+  overrides:
+    llm: llama_3b
+    prm: qwen_prm
+    search.lam: 0.01
+    search.ds_alpha: 1.0
+    data: aime2025
+  trials: 4
+  feeds: []
+  group: sem-mcts
+  status: running
+  priority: 1.4
+  expected_hr: 7
+  launch:
+    job_id: 23186864
+    node: r5u11n1
+    pid: 1099995
+    at: 2026-07-15 04:57
+  note: migrated from queue (id sem-mcts-aime2025-llama3b-qwenprm-lam0.01-weff10);
+    feeds pending
+- id: sem-mcts-aime2025-qwen3b-qwenprm-lam0.01-weff10
+  launcher: generate_mcts_sem.py
+  hash: 90bf7f20
+  config_root: mcts_sem_v02_prm800k
+  overrides:
+    llm: qwen_3b
+    prm: qwen_prm
+    search.lam: 0.01
+    search.ds_alpha: 1.0
+    data: aime2025
+  trials: 4
+  feeds: []
+  group: sem-mcts
+  status: running
+  priority: 1.4
+  expected_hr: 6
+  launch:
+    job_id: 23166029
+    node: r5u03n1
+    pid: 1100189
+    at: 2026-07-15 04:57
+  note: migrated from queue (id sem-mcts-aime2025-qwen3b-qwenprm-lam0.01-weff10);
+    feeds pending
+- id: sem-mcts-aime2025-qwen7bgptq-qwenprm-lam0.01-weff10
+  launcher: generate_mcts_sem.py
+  hash: 5765595c
+  config_root: mcts_sem_v02_prm800k
+  overrides:
+    llm: qwen_7b_gptq_int4
+    prm: qwen_prm
+    search.lam: 0.01
+    search.ds_alpha: 1.0
+    data: aime2025
+  trials: 4
+  feeds: []
+  group: sem-mcts
+  status: running
+  priority: 1.4
+  expected_hr: 6
+  launch:
+    job_id: 23166031
+    node: r5u09n1
+    pid: 1100560
+    at: 2026-07-15 04:58
+  note: migrated from queue (id sem-mcts-aime2025-qwen7bgptq-qwenprm-lam0.01-weff10);
+    feeds pending
+- id: sem-mcts-aime2025-qwenmath15b-qwenprm-lam0.01-weff10
+  launcher: generate_mcts_sem.py
+  hash: df0e8600
+  config_root: mcts_sem_v02_prm800k
+  overrides:
+    llm: qwen_math_1_5b
+    prm: qwen_prm
+    search.lam: 0.01
+    search.ds_alpha: 1.0
+    data: aime2025
+  trials: 4
+  feeds: []
+  group: sem-mcts
+  status: running
+  priority: 1.4
+  expected_hr: 5
+  launch:
+    job_id: 23176910
+    node: r5u05n1
+    pid: 1140218
+    at: 2026-07-15 07:31
+  note: migrated from queue (id sem-mcts-aime2025-qwenmath15b-qwenprm-lam0.01-weff10);
+    feeds pending
+- id: sem-mcts-aime2025-llama1b-qwenprm-lam0.01-weff100
+  launcher: generate_mcts_sem.py
+  hash: 772db23e
+  config_root: mcts_sem_v02_prm800k
+  overrides:
+    llm: llama_1b
+    prm: qwen_prm
+    search.lam: 0.01
+    search.ds_alpha: 10
+    data: aime2025
+  trials: 4
+  feeds: []
+  group: sem-mcts
+  status: running
+  priority: 1.4
+  expected_hr: 5
+  launch:
+    job_id: 23176911
+    node: r5u05n1
+    pid: 1140367
+    at: 2026-07-15 07:31
+  note: migrated from queue (id sem-mcts-aime2025-llama1b-qwenprm-lam0.01-weff100);
+    feeds pending
+- id: sem-mcts-aime2025-llama3b-qwenprm-lam0.01-weff100
+  launcher: generate_mcts_sem.py
+  hash: c1a2b78d
+  config_root: mcts_sem_v02_prm800k
+  overrides:
+    llm: llama_3b
+    prm: qwen_prm
+    search.lam: 0.01
+    search.ds_alpha: 10
+    data: aime2025
+  trials: 4
+  feeds: []
+  group: sem-mcts
+  status: running
+  priority: 1.4
+  expected_hr: 7
+  launch:
+    job_id: 23186899
+    node: r5u03n1
+    pid: 1184794
+    at: 2026-07-15 11:28
+  note: migrated from queue (id sem-mcts-aime2025-llama3b-qwenprm-lam0.01-weff100);
+    feeds pending
+- id: sem-mcts-aime2025-qwen3b-qwenprm-lam0.01-weff100
+  launcher: generate_mcts_sem.py
+  hash: e6b9953b
+  config_root: mcts_sem_v02_prm800k
+  overrides:
+    llm: qwen_3b
+    prm: qwen_prm
+    search.lam: 0.01
+    search.ds_alpha: 10
+    data: aime2025
+  trials: 4
+  feeds: []
+  group: sem-mcts
+  status: running
+  priority: 1.4
+  expected_hr: 6
+  launch:
+    job_id: 23186899
+    node: r5u03n1
+    pid: 3227397
+    at: 2026-07-15 21:49
+  note: migrated from queue (id sem-mcts-aime2025-qwen3b-qwenprm-lam0.01-weff100);
+    feeds pending
+- id: sem-mcts-aime2025-qwen7bgptq-qwenprm-lam0.01-weff100
+  launcher: generate_mcts_sem.py
+  hash: f4a586eb
+  config_root: mcts_sem_v02_prm800k
+  overrides:
+    llm: qwen_7b_gptq_int4
+    prm: qwen_prm
+    search.lam: 0.01
+    search.ds_alpha: 10
+    data: aime2025
+  trials: 4
+  feeds: []
+  group: sem-mcts
+  status: running
+  priority: 1.4
+  expected_hr: 6
+  launch:
+    job_id: 23176919
+    node: r5u35n1
+    pid: 3227473
+    at: 2026-07-15 21:49
+  note: migrated from queue (id sem-mcts-aime2025-qwen7bgptq-qwenprm-lam0.01-weff100);
+    feeds pending
+- id: sem-mcts-aime2025-qwenmath15b-qwenprm-lam0.01-weff100
+  launcher: generate_mcts_sem.py
+  hash: c8b15623
+  config_root: mcts_sem_v02_prm800k
+  overrides:
+    llm: qwen_math_1_5b
+    prm: qwen_prm
+    search.lam: 0.01
+    search.ds_alpha: 10
+    data: aime2025
+  trials: 4
+  feeds: []
+  group: sem-mcts
+  status: running
+  priority: 1.4
+  expected_hr: 5
+  launch:
+    job_id: 23176919
+    node: r5u35n1
+    pid: 1184930
+    at: 2026-07-15 11:28
+  note: migrated from queue (id sem-mcts-aime2025-qwenmath15b-qwenprm-lam0.01-weff100);
+    feeds pending
+- id: sem-mcts-aime2025-llama1b-centermode-local-lam0.01-weff10
+  launcher: generate_mcts_sem.py
+  hash: 8cdd0855
+  config_root: mcts_sem_v02_prm800k
+  overrides:
+    llm: llama_1b
+    prm: qwen_prm
+    search.lam: 0.01
+    search.ds_alpha: 1.0
+    search.embeds_center: true
+    search.embeds_center_mode: local
+    data: aime2025
+  trials: 4
+  feeds: []
+  group: sem-mcts
+  status: running
+  priority: 1.4
+  expected_hr: 5
+  launch:
+    job_id: 23216110
+    node: r5u03n1
+    pid: 3230804
+    at: 2026-07-15 22:00
+  note: migrated from queue (id sem-mcts-aime2025-llama1b-centermode-local-lam0.01-weff10);
+    feeds pending
+- id: sem-mcts-aime2025-llama3b-centermode-local-lam0.01-weff10
+  launcher: generate_mcts_sem.py
+  hash: c306887d
+  config_root: mcts_sem_v02_prm800k
+  overrides:
+    llm: llama_3b
+    prm: qwen_prm
+    search.lam: 0.01
+    search.ds_alpha: 1.0
+    search.embeds_center: true
+    search.embeds_center_mode: local
+    data: aime2025
+  trials: 4
+  feeds: []
+  group: sem-mcts
+  status: running
+  priority: 1.4
+  expected_hr: 7
+  launch:
+    job_id: 23191807
+    node: r5u11n1
+    pid: 3230939
+    at: 2026-07-15 22:00
+  note: migrated from queue (id sem-mcts-aime2025-llama3b-centermode-local-lam0.01-weff10);
+    feeds pending
+- id: sem-mcts-aime2025-qwen3b-centermode-local-lam0.01-weff10
+  launcher: generate_mcts_sem.py
+  hash: f7759ad6
+  config_root: mcts_sem_v02_prm800k
+  overrides:
+    llm: qwen_3b
+    prm: qwen_prm
+    search.lam: 0.01
+    search.ds_alpha: 1.0
+    search.embeds_center: true
+    search.embeds_center_mode: local
+    data: aime2025
+  trials: 4
+  feeds: []
+  group: sem-mcts
+  status: running
+  priority: 1.4
+  expected_hr: 6
+  launch:
+    job_id: 23191808
+    node: r5u11n1
+    pid: 3231085
+    at: 2026-07-15 22:01
+  note: migrated from queue (id sem-mcts-aime2025-qwen3b-centermode-local-lam0.01-weff10);
+    feeds pending
+- id: sem-mcts-aime2025-qwen7bgptq-centermode-local-lam0.01-weff10
+  launcher: generate_mcts_sem.py
+  hash: cbf4dd0f
+  config_root: mcts_sem_v02_prm800k
+  overrides:
+    llm: qwen_7b_gptq_int4
+    prm: qwen_prm
+    search.lam: 0.01
+    search.ds_alpha: 1.0
+    search.embeds_center: true
+    search.embeds_center_mode: local
+    data: aime2025
+  trials: 4
+  feeds: []
+  group: sem-mcts
+  status: running
+  priority: 1.4
+  expected_hr: 6
+  launch:
+    job_id: 23186864
+    node: r5u11n1
+    pid: 3231215
+    at: 2026-07-15 22:01
+  note: migrated from queue (id sem-mcts-aime2025-qwen7bgptq-centermode-local-lam0.01-weff10);
+    feeds pending
+- id: sem-mcts-aime2025-qwenmath15b-centermode-local-lam0.01-weff10
+  launcher: generate_mcts_sem.py
+  hash: c2da3013
+  config_root: mcts_sem_v02_prm800k
+  overrides:
+    llm: qwen_math_1_5b
+    prm: qwen_prm
+    search.lam: 0.01
+    search.ds_alpha: 1.0
+    search.embeds_center: true
+    search.embeds_center_mode: local
+    data: aime2025
+  trials: 4
+  feeds: []
+  group: sem-mcts
+  status: running
+  priority: 1.4
+  expected_hr: 5
+  launch:
+    job_id: 23179734
+    node: r5u37n1
+    pid: 3231348
+    at: 2026-07-15 22:02
+  note: migrated from queue (id sem-mcts-aime2025-qwenmath15b-centermode-local-lam0.01-weff10);
+    feeds pending
+- id: sem-mcts-aime2025-llama1b-centermode-local-lam0.01-weff100
+  launcher: generate_mcts_sem.py
+  hash: 2597c292
+  config_root: mcts_sem_v02_prm800k
+  overrides:
+    llm: llama_1b
+    prm: qwen_prm
+    search.lam: 0.01
+    search.ds_alpha: 10
+    search.embeds_center: true
+    search.embeds_center_mode: local
+    data: aime2025
+  trials: 4
+  feeds: []
+  group: sem-mcts
+  status: running
+  priority: 1.4
+  expected_hr: 5
+  launch:
+    job_id: 23176910
+    node: r5u05n1
+    pid: 3231514
+    at: 2026-07-15 22:02
+  note: migrated from queue (id sem-mcts-aime2025-llama1b-centermode-local-lam0.01-weff100);
+    feeds pending
+- id: sem-mcts-aime2025-llama3b-centermode-local-lam0.01-weff100
+  launcher: generate_mcts_sem.py
+  hash: 02ad0680
+  config_root: mcts_sem_v02_prm800k
+  overrides:
+    llm: llama_3b
+    prm: qwen_prm
+    search.lam: 0.01
+    search.ds_alpha: 10
+    search.embeds_center: true
+    search.embeds_center_mode: local
+    data: aime2025
+  trials: 4
+  feeds: []
+  group: sem-mcts
+  status: running
+  priority: 1.4
+  expected_hr: 7
+  launch:
+    job_id: 23176911
+    node: r5u05n1
+    pid: 3231713
+    at: 2026-07-15 22:02
+  note: migrated from queue (id sem-mcts-aime2025-llama3b-centermode-local-lam0.01-weff100);
+    feeds pending
+- id: sem-mcts-aime2025-qwen3b-centermode-local-lam0.01-weff100
+  launcher: generate_mcts_sem.py
+  hash: 477ae979
+  config_root: mcts_sem_v02_prm800k
+  overrides:
+    llm: qwen_3b
+    prm: qwen_prm
+    search.lam: 0.01
+    search.ds_alpha: 10
+    search.embeds_center: true
+    search.embeds_center_mode: local
+    data: aime2025
+  trials: 4
+  feeds: []
+  group: sem-mcts
+  status: running
+  priority: 1.4
+  expected_hr: 6
+  launch:
+    job_id: 23176913
+    node: r5u05n1
+    pid: 3232156
+    at: 2026-07-15 22:03
+  note: migrated from queue (id sem-mcts-aime2025-qwen3b-centermode-local-lam0.01-weff100);
+    feeds pending
+- id: sem-mcts-aime2025-qwen7bgptq-centermode-local-lam0.01-weff100
+  launcher: generate_mcts_sem.py
+  hash: 025a60c6
+  config_root: mcts_sem_v02_prm800k
+  overrides:
+    llm: qwen_7b_gptq_int4
+    prm: qwen_prm
+    search.lam: 0.01
+    search.ds_alpha: 10
+    search.embeds_center: true
+    search.embeds_center_mode: local
+    data: aime2025
+  trials: 4
+  feeds: []
+  group: sem-mcts
+  status: running
+  priority: 1.4
+  expected_hr: 6
+  launch:
+    job_id: 23176288
+    node: r5u05n1
+    pid: 3232555
+    at: 2026-07-15 22:03
+  note: migrated from queue (id sem-mcts-aime2025-qwen7bgptq-centermode-local-lam0.01-weff100);
+    feeds pending
+- id: sem-mcts-aime2025-qwenmath15b-centermode-local-lam0.01-weff100
+  launcher: generate_mcts_sem.py
+  hash: b51e811c
+  config_root: mcts_sem_v02_prm800k
+  overrides:
+    llm: qwen_math_1_5b
+    prm: qwen_prm
+    search.lam: 0.01
+    search.ds_alpha: 10
+    search.embeds_center: true
+    search.embeds_center_mode: local
+    data: aime2025
+  trials: 4
+  feeds: []
+  group: sem-mcts
+  status: running
+  priority: 1.4
+  expected_hr: 5
+  launch:
+    job_id: 23216408
+    node: r5u09n1
+    pid: 3233471
+    at: 2026-07-15 22:06
+  note: migrated from queue (id sem-mcts-aime2025-qwenmath15b-centermode-local-lam0.01-weff100);
+    feeds pending

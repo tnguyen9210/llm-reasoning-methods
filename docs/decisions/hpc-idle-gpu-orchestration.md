@@ -4,7 +4,14 @@
 2026-07-14 — reverted from recurring cron to manual-trigger only
 (see "Scheduler"); crontab entries removed, `cron_stop_at.txt`/
 `cron_output.log`/`run_cycle.sh` are now historical artifacts of
-the cron attempt, not part of the live design.*
+the cron attempt, not part of the live design.
+2026-07-22 — **queue.yaml SUPERSEDED by workflow v2** (see
+`experiment-workflow-v2.md`): experiment state moved into
+per-doc ledgers `experiments/*.yaml` with a 5-state lifecycle;
+the drain cycle is now the `exp-run` skill reading
+`status.py --queue`. The srun-overlap launch mechanics, idle
+probe, walltime guard, and jobs.yaml design below remain the
+live reference — only the queue-file half is retired.*
 
 Records the design of the orchestration system that launches
 queued experiments onto idle GPUs inside Tuan's existing SLURM

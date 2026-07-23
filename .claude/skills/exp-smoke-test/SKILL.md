@@ -26,8 +26,9 @@ NOT go into the tracking system.
   `prepare_scored_dataset`**, no pass@gb numbers. Success is
   "the launcher exited 0 and produced
   `generate_...--trial-000.jsonl`", full stop.
-- a tracked experiment — **no `experiments.yaml` entry**, no
-  `feeds`, no `recorded`. Smoke runs are throwaway.
+- a tracked experiment — **no ledger entry**
+  (`experiments/*.yaml`), no `feeds`, no lifecycle status.
+  Smoke runs are throwaway.
 - a determinism test — that's the separate
   `smoke_test_determinism.sh` (double-run + byte-diff); out of
   scope here.
