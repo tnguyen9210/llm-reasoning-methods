@@ -126,7 +126,12 @@ underscore form, the doc columns are @gb form:
 | `weighted_gb` | wei@gb |
 | `maj_gb` | maj@gb |
 
-Format `.NNNN<br>±.NNNN` (4 dp). **`hr/trial` does NOT come from
+Format `.NNNN<br>±.NNNN` (4 dp). **A one-question drift
+(±1/n_questions on naive/wei/maj only) between a recompute and
+the doc is usually a sympy grading-timeout flake, not a data
+problem** — rerun that entry solo (twice); the value that
+reproduces wins, whichever side it lands on (both directions
+observed 2026-07-22). **`hr/trial` does NOT come from
 compute_stats** — read `timing_state.json` in the result dir
 (`avg_time_per_trial_hr`), else W&B `time_per_trial_hr`; if
 unavailable leave `—`, never fabricate. Side effect: compute_stats

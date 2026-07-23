@@ -650,7 +650,7 @@
   trials: 2
   feeds: []
   group: sem-mcts
-  status: running
+  status: scored
   priority: 2
   note: backfilled from mcts_sem_v02--level-4--Llama3.2-1B--qwen--d-20--bs-4--b-080--cfg-019ecd02
     (run_id xblhv6xb)

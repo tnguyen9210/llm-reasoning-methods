@@ -3446,9 +3446,14 @@
   feeds:
   - level5-kube-bl-v01-kubec-sweep-qwen
   group: kube-mcts-bl
-  status: inqueue
+  status: running
   priority: 2
   expected_hr: 8
+  launch:
+    job_id: 23338597
+    node: r5u35n1
+    pid: 1556813
+    at: 2026-07-22 23:13
   note: kube_c sweep 8.0 llama3b
 - id: kube-bl-v01-l5-kubec-qwen3b-c0.1
   launcher: generate_mcts_bl_cnt.py
@@ -3463,9 +3468,14 @@
   feeds:
   - level5-kube-bl-v01-kubec-sweep-qwen
   group: kube-mcts-bl
-  status: inqueue
+  status: running
   priority: 2
   expected_hr: 8
+  launch:
+    job_id: 23344632
+    node: r5u15n1
+    pid: 1564591
+    at: 2026-07-22 23:38
   note: kube_c sweep 0.1 qwen3b
 - id: kube-bl-v01-l5-kubec-qwen3b-c0.5
   launcher: generate_mcts_bl_cnt.py
@@ -3480,9 +3490,14 @@
   feeds:
   - level5-kube-bl-v01-kubec-sweep-qwen
   group: kube-mcts-bl
-  status: inqueue
+  status: running
   priority: 2
   expected_hr: 8
+  launch:
+    job_id: 23335892
+    node: r5u11n1
+    pid: 1564592
+    at: 2026-07-22 23:38
   note: kube_c sweep 0.5 qwen3b
 - id: kube-bl-v01-l5-kubec-qwen3b-c8.0
   launcher: generate_mcts_bl_cnt.py
