@@ -2,8 +2,9 @@
 
 Loaded when: Tuan wants one cycle of the experiment orchestrator
 executed — "run the experiments", "run an orchestrator cycle",
-"fill the idle GPUs from the queue", `/exp-run`. **Manual-trigger
-only — never on a cron/recurring schedule.** Design:
+"fill the idle GPUs from the queue", `/exp-run`. One attended
+cycle, watched. (For launching on a timer over a fixed window,
+that is the `exp-cron` skill.) Design:
 [docs/decisions/experiment-workflow-v2.md](../../../docs/decisions/experiment-workflow-v2.md)
 (supersedes the queue.yaml design in
 hpc-idle-gpu-orchestration.md).
