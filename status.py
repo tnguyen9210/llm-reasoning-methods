@@ -676,6 +676,9 @@ _DOC_LLM_ALIASES = {
     "qwen-7b gptq-int4": "qwen_7b_gptq_int4",
     "qwen-math-1.5b": "qwen_math_1_5b",
     "qwen-math-7b": "qwen_math_7b",
+    # prm column shorthands (doc cells name the PRM bare)
+    "qwen": "qwen_prm",
+    "rlhflow": "rlhflow_prm",
 }
 
 _FEEDS_RE = None  # compiled lazily in _section_feeds_key
@@ -785,6 +788,15 @@ def sync_doc(doc_path, entries, apply=False):
             report["unsynced_tables"].append(
                 (title, "entries indistinguishable (no varied keys)"))
             continue
+        # Match on EVERY override key the fed entries carry, not
+        # just the fed-varied ones: a key constant across the fed
+        # set (e.g. lam=0.01) can still differ from other rows of
+        # the table, and matching on the varied subset alone let
+        # the wrong row grab an entry (aime sweep tables,
+        # 2026-07-22). Keys an entry leaves unset stay
+        # conservative: _cell_matches(cell, None) is False for any
+        # explicit cell value, so such entries surface as skips.
+        varied = sorted(all_keys)
 
         # Locate the table: first run of | lines with a status col.
         trows = [i for i in range(start, end)

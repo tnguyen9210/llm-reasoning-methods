@@ -88,6 +88,17 @@ entries as "blocked: needs GPU scoring".
    (conservative; its report lists anything it wouldn't touch).
 
 ### stalled / missing -> mark failed, REPORT (never relaunch)
+**Probe before flipping** (2026-07-22 lesson): W&B `crashed` is
+a heartbeat verdict, not proof of death — a live searcher was
+once marked failed while mid-trial-2. If the entry has a
+`launch:` block, first check the process:
+```
+srun --jobid=<launch.job_id> --overlap bash -c \
+  'nvidia-smi --query-compute-apps=pid --format=csv,noheader | \
+   xargs -r ps -o pid,etime,cmd -p' | grep <config_root>
+```
+A live matching process -> the entry STAYS running (note the
+wandb lapse); only a dead/absent process earns `failed`.
 Targeted Edit on the entry:
 - append to `history:` (create if absent):
   ```
