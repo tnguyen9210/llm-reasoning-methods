@@ -124,6 +124,16 @@ Old files (experiments.yaml, orchestration/queue.yaml) are
 retired only after the running backlog is drained and Tuan
 signs off (git history preserves them).
 
+**Retired 2026-07-23** (Tuan signed off): condition verified —
+0 running entries across all 4 ledgers; experiments.yaml's 225
+entries all present in experiments/*.yaml (0 missing hashes);
+queue.yaml's 4 residual planned entries all ledger-inqueue.
+experiments.yaml deleted via git rm (history preserves it);
+orchestration/queue.yaml (git-ignored) deleted outright.
+orchestration/jobs.yaml stays — it is exp-run's allocation
+pool. status.py's inert legacy fallback and
+scripts/migrate_ledger.py left in place as migration record.
+
 ## First fruits
 
 The very first --check-running pass auto-detected
