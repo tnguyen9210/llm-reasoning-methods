@@ -2832,7 +2832,7 @@
   trials: 2
   feeds: []
   group: kdepth-mcts-bl-v02
-  status: running
+  status: failed
   priority: 1.7
   expected_hr: 8
   launch:
@@ -2844,6 +2844,8 @@
     - {at: 2026-07-22 02:01, job_id: 23338597, outcome: stalled,
        trials_done: 1}
     - {at: 2026-07-22 12:14, job_id: 23338589, outcome: stalled,
+       trials_done: 1}
+    - {at: 2026-07-22 20:36, job_id: 23344632, outcome: stalled,
        trials_done: 1}
   note: migrated from queue (id kdepth-bl-v02-l5-mf-a0.8-llama1b); feeds pending
 - id: kdepth-bl-v02-l5-mf-a0.8-llama3b
@@ -3067,7 +3069,7 @@
   feeds:
   - level5-kube-bl-v02-model-family-parent-blend-a0.0-qwen
   group: kube-mcts-bl-v02
-  status: running
+  status: scored
   priority: 1.5
   expected_hr: 8
   launch:
@@ -3090,7 +3092,7 @@
   feeds:
   - level5-kube-bl-v02-model-family-parent-blend-a0.0-qwen
   group: kube-mcts-bl-v02
-  status: running
+  status: scored
   priority: 1.5
   expected_hr: 8
   launch:
@@ -3113,7 +3115,7 @@
   feeds:
   - level5-kube-bl-v02-model-family-parent-blend-a0.0-qwen
   group: kube-mcts-bl-v02
-  status: running
+  status: scored
   priority: 1.5
   expected_hr: 8
   launch:
@@ -3137,7 +3139,7 @@
   feeds:
   - level5-kube-bl-v02-model-family-parent-blend-a0.0-qwen
   group: kube-mcts-bl-v02
-  status: running
+  status: scored
   priority: 1.5
   expected_hr: 8
   launch:

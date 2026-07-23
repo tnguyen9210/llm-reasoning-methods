@@ -1008,26 +1008,36 @@ Two activities, two shapes:
 > bs-4, d-20, b=80, prm_batch_size=1, level=5, tmpl=model-family
 > default (native for Qwen, custom for Llama).
 >
-> ⚠️ Entirely planned, no runs yet.
+> All 5 cells scored (2026-07-22).
 >
-> **W&B:** none yet (no runs exist).
+> **W&B:** llama-1b `ehm46m6l`, llama-3b `ez4boxm3`, qwen-3b
+> `e0uvhi9j`, qwen-7b gptq `1nzsifou`, qwen-math-1.5b `y4wj7fe9`.
 
 | llm | trials | status | pass@gb | naive@gb | wei@gb | maj@gb | hr/trial |
 |---|---|---|---|---|---|---|---|
-| llama-1b fp16 | — | scored | — | — | — | — | — |
-| llama-3b fp16 | — | running | — | — | — | — | — |
-| qwen-3b fp16 | — | running | — | — | — | — | — |
-| qwen-7b gptq-int4 | — | running | — | — | — | — | — |
-| qwen-math-1.5b fp16 | — | running | — | — | — | — | — |
+| llama-1b fp16 | 2 | scored | .2687<br>±.0271 | .2052<br>±.0247 | .1828<br>±.0237 | .1679<br>±.0229 | 2.98 |
+| llama-3b fp16 | 2 | scored | .5000<br>±.0306 | .3657<br>±.0295 | .3433<br>±.0291 | .3284<br>±.0287 | 4.84 |
+| qwen-3b fp16 | 2 | scored | .6045<br>±.0299 | .5000<br>±.0306 | .4888<br>±.0306 | .4701<br>±.0305 | 4.26 |
+| qwen-7b gptq-int4 | 2 | scored | .7388<br>±.0269 | .5821<br>±.0302 | .5261<br>±.0306 | .5000<br>±.0306 | 3.54 |
+| qwen-math-1.5b fp16 | 2 | scored | .6306<br>±.0295 | .5112<br>±.0306 | .5075<br>±.0306 | .4888<br>±.0306 | 3.16 |
 
-> **Analysis.** No data yet — nothing to take away. Once filled,
-> the key read per model is the alpha=0.0-vs-1.0 gap (how much the
-> leaf's own PRM q buys over parent-only scoring), with alpha=0.8
-> as the intermediate point; a rough second read is whether the
-> root-adjacent depth-1 phase (where the parent is the root with no
-> meaningful q) degrades uniformly across models. All 5 launched
-> 2026-07-22 (llama-1b/3b + qwen-3b 09:30; qwen-7b +
-> qwen-math-1.5b 11:22).
+> **Analysis.** The ablation splits by metric, not by model. On
+> the answer-selection metrics the leaf q is load-bearing
+> everywhere: naive@gb drops at a0.0 vs a1.0 on all 5 models
+> (−.022 to −.071), and wei@gb/maj@gb likewise (only qwen-7b's
+> wei@gb ties). On pass@gb the gap is model-dependent: llama-1b
+> −.063 (~2 SEM, the clearest value-blindness cost), qwen-3b
+> −.034 and qwen-math −.037 (~1 SEM each), llama-3b +.015
+> (noise) — but qwen-7b **+.041** (.7388 vs .6978), tying the
+> best bl pass@gb cell in the doc. Reading: value-blind sibling
+> selection pushes the search toward uniform/visit-driven
+> exploration, which can widen coverage (pass@gb) for a strong
+> generator while filling the candidate pool with worse-ranked
+> solutions (all selection metrics fall). So the alpha sweep is
+> bounded from below only for selection quality; for raw
+> coverage on strong models, a0.0 is surprisingly competitive.
+> All 5 launched 2026-07-22 (llama-1b/3b + qwen-3b 09:30;
+> qwen-7b + qwen-math-1.5b 11:22).
 > **Limitations / follow-up:** ledger
 > experiments/prm800k-level5.yaml, feeds
 > `level5-kube-bl-v02-model-family-parent-blend-a0.0-qwen`.
@@ -1183,7 +1193,7 @@ Two activities, two shapes:
 | llama-1b fp16 | 2 | scored | .3022<br>±.0281 | .2500<br>±.0265 | .2276<br>±.0257 | .2127<br>±.0250 | 3.22 |
 | llama-3b fp16 | 2 | scored | .5000<br>±.0306 | .4104<br>±.0301 | .4030<br>±.0300 | .3955<br>±.0299 | 4.78 |
 | qwen-3b fp16 | 2 | scored | .6082<br>±.0299 | .5224<br>±.0306 | .5224<br>±.0306 | .5075<br>±.0306 | 3.92 |
-| qwen-7b gptq-int4 | — | failed | — | — | — | — | — |
+| qwen-7b gptq-int4 | — | running | — | — | — | — | — |
 | qwen-math-1.5b fp16 | 2 | scored | .6455<br>±.0293 | .5522<br>±.0304 | .5485<br>±.0305 | .5336<br>±.0305 |  3.26 |
 
 > **Analysis.** One data point so far (qwen-math-1.5b): pass@gb
