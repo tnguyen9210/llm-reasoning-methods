@@ -76,8 +76,6 @@ Two activities, two shapes:
 > sem-bl: ds_alpha=1/10). bl-v01 SEMs are from direct
 > compute_stats scoring (2 trials); hr/trial not captured for those.
 
-<!-- TEMPORARILY HIDDEN (2026-07-21): llama-1b fp16 block. Restore by
-     uncommenting. bl rows unrun; cnt/sem-mcts scored.
 **llama-1b fp16**
 
 | algorithm | trials | status | pass@gb | naive@gb | wei@gb | maj@gb | hr/trial |
@@ -85,10 +83,9 @@ Two activities, two shapes:
 | cnt-mcts | 2 | scored | .3619<br>±.0294 | .2724 | .2127 | .1903 | 2.98 |
 | sem-mcts | 2 | scored | .3433<br>±.0291 | .2537 | .1978 | .1679 | 4.85 |
 | cnt-mcts-bl-v01 | 2 | scored | .2313<br>±.0258 | .2090 | .1940 | .1940 | 2.74 |
-| kube-mcts-bl-v01 | — | planned | — | — | — | — | — |
-| kdepth-mcts-bl-v01 | — | planned | — | — | — | — | — |
-| sem-mcts-bl-v01 | — | planned | — | — | — | — | — |
--->
+| kube-mcts-bl-v01 | 2 | scored | .3060<br>±.0282 | .2612 | .2463 | .2276 | 3.11 |
+| kdepth-mcts-bl-v01 | — | running | — | — | — | — | — |
+| sem-mcts-bl-v01 | — | running | — | — | — | — | — |
 
 **llama-3b fp16**
 
@@ -99,21 +96,18 @@ Two activities, two shapes:
 | cnt-mcts-bl-v01 | 2 | scored | .3731<br>±.0296 | .3209 | .3321 | .3209 | 4.76 |
 | kube-mcts-bl-v01 | 2 | scored | .4851<br>±.0306 | .3918 | .3769 | .3731 | — |
 | kdepth-mcts-bl-v01 | 2 | scored | .5000<br>±.0306 | .4104 | .4030 | .3955 | — |
-| sem-mcts-bl-v01 | — | planned | — | — | — | — | — |
+| sem-mcts-bl-v01 | — | running | — | — | — | — | — |
 
-<!-- TEMPORARILY HIDDEN (2026-07-21): qwen-3b fp16 block. Restore by
-     uncommenting. bl rows unrun; cnt/sem-mcts scored.
 **qwen-3b fp16**
 
 | algorithm | trials | status | pass@gb | naive@gb | wei@gb | maj@gb | hr/trial |
 |---|---|---|---|---|---|---|---|
 | cnt-mcts | 2 | scored | .6978<br>±.0281 | .5896 | .5896 | .5410 | 4.63 |
 | sem-mcts | 2 | scored | .6903<br>±.0283 | .5784 | .5597 | .5373 | 6.20 |
-| cnt-mcts-bl-v01 | — | planned | — | — | — | — | — |
-| kube-mcts-bl-v01 | — | planned | — | — | — | — | — |
-| kdepth-mcts-bl-v01 | — | planned | — | — | — | — | — |
-| sem-mcts-bl-v01 | — | planned | — | — | — | — | — |
--->
+| cnt-mcts-bl-v01 | — | running | — | — | — | — | — |
+| kube-mcts-bl-v01 | 2 | scored | .6157<br>±.0298 | .5410 | .5224 | .5075 | 4.10 |
+| kdepth-mcts-bl-v01 | — | running | — | — | — | — | — |
+| sem-mcts-bl-v01 | — | running | — | — | — | — | — |
 
 **qwen-7b gptq-int4**
 
@@ -123,7 +117,7 @@ Two activities, two shapes:
 | sem-mcts | 2 | scored | .7873<br>±.0250 | .6045 | .5634 | .5634 | 5.54 |
 | cnt-mcts-bl-v01 | 2 | scored | .6343<br>±.0295 | .5709 | .5672 | .5522 | 3.97 |
 | kube-mcts-bl-v01 | 2 | scored | .7164<br>±.0276 | .6157 | .5858 | .5746 | — |
-| kdepth-mcts-bl-v01 | — | planned | — | — | — | — | — |
+| kdepth-mcts-bl-v01 | — | running | — | — | — | — | — |
 | sem-mcts-bl-v01 | 2 | scored | .7537<br>±.0264 | .5597 | .5037 | .4478 | — |
 
 **qwen-math-1.5b fp16**
@@ -137,19 +131,29 @@ Two activities, two shapes:
 | kdepth-mcts-bl-v01 | 2 | scored | .6455<br>±.0293 | .5522 | .5485 | .5336 | — |
 | sem-mcts-bl-v01 | 2 | scored | .6567<br>±.0291 | .5410 | .4627 | .4552 | — |
 
-> **Analysis.** Best-available snapshot, partially filled. Where
-> data exists, the ordering is model-driven: qwen-math-1.5b and
-> qwen-7b-gptq top every algorithm (pass@gb .65–.79), llama-1b
-> trails (.34–.36). Among algorithms on the filled cells,
-> non-bl cnt/sem-mcts lead their bl counterparts on the same model
-> (e.g. qwen-7b: sem-mcts .7873 vs sem-bl-v01 .7537; cnt-mcts .7537
-> vs cnt-bl-v01 .6343). Within the bl families, kube-bl-v01 is the
-> strongest baseline (qwen-7b .7164, qwenmath .6493).
-> **Limitations / follow-up:** gaps remain — llama-1b and qwen-3b
-> bl rows, qwen-7b kdepth, qwenmath sem-mcts all still planned/
-> unrun. bl-v01 cells come from fresh compute_stats scoring not yet
-> written into the per-family tables above, so those tables still
-> show `planned` for the same configs.
+> **Analysis.** Best-available snapshot, 24/30 cells scored
+> (all 5 model blocks visible as of 2026-07-22; the llama-1b and
+> qwen-3b blocks were restored after their kube-bl cells landed).
+> Ordering is model-driven: qwen-math-1.5b and qwen-7b-gptq top
+> every algorithm (pass@gb .65–.79), qwen-3b sits mid (.62–.70),
+> llama-1b trails (.23–.36). Non-bl cnt/sem-mcts lead their bl
+> counterparts on every model with data (qwen-7b: sem-mcts .7873
+> vs sem-bl-v01 .7537, cnt-mcts .7537 vs cnt-bl-v01 .6343;
+> qwen-3b: cnt-mcts .6978 vs kube-bl .6157). Within the bl
+> families no single variant dominates: sem-bl-v01 tops qwen-7b
+> (.7537) and qwen-math (.6567), kdepth tops llama-3b (.5000),
+> kube tops the two models where the others are unfilled
+> (llama-1b .3060, qwen-3b .6157) — and the kube/kdepth/sem-bl
+> spreads sit within ~1 SEM of each other per model, so treat
+> the bl-internal ranking as provisional. The robust reads:
+> cnt-bl-v01 is uniformly weakest (its qwen-math collapse .4366
+> is the standout anomaly), and every bl variant trails plain
+> cnt/sem-mcts on every model.
+> **Limitations / follow-up:** 6 cells still running — llama-1b
+> kdepth/sem-bl, qwen-3b cnt-bl/kdepth/sem-bl, qwen-7b kdepth
+> (runs done on disk, awaiting compute_stats + verification).
+> hr/trial missing for most bl cells (compute_stats path doesn't
+> capture it; backfill from timing_state.json pending).
 
 ---
 
@@ -705,7 +709,7 @@ Two activities, two shapes:
 |---|---|---|---|---|---|---|---|
 | llama-1b fp16 | 2 | scored | .2313<br>±.0258 | .2090<br>±.0249 | .1940<br>±.0242 | .1940<br>±.0242 | 2.74 |
 | llama-3b fp16 | 2 | scored | .3731<br>±.0296 | .3209<br>±.0286 | .3321<br>±.0288 | .3209<br>±.0286 | 4.76 |
-| qwen-3b fp16 | — | running (1/2) | — | — | — | — | — |
+| qwen-3b fp16 | — | running | — | — | — | — | — |
 | qwen-7b gptq-int4 | 2 | scored | .6343<br>±.0295 | .5709<br>±.0303 | .5672<br>±.0303 | .5522<br>±.0304 | 3.97 |
 | qwen-math-1.5b fp16 | 2 | scored | .4366<br>±.0304 | .4142<br>±.0301 | .4104<br>±.0301 | .3955<br>±.0299 | 3.31 |
 
@@ -750,29 +754,39 @@ Two activities, two shapes:
 > v01 control arm (recovers v01's puct identically); path_decay
 > has no v01-equivalent arm.
 >
-> **W&B:** none yet (no runs exist).
+> **W&B:** pb-a1.0 `uu7p59lq`, pd-g1.0-c0.5 `gx1u385h`; others
+> none yet.
 
 | score_mode | alpha | gamma | cpuct | trials | status | pass@gb | naive@gb | wei@gb | maj@gb | hr/trial |
 |---|---|---|---|---|---|---|---|---|---|---|
-| parent_blend | 1.0 | — | 2.0 | — | planned | — | — | — | — | — |
-| parent_blend | 0.8 | — | 2.0 | — | planned | — | — | — | — | — |
-| parent_blend | 0.6 | — | 2.0 | — | planned | — | — | — | — | — |
-| path_decay | — | 1.0 | 2.0 | — | planned | — | — | — | — | — |
-| path_decay | — | 0.8 | 2.0 | — | planned | — | — | — | — | — |
-| path_decay | — | 0.5 | 2.0 | — | planned | — | — | — | — | — |
-| path_decay | — | 1.0 | 0.5 | — | planned | — | — | — | — | — |
-| path_decay | — | 0.8 | 0.5 | — | planned | — | — | — | — | — |
-| path_decay | — | 0.5 | 0.5 | — | planned | — | — | — | — | — |
+| parent_blend | 1.0 | — | 2.0 | 2 | scored | .4403<br>±.0304 | .4142<br>±.0301 | .4067<br>±.0301 | .3955<br>±.0299 | 4.28 |
+| parent_blend | 0.8 | — | 2.0 | — | running | — | — | — | — | — |
+| parent_blend | 0.6 | — | 2.0 | — | running | — | — | — | — | — |
+| path_decay | — | 1.0 | 2.0 | — | running | — | — | — | — | — |
+| path_decay | — | 0.8 | 2.0 | — | running | — | — | — | — | — |
+| path_decay | — | 0.5 | 2.0 | — | inqueue | — | — | — | — | — |
+| path_decay | — | 1.0 | 0.5 | 2 | scored | .6194<br>±.0297 | .5821<br>±.0302 | .5746<br>±.0303 | .5560<br>±.0304 | 4.31 |
+| path_decay | — | 0.8 | 0.5 | — | running | — | — | — | — | — |
+| path_decay | — | 0.5 | 0.5 | — | running | — | — | — | — | — |
 
-> **Analysis.** No data yet — nothing to take away. Once filled,
-> the three key reads: (1) does any alpha<1.0 arm beat the
-> alpha=1.0 v01 control (does one-hop blending help at all);
-> (2) does gamma matter at cpuct=0.5 but not at cpuct=2.0 (the
-> scale-domination story above); (3) best parent_blend arm vs.
-> best path_decay arm — the winning score_mode is the survivor,
-> the losing mode is slated for deletion in a future v03 (see
-> docs/decisions-log.md 2026-07-19).
-> **Limitations / follow-up:** all cells planned — see
+> **Analysis.** 2/9 arms scored (2026-07-22): pd-g1.0-c0.5
+> beats the pb-a1.0 v01 control by +.18 pass@gb (.6194 vs
+> .4403, ~6 SEM) at identical cost (~4.3 hr/trial, 79 phases) —
+> but the two arms differ in BOTH score_mode and cpuct, so the
+> win is not yet attributable (path value vs. lower exploration
+> scale). The deciding cells are the pd arms at cpuct=2.0 and
+> the remaining pb arms, all in flight. path_decay's scored arm
+> searches deeper (depth 11.2 vs 8.7) and keeps more
+> completions (42.3 vs 25.1 ncomps) on the same budget. The
+> three key reads once full: (1) does any alpha<1.0 arm beat
+> the alpha=1.0 v01 control (does one-hop blending help at
+> all); (2) does gamma matter at cpuct=0.5 but not at cpuct=2.0
+> (the scale-domination story above); (3) best parent_blend arm
+> vs. best path_decay arm — the winning score_mode is the
+> survivor, the losing mode is slated for deletion in a future
+> v03 (see docs/decisions-log.md 2026-07-19).
+> **Limitations / follow-up:** 6 arms running, 1 inqueue (the
+> pd-g0.5-c2.0 relaunch after preemption) — see
 > experiments.yaml group `cnt-mcts-bl-v02`, feeds
 > `level5-cnt-bl-v02-score-mode-qwen3b`. Single model (qwen-3b);
 > extend the winning arm to the 5-model grid later if warranted.
@@ -791,18 +805,31 @@ Two activities, two shapes:
 > bs-4, d-20, b=80, prm_batch_size=1, tmpl=model-family default
 > (native for Qwen, custom for Llama). See
 > `docs/decisions/bl-kube-bonus-schedule.md` for the schedule choice.
+>
+> **W&B:** llama-1b `gu5l0k7p`, llama-3b `rywqssh0`, qwen-3b
+> `79kyy2a7`, qwen-7b gptq `tmtery3w`, qwen-math-1.5b `ktgdyyfx`.
 
 | llm | trials | status | pass@gb | naive@gb | wei@gb | maj@gb | hr/trial |
 |---|---|---|---|---|---|---|---|
-| llama-1b fp16 | — | planned | — | — | — | — | — |
-| llama-3b fp16 | — | planned | — | — | — | — | — |
-| qwen-3b fp16 | — | planned | — | — | — | — | — |
-| qwen-7b gptq-int4 | — | planned | — | — | — | — | — |
-| qwen-math-1.5b fp16 | — | planned | — | — | — | — | — |
+| llama-1b fp16 | 2 | scored | .3060<br>±.0282 | .2612<br>±.0269 | .2463<br>±.0264 | .2276<br>±.0257 | 3.11 |
+| llama-3b fp16 | 2 | scored | .4851<br>±.0306 | .3918<br>±.0299 | .3769<br>±.0297 | .3731<br>±.0296 | 4.65 |
+| qwen-3b fp16 | 2 | scored | .6157<br>±.0298 | .5410<br>±.0305 | .5224<br>±.0306 | .5075<br>±.0306 | 4.10 |
+| qwen-7b gptq-int4 | 2 | scored | .7164<br>±.0276 | .6157<br>±.0298 | .5858<br>±.0301 | .5746<br>±.0303 | 3.43 |
+| qwen-math-1.5b fp16 | 2 | scored | .6493<br>±.0292 | .5784<br>±.0302 | .5672<br>±.0303 | .5522<br>±.0304 | 3.25 |
 
-> **Analysis.** No level-5 data yet — nothing to take away.
-> **Limitations / follow-up:** entire table planned; launch is
-> the level-4 counterpart's command plus `data.level=5`.
+> **Analysis.** All 5 cells scored (2026-07-22). Ordering is
+> size/family-consistent and matches the other bl-family grids:
+> llama-1b < llama-3b < qwen-3b < qwen-math-1.5b < qwen-7b gptq
+> (best .7164). llama-3b, qwen-7b, and qwen-math values match
+> the cross-algorithm summary tables exactly (consistency check
+> passed); llama-1b and qwen-3b are net-new. Vs. cnt-mcts-bl-v01
+> cell-for-cell (PUCT-vs-KUBE at identical budget): KUBE wins
+> every model — llama-1b .3060 vs .2313, llama-3b .4851 vs
+> .3731, qwen-7b .7164 vs .6343, qwen-math .6493 vs .4366 (the
+> largest gap, +.21).
+> **Limitations / follow-up:** queue-only block
+> (`kube-bl-v01-l5-*` entries, all done — deletable after this
+> recording); no experiments.yaml entries.
 
 ### kube-mcts-bl-v02
 
@@ -886,17 +913,20 @@ Two activities, two shapes:
 > default (native for Qwen, custom for Llama).
 >
 > ⚠️ 1/5 cells scored (qwen-3b, reused from the score_mode sweep);
-> the other 4 planned.
+> the other 4 inqueue (orchestration/queue.yaml
+> `kube-bl-v02-l5-mf-a0.8-*`, priority 2, queued 2026-07-22 —
+> deliberately behind the alpha×kube_c sweep, which decides
+> whether alpha=0.8 is the arm worth propagating).
 >
 > **W&B:** qwen-3b `z15wgie9`; others none yet (no runs exist).
 
 | llm | trials | status | pass@gb | naive@gb | wei@gb | maj@gb | hr/trial |
 |---|---|---|---|---|---|---|---|
-| llama-1b fp16 | — | planned | — | — | — | — | — |
-| llama-3b fp16 | — | planned | — | — | — | — | — |
+| llama-1b fp16 | — | inqueue | — | — | — | — | — |
+| llama-3b fp16 | — | inqueue | — | — | — | — | — |
 | qwen-3b fp16 | 2 | scored | .6194<br>±.0297 | .5299<br>±.0305 | .5224<br>±.0306 | .5037<br>±.0306 | — |
-| qwen-7b gptq-int4 | — | planned | — | — | — | — | — |
-| qwen-math-1.5b fp16 | — | planned | — | — | — | — | — |
+| qwen-7b gptq-int4 | — | inqueue | — | — | — | — | — |
+| qwen-math-1.5b fp16 | — | inqueue | — | — | — | — | — |
 
 > **Analysis.** Only the qwen-3b cell is filled (pass@gb .6194).
 > Once the other four land, the key read is how parent_blend's
@@ -926,28 +956,148 @@ Two activities, two shapes:
 > bs-4, d-20, b=80, prm_batch_size=1, level=5, tmpl=model-family
 > default (native for Qwen, custom for Llama).
 >
-> ⚠️ 1/5 cells scored (qwen-3b, reused from the score_mode sweep);
-> the other 4 planned.
+> All 5 cells scored (2026-07-22).
 >
-> **W&B:** qwen-3b `26ty6v7n`; others none yet (no runs exist).
+> **W&B:** llama-1b `oypd0uyv`, llama-3b `apcu4aqr`, qwen-3b
+> `26ty6v7n`, qwen-7b gptq `68tp8ltv`, qwen-math-1.5b `g9qs2c4z`.
 
 | llm | trials | status | pass@gb | naive@gb | wei@gb | maj@gb | hr/trial |
 |---|---|---|---|---|---|---|---|
-| llama-1b fp16 | — | planned | — | — | — | — | — |
-| llama-3b fp16 | — | planned | — | — | — | — | — |
+| llama-1b fp16 | 2 | scored | .3321<br>±.0288 | .2761<br>±.0274 | .2463<br>±.0264 | .2425<br>±.0262 | 2.99 |
+| llama-3b fp16 | 2 | scored | .4851<br>±.0306 | .3881<br>±.0298 | .3881<br>±.0298 | .3731<br>±.0296 | 4.67 |
 | qwen-3b fp16 | 2 | scored | .6381<br>±.0294 | .5485<br>±.0305 | .5112<br>±.0306 | .5224<br>±.0306 | — |
-| qwen-7b gptq-int4 | — | planned | — | — | — | — | — |
-| qwen-math-1.5b fp16 | — | planned | — | — | — | — | — |
+| qwen-7b gptq-int4 | 2 | scored | .6978<br>±.0281 | .6045<br>±.0299 | .5261<br>±.0306 | .5187<br>±.0306 | 3.42 |
+| qwen-math-1.5b fp16 | 2 | scored | .6679<br>±.0288 | .5709<br>±.0303 | .5410<br>±.0305 | .5261<br>±.0306 | 3.42 |
 
-> **Analysis.** Only the qwen-3b cell is filled (pass@gb .6381,
-> above the alpha=0.8 cell's .6194). Once the other four land, the
-> key read is the per-model alpha=1.0-vs-0.8 delta — whether
-> "no blend beats blend" is a qwen-3b quirk or holds across the
-> family.
+> **Analysis.** All 5 scored. Vs. kube-v01 cell-for-cell (the
+> eager-terminal-backprop isolation — alpha=1.0 recovers v01's
+> kube_density exactly, so the ONLY difference is v02's fold):
+> pass@gb deltas are small and mixed — llama-1b +.026, llama-3b
+> .000, qwen-3b +.022, qwen-7b −.019, qwen-math +.019, all
+> within ~1 SEM. Eager backprop is roughly **neutral on
+> pass@gb**. The real signal is wei@gb: v02 hurts weighted
+> aggregation on all three Qwen models, sharply on qwen-7b
+> (.5261 vs v01's .5858, −.06 ≈ 2 SEM) — eager terminal folding
+> appears to distort the score distribution the weighted vote
+> relies on. If wei@gb matters, v01's delayed backprop is the
+> safer default. Cost identical (hr/trial ±.02); v02 runs far
+> fewer phases (~77 vs 95–140) for the same budget. qwen-7b's
+> trees are notably shallower (depth ~9 vs 12–14 elsewhere).
 > **Limitations / follow-up:** 4 cells planned — see
 > experiments.yaml group `kube-mcts-bl-v02`, feeds
 > `level5-kube-bl-v02-model-family-parent-blend-a1.0-qwen`. qwen-3b
 > feeds both this table and the score_mode-sweep table.
+
+#### model family, size, quantization comparison (QwenPRM, parent_blend/alpha=0.0)
+> **Compares:** the same 5-model/quant grid at the **value-blindness
+> extreme alpha=0.0** — the leaf's own q is ignored entirely and
+> every child is scored by its parent's q alone
+> (`blended_q = q(parent)`). Within a sibling set the value term is
+> then identical for all children, so selection among siblings is
+> driven purely by the exploration/visit term and the kube bonus.
+> This is an ablation, not a tuning arm: it asks whether the leaf's
+> own PRM signal matters at all under KUBE, bounding the alpha
+> sweep from below. Read against the alpha=1.0 (pure own-q) and
+> alpha=0.8 tables: a small 0.0→1.0 gap would mean per-leaf PRM
+> discrimination contributes little beyond tree structure; a large
+> gap confirms the leaf q is load-bearing. Unlike the 0.8/1.0
+> tables, the qwen-3b cell is NOT reusable from the score_mode
+> sweep (no alpha=0.0 arm exists there) — all 5 cells are net-new.
+>
+> **Fixed:** method=`mcts_bl_kube_v02`, **score_mode=parent_blend,
+> alpha=0.0**, kube_schedule=`parent`, kube_c=2.0 (default),
+> kube_affordable=true (default), prm=qwen, agg_strategy=`last`,
+> bs-4, d-20, b=80, prm_batch_size=1, level=5, tmpl=model-family
+> default (native for Qwen, custom for Llama).
+>
+> ⚠️ Entirely planned, no runs yet.
+>
+> **W&B:** none yet (no runs exist).
+
+| llm | trials | status | pass@gb | naive@gb | wei@gb | maj@gb | hr/trial |
+|---|---|---|---|---|---|---|---|
+| llama-1b fp16 | — | running | — | — | — | — | — |
+| llama-3b fp16 | — | running | — | — | — | — | — |
+| qwen-3b fp16 | — | running | — | — | — | — | — |
+| qwen-7b gptq-int4 | — | running | — | — | — | — | — |
+| qwen-math-1.5b fp16 | — | running | — | — | — | — | — |
+
+> **Analysis.** No data yet — nothing to take away. Once filled,
+> the key read per model is the alpha=0.0-vs-1.0 gap (how much the
+> leaf's own PRM q buys over parent-only scoring), with alpha=0.8
+> as the intermediate point; a rough second read is whether the
+> root-adjacent depth-1 phase (where the parent is the root with no
+> meaningful q) degrades uniformly across models. All 5 launched
+> 2026-07-22 (llama-1b/3b + qwen-3b 09:30; qwen-7b +
+> qwen-math-1.5b 11:22).
+> **Limitations / follow-up:** all 5 cells planned — queue-only
+> block (orchestration/queue.yaml `kube-bl-v02-l5-mf-a0.0-*`), no
+> experiments.yaml entries yet. Single-alpha ablation; only worth
+> extending if the 0.0-vs-1.0 gap is surprisingly small.
+
+#### alpha × kube_c joint sweep (llama-3b, QwenPRM, parent_blend)
+> **Compares:** the parent_blend value-composition knob `alpha`
+> jointly with the exploration scale `kube_c`, as a 3×3 factorial
+> — NOT two sequential 1-D sweeps. The two parameters are
+> partially aliased by construction: among siblings the parent-q
+> term is a shared constant, so value discrimination is exactly
+> `alpha·Δq` and behavior depends only on the ratio
+> `kube_c/alpha`; alpha's genuinely new effect (importing the
+> parent's q into cross-branch comparisons) is only identifiable
+> against the factorial's interaction pattern. Reads: (1) kube_c
+> main effect down the alpha=1.0 column; (2) alpha spread at
+> kube_c=0.5/0.1 vs. at 2.0 — separation only at low kube_c
+> confirms scale-domination (tune alpha in the low-c regime);
+> flat everywhere is real evidence against one-hop blending;
+> (3) the (a=1.0,c=2.0) vs (a=0.5,c=1.0-equivalent) diagonal is
+> approximated by comparing constant-ratio pairs across the grid.
+> kube_c grid {0.1, 0.5, 2.0} straddles the default from below —
+> q ∈ [0,1] bounds sibling Δq to a few tenths, so the
+> value↔bonus crossover plausibly sits below the default, not
+> above (see the score_mode sweep's scale-domination rationale).
+>
+> **Fixed:** method=`mcts_bl_kube_v02`, llm=llama-3b fp16 (custom
+> tmpl), **score_mode=parent_blend**, kube_schedule=`parent`,
+> kube_affordable=true (default), prm=qwen, agg_strategy=`last`,
+> bs-4, d-20, b=80, prm_batch_size=1, level=5.
+>
+> ⚠️ 1/9 cells scored — the (alpha=1.0, kube_c=2.0) cell is the
+> **exact same run** as the alpha=1.0 model-family table's
+> llama-3b cell (cfg-63051bb1), reused, not re-run. The
+> (alpha=0.8, kube_c=2.0) cell will likewise reuse the alpha=0.8
+> model-family table's llama-3b cell once that queue entry runs
+> (`kube-bl-v02-l5-mf-a0.8-llama3b`). The other 7 are net-new.
+> kube_c is NOT numerically comparable to cnt-v02's cpuct
+> (different bonus shapes).
+>
+> **W&B:** (1.0, 2.0) `apcu4aqr`; others none yet.
+
+| alpha | kube_c | trials | status | pass@gb | naive@gb | wei@gb | maj@gb | hr/trial |
+|---|---|---|---|---|---|---|---|---|
+| 1.0 | 2.0 | 2 | scored | .4851<br>±.0306 | .3881<br>±.0298 | .3881<br>±.0298 | .3731<br>±.0296 | 4.67 |
+| 1.0 | 0.5 | — | running | — | — | — | — | — |
+| 1.0 | 0.1 | — | running | — | — | — | — | — |
+| 0.8 | 2.0 | — | inqueue | — | — | — | — | — |
+| 0.8 | 0.5 | — | running | — | — | — | — | — |
+| 0.8 | 0.1 | — | running | — | — | — | — | — |
+| 0.5 | 2.0 | — | inqueue | — | — | — | — | — |
+| 0.5 | 0.5 | — | running | — | — | — | — | — |
+| 0.5 | 0.1 | — | running | — | — | — | — | — |
+
+> **Analysis.** No scored cells yet — nothing to take away. Once
+> filled, the decision rule: if alpha separates only at low
+> kube_c, fix the low-c regime and tune alpha there; if the
+> alpha=1.0 column dominates everywhere, one-hop blending is dead
+> for kube and the model-family grids stay at alpha=1.0; the
+> winning (alpha, kube_c) pair + the alpha=1.0 control then
+> propagate to the other models' grids — the full 3×3 is NOT
+> repeated per model.
+> **Limitations / follow-up:** 7 cells net-new, ~8h/trial each —
+> queue-only block (orchestration/queue.yaml
+> `kube-bl-v02-l5-ac-sweep-llama3b-*`), no experiments.yaml
+> entries yet. 2 trials/cell → SEM ~±.03; effects under ~.06
+> pass@gb are not resolvable. Single model (llama-3b); the
+> propagation step, not this table, covers generalization.
 
 ### kdepth-mcts-bl-v01
 
@@ -966,11 +1116,11 @@ Two activities, two shapes:
 
 | llm | trials | status | pass@gb | naive@gb | wei@gb | maj@gb | hr/trial |
 |---|---|---|---|---|---|---|---|
-| llama-1b fp16 | — | planned | — | — | — | — | — |
-| llama-3b fp16 | — | planned | — | — | — | — | — |
-| qwen-3b fp16 | — | planned | — | — | — | — | — |
-| qwen-7b gptq-int4 | — | planned | — | — | — | — | — |
-| qwen-math-1.5b fp16 | — | planned | — | — | — | — | — |
+| llama-1b fp16 | — | running | — | — | — | — | — |
+| llama-3b fp16 | — | running | — | — | — | — | — |
+| qwen-3b fp16 | — | running | — | — | — | — | — |
+| qwen-7b gptq-int4 | — | running | — | — | — | — | — |
+| qwen-math-1.5b fp16 | — | running | — | — | — | — | — |
 
 > **Analysis.** No level-5 data yet — nothing to take away.
 > **Limitations / follow-up:** entire table planned; launch is
@@ -995,11 +1145,11 @@ Two activities, two shapes:
 
 | llm | trials | status | pass@gb | naive@gb | wei@gb | maj@gb | hr/trial |
 |---|---|---|---|---|---|---|---|
-| llama-1b fp16 | — | planned | — | — | — | — | — |
-| llama-3b fp16 | — | planned | — | — | — | — | — |
-| qwen-3b fp16 | — | planned | — | — | — | — | — |
-| qwen-7b gptq-int4 | — | planned | — | — | — | — | — |
-| qwen-math-1.5b fp16 | — | planned | — | — | — | — | — |
+| llama-1b fp16 | — | running | — | — | — | — | — |
+| llama-3b fp16 | — | running | — | — | — | — | — |
+| qwen-3b fp16 | — | running | — | — | — | — | — |
+| qwen-7b gptq-int4 | — | running | — | — | — | — | — |
+| qwen-math-1.5b fp16 | — | running | — | — | — | — | — |
 
 > **Analysis.** No data yet — nothing to take away. Once filled,
 > the key read is whether a concave (depth-tolerant) bonus helps
@@ -1031,10 +1181,10 @@ Two activities, two shapes:
 
 | llm | trials | status | pass@gb | naive@gb | wei@gb | maj@gb | hr/trial |
 |---|---|---|---|---|---|---|---|
-| llama-1b fp16 | — | planned | — | — | — | — | — |
-| llama-3b fp16 | — | planned | — | — | — | — | — |
-| qwen-3b fp16 | — | planned | — | — | — | — | — |
-| qwen-7b gptq-int4 | — | planned | — | — | — | — | — |
+| llama-1b fp16 | — | running | — | — | — | — | — |
+| llama-3b fp16 | — | running | — | — | — | — | — |
+| qwen-3b fp16 | — | running | — | — | — | — | — |
+| qwen-7b gptq-int4 | — | running | — | — | — | — | — |
 | qwen-math-1.5b fp16 | 2 | scored | .6455<br>±.0293 | .5522<br>±.0304 | .5485<br>±.0305 | .5336<br>±.0305 | — |
 
 > **Analysis.** One data point so far (qwen-math-1.5b): pass@gb
@@ -1079,8 +1229,8 @@ Two activities, two shapes:
 
 | score_mode | alpha | gamma | trials | status | pass@gb | naive@gb | wei@gb | maj@gb | hr/trial |
 |---|---|---|---|---|---|---|---|---|---|
-| parent_blend | 1.0 | — | — | planned | — | — | — | — | — |
-| parent_blend | 0.8 | — | — | planned | — | — | — | — | — |
+| parent_blend | 1.0 | — | — | running | — | — | — | — | — |
+| parent_blend | 0.8 | — | — | running | — | — | — | — | — |
 | parent_blend | 0.6 | — | — | planned | — | — | — | — | — |
 | path_decay | — | 1.0 | — | planned | — | — | — | — | — |
 | path_decay | — | 0.8 | — | planned | — | — | — | — | — |
@@ -1124,11 +1274,11 @@ Two activities, two shapes:
 
 | llm | trials | status | pass@gb | naive@gb | wei@gb | maj@gb | hr/trial |
 |---|---|---|---|---|---|---|---|
-| llama-1b fp16 | — | planned | — | — | — | — | — |
-| llama-3b fp16 | — | planned | — | — | — | — | — |
-| qwen-3b fp16 | — | planned | — | — | — | — | — |
-| qwen-7b gptq-int4 | — | planned | — | — | — | — | — |
-| qwen-math-1.5b fp16 | — | planned | — | — | — | — | — |
+| llama-1b fp16 | — | running | — | — | — | — | — |
+| llama-3b fp16 | — | running | — | — | — | — | — |
+| qwen-3b fp16 | — | running | — | — | — | — | — |
+| qwen-7b gptq-int4 | — | running | — | — | — | — | — |
+| qwen-math-1.5b fp16 | — | running | — | — | — | — | — |
 
 > **Analysis.** No data yet. Once filled, the key read is how
 > parent_blend's one-hop q-blend generalizes across model families
@@ -1164,11 +1314,11 @@ Two activities, two shapes:
 
 | llm | trials | status | pass@gb | naive@gb | wei@gb | maj@gb | hr/trial |
 |---|---|---|---|---|---|---|---|
-| llama-1b fp16 | — | planned | — | — | — | — | — |
-| llama-3b fp16 | — | planned | — | — | — | — | — |
-| qwen-3b fp16 | — | planned | — | — | — | — | — |
-| qwen-7b gptq-int4 | — | planned | — | — | — | — | — |
-| qwen-math-1.5b fp16 | — | planned | — | — | — | — | — |
+| llama-1b fp16 | — | running | — | — | — | — | — |
+| llama-3b fp16 | — | running | — | — | — | — | — |
+| qwen-3b fp16 | — | running | — | — | — | — | — |
+| qwen-7b gptq-int4 | — | running | — | — | — | — | — |
+| qwen-math-1.5b fp16 | — | running | — | — | — | — | — |
 
 > **Analysis.** No data yet. Once filled, the key read is the
 > per-model alpha=1.0-vs-0.8 delta — whether "no blend beats
@@ -1202,11 +1352,11 @@ could you help me add these sem-mcts-bl-v01 experiments to queue, all priority=1
 
 | llm | trials | status | pass@gb | naive@gb | wei@gb | maj@gb | hr/trial |
 |---|---|---|---|---|---|---|---|
-| llama-1b fp16 | — | planned | — | — | — | — | — |
-| llama-3b fp16 | — | planned | — | — | — | — | — |
-| qwen-3b fp16 | — | planned | — | — | — | — | — |
-| qwen-7b gptq-int4 | — | planned | — | — | — | — | — |
-| qwen-math-1.5b fp16 | — | planned | — | — | — | — | — |
+| llama-1b fp16 | — | running | — | — | — | — | — |
+| llama-3b fp16 | — | running | — | — | — | — | — |
+| qwen-3b fp16 | — | running | — | — | — | — | — |
+| qwen-7b gptq-int4 | — | running | — | — | — | — | — |
+| qwen-math-1.5b fp16 | — | running | — | — | — | — | — |
 
 > **Analysis.** No level-5 data yet — nothing to take away.
 > **Limitations / follow-up:** entire table planned. Launch per
@@ -1274,11 +1424,11 @@ could you help me add these sem-mcts-bl-v01 experiments to queue, all priority=1
 
 | llm | trials | status | pass@gb | naive@gb | wei@gb | maj@gb | hr/trial |
 |---|---|---|---|---|---|---|---|
-| llama-1b fp16 | — | planned | — | — | — | — | — |
-| llama-3b fp16 | — | planned | — | — | — | — | — |
-| qwen-3b fp16 | — | planned | — | — | — | — | — |
-| qwen-7b gptq-int4 | — | planned | — | — | — | — | — |
-| qwen-math-1.5b fp16 | — | planned | — | — | — | — | — |
+| llama-1b fp16 | — | running | — | — | — | — | — |
+| llama-3b fp16 | — | running | — | — | — | — | — |
+| qwen-3b fp16 | — | running | — | — | — | — | — |
+| qwen-7b gptq-int4 | — | running | — | — | — | — | — |
+| qwen-math-1.5b fp16 | — | running | — | — | — | — | — |
 
 > **Analysis.** No data yet — nothing to take away. Once filled,
 > the key reads are (1) bl_sem_v02 vs. bl_sem_v01 at the same
