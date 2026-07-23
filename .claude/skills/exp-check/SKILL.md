@@ -67,8 +67,19 @@ entries as "blocked: needs GPU scoring".
 
 ### finished, scored == trials -> score, record, flip
 1. `python compute_stats.py --config-name <config_root>
-   <overrides> run.num_trials=<trials>` — CPU-only; batch in
-   parallel with min(48, n) workers. THE number source (§3).
+   <overrides> run.num_trials=<trials>` — CPU-only; THE number
+   source (§3). Grading is 48-way parallel per run since
+   2026-07-22 (`+num_proc=N` to override) — one run takes
+   ~1-2 min, dominated by W&B sync, so **run them one after
+   another**, not concurrently. If you must run several at
+   once, pass `+num_proc=1` each and cap at ~12 concurrent:
+   the shell lives INSIDE a SLURM job's cgroup (ssh sessions
+   are adopted into the newest GPU allocation — ~22 cores,
+   ~110 GiB), and a 45-way batch got ~21 processes silently
+   cgroup-OOM-killed (no traceback) on 2026-07-22. One log
+   file per process, never a shared path (concurrent writers
+   race). Verify every log ends with its summary line before
+   reading numbers.
 2. Audit-write every doc cell the entry's `feeds` names (§4).
 3. Targeted Edit in the entry's ledger: `status: running ->
    scored`.

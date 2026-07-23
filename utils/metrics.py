@@ -26,6 +26,7 @@ Metric dict keys use underscores (pass_gb, ...) so they are safe as
 
 import os
 import signal
+from concurrent.futures import ProcessPoolExecutor
 
 import numpy as np
 np.set_printoptions(precision=4)
@@ -97,89 +98,109 @@ def _grade_pred(pred_field, gt_answer, grader_name='math', timeout=2):
 # Per-dataset correctness evaluation                              #
 # --------------------------------------------------------------- #
 
-def evaluate_correctness(dataset, grader_name='math', timeout=2):
+def _eval_question(args):
+    """Grade one question; module-level so Pool can pickle it.
+
+    Returns a dict of per-question scalars (the fields
+    evaluate_correctness assembles into arrays).
+    """
+    data, grader_name, timeout = args
+    _, gt_answer = parser.parse_ground_truth(data, grader_name)
+    completions = data["completions"]
+
+    # No completions: the search produced nothing for this
+    # question. Correctness is 0 (a genuine failure — it stays in
+    # the denominator), but the search-cost stats are undefined
+    # (mean over an empty list), so mark them nan to drop them
+    # from the nan-aware averages rather than fabricate a 0.
+    if len(completions) == 0:
+        return {
+            "pass_gb": 0.0,
+            "naive_gb": 0.0,
+            "weighted_gb": 0.0,
+            "maj_gb": 0.0,
+            "ncomps": 0,
+            "depth": np.nan,
+            "nphases": np.nan,
+            "ndepths": np.nan,
+        }
+
+    row = {}
+    # Aggregation-based predictions (naive / weighted / maj).
+    row["naive_gb"] = _grade_pred(
+        data["pred_naive@gb"], gt_answer, grader_name, timeout)
+    row["weighted_gb"] = _grade_pred(
+        data["pred_weighted@gb"], gt_answer, grader_name, timeout)
+    row["maj_gb"] = _grade_pred(
+        data["pred_maj@gb"], gt_answer, grader_name, timeout)
+
+    # pass@gb: oracle best-of-n — correct if ANY completion is.
+    pass_gb_correct = False
+    for completion in completions:
+        _, is_correct = run_with_timeout(
+            parser.extract_answer, grader2.math_equal,
+            completion, gt_answer, grader_name, timeout,
+        )
+        if is_correct is True:
+            pass_gb_correct = True
+            break
+    row["pass_gb"] = pass_gb_correct
+
+    # Search-cost stats (Scheme-C keys). Older mcts_sem_v01/v02
+    # scored datasets predate this naming (pre-rename keys
+    # c_depths/last_phases/ndepths_arr); fall back to those so
+    # those runs remain readable without re-scoring.
+    depth_key = "comp_depth" if "comp_depth" in data else "c_depths"
+    phase_key = (
+        "q_last_phase" if "q_last_phase" in data else "last_phases"
+    )
+    ndepths_key = (
+        "phase_depths" if "phase_depths" in data else "ndepths_arr"
+    )
+    row["ncomps"] = len(completions)
+    row["depth"] = np.mean(data[depth_key])
+    row["nphases"] = data[phase_key]
+    row["ndepths"] = np.mean(data[ndepths_key])
+    return row
+
+
+def evaluate_correctness(dataset, grader_name='math', timeout=2,
+                         num_proc=1):
     """Per-question metrics for one trial's scored dataset.
 
     `grader_name` selects the utils/parser.py `data_name` vocabulary
     ("math", "gsm8k", ...) ground-truth parsing and answer extraction
     branch on -- pass the run's `cfg.data.grader_name`.
 
+    `num_proc` > 1 grades questions in a process pool (questions are
+    independent). ProcessPoolExecutor, not multiprocessing.Pool: each
+    symbolic comparison hard-kills stuck sympy in a child process of
+    its own, and Pool's daemonic workers may not have children.
+    <= 1 keeps the original serial path.
+
     Returns a dict of 1-D arrays (one entry per question):
       pass_gb, naive_gb, weighted_gb, maj_gb  (correctness in {0,1})
       ncomps, depth, nphases, ndepths     (search-cost stats)
     """
-    n = len(dataset)
-    out = {
-        "pass_gb": np.zeros(n),
-        "naive_gb": np.zeros(n),
-        "weighted_gb": np.zeros(n),
-        "maj_gb": np.zeros(n),
-        "ncomps": np.zeros(n),
-        "depth": np.zeros(n),
-        "nphases": np.zeros(n),
-        "ndepths": np.zeros(n),
+    items = [(data, grader_name, timeout) for data in dataset]
+    if num_proc > 1 and len(items) > 1:
+        procs = min(num_proc, len(items))
+        with ProcessPoolExecutor(max_workers=procs) as pool:
+            rows = list(pool.map(_eval_question, items))
+    else:
+        rows = [_eval_question(item) for item in items]
+
+    keys = (
+        "pass_gb", "naive_gb", "weighted_gb", "maj_gb",
+        "ncomps", "depth", "nphases", "ndepths",
+    )
+    return {
+        k: np.array([float(r[k]) for r in rows]) for k in keys
     }
 
-    for q_idx, data in enumerate(dataset):
-        _, gt_answer = parser.parse_ground_truth(data, grader_name)
-        completions = data["completions"]
 
-        # No completions: the search produced nothing for this
-        # question. Correctness is 0 (a genuine failure — it stays in
-        # the denominator), but the search-cost stats are undefined
-        # (mean over an empty list), so mark them nan to drop them
-        # from the nan-aware averages rather than fabricate a 0.
-        if len(completions) == 0:
-            out["pass_gb"][q_idx] = 0.0
-            out["naive_gb"][q_idx] = 0.0
-            out["weighted_gb"][q_idx] = 0.0
-            out["maj_gb"][q_idx] = 0.0
-            out["ncomps"][q_idx] = 0
-            out["depth"][q_idx] = np.nan
-            out["nphases"][q_idx] = np.nan
-            out["ndepths"][q_idx] = np.nan
-            continue
-
-        # Aggregation-based predictions (naive / weighted / maj).
-        out["naive_gb"][q_idx] = _grade_pred(
-            data["pred_naive@gb"], gt_answer, grader_name, timeout)
-        out["weighted_gb"][q_idx] = _grade_pred(
-            data["pred_weighted@gb"], gt_answer, grader_name, timeout)
-        out["maj_gb"][q_idx] = _grade_pred(
-            data["pred_maj@gb"], gt_answer, grader_name, timeout)
-
-        # pass@gb: oracle best-of-n — correct if ANY completion is.
-        pass_gb_correct = False
-        for completion in completions:
-            _, is_correct = run_with_timeout(
-                parser.extract_answer, grader2.math_equal,
-                completion, gt_answer, grader_name, timeout,
-            )
-            if is_correct is True:
-                pass_gb_correct = True
-                break
-        out["pass_gb"][q_idx] = pass_gb_correct
-
-        # Search-cost stats (Scheme-C keys). Older mcts_sem_v01/v02
-        # scored datasets predate this naming (pre-rename keys
-        # c_depths/last_phases/ndepths_arr); fall back to those so
-        # those runs remain readable without re-scoring.
-        depth_key = "comp_depth" if "comp_depth" in data else "c_depths"
-        phase_key = (
-            "q_last_phase" if "q_last_phase" in data else "last_phases"
-        )
-        ndepths_key = (
-            "phase_depths" if "phase_depths" in data else "ndepths_arr"
-        )
-        out["ncomps"][q_idx] = len(completions)
-        out["depth"][q_idx] = np.mean(data[depth_key])
-        out["nphases"][q_idx] = data[phase_key]
-        out["ndepths"][q_idx] = np.mean(data[ndepths_key])
-
-    return out
-
-
-def _load_trials(result_dir, config_name, num_trials, grader_name='math'):
+def _load_trials(result_dir, config_name, num_trials, grader_name='math',
+                 num_proc=1):
     """Load + evaluate each trial, returning per-metric arrays
     concatenated over all trials x questions. Trials whose scored
     .jsonl is missing are skipped (and reported), so stats can be
@@ -197,7 +218,11 @@ def _load_trials(result_dir, config_name, num_trials, grader_name='math'):
         dataset_res = load_dataset(
             "json", data_files=path, split='train',
         )
-        per_trial.append(evaluate_correctness(dataset_res, grader_name))
+        per_trial.append(
+            evaluate_correctness(
+                dataset_res, grader_name, num_proc=num_proc,
+            )
+        )
 
     if skipped:
         print(f"missing trials, skipped: {skipped}")
@@ -226,13 +251,19 @@ def _mean_sem(arr):
 
 def compute_stats_basics(
     result_dir, config_name, num_trials, grader_name='math',
+    num_proc=1,
 ):
     """Aggregate correctness + search-cost stats across trials,
     save the per-question correctness arrays, and print a summary
     line. `grader_name` selects the utils/parser.py `data_name`
     vocabulary ("math", "gsm8k", ...) -- pass `cfg.data.grader_name`.
-    Returns the stats dict (metric -> (mean, sem))."""
-    stats = _load_trials(result_dir, config_name, num_trials, grader_name)
+    `num_proc` > 1 parallelizes grading over questions (see
+    evaluate_correctness). Returns the stats dict
+    (metric -> (mean, sem))."""
+    stats = _load_trials(
+        result_dir, config_name, num_trials, grader_name,
+        num_proc=num_proc,
+    )
 
     # Persist the raw per-question correctness for downstream tests.
     for name in ("pass_gb", "naive_gb", "weighted_gb", "maj_gb"):

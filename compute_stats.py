@@ -92,8 +92,12 @@ def main(cfg: ExpConfig):
     # Summary columns:
     #   pass@gb, naive@gb, weighted@gb, maj@gb,
     #   ncomps, depth, nphases, ndepths   (each: mean ± SEM)
+    # +num_proc=N parallelizes grading over questions (default 48;
+    # use 1 when many compute_stats processes run concurrently —
+    # all of them share one SLURM job cgroup's CPU/memory).
     summary = metrics.compute_stats_basics(
         result_dir, run_name, cfg.run.num_trials, cfg.data.grader_name,
+        num_proc=cfg.get("num_proc", 48),
     )
 
     # Reattach to the generation run (id saved at generation time) and
