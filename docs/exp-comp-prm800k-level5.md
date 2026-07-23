@@ -1425,9 +1425,9 @@ could you help me add these sem-mcts-bl-v01 experiments to queue, all priority=1
 |---|---|---|---|---|---|---|---|
 | llama-1b fp16 | — | running | — | — | — | — | — |
 | llama-3b fp16 | — | running | — | — | — | — | — |
-| qwen-3b fp16 | — | running | — | — | — | — | — |
-| qwen-7b gptq-int4 | — | running | — | — | — | — | — |
-| qwen-math-1.5b fp16 | — | running | — | — | — | — | — |
+| qwen-3b fp16 | 2 | scored | .5933<br>±.0301 | .4179<br>±.0302 | .3470<br>±.0291 | .2910<br>±.0278 | — |
+| qwen-7b gptq-int4 | 2 | scored | .7537<br>±.0264 | .5597<br>±.0304 | .4925<br>±.0306 | .4664<br>±.0305 | — |
+| qwen-math-1.5b fp16 | 2 | scored | .6828<br>±.0285 | .5373<br>±.0305 | .4888<br>±.0306 | .4478<br>±.0304 | — |
 
 > **Analysis.** No data yet — nothing to take away. Once filled,
 > the key reads are (1) bl_sem_v02 vs. bl_sem_v01 at the same
