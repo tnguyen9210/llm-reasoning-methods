@@ -435,13 +435,13 @@ instead of one wide sparse grid.)
 > **W&B:** rlhflow prm_bs=1 `1c9026yj`, prm_bs=4 `wb2un007`;
 > qwen prm_bs=1 `8vvw5usb`, prm_bs=4 `u9itrf7k`.
 
-| prm | prm_bs | trials | status | pass@gb | hr/trial | peak GPU mem (GB) |
-|---|---|---|---|---|---|---|
-| rlhflow | 1 | 2 | scored | .617<br>±.030 | 2.51 | 30.23 |
-| rlhflow | 2 | — | not run | — | — | — |
-| rlhflow | 4 | 2 | scored | .641<br>±.030 | 2.38 | 31.68 |
-| qwen | 1 | 2 | scored | .633<br>±.030 | 2.35 | 27.49 |
-| qwen | 4 | 2 | scored | .676<br>±.029 | 2.31 | 28.68 |
+| llm | prm | prm_bs | trials | status | pass@gb | hr/trial | peak GPU mem (GB) |
+|---|---|---|---|---|---|---|---|
+| llama-1b | rlhflow | 1 | 2 | scored | .617<br>±.030 | 2.51 | 30.23 |
+| llama-1b | rlhflow | 2 | — | not run | — | — | — |
+| llama-1b | rlhflow | 4 | 2 | scored | .641<br>±.030 | 2.38 | 31.68 |
+| llama-1b | qwen | 1 | 2 | scored | .633<br>±.030 | 2.35 | 27.49 |
+| llama-1b | qwen | 4 | 2 | scored | .676<br>±.029 | 2.31 | 28.68 |
 
 > **Analysis.** Within the n=2 rows, pass@gb is flat within ~1
 > SEM across prm_bs (rlhflow: .617/.641; qwen: .633/.676) — no
@@ -948,20 +948,20 @@ instead of one wide sparse grid.)
 > (`cfg-23f6c64a`, `cfg-baa5b18e`) — no new run. The `avg` rows are
 > new; both now run and scored (2026-07-08/09).
 
-| strategy | scope | lam | ds_alpha | w_eff | trials | status | pass@gb | naive@gb | wei@gb | maj@gb | hr/trial |
-|---|---|---|---|---|---|---|---|---|---|---|---|
-| last | full | 0.01 | 100 | 1000 | 2 | done (see ds_alpha=100) | — | — | — | — | — |
-| last | full | 0.01 | 1.0 | 10 | 2 | scored (see lam/ds_alpha joint sweep) | .7500<br>±.0271 | .6562<br>±.0297 | .6562<br>±.0297 | .6523<br>±.0298 | 5.23 |
-| last | full | 0.01 | 10 | 100 | 2 | scored (see lam/ds_alpha joint sweep) | .7695<br>±.0264 | .6797<br>±.0292 | .6445<br>±.0300 | .6211<br>±.0304 | 5.44 |
-| last | full | 0.1 | 3.16 | 10 | 2 | scored (see lam/ds_alpha joint sweep) | .7578<br>±.0268 | .6719<br>±.0294 | .6602<br>±.0297 | .6289<br>±.0303 | 5.32 |
-| last | full | 0.1 | 31.6 | 100 | 2 | scored (see lam/ds_alpha joint sweep) | .7812<br>±.0259 | .6562<br>±.0297 | .6211<br>±.0304 | .5938<br>±.0308 | 5.51 |
-| avg | full | 0.01 | 100 | 1000 | — | planned | — | — | — | — | — |
-| avg | full | 0.01 | 1.0 | 10 | 2 | scored | .7617<br>±.0267 | .6523<br>±.0298 | .6445<br>±.0300 | .6484<br>±.0299 | 5.51 |
-| avg | full | 0.01 | 10 | 100 | 2 | scored | .7773<br>±.0261 | .6719<br>±.0294 | .6484<br>±.0299 | .6328<br>±.0302 | 5.79 |
-| avg | full | 0.1 | 3.16 | 10 | 2 | scored | .7695<br>±.0264 | .6641<br>±.0296 | .6641<br>±.0296 | .6211<br>±.0304 | 5.46 |
-| avg | full | 0.1 | 31.6 | 100 | 2 | scored | .7539<br>±.0270 | .6641<br>±.0296 | .6328<br>±.0302 | .6172<br>±.0304 | 5.57 |
-| last | response | — | — | — | — | blocked | — | — | — | — | — |
-| avg | response | — | — | — | — | blocked | — | — | — | — | — |
+| llm | strategy | scope | lam | ds_alpha | w_eff | trials | status | pass@gb | naive@gb | wei@gb | maj@gb | hr/trial |
+|---|---|---|---|---|---|---|---|---|---|---|---|---|
+| llama-3b | last | full | 0.01 | 100 | 1000 | 2 | done (see ds_alpha=100) | — | — | — | — | — |
+| llama-3b | last | full | 0.01 | 1.0 | 10 | 2 | scored (see lam/ds_alpha joint sweep) | .7500<br>±.0271 | .6562<br>±.0297 | .6562<br>±.0297 | .6523<br>±.0298 | 5.23 |
+| llama-3b | last | full | 0.01 | 10 | 100 | 2 | scored (see lam/ds_alpha joint sweep) | .7695<br>±.0264 | .6797<br>±.0292 | .6445<br>±.0300 | .6211<br>±.0304 | 5.44 |
+| llama-3b | last | full | 0.1 | 3.16 | 10 | 2 | scored (see lam/ds_alpha joint sweep) | .7578<br>±.0268 | .6719<br>±.0294 | .6602<br>±.0297 | .6289<br>±.0303 | 5.32 |
+| llama-3b | last | full | 0.1 | 31.6 | 100 | 2 | scored (see lam/ds_alpha joint sweep) | .7812<br>±.0259 | .6562<br>±.0297 | .6211<br>±.0304 | .5938<br>±.0308 | 5.51 |
+| llama-3b | avg | full | 0.01 | 100 | 1000 | — | planned | — | — | — | — | — |
+| llama-3b | avg | full | 0.01 | 1.0 | 10 | 2 | scored | .7617<br>±.0267 | .6523<br>±.0298 | .6445<br>±.0300 | .6484<br>±.0299 | 5.51 |
+| llama-3b | avg | full | 0.01 | 10 | 100 | 2 | scored | .7773<br>±.0261 | .6719<br>±.0294 | .6484<br>±.0299 | .6328<br>±.0302 | 5.79 |
+| llama-3b | avg | full | 0.1 | 3.16 | 10 | 2 | scored | .7695<br>±.0264 | .6641<br>±.0296 | .6641<br>±.0296 | .6211<br>±.0304 | 5.46 |
+| llama-3b | avg | full | 0.1 | 31.6 | 100 | 2 | scored | .7539<br>±.0270 | .6641<br>±.0296 | .6328<br>±.0302 | .6172<br>±.0304 | 5.57 |
+| llama-3b | last | response | — | — | — | — | blocked | — | — | — | — | — |
+| llama-3b | avg | response | — | — | — | — | blocked | — | — | — | — | — |
 
 > **Analysis (updated 2026-07-09).** 4 of 5 `avg`×`full` cells now
 > scored (only the default point `lam=0.01,ds_alpha=100,w_eff=1000`

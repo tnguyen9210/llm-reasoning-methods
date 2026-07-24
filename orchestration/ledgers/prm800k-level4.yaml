@@ -259,7 +259,7 @@
   feeds:
   - sem-mcts/proj-cov-sweep
   group: sem-mcts
-  status: running
+  status: failed
   launch:
     job_id: 23344018
     node: r5u25n1
@@ -268,6 +268,8 @@
   priority: 1
   history:
     - {at: 2026-07-22 22:15, job_id: null, outcome: stalled,
+       trials_done: 1}
+    - {at: 2026-07-23 19:45, job_id: 23344018, outcome: stalled,
        trials_done: 1}
   note: llama-1b sparse512/exact; wandb=failed at 1/2 trials
 - id: sem-mcts-cbc0a340
@@ -2027,7 +2029,7 @@
   trials: 2
   feeds: []
   group: sem-mcts-bl
-  status: running
+  status: failed
   launch:
     job_id: 23344018
     node: r5u25n1
@@ -2036,6 +2038,8 @@
   priority: 2
   history:
     - {at: 2026-07-22 22:15, job_id: null, outcome: stalled,
+       trials_done: 1}
+    - {at: 2026-07-23 19:45, job_id: 23344018, outcome: stalled,
        trials_done: 1}
   note: FAILED -- w_eff=10 llama-3b fp16 cell (config-hash 3ca318f6, run_id
     yf562ig8). Trial 0 completed (6.19h); trial 1 crashed mid-search with

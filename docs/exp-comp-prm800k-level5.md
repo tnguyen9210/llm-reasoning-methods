@@ -774,17 +774,17 @@ Two activities, two shapes:
 > pd-g0.5-c2.0 `9k378zhj`; remaining arms' ids not recorded
 > here (see result dirs).
 
-| score_mode | alpha | gamma | cpuct | trials | status | pass@gb | naive@gb | wei@gb | maj@gb | hr/trial |
-|---|---|---|---|---|---|---|---|---|---|---|
-| parent_blend | 1.0 | — | 2.0 | 2 | scored | .4403<br>±.0304 | .4142<br>±.0301 | .4067<br>±.0301 | .3955<br>±.0299 | 4.28 |
-| parent_blend | 0.8 | — | 2.0 | 2 | scored | .4403<br>±.0304 | .3993<br>±.0300 | .3993<br>±.0300 | .3843<br>±.0298 | 4.41 |
-| parent_blend | 0.6 | — | 2.0 | 2 | scored | .4701<br>±.0305 | .4478<br>±.0304 | .4366<br>±.0304 | .4291<br>±.0303 | 4.39 |
-| path_decay | — | 1.0 | 2.0 | 2 | scored | .6493<br>±.0292 | .5522<br>±.0304 | .5522<br>±.0304 | .5410<br>±.0305 | 4.41 |
-| path_decay | — | 0.8 | 2.0 | 2 | scored | .6418<br>±.0293 | .5746<br>±.0303 | .5634<br>±.0304 | .5485<br>±.0305 | 4.39 |
-| path_decay | — | 0.5 | 2.0 | 2 | scored | .5485<br>±.0305 | .5224<br>±.0306 | .5336<br>±.0305 | .5149<br>±.0306 | 4.35 |
-| path_decay | — | 1.0 | 0.5 | 2 | scored | .6194<br>±.0297 | .5821<br>±.0302 | .5746<br>±.0303 | .5560<br>±.0304 | 4.31 |
-| path_decay | — | 0.8 | 0.5 | 2 | scored | .6082<br>±.0299 | .5821<br>±.0302 | .5709<br>±.0303 | .5560<br>±.0304 | 4.52 |
-| path_decay | — | 0.5 | 0.5 | 2 | scored | .5746<br>±.0303 | .5373<br>±.0305 | .5261<br>±.0306 | .5261<br>±.0306 | 4.54 |
+| llm | score_mode | alpha | gamma | cpuct | trials | status | pass@gb | naive@gb | wei@gb | maj@gb | hr/trial |
+|---|---|---|---|---|---|---|---|---|---|---|---|
+| qwen-3b | parent_blend | 1.0 | — | 2.0 | 2 | scored | .4403<br>±.0304 | .4142<br>±.0301 | .4067<br>±.0301 | .3955<br>±.0299 | 4.28 |
+| qwen-3b | parent_blend | 0.8 | — | 2.0 | 2 | scored | .4403<br>±.0304 | .3993<br>±.0300 | .3993<br>±.0300 | .3843<br>±.0298 | 4.41 |
+| qwen-3b | parent_blend | 0.6 | — | 2.0 | 2 | scored | .4701<br>±.0305 | .4478<br>±.0304 | .4366<br>±.0304 | .4291<br>±.0303 | 4.39 |
+| qwen-3b | path_decay | — | 1.0 | 2.0 | 2 | scored | .6493<br>±.0292 | .5522<br>±.0304 | .5522<br>±.0304 | .5410<br>±.0305 | 4.41 |
+| qwen-3b | path_decay | — | 0.8 | 2.0 | 2 | scored | .6418<br>±.0293 | .5746<br>±.0303 | .5634<br>±.0304 | .5485<br>±.0305 | 4.39 |
+| qwen-3b | path_decay | — | 0.5 | 2.0 | 2 | scored | .5485<br>±.0305 | .5224<br>±.0306 | .5336<br>±.0305 | .5149<br>±.0306 | 4.35 |
+| qwen-3b | path_decay | — | 1.0 | 0.5 | 2 | scored | .6194<br>±.0297 | .5821<br>±.0302 | .5746<br>±.0303 | .5560<br>±.0304 | 4.31 |
+| qwen-3b | path_decay | — | 0.8 | 0.5 | 2 | scored | .6082<br>±.0299 | .5821<br>±.0302 | .5709<br>±.0303 | .5560<br>±.0304 | 4.52 |
+| qwen-3b | path_decay | — | 0.5 | 0.5 | 2 | scored | .5746<br>±.0303 | .5373<br>±.0305 | .5261<br>±.0306 | .5261<br>±.0306 | 4.54 |
 
 > **Analysis.** 9/9 arms scored (final cell 2026-07-23). The
 > three reads: (1) one-hop blending does NOT help — pb arms sit
@@ -876,7 +876,11 @@ Two activities, two shapes:
 > **W&B:** kube_c=2.0 reused — llama-1b `gu5l0k7p`, llama-3b
 > `rywqssh0`, qwen-3b `79kyy2a7`, qwen-7b gptq `tmtery3w`,
 > qwen-math-1.5b `ktgdyyfx`; llama-1b sweep — c0.1 `ciaa0mnv`,
-> c0.5 `bgrjt17l`, c8.0 `2nuo4pt9`; others none yet.
+> c0.5 `bgrjt17l`, c8.0 `2nuo4pt9`; llama-3b sweep — c0.1
+> `z9vhyakl`, c0.5 `25t829u4`, c8.0 `lku8g5in`; qwen-3b sweep —
+> c0.1 `r9hdz8uz`, c0.5 `cjnfk9uc`, c8.0 `p50sut32`;
+> qwen-math-1.5b sweep — c0.1 `bs81j93w`, c0.5 `gyhlf3hu`,
+> c8.0 `tzslh57a`.
 
 | llm | kube_c | trials | status | pass@gb | naive@gb | wei@gb | maj@gb | hr/trial |
 |---|---|---|---|---|---|---|---|---|
@@ -884,44 +888,74 @@ Two activities, two shapes:
 | llama-1b fp16 | 0.5 | 2 | scored | .3172<br>±.0285 | .2612<br>±.0269 | .2500<br>±.0265 | .2388<br>±.0261 | 3.11 |
 | llama-1b fp16 | 2.0 | 2 | scored | .3060<br>±.0282 | .2612<br>±.0269 | .2463<br>±.0264 | .2276<br>±.0257 | 3.11 |
 | llama-1b fp16 | 8.0 | 2 | scored | .3097<br>±.0283 | .2612<br>±.0269 | .2537<br>±.0266 | .2463<br>±.0264 | 3.14 |
-| llama-3b fp16 | 0.1 | — | failed | — | — | — | — | — |
-| llama-3b fp16 | 0.5 | — | failed | — | — | — | — | — |
+| llama-3b fp16 | 0.1 | 2 | scored | .5149<br>±.0306 | .4142<br>±.0301 | .3993<br>±.0300 | .3955<br>±.0299 | 4.67 |
+| llama-3b fp16 | 0.5 | 2 | scored | .4813<br>±.0306 | .4142<br>±.0301 | .3843<br>±.0298 | .3657<br>±.0295 | 4.64 |
 | llama-3b fp16 | 2.0 | 2 | scored | .4851<br>±.0306 | .3918<br>±.0299 | .3769<br>±.0297 | .3731<br>±.0296 | 4.65 |
-| llama-3b fp16 | 8.0 | — | failed | — | — | — | — | — |
-| qwen-3b fp16 | 0.1 | — | failed | — | — | — | — | — |
-| qwen-3b fp16 | 0.5 | — | failed | — | — | — | — | — |
+| llama-3b fp16 | 8.0 | 2 | scored | .4925<br>±.0306 | .4179<br>±.0302 | .4030<br>±.0300 | .3881<br>±.0298 | 4.75 |
+| qwen-3b fp16 | 0.1 | 2 | scored | .6007<br>±.0300 | .5448<br>±.0305 | .5261<br>±.0306 | .5149<br>±.0306 | 3.95 |
+| qwen-3b fp16 | 0.5 | 2 | scored | .6231<br>±.0297 | .5746<br>±.0303 | .5485<br>±.0305 | .5410<br>±.0305 | 3.95 |
 | qwen-3b fp16 | 2.0 | 2 | scored | .6157<br>±.0298 | .5410<br>±.0305 | .5224<br>±.0306 | .5075<br>±.0306 | 4.10 |
-| qwen-3b fp16 | 8.0 | — | inqueue | — | — | — | — | — |
-| qwen-7b gptq-int4 | 0.1 | — | inqueue | — | — | — | — | — |
-| qwen-7b gptq-int4 | 0.5 | — | inqueue | — | — | — | — | — |
+| qwen-3b fp16 | 8.0 | 2 | scored | .6530<br>±.0291 | .5672<br>±.0303 | .5784<br>±.0302 | .5560<br>±.0304 | 4.08 |
+| qwen-7b gptq-int4 | 0.1 | 2 | scored | .7127<br>±.0277 | .6157<br>±.0298 | .6082<br>±.0299 | .5933<br>±.0301 | 3.41 |
+| qwen-7b gptq-int4 | 0.5 | 2 | scored | .7313<br>±.0271 | .6007<br>±.0300 | .5597<br>±.0304 | .5560<br>±.0304 | 3.50 |
 | qwen-7b gptq-int4 | 2.0 | 2 | scored | .7164<br>±.0276 | .6157<br>±.0298 | .5858<br>±.0301 | .5746<br>±.0303 | 3.43 |
-| qwen-7b gptq-int4 | 8.0 | — | inqueue | — | — | — | — | — |
-| qwen-math-1.5b fp16 | 0.1 | — | inqueue | — | — | — | — | — |
-| qwen-math-1.5b fp16 | 0.5 | — | inqueue | — | — | — | — | — |
+| qwen-7b gptq-int4 | 8.0 | 2 | scored | .7276<br>±.0272 | .5933<br>±.0301 | .5821<br>±.0302 | .5933<br>±.0301 | 3.43 |
+| qwen-math-1.5b fp16 | 0.1 | 2 | scored | .6157<br>±.0298 | .5448<br>±.0305 | .5373<br>±.0305 | .5224<br>±.0306 | 3.24 |
+| qwen-math-1.5b fp16 | 0.5 | 2 | scored | .6343<br>±.0295 | .5672<br>±.0303 | .5485<br>±.0305 | .5373<br>±.0305 | 3.24 |
 | qwen-math-1.5b fp16 | 2.0 | 2 | scored | .6493<br>±.0292 | .5784<br>±.0302 | .5672<br>±.0303 | .5522<br>±.0304 | 3.25 |
-| qwen-math-1.5b fp16 | 8.0 | — | inqueue | — | — | — | — | — |
+| qwen-math-1.5b fp16 | 8.0 | 2 | scored | .6306<br>±.0295 | .5299<br>±.0305 | .5261<br>±.0306 | .5149<br>±.0306 | 3.28 |
 
-> **Analysis.** 8/20 scored (2026-07-23): the llama-1b row is
-> complete plus the reused kube_c=2.0 column. First per-model
-> read (llama-1b): **no optimum** — pass@gb spans .3060–.3172
-> (well under 1 SEM) across an 80× kube_c range; naive is
-> byte-identical (.2612–.2649, a one-question spread) and
-> wei/maj drift up ~.02 with c (< 1 SEM). c=8.0 does NOT
-> over-explore for llama-1b (.3097 ≈ row mean) — the
-> AZ-style bonus-swamping concern does not materialize at this
-> budget. Same conclusion as the v02 alpha × kube_c sweep below
-> (llama-3b, also flat): at b=80/level-5 the llama searches are
-> value-noise-dominated, and the exploration scale is
-> second-order. Whether that holds for the stronger qwens — the
-> optimum-shift question this table was built for — still needs
-> the 7 inqueue cells.
-> **Limitations / follow-up:** ledger
-> orchestration/ledgers/prm800k-level5.yaml, feeds
-> `level5-kube-bl-v01-kubec-sweep-qwen`. 7 cells inqueue
-> (qwen-3b c8.0, qwen-7b + qwen-math sweeps); 5 cells failed
-> (llama-3b c0.1/c0.5/c8.0, qwen-3b c0.1/c0.5) — died to the
-> 2026-07-22 results-disk-full incident; disk moved to /groups
-> 2026-07-23 so a requeue is safe once Tuan approves.
+> **Analysis.** 20/20 scored (2026-07-23) — the sweep is
+> complete. **Every row is flat.** Across an 80× `kube_c` range
+> (0.1 → 8.0), no model shows a monotone trend and no row's
+> spread reaches 2 SEM:
+>
+> | model | pass@gb range | spread | in SEMs | argmax c |
+> |---|---|---|---|---|
+> | llama-1b | .3060–.3172 | .011 | 0.40 | 0.5 |
+> | llama-3b | .4813–.5149 | .034 | 1.10 | 0.1 |
+> | qwen-3b | .6007–.6530 | .052 | 1.77 | 8.0 |
+> | qwen-7b gptq | .7127–.7313 | .019 | 0.68 | 0.5 |
+> | qwen-math-1.5b | .6157–.6493 | .034 | 1.14 | 2.0 |
+>
+> Two features mark this as noise rather than weak structure:
+> **no row is monotone** in `kube_c`, and the `argmax` lands on
+> a *different* c in four of the five rows (0.5 / 0.1 / 8.0 /
+> 0.5 / 2.0). A real exploration optimum would sit in a
+> consistent place, or at least drift systematically with model
+> strength; instead it scatters, which is what independent
+> per-cell noise at n=134 × 2 trials produces.
+>
+> This settles the optimum-shift question the table was built
+> for, and settles it more strongly than the two-endpoint
+> bracket could: **the flatness is not a weak-model artifact,
+> nor a mid-range one.** Insensitivity holds uniformly across a
+> .31 → .73 pass@gb span — the weakest and strongest models in
+> the grid, and the three in between, respond identically (i.e.
+> not at all) to the exploration scale. At b=80/level-5 the KUBE
+> bonus coefficient is second-order regardless of model
+> strength; the value/PRM signal, not exploration tuning, is
+> what binds. `c=8.0` never over-explores in any row (≤ .03 from
+> the row mean everywhere), so the upper bracket is not merely
+> tolerable but indistinguishable. Same verdict as the v02
+> alpha × kube_c sweep below (llama-3b), now generalized across
+> the family.
+>
+> The largest single deviation is **qwen-3b c=8.0** (.6530,
+> +.030 over its row mean, ~1.25 SEM) — the only cell that
+> gestures at top-end benefit. It is the expected maximum of 20
+> draws under the flat hypothesis, its row is non-monotone
+> around it (.6007/.6231/.6157/.6530), and the other four rows
+> put c=8.0 within .006 of their means. Treated as noise; worth
+> a second look only if a future qwen-3b sweep reproduces it.
+>
+> **Limitations / follow-up:** 2 trials/cell — SEM ~.03, so
+> effects below ~.06 are invisible here; the claim is "no large
+> effect," not "no effect." All cells relaunched after the
+> 2026-07-22 results-disk-full incident (disk moved to /groups
+> 2026-07-23). Ledger orchestration/ledgers/prm800k-level5.yaml,
+> feeds `level5-kube-bl-v01-kubec-sweep-qwen`. Remaining
+> follow-up: the bl_cnt-v01-vs-KUBE delta per model.
 
 ### kube-mcts-bl-v02
 
@@ -958,17 +992,17 @@ Two activities, two shapes:
 > gamma=1.0/kube_c=2.0 `ugkxb2de`, gamma=1.0/kube_c=0.5 `cs0rfgii`,
 > gamma=0.5/kube_c=0.5 `gthxems1`.
 
-| score_mode | alpha | gamma | kube_c | trials | status | pass@gb | naive@gb | wei@gb | maj@gb | hr/trial |
-|---|---|---|---|---|---|---|---|---|---|---|
-| parent_blend | 1.0 | — | — | 2 | scored | .6381<br>±.0294 | .5485<br>±.0305 | .5112<br>±.0306 | .5224<br>±.0306 | — |
-| parent_blend | 0.8 | — | — | 2 | scored | .6194<br>±.0297 | .5299<br>±.0305 | .5224<br>±.0306 | .5037<br>±.0306 | — |
-| parent_blend | 0.6 | — | — | 2 | scored | .6082<br>±.0299 | .5149<br>±.0306 | .5075<br>±.0306 | .4925<br>±.0306 |  4.20 |
-| path_decay | — | 1.0 | 2.0 | 2 | scored | .6082<br>±.0299 | .5149<br>±.0306 | .4776<br>±.0306 | .4739<br>±.0306 |  3.97 |
-| path_decay | — | 0.8 | 2.0 | 2 | scored | .6157<br>±.0298 | .5261<br>±.0306 | .4925<br>±.0306 | .4701<br>±.0305 |  3.87 |
-| path_decay | — | 0.5 | 2.0 | 2 | scored | .6269<br>±.0296 | .5112<br>±.0306 | .5000<br>±.0306 | .4851<br>±.0306 |  4.14 |
-| path_decay | — | 1.0 | 0.5 | 2 | scored | .6269<br>±.0296 | .5187<br>±.0306 | .4664<br>±.0305 | .4440<br>±.0304 |  3.91 |
-| path_decay | — | 0.8 | 0.5 | 2 | scored | .6269<br>±.0296 | .5261<br>±.0306 | .4813<br>±.0306 | .4813<br>±.0306 | — |
-| path_decay | — | 0.5 | 0.5 | 2 | scored | .6231<br>±.0297 | .5187<br>±.0306 | .4925<br>±.0306 | .4888<br>±.0306 |  3.97 |
+| llm | score_mode | alpha | gamma | kube_c | trials | status | pass@gb | naive@gb | wei@gb | maj@gb | hr/trial |
+|---|---|---|---|---|---|---|---|---|---|---|---|
+| qwen-3b | parent_blend | 1.0 | — | — | 2 | scored | .6381<br>±.0294 | .5485<br>±.0305 | .5112<br>±.0306 | .5224<br>±.0306 | — |
+| qwen-3b | parent_blend | 0.8 | — | — | 2 | scored | .6194<br>±.0297 | .5299<br>±.0305 | .5224<br>±.0306 | .5037<br>±.0306 | — |
+| qwen-3b | parent_blend | 0.6 | — | — | 2 | scored | .6082<br>±.0299 | .5149<br>±.0306 | .5075<br>±.0306 | .4925<br>±.0306 |  4.20 |
+| qwen-3b | path_decay | — | 1.0 | 2.0 | 2 | scored | .6082<br>±.0299 | .5149<br>±.0306 | .4776<br>±.0306 | .4739<br>±.0306 |  3.97 |
+| qwen-3b | path_decay | — | 0.8 | 2.0 | 2 | scored | .6157<br>±.0298 | .5261<br>±.0306 | .4925<br>±.0306 | .4701<br>±.0305 |  3.87 |
+| qwen-3b | path_decay | — | 0.5 | 2.0 | 2 | scored | .6269<br>±.0296 | .5112<br>±.0306 | .5000<br>±.0306 | .4851<br>±.0306 |  4.14 |
+| qwen-3b | path_decay | — | 1.0 | 0.5 | 2 | scored | .6269<br>±.0296 | .5187<br>±.0306 | .4664<br>±.0305 | .4440<br>±.0304 |  3.91 |
+| qwen-3b | path_decay | — | 0.8 | 0.5 | 2 | scored | .6269<br>±.0296 | .5261<br>±.0306 | .4813<br>±.0306 | .4813<br>±.0306 | — |
+| qwen-3b | path_decay | — | 0.5 | 0.5 | 2 | scored | .6231<br>±.0297 | .5187<br>±.0306 | .4925<br>±.0306 | .4888<br>±.0306 |  3.97 |
 
 > **Analysis.** All 9 cells scored. `parent_blend, alpha=1.0`
 > (pass@gb .6381 — the v01 control, no blend) is the best arm
@@ -1183,17 +1217,20 @@ Two activities, two shapes:
 > `q45ropnt`, (0.5, 2.0) `w19d5y18`, (0.5, 0.5) `fpit1vuv`,
 > (0.5, 0.1) `eb34obcy`.
 
-| alpha | kube_c | trials | status | pass@gb | naive@gb | wei@gb | maj@gb | hr/trial |
-|---|---|---|---|---|---|---|---|---|
-| 1.0 | 2.0 | 2 | scored | .4851<br>±.0306 | .3881<br>±.0298 | .3881<br>±.0298 | .3731<br>±.0296 | 4.67 |
-| 1.0 | 0.5 | 2 | scored | .5037<br>±.0306 | .4328<br>±.0303 | .4104<br>±.0301 | .3881<br>±.0298 | 4.61 |
-| 1.0 | 0.1 | 2 | scored | .4888<br>±.0306 | .4030<br>±.0300 | .3918<br>±.0299 | .3694<br>±.0295 | 4.75 |
-| 0.8 | 2.0 | — | inqueue | — | — | — | — | — |
-| 0.8 | 0.5 | 2 | scored | .5037<br>±.0306 | .4478<br>±.0304 | .4142<br>±.0301 | .3955<br>±.0299 | 4.62 |
-| 0.8 | 0.1 | 2 | scored | .4776<br>±.0306 | .4179<br>±.0302 | .4179<br>±.0302 | .3993<br>±.0300 | 4.64 |
-| 0.5 | 2.0 | 2 | scored | .4776<br>±.0306 | .4067<br>±.0301 | .3806<br>±.0297 | .3731<br>±.0296 | 4.71 |
-| 0.5 | 0.5 | 2 | scored | .4888<br>±.0306 | .4142<br>±.0301 | .3843<br>±.0298 | .3806<br>±.0297 | 4.58 |
-| 0.5 | 0.1 | 2 | scored | .4963<br>±.0306 | .4030<br>±.0300 | .3993<br>±.0300 | .3955<br>±.0299 | 4.61 |
+| llm | alpha | kube_c | trials | status | pass@gb | naive@gb | wei@gb | maj@gb | hr/trial |
+|---|---|---|---|---|---|---|---|---|---|
+| llama-3b | 1.0 | 2.0 | 2 | scored | .4851<br>±.0306 | .3881<br>±.0298 | .3881<br>±.0298 | .3731<br>±.0296 | 4.67 |
+| llama-3b | 1.0 | 0.5 | 2 | scored | .5037<br>±.0306 | .4328<br>±.0303 | .4104<br>±.0301 | .3881<br>±.0298 | 4.61 |
+| llama-3b | 1.0 | 0.1 | 2 | scored | .4888<br>±.0306 | .4030<br>±.0300 | .3918<br>±.0299 | .3694<br>±.0295 | 4.75 |
+| llama-3b | 0.8 | 2.0 | — | inqueue | — | — | — | — | — |
+| llama-3b | 0.8 | 0.5 | 2 | scored | .5037<br>±.0306 | .4478<br>±.0304 | .4142<br>±.0301 | .3955<br>±.0299 | 4.62 |
+| llama-3b | 0.8 | 0.1 | 2 | scored | .4776<br>±.0306 | .4179<br>±.0302 | .4179<br>±.0302 | .3993<br>±.0300 | 4.64 |
+| llama-3b | 0.5 | 2.0 | 2 | scored | .4776<br>±.0306 | .4067<br>±.0301 | .3806<br>±.0297 | .3731<br>±.0296 | 4.71 |
+| llama-3b | 0.5 | 0.5 | 2 | scored | .4888<br>±.0306 | .4142<br>±.0301 | .3843<br>±.0298 | .3806<br>±.0297 | 4.58 |
+| llama-3b | 0.5 | 0.1 | 2 | scored | .4963<br>±.0306 | .4030<br>±.0300 | .3993<br>±.0300 | .3955<br>±.0299 | 4.61 |
+| llama-3b | 0.0 | 2.0 | 2 | scored | .5000<br>±.0306 | .3657<br>±.0295 | .3433<br>±.0291 | .3284<br>±.0287 | 4.84 |
+| llama-3b | 0.0 | 0.5 | — | running | — | — | — | — | — |
+| llama-3b | 0.0 | 0.1 | — | inqueue | — | — | — | — | — |
 
 > **Analysis.** 8/9 scored (2026-07-23). The grid is FLAT:
 > pass@gb spans .4776–.5037 — under 1 SEM — across a 20× kube_c
@@ -1220,6 +1257,67 @@ Two activities, two shapes:
 > orchestration/ledgers/prm800k-level5.yaml
 > (`kube-bl-v02-l5-ac-sweep-llama3b-*`), feeds
 > `level5-kube-bl-v02-alpha-kubec-sweep-llama3b`.
+
+#### gamma × kube_c joint sweep (qwen-3b, QwenPRM, path_decay)
+<!-- table-id: tbl-46d9c7 -->
+> **Compares:** the `path_decay` score_mode's two knobs jointly
+> — the per-hop value decay `gamma` (rows) against the
+> exploration-bonus coefficient `kube_c` (columns). The
+> path_decay sibling of the alpha × kube_c parent_blend sweep
+> above: same grid shape, the *other* v02 scorer. Reads whether
+> gamma separates once kube_c is swept, and where the g0.5
+> penalty (seen in the score_mode tables) sits across the bonus
+> range.
+>
+> **Fixed:** method=`mcts_bl_kube_v02`, llm=qwen-3b fp16 (native
+> tmpl), **score_mode=path_decay**, kube_schedule=`parent`,
+> kube_affordable=true (default), prm=qwen, agg_strategy=`last`,
+> bs-4, d-20, b=80, prm_batch_size=1, level=5.
+>
+> ⚠️ 6/9 cells scored (2026-07-23) — the kube_c∈{0.5, 2.0}
+> columns are the **exact same runs** as the qwen-3b score_mode
+> sweep (`tbl-dac772`), reused, not re-run. The kube_c=0.1
+> column (3 cells) is net-new. kube_c is NOT numerically
+> comparable to parent_blend's kube_c or to cnt-v02's cpuct
+> (different bonus shapes: AZ form here). gamma has no v01
+> control arm (unlike parent_blend's alpha=1.0).
+>
+> **W&B:** (0.5, 2.0) `69mrzt65`, (0.5, 0.5) `gthxems1`,
+> (0.8, 2.0) `mi5gfiwv`, (0.8, 0.5) `nvcah979`, (1.0, 2.0)
+> `ugkxb2de`, (1.0, 0.5) `cs0rfgii`.
+
+| llm | gamma | kube_c | trials | status | pass@gb | naive@gb | wei@gb | maj@gb | hr/trial |
+|---|---|---|---|---|---|---|---|---|---|
+| qwen-3b | 1.0 | 2.0 | 2 | scored | .6082<br>±.0299 | .5149<br>±.0306 | .4776<br>±.0306 | .4739<br>±.0306 | 3.97 |
+| qwen-3b | 1.0 | 0.5 | 2 | scored | .6269<br>±.0296 | .5187<br>±.0306 | .4664<br>±.0305 | .4440<br>±.0304 | 3.91 |
+| qwen-3b | 1.0 | 0.1 | — | inqueue | — | — | — | — | — |
+| qwen-3b | 0.8 | 2.0 | 2 | scored | .6157<br>±.0298 | .5261<br>±.0306 | .4925<br>±.0306 | .4701<br>±.0305 | 3.87 |
+| qwen-3b | 0.8 | 0.5 | 2 | scored | .6269<br>±.0296 | .5261<br>±.0306 | .4813<br>±.0306 | .4813<br>±.0306 | — |
+| qwen-3b | 0.8 | 0.1 | — | inqueue | — | — | — | — | — |
+| qwen-3b | 0.5 | 2.0 | 2 | scored | .6269<br>±.0296 | .5112<br>±.0306 | .5000<br>±.0306 | .4851<br>±.0306 | 4.14 |
+| qwen-3b | 0.5 | 0.5 | 2 | scored | .6231<br>±.0297 | .5187<br>±.0306 | .4925<br>±.0306 | .4888<br>±.0306 | 3.97 |
+| qwen-3b | 0.5 | 0.1 | — | inqueue | — | — | — | — | — |
+
+> **Analysis.** 6/9 scored (2026-07-23); the kube_c=0.1 column
+> is queued. Early read on the two scored columns: pass@gb is
+> tight (.6082–.6269, within ~1 SEM) — gamma shows no clean
+> main effect on pass@gb, but the deeper metrics hint that
+> **g1.0 (no decay) is weakest on wei/maj** (.4664/.4440 at
+> c0.5; .4776/.4739 at c2.0) while g0.5/g0.8 hold higher
+> (~.48–.50) — consistent with the g0.5-penalty-inverts note
+> from the score_mode tables, here reading as g1.0 doing worse,
+> not better. The kube_c=0.1 column will test whether that
+> ordering holds when exploration is starved. Contrast with the
+> parent_blend sweep above (flat everywhere): path_decay's gamma
+> at least *moves* the tail metrics, so it is the less-dead of
+> the two v02 modes on qwen-3b.
+> **Limitations / follow-up:** 2 trials/cell → SEM ~±.03; the
+> gamma read is on wei/maj only (pass@gb is flat). Single model
+> (qwen-3b); the parent_blend companion is llama-3b, so the two
+> v02-mode tables are not same-model comparable yet. Ledger:
+> orchestration/ledgers/prm800k-level5.yaml
+> (`kube-bl-v02-l5-qwen3b-pd-*` + the net-new
+> `kube-bl-v02-l5-pd-sweep-qwen3b-*`), feeds `tbl-46d9c7`.
 
 ### kdepth-mcts-bl-v01
 
@@ -1298,18 +1396,20 @@ Two activities, two shapes:
 > (default), bs-4, d-20, b=80, prm_batch_size=1, tmpl=model-family
 > default (native for Qwen, custom for Llama).
 >
-> ⚠️ 1/5 cells scored (qwen-math-1.5b); the other 4 planned.
+> ⚠️ 2/5 cells scored (qwen-math-1.5b, qwen-7b gptq-int4); the
+> other 3 planned.
 >
 > **W&B:** qwen-math-1.5b on disk as cfg-ad001285 (scored via
 > prepare_scored_dataset + compute_stats_basics, 2 trials); no
-> W&B run id captured. Others: none yet.
+> W&B run id captured. qwen-7b gptq-int4 `e0p7hhug`. Others:
+> none yet.
 
 | llm | trials | status | pass@gb | naive@gb | wei@gb | maj@gb | hr/trial |
 |---|---|---|---|---|---|---|---|
 | llama-1b fp16 | 2 | scored | .3022<br>±.0281 | .2500<br>±.0265 | .2276<br>±.0257 | .2127<br>±.0250 | 3.22 |
 | llama-3b fp16 | 2 | scored | .5000<br>±.0306 | .4104<br>±.0301 | .4030<br>±.0300 | .3955<br>±.0299 | 4.78 |
 | qwen-3b fp16 | 2 | scored | .6082<br>±.0299 | .5224<br>±.0306 | .5224<br>±.0306 | .5075<br>±.0306 | 3.92 |
-| qwen-7b gptq-int4 | — | failed | — | — | — | — | — |
+| qwen-7b gptq-int4 | 2 | scored | .7052<br>±.0279 | .6007<br>±.0300 | .5522<br>±.0304 | .5448<br>±.0305 | 3.18 |
 | qwen-math-1.5b fp16 | 2 | scored | .6455<br>±.0293 | .5522<br>±.0304 | .5485<br>±.0305 | .5336<br>±.0305 |  3.26 |
 
 > **Analysis.** One data point so far (qwen-math-1.5b): pass@gb
@@ -1353,14 +1453,14 @@ Two activities, two shapes:
 >
 > **W&B:** none yet (no runs exist).
 
-| score_mode | alpha | gamma | trials | status | pass@gb | naive@gb | wei@gb | maj@gb | hr/trial |
-|---|---|---|---|---|---|---|---|---|---|
-| parent_blend | 1.0 | — | — | running | — | — | — | — | — |
-| parent_blend | 0.8 | — | — | running | — | — | — | — | — |
-| parent_blend | 0.6 | — | — | planned | — | — | — | — | — |
-| path_decay | — | 1.0 | — | planned | — | — | — | — | — |
-| path_decay | — | 0.8 | — | planned | — | — | — | — | — |
-| path_decay | — | 0.5 | — | planned | — | — | — | — | — |
+| llm | score_mode | alpha | gamma | trials | status | pass@gb | naive@gb | wei@gb | maj@gb | hr/trial |
+|---|---|---|---|---|---|---|---|---|---|---|
+| qwen-3b | parent_blend | 1.0 | — | — | running | — | — | — | — | — |
+| qwen-3b | parent_blend | 0.8 | — | — | running | — | — | — | — | — |
+| qwen-3b | parent_blend | 0.6 | — | — | planned | — | — | — | — | — |
+| qwen-3b | path_decay | — | 1.0 | — | planned | — | — | — | — | — |
+| qwen-3b | path_decay | — | 0.8 | — | planned | — | — | — | — | — |
+| qwen-3b | path_decay | — | 0.5 | — | planned | — | — | — | — | — |
 
 > **Analysis.** No data yet — nothing to take away. Once filled,
 > the key reads are: (1) whether any path-aware value beats the
@@ -1469,7 +1569,7 @@ Two activities, two shapes:
 > qwen-3b feeds both this table and the score_mode-sweep table.
 
 ### sem-mcts-bl-v01
-could you help me add these sem-mcts-bl-v01 experiments to queue, all priority=1 except priority for llama-1b and qweb-3b=1.7
+
 #### model family, size, quantization comparison (QwenPRM, lam=0.01/ds_alpha=10)
 <!-- table-id: tbl-c43f9b -->
 > **Compares:** model family, size, and quantization jointly —
@@ -1505,6 +1605,63 @@ could you help me add these sem-mcts-bl-v01 experiments to queue, all priority=1
 > search.lam=0.01 search.ds_alpha=10` (NOTE: `lam=0.01`, not the
 > level-4 bl_sem_v01 tables' `lam=0.1` — this table is anchored
 > to the sem_v02 `lam=0.01` checkpoint, see Compares).
+
+#### model family comparison (QwenPRM, lam=0.01/ds_alpha=10, max_model_len=6000)
+<!-- table-id: tbl-9f7cda -->
+> **Compares:** the SAME 5-model/quant grid as the
+> `max_model_len=5000` table directly above (`tbl-c43f9b`), but
+> with the vLLM context window raised to **6000** tokens
+> (`llm.max_model_len=6000`). The question is diagnostic, not a
+> new tuning axis: does the extra headroom let the sem-bl-v01
+> **llama** cells run to completion? At the default 5000 those
+> deep-search trajectories can overflow the context and the run
+> raises (the same class of failure tracked in
+> `docs/decisions/context-length-overflow-guard.md`). A
+> row-by-row read against the 5000 table tells whether 6000 is
+> enough headroom, and — where both complete — whether the
+> larger window shifts pass@gb at all.
+>
+> **Fixed:** method=`mcts_bl_sem_v01` (PRM embeds — prm=qwen for
+> both scoring AND diversity via `embeds_source=prm`, the schema
+> default), prm=qwen, agg_strategy=`last`, bs-4, d-20, b=80,
+> prm_batch_size=1, `ds_alpha_schedule=global`, `cov_update=sm`,
+> `embeds_proj=sparse512` (`embeds_dim=512`), ds_beta=1.0,
+> tmpl=model-family default (native for Qwen, custom for Llama).
+> **lam=0.01, ds_alpha=10** (`w_eff = ds_alpha/sqrt(lam) = 100`).
+> **`max_model_len=6000`** (this table's whole point; hash-
+> relevant, so every cell is a distinct config from the 5000
+> table — nothing is shared).
+>
+> ⚠️ Entirely planned — no runs yet. `max_model_len` is a
+> hash group field, so these 5 cells have brand-new config
+> hashes and result dirs; they do NOT resume the 5000 runs.
+> Higher context costs more KV-cache VRAM per step (watch the
+> gptq/7b cell at `gpu_memory_utilization=0.3`).
+>
+> **W&B:** none yet (no runs exist).
+
+| llm | trials | status | pass@gb | naive@gb | wei@gb | maj@gb | hr/trial |
+|---|---|---|---|---|---|---|---|
+| llama-1b fp16 | — | failed | — | — | — | — | — |
+| llama-3b fp16 | — | running | — | — | — | — | — |
+| qwen-3b fp16 | — | running | — | — | — | — | — |
+| qwen-7b gptq-int4 | — | running | — | — | — | — | — |
+| qwen-math-1.5b fp16 | — | inqueue | — | — | — | — | — |
+
+> **Analysis.** No data yet — nothing to take away. Once filled,
+> the key read is the two **llama** rows: if they go from
+> `failed`/overflow at 5000 to `scored` here, 6000 is sufficient
+> headroom and the llama cells of `tbl-c43f9b` should be re-run
+> at 6000 (or the overflow guard landed). For the three qwen
+> rows (which already complete at 5000), the read is whether the
+> larger window moves pass@gb beyond noise — expected ~flat if
+> those trajectories rarely hit the 5000 cap.
+> **Limitations / follow-up:** 5 cells planned — see
+> orchestration/ledgers/prm800k-level5.yaml group `sem-mcts-bl`,
+> feeds `tbl-9f7cda`. Launch per cell:
+> `generate_mcts_sem.py --config-name mcts_bl_sem_v01_prm800k
+> llm=<model> prm=qwen_prm data.level=5 search.lam=0.01
+> search.ds_alpha=10 llm.max_model_len=6000`.
 
 #### model family, size, quantization comparison (QwenPRM, lam=0.01/ds_alpha=1)
 <!-- table-id: tbl-369e81 -->
