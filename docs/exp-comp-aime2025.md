@@ -802,9 +802,9 @@ Two activities, two shapes:
 > `mcts_bl_cnt_v02`), prm=qwen, agg_strategy=
 > `last`, kube_c=2.0, kube_schedule=parent, kube_affordable=true,
 > bs-4, d-20, b=80, prm_batch_size=1, tmpl=model-family default
-> (native for Qwen, custom for Llama). See
+> (native for Qwen, custom for Llama), **run.num_trials=4**. See
 > `docs/decisions/bl-kube-bonus-schedule.md` for the schedule choice.
->, **run.num_trials=4**.
+
 | llm | trials | status | pass@gb | naive@gb | wei@gb | maj@gb | hr/trial |
 |---|---|---|---|---|---|---|---|
 | llama-1b fp16 | 4 | scored | .0083<br>±.0083 | .0000<br>±.0000 | .0000<br>±.0000 | .0000<br>±.0000 | 0.8 |
@@ -996,7 +996,7 @@ Two activities, two shapes:
 > default (native for Qwen, custom for Llama), **run.num_trials=4**.
 >
 > ⚠️ Entirely planned — no AIME2025 runs yet.
->, **run.num_trials=4**.
+
 | llm | trials | status | pass@gb | naive@gb | wei@gb | maj@gb | hr/trial |
 |---|---|---|---|---|---|---|---|
 | llama-1b fp16 | — | planned | — | — | — | — | — |
@@ -1033,7 +1033,7 @@ Two activities, two shapes:
 > default (native for Qwen, custom for Llama), **run.num_trials=4**.
 >
 > ⚠️ Entirely planned — no AIME2025 runs yet.
->, **run.num_trials=4**.
+
 | llm | trials | status | pass@gb | naive@gb | wei@gb | maj@gb | hr/trial |
 |---|---|---|---|---|---|---|---|
 | llama-1b fp16 | — | planned | — | — | — | — | — |
