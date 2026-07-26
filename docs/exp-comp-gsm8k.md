@@ -8,6 +8,48 @@ Central tracker for every MCTS search experiment (cnt / sem /
 cnt-bl / sem-bl) on GSM8K — per-algorithm tuning tables grouped
 by gen_budget, plus a cross-algorithm best-config summary.
 
+
+<!-- toc:begin -- generated, do not hand-edit -->
+## Contents
+
+- [**Purpose**](#purpose)
+- [**Structure and use**](#structure-and-use)
+- [**Cross-algorithm summary (QwenPRM)**](#cross-algorithm-summary-qwenprm)
+- [**Tuning tables \[gen_budget=80\]**](#tuning-tables-gen_budget80)
+  - [cnt-mcts](#cnt-mcts)
+    - [model family, size, quantization comparison (RLHFlowPRM)](#model-family-size-quantization-comparison-rlhflowprm) · `tbl-266060`
+    - [model family, size, quantization comparison (QwenPRM)](#model-family-size-quantization-comparison-qwenprm) · `tbl-ed4d78`
+    - [agg_strategy comparison (qwen-3b, qwen-math-1.5b)](#agg_strategy-comparison-qwen-3b-qwen-math-15b) · `tbl-829582`
+  - [sem-mcts-v02](#sem-mcts-v02)
+    - [embeds_strategy × scope sweep (QwenPRM)](#embeds_strategy-scope-sweep-qwenprm) · `tbl-08eeb2`
+    - [lam / ds_alpha joint sweep (llama-1b)](#lam-ds_alpha-joint-sweep-llama-1b) · `tbl-e948d5`
+    - [lam / ds_alpha joint sweep (llama-3b)](#lam-ds_alpha-joint-sweep-llama-3b) · `tbl-652a5a`
+    - [lam / ds_alpha joint sweep (qwen-math-1.5b)](#lam-ds_alpha-joint-sweep-qwen-math-15b) · `tbl-f04cff`
+    - [lam / ds_alpha joint sweep (qwen-7b gptq-int4)](#lam-ds_alpha-joint-sweep-qwen-7b-gptq-int4) · `tbl-0f10a8`
+    - [model family, size, quantization comparison (RLHFlowPRM)](#model-family-size-quantization-comparison-rlhflowprm-1) · `tbl-daaba3`
+    - [model family, size, quantization comparison (QwenPRM)](#model-family-size-quantization-comparison-qwenprm-1) · `tbl-4afa3e`
+    - [agg_strategy comparison (qwen-3b, qwen-math-1.5b)](#agg_strategy-comparison-qwen-3b-qwen-math-15b-1) · `tbl-f65982`
+    - [agg_strategy comparison (qwen-3b, qwen-math-1.5b, lam=0.1, w_eff=10)](#agg_strategy-comparison-qwen-3b-qwen-math-15b-lam01-w_eff10) · `tbl-2812aa`
+    - [agg_strategy comparison (qwen-3b, qwen-math-1.5b, lam=0.1, w_eff=100)](#agg_strategy-comparison-qwen-3b-qwen-math-15b-lam01-w_eff100) · `tbl-307c26`
+  - [cnt-mcts-bl-v01](#cnt-mcts-bl-v01)
+    - [model family, size, quantization comparison (QwenPRM)](#model-family-size-quantization-comparison-qwenprm-2) · `tbl-7e915f`
+  - [kube-mcts-bl-v01](#kube-mcts-bl-v01)
+    - [model family, size, quantization comparison (QwenPRM)](#model-family-size-quantization-comparison-qwenprm-3) · `tbl-7cd83c`
+  - [kdepth-mcts-bl-v01](#kdepth-mcts-bl-v01)
+    - [model family, size, quantization comparison (QwenPRM)](#model-family-size-quantization-comparison-qwenprm-4) · `tbl-ca40d6`
+  - [sem-mcts-bl](#sem-mcts-bl)
+    - [model family, size, quantization comparison (QwenPRM, w_eff=100)](#model-family-size-quantization-comparison-qwenprm-w_eff100) · `tbl-24aacc`
+    - [model family, size, quantization comparison (QwenPRM, w_eff=10)](#model-family-size-quantization-comparison-qwenprm-w_eff10) · `tbl-2f7693`
+- [**Tuning tables \[gen_budget=160, 320, …\] *(future)***](#tuning-tables-gen_budget160-320-future)
+  - [cnt-mcts](#cnt-mcts-1)
+    - [model family comparison (b=320, QwenPRM)](#model-family-comparison-b320-qwenprm) · `tbl-5f6056`
+  - [sem-mcts-v02](#sem-mcts-v02-1)
+    - [model family comparison (b=320, QwenPRM, lam=0.1, w_eff=10)](#model-family-comparison-b320-qwenprm-lam01-w_eff10) · `tbl-1142d9`
+    - [model family comparison (b=320, QwenPRM, lam=0.1, w_eff=100)](#model-family-comparison-b320-qwenprm-lam01-w_eff100) · `tbl-8bd25e`
+
+*21 tables. Regenerate with `python scripts/gen_toc.py`.*
+<!-- toc:end -->
+
 ## Purpose
 The four algorithm tracks (`llm-reasoning-mcts-exp`,
 `llm-reasoning-mcts-bl-exp`, + the `sem` variants) own
@@ -214,7 +256,7 @@ Two activities, two shapes:
 | qwen-math-1.5b | qwen | prod | — | planned | — | — | — | — | — |
 | qwen-math-1.5b | qwen | last | — | planned | — | — | — | — | — |
 
-### sem-mcts (v02)
+### sem-mcts-v02
 
 #### embeds_strategy × scope sweep (QwenPRM)
 <!-- table-id: tbl-08eeb2 -->
@@ -779,7 +821,7 @@ Two activities, two shapes:
 > **Limitations / follow-up:** entire table planned; launch is
 > the level-5 counterpart's command with `data=gsm8k`.
 
-### sem-mcts
+### sem-mcts-v02
 
 #### model family comparison (b=320, QwenPRM, lam=0.1, w_eff=10)
 <!-- table-id: tbl-1142d9 -->

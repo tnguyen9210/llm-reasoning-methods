@@ -3,7 +3,11 @@
 #   docs/exp-comp-prm800k-level5.md
 #
 # status: planned | inqueue | running | scored | failed
-#   planned  -> table cell exists, not queued yet
+#   planned  -> NOT USED: an authored-but-unqueued table cell
+#               has NO entry here at all (Tuan's rule,
+#               2026-07-24). Doc rows may read `planned`;
+#               a ledger entry is born when he queues it,
+#               i.e. at `inqueue`.
 #   inqueue  -> Tuan queued it (priority: lower drains first)
 #   running  -> launched (launch: block records where)
 #   scored   -> stats computed AND written into the doc
@@ -2975,9 +2979,10 @@
     search.score_mode: parent_blend
     search.alpha: 0.8
   trials: 2
-  feeds: []
+  feeds:
+  - tbl-c85c90  # L5 kube-v02 model family, parent_blend a=0.8
   group: kube-mcts-bl-v02
-  status: running
+  status: scored
   priority: 2
   expected_hr: 8
   launch:
@@ -2999,9 +3004,11 @@
     search.score_mode: parent_blend
     search.alpha: 0.8
   trials: 2
-  feeds: []
+  feeds:
+  - tbl-c85c90  # L5 kube-v02 model family, parent_blend a=0.8
+  - tbl-a9e420  # (alpha=0.8, kube_c=2.0) cell of the joint sweep
   group: kube-mcts-bl-v02
-  status: running
+  status: scored
   priority: 2
   expected_hr: 8
   launch:
@@ -3023,9 +3030,10 @@
     search.score_mode: parent_blend
     search.alpha: 0.8
   trials: 2
-  feeds: []
+  feeds:
+  - tbl-c85c90  # L5 kube-v02 model family, parent_blend a=0.8
   group: kube-mcts-bl-v02
-  status: running
+  status: scored
   priority: 2
   expected_hr: 8
   launch:
@@ -3049,9 +3057,10 @@
     search.score_mode: parent_blend
     search.alpha: 0.8
   trials: 2
-  feeds: []
+  feeds:
+  - tbl-c85c90  # L5 kube-v02 model family, parent_blend a=0.8
   group: kube-mcts-bl-v02
-  status: running
+  status: scored
   priority: 2
   expected_hr: 8
   launch:
@@ -3715,7 +3724,7 @@
   feeds:
   - tbl-a9e420  # alpha x kube_c joint sweep
   group: kube-mcts-bl-v02
-  status: running
+  status: scored
   priority: 2
   expected_hr: 8
   launch:
@@ -3743,14 +3752,16 @@
   - tbl-a9e420  # alpha x kube_c joint sweep
   group: kube-mcts-bl-v02
   status: running
-  priority: 2
+  priority: 1
   expected_hr: 8
   launch:
-    job_id: 23335888
+    job_id: 23419813
     node: r5u09n1
-    pid: 1715474
-    at: 2026-07-24 02:12
+    pid: 2620024
+    at: 2026-07-26 10:55
   note: ac-sweep a0.0 c0.1 llama3b (full-parent extreme)
+  history:
+  - {at: '2026-07-26 10:00', job_id: 23335888, outcome: stalled, trials_done: 0}
 # --- planned: kube_c=0.1 column for the path_decay gamma x kube_c
 #     joint sweep (tbl-46d9c7); the kube_c{0.5,2.0} columns reuse
 #     the qwen-3b score-mode-sweep runs (already scored).
@@ -3773,11 +3784,13 @@
   priority: 2
   expected_hr: 8
   launch:
-    job_id: 23356396
-    node: r5u11n1
-    pid: 1715475
-    at: 2026-07-24 02:12
+    job_id: 23419815
+    node: r5u09n1
+    pid: 2620025
+    at: 2026-07-26 10:55
   note: pd-sweep g0.5 c0.1 qwen3b (starved-exploration column)
+  history:
+  - {at: '2026-07-26 10:00', job_id: 23356396, outcome: stalled, trials_done: 1}
 - id: kube-bl-v02-l5-pd-sweep-qwen3b-g0.8-c0.1
   launcher: generate_mcts_bl_cnt.py
   hash: "de1871e9"
@@ -3797,11 +3810,13 @@
   priority: 2
   expected_hr: 8
   launch:
-    job_id: 23335893
-    node: r5u11n1
-    pid: 1717485
-    at: 2026-07-24 02:42
+    job_id: 23376655
+    node: r5u33n1
+    pid: 2620026
+    at: 2026-07-26 10:55
   note: pd-sweep g0.8 c0.1 qwen3b (starved-exploration column)
+  history:
+  - {at: '2026-07-26 10:00', job_id: 23335893, outcome: stalled, trials_done: 1}
 - id: kube-bl-v02-l5-pd-sweep-qwen3b-g1.0-c0.1
   launcher: generate_mcts_bl_cnt.py
   hash: "485be8e5"
@@ -3817,7 +3832,7 @@
   feeds:
   - tbl-46d9c7  # gamma x kube_c joint sweep (path_decay)
   group: kube-mcts-bl-v02
-  status: running
+  status: inqueue
   priority: 2
   expected_hr: 8
   launch:
@@ -3826,6 +3841,86 @@
     pid: 1717486
     at: 2026-07-24 02:42
   note: pd-sweep g1.0 c0.1 qwen3b (starved-exploration column)
+  history:
+  - {at: '2026-07-26 10:00', job_id: 23335889, outcome: stalled, trials_done: 1}
+# --- planned: gamma=0 low-anchor row for the gamma x kube_c
+#     joint sweep (tbl-46d9c7). gamma=0 reads only the leaf's own
+#     q (no path decay); brackets the gamma axis at its bottom.
+#     All 3 net-new configs (no existing run to reuse at gamma=0).
+- id: kube-bl-v02-l5-pd-sweep-qwen3b-g0.0-c2.0
+  launcher: generate_mcts_bl_cnt.py
+  hash: "068e02d1"
+  config_root: mcts_bl_kube_v02_prm800k
+  overrides:
+    llm: qwen_3b
+    prm: qwen_prm
+    data.level: 5
+    search.score_mode: path_decay
+    search.gamma: 0.0
+    search.kube_c: 2.0
+  trials: 2
+  feeds:
+  - tbl-46d9c7  # gamma x kube_c joint sweep (path_decay)
+  group: kube-mcts-bl-v02
+  status: inqueue
+  priority: 3
+  expected_hr: 8
+  launch:
+    job_id: 23372304
+    node: r5u09n1
+    pid: 1733602
+    at: 2026-07-24 05:42
+  note: pd-sweep g0.0 c2.0 qwen3b (gamma=0 low-anchor)
+  history:
+  - {at: '2026-07-26 10:00', job_id: 23372304, outcome: stalled, trials_done: 0}
+- id: kube-bl-v02-l5-pd-sweep-qwen3b-g0.0-c0.5
+  launcher: generate_mcts_bl_cnt.py
+  hash: "013968ed"
+  config_root: mcts_bl_kube_v02_prm800k
+  overrides:
+    llm: qwen_3b
+    prm: qwen_prm
+    data.level: 5
+    search.score_mode: path_decay
+    search.gamma: 0.0
+    search.kube_c: 0.5
+  trials: 2
+  feeds:
+  - tbl-46d9c7  # gamma x kube_c joint sweep (path_decay)
+  group: kube-mcts-bl-v02
+  status: running
+  priority: 2
+  expected_hr: 8
+  note: pd-sweep g0.0 c0.5 qwen3b (gamma=0 low-anchor)
+  launch:
+    job_id: 23378191
+    node: r5u17n1
+    pid: 2459112
+    at: 2026-07-26 05:46
+- id: kube-bl-v02-l5-pd-sweep-qwen3b-g0.0-c0.1
+  launcher: generate_mcts_bl_cnt.py
+  hash: "923815bc"
+  config_root: mcts_bl_kube_v02_prm800k
+  overrides:
+    llm: qwen_3b
+    prm: qwen_prm
+    data.level: 5
+    search.score_mode: path_decay
+    search.gamma: 0.0
+    search.kube_c: 0.1
+  trials: 2
+  feeds:
+  - tbl-46d9c7  # gamma x kube_c joint sweep (path_decay)
+  group: kube-mcts-bl-v02
+  status: running
+  priority: 2
+  expected_hr: 8
+  note: pd-sweep g0.0 c0.1 qwen3b (gamma=0 low-anchor)
+  launch:
+    job_id: 23372291
+    node: r5u15n1
+    pid: 2459113
+    at: 2026-07-26 05:46
 # --- planned: sem-bl-v01 model-family grid at max_model_len=6000
 #     (tbl-9f7cda); diagnostic twin of the max_model_len=5000
 #     table (tbl-c43f9b). Tests whether the extra context headroom
@@ -3873,7 +3968,7 @@
   feeds:
   - tbl-9f7cda  # model family at max_model_len=6000
   group: sem-mcts-bl
-  status: running
+  status: failed
   priority: 1
   expected_hr: 8
   launch:
@@ -3882,6 +3977,8 @@
     pid: 1918150
     at: 2026-07-23 16:34
   note: sem-bl-v01 mml6000 llama3b (context-headroom test)
+  history:
+  - {at: '2026-07-26 10:00', job_id: 23346204, outcome: stalled, trials_done: 0}
 - id: sem-bl-v01-l5-mml6000-qwen3b
   launcher: generate_mcts_sem.py
   hash: "073989d8"
@@ -3897,7 +3994,7 @@
   feeds:
   - tbl-9f7cda  # model family at max_model_len=6000
   group: sem-mcts-bl
-  status: running
+  status: scored
   priority: 1
   expected_hr: 8
   launch:
@@ -3925,11 +4022,13 @@
   priority: 1
   expected_hr: 8
   launch:
-    job_id: 23344632
+    job_id: 23378154
     node: r5u15n1
-    pid: 1918152
-    at: 2026-07-23 16:34
+    pid: 2550289
+    at: 2026-07-26 10:30
   note: sem-bl-v01 mml6000 qwen7bgptq (context-headroom test)
+  history:
+  - {at: '2026-07-26 10:00', job_id: 23344632, outcome: stalled, trials_done: 1}
 - id: sem-bl-v01-l5-mml6000-qwenmath15b
   launcher: generate_mcts_sem.py
   hash: "cecc0783"
@@ -3945,7 +4044,7 @@
   feeds:
   - tbl-9f7cda  # model family at max_model_len=6000
   group: sem-mcts-bl
-  status: running
+  status: failed
   priority: 1
   expected_hr: 8
   launch:
@@ -3953,4 +4052,469 @@
     node: r5u11n1
     pid: 1715473
     at: 2026-07-24 02:12
+  history:
+    - {at: 2026-07-24 04:52, job_id: 23335887, outcome: missing,
+       trials_done: 0}  # launch died at startup; no dir, no wandb
   note: sem-bl-v01 mml6000 qwenmath15b (context-headroom test)
+# --- cnt-mcts model-family at b=320, QwenPRM (tbl-867868). L5
+#     counterpart of the L4 b=320 qwen table; 5 models. Queued
+#     priority 1 (Tuan 2026-07-24).
+- id: cnt-mcts-l5-b320-qwen-llama1b
+  launcher: generate_mcts_cnt.py
+  hash: "aa8a9f61"
+  config_root: mcts_cnt_prm800k
+  overrides:
+    llm: llama_1b
+    prm: qwen_prm
+    search.gen_budget: 320
+    data.level: 5
+    llm.max_model_len: 6000
+  trials: 2
+  feeds:
+  - tbl-867868  # cnt-mcts model-family b=320 QwenPRM
+  group: cnt-mcts
+  status: scored
+  priority: 1
+  expected_hr: 13
+  launch:
+    job_id: 23335887
+    node: r5u11n1
+    pid: 1932476
+    at: 2026-07-24 08:43
+  note: b=320 qwen-PRM llama-1b fp16 (L5); mml6000 (b=320 overflows 5000-token window)
+- id: cnt-mcts-l5-b320-qwen-llama3b
+  launcher: generate_mcts_cnt.py
+  hash: "60a76833"
+  config_root: mcts_cnt_prm800k
+  overrides:
+    llm: llama_3b
+    prm: qwen_prm
+    search.gen_budget: 320
+    data.level: 5
+    llm.max_model_len: 6000
+  trials: 2
+  feeds:
+  - tbl-867868  # cnt-mcts model-family b=320 QwenPRM
+  group: cnt-mcts
+  status: scored
+  priority: 1
+  expected_hr: 22
+  launch:
+    job_id: 23372291
+    node: r5u15n1
+    pid: 4057593
+    at: 2026-07-24 08:43
+  note: b=320 qwen-PRM llama-3b fp16 (L5); mml6000 (b=320 overflows 5000-token window)
+- id: cnt-mcts-l5-b320-qwen-qwen3b
+  launcher: generate_mcts_cnt.py
+  hash: "8f005d00"
+  config_root: mcts_cnt_prm800k
+  overrides:
+    llm: qwen_3b
+    prm: qwen_prm
+    search.gen_budget: 320
+    data.level: 5
+    llm.max_model_len: 6000
+  trials: 2
+  feeds:
+  - tbl-867868  # cnt-mcts model-family b=320 QwenPRM
+  group: cnt-mcts
+  status: scored
+  priority: 1
+  expected_hr: 20
+  launch:
+    job_id: 23378154
+    node: r5u15n1
+    pid: 4057594
+    at: 2026-07-24 08:43
+  note: b=320 qwen-PRM qwen-3b fp16 (L5); mml6000 (b=320 overflows 5000-token window)
+- id: cnt-mcts-l5-b320-qwen-qwen7bgptq
+  launcher: generate_mcts_cnt.py
+  hash: "e6911b92"
+  config_root: mcts_cnt_prm800k
+  overrides:
+    llm: qwen_7b_gptq_int4
+    prm: qwen_prm
+    search.gen_budget: 320
+    data.level: 5
+    llm.max_model_len: 6000
+  trials: 2
+  feeds:
+  - tbl-867868  # cnt-mcts model-family b=320 QwenPRM
+  group: cnt-mcts
+  status: scored
+  priority: 1
+  expected_hr: 18
+  launch:
+    job_id: 23378153
+    node: r5u39n1
+    pid: 1937944
+    at: 2026-07-24 08:43
+  note: b=320 qwen-PRM qwen-7b gptq-int4 (L5); mml6000 (b=320 overflows 5000-token window)
+- id: cnt-mcts-l5-b320-qwen-qwenmath15b
+  launcher: generate_mcts_cnt.py
+  hash: "e181e082"
+  config_root: mcts_cnt_prm800k
+  overrides:
+    llm: qwen_math_1_5b
+    prm: qwen_prm
+    search.gen_budget: 320
+    data.level: 5
+    llm.max_model_len: 6000
+  trials: 2
+  feeds:
+  - tbl-867868  # cnt-mcts model-family b=320 QwenPRM
+  group: cnt-mcts
+  status: failed
+  priority: 1
+  expected_hr: 14
+  note: b=320 qwen-PRM qwen-math-1.5b fp16 (L5). BLOCKED - qwen-math-1.5b
+    max_position_embeddings=4096, so mml6000 is rejected by vLLM at startup;
+    but b=320 needs >5000 context. This model cannot do b=320 at L5 with the
+    current prompt. Needs a decision (drop the cell, or shorten prompts).
+# --- sem-mcts model-family at b=320, QwenPRM, lam=0.01
+#     (tbl-900e87 ds_alpha=1/w_eff=10, tbl-01c466
+#     ds_alpha=10/w_eff=100). Queued priority 1 (Tuan 2026-07-24).
+- id: sem-mcts-l5-b320-ds1-llama1b
+  launcher: generate_mcts_sem.py
+  hash: "5cd13f38"
+  config_root: mcts_sem_v02_prm800k
+  overrides:
+    llm: llama_1b
+    prm: qwen_prm
+    search.lam: 0.01
+    search.ds_alpha: 1.0
+    search.gen_budget: 320
+    data.level: 5
+    llm.max_model_len: 6000
+  trials: 2
+  feeds:
+  - tbl-900e87  # sem-mcts model-family b=320 QwenPRM lam=0.01 w_eff=10
+  group: sem-mcts
+  status: scored
+  priority: 1
+  expected_hr: 20
+  launch:
+    job_id: 23372304
+    node: r5u09n1
+    pid: 2800279
+    at: 2026-07-24 08:43
+  note: b=320 sem qwen-PRM llama-1b fp16 lam=0.01 ds_alpha=1.0 (w_eff=10, L5)
+- id: sem-mcts-l5-b320-ds1-llama3b
+  launcher: generate_mcts_sem.py
+  hash: "bfba27a1"
+  config_root: mcts_sem_v02_prm800k
+  overrides:
+    llm: llama_3b
+    prm: qwen_prm
+    search.lam: 0.01
+    search.ds_alpha: 1.0
+    search.gen_budget: 320
+    data.level: 5
+    llm.max_model_len: 6000
+  trials: 2
+  feeds:
+  - tbl-900e87  # sem-mcts model-family b=320 QwenPRM lam=0.01 w_eff=10
+  group: sem-mcts
+  status: running
+  priority: 1
+  expected_hr: 28
+  launch:
+    job_id: 23419789
+    node: r5u17n1
+    pid: 2550287
+    at: 2026-07-26 10:30
+  note: b=320 sem qwen-PRM llama-3b fp16 lam=0.01 ds_alpha=1.0 (w_eff=10, L5);
+    mml6000 (b=320 overflows 5000-token window)
+  history:
+  - {at: '2026-07-26 10:00', job_id: 23346204, outcome: stalled, trials_done: 1}
+- id: sem-mcts-l5-b320-ds1-qwen3b
+  launcher: generate_mcts_sem.py
+  hash: "5d79c436"
+  config_root: mcts_sem_v02_prm800k
+  overrides:
+    llm: qwen_3b
+    prm: qwen_prm
+    search.lam: 0.01
+    search.ds_alpha: 1.0
+    search.gen_budget: 320
+    data.level: 5
+    llm.max_model_len: 6000
+  trials: 2
+  feeds:
+  - tbl-900e87  # sem-mcts model-family b=320 QwenPRM lam=0.01 w_eff=10
+  group: sem-mcts
+  status: scored
+  priority: 1
+  expected_hr: 25
+  launch:
+    job_id: 23335893
+    node: r5u11n1
+    pid: 1932860
+    at: 2026-07-24 08:45
+  note: b=320 sem qwen-PRM qwen-3b fp16 lam=0.01 ds_alpha=1.0 (w_eff=10, L5);
+    mml6000 (b=320 overflows 5000-token window)
+- id: sem-mcts-l5-b320-ds1-qwen7bgptq
+  launcher: generate_mcts_sem.py
+  hash: "f73f428e"
+  config_root: mcts_sem_v02_prm800k
+  overrides:
+    llm: qwen_7b_gptq_int4
+    prm: qwen_prm
+    search.lam: 0.01
+    search.ds_alpha: 1.0
+    search.gen_budget: 320
+    data.level: 5
+    llm.max_model_len: 6000
+  trials: 2
+  feeds:
+  - tbl-900e87  # sem-mcts model-family b=320 QwenPRM lam=0.01 w_eff=10
+  group: sem-mcts
+  status: scored
+  priority: 1
+  expected_hr: 22
+  launch:
+    job_id: 23335889
+    node: r5u11n1
+    pid: 1932859
+    at: 2026-07-24 08:45
+  note: b=320 sem qwen-PRM qwen-7b gptq-int4 lam=0.01 ds_alpha=1.0 (w_eff=10, L5);
+    mml6000 (b=320 overflows 5000-token window)
+- id: sem-mcts-l5-b320-ds1-qwenmath15b
+  launcher: generate_mcts_sem.py
+  hash: "34568bad"
+  config_root: mcts_sem_v02_prm800k
+  overrides:
+    llm: qwen_math_1_5b
+    prm: qwen_prm
+    search.lam: 0.01
+    search.ds_alpha: 1.0
+    search.gen_budget: 320
+    data.level: 5
+    llm.max_model_len: 6000
+  trials: 2
+  feeds:
+  - tbl-900e87  # sem-mcts model-family b=320 QwenPRM lam=0.01 w_eff=10
+  group: sem-mcts
+  status: failed
+  priority: 1
+  expected_hr: 20
+  note: b=320 sem qwen-PRM qwen-math-1.5b fp16 lam=0.01 ds_alpha=1.0 (w_eff=10, L5).
+    BLOCKED - qwen-math-1.5b max_position_embeddings=4096, so mml6000 is rejected
+    by vLLM at startup; but b=320 needs >5000 context. This model cannot do b=320
+    at L5 with the current prompt. Needs a decision (drop the cell, or shorten
+    prompts).
+- id: sem-mcts-l5-b320-ds10-llama1b
+  launcher: generate_mcts_sem.py
+  hash: "9b8ba3c8"
+  config_root: mcts_sem_v02_prm800k
+  overrides:
+    llm: llama_1b
+    prm: qwen_prm
+    search.lam: 0.01
+    search.ds_alpha: 10
+    search.gen_budget: 320
+    data.level: 5
+    llm.max_model_len: 6000
+  trials: 2
+  feeds:
+  - tbl-01c466  # sem-mcts model-family b=320 QwenPRM lam=0.01 w_eff=100
+  group: sem-mcts
+  status: scored
+  priority: 1
+  expected_hr: 20
+  launch:
+    job_id: 23356396
+    node: r5u11n1
+    pid: 1932861
+    at: 2026-07-24 08:45
+  note: b=320 sem qwen-PRM llama-1b fp16 lam=0.01 ds_alpha=10 (w_eff=100, L5);
+    mml6000 (b=320 overflows 5000-token window)
+- id: sem-mcts-l5-b320-ds10-llama3b
+  launcher: generate_mcts_sem.py
+  hash: "9d7da776"
+  config_root: mcts_sem_v02_prm800k
+  overrides:
+    llm: llama_3b
+    prm: qwen_prm
+    search.lam: 0.01
+    search.ds_alpha: 10
+    search.gen_budget: 320
+    data.level: 5
+    llm.max_model_len: 6000
+  trials: 2
+  feeds:
+  - tbl-01c466  # sem-mcts model-family b=320 QwenPRM lam=0.01 w_eff=100
+  group: sem-mcts
+  status: running
+  priority: 1
+  expected_hr: 28
+  launch:
+    job_id: 23373790
+    node: r5u03n1
+    pid: 2211993
+    at: 2026-07-24 08:45
+  note: b=320 sem qwen-PRM llama-3b fp16 lam=0.01 ds_alpha=10 (w_eff=100, L5);
+    mml6000 (b=320 overflows 5000-token window)
+- id: sem-mcts-l5-b320-ds10-qwen3b
+  launcher: generate_mcts_sem.py
+  hash: "832cde92"
+  config_root: mcts_sem_v02_prm800k
+  overrides:
+    llm: qwen_3b
+    prm: qwen_prm
+    search.lam: 0.01
+    search.ds_alpha: 10
+    search.gen_budget: 320
+    data.level: 5
+    llm.max_model_len: 6000
+  trials: 2
+  feeds:
+  - tbl-01c466  # sem-mcts model-family b=320 QwenPRM lam=0.01 w_eff=100
+  group: sem-mcts
+  status: scored
+  priority: 1
+  expected_hr: 25
+  launch:
+    job_id: 23374214
+    node: r5u03n1
+    pid: 2211995
+    at: 2026-07-24 08:45
+  note: b=320 sem qwen-PRM qwen-3b fp16 lam=0.01 ds_alpha=10 (w_eff=100, L5);
+    mml6000 (b=320 overflows 5000-token window)
+- id: sem-mcts-l5-b320-ds10-qwen7bgptq
+  launcher: generate_mcts_sem.py
+  hash: "991e187c"
+  config_root: mcts_sem_v02_prm800k
+  overrides:
+    llm: qwen_7b_gptq_int4
+    prm: qwen_prm
+    search.lam: 0.01
+    search.ds_alpha: 10
+    search.gen_budget: 320
+    data.level: 5
+    llm.max_model_len: 6000
+  trials: 2
+  feeds:
+  - tbl-01c466  # sem-mcts model-family b=320 QwenPRM lam=0.01 w_eff=100
+  group: sem-mcts
+  status: scored
+  priority: 1
+  expected_hr: 22
+  launch:
+    job_id: 23378191
+    node: r5u17n1
+    pid: 2223514
+    at: 2026-07-24 09:30
+  note: b=320 sem qwen-PRM qwen-7b gptq-int4 lam=0.01 ds_alpha=10 (w_eff=100, L5);
+    mml6000 (b=320 overflows 5000-token window)
+- id: sem-mcts-l5-b320-ds10-qwenmath15b
+  launcher: generate_mcts_sem.py
+  hash: "8c3bd283"
+  config_root: mcts_sem_v02_prm800k
+  overrides:
+    llm: qwen_math_1_5b
+    prm: qwen_prm
+    search.lam: 0.01
+    search.ds_alpha: 10
+    search.gen_budget: 320
+    data.level: 5
+    llm.max_model_len: 6000
+  trials: 2
+  feeds:
+  - tbl-01c466  # sem-mcts model-family b=320 QwenPRM lam=0.01 w_eff=100
+  group: sem-mcts
+  status: failed
+  priority: 1
+  expected_hr: 20
+  note: b=320 sem qwen-PRM qwen-math-1.5b fp16 lam=0.01 ds_alpha=10 (w_eff=100, L5).
+    BLOCKED - qwen-math-1.5b max_position_embeddings=4096, so mml6000 is rejected
+    by vLLM at startup; but b=320 needs >5000 context. This model cannot do b=320
+    at L5 with the current prompt. Needs a decision (drop the cell, or shorten
+    prompts).
+# --- added 2026-07-24: the "can qwen-math do level-5 b=320 at its
+# own 4096 window?" experiment. The mml6000 siblings of these three
+# cells are marked failed (vLLM rejects 6000 for qwen-math), but
+# whether 4096 suffices at level 5 is unresolved -- a 2026-07-24
+# attempt (W&B 08m3c7r9) ran ~1h25m with no context error before an
+# unrelated external kill. 4096 is qwen-math's config default, so
+# stating it explicitly does not change the hash; it records intent.
+# Rationale + evidence:
+#   docs/findings/coding-findings/qwen-math-4096-context-cap.md
+- id: cnt-mcts-l5-b320-qwen-qwenmath15b-mml4096
+  launcher: generate_mcts_cnt.py
+  hash: d87ee48f
+  config_root: mcts_cnt_prm800k
+  overrides:
+    llm: qwen_math_1_5b
+    prm: qwen_prm
+    search.gen_budget: 320
+    data.level: 5
+    llm.max_model_len: 4096
+  trials: 2
+  feeds:
+  - tbl-867868  # cnt-mcts model-family b=320 QwenPRM
+  group: cnt-mcts
+  status: running
+  priority: 1.6
+  expected_hr: 14
+  launch:
+    job_id: 23335887
+    node: r5u11n1
+    pid: 2376510
+    at: 2026-07-25 09:43
+  note: b=320 qwen-PRM qwen-math-1.5b at its architectural 4096 window (L5).
+    Diagnostic - decides whether qwen-math can join the b=320 tables at 4096
+    instead of being marked n/a. Supersedes the mml6000 attempt (failed).
+- id: sem-mcts-l5-b320-ds1-qwenmath15b-mml4096
+  launcher: generate_mcts_sem.py
+  hash: "06533f44"
+  config_root: mcts_sem_v02_prm800k
+  overrides:
+    llm: qwen_math_1_5b
+    prm: qwen_prm
+    search.lam: 0.01
+    search.ds_alpha: 1.0
+    search.gen_budget: 320
+    data.level: 5
+    llm.max_model_len: 4096
+  trials: 2
+  feeds:
+  - tbl-900e87  # sem-mcts model-family b=320 QwenPRM lam=0.01 w_eff=10
+  group: sem-mcts
+  status: running
+  priority: 1.6
+  expected_hr: 20
+  launch:
+    job_id: 23335889
+    node: r5u11n1
+    pid: 2412909
+    at: 2026-07-25 15:43
+  note: b=320 sem qwen-PRM qwen-math-1.5b lam=0.01 ds_alpha=1.0 (w_eff=10, L5)
+    at its architectural 4096 window. Diagnostic - see cnt sibling.
+- id: sem-mcts-l5-b320-ds10-qwenmath15b-mml4096
+  launcher: generate_mcts_sem.py
+  hash: "9748b857"
+  config_root: mcts_sem_v02_prm800k
+  overrides:
+    llm: qwen_math_1_5b
+    prm: qwen_prm
+    search.lam: 0.01
+    search.ds_alpha: 10
+    search.gen_budget: 320
+    data.level: 5
+    llm.max_model_len: 4096
+  trials: 2
+  feeds:
+  - tbl-01c466  # sem-mcts model-family b=320 QwenPRM lam=0.01 w_eff=100
+  group: sem-mcts
+  status: running
+  priority: 1.6
+  expected_hr: 20
+  launch:
+    job_id: 23378153
+    node: r5u39n1
+    pid: 2415298
+    at: 2026-07-25 16:13
+  note: b=320 sem qwen-PRM qwen-math-1.5b lam=0.01 ds_alpha=10 (w_eff=100, L5)
+    at its architectural 4096 window. Diagnostic - see cnt sibling.

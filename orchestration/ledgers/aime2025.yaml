@@ -3,7 +3,11 @@
 #   docs/exp-comp-aime2025.md
 #
 # status: planned | inqueue | running | scored | failed
-#   planned  -> table cell exists, not queued yet
+#   planned  -> NOT USED: an authored-but-unqueued table cell
+#               has NO entry here at all (Tuan's rule,
+#               2026-07-24). Doc rows may read `planned`;
+#               a ledger entry is born when he queues it,
+#               i.e. at `inqueue`.
 #   inqueue  -> Tuan queued it (priority: lower drains first)
 #   running  -> launched (launch: block records where)
 #   scored   -> stats computed AND written into the doc
@@ -632,3 +636,446 @@
     at: 2026-07-15 22:06
   note: migrated from queue (id sem-mcts-aime2025-qwenmath15b-centermode-local-lam0.01-weff100);
     feeds pending
+- id: kube-bl-v01-aime2025-llama1b
+  launcher: generate_mcts_bl_cnt.py
+  hash: 44c5cce3
+  config_root: mcts_bl_kube_v01_prm800k
+  overrides:
+    llm: llama_1b
+    prm: qwen_prm
+    data: aime2025
+  trials: 4
+  feeds:
+  - tbl-d34700
+  - tbl-9d3944  # kube_c=2.0 column of the sweep reuses this run
+  group: kube-mcts-bl-v01
+  status: scored
+  priority: 1.5
+  expected_hr: 4
+  launch:
+    job_id: 23335888
+    node: r5u09n1
+    pid: 2223520
+    at: 2026-07-24 09:30
+  note: kube-v01 model family AIME2025, kube_c=2.0 defaults
+- id: kube-bl-v01-aime2025-llama3b
+  launcher: generate_mcts_bl_cnt.py
+  hash: da544a31
+  config_root: mcts_bl_kube_v01_prm800k
+  overrides:
+    llm: llama_3b
+    prm: qwen_prm
+    data: aime2025
+  trials: 4
+  feeds:
+  - tbl-d34700
+  - tbl-9d3944  # kube_c=2.0 column of the sweep reuses this run
+  group: kube-mcts-bl-v01
+  status: scored
+  priority: 1.5
+  expected_hr: 6
+  launch:
+    job_id: 23346202
+    node: r5u33n1
+    pid: 2226515
+    at: 2026-07-24 09:43
+  note: kube-v01 model family AIME2025, kube_c=2.0 defaults
+- id: kube-bl-v01-aime2025-qwen3b
+  launcher: generate_mcts_bl_cnt.py
+  hash: 5c2c5991
+  config_root: mcts_bl_kube_v01_prm800k
+  overrides:
+    llm: qwen_3b
+    prm: qwen_prm
+    data: aime2025
+  trials: 4
+  feeds:
+  - tbl-d34700
+  - tbl-9d3944  # kube_c=2.0 column of the sweep reuses this run
+  group: kube-mcts-bl-v01
+  status: scored
+  priority: 1.5
+  expected_hr: 5
+  launch:
+    job_id: 23378151
+    node: r5u39n1
+    pid: 2226521
+    at: 2026-07-24 09:43
+  note: kube-v01 model family AIME2025, kube_c=2.0 defaults
+- id: kube-bl-v01-aime2025-qwen7bgptq
+  launcher: generate_mcts_bl_cnt.py
+  hash: 257439e0
+  config_root: mcts_bl_kube_v01_prm800k
+  overrides:
+    llm: qwen_7b_gptq_int4
+    prm: qwen_prm
+    data: aime2025
+  trials: 4
+  feeds:
+  - tbl-d34700
+  - tbl-9d3944  # kube_c=2.0 column of the sweep reuses this run
+  group: kube-mcts-bl-v01
+  status: running
+  priority: 1
+  expected_hr: 5
+  launch:
+    job_id: 23374214
+    node: r5u03n1
+    pid: 2528102
+    at: 2026-07-26 10:25
+  note: kube-v01 model family AIME2025, kube_c=2.0 defaults. Earlier 09:43 launch
+    failed on MIG A100 23378067 (vLLM rejects MIG UUID); relaunched on V100.
+  history:
+  - {at: '2026-07-26 10:00', job_id: 23376607, outcome: stalled, trials_done: 1}
+- id: kube-bl-v01-aime2025-qwenmath15b
+  launcher: generate_mcts_bl_cnt.py
+  hash: bf3920d1
+  config_root: mcts_bl_kube_v01_prm800k
+  overrides:
+    llm: qwen_math_1_5b
+    prm: qwen_prm
+    data: aime2025
+  trials: 4
+  feeds:
+  - tbl-d34700
+  - tbl-9d3944  # kube_c=2.0 column of the sweep reuses this run
+  group: kube-mcts-bl-v01
+  status: scored
+  priority: 1.5
+  expected_hr: 4
+  launch:
+    job_id: 23335888
+    node: r5u09n1
+    pid: 2260021
+    at: 2026-07-24 13:14
+  note: kube-v01 model family AIME2025, kube_c=2.0 defaults
+- id: kube-bl-v01-aime2025-llama1b-c0.1
+  launcher: generate_mcts_bl_cnt.py
+  hash: "2ccc6b95"
+  config_root: mcts_bl_kube_v01_prm800k
+  overrides:
+    llm: llama_1b
+    prm: qwen_prm
+    data: aime2025
+    search.kube_c: 0.1
+  trials: 4
+  feeds:
+  - tbl-9d3944
+  group: kube-mcts-bl-v01
+  status: scored
+  priority: 1.5
+  expected_hr: 4
+  launch:
+    job_id: 23335888
+    node: r5u09n1
+    pid: 2276996
+    at: 2026-07-24 17:51
+  note: kube-v01 kube_c sweep AIME2025
+- id: kube-bl-v01-aime2025-llama1b-c0.5
+  launcher: generate_mcts_bl_cnt.py
+  hash: "246f2a97"
+  config_root: mcts_bl_kube_v01_prm800k
+  overrides:
+    llm: llama_1b
+    prm: qwen_prm
+    data: aime2025
+    search.kube_c: 0.5
+  trials: 4
+  feeds:
+  - tbl-9d3944
+  group: kube-mcts-bl-v01
+  status: scored
+  priority: 1.5
+  expected_hr: 4
+  launch:
+    job_id: 23346202
+    node: r5u33n1
+    pid: 2276997
+    at: 2026-07-24 17:51
+  note: kube-v01 kube_c sweep AIME2025
+- id: kube-bl-v01-aime2025-llama1b-c8.0
+  launcher: generate_mcts_bl_cnt.py
+  hash: "1794e32c"
+  config_root: mcts_bl_kube_v01_prm800k
+  overrides:
+    llm: llama_1b
+    prm: qwen_prm
+    data: aime2025
+    search.kube_c: 8.0
+  trials: 4
+  feeds:
+  - tbl-9d3944
+  group: kube-mcts-bl-v01
+  status: scored
+  priority: 1.5
+  expected_hr: 4
+  launch:
+    job_id: 23376655
+    node: r5u33n1
+    pid: 2276998
+    at: 2026-07-24 17:51
+  note: kube-v01 kube_c sweep AIME2025
+- id: kube-bl-v01-aime2025-llama3b-c0.1
+  launcher: generate_mcts_bl_cnt.py
+  hash: "243addc2"
+  config_root: mcts_bl_kube_v01_prm800k
+  overrides:
+    llm: llama_3b
+    prm: qwen_prm
+    data: aime2025
+    search.kube_c: 0.1
+  trials: 4
+  feeds:
+  - tbl-9d3944
+  group: kube-mcts-bl-v01
+  status: scored
+  priority: 1.5
+  expected_hr: 6
+  launch:
+    job_id: 23378088
+    node: r5u37n1
+    pid: 2276999
+    at: 2026-07-24 17:51
+  note: kube-v01 kube_c sweep AIME2025
+- id: kube-bl-v01-aime2025-llama3b-c0.5
+  launcher: generate_mcts_bl_cnt.py
+  hash: "712b840c"
+  config_root: mcts_bl_kube_v01_prm800k
+  overrides:
+    llm: llama_3b
+    prm: qwen_prm
+    data: aime2025
+    search.kube_c: 0.5
+  trials: 4
+  feeds:
+  - tbl-9d3944
+  group: kube-mcts-bl-v01
+  status: scored
+  priority: 1.5
+  expected_hr: 6
+  launch:
+    job_id: 23378090
+    node: r5u35n1
+    pid: 2277000
+    at: 2026-07-24 17:51
+  note: kube-v01 kube_c sweep AIME2025
+- id: kube-bl-v01-aime2025-llama3b-c8.0
+  launcher: generate_mcts_bl_cnt.py
+  hash: "71fd5545"
+  config_root: mcts_bl_kube_v01_prm800k
+  overrides:
+    llm: llama_3b
+    prm: qwen_prm
+    data: aime2025
+    search.kube_c: 8.0
+  trials: 4
+  feeds:
+  - tbl-9d3944
+  group: kube-mcts-bl-v01
+  status: scored
+  priority: 1.5
+  expected_hr: 6
+  launch:
+    job_id: 23378151
+    node: r5u39n1
+    pid: 2277001
+    at: 2026-07-24 17:51
+  note: kube-v01 kube_c sweep AIME2025
+- id: kube-bl-v01-aime2025-qwen3b-c0.1
+  launcher: generate_mcts_bl_cnt.py
+  hash: "bcbd114a"
+  config_root: mcts_bl_kube_v01_prm800k
+  overrides:
+    llm: qwen_3b
+    prm: qwen_prm
+    data: aime2025
+    search.kube_c: 0.1
+  trials: 4
+  feeds:
+  - tbl-9d3944
+  group: kube-mcts-bl-v01
+  status: scored
+  priority: 1.5
+  expected_hr: 5
+  launch:
+    job_id: 23378201
+    node: r5u35n1
+    pid: 2277002
+    at: 2026-07-24 17:51
+  note: kube-v01 kube_c sweep AIME2025
+- id: kube-bl-v01-aime2025-qwen3b-c0.5
+  launcher: generate_mcts_bl_cnt.py
+  hash: "e5ce2977"
+  config_root: mcts_bl_kube_v01_prm800k
+  overrides:
+    llm: qwen_3b
+    prm: qwen_prm
+    data: aime2025
+    search.kube_c: 0.5
+  trials: 4
+  feeds:
+  - tbl-9d3944
+  group: kube-mcts-bl-v01
+  status: scored
+  priority: 1.5
+  expected_hr: 5
+  launch:
+    job_id: 23378203
+    node: r5u35n1
+    pid: 2277003
+    at: 2026-07-24 17:51
+  note: kube-v01 kube_c sweep AIME2025
+- id: kube-bl-v01-aime2025-qwen3b-c8.0
+  launcher: generate_mcts_bl_cnt.py
+  hash: "f84f3f3e"
+  config_root: mcts_bl_kube_v01_prm800k
+  overrides:
+    llm: qwen_3b
+    prm: qwen_prm
+    data: aime2025
+    search.kube_c: 8.0
+  trials: 4
+  feeds:
+  - tbl-9d3944
+  group: kube-mcts-bl-v01
+  status: scored
+  priority: 1.5
+  expected_hr: 5
+  launch:
+    job_id: 23378204
+    node: r5u35n1
+    pid: 2277004
+    at: 2026-07-24 17:51
+  note: kube-v01 kube_c sweep AIME2025
+- id: kube-bl-v01-aime2025-qwen7bgptq-c0.1
+  launcher: generate_mcts_bl_cnt.py
+  hash: "70810336"
+  config_root: mcts_bl_kube_v01_prm800k
+  overrides:
+    llm: qwen_7b_gptq_int4
+    prm: qwen_prm
+    data: aime2025
+    search.kube_c: 0.1
+  trials: 4
+  feeds:
+  - tbl-9d3944
+  group: kube-mcts-bl-v01
+  status: scored
+  priority: 1.5
+  expected_hr: 5
+  launch:
+    job_id: 23346202
+    node: r5u33n1
+    pid: 2316151
+    at: 2026-07-24 23:13
+  note: kube-v01 kube_c sweep AIME2025
+- id: kube-bl-v01-aime2025-qwen7bgptq-c0.5
+  launcher: generate_mcts_bl_cnt.py
+  hash: "8764c039"
+  config_root: mcts_bl_kube_v01_prm800k
+  overrides:
+    llm: qwen_7b_gptq_int4
+    prm: qwen_prm
+    data: aime2025
+    search.kube_c: 0.5
+  trials: 4
+  feeds:
+  - tbl-9d3944
+  group: kube-mcts-bl-v01
+  status: scored
+  priority: 1.5
+  expected_hr: 5
+  launch:
+    job_id: 23376655
+    node: r5u33n1
+    pid: 2316152
+    at: 2026-07-24 23:13
+  note: kube-v01 kube_c sweep AIME2025
+- id: kube-bl-v01-aime2025-qwen7bgptq-c8.0
+  launcher: generate_mcts_bl_cnt.py
+  hash: "394ed8b5"
+  config_root: mcts_bl_kube_v01_prm800k
+  overrides:
+    llm: qwen_7b_gptq_int4
+    prm: qwen_prm
+    data: aime2025
+    search.kube_c: 8.0
+  trials: 4
+  feeds:
+  - tbl-9d3944
+  group: kube-mcts-bl-v01
+  status: scored
+  priority: 1.5
+  expected_hr: 5
+  launch:
+    job_id: 23378151
+    node: r5u39n1
+    pid: 2316153
+    at: 2026-07-24 23:13
+  note: kube-v01 kube_c sweep AIME2025
+- id: kube-bl-v01-aime2025-qwenmath15b-c0.1
+  launcher: generate_mcts_bl_cnt.py
+  hash: "b5a66226"
+  config_root: mcts_bl_kube_v01_prm800k
+  overrides:
+    llm: qwen_math_1_5b
+    prm: qwen_prm
+    data: aime2025
+    search.kube_c: 0.1
+  trials: 4
+  feeds:
+  - tbl-9d3944
+  group: kube-mcts-bl-v01
+  status: scored
+  priority: 1.5
+  expected_hr: 4
+  note: kube-v01 kube_c sweep AIME2025
+  launch:
+    job_id: 23376655
+    node: r5u33n1
+    pid: 2346471
+    at: 2026-07-25 03:43
+- id: kube-bl-v01-aime2025-qwenmath15b-c0.5
+  launcher: generate_mcts_bl_cnt.py
+  hash: "efbd8750"
+  config_root: mcts_bl_kube_v01_prm800k
+  overrides:
+    llm: qwen_math_1_5b
+    prm: qwen_prm
+    data: aime2025
+    search.kube_c: 0.5
+  trials: 4
+  feeds:
+  - tbl-9d3944
+  group: kube-mcts-bl-v01
+  status: scored
+  priority: 1.5
+  expected_hr: 4
+  note: kube-v01 kube_c sweep AIME2025
+  launch:
+    job_id: 23346202
+    node: r5u33n1
+    pid: 2348897
+    at: 2026-07-25 04:12
+- id: kube-bl-v01-aime2025-qwenmath15b-c8.0
+  launcher: generate_mcts_bl_cnt.py
+  hash: "d9c69c16"
+  config_root: mcts_bl_kube_v01_prm800k
+  overrides:
+    llm: qwen_math_1_5b
+    prm: qwen_prm
+    data: aime2025
+    search.kube_c: 8.0
+  trials: 4
+  feeds:
+  - tbl-9d3944
+  group: kube-mcts-bl-v01
+  status: scored
+  priority: 1.5
+  expected_hr: 4
+  note: kube-v01 kube_c sweep AIME2025
+  launch:
+    job_id: 23378151
+    node: r5u39n1
+    pid: 2348898
+    at: 2026-07-25 04:12

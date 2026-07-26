@@ -3,7 +3,11 @@
 #   docs/exp-comp-gsm8k.md
 #
 # status: planned | inqueue | running | scored | failed
-#   planned  -> table cell exists, not queued yet
+#   planned  -> NOT USED: an authored-but-unqueued table cell
+#               has NO entry here at all (Tuan's rule,
+#               2026-07-24). Doc rows may read `planned`;
+#               a ledger entry is born when he queues it,
+#               i.e. at `inqueue`.
 #   inqueue  -> Tuan queued it (priority: lower drains first)
 #   running  -> launched (launch: block records where)
 #   scored   -> stats computed AND written into the doc

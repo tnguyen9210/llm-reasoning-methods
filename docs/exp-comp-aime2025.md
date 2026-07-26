@@ -10,6 +10,68 @@ Central tracker for every MCTS search experiment (cnt / sem /
 cnt-bl / sem-bl) on AIME2025 — per-algorithm tuning tables grouped
 by gen_budget, plus a cross-algorithm best-config summary.
 
+
+<!-- toc:begin -- generated, do not hand-edit -->
+## Contents
+
+- [**Purpose**](#purpose)
+- [**Structure and use**](#structure-and-use)
+- [**Cross-algorithm summary (QwenPRM)**](#cross-algorithm-summary-qwenprm)
+- [**Tuning tables \[gen_budget=80\]**](#tuning-tables-gen_budget80)
+  - [cnt-mcts](#cnt-mcts)
+    - [model family, size, quantization comparison (RLHFlowPRM)](#model-family-size-quantization-comparison-rlhflowprm) · `tbl-161a03`
+    - [model family, size, quantization comparison (QwenPRM)](#model-family-size-quantization-comparison-qwenprm) · `tbl-e742a7`
+    - [agg_strategy comparison (qwen-3b, qwen-math-1.5b)](#agg_strategy-comparison-qwen-3b-qwen-math-15b) · `tbl-6dad4f`
+  - [sem-mcts-v02](#sem-mcts-v02)
+    - [embeds_strategy × scope sweep (QwenPRM)](#embeds_strategy-scope-sweep-qwenprm) · `tbl-0c55e1`
+    - [lam / ds_alpha joint sweep (llama-1b)](#lam-ds_alpha-joint-sweep-llama-1b) · `tbl-b1a6d9`
+    - [lam / ds_alpha joint sweep (llama-3b)](#lam-ds_alpha-joint-sweep-llama-3b) · `tbl-d0ed2a`
+    - [lam / ds_alpha joint sweep (qwen-math-1.5b)](#lam-ds_alpha-joint-sweep-qwen-math-15b) · `tbl-8bf48f`
+    - [lam / ds_alpha joint sweep (qwen-7b gptq-int4)](#lam-ds_alpha-joint-sweep-qwen-7b-gptq-int4) · `tbl-ba8af1`
+    - [embeds_center_mode comparison (lam=0.01/ds_alpha=1)](#embeds_center_mode-comparison-lam001ds_alpha1) · `tbl-4f8220`
+    - [embeds_center_mode comparison (lam=0.01/ds_alpha=10)](#embeds_center_mode-comparison-lam001ds_alpha10) · `tbl-ddf79e`
+    - [agg_strategy comparison (qwen-3b, qwen-math-1.5b, lam=0.01/ds_alpha=1)](#agg_strategy-comparison-qwen-3b-qwen-math-15b-lam001ds_alpha1) · `tbl-6ef336`
+    - [agg_strategy comparison (qwen-3b, qwen-math-1.5b, lam=0.01/ds_alpha=10)](#agg_strategy-comparison-qwen-3b-qwen-math-15b-lam001ds_alpha10) · `tbl-4498f8`
+    - [model family, size, quantization comparison (QwenPRM, lam=0.01/ds_alpha=1)](#model-family-size-quantization-comparison-qwenprm-lam001ds_alpha1) · `tbl-cfd7cf`
+    - [model family, size, quantization comparison (QwenPRM, lam=0.01/ds_alpha=10)](#model-family-size-quantization-comparison-qwenprm-lam001ds_alpha10) · `tbl-878af9`
+  - [cnt-mcts-bl-v01](#cnt-mcts-bl-v01)
+    - [model family, size, quantization comparison (QwenPRM)](#model-family-size-quantization-comparison-qwenprm-1) · `tbl-c7dd39`
+  - [cnt-mcts-bl-v02](#cnt-mcts-bl-v02)
+    - [score_mode sweep: parent_blend (alpha) vs. path_decay (gamma × cpuct) (qwen-3b, QwenPRM)](#score_mode-sweep-parent_blend-alpha-vs-path_decay-gamma-cpuct-qwen-3b-qwenprm) · `tbl-40a360`
+  - [kube-mcts-bl-v01](#kube-mcts-bl-v01)
+    - [model family, size, quantization comparison (QwenPRM)](#model-family-size-quantization-comparison-qwenprm-2) · `tbl-d34700`
+    - [kube_c sweep × model family (QwenPRM)](#kube_c-sweep-model-family-qwenprm) · `tbl-9d3944`
+  - [kube-mcts-bl-v02](#kube-mcts-bl-v02)
+    - [score_mode sweep: parent_blend (alpha) vs. path_decay (gamma × kube_c) (qwen-3b, QwenPRM)](#score_mode-sweep-parent_blend-alpha-vs-path_decay-gamma-kube_c-qwen-3b-qwenprm) · `tbl-bdeba2`
+    - [model family, size, quantization comparison (QwenPRM, parent_blend/alpha=0.8)](#model-family-size-quantization-comparison-qwenprm-parent_blendalpha08) · `tbl-bda3a8`
+    - [model family, size, quantization comparison (QwenPRM, parent_blend/alpha=1.0)](#model-family-size-quantization-comparison-qwenprm-parent_blendalpha10) · `tbl-b3d812`
+    - [model family, size, quantization comparison (QwenPRM, parent_blend/alpha=0.0)](#model-family-size-quantization-comparison-qwenprm-parent_blendalpha00) · `tbl-7c1779`
+    - [alpha × kube_c joint sweep (llama-3b, QwenPRM, parent_blend)](#alpha-kube_c-joint-sweep-llama-3b-qwenprm-parent_blend) · `tbl-86e0b6`
+    - [gamma × kube_c joint sweep (qwen-3b, QwenPRM, path_decay)](#gamma-kube_c-joint-sweep-qwen-3b-qwenprm-path_decay) · `tbl-434915`
+  - [kdepth-mcts-bl-v01](#kdepth-mcts-bl-v01)
+    - [model family, size, quantization comparison (QwenPRM)](#model-family-size-quantization-comparison-qwenprm-3) · `tbl-acca74`
+    - [model family, size, quantization comparison (QwenPRM, depth_alpha=0.5)](#model-family-size-quantization-comparison-qwenprm-depth_alpha05) · `tbl-b429d0`
+    - [model family, size, quantization comparison (QwenPRM, depth_alpha=2.0)](#model-family-size-quantization-comparison-qwenprm-depth_alpha20) · `tbl-3fbc68`
+  - [kdepth-mcts-bl-v02](#kdepth-mcts-bl-v02)
+    - [score_mode sweep: parent_blend (alpha) vs. path_decay (gamma) (qwen-3b, QwenPRM)](#score_mode-sweep-parent_blend-alpha-vs-path_decay-gamma-qwen-3b-qwenprm) · `tbl-59ccb9`
+    - [model family, size, quantization comparison (QwenPRM, parent_blend/alpha=0.8)](#model-family-size-quantization-comparison-qwenprm-parent_blendalpha08-1) · `tbl-d81f40`
+    - [model family, size, quantization comparison (QwenPRM, parent_blend/alpha=1.0)](#model-family-size-quantization-comparison-qwenprm-parent_blendalpha10-1) · `tbl-288646`
+  - [sem-mcts-bl-v01](#sem-mcts-bl-v01)
+    - [model family, size, quantization comparison (QwenPRM, lam=0.01/ds_alpha=10)](#model-family-size-quantization-comparison-qwenprm-lam001ds_alpha10-1) · `tbl-065cf2`
+    - [model family comparison (QwenPRM, lam=0.01/ds_alpha=10, max_model_len=6000)](#model-family-comparison-qwenprm-lam001ds_alpha10-max_model_len6000) · `tbl-df1eeb`
+    - [model family, size, quantization comparison (QwenPRM, lam=0.01/ds_alpha=1)](#model-family-size-quantization-comparison-qwenprm-lam001ds_alpha1-1) · `tbl-b3f9bb`
+  - [sem-mcts-bl-v02](#sem-mcts-bl-v02)
+    - [model family, size, quantization comparison (QwenPRM, parent_blend/alpha=1.0, lam=0.01/ds_alpha=10)](#model-family-size-quantization-comparison-qwenprm-parent_blendalpha10-lam001ds_alpha10) · `tbl-396f65`
+- [**Tuning tables \[gen_budget=160, 320, …\] *(future)***](#tuning-tables-gen_budget160-320-future)
+  - [cnt-mcts](#cnt-mcts-1)
+    - [model family comparison (b=320, QwenPRM)](#model-family-comparison-b320-qwenprm) · `tbl-f31bf0`
+  - [sem-mcts-v02](#sem-mcts-v02-1)
+    - [model family comparison (b=320, QwenPRM, lam=0.1, w_eff=10)](#model-family-comparison-b320-qwenprm-lam01-w_eff10) · `tbl-b2d2d2`
+    - [model family comparison (b=320, QwenPRM, lam=0.1, w_eff=100)](#model-family-comparison-b320-qwenprm-lam01-w_eff100) · `tbl-9d68e9`
+
+*37 tables. Regenerate with `python scripts/gen_toc.py`.*
+<!-- toc:end -->
+
 ## Purpose
 The four algorithm tracks (`llm-reasoning-mcts-exp`,
 `llm-reasoning-mcts-bl-exp`, + the `sem` variants) own
@@ -217,7 +279,7 @@ Two activities, two shapes:
 | qwen-math-1.5b | qwen | prod | — | planned | — | — | — | — | — |
 | qwen-math-1.5b | qwen | last | — | planned | — | — | — | — | — |
 
-### sem-mcts (v02)
+### sem-mcts-v02
 
 #### embeds_strategy × scope sweep (QwenPRM)
 <!-- table-id: tbl-0c55e1 -->
@@ -663,7 +725,7 @@ Two activities, two shapes:
 ### cnt-mcts-bl-v01
 
 #### model family, size, quantization comparison (QwenPRM)
-<!-- table-id: tbl-6f004c -->
+<!-- table-id: tbl-c7dd39 -->
 > **Compares:** model family, size, and quantization jointly —
 > same 5-model/quant grid as cnt-mcts's equivalent
 > table above, so a direct bl_cnt-vs-cnt read is possible once
@@ -671,8 +733,7 @@ Two activities, two shapes:
 >
 > **Fixed:** method=`mcts_bl_cnt_v01`, prm=qwen, agg_strategy=
 > `last`, cpuct=2.0, bs-4, d-20, b=80, prm_batch_size=1,
-> tmpl=model-family default (native for Qwen, custom for Llama),
-> **run.num_trials=4** (see the cnt-mcts tables above).
+> tmpl=model-family default (native for Qwen, custom for Llama), **run.num_trials=4**.
 
 | llm | trials | status | pass@gb | naive@gb | wei@gb | maj@gb | hr/trial |
 |---|---|---|---|---|---|---|---|
@@ -684,12 +745,54 @@ Two activities, two shapes:
 
 > **Analysis.** No AIME2025 data yet — nothing to take away.
 > **Limitations / follow-up:** entire table planned; launch is
-> the GSM8K counterpart's command with `data=aime2025`.
+> the prm800k-level5 counterpart's command with `data=aime2025`.
+
+### cnt-mcts-bl-v02
+
+#### score_mode sweep: parent_blend (alpha) vs. path_decay (gamma × cpuct) (qwen-3b, QwenPRM)
+<!-- table-id: tbl-40a360 -->
+> **Compares:** the two selectable v02 frontier scores head-to-head
+> on one model. parent_blend arms sweep `alpha` (one-hop blend of a
+> leaf's q with its parent's) at the file-default cpuct=2.0;
+> path_decay arms sweep the full `gamma × cpuct` cross. Why cpuct
+> is crossed with gamma rather than held fixed: path_decay's
+> exploration term uses the AlphaZero shape
+> `cpuct·sqrt(N_parent)/(1+N_leaf)` — no log damping, so at the
+> default cpuct=2.0 it can swamp the `q_path` value term (range
+> ~[0,1]) after a few backprops regardless of gamma. A flat gamma
+> effect at cpuct=2.0 alone would be uninterpretable (gamma
+> useless, or drowned out?). The cross separates the two stories:
+> gamma mattering at cpuct=0.5 but not 2.0 confirms
+> scale-domination; gamma inert at both scales is real evidence
+> against full-path value reading. gamma semantics: 1.0 = plain
+> path average, 0.8 = moderate decay, 0.5 = steep/near-local.
+>
+> **Fixed:** method=`mcts_bl_cnt_v02`, llm=qwen-3b fp16 (native
+> tmpl), prm=qwen, agg_strategy=`last`, bs-4, d-20, b=80,
+> prm_batch_size=1, level=5, **run.num_trials=4**.
+>
+> ⚠️ Entirely planned — no AIME2025 runs yet.
+
+| llm | score_mode | alpha | gamma | cpuct | trials | status | pass@gb | naive@gb | wei@gb | maj@gb | hr/trial |
+|---|---|---|---|---|---|---|---|---|---|---|---|
+| qwen-3b | parent_blend | 1.0 | — | 2.0 | — | planned | — | — | — | — | — |
+| qwen-3b | parent_blend | 0.8 | — | 2.0 | — | planned | — | — | — | — | — |
+| qwen-3b | parent_blend | 0.6 | — | 2.0 | — | planned | — | — | — | — | — |
+| qwen-3b | path_decay | — | 1.0 | 2.0 | — | planned | — | — | — | — | — |
+| qwen-3b | path_decay | — | 0.8 | 2.0 | — | planned | — | — | — | — | — |
+| qwen-3b | path_decay | — | 0.5 | 2.0 | — | planned | — | — | — | — | — |
+| qwen-3b | path_decay | — | 1.0 | 0.5 | — | planned | — | — | — | — | — |
+| qwen-3b | path_decay | — | 0.8 | 0.5 | — | planned | — | — | — | — | — |
+| qwen-3b | path_decay | — | 0.5 | 0.5 | — | planned | — | — | — | — | — |
+
+> **Analysis.** No AIME2025 data yet — nothing to take away.
+> **Limitations / follow-up:** entire table planned; launch is
+> the prm800k-level5 counterpart's command with `data=aime2025`.
 
 ### kube-mcts-bl-v01
 
 #### model family, size, quantization comparison (QwenPRM)
-<!-- table-id: tbl-b7bcda -->
+<!-- table-id: tbl-d34700 -->
 > **Compares:** model family, size, and quantization jointly —
 > same 5-model/quant grid as cnt-mcts-bl-v01's equivalent table
 > above, so a direct v01-vs-v02 (PUCT-vs-KUBE) read is possible
@@ -699,9 +802,168 @@ Two activities, two shapes:
 > `mcts_bl_cnt_v02`), prm=qwen, agg_strategy=
 > `last`, kube_c=2.0, kube_schedule=parent, kube_affordable=true,
 > bs-4, d-20, b=80, prm_batch_size=1, tmpl=model-family default
-> (native for Qwen, custom for Llama), **run.num_trials=4** (see
-> the cnt-mcts tables above). See
+> (native for Qwen, custom for Llama). See
 > `docs/decisions/bl-kube-bonus-schedule.md` for the schedule choice.
+>, **run.num_trials=4**.
+| llm | trials | status | pass@gb | naive@gb | wei@gb | maj@gb | hr/trial |
+|---|---|---|---|---|---|---|---|
+| llama-1b fp16 | 4 | scored | .0083<br>±.0083 | .0000<br>±.0000 | .0000<br>±.0000 | .0000<br>±.0000 | 0.8 |
+| llama-3b fp16 | 4 | scored | .0667<br>±.0229 | .0250<br>±.0143 | .0250<br>±.0143 | .0250<br>±.0143 | 1.2 |
+| qwen-3b fp16 | 4 | scored | .1000<br>±.0275 | .0833<br>±.0253 | .0833<br>±.0253 | .0833<br>±.0253 | 1.1 |
+| qwen-7b gptq-int4 | — | running | — | — | — | — | — |
+| qwen-math-1.5b fp16 | 4 | scored | .1583<br>±.0335 | .1167<br>±.0294 | .1083<br>±.0285 | .1083<br>±.0285 | 0.9 |
+
+> **Analysis.** AIME2025 is brutally hard for this scale: at
+> b=80 the whole grid sits between 0.8% and 16% pass@gb, and the
+> two Llama models are effectively at zero on every aggregated
+> metric (llama-1b: `naive`/`wei`/`maj` all .0000 — its single
+> pass@gb hit was never selected). Ordering is
+> qwen-math-1.5b > qwen-3b > llama-3b > llama-1b, i.e. **math
+> post-training beats parameter count** — the 1.5B math model
+> doubles qwen-3b's aggregated accuracy at 80% of its cost/trial.
+> The pass@gb-vs-maj@gb gap (llama-3b .0667 → .0250) says the
+> searcher does find correct leaves it then fails to select;
+> that selection gap, not generation, is the bottleneck here.
+> **Limitations / follow-up:** qwen-7b gptq-int4 relaunched
+> 2026-07-26 (its first attempt lost trials 2–4 to a cancelled
+> allocation); with 30 questions × 4 trials the ±sem on a
+> single-digit percentage is wide — treat sub-3% differences as
+> noise.
+
+#### kube_c sweep × model family (QwenPRM)
+<!-- table-id: tbl-9d3944 -->
+> **Compares:** sensitivity of kube-bl-v01 to the KUBE
+> exploration coefficient `kube_c`, swept {0.1, 0.5, 2.0, 8.0}
+> on the full 5-model/quant grid. 2.0 is the default (those 5
+> cells are the exact runs of the model-family table above —
+> reused, not re-run); 0.1/0.5 probe below it, 8.0 brackets
+> above. Unlike the v02 alpha × kube_c joint sweep (llama-3b,
+> parent_blend), this is a clean 1-D sweep — v01 has no
+> score_mode/alpha knob, so kube_c is the only exploration
+> scale and up/down bracketing is unaliased. Per-model read:
+> whether the KUBE advantage over cnt-bl-v01 (seen at 2.0 on
+> every model) is robust to the bonus scale, and whether the
+> optimum shifts with model strength.
+>
+> **Fixed:** method=`mcts_bl_kube_v01`, prm=qwen,
+> agg_strategy=`last`, kube_schedule=parent,
+> kube_affordable=true, bs-4, d-20, b=80, prm_batch_size=1,
+> level=5, tmpl=model-family default (native for Qwen, custom
+> for Llama), **run.num_trials=4**.
+
+| llm | kube_c | trials | status | pass@gb | naive@gb | wei@gb | maj@gb | hr/trial |
+|---|---|---|---|---|---|---|---|---|
+| llama-1b fp16 | 0.1 | 4 | scored | .0167<br>±.0117 | .0000<br>±.0000 | .0000<br>±.0000 | .0000<br>±.0000 | 0.8 |
+| llama-1b fp16 | 0.5 | 4 | scored | .0083<br>±.0083 | .0000<br>±.0000 | .0000<br>±.0000 | .0000<br>±.0000 | 0.8 |
+| llama-1b fp16 | 2.0 | 4 | scored | .0083<br>±.0083 | .0000<br>±.0000 | .0000<br>±.0000 | .0000<br>±.0000 | 0.8 |
+| llama-1b fp16 | 8.0 | 4 | scored | .0333<br>±.0165 | .0000<br>±.0000 | .0000<br>±.0000 | .0000<br>±.0000 | 0.8 |
+| llama-3b fp16 | 0.1 | 4 | scored | .0333<br>±.0165 | .0167<br>±.0117 | .0167<br>±.0117 | .0167<br>±.0117 | 1.1 |
+| llama-3b fp16 | 0.5 | 4 | scored | .0333<br>±.0165 | .0083<br>±.0083 | .0083<br>±.0083 | .0083<br>±.0083 | 1.2 |
+| llama-3b fp16 | 2.0 | 4 | scored | .0667<br>±.0229 | .0250<br>±.0143 | .0250<br>±.0143 | .0250<br>±.0143 | 1.2 |
+| llama-3b fp16 | 8.0 | 4 | scored | .0250<br>±.0143 | .0250<br>±.0143 | .0250<br>±.0143 | .0250<br>±.0143 | 1.2 |
+| qwen-3b fp16 | 0.1 | 4 | scored | .1000<br>±.0275 | .0833<br>±.0253 | .0750<br>±.0241 | .0750<br>±.0241 | 1.1 |
+| qwen-3b fp16 | 0.5 | 4 | scored | .1167<br>±.0294 | .1000<br>±.0275 | .1000<br>±.0275 | .1000<br>±.0275 | 1.1 |
+| qwen-3b fp16 | 2.0 | 4 | scored | .1000<br>±.0275 | .0833<br>±.0253 | .0833<br>±.0253 | .0833<br>±.0253 | 1.1 |
+| qwen-3b fp16 | 8.0 | 4 | scored | .1250<br>±.0303 | .1000<br>±.0275 | .1000<br>±.0275 | .0917<br>±.0265 | 1.2 |
+| qwen-7b gptq-int4 | 0.1 | 4 | scored | .1917<br>±.0361 | .1667<br>±.0342 | .1000<br>±.0275 | .1083<br>±.0285 | 1.1 |
+| qwen-7b gptq-int4 | 0.5 | 4 | scored | .1917<br>±.0361 | .1500<br>±.0327 | .1167<br>±.0294 | .1167<br>±.0294 | 1.0 |
+| qwen-7b gptq-int4 | 2.0 | — | running | — | — | — | — | — |
+| qwen-7b gptq-int4 | 8.0 | 4 | scored | .2583<br>±.0401 | .1917<br>±.0361 | .1833<br>±.0355 | .1833<br>±.0355 | 1.1 |
+| qwen-math-1.5b fp16 | 0.1 | 4 | scored | .2167<br>±.0378 | .1583<br>±.0335 | .1333<br>±.0312 | .1333<br>±.0312 | 0.9 |
+| qwen-math-1.5b fp16 | 0.5 | 4 | scored | .1917<br>±.0361 | .1583<br>±.0335 | .1500<br>±.0327 | .1500<br>±.0327 | 0.9 |
+| qwen-math-1.5b fp16 | 2.0 | 4 | scored | .1583<br>±.0335 | .1167<br>±.0294 | .1083<br>±.0285 | .1083<br>±.0285 | 0.9 |
+| qwen-math-1.5b fp16 | 8.0 | 4 | scored | .1667<br>±.0342 | .1083<br>±.0285 | .1083<br>±.0285 | .0917<br>±.0265 | 0.9 |
+
+> **Analysis.** 19/20 cells filled (2026-07-26). **The kube_c
+> optimum is model-dependent, and it moves the opposite way from
+> what the prm800k-level5 sweep suggested.** The two strongest
+> models want *more* exploration: qwen-7b peaks at c=8.0
+> (.2583 pass@gb vs .1917 at both 0.1 and 0.5 — a +35% relative
+> jump, ~1.6σ) and qwen-3b trends the same way (.1250 at 8.0 vs
+> .1000 at 0.1/2.0). qwen-math-1.5b inverts it, peaking at the
+> *bottom* of the range (.2167 at c=0.1, falling to .1583 at
+> 2.0) — a math-tuned policy proposes good children early, so
+> bonus-driven width mostly buys noise. llama-3b's best is the
+> default 2.0 and llama-1b is at floor everywhere (all
+> aggregated metrics .0000 regardless of c) — below some
+> capability threshold the exploration coefficient simply has
+> nothing to trade off.
+>
+> Read against the aggregated columns the story tightens: for
+> qwen-7b, c=8.0 lifts `maj@gb` from .1083 → .1833, so the extra
+> exploration finds leaves that *survive selection*, not just
+> pass@gb lottery tickets. Cost is flat across c (≤0.1 hr/trial
+> spread within each model), so on AIME the coefficient is a
+> free knob — worth tuning per model rather than fixing at 2.0.
+>
+> **Limitations / follow-up:** qwen-7b c=2.0 still running
+> (relaunched 07-26), so its column has a hole exactly at the
+> default — the c=8.0-beats-default claim for that model rests
+> on the 0.1/0.5 comparison until it lands. 30 questions × 4
+> trials means ±3–4 points on every cell; only the qwen-7b
+> 8.0-vs-0.5 and qwen-math 0.1-vs-2.0 contrasts clear ~1.5σ.
+> Worth re-running the winner cells at more trials before
+> claiming a per-model tuning rule.
+
+### kube-mcts-bl-v02
+
+#### score_mode sweep: parent_blend (alpha) vs. path_decay (gamma × kube_c) (qwen-3b, QwenPRM)
+<!-- table-id: tbl-bdeba2 -->
+> **Compares:** the two selectable v02 frontier densities
+> head-to-head, mirroring the cnt-mcts-bl-v02 score_mode sweep
+> above cell-for-cell (same model, PRM, level, budget, arm grid) —
+> so the two families' sweeps are directly comparable: under
+> kube_schedule=parent (fixed here), kube's path_decay density is
+> exactly bl_cnt v02's path_decay score divided by remaining cost,
+> and kube's parent_blend bonus is exactly bl_cnt's PUCT bonus
+> over cost. Any ranking difference between the families is
+> attributable to the /cost division alone. The gamma × kube_c
+> cross rationale is the same as the cnt table's (see its blurb):
+> the AZ-shaped path_decay bonus has no log damping, so
+> kube_c=2.0 may swamp the value term regardless of gamma — the
+> cross separates "gamma useless" from "gamma drowned out".
+>
+> **Fixed:** method=`mcts_bl_kube_v02`, kube_schedule=`parent`,
+> kube_affordable=true, llm=qwen-3b fp16 (native tmpl), prm=qwen,
+> agg_strategy=`last`, bs-4, d-20, b=80, prm_batch_size=1,
+> level=5, **run.num_trials=4**.
+>
+> ⚠️ Entirely planned — no AIME2025 runs yet.
+
+| llm | score_mode | alpha | gamma | kube_c | trials | status | pass@gb | naive@gb | wei@gb | maj@gb | hr/trial |
+|---|---|---|---|---|---|---|---|---|---|---|---|
+| qwen-3b | parent_blend | 1.0 | — | — | — | planned | — | — | — | — | — |
+| qwen-3b | parent_blend | 0.8 | — | — | — | planned | — | — | — | — | — |
+| qwen-3b | parent_blend | 0.6 | — | — | — | planned | — | — | — | — | — |
+| qwen-3b | path_decay | — | 1.0 | 2.0 | — | planned | — | — | — | — | — |
+| qwen-3b | path_decay | — | 0.8 | 2.0 | — | planned | — | — | — | — | — |
+| qwen-3b | path_decay | — | 0.5 | 2.0 | — | planned | — | — | — | — | — |
+| qwen-3b | path_decay | — | 1.0 | 0.5 | — | planned | — | — | — | — | — |
+| qwen-3b | path_decay | — | 0.8 | 0.5 | — | planned | — | — | — | — | — |
+| qwen-3b | path_decay | — | 0.5 | 0.5 | — | planned | — | — | — | — | — |
+
+> **Analysis.** No AIME2025 data yet — nothing to take away.
+> **Limitations / follow-up:** entire table planned; launch is
+> the prm800k-level5 counterpart's command with `data=aime2025`.
+
+#### model family, size, quantization comparison (QwenPRM, parent_blend/alpha=0.8)
+<!-- table-id: tbl-bda3a8 -->
+> **Compares:** model family, size, and quantization jointly at
+> the winning-candidate frontier score `score_mode=parent_blend`
+> with `alpha=0.8` — same 5-model/quant grid as cnt-mcts-bl-v01's
+> equivalent table above, so a direct kube_v02-vs-cnt-v01 (and,
+> across the bl families' model-family tables) read is possible
+> once filled. The qwen-3b cell is the **exact same run** as the
+> `parent_blend/alpha=0.8` arm of the score_mode sweep above
+> (planned for AIME2025) — reused, not re-run.
+>
+> **Fixed:** method=`mcts_bl_kube_v02`, **score_mode=parent_blend,
+> alpha=0.8**, kube_schedule=`parent`, kube_c=2.0 (default),
+> kube_affordable=true (default), prm=qwen, agg_strategy=`last`,
+> bs-4, d-20, b=80, prm_batch_size=1, level=5, tmpl=model-family
+> default (native for Qwen, custom for Llama), **run.num_trials=4**.
+>
+> ⚠️ Entirely planned — no AIME2025 runs yet.
 
 | llm | trials | status | pass@gb | naive@gb | wei@gb | maj@gb | hr/trial |
 |---|---|---|---|---|---|---|---|
@@ -713,12 +975,166 @@ Two activities, two shapes:
 
 > **Analysis.** No AIME2025 data yet — nothing to take away.
 > **Limitations / follow-up:** entire table planned; launch is
-> the GSM8K counterpart's command with `data=aime2025`.
+> the prm800k-level5 counterpart's command with `data=aime2025`.
+
+#### model family, size, quantization comparison (QwenPRM, parent_blend/alpha=1.0)
+<!-- table-id: tbl-b3d812 -->
+> **Compares:** the same 5-model/quant grid as the
+> `parent_blend/alpha=0.8` table above, but at **alpha=1.0** — the
+> exact-v01 control arm (no parent blend: `blended_q = q(leaf)`,
+> recovering `BLMCTSKubeV01Config`'s kube_density exactly). Read
+> against the alpha=0.8 table, this isolates whether the one-hop
+> q-blend helps or hurts per model family. On qwen-3b the control
+> currently wins (.6381 vs .6194), so this table tests whether
+> that holds across models. qwen-3b reuses the score_mode sweep's
+> alpha=1.0 arm (planned for AIME2025).
+>
+> **Fixed:** method=`mcts_bl_kube_v02`, **score_mode=parent_blend,
+> alpha=1.0**, kube_schedule=`parent`, kube_c=2.0 (default),
+> kube_affordable=true (default), prm=qwen, agg_strategy=`last`,
+> bs-4, d-20, b=80, prm_batch_size=1, level=5, tmpl=model-family
+> default (native for Qwen, custom for Llama), **run.num_trials=4**.
+>
+> ⚠️ Entirely planned — no AIME2025 runs yet.
+>, **run.num_trials=4**.
+| llm | trials | status | pass@gb | naive@gb | wei@gb | maj@gb | hr/trial |
+|---|---|---|---|---|---|---|---|
+| llama-1b fp16 | — | planned | — | — | — | — | — |
+| llama-3b fp16 | — | planned | — | — | — | — | — |
+| qwen-3b fp16 | — | planned | — | — | — | — | — |
+| qwen-7b gptq-int4 | — | planned | — | — | — | — | — |
+| qwen-math-1.5b fp16 | — | planned | — | — | — | — | — |
+
+> **Analysis.** No AIME2025 data yet — nothing to take away.
+> **Limitations / follow-up:** entire table planned; launch is
+> the prm800k-level5 counterpart's command with `data=aime2025`.
+
+#### model family, size, quantization comparison (QwenPRM, parent_blend/alpha=0.0)
+<!-- table-id: tbl-7c1779 -->
+> **Compares:** the same 5-model/quant grid at the **value-blindness
+> extreme alpha=0.0** — the leaf's own q is ignored entirely and
+> every child is scored by its parent's q alone
+> (`blended_q = q(parent)`). Within a sibling set the value term is
+> then identical for all children, so selection among siblings is
+> driven purely by the exploration/visit term and the kube bonus.
+> This is an ablation, not a tuning arm: it asks whether the leaf's
+> own PRM signal matters at all under KUBE, bounding the alpha
+> sweep from below. Read against the alpha=1.0 (pure own-q) and
+> alpha=0.8 tables: a small 0.0→1.0 gap would mean per-leaf PRM
+> discrimination contributes little beyond tree structure; a large
+> gap confirms the leaf q is load-bearing. Unlike the 0.8/1.0
+> tables, the qwen-3b cell is NOT reusable from the score_mode
+> sweep (no alpha=0.0 arm exists there) — all 5 cells are net-new.
+>
+> **Fixed:** method=`mcts_bl_kube_v02`, **score_mode=parent_blend,
+> alpha=0.0**, kube_schedule=`parent`, kube_c=2.0 (default),
+> kube_affordable=true (default), prm=qwen, agg_strategy=`last`,
+> bs-4, d-20, b=80, prm_batch_size=1, level=5, tmpl=model-family
+> default (native for Qwen, custom for Llama), **run.num_trials=4**.
+>
+> ⚠️ Entirely planned — no AIME2025 runs yet.
+>, **run.num_trials=4**.
+| llm | trials | status | pass@gb | naive@gb | wei@gb | maj@gb | hr/trial |
+|---|---|---|---|---|---|---|---|
+| llama-1b fp16 | — | planned | — | — | — | — | — |
+| llama-3b fp16 | — | planned | — | — | — | — | — |
+| qwen-3b fp16 | — | planned | — | — | — | — | — |
+| qwen-7b gptq-int4 | — | planned | — | — | — | — | — |
+| qwen-math-1.5b fp16 | — | planned | — | — | — | — | — |
+
+> **Analysis.** No AIME2025 data yet — nothing to take away.
+> **Limitations / follow-up:** entire table planned; launch is
+> the prm800k-level5 counterpart's command with `data=aime2025`.
+
+#### alpha × kube_c joint sweep (llama-3b, QwenPRM, parent_blend)
+<!-- table-id: tbl-86e0b6 -->
+> **Compares:** the parent_blend value-composition knob `alpha`
+> jointly with the exploration scale `kube_c`, as a 3×3 factorial
+> — NOT two sequential 1-D sweeps. The two parameters are
+> partially aliased by construction: among siblings the parent-q
+> term is a shared constant, so value discrimination is exactly
+> `alpha·Δq` and behavior depends only on the ratio
+> `kube_c/alpha`; alpha's genuinely new effect (importing the
+> parent's q into cross-branch comparisons) is only identifiable
+> against the factorial's interaction pattern. Reads: (1) kube_c
+> main effect down the alpha=1.0 column; (2) alpha spread at
+> kube_c=0.5/0.1 vs. at 2.0 — separation only at low kube_c
+> confirms scale-domination (tune alpha in the low-c regime);
+> flat everywhere is real evidence against one-hop blending;
+> (3) the (a=1.0,c=2.0) vs (a=0.5,c=1.0-equivalent) diagonal is
+> approximated by comparing constant-ratio pairs across the grid.
+> kube_c grid {0.1, 0.5, 2.0} straddles the default from below —
+> q ∈ [0,1] bounds sibling Δq to a few tenths, so the
+> value↔bonus crossover plausibly sits below the default, not
+> above (see the score_mode sweep's scale-domination rationale).
+>
+> **Fixed:** method=`mcts_bl_kube_v02`, llm=llama-3b fp16 (custom
+> tmpl), **score_mode=parent_blend**, kube_schedule=`parent`,
+> kube_affordable=true (default), prm=qwen, agg_strategy=`last`,
+> bs-4, d-20, b=80, prm_batch_size=1, level=5, **run.num_trials=4**.
+>
+> ⚠️ Entirely planned — no AIME2025 runs yet.
+
+| llm | alpha | kube_c | trials | status | pass@gb | naive@gb | wei@gb | maj@gb | hr/trial |
+|---|---|---|---|---|---|---|---|---|---|
+| llama-3b | 1.0 | 2.0 | — | planned | — | — | — | — | — |
+| llama-3b | 1.0 | 0.5 | — | planned | — | — | — | — | — |
+| llama-3b | 1.0 | 0.1 | — | planned | — | — | — | — | — |
+| llama-3b | 0.8 | 2.0 | — | planned | — | — | — | — | — |
+| llama-3b | 0.8 | 0.5 | — | planned | — | — | — | — | — |
+| llama-3b | 0.8 | 0.1 | — | planned | — | — | — | — | — |
+| llama-3b | 0.5 | 2.0 | — | planned | — | — | — | — | — |
+| llama-3b | 0.5 | 0.5 | — | planned | — | — | — | — | — |
+| llama-3b | 0.5 | 0.1 | — | planned | — | — | — | — | — |
+| llama-3b | 0.0 | 2.0 | — | planned | — | — | — | — | — |
+| llama-3b | 0.0 | 0.5 | — | planned | — | — | — | — | — |
+| llama-3b | 0.0 | 0.1 | — | planned | — | — | — | — | — |
+
+> **Analysis.** No AIME2025 data yet — nothing to take away.
+> **Limitations / follow-up:** entire table planned; launch is
+> the prm800k-level5 counterpart's command with `data=aime2025`.
+
+#### gamma × kube_c joint sweep (qwen-3b, QwenPRM, path_decay)
+<!-- table-id: tbl-434915 -->
+> **Compares:** the `path_decay` score_mode's two knobs jointly
+> — the per-hop value decay `gamma` (rows) against the
+> exploration-bonus coefficient `kube_c` (columns). The
+> path_decay sibling of the alpha × kube_c parent_blend sweep
+> above: same grid shape, the *other* v02 scorer. Reads whether
+> gamma separates once kube_c is swept, and where the g0.5
+> penalty (seen in the score_mode tables) sits across the bonus
+> range.
+>
+> **Fixed:** method=`mcts_bl_kube_v02`, llm=qwen-3b fp16 (native
+> tmpl), **score_mode=path_decay**, kube_schedule=`parent`,
+> kube_affordable=true (default), prm=qwen, agg_strategy=`last`,
+> bs-4, d-20, b=80, prm_batch_size=1, level=5, **run.num_trials=4**.
+>
+> ⚠️ Entirely planned — no AIME2025 runs yet.
+
+| llm | gamma | kube_c | trials | status | pass@gb | naive@gb | wei@gb | maj@gb | hr/trial |
+|---|---|---|---|---|---|---|---|---|---|
+| qwen-3b | 1.0 | 2.0 | — | planned | — | — | — | — | — |
+| qwen-3b | 1.0 | 0.5 | — | planned | — | — | — | — | — |
+| qwen-3b | 1.0 | 0.1 | — | planned | — | — | — | — | — |
+| qwen-3b | 0.8 | 2.0 | — | planned | — | — | — | — | — |
+| qwen-3b | 0.8 | 0.5 | — | planned | — | — | — | — | — |
+| qwen-3b | 0.8 | 0.1 | — | planned | — | — | — | — | — |
+| qwen-3b | 0.5 | 2.0 | — | planned | — | — | — | — | — |
+| qwen-3b | 0.5 | 0.5 | — | planned | — | — | — | — | — |
+| qwen-3b | 0.5 | 0.1 | — | planned | — | — | — | — | — |
+| qwen-3b | 0.0 | 2.0 | — | planned | — | — | — | — | — |
+| qwen-3b | 0.0 | 0.5 | — | planned | — | — | — | — | — |
+| qwen-3b | 0.0 | 0.1 | — | planned | — | — | — | — | — |
+
+> **Analysis.** No AIME2025 data yet — nothing to take away.
+> **Limitations / follow-up:** entire table planned; launch is
+> the prm800k-level5 counterpart's command with `data=aime2025`.
 
 ### kdepth-mcts-bl-v01
 
 #### model family, size, quantization comparison (QwenPRM)
-<!-- table-id: tbl-3721dc -->
+<!-- table-id: tbl-acca74 -->
 > **Compares:** model family, size, and quantization jointly —
 > same 5-model/quant grid as cnt-mcts-bl-v01's equivalent table
 > above, so a direct bl_cnt-v01-vs-v03 (and, once v02 has runs,
@@ -729,8 +1145,7 @@ Two activities, two shapes:
 > `mcts_bl_cnt_v03`), prm=qwen, agg_strategy=
 > `last`, depth_beta=2.0, depth_alpha=1.0, kube_affordable=true
 > (default), bs-4, d-20, b=80, prm_batch_size=1, tmpl=model-family
-> default (native for Qwen, custom for Llama), **run.num_trials=4**
-> (see the cnt-mcts tables above).
+> default (native for Qwen, custom for Llama), **run.num_trials=4**.
 
 | llm | trials | status | pass@gb | naive@gb | wei@gb | maj@gb | hr/trial |
 |---|---|---|---|---|---|---|---|
@@ -742,30 +1157,185 @@ Two activities, two shapes:
 
 > **Analysis.** No AIME2025 data yet — nothing to take away.
 > **Limitations / follow-up:** entire table planned; launch is
-> the GSM8K counterpart's command with `data=aime2025`.
+> the prm800k-level5 counterpart's command with `data=aime2025`.
 
-### sem-mcts-bl
+#### model family, size, quantization comparison (QwenPRM, depth_alpha=0.5)
+<!-- table-id: tbl-b429d0 -->
+> **Compares:** model family, size, and quantization jointly —
+> same 5-model/quant grid as the `depth_alpha=1.0` table above,
+> but with a **concave** depth-bonus curve (`f(z)=1-z^0.5`, bonus
+> stays high deeper into the tree). Read against the α=1.0 and
+> α=2.0 tables, this isolates how the depth-bonus curvature
+> interacts with model family/size at fixed `depth_beta=2.0`.
+>
+> **Fixed:** method=`mcts_bl_kdepth_v01`, prm=qwen, agg_strategy=
+> `last`, depth_beta=2.0, **depth_alpha=0.5**, kube_affordable=true
+> (default), bs-4, d-20, b=80, prm_batch_size=1, tmpl=model-family
+> default (native for Qwen, custom for Llama), **run.num_trials=4**.
+>
+> ⚠️ Entirely planned — no AIME2025 runs yet.
 
-#### model family, size, quantization comparison (QwenPRM, w_eff=100)
-<!-- table-id: tbl-52c07f -->
+| llm | trials | status | pass@gb | naive@gb | wei@gb | maj@gb | hr/trial |
+|---|---|---|---|---|---|---|---|
+| llama-1b fp16 | — | planned | — | — | — | — | — |
+| llama-3b fp16 | — | planned | — | — | — | — | — |
+| qwen-3b fp16 | — | planned | — | — | — | — | — |
+| qwen-7b gptq-int4 | — | planned | — | — | — | — | — |
+| qwen-math-1.5b fp16 | — | planned | — | — | — | — | — |
+
+> **Analysis.** No AIME2025 data yet — nothing to take away.
+> **Limitations / follow-up:** entire table planned; launch is
+> the prm800k-level5 counterpart's command with `data=aime2025`.
+
+#### model family, size, quantization comparison (QwenPRM, depth_alpha=2.0)
+<!-- table-id: tbl-3fbc68 -->
+> **Compares:** model family, size, and quantization jointly —
+> same 5-model/quant grid as the `depth_alpha=1.0` table above,
+> but with a **convex** depth-bonus curve (`f(z)=1-z^2`, bonus
+> collapses fast → strongly favors shallow nodes). The α=2.0
+> counterpart to the α=0.5 table, so the three tables
+> (0.5/1.0/2.0) span the curvature axis at fixed
+> `depth_beta=2.0`.
+>
+> **Fixed:** method=`mcts_bl_kdepth_v01`, prm=qwen, agg_strategy=
+> `last`, depth_beta=2.0, **depth_alpha=2.0**, kube_affordable=true
+> (default), bs-4, d-20, b=80, prm_batch_size=1, tmpl=model-family
+> default (native for Qwen, custom for Llama), **run.num_trials=4**.
+>
+> ⚠️ Entirely planned — no AIME2025 runs yet.
+
+| llm | trials | status | pass@gb | naive@gb | wei@gb | maj@gb | hr/trial |
+|---|---|---|---|---|---|---|---|
+| llama-1b fp16 | — | planned | — | — | — | — | — |
+| llama-3b fp16 | — | planned | — | — | — | — | — |
+| qwen-3b fp16 | — | planned | — | — | — | — | — |
+| qwen-7b gptq-int4 | — | planned | — | — | — | — | — |
+| qwen-math-1.5b fp16 | — | planned | — | — | — | — | — |
+
+> **Analysis.** No AIME2025 data yet — nothing to take away.
+> **Limitations / follow-up:** entire table planned; launch is
+> the prm800k-level5 counterpart's command with `data=aime2025`.
+
+### kdepth-mcts-bl-v02
+
+#### score_mode sweep: parent_blend (alpha) vs. path_decay (gamma) (qwen-3b, QwenPRM)
+<!-- table-id: tbl-59ccb9 -->
+> **Compares:** the two selectable v02 frontier densities
+> head-to-head, mirroring the kube-mcts-bl-v02 score_mode sweep
+> above — but on kdepth's density, whose exploration term is the
+> fixed DEPTH bonus (`depth_beta*(1-depth_frac**depth_alpha)`),
+> not a visit/clock bonus. So the score_mode blend here touches
+> ONLY the value (q) term; the depth bonus and `/cost` are shared
+> across both modes (see docs/decisions-log.md 2026-07-21). There
+> is no `kube_c` axis (kdepth has no bonus coefficient to sweep —
+> `depth_beta`/`depth_alpha` are held fixed), so path_decay varies
+> gamma alone. The read: does path-aware value (one-hop parent
+> blend, or gamma-decayed full path) beat plain own-q under a
+> depth-shaped frontier?
+>
+> **Fixed:** method=`mcts_bl_kdepth_v02`, depth_beta=2.0,
+> depth_alpha=1.0, kube_affordable=true, llm=qwen-3b fp16 (native
+> tmpl), prm=qwen, agg_strategy=`last`, bs-4, d-20, b=80,
+> prm_batch_size=1, level=5, **run.num_trials=4**.
+>
+> ⚠️ Entirely planned — no AIME2025 runs yet.
+
+| llm | score_mode | alpha | gamma | trials | status | pass@gb | naive@gb | wei@gb | maj@gb | hr/trial |
+|---|---|---|---|---|---|---|---|---|---|---|
+| qwen-3b | parent_blend | 1.0 | — | — | planned | — | — | — | — | — |
+| qwen-3b | parent_blend | 0.8 | — | — | planned | — | — | — | — | — |
+| qwen-3b | parent_blend | 0.6 | — | — | planned | — | — | — | — | — |
+| qwen-3b | path_decay | — | 1.0 | — | planned | — | — | — | — | — |
+| qwen-3b | path_decay | — | 0.8 | — | planned | — | — | — | — | — |
+| qwen-3b | path_decay | — | 0.5 | — | planned | — | — | — | — | — |
+
+> **Analysis.** No AIME2025 data yet — nothing to take away.
+> **Limitations / follow-up:** entire table planned; launch is
+> the prm800k-level5 counterpart's command with `data=aime2025`.
+
+#### model family, size, quantization comparison (QwenPRM, parent_blend/alpha=0.8)
+<!-- table-id: tbl-d81f40 -->
+> **Compares:** model family, size, and quantization jointly at
+> `score_mode=parent_blend` with `alpha=0.8` — same 5-model/quant
+> grid as kdepth-mcts-bl-v01's and kube-mcts-bl-v02's equivalent
+> tables, so a direct v01-vs-v02 (blend vs. no channel) and
+> cross-family (kdepth vs. kube) read is possible once filled. The
+> qwen-3b cell is the **exact same run** as the
+> `parent_blend/alpha=0.8` arm of the score_mode sweep above
+> (planned for AIME2025) — reused, not re-run.
+>
+> **Fixed:** method=`mcts_bl_kdepth_v02`, **score_mode=parent_blend,
+> alpha=0.8**, depth_beta=2.0, depth_alpha=1.0, kube_affordable=true
+> (default), prm=qwen, agg_strategy=`last`, bs-4, d-20, b=80,
+> prm_batch_size=1, level=5, tmpl=model-family default (native for
+> Qwen, custom for Llama), **run.num_trials=4**.
+>
+> ⚠️ Entirely planned — no AIME2025 runs yet.
+
+| llm | trials | status | pass@gb | naive@gb | wei@gb | maj@gb | hr/trial |
+|---|---|---|---|---|---|---|---|
+| llama-1b fp16 | — | planned | — | — | — | — | — |
+| llama-3b fp16 | — | planned | — | — | — | — | — |
+| qwen-3b fp16 | — | planned | — | — | — | — | — |
+| qwen-7b gptq-int4 | — | planned | — | — | — | — | — |
+| qwen-math-1.5b fp16 | — | planned | — | — | — | — | — |
+
+> **Analysis.** No AIME2025 data yet — nothing to take away.
+> **Limitations / follow-up:** entire table planned; launch is
+> the prm800k-level5 counterpart's command with `data=aime2025`.
+
+#### model family, size, quantization comparison (QwenPRM, parent_blend/alpha=1.0)
+<!-- table-id: tbl-288646 -->
+> **Compares:** the same 5-model/quant grid as the
+> `parent_blend/alpha=0.8` table above, but at **alpha=1.0** — the
+> exact-v01 control arm (no parent blend: `blended_q = q(leaf)`,
+> recovering `BLMCTSKdepthV01Config`'s depth_density exactly). Read
+> against the alpha=0.8 table, this isolates whether the one-hop
+> q-blend helps or hurts per model family under a depth-shaped
+> frontier. qwen-3b reuses the score_mode sweep's alpha=1.0 arm
+> (planned for AIME2025).
+>
+> **Fixed:** method=`mcts_bl_kdepth_v02`, **score_mode=parent_blend,
+> alpha=1.0**, depth_beta=2.0, depth_alpha=1.0, kube_affordable=true
+> (default), prm=qwen, agg_strategy=`last`, bs-4, d-20, b=80,
+> prm_batch_size=1, level=5, tmpl=model-family default (native for
+> Qwen, custom for Llama), **run.num_trials=4**.
+>
+> ⚠️ Entirely planned — no AIME2025 runs yet.
+
+| llm | trials | status | pass@gb | naive@gb | wei@gb | maj@gb | hr/trial |
+|---|---|---|---|---|---|---|---|
+| llama-1b fp16 | — | planned | — | — | — | — | — |
+| llama-3b fp16 | — | planned | — | — | — | — | — |
+| qwen-3b fp16 | — | planned | — | — | — | — | — |
+| qwen-7b gptq-int4 | — | planned | — | — | — | — | — |
+| qwen-math-1.5b fp16 | — | planned | — | — | — | — | — |
+
+> **Analysis.** No AIME2025 data yet — nothing to take away.
+> **Limitations / follow-up:** entire table planned; launch is
+> the prm800k-level5 counterpart's command with `data=aime2025`.
+
+### sem-mcts-bl-v01
+
+#### model family, size, quantization comparison (QwenPRM, lam=0.01/ds_alpha=10)
+<!-- table-id: tbl-065cf2 -->
 > **Compares:** model family, size, and quantization jointly —
 > same 5-model/quant grid as cnt-mcts-bl-v01's equivalent table
 > above, so a direct bl_sem-vs-bl_cnt read is possible once both
-> are filled.
+> are filled. Anchored to the **same (lam, ds_alpha) checkpoint
+> as sem-mcts-v02's `lam=0.01/ds_alpha=10` table** above (not
+> level-4 bl_sem_v01's `lam=0.1` convention), so bl_sem-vs-sem_v02
+> is apples-to-apples at this `w_eff`.
 >
-> **Fixed:** method=`mcts_bl_sem_v01`, prm=qwen (both scoring
-> AND diversity embeds — `embeds_source=prm` is the schema
-> default, no second pooling engine), agg_strategy=`last`, bs-4,
-> d-20, b=80, prm_batch_size=1, `ds_alpha_schedule=global`
-> (default — see decisions-log), `cov_update=sm`,
-> `embeds_dim=512`/`embeds_proj=sparse` (defaults), tmpl=
-> model-family default (native for Qwen, custom for Llama).
-> **lam=0.1, ds_alpha=31.6** (`w_eff = ds_alpha/sqrt(lam) = 100`
-> — see
-> [decisions/tuning-semantic-score-weights-and-lambda.md](decisions/tuning-semantic-score-weights-and-lambda.md)'s
-> `lam=0.1` row; `ds_beta=1.0` fixed throughout, so only the
-> ratio matters). **run.num_trials=4** (see the cnt-mcts tables
-> above).
+> **Fixed:** method=`mcts_bl_sem_v01` (PRM embeds — prm=qwen for
+> both scoring AND diversity via `embeds_source=prm`, the schema
+> default, no second pooling engine), prm=qwen, agg_strategy=
+> `last`, bs-4, d-20, b=80, prm_batch_size=1,
+> `ds_alpha_schedule=global` (default — see decisions-log),
+> `cov_update=sm` (sherman_morrison), `embeds_proj=sparse512`
+> (`embeds_dim=512`, defaults), ds_beta=1.0, tmpl=model-family
+> default (native for Qwen, custom for Llama), **run.num_trials=4**.
+> **lam=0.01, ds_alpha=10** (`w_eff = ds_alpha/sqrt(lam) = 100`).
 
 | llm | trials | status | pass@gb | naive@gb | wei@gb | maj@gb | hr/trial |
 |---|---|---|---|---|---|---|---|
@@ -777,25 +1347,35 @@ Two activities, two shapes:
 
 > **Analysis.** No AIME2025 data yet — nothing to take away.
 > **Limitations / follow-up:** entire table planned; launch is
-> the GSM8K counterpart's command with `data=aime2025`.
+> the prm800k-level5 counterpart's command with `data=aime2025`.
 
-#### model family, size, quantization comparison (QwenPRM, w_eff=10)
-<!-- table-id: tbl-4ddab6 -->
-> **Compares:** same 5-model/quant grid as the `w_eff=100` table
-> above, at one order of magnitude lower effective diversity
-> weight — the two tables together give a first (coarse) read on
-> whether the model-family ranking is sensitive to `w_eff` for
-> this algorithm, ahead of a proper `w_eff` sweep.
+#### model family comparison (QwenPRM, lam=0.01/ds_alpha=10, max_model_len=6000)
+<!-- table-id: tbl-df1eeb -->
+> **Compares:** the SAME 5-model/quant grid as the
+> `max_model_len=5000` table directly above (`tbl-c43f9b`), but
+> with the vLLM context window raised to **6000** tokens
+> (`llm.max_model_len=6000`). The question is diagnostic, not a
+> new tuning axis: does the extra headroom let the sem-bl-v01
+> **llama** cells run to completion? At the default 5000 those
+> deep-search trajectories can overflow the context and the run
+> raises (the same class of failure tracked in
+> `docs/decisions/context-length-overflow-guard.md`). A
+> row-by-row read against the 5000 table tells whether 6000 is
+> enough headroom, and — where both complete — whether the
+> larger window shifts pass@gb at all.
 >
-> **Fixed:** identical to the `w_eff=100` table above (method=
-> `mcts_bl_sem_v01`, prm=qwen, agg_strategy=`last`, bs-4, d-20,
-> b=80, prm_batch_size=1, `ds_alpha_schedule=global`,
-> `cov_update=sm`, `embeds_dim=512`/`embeds_proj=sparse`, tmpl=
-> model-family default, **run.num_trials=4**) except the
-> diversity weight. **lam=0.1, ds_alpha=3.16** (`w_eff =
-> ds_alpha/sqrt(lam) = 10` — see
-> [decisions/tuning-semantic-score-weights-and-lambda.md](decisions/tuning-semantic-score-weights-and-lambda.md)'s
-> `lam=0.1` row).
+> **Fixed:** method=`mcts_bl_sem_v01` (PRM embeds — prm=qwen for
+> both scoring AND diversity via `embeds_source=prm`, the schema
+> default), prm=qwen, agg_strategy=`last`, bs-4, d-20, b=80,
+> prm_batch_size=1, `ds_alpha_schedule=global`, `cov_update=sm`,
+> `embeds_proj=sparse512` (`embeds_dim=512`), ds_beta=1.0,
+> tmpl=model-family default (native for Qwen, custom for Llama), **run.num_trials=4**.
+> **lam=0.01, ds_alpha=10** (`w_eff = ds_alpha/sqrt(lam) = 100`).
+> **`max_model_len=6000`** (this table's whole point; hash-
+> relevant, so every cell is a distinct config from the 5000
+> table — nothing is shared).
+>
+> ⚠️ Entirely planned — no AIME2025 runs yet.
 
 | llm | trials | status | pass@gb | naive@gb | wei@gb | maj@gb | hr/trial |
 |---|---|---|---|---|---|---|---|
@@ -807,7 +1387,71 @@ Two activities, two shapes:
 
 > **Analysis.** No AIME2025 data yet — nothing to take away.
 > **Limitations / follow-up:** entire table planned; launch is
-> the GSM8K counterpart's command with `data=aime2025`.
+> the prm800k-level5 counterpart's command with `data=aime2025`.
+
+#### model family, size, quantization comparison (QwenPRM, lam=0.01/ds_alpha=1)
+<!-- table-id: tbl-b3f9bb -->
+> **Compares:** same 5-model/quant grid as the `lam=0.01/
+> ds_alpha=10` table above, at one order of magnitude lower
+> effective diversity weight — the two tables together give a
+> first (coarse) read on whether the model-family ranking is
+> sensitive to `w_eff` for this algorithm, ahead of a proper
+> `w_eff` sweep. Anchored to sem-mcts-v02's `lam=0.01/
+> ds_alpha=1` table above (`w_eff=10`).
+>
+> **Fixed:** identical to the `lam=0.01/ds_alpha=10` table above
+> (method=`mcts_bl_sem_v01`, prm=qwen, agg_strategy=`last`, bs-4,
+> d-20, b=80, prm_batch_size=1, `ds_alpha_schedule=global`,
+> `cov_update=sm`, `embeds_proj=sparse512`, ds_beta=1.0, tmpl=
+> model-family default) except the diversity weight, **run.num_trials=4**.
+> **lam=0.01, ds_alpha=1.0** (`w_eff = ds_alpha/sqrt(lam) = 10`).
+
+| llm | trials | status | pass@gb | naive@gb | wei@gb | maj@gb | hr/trial |
+|---|---|---|---|---|---|---|---|
+| llama-1b fp16 | — | planned | — | — | — | — | — |
+| llama-3b fp16 | — | planned | — | — | — | — | — |
+| qwen-3b fp16 | — | planned | — | — | — | — | — |
+| qwen-7b gptq-int4 | — | planned | — | — | — | — | — |
+| qwen-math-1.5b fp16 | — | planned | — | — | — | — | — |
+
+> **Analysis.** No AIME2025 data yet — nothing to take away.
+> **Limitations / follow-up:** entire table planned; launch is
+> the prm800k-level5 counterpart's command with `data=aime2025`.
+
+### sem-mcts-bl-v02
+
+#### model family, size, quantization comparison (QwenPRM, parent_blend/alpha=1.0, lam=0.01/ds_alpha=10)
+<!-- table-id: tbl-396f65 -->
+> **Compares:** model family, size, and quantization jointly for
+> sem-mcts-bl-v02 at its selectable frontier value term fixed to
+> `score_mode=parent_blend, alpha=1.0` (the no-blend control:
+> `q_term = q(leaf)`, byte-identical to `score_mode=own`), with the
+> diversity knobs pinned to the same `lam=0.01/ds_alpha=10`
+> (`w_eff=100`) checkpoint as the sem-mcts-bl-v01 table above and
+> sem-mcts-v02's tables — so bl_sem_v02-vs-bl_sem_v01 and, cell-
+> for-cell, bl_sem_v02-vs-kube_v02 (both at parent_blend/alpha=1.0)
+> reads are possible once filled.
+>
+> **Fixed:** method=`mcts_bl_sem_v02`, **score_mode=parent_blend,
+> alpha=1.0**, embeds_source=prm, **lam=0.01, ds_alpha=10**
+> (`w_eff=100`), ds_beta=1.0 (default), ds_alpha_schedule=global
+> (default), prm=qwen, agg_strategy=`last`, bs-4, d-20, b=80,
+> prm_batch_size=1, level=5, tmpl=model-family default (native for
+> Qwen, custom for Llama), **run.num_trials=4**.
+>
+> ⚠️ Entirely planned — no AIME2025 runs yet.
+
+| llm | trials | status | pass@gb | naive@gb | wei@gb | maj@gb | hr/trial |
+|---|---|---|---|---|---|---|---|
+| llama-1b fp16 | — | planned | — | — | — | — | — |
+| llama-3b fp16 | — | planned | — | — | — | — | — |
+| qwen-3b fp16 | — | planned | — | — | — | — | — |
+| qwen-7b gptq-int4 | — | planned | — | — | — | — | — |
+| qwen-math-1.5b fp16 | — | planned | — | — | — | — | — |
+
+> **Analysis.** No AIME2025 data yet — nothing to take away.
+> **Limitations / follow-up:** entire table planned; launch is
+> the prm800k-level5 counterpart's command with `data=aime2025`.
 
 ## Tuning tables [gen_budget=160, 320, …] *(future)*
 > Add a new `## Tuning tables [gen_budget=N]` section, then
@@ -858,7 +1502,7 @@ Two activities, two shapes:
 > **Limitations / follow-up:** entire table planned; launch is
 > the GSM8K counterpart's command with `data=aime2025`.
 
-### sem-mcts
+### sem-mcts-v02
 
 #### model family comparison (b=320, QwenPRM, lam=0.1, w_eff=10)
 <!-- table-id: tbl-b2d2d2 -->

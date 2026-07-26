@@ -24,6 +24,7 @@ Decisions motivated by a finding go in
 - [prm-step-split-trailing-separator.md](coding-findings/prm-step-split-trailing-separator.md) — 2026-07-06, PRM.score splits a bogus trailing empty step; RLHFlowPRM can mask a bad step, QwenPRM only tracks it
 - [compute-stats-sympy-hang.md](coding-findings/compute-stats-sympy-hang.md) — 2026-07-07, compute_stats.py's signal.alarm can't interrupt a sympy hang on a pathological boxed answer; fixed by using grader2's existing multiprocessing hard-kill path
 - [bl-cnt-frontier-zero-completion-rate.md](coding-findings/bl-cnt-frontier-zero-completion-rate.md) — 2026-07-08, mcts_bl_cnt_v01's best-first frontier search leaves ~18% of questions with zero completions at gen_budget=80 (vs 3% for mcts_cnt_v01) — an inherent algorithm tradeoff, not a bug
+- [qwen-math-4096-context-cap.md](coding-findings/qwen-math-4096-context-cap.md) — 2026-07-24, Qwen2.5-Math is architecturally capped at `max_model_len=4096` and vLLM *raises* (never clamps) above it, while the other six models accept ≥6000 — so one global mml override succeeds for most cells and hard-fails exactly the qwen-math ones; also means qwen-math is never context-matched to its row-mates in mixed tables
 
 ## exp-findings/
 

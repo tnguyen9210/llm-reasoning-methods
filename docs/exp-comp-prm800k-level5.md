@@ -6,6 +6,68 @@ Central tracker for every MCTS search experiment (cnt / sem /
 cnt-bl / sem-bl) on PRM800K — per-algorithm tuning tables grouped
 by gen_budget, plus a cross-algorithm best-config summary.
 
+
+<!-- toc:begin -- generated, do not hand-edit -->
+## Contents
+
+- [**Purpose**](#purpose)
+- [**Structure and use**](#structure-and-use)
+- [**Cross-algorithm summary (QwenPRM)**](#cross-algorithm-summary-qwenprm)
+- [**Tuning tables \[gen_budget=80\]**](#tuning-tables-gen_budget80)
+  - [cnt-mcts](#cnt-mcts)
+    - [model family, size, quantization comparison (RLHFlowPRM)](#model-family-size-quantization-comparison-rlhflowprm) · `tbl-d6065d`
+    - [model family, size, quantization comparison (QwenPRM)](#model-family-size-quantization-comparison-qwenprm) · `tbl-afdda0`
+    - [agg_strategy comparison (qwen-3b, qwen-math-1.5b)](#agg_strategy-comparison-qwen-3b-qwen-math-15b) · `tbl-a45ce2`
+  - [sem-mcts-v02](#sem-mcts-v02)
+    - [embeds_strategy × scope sweep (QwenPRM)](#embeds_strategy-scope-sweep-qwenprm) · `tbl-666cb6`
+    - [lam / ds_alpha joint sweep (llama-1b)](#lam-ds_alpha-joint-sweep-llama-1b) · `tbl-a554c7`
+    - [lam / ds_alpha joint sweep (llama-3b)](#lam-ds_alpha-joint-sweep-llama-3b) · `tbl-591232`
+    - [lam / ds_alpha joint sweep (qwen-math-1.5b)](#lam-ds_alpha-joint-sweep-qwen-math-15b) · `tbl-a12d4f`
+    - [lam / ds_alpha joint sweep (qwen-7b gptq-int4)](#lam-ds_alpha-joint-sweep-qwen-7b-gptq-int4) · `tbl-21bde4`
+    - [embeds_center_mode comparison (lam=0.01/ds_alpha=1)](#embeds_center_mode-comparison-lam001ds_alpha1) · `tbl-e58353`
+    - [embeds_center_mode comparison (lam=0.01/ds_alpha=10)](#embeds_center_mode-comparison-lam001ds_alpha10) · `tbl-2e75f2`
+    - [agg_strategy comparison (qwen-3b, qwen-math-1.5b, lam=0.01/ds_alpha=1)](#agg_strategy-comparison-qwen-3b-qwen-math-15b-lam001ds_alpha1) · `tbl-ae7863`
+    - [agg_strategy comparison (qwen-3b, qwen-math-1.5b, lam=0.01/ds_alpha=10)](#agg_strategy-comparison-qwen-3b-qwen-math-15b-lam001ds_alpha10) · `tbl-4cc5b9`
+    - [model family, size, quantization comparison (QwenPRM, lam=0.01/ds_alpha=1)](#model-family-size-quantization-comparison-qwenprm-lam001ds_alpha1) · `tbl-73533c`
+    - [model family, size, quantization comparison (QwenPRM, lam=0.01/ds_alpha=10)](#model-family-size-quantization-comparison-qwenprm-lam001ds_alpha10) · `tbl-cf8fea`
+  - [cnt-mcts-bl-v01](#cnt-mcts-bl-v01)
+    - [model family, size, quantization comparison (QwenPRM)](#model-family-size-quantization-comparison-qwenprm-1) · `tbl-6557b7`
+  - [cnt-mcts-bl-v02](#cnt-mcts-bl-v02)
+    - [score_mode sweep: parent_blend (alpha) vs. path_decay (gamma × cpuct) (qwen-3b, QwenPRM)](#score_mode-sweep-parent_blend-alpha-vs-path_decay-gamma-cpuct-qwen-3b-qwenprm) · `tbl-249fa2`
+  - [kube-mcts-bl-v01](#kube-mcts-bl-v01)
+    - [model family, size, quantization comparison (QwenPRM)](#model-family-size-quantization-comparison-qwenprm-2) · `tbl-622bce`
+    - [kube_c sweep × model family (QwenPRM)](#kube_c-sweep-model-family-qwenprm) · `tbl-61a2b9`
+  - [kube-mcts-bl-v02](#kube-mcts-bl-v02)
+    - [score_mode sweep: parent_blend (alpha) vs. path_decay (gamma × kube_c) (qwen-3b, QwenPRM)](#score_mode-sweep-parent_blend-alpha-vs-path_decay-gamma-kube_c-qwen-3b-qwenprm) · `tbl-dac772`
+    - [model family, size, quantization comparison (QwenPRM, parent_blend/alpha=0.8)](#model-family-size-quantization-comparison-qwenprm-parent_blendalpha08) · `tbl-c85c90`
+    - [model family, size, quantization comparison (QwenPRM, parent_blend/alpha=1.0)](#model-family-size-quantization-comparison-qwenprm-parent_blendalpha10) · `tbl-3fb9a1`
+    - [model family, size, quantization comparison (QwenPRM, parent_blend/alpha=0.0)](#model-family-size-quantization-comparison-qwenprm-parent_blendalpha00) · `tbl-a55139`
+    - [alpha × kube_c joint sweep (llama-3b, QwenPRM, parent_blend)](#alpha-kube_c-joint-sweep-llama-3b-qwenprm-parent_blend) · `tbl-a9e420`
+    - [gamma × kube_c joint sweep (qwen-3b, QwenPRM, path_decay)](#gamma-kube_c-joint-sweep-qwen-3b-qwenprm-path_decay) · `tbl-46d9c7`
+  - [kdepth-mcts-bl-v01](#kdepth-mcts-bl-v01)
+    - [model family, size, quantization comparison (QwenPRM)](#model-family-size-quantization-comparison-qwenprm-3) · `tbl-d1a3ce`
+    - [model family, size, quantization comparison (QwenPRM, depth_alpha=0.5)](#model-family-size-quantization-comparison-qwenprm-depth_alpha05) · `tbl-43590e`
+    - [model family, size, quantization comparison (QwenPRM, depth_alpha=2.0)](#model-family-size-quantization-comparison-qwenprm-depth_alpha20) · `tbl-9d088e`
+  - [kdepth-mcts-bl-v02](#kdepth-mcts-bl-v02)
+    - [score_mode sweep: parent_blend (alpha) vs. path_decay (gamma) (qwen-3b, QwenPRM)](#score_mode-sweep-parent_blend-alpha-vs-path_decay-gamma-qwen-3b-qwenprm) · `tbl-1b443b`
+    - [model family, size, quantization comparison (QwenPRM, parent_blend/alpha=0.8)](#model-family-size-quantization-comparison-qwenprm-parent_blendalpha08-1) · `tbl-2fe92e`
+    - [model family, size, quantization comparison (QwenPRM, parent_blend/alpha=1.0)](#model-family-size-quantization-comparison-qwenprm-parent_blendalpha10-1) · `tbl-76f66a`
+  - [sem-mcts-bl-v01](#sem-mcts-bl-v01)
+    - [model family, size, quantization comparison (QwenPRM, lam=0.01/ds_alpha=10)](#model-family-size-quantization-comparison-qwenprm-lam001ds_alpha10-1) · `tbl-c43f9b`
+    - [model family comparison (QwenPRM, lam=0.01/ds_alpha=10, max_model_len=6000)](#model-family-comparison-qwenprm-lam001ds_alpha10-max_model_len6000) · `tbl-9f7cda`
+    - [model family, size, quantization comparison (QwenPRM, lam=0.01/ds_alpha=1)](#model-family-size-quantization-comparison-qwenprm-lam001ds_alpha1-1) · `tbl-369e81`
+  - [sem-mcts-bl-v02](#sem-mcts-bl-v02)
+    - [model family, size, quantization comparison (QwenPRM, parent_blend/alpha=1.0, lam=0.01/ds_alpha=10)](#model-family-size-quantization-comparison-qwenprm-parent_blendalpha10-lam001ds_alpha10) · `tbl-e9dbbb`
+- [**Tuning tables \[gen_budget=160, 320, …\] *(future)***](#tuning-tables-gen_budget160-320-future)
+  - [cnt-mcts](#cnt-mcts-1)
+    - [model family comparison (b=320, QwenPRM)](#model-family-comparison-b320-qwenprm) · `tbl-867868`
+  - [sem-mcts-v02](#sem-mcts-v02-1)
+    - [model family comparison (b=320, QwenPRM, lam=0.01/ds_alpha=1)](#model-family-comparison-b320-qwenprm-lam001ds_alpha1) · `tbl-900e87`
+    - [model family comparison (b=320, QwenPRM, lam=0.01/ds_alpha=10)](#model-family-comparison-b320-qwenprm-lam001ds_alpha10) · `tbl-01c466`
+
+*37 tables. Regenerate with `python scripts/gen_toc.py`.*
+<!-- toc:end -->
+
 ## Purpose
 The four algorithm tracks (`llm-reasoning-mcts-exp`,
 `llm-reasoning-mcts-bl-exp`, + the `sem` variants) own
@@ -224,7 +286,7 @@ Two activities, two shapes:
 | qwen-math-1.5b | qwen | prod | — | planned | — | — | — | — | — |
 | qwen-math-1.5b | qwen | last | — | planned | — | — | — | — | — |
 
-### sem-mcts (v02)
+### sem-mcts-v02
 
 #### embeds_strategy × scope sweep (QwenPRM)
 <!-- table-id: tbl-666cb6 -->
@@ -1040,32 +1102,45 @@ Two activities, two shapes:
 > bs-4, d-20, b=80, prm_batch_size=1, level=5, tmpl=model-family
 > default (native for Qwen, custom for Llama).
 >
-> ⚠️ 1/5 cells scored (qwen-3b, reused from the score_mode sweep);
-> the other 4 inqueue (orchestration/queue.yaml
-> `kube-bl-v02-l5-mf-a0.8-*`, priority 2, queued 2026-07-22 —
-> deliberately behind the alpha×kube_c sweep, which decides
-> whether alpha=0.8 is the arm worth propagating).
+> 5/5 cells scored (2026-07-26). qwen-3b is reused from the
+> score_mode sweep.
 >
-> **W&B:** qwen-3b `z15wgie9`; others none yet (no runs exist).
+> **W&B:** qwen-3b `z15wgie9`; llama-1b/llama-3b/qwen-7b from the
+> 2026-07-23 batch.
 
 | llm | trials | status | pass@gb | naive@gb | wei@gb | maj@gb | hr/trial |
 |---|---|---|---|---|---|---|---|
-| llama-1b fp16 | — | inqueue | — | — | — | — | — |
-| llama-3b fp16 | — | inqueue | — | — | — | — | — |
+| llama-1b fp16 | 2 | scored | .3284<br>±.0287 | .2463<br>±.0264 | .2276<br>±.0257 | .2239<br>±.0255 | 3.0 |
+| llama-3b fp16 | 2 | scored | .5224<br>±.0306 | .4254<br>±.0303 | .4142<br>±.0301 | .4067<br>±.0301 | 4.7 |
 | qwen-3b fp16 | 2 | scored | .6194<br>±.0297 | .5299<br>±.0305 | .5224<br>±.0306 | .5037<br>±.0306 | — |
-| qwen-7b gptq-int4 | — | inqueue | — | — | — | — | — |
-| qwen-math-1.5b fp16 | — | inqueue | — | — | — | — | — |
+| qwen-7b gptq-int4 | 2 | scored | .7239<br>±.0274 | .6082<br>±.0299 | .5896<br>±.0301 | .5746<br>±.0303 | 3.4 |
+| qwen-math-1.5b fp16 | 2 | scored | .6567<br>±.0291 | .5709<br>±.0303 | .5672<br>±.0303 | .5522<br>±.0304 | 3.4 |
 
-> **Analysis.** Only the qwen-3b cell is filled (pass@gb .6194).
-> Once the other four land, the key read is how parent_blend's
-> one-hop q-blend generalizes across model families and sizes at
-> the fixed alpha=0.8, and — cell-for-cell against the analogous
-> cnt-mcts-bl and kdepth-mcts-bl model-family tables — whether the
-> /cost normalization helps or hurts per model.
-> **Limitations / follow-up:** 4 cells planned — see
-> experiments.yaml group `kube-mcts-bl-v02`, feeds
-> `level5-kube-bl-v02-model-family-parent-blend-qwen`. qwen-3b
-> feeds both this table and the score_mode-sweep table.
+> **Analysis.** 5/5 scored (2026-07-26). Ordering at b=80 is
+> monotone in capability — qwen-7b .7239 > qwen-math-1.5b .6567 >
+> qwen-3b .6194 > llama-3b .5224 > llama-1b .3284 pass@gb — with
+> adjacent pairs separated by 1–4 SEM, so unlike the alpha×kube_c
+> sweep (flat by construction, one model) this grid genuinely
+> resolves. **qwen-math-1.5b beats qwen-3b at half the size and
+> 72% of the cost** (3.4 vs qwen-7b's 3.4 hr/trial), repeating
+> the math-post-training-beats-parameter-count result the AIME
+> tables show — and its maj@gb (.5522) ties qwen-3b's .5037
+> upward, making it the best accuracy-per-hour cell in the table.
+> **Selection retention (maj@gb / pass@gb) is remarkably stable
+> here**: 79% (qwen-7b), 84% (qwen-math), 81% (qwen-3b), 78%
+> (llama-3b), 68% (llama-1b) — far tighter than the same read at
+> b=320 in the
+> cnt table above (38–68%). That contrast is the useful one: at
+> b=80 the searcher proposes few enough candidates that the PRM
+> picks well across the whole family; the retention collapse is a
+> *budget-induced* problem, appearing when b=320 floods
+> aggregation with near-miss leaves. Worth testing directly
+> before scaling budget further on weak policies.
+> **Limitations / follow-up:** 2 trials/cell (SEM ~±.03). qwen-3b
+> has no hr/trial recorded (reused run, timing not captured).
+> The cell-for-cell read against the cnt-mcts-bl and
+> kdepth-mcts-bl model-family tables — whether /cost
+> normalization helps per model — is now possible and unwritten.
 
 #### model family, size, quantization comparison (QwenPRM, parent_blend/alpha=1.0)
 <!-- table-id: tbl-3fb9a1 -->
@@ -1222,33 +1297,53 @@ Two activities, two shapes:
 | llama-3b | 1.0 | 2.0 | 2 | scored | .4851<br>±.0306 | .3881<br>±.0298 | .3881<br>±.0298 | .3731<br>±.0296 | 4.67 |
 | llama-3b | 1.0 | 0.5 | 2 | scored | .5037<br>±.0306 | .4328<br>±.0303 | .4104<br>±.0301 | .3881<br>±.0298 | 4.61 |
 | llama-3b | 1.0 | 0.1 | 2 | scored | .4888<br>±.0306 | .4030<br>±.0300 | .3918<br>±.0299 | .3694<br>±.0295 | 4.75 |
-| llama-3b | 0.8 | 2.0 | — | inqueue | — | — | — | — | — |
+| llama-3b | 0.8 | 2.0 | 2 | scored | .5224<br>±.0306 | .4254<br>±.0303 | .4142<br>±.0301 | .4067<br>±.0301 | 4.7 |
 | llama-3b | 0.8 | 0.5 | 2 | scored | .5037<br>±.0306 | .4478<br>±.0304 | .4142<br>±.0301 | .3955<br>±.0299 | 4.62 |
 | llama-3b | 0.8 | 0.1 | 2 | scored | .4776<br>±.0306 | .4179<br>±.0302 | .4179<br>±.0302 | .3993<br>±.0300 | 4.64 |
 | llama-3b | 0.5 | 2.0 | 2 | scored | .4776<br>±.0306 | .4067<br>±.0301 | .3806<br>±.0297 | .3731<br>±.0296 | 4.71 |
 | llama-3b | 0.5 | 0.5 | 2 | scored | .4888<br>±.0306 | .4142<br>±.0301 | .3843<br>±.0298 | .3806<br>±.0297 | 4.58 |
 | llama-3b | 0.5 | 0.1 | 2 | scored | .4963<br>±.0306 | .4030<br>±.0300 | .3993<br>±.0300 | .3955<br>±.0299 | 4.61 |
 | llama-3b | 0.0 | 2.0 | 2 | scored | .5000<br>±.0306 | .3657<br>±.0295 | .3433<br>±.0291 | .3284<br>±.0287 | 4.84 |
-| llama-3b | 0.0 | 0.5 | — | running | — | — | — | — | — |
-| llama-3b | 0.0 | 0.1 | — | inqueue | — | — | — | — | — |
+| llama-3b | 0.0 | 0.5 | 2 | scored | .4851<br>±.0306 | .3470<br>±.0291 | .3396<br>±.0290 | .3284<br>±.0287 | 4.9 |
+| llama-3b | 0.0 | 0.1 | — | running | — | — | — | — | — |
 
-> **Analysis.** 8/9 scored (2026-07-23). The grid is FLAT:
-> pass@gb spans .4776–.5037 — under 1 SEM — across a 20× kube_c
-> swing and the full alpha range; no cell separates. Against the
+> **Analysis.** 11/12 scored (updated 2026-07-26 with the
+> alpha=0.8/c=2.0 and alpha=0.0/c=0.5 cells). **On pass@gb the
+> grid is still FLAT** — .4776–.5224 across a 20× kube_c swing
+> and the full alpha range, ~1 SEM end to end. Against the
 > designed reads: (1) no kube_c main effect down the alpha=1.0
 > column (.4851/.5037/.4888); (2) no alpha spread at low kube_c
-> (c0.1: .4888/.4776/.4963) — the regime where blending had to
-> show up if scale-domination was masking it; (3) constant-ratio
-> pairs are equal too. Verdict per the pre-registered rule:
-> **flat everywhere → one-hop blending is dead for kube-v02**;
-> the model-family grids stay at alpha=1.0. The kube_c
-> insensitivity itself is a finding, echoing the kube-v01
-> llama-1b row above: at b=80/level-5 the llamas look
-> value-noise-dominated, not exploration-scale-dominated.
-> naive/wei/maj move ≤ 2 SEM with no consistent pattern;
-> hr/trial is flat (4.58–4.75).
-> **Limitations / follow-up:** 2 trials/cell → SEM ~±.03; "flat"
-> means no effect ≥ .06 pass@gb resolvable, not zero effect.
+> (c0.1: .4888/.4776/.4963); (3) constant-ratio pairs are equal.
+>
+> **But the alpha=0.0 anchor added 07-25/26 changes the verdict
+> on the aggregated metrics.** With blending switched fully off,
+> selection quality drops consistently while pass@gb does not:
+>
+> | alpha | naive@gb | maj@gb |
+> |---|---|---|
+> | 1.0 | .3881–.4328 | .3694–.3881 |
+> | 0.8 | .4179–.4478 | .3955–.4067 |
+> | 0.5 | .4030–.4142 | .3731–.3955 |
+> | **0.0** | **.3470–.3657** | **.3284–.3284** |
+>
+> Both alpha=0.0 cells sit ~2–3 SEM below every alpha>0 cell on
+> maj@gb (.3284 vs .37–.41) and below all but one on naive@gb.
+> So the earlier "one-hop blending is dead" reading (written when
+> the grid stopped at alpha=0.5) was **too strong**: *having*
+> parent blending helps the searcher pick winners it already
+> found; *how much* of it (0.5 vs 0.8 vs 1.0) is what doesn't
+> matter. The pre-registered flat-everywhere rule fired on
+> pass@gb alone, which is exactly the metric blind to selection.
+> Keeping the model-family grids at alpha=1.0 remains right — but
+> for the reason "any alpha>0 is fine", not "alpha is inert".
+> The kube_c insensitivity stands, echoing the kube-v01 llama-1b
+> row: at b=80/level-5 the llamas look value-noise-dominated, not
+> exploration-scale-dominated. hr/trial flat (4.58–4.9).
+> **Limitations / follow-up:** 2 trials/cell → SEM ~±.03, and the
+> alpha=0.0 claim rests on 2 cells (the third, c=0.1, failed at
+> startup 07-24 and is a requeue candidate — it would test
+> whether the drop holds at low exploration too). "Flat" on
+> pass@gb means no effect ≥ .06 resolvable, not zero effect.
 > Single model (llama-3b). The pending (0.8, 2.0) cell cannot
 > change the verdict (its row and column are already flat).
 > Consequence: the 4 kube-a0.8 model-family requeues
@@ -1274,13 +1369,16 @@ Two activities, two shapes:
 > kube_affordable=true (default), prm=qwen, agg_strategy=`last`,
 > bs-4, d-20, b=80, prm_batch_size=1, level=5.
 >
-> ⚠️ 6/9 cells scored (2026-07-23) — the kube_c∈{0.5, 2.0}
-> columns are the **exact same runs** as the qwen-3b score_mode
-> sweep (`tbl-dac772`), reused, not re-run. The kube_c=0.1
-> column (3 cells) is net-new. kube_c is NOT numerically
-> comparable to parent_blend's kube_c or to cnt-v02's cpuct
-> (different bonus shapes: AZ form here). gamma has no v01
-> control arm (unlike parent_blend's alpha=1.0).
+> ⚠️ 6/12 cells scored (2026-07-23) — the kube_c∈{0.5, 2.0}
+> columns at gamma∈{0.5, 0.8, 1.0} are the **exact same runs** as
+> the qwen-3b score_mode sweep (`tbl-dac772`), reused, not re-run.
+> The kube_c=0.1 column and the **gamma=0 row** (added 2026-07-24)
+> are net-new: gamma=0 reads only the leaf's own q (no path
+> decay), anchoring the bottom of the gamma axis — no existing run
+> to reuse at gamma=0, so all 3 of its cells are fresh. kube_c is
+> NOT numerically comparable to parent_blend's kube_c or to
+> cnt-v02's cpuct (different bonus shapes: AZ form here). gamma has
+> no v01 control arm (unlike parent_blend's alpha=1.0).
 >
 > **W&B:** (0.5, 2.0) `69mrzt65`, (0.5, 0.5) `gthxems1`,
 > (0.8, 2.0) `mi5gfiwv`, (0.8, 0.5) `nvcah979`, (1.0, 2.0)
@@ -1293,10 +1391,13 @@ Two activities, two shapes:
 | qwen-3b | 1.0 | 0.1 | — | inqueue | — | — | — | — | — |
 | qwen-3b | 0.8 | 2.0 | 2 | scored | .6157<br>±.0298 | .5261<br>±.0306 | .4925<br>±.0306 | .4701<br>±.0305 | 3.87 |
 | qwen-3b | 0.8 | 0.5 | 2 | scored | .6269<br>±.0296 | .5261<br>±.0306 | .4813<br>±.0306 | .4813<br>±.0306 | — |
-| qwen-3b | 0.8 | 0.1 | — | inqueue | — | — | — | — | — |
+| qwen-3b | 0.8 | 0.1 | — | running | — | — | — | — | — |
 | qwen-3b | 0.5 | 2.0 | 2 | scored | .6269<br>±.0296 | .5112<br>±.0306 | .5000<br>±.0306 | .4851<br>±.0306 | 4.14 |
 | qwen-3b | 0.5 | 0.5 | 2 | scored | .6231<br>±.0297 | .5187<br>±.0306 | .4925<br>±.0306 | .4888<br>±.0306 | 3.97 |
-| qwen-3b | 0.5 | 0.1 | — | inqueue | — | — | — | — | — |
+| qwen-3b | 0.5 | 0.1 | — | running | — | — | — | — | — |
+| qwen-3b | 0.0 | 2.0 | — | inqueue | — | — | — | — | — |
+| qwen-3b | 0.0 | 0.5 | — | running | — | — | — | — | — |
+| qwen-3b | 0.0 | 0.1 | — | running | — | — | — | — | — |
 
 > **Analysis.** 6/9 scored (2026-07-23); the kube_c=0.1 column
 > is queued. Early read on the two scored columns: pass@gb is
@@ -1576,7 +1677,7 @@ Two activities, two shapes:
 > same 5-model/quant grid as cnt-mcts-bl-v01's equivalent table
 > above, so a direct bl_sem-vs-bl_cnt read is possible once both
 > are filled. Anchored to the **same (lam, ds_alpha) checkpoint
-> as sem-mcts (v02)'s `lam=0.01/ds_alpha=10` table** above (not
+> as sem-mcts-v02's `lam=0.01/ds_alpha=10` table** above (not
 > level-4 bl_sem_v01's `lam=0.1` convention), so bl_sem-vs-sem_v02
 > is apples-to-apples at this `w_eff`.
 >
@@ -1643,19 +1744,32 @@ Two activities, two shapes:
 | llm | trials | status | pass@gb | naive@gb | wei@gb | maj@gb | hr/trial |
 |---|---|---|---|---|---|---|---|
 | llama-1b fp16 | — | failed | — | — | — | — | — |
-| llama-3b fp16 | — | running | — | — | — | — | — |
-| qwen-3b fp16 | — | running | — | — | — | — | — |
+| llama-3b fp16 | — | failed | — | — | — | — | — |
+| qwen-3b fp16 | 2 | scored | .6045<br>±.0299 | .4216<br>±.0302 | .3507<br>±.0292 | .2985<br>±.0280 | 6.5 |
 | qwen-7b gptq-int4 | — | running | — | — | — | — | — |
-| qwen-math-1.5b fp16 | — | inqueue | — | — | — | — | — |
+| qwen-math-1.5b fp16 | — | failed | — | — | — | — | — |
 
-> **Analysis.** No data yet — nothing to take away. Once filled,
-> the key read is the two **llama** rows: if they go from
-> `failed`/overflow at 5000 to `scored` here, 6000 is sufficient
-> headroom and the llama cells of `tbl-c43f9b` should be re-run
-> at 6000 (or the overflow guard landed). For the three qwen
-> rows (which already complete at 5000), the read is whether the
-> larger window moves pass@gb beyond noise — expected ~flat if
-> those trajectories rarely hit the 5000 cap.
+> **Analysis.** 1/5 scored (2026-07-26) — and the diagnostic
+> question this table exists to answer is **not** settled by it.
+> qwen-3b (which already completed at 5000) lands at .6045
+> pass@gb; the matched `tbl-c43f9b` row is the comparison to
+> make when reading whether 6000 moves anything for models that
+> never hit the cap. The **llama rows both failed again at
+> 6000**, and the traceback (W&B `khe3unjb`, checked 2026-07-26)
+> says exactly why: `prompt contains at least 6001 input tokens`
+> against a 6000 limit — **over by one token**. So context length
+> is confirmed as the cause and 6000 is simply not enough
+> headroom; nothing exotic is wrong with the llama cells. The
+> right retry is a clearly-oversized window (8000+) rather than
+> another marginal bump, since 6000 was chosen to just clear the
+> observed 5000 failure and the chains evidently grow past
+> whatever bound you pick. That makes
+> `docs/decisions/context-length-overflow-guard.md` (still
+> unimplemented) the real fix: a guard that truncates or aborts
+> the offending rollout beats chasing the window upward.
+> qwen-math failed for the unrelated architectural reason (4096
+> `max_position_embeddings` < 6000 — vLLM rejects it at engine
+> construction; permanent for this table).
 > **Limitations / follow-up:** 5 cells planned — see
 > orchestration/ledgers/prm800k-level5.yaml group `sem-mcts-bl`,
 > feeds `tbl-9f7cda`. Launch per cell:
@@ -1670,7 +1784,7 @@ Two activities, two shapes:
 > effective diversity weight — the two tables together give a
 > first (coarse) read on whether the model-family ranking is
 > sensitive to `w_eff` for this algorithm, ahead of a proper
-> `w_eff` sweep. Anchored to sem-mcts (v02)'s `lam=0.01/
+> `w_eff` sweep. Anchored to sem-mcts-v02's `lam=0.01/
 > ds_alpha=1` table above (`w_eff=10`).
 >
 > **Fixed:** identical to the `lam=0.01/ds_alpha=10` table above
@@ -1706,7 +1820,7 @@ Two activities, two shapes:
 > `q_term = q(leaf)`, byte-identical to `score_mode=own`), with the
 > diversity knobs pinned to the same `lam=0.01/ds_alpha=10`
 > (`w_eff=100`) checkpoint as the sem-mcts-bl-v01 table above and
-> sem-mcts (v02)'s tables — so bl_sem_v02-vs-bl_sem_v01 and, cell-
+> sem-mcts-v02's tables — so bl_sem_v02-vs-bl_sem_v01 and, cell-
 > for-cell, bl_sem_v02-vs-kube_v02 (both at parent_blend/alpha=1.0)
 > reads are possible once filled.
 >
@@ -1770,101 +1884,219 @@ Two activities, two shapes:
 > **Fixed:** cpuct=2.0, bs-4, d-20, b=320, prm=qwen,
 > tmpl=model-family default (native for Qwen, custom for Llama).
 >
-> ⚠️ Entirely `planned` — no runs yet. Budget=320 is a 4×
-> generation-count increase over the b=80 table; expect roughly
-> 4× the per-trial wall-clock of the corresponding b=80 row
-> (e.g. qwen-7b gptq-int4 was 3.21 hr/trial at b=80).
+> 4/5 scored 2026-07-26. Budget=320 is a 4× generation-count
+> increase over the b=80 table; measured cost came in at
+> 12–21 hr/trial (vs the ~4× projection off b=80's 3.21 hr/trial
+> for qwen-7b — the scaling is worse than linear in budget for
+> the llamas).
 >
-> **W&B:** none yet (no level-5 runs).
+> **W&B:** 2026-07-24 batch, `tnguyen10/llm-reasoning`.
 
 | llm | prm | trials | status | pass@gb | naive@gb | wei@gb | maj@gb | hr/trial |
 |---|---|---|---|---|---|---|---|---|
-| llama-1b fp16 | qwen | — | planned | — | — | — | — | — |
-| llama-3b fp16 | qwen | — | planned | — | — | — | — | — |
-| qwen-3b fp16 | qwen | — | planned | — | — | — | — | — |
-| qwen-7b gptq-int4 | qwen | — | planned | — | — | — | — | — |
-| qwen-math-1.5b fp16 | qwen | — | planned | — | — | — | — | — |
+| llama-1b fp16 | qwen | 2 | scored | .5672<br>±.0303 | .3246<br>±.0287 | .2463<br>±.0264 | .2164<br>±.0252 | 12.1 |
+| llama-3b fp16 | qwen | 2 | scored | .7015<br>±.0280 | .4328<br>±.0303 | .4142<br>±.0301 | .3619<br>±.0294 | 20.9 |
+| qwen-3b fp16 | qwen | 2 | scored | .8172<br>±.0237 | .6306<br>±.0295 | .5858<br>±.0301 | .5522<br>±.0304 | 18.2 |
+| qwen-7b gptq-int4 | qwen | 2 | scored | .8433<br>±.0222 | .6381<br>±.0294 | .5858<br>±.0301 | .5746<br>±.0303 | 14.5 |
+| qwen-math-1.5b fp16 | qwen | — | running | — | — | — | — | — |
 
-> **Analysis.** No level-5 data yet — nothing to take away.
-> **Limitations / follow-up:** entire table planned; launch is
-> the level-4 counterpart's command plus `data.level=5`.
+> **Analysis.** 4/5 scored (2026-07-26). At b=320 the model
+> ordering is clean and wide — qwen-7b .8433 ≳ qwen-3b .8172 >
+> llama-3b .7015 > llama-1b .5672 pass@gb — with the two qwens
+> separated from the llamas by 4–8 SEM. **The interesting gap is
+> pass@gb vs maj@gb**, i.e. how much of what the search finds
+> survives aggregation: qwen-7b keeps .5746/.8433 = 68% of its
+> reachable answers, qwen-3b 68%, llama-3b 52%, llama-1b just
+> 38%. So the weaker the policy, the more the b=320 budget buys
+> leaves the PRM then fails to pick — extra budget helps the
+> llamas find answers but not *commit* to them, which is a
+> scoring/aggregation problem, not a search one.
+> Cost is non-monotone in model size (llama-3b 20.9 hr/trial is
+> the most expensive cell, above qwen-7b gptq's 14.5) — the
+> gptq-int4 quantization pays for itself at this budget.
+> **Limitations / follow-up:** 2 trials/cell (SEM ~±.03); the
+> qwen-math cell is the `mml4096` diagnostic still in trial 2
+> (see the sem tables below for the 4096-window question). A
+> matched-PRM (llama) b=320 row per model is still missing, so
+> budget and PRM remain confounded against the b=80 table — as
+> the header warns.
 
-### sem-mcts
+### sem-mcts-v02
 
-#### model family comparison (b=320, QwenPRM, lam=0.1, w_eff=10)
+#### model family comparison (b=320, QwenPRM, lam=0.01/ds_alpha=1)
 <!-- table-id: tbl-900e87 -->
 > **Compares:** the same 5-model family/size/quantization sweep
-> as the `[gen_budget=80]` sem-mcts (QwenPRM) table above, but
-> at `search.gen_budget=320` (4× the b=80 budget) and at
-> `lam=0.1, ds_alpha=3.16` (`w_eff = ds_alpha/sqrt(lam) = 10`)
-> instead of that table's default point (`lam=0.01,
-> ds_alpha=100`, i.e. `w_eff=1000`). Three axes move at once
-> relative to that b=80 table — budget, lam, and ds_alpha — so
-> this isn't a clean isolation of any one of them; paired with
-> the `w_eff=100` table below (same budget, same lam, 10×
-> ds_alpha) it does isolate `w_eff` at b=320.
+> as the b=80 `model family, size, quantization comparison
+> (QwenPRM, lam=0.01/ds_alpha=1)` table above, but at
+> `search.gen_budget=320` (4× the b=80 budget). Same diversity
+> point as that b=80 table — `lam=0.01, ds_alpha=1.0`
+> (`w_eff = ds_alpha/sqrt(lam) = 10`) — so budget is the only
+> axis that moves; paired with the `ds_alpha=10` table below
+> (same budget, same lam, 10× ds_alpha) it also isolates `w_eff`
+> at b=320.
 >
 > **Fixed:** method=`mcts_sem_v02` (PRM embeds), prm=qwen, bs-4,
-> d-20, b=320, prm_batch_size=1, `ds_alpha_schedule=global`
+> d-20, b=320, prm_batch_size=1, **`llm.max_model_len=6000`**,
+> `ds_alpha_schedule=global`
 > (default), `cov_update=sm`, `embeds_dim=512`/
 > `embeds_proj=sparse` (defaults), tmpl=model-family default
-> (native for Qwen, custom for Llama). **lam=0.1, ds_alpha=3.16**
-> (`w_eff=10` — see
-> [decisions/tuning-semantic-score-weights-and-lambda.md](decisions/tuning-semantic-score-weights-and-lambda.md)'s
-> `lam=0.1` row, same point used by the `sem-mcts-bl` w_eff=10
-> table).
+> (native for Qwen, custom for Llama). **lam=0.01, ds_alpha=1.0**
+> (`w_eff=10` — the same point used by the b=80
+> `lam=0.01/ds_alpha=1` table).
 >
-> ⚠️ Entirely `planned` — no runs yet. Budget=320 is a 4×
-> generation-count increase over the b=80 table; expect roughly
-> 4× the per-trial wall-clock of the corresponding b=80/w_eff=10
-> row (see the `sem-mcts-bl` w_eff=10 table's hr/trial column for
-> a rough b=80 reference point at this lam/ds_alpha, though that's
-> the bl_sem frontier variant, not phase-based sem-mcts).
+> **Why `max_model_len=6000` (not the 5000 default):** at
+> **level 5** specifically, b=320 search builds prompts that
+> overflow a 5000-token window — the 2026-07-24 b=320 attempts at
+> the 5000 default died at startup with `decoder prompt (5000) +
+> output tokens > max_model_len 5000` (observed on cnt llama-3b;
+> the sibling cells were relaunched at 6000 rather than
+> individually reproduced). **Correction (2026-07-26): this is
+> NOT level-5-specific.** The earlier claim here — that level-4
+> b=320 completes at mml=5000, so level-5's longer chains are the
+> driver — was based on level-4 cells that had only finished
+> trial 1. `sem-mcts-56ae22f5` (level-4, b=320, llama-3b,
+> mml=5000) then died in **trial 2** with the identical
+> `decoder prompt (5000) + output > max_model_len 5000` error
+> after 20h44m of clean trial-1 running (W&B `7c79wk6z`). So
+> **b=320 overflows a 5000-token window at level 4 as well** —
+> the failure is budget-driven and merely *probabilistic*: it
+> needs one sufficiently long chain, which more trials eventually
+> supply. Level-4 b=320 cells that read `scored` at mml=5000 are
+> survivors, not evidence of safety. 6000 is therefore fixed
+> config for this table, not a variation; `max_model_len` is
+> hash-relevant, so these cells address different config hashes
+> than any 5000 attempt, and no b=320/mml=5000 companion table is
+> possible at level 5.
+> Note b=80 tables use the 5000 default, so b=80↔b=320
+> comparisons move two settings; mml only binds when prompts
+> approach the cap, which b=80 does not, so the confound is mild.
 >
-> **W&B:** none yet (no level-5 runs).
+> ⚠️ **qwen-math-1.5b is excluded from this table at mml6000:**
+> its `max_position_embeddings=4096`, so vLLM rejects
+> `max_model_len=6000` at engine construction — that part is
+> observed and unambiguous.
+>
+> Whether qwen-math could instead run level-5 b=320 *at its own
+> 4096 window* is **still open**. It was attempted on 2026-07-24
+> (`cfg-d87ee48f`, W&B `08m3c7r9`): the model loaded, entered
+> trial 0, and ran ~1 h 25 min with no context error before the
+> process was killed externally (unrelated kill sweep at 07:09) —
+> so that attempt neither confirms nor refutes an overflow. For
+> contrast, qwen-math *completed* level-4 b=320 at mml=4096
+> (`cfg-799bfbc6`, `cfg-c67e46ee`, 2/2 trials each). The
+> level-5-needs->5000 evidence comes from one cell only (cnt
+> llama-3b at mml=5000, W&B `qyve9h2t`, `failed` after ~23 min);
+> extending it to qwen-math is inference, not measurement. One
+> rerun at `llm.max_model_len=4096` would settle it.
+>
+> 3/5 scored 2026-07-26; llama-3b relaunched after a walltime
+> timeout took its second trial.
+>
+> **W&B:** runs in `tnguyen10/llm-reasoning` (2026-07-24 batch).
 
 | llm | prm | trials | status | pass@gb | naive@gb | wei@gb | maj@gb | hr/trial |
 |---|---|---|---|---|---|---|---|---|
-| llama-1b fp16 | qwen | — | planned | — | — | — | — | — |
-| llama-3b fp16 | qwen | — | planned | — | — | — | — | — |
-| qwen-3b fp16 | qwen | — | planned | — | — | — | — | — |
-| qwen-7b gptq-int4 | qwen | — | planned | — | — | — | — | — |
-| qwen-math-1.5b fp16 | qwen | — | planned | — | — | — | — | — |
+| llama-1b fp16 | qwen | 2 | scored | .5187<br>±.0306 | .3134<br>±.0284 | .2799<br>±.0275 | .2500<br>±.0265 | 18.5 |
+| llama-3b fp16 | qwen | — | running | — | — | — | — | — |
+| qwen-3b fp16 | qwen | 2 | scored | .8097<br>±.0240 | .6157<br>±.0298 | .5858<br>±.0301 | .5784<br>±.0302 | 23.4 |
+| qwen-7b gptq-int4 | qwen | 2 | scored | .7985<br>±.0245 | .6418<br>±.0293 | .6269<br>±.0296 | .6157<br>±.0298 | 14.6 |
+| qwen-math-1.5b fp16 | qwen | — | running (mml4096) | — | — | — | — | — |
 
-> **Analysis.** No level-5 data yet — nothing to take away.
-> **Limitations / follow-up:** entire table planned; launch is
-> the level-4 counterpart's command plus `data.level=5`.
+> **Analysis.** 3/5 scored (2026-07-26). The two qwens are
+> statistically tied on pass@gb (.8097 vs .7985, ≪1 SEM) and both
+> ~9 SEM above llama-1b (.5187) — at b=320 with w_eff=10, model
+> family dominates and the 3b-vs-7b size/quantization gap
+> vanishes. **Against the matched cnt table above (tbl-867868,
+> same models, same budget, same PRM), sem's advantage is in
+> selection, not reach:** qwen-7b pass@gb .7985 (sem) vs .8433
+> (cnt) — sem finds *fewer* correct leaves — yet maj@gb .6157
+> (sem) vs .5746 (cnt). Retention climbs 68% → 77%. The
+> diversity term is doing what it was designed to do: trading a
+> little raw coverage for a candidate set the PRM can rank.
+> Same pattern on qwen-3b (.5784 vs .5522 maj@gb) and llama-1b
+> (.2500 vs .2164). Cost is the price: 14.6–23.4 hr/trial vs the
+> cnt table's 12.1–18.2.
+> **Limitations / follow-up:** llama-3b relaunched 2026-07-26
+> (job 23419789) after its first attempt lost trial 2 to a 3-day
+> allocation timeout — note its trial-1 alone took ~25h, nearly
+> the 28h `expected_hr` budgeted for *both*, so this family's
+> estimates need recalibrating. The qwen-math row is the open
+> 4096-window question: its `mml4096` diagnostic (`cfg-06533f44`)
+> has been running cleanly for 18h+ — well past the ~23-min
+> context death seen at mml5000 — which increasingly suggests
+> b=320 *does* fit in 4096 and the "permanently blocked" framing
+> above applies only to mml6000, not to the model.
 
-#### model family comparison (b=320, QwenPRM, lam=0.1, w_eff=100)
+#### model family comparison (b=320, QwenPRM, lam=0.01/ds_alpha=10)
 <!-- table-id: tbl-01c466 -->
-> **Compares:** identical setup to the `w_eff=10` table above,
-> at `ds_alpha=31.6` instead of `3.16` (10× the diversity
-> weight, same `lam=0.1`) — the b=320 counterpart of the
-> `sem-mcts-bl` w_eff=100 table, and the paired point needed to
+> **Compares:** identical setup to the `ds_alpha=1` table above,
+> at `ds_alpha=10` instead of `1.0` (10× the diversity weight,
+> same `lam=0.01`) — the b=320 counterpart of the b=80
+> `lam=0.01/ds_alpha=10` table, and the paired point needed to
 > isolate `w_eff` alone at this budget.
 >
-> **Fixed:** identical to the `w_eff=10` table above (method=
+> **Fixed:** identical to the `ds_alpha=1` table above (method=
 > `mcts_sem_v02`, prm=qwen, bs-4, d-20, b=320, prm_batch_size=1,
+> **`llm.max_model_len=6000`**,
 > `ds_alpha_schedule=global`, `cov_update=sm`,
 > `embeds_dim=512`/`embeds_proj=sparse`, tmpl=model-family
-> default) except the diversity weight. **lam=0.1,
-> ds_alpha=31.6** (`w_eff=100`).
+> default) except the diversity weight. **lam=0.01,
+> ds_alpha=10** (`w_eff=100`).
 >
-> ⚠️ Entirely `planned` — no runs yet. Same 4× wall-clock
-> expectation vs. b=80 as the `w_eff=10` table above.
+> **Why `max_model_len=6000`:** same reason as the `ds_alpha=1`
+> table above — at level 5, b=320 prompts overflow the 5000
+> default, so 6000 is fixed config here and no mml=5000 companion
+> table is possible. (Level-4 b=320 ran fine at 5000; the limit is
+> level-5-specific.)
 >
-> **W&B:** none yet (no level-5 runs).
+> ⚠️ **qwen-math-1.5b is blocked at level-5 b=320** (4096
+> `max_position_embeddings` vs. the >5000 requirement) — same
+> architectural conflict as the `ds_alpha=1` table; it does run at
+> level-4 b=320 with mml=4096.
+>
+> 3/5 scored 2026-07-26; llama-3b still running.
+>
+> **W&B:** runs in `tnguyen10/llm-reasoning` (2026-07-24 batch).
 
 | llm | prm | trials | status | pass@gb | naive@gb | wei@gb | maj@gb | hr/trial |
 |---|---|---|---|---|---|---|---|---|
-| llama-1b fp16 | qwen | — | planned | — | — | — | — | — |
-| llama-3b fp16 | qwen | — | planned | — | — | — | — | — |
-| qwen-3b fp16 | qwen | — | planned | — | — | — | — | — |
-| qwen-7b gptq-int4 | qwen | — | planned | — | — | — | — | — |
-| qwen-math-1.5b fp16 | qwen | — | planned | — | — | — | — | — |
+| llama-1b fp16 | qwen | 2 | scored | .5373<br>±.0305 | .2649<br>±.0270 | .2127<br>±.0250 | .1828<br>±.0237 | 20.0 |
+| llama-3b fp16 | qwen | — | running | — | — | — | — | — |
+| qwen-3b fp16 | qwen | 2 | scored | .8396<br>±.0225 | .5896<br>±.0301 | .5560<br>±.0304 | .5299<br>±.0305 | 23.8 |
+| qwen-7b gptq-int4 | qwen | 2 | scored | .8582<br>±.0213 | .6007<br>±.0300 | .6007<br>±.0300 | .5821<br>±.0302 | 19.1 |
+| qwen-math-1.5b fp16 | qwen | — | running (mml4096) | — | — | — | — | — |
 
-> **Analysis.** No level-5 data yet — nothing to take away.
-> **Limitations / follow-up:** entire table planned; launch is
-> the level-4 counterpart's command plus `data.level=5`.
+> **Analysis.** 3/5 scored (2026-07-26). **The w_eff pairing this
+> table exists for now has an answer on 3 of 5 models, and it is
+> a clean split by metric.** Against the `ds_alpha=1` table
+> (w_eff=10), raising diversity 10× to w_eff=100:
+>
+> | model | pass@gb (10 → 100) | maj@gb (10 → 100) |
+> |---|---|---|
+> | llama-1b | .5187 → .5373 | .2500 → **.1828** |
+> | qwen-3b | .8097 → .8396 | .5784 → **.5299** |
+> | qwen-7b | .7985 → .8582 | .6157 → **.5821** |
+>
+> Every model gains on pass@gb (+.019/+.030/+.060) and every
+> model *loses* on maj@gb (−.067/−.049/−.034) — consistent in
+> sign across all three, and for llama-1b the maj drop is ~2.7
+> SEM. So **more diversity widens what the search reaches and
+> degrades what aggregation keeps**: w_eff=100 pushes the tree
+> toward semantically spread-out branches whose leaves the PRM
+> then ranks worse. Note the loss shrinks as the policy gets
+> stronger (−.067 llama-1b → −.034 qwen-7b), consistent with the
+> retention story in the sibling tables: weak policies need the
+> PRM's ranking most and are hurt most when diversity dilutes it.
+> Practical read: **w_eff=10 is the better operating point at
+> b=320** unless pass@gb is the target metric, and w_eff should
+> arguably scale with policy strength rather than being fixed.
+> Cost is ~flat-to-worse (19.1–23.8 vs 14.6–23.4 hr/trial).
+> **Limitations / follow-up:** 2 trials/cell (SEM ~±.03), so
+> individually only llama-1b's maj drop clears 2 SEM — the
+> *consistency of sign* across 3 models is what carries the
+> claim, not any single cell. llama-3b would be the fourth test
+> and is still running. The qwen-math row awaits the mml4096
+> question (see the `ds_alpha=1` table's note); if 4096 proves
+> sufficient, both b=320 sem tables can be completed at 5/5.
 
 ---

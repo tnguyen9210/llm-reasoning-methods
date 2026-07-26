@@ -3,7 +3,11 @@
 #   docs/exp-comp-prm800k-level4.md
 #
 # status: planned | inqueue | running | scored | failed
-#   planned  -> table cell exists, not queued yet
+#   planned  -> NOT USED: an authored-but-unqueued table cell
+#               has NO entry here at all (Tuan's rule,
+#               2026-07-24). Doc rows may read `planned`;
+#               a ledger entry is born when he queues it,
+#               i.e. at `inqueue`.
 #   inqueue  -> Tuan queued it (priority: lower drains first)
 #   running  -> launched (launch: block records where)
 #   scored   -> stats computed AND written into the doc
@@ -233,21 +237,6 @@
   priority: 2
   run_id: e5ki98he
   from_dir: mcts_cnt--level-4--Llama3.2-3B--rlhflow--d-20--bs-4--b-080--cfg-e829c53b
-- id: sem-mcts-d8502926
-  launcher: generate_mcts_sem.py
-  hash: d8502926
-  config_root: mcts_sem_v02_prm800k
-  overrides:
-    llm: llama_1b
-    search.embeds_proj: none
-    search.cov_update: exact
-  trials: 2
-  feeds:
-  - sem-mcts/proj-cov-sweep
-  group: sem-mcts
-  status: planned
-  priority: 1
-  note: llama-1b none/exact
 - id: sem-mcts-8a04437c
   launcher: generate_mcts_sem.py
   hash: 8a04437c
@@ -272,61 +261,6 @@
     - {at: 2026-07-23 19:45, job_id: 23344018, outcome: stalled,
        trials_done: 1}
   note: llama-1b sparse512/exact; wandb=failed at 1/2 trials
-- id: sem-mcts-cbc0a340
-  launcher: generate_mcts_sem.py
-  hash: cbc0a340
-  config_root: mcts_sem_v02_prm800k
-  overrides:
-    llm: qwen_math_1_5b
-    search.embeds_proj: none
-    search.cov_update: exact
-  trials: 2
-  feeds:
-  - sem-mcts/proj-cov-sweep
-  group: sem-mcts
-  status: planned
-  priority: 1
-  note: qwen-math-1.5b none/exact
-- id: sem-mcts-0a8d0790
-  launcher: generate_mcts_sem.py
-  hash: 0a8d0790
-  config_root: mcts_sem_v01_prm800k
-  overrides:
-    llm: llama_1b
-  trials: 2
-  feeds:
-  - sem-mcts/llm-vs-prm-embeds
-  group: sem-mcts
-  status: planned
-  priority: 1
-  note: v01 policy llama-1b custom
-- id: sem-mcts-445e60cc
-  launcher: generate_mcts_sem.py
-  hash: 445e60cc
-  config_root: mcts_sem_v01_prm800k
-  overrides:
-    llm: llama_3b
-  trials: 2
-  feeds:
-  - sem-mcts/llm-vs-prm-embeds
-  group: sem-mcts
-  status: planned
-  priority: 1
-  note: v01 policy llama-3b custom
-- id: sem-mcts-3ce0120e
-  launcher: generate_mcts_sem.py
-  hash: 3ce0120e
-  config_root: mcts_sem_v01_prm800k
-  overrides:
-    llm: qwen_math_1_5b
-    llm.use_custom_template: false
-  trials: 2
-  feeds:
-  - sem-mcts/llm-vs-prm-embeds
-  group: sem-mcts
-  status: planned
-  priority: 1
-  note: v01 policy qwen-math-1.5b native
 - id: sem-mcts-1886c8f2
   launcher: generate_mcts_sem.py
   hash: 1886c8f2
@@ -500,21 +434,6 @@
   status: scored
   priority: 2
   note: b=320 qwen-PRM llama-3b fp16
-- id: cnt-mcts-355533ed
-  launcher: generate_mcts_cnt.py
-  hash: 355533ed
-  config_root: mcts_cnt_prm800k
-  overrides:
-    llm: llama_3b_gptq
-    prm: qwen_prm
-    search.gen_budget: 320
-  trials: 2
-  feeds:
-  - cnt-mcts/model-family-b320-qwen
-  group: cnt-mcts
-  status: planned
-  priority: 2
-  note: b=320 qwen-PRM llama-3b gptq
 - id: cnt-mcts-9fd14d37
   launcher: generate_mcts_cnt.py
   hash: 9fd14d37
@@ -530,21 +449,6 @@
   status: scored
   priority: 2
   note: b=320 qwen-PRM qwen-3b fp16
-- id: cnt-mcts-9fe5eaf8
-  launcher: generate_mcts_cnt.py
-  hash: 9fe5eaf8
-  config_root: mcts_cnt_prm800k
-  overrides:
-    llm: qwen_3b_gptq_int4
-    prm: qwen_prm
-    search.gen_budget: 320
-  trials: 2
-  feeds:
-  - cnt-mcts/model-family-b320-qwen
-  group: cnt-mcts
-  status: planned
-  priority: 2
-  note: b=320 qwen-PRM qwen-3b gptq-int4
 - id: cnt-mcts-c8fddcba
   launcher: generate_mcts_cnt.py
   hash: c8fddcba
@@ -575,21 +479,6 @@
   status: scored
   priority: 2
   note: b=320 qwen-PRM qwen-math-1.5b fp16
-- id: sem-mcts-2d22ccd4
-  launcher: generate_mcts_sem.py
-  hash: 2d22ccd4
-  config_root: mcts_sem_v02_prm800k
-  overrides:
-    llm: llama_3b
-    prm: qwen_prm
-    search.embeds_strategy: avg
-  trials: 2
-  feeds:
-  - sem-mcts/embeds-strategy-scope
-  group: sem-mcts
-  status: planned
-  priority: 2
-  note: qwen-PRM embeds avg x full llama-3b
 - id: sem-mcts-a68374f0
   launcher: generate_mcts_sem.py
   hash: a68374f0
@@ -2061,7 +1950,7 @@
   trials: 2
   feeds: []
   group: sem-mcts-bl
-  status: planned
+  status: failed
   priority: 2
   note: FAILED -- w_eff=100 llama-3b fp16 cell (config-hash 0f06296f, run_id
     2goolnzd). Crashed during trial 0 with the same vLLM max_model_len=5000
@@ -2184,3 +2073,216 @@
   note: level-4 qwen-3b lam=0.1 w_eff=100 agg=min, cfg-4ef6d3b2, run_id rmt3u7sf;
     pass@gb .8711±.0210 (docs/exp-comp-prm800k-level4.md "agg_strategy comparison
     (qwen-3b, qwen-math-1.5b, lam=0.1, w_eff=100)")
+# --- backfilled 2026-07-24: level-4 sem_v02 b=320 cells that ran
+# 2026-07-13 and were scored into docs/exp-comp-prm800k-level4.md
+# but were never migrated into this ledger (all 67 pre-existing
+# sem_v02 entries are b=80). Hashes verified against the on-disk
+# result dirs; every cell has 2/2 .done markers.
+- id: sem-mcts-2acc049d
+  launcher: generate_mcts_sem.py
+  hash: 2acc049d
+  config_root: mcts_sem_v02_prm800k
+  overrides:
+    llm: llama_1b
+    prm: qwen_prm
+    search.lam: 0.1
+    search.ds_alpha: 3.16
+    search.gen_budget: 320
+  trials: 2
+  feeds:
+  - tbl-e144a5  # L4 sem b320 model-family, lam=0.1 w_eff=10
+  group: sem-mcts
+  status: scored
+  priority: 2
+  expected_hr: 14
+  note: backfilled 2026-07-24; ran 2026-07-13, W&B pzu1ri27; mml=5000
+- id: sem-mcts-0dec93af
+  launcher: generate_mcts_sem.py
+  hash: 0dec93af
+  config_root: mcts_sem_v02_prm800k
+  overrides:
+    llm: llama_3b
+    prm: qwen_prm
+    search.lam: 0.1
+    search.ds_alpha: 3.16
+    search.gen_budget: 320
+  trials: 2
+  feeds:
+  - tbl-e144a5  # L4 sem b320 model-family, lam=0.1 w_eff=10
+  group: sem-mcts
+  status: scored
+  priority: 2
+  expected_hr: 17
+  note: backfilled 2026-07-24; ran 2026-07-13, W&B mek0jor8; mml=5000
+- id: sem-mcts-1184f10f
+  launcher: generate_mcts_sem.py
+  hash: 1184f10f
+  config_root: mcts_sem_v02_prm800k
+  overrides:
+    llm: qwen_3b
+    prm: qwen_prm
+    search.lam: 0.1
+    search.ds_alpha: 3.16
+    search.gen_budget: 320
+  trials: 2
+  feeds:
+  - tbl-e144a5  # L4 sem b320 model-family, lam=0.1 w_eff=10
+  group: sem-mcts
+  status: scored
+  priority: 2
+  expected_hr: 18
+  note: backfilled 2026-07-24; ran 2026-07-13, W&B pw6som82; mml=5000
+- id: sem-mcts-3a8c9af2
+  launcher: generate_mcts_sem.py
+  hash: 3a8c9af2
+  config_root: mcts_sem_v02_prm800k
+  overrides:
+    llm: qwen_7b_gptq_int4
+    prm: qwen_prm
+    search.lam: 0.1
+    search.ds_alpha: 3.16
+    search.gen_budget: 320
+  trials: 2
+  feeds:
+  - tbl-e144a5  # L4 sem b320 model-family, lam=0.1 w_eff=10
+  group: sem-mcts
+  status: scored
+  priority: 2
+  expected_hr: 10
+  note: backfilled 2026-07-24; ran 2026-07-13, W&B q6yjispf; mml=5000
+- id: sem-mcts-c67e46ee
+  launcher: generate_mcts_sem.py
+  hash: c67e46ee
+  config_root: mcts_sem_v02_prm800k
+  overrides:
+    llm: qwen_math_1_5b
+    prm: qwen_prm
+    search.lam: 0.1
+    search.ds_alpha: 3.16
+    search.gen_budget: 320
+  trials: 2
+  feeds:
+  - tbl-e144a5  # L4 sem b320 model-family, lam=0.1 w_eff=10
+  group: sem-mcts
+  status: scored
+  priority: 2
+  expected_hr: 16
+  note: backfilled 2026-07-24; ran 2026-07-13, W&B lywharje; mml=4096
+    (qwen-math architectural cap -- see
+    docs/findings/coding-findings/qwen-math-4096-context-cap.md)
+- id: sem-mcts-32562e05
+  launcher: generate_mcts_sem.py
+  hash: 32562e05
+  config_root: mcts_sem_v02_prm800k
+  overrides:
+    llm: llama_1b
+    prm: qwen_prm
+    search.lam: 0.1
+    search.ds_alpha: 31.6
+    search.gen_budget: 320
+  trials: 2
+  feeds:
+  - tbl-179d62  # L4 sem b320 model-family, lam=0.1 w_eff=100
+  group: sem-mcts
+  status: scored
+  priority: 2
+  expected_hr: 17
+  note: backfilled 2026-07-24; ran 2026-07-13, W&B ufv99olb; mml=5000
+- id: sem-mcts-799bfbc6
+  launcher: generate_mcts_sem.py
+  hash: 799bfbc6
+  config_root: mcts_sem_v02_prm800k
+  overrides:
+    llm: qwen_math_1_5b
+    prm: qwen_prm
+    search.lam: 0.1
+    search.ds_alpha: 31.6
+    search.gen_budget: 320
+  trials: 2
+  feeds:
+  - tbl-179d62  # L4 sem b320 model-family, lam=0.1 w_eff=100
+  group: sem-mcts
+  status: scored
+  priority: 2
+  expected_hr: 16
+  note: backfilled 2026-07-24; ran 2026-07-13, W&B a2i0we44; mml=4096
+    (qwen-math architectural cap -- see
+    docs/findings/coding-findings/qwen-math-4096-context-cap.md)
+# --- queued 2026-07-24 at Tuan's request: the 3 unrun cells of
+# tbl-179d62 (L4 sem b=320, lam=0.1 ds_alpha=31.6, w_eff=100).
+# Completes that table from 2/5 to 5/5. hr/trial estimates scaled
+# from the w_eff=10 siblings (tbl-e144a5), which ran slightly
+# faster than w_eff=100 on the one model with both points.
+- id: sem-mcts-56ae22f5
+  launcher: generate_mcts_sem.py
+  hash: 56ae22f5
+  config_root: mcts_sem_v02_prm800k
+  overrides:
+    llm: llama_3b
+    prm: qwen_prm
+    search.lam: 0.1
+    search.ds_alpha: 31.6
+    search.gen_budget: 320
+  trials: 2
+  feeds:
+  - tbl-179d62  # L4 sem b320 model-family, lam=0.1 w_eff=100
+  group: sem-mcts
+  status: failed
+  priority: 1.5
+  expected_hr: 18
+  note: b=320 qwen-PRM llama-3b fp16 lam=0.1 ds_alpha=31.6 (w_eff=100, L4)
+  launch:
+    job_id: 23376655
+    node: r5u33n1
+    pid: 2365590
+    at: 2026-07-25 08:04
+  history:
+  - {at: '2026-07-26 10:00', job_id: 23376655, outcome: stalled, trials_done: 1}
+- id: sem-mcts-0c3aba62
+  launcher: generate_mcts_sem.py
+  hash: 0c3aba62
+  config_root: mcts_sem_v02_prm800k
+  overrides:
+    llm: qwen_3b
+    prm: qwen_prm
+    search.lam: 0.1
+    search.ds_alpha: 31.6
+    search.gen_budget: 320
+  trials: 2
+  feeds:
+  - tbl-179d62  # L4 sem b320 model-family, lam=0.1 w_eff=100
+  group: sem-mcts
+  status: running
+  priority: 1.5
+  expected_hr: 19
+  note: b=320 qwen-PRM qwen-3b fp16 lam=0.1 ds_alpha=31.6 (w_eff=100, L4)
+  launch:
+    job_id: 23378151
+    node: r5u39n1
+    pid: 2369443
+    at: 2026-07-25 08:43
+- id: sem-mcts-53dac75e
+  launcher: generate_mcts_sem.py
+  hash: 53dac75e
+  config_root: mcts_sem_v02_prm800k
+  overrides:
+    llm: qwen_7b_gptq_int4
+    prm: qwen_prm
+    search.lam: 0.1
+    search.ds_alpha: 31.6
+    search.gen_budget: 320
+  trials: 2
+  feeds:
+  - tbl-179d62  # L4 sem b320 model-family, lam=0.1 w_eff=100
+  group: sem-mcts
+  status: running
+  priority: 1
+  expected_hr: 11
+  note: b=320 qwen-PRM qwen-7b gptq-int4 lam=0.1 ds_alpha=31.6 (w_eff=100, L4)
+  launch:
+    job_id: 23419790
+    node: r5u17n1
+    pid: 2550288
+    at: 2026-07-26 10:30
+  history:
+  - {at: '2026-07-26 10:00', job_id: 23346202, outcome: stalled, trials_done: 1}

@@ -4,6 +4,69 @@ Central tracker for every MCTS search experiment (cnt / sem /
 cnt-bl / sem-bl) on PRM800K — per-algorithm tuning tables grouped
 by gen_budget, plus a cross-algorithm best-config summary.
 
+
+<!-- toc:begin -- generated, do not hand-edit -->
+## Contents
+
+- [**Purpose**](#purpose)
+- [**Structure (why it's shaped this way)**](#structure-why-its-shaped-this-way)
+- [**How to use**](#how-to-use)
+- [**Cross-algorithm summary (qwen PRM)**](#cross-algorithm-summary-qwen-prm)
+- [**Algorithm name ↔ code mapping**](#algorithm-name-code-mapping)
+- [**Summary — results per (algorithm, model, budget)**](#summary-results-per-algorithm-model-budget)
+- [**Tuning tables \[gen_budget=80\]**](#tuning-tables-gen_budget80)
+  - [cnt-mcts](#cnt-mcts)
+    - [custom vs native template comparison](#custom-vs-native-template-comparison) · `tbl-c1962a`
+    - [prm_batch_size sweep](#prm_batch_size-sweep) · `tbl-0642eb`
+    - [rlhflow vs qwen PRM comparison](#rlhflow-vs-qwen-prm-comparison) · `tbl-ab03de`
+    - [enforce_eager comparison](#enforce_eager-comparison) · `tbl-bfab79`
+    - [model family, size, quantization comparison](#model-family-size-quantization-comparison) · `tbl-8ca223`
+  - [cnt-mcts (updated)](#cnt-mcts-updated)
+    - [custom vs native template comparison](#custom-vs-native-template-comparison-1) · `tbl-55d130`
+    - [prm_batch_size sweep](#prm_batch_size-sweep-1) · `tbl-b5bc59`
+    - [rlhflow vs qwen PRM comparison](#rlhflow-vs-qwen-prm-comparison-1) · `tbl-ef6f98`
+    - [enforce_eager comparison](#enforce_eager-comparison-1) · `tbl-adf2f8`
+    - [model family, size, quantization comparison](#model-family-size-quantization-comparison-1) · `tbl-702925`
+    - [model family, size, quantization comparison (qwen PRM)](#model-family-size-quantization-comparison-qwen-prm) · `tbl-6fe5a2`
+    - [agg_strategy comparison (qwen-3b, qwen-math-1.5b)](#agg_strategy-comparison-qwen-3b-qwen-math-15b) · `tbl-3ea294`
+  - [sem-mcts-v02](#sem-mcts-v02)
+    - [embeds_proj × cov_update sweep (v02)](#embeds_proj-cov_update-sweep-v02) · `tbl-860167`
+    - [embeds_strategy × scope sweep (v02, qwen PRM)](#embeds_strategy-scope-sweep-v02-qwen-prm) · `tbl-82c90f`
+    - [ds_alpha sweep (v02)](#ds_alpha-sweep-v02) · `tbl-1c9c2c`
+    - [ds_alpha sweep (v02, qwen PRM)](#ds_alpha-sweep-v02-qwen-prm) · `tbl-93c239`
+    - [lam / ds_alpha joint sweep (v02, llama-1b, step 1 done)](#lam-ds_alpha-joint-sweep-v02-llama-1b-step-1-done) · `tbl-0efc55`
+    - [lam / ds_alpha joint sweep (v02, llama-3b, step 1 done)](#lam-ds_alpha-joint-sweep-v02-llama-3b-step-1-done) · `tbl-f50e22`
+    - [lam / ds_alpha joint sweep (v02, qwen-math-1.5b)](#lam-ds_alpha-joint-sweep-v02-qwen-math-15b) · `tbl-7491b1`
+    - [model family, size, quantization comparison](#model-family-size-quantization-comparison-2) · `tbl-0c4ffd`
+    - [model family, size, quantization comparison (qwen PRM)](#model-family-size-quantization-comparison-qwen-prm-1) · `tbl-352d94`
+    - [rlhflow vs qwen PRM comparison](#rlhflow-vs-qwen-prm-comparison-2) · `tbl-b4c266`
+    - [agg_strategy comparison (qwen-3b, qwen-math-1.5b)](#agg_strategy-comparison-qwen-3b-qwen-math-15b-1) · `tbl-baf795`
+    - [agg_strategy comparison (qwen-3b, qwen-math-1.5b, lam=0.1, w_eff=10)](#agg_strategy-comparison-qwen-3b-qwen-math-15b-lam01-w_eff10) · `tbl-b1e565`
+    - [agg_strategy comparison (qwen-3b, qwen-math-1.5b, lam=0.1, w_eff=100)](#agg_strategy-comparison-qwen-3b-qwen-math-15b-lam01-w_eff100) · `tbl-db5810`
+    - [LLM vs PRM embeds comparison](#llm-vs-prm-embeds-comparison) · `tbl-1eed5c`
+  - [cnt-mcts-bl-v01](#cnt-mcts-bl-v01)
+    - [model family, size, quantization comparison (qwen PRM)](#model-family-size-quantization-comparison-qwen-prm-2) · `tbl-deb9f9`
+  - [kube-mcts-bl-v01](#kube-mcts-bl-v01)
+    - [model family, size, quantization comparison (qwen PRM)](#model-family-size-quantization-comparison-qwen-prm-3) · `tbl-fbd467`
+  - [kdepth-mcts-bl-v01](#kdepth-mcts-bl-v01)
+    - [model family, size, quantization comparison (qwen PRM)](#model-family-size-quantization-comparison-qwen-prm-4) · `tbl-7367f8`
+  - [sem-mcts-bl](#sem-mcts-bl)
+    - [model family, size, quantization comparison (qwen PRM, w_eff=100)](#model-family-size-quantization-comparison-qwen-prm-w_eff100) · `tbl-ed6194`
+    - [model family, size, quantization comparison (qwen PRM, w_eff=10)](#model-family-size-quantization-comparison-qwen-prm-w_eff10) · `tbl-7fec69`
+- [**Tuning tables \[gen_budget=160, 320, …\] *(future)***](#tuning-tables-gen_budget160-320-future)
+  - [cnt-mcts](#cnt-mcts-1)
+    - [model family comparison (b=320, qwen PRM)](#model-family-comparison-b320-qwen-prm) · `tbl-4e21d6`
+  - [sem-mcts-v02](#sem-mcts-v02-1)
+    - [model family comparison (b=320, qwen PRM, lam=0.1, w_eff=10)](#model-family-comparison-b320-qwen-prm-lam01-w_eff10) · `tbl-e144a5`
+    - [model family comparison (b=320, qwen PRM, lam=0.1, w_eff=100)](#model-family-comparison-b320-qwen-prm-lam01-w_eff100) · `tbl-179d62`
+- [**Run log (newest first)**](#run-log-newest-first)
+  - [2026-06-18 — cnt-mcts / llama-1b / custom / cpuct=2.0 / b=80](#2026-06-18-cnt-mcts-llama-1b-custom-cpuct20-b80)
+- [**Standing comparison questions**](#standing-comparison-questions)
+- [**Links & connections**](#links-connections)
+
+*34 tables. Regenerate with `python scripts/gen_toc.py`.*
+<!-- toc:end -->
+
 ## Purpose
 The four algorithm tracks (`llm-reasoning-mcts-exp`,
 `llm-reasoning-mcts-bl-exp`, + the `sem` variants) own
@@ -820,11 +883,14 @@ instead of one wide sparse grid.)
 > and replicates across model sizes. The qwen-side gap needs more
 > trials before claiming a direction at all.
 
-### sem-mcts
+### sem-mcts-v02
 > **Runnable as of 2026-06-18** (rename + migration landed).
-> Two methods = two embedding sources: `mcts_sem_v01` (policy
-> embeds, 2nd vLLM engine) and `mcts_sem_v02` (PRM embeds, no
-> 2nd engine). knobs beyond template: ds_alpha, ds_beta,
+> Every table in this section is `mcts_sem_v02` (PRM embeds, no
+> 2nd engine) — hence the heading. The one exception is the
+> `LLM vs PRM embeds comparison` table below (`tbl-1eed5c`),
+> which is a v01↔v02 head-to-head and therefore also carries
+> `mcts_sem_v01` (policy embeds, 2nd vLLM engine) rows; v01 has
+> zero runs to date, so that table is entirely `planned`. knobs beyond template: ds_alpha, ds_beta,
 > lam, embeds_strategy (last/avg), embeds_normalize, and for
 > v02 embeds_proj (none/sparse, dim 512) + cov_update
 > (exact/sherman_morrison). Defaults in conf/search/mcts_sem_v0*.
@@ -1838,7 +1904,7 @@ instead of one wide sparse grid.)
 > is the same fixed point. method=`mcts_bl_sem_v01`
 > (`core/mcts_bl_sem_search_v01_00_00.py`), best-first frontier
 > selection with the sem family's diversity-adjusted value
-> (frontier counterpart of sem-mcts v02, as cnt-mcts-bl-v01 is to
+> (frontier counterpart of sem-mcts-v02, as cnt-mcts-bl-v01 is to
 > cnt-mcts). Run from `generate_mcts_sem.py`,
 > `algo=mcts_bl_sem_v01`. See `docs/algorithms.md`
 > ("BL-Sem-MCTS") and `docs/decisions-log.md` (2026-07-08) for
@@ -1975,7 +2041,19 @@ instead of one wide sparse grid.)
 > needed to separate the two effects.
 >
 > **Fixed:** cpuct=2.0, bs-4, d-20, b=320, prm=qwen,
+> **`llm.max_model_len=5000`**,
 > tmpl=model-family default (native for Qwen, custom for Llama).
+>
+> ⚠️ **`max_model_len` is not uniform across these rows:**
+> qwen-math-1.5b ran at **4096**, the other four at 5000 (verified
+> in each cell's manifest). Qwen2.5-Math is architecturally capped
+> at `max_position_embeddings=4096` and vLLM raises rather than
+> clamps above it, so 5000 is unreachable for that model. Context
+> window is therefore a second uncontrolled variable on the
+> qwen-math row; it only bites on prompts approaching the cap, so
+> treat it as a caveat for long-chain problems rather than a
+> blanket confound. Details:
+> [findings/coding-findings/qwen-math-4096-context-cap.md](findings/coding-findings/qwen-math-4096-context-cap.md).
 >
 > ✅ All 5 cells scored (2026-07-13), via `method=mcts_cnt_v01`
 > (post-fix). Budget=320 is a 4× generation-count increase over
@@ -2010,7 +2088,7 @@ instead of one wide sparse grid.)
 > b=80 table at once; a matched-PRM b=320 row would isolate the
 > budget effect alone.
 
-### sem-mcts
+### sem-mcts-v02
 
 #### model family comparison (b=320, qwen PRM, lam=0.1, w_eff=10)
 <!-- table-id: tbl-e144a5 -->
@@ -2028,7 +2106,8 @@ instead of one wide sparse grid.)
 > 10× ds_alpha) it does isolate `w_eff` at b=320.
 >
 > **Fixed:** method=`mcts_sem_v02` (PRM embeds), prm=qwen, bs-4,
-> d-20, b=320, prm_batch_size=1, `ds_alpha_schedule=global`
+> d-20, b=320, prm_batch_size=1, **`llm.max_model_len=5000`**,
+> `ds_alpha_schedule=global`
 > (default), `cov_update=sm`, `embeds_dim=512`/
 > `embeds_proj=sparse` (defaults), tmpl=model-family default
 > (native for Qwen, custom for Llama). **lam=0.1, ds_alpha=3.16**
@@ -2036,6 +2115,18 @@ instead of one wide sparse grid.)
 > [decisions/tuning-semantic-score-weights-and-lambda.md](decisions/tuning-semantic-score-weights-and-lambda.md)'s
 > `lam=0.1` row, same point used by the `sem-mcts-bl` w_eff=10
 > table).
+>
+> ⚠️ **`max_model_len` is not uniform across these rows:**
+> qwen-math-1.5b ran at **4096**, the other four at 5000 (verified
+> in each cell's manifest). That is not a config slip —
+> Qwen2.5-Math is architecturally capped at
+> `max_position_embeddings=4096`, and vLLM raises rather than
+> clamps above it, so 5000 is unreachable for that model. Context
+> window is therefore a second uncontrolled variable on the
+> qwen-math row; it only bites on prompts approaching the cap, so
+> treat it as a caveat for long-chain problems rather than a
+> blanket confound. Details:
+> [findings/coding-findings/qwen-math-4096-context-cap.md](findings/coding-findings/qwen-math-4096-context-cap.md).
 >
 > ✅ All 5 cells scored (2026-07-13). Budget=320 is a 4×
 > generation-count increase over the b=80 table; per-trial
@@ -2081,10 +2172,25 @@ instead of one wide sparse grid.)
 >
 > **Fixed:** identical to the `w_eff=10` table above (method=
 > `mcts_sem_v02`, prm=qwen, bs-4, d-20, b=320, prm_batch_size=1,
+> **`llm.max_model_len=5000`**,
 > `ds_alpha_schedule=global`, `cov_update=sm`,
 > `embeds_dim=512`/`embeds_proj=sparse`, tmpl=model-family
 > default) except the diversity weight. **lam=0.1,
 > ds_alpha=31.6** (`w_eff=100`).
+>
+> ⚠️ **`max_model_len` is not uniform across these rows:**
+> qwen-math-1.5b ran at **4096**, llama-1b at 5000 (verified in
+> both manifests) — and the same will hold for the three unrun
+> rows. Qwen2.5-Math is architecturally capped at
+> `max_position_embeddings=4096` and vLLM raises rather than
+> clamps above it, so 5000 is unreachable for that model. This
+> matters for the w_eff read below, which compares exactly these
+> two models across tables: both carry their own window
+> consistently at w_eff=10 and w_eff=100, so the `w_eff`
+> comparison per model is unaffected — but llama-1b↔qwen-math
+> comparisons within this table differ in window as well as model.
+> Details:
+> [findings/coding-findings/qwen-math-4096-context-cap.md](findings/coding-findings/qwen-math-4096-context-cap.md).
 >
 > ⚠️ 2 of 5 cells scored (2026-07-13): llama-1b and
 > qwen-math-1.5b. No result dir exists yet for llama-3b, qwen-3b,
@@ -2097,9 +2203,9 @@ instead of one wide sparse grid.)
 | llm | prm | trials | status | pass@gb | naive@gb | wei@gb | maj@gb | hr/trial |
 |---|---|---|---|---|---|---|---|---|
 | llama-1b fp16 | qwen | 2 | scored | .7148<br>±.0283 | .5508<br>±.0311 | .4492<br>±.0311 | .4375<br>±.0311 | 16.18 |
-| llama-3b fp16 | qwen | — | planned | — | — | — | — | — |
-| qwen-3b fp16 | qwen | — | planned | — | — | — | — | — |
-| qwen-7b gptq-int4 | qwen | — | planned | — | — | — | — | — |
+| llama-3b fp16 | qwen | — | failed | — | — | — | — | — |
+| qwen-3b fp16 | qwen | — | running | — | — | — | — | — |
+| qwen-7b gptq-int4 | qwen | — | running | — | — | — | — | — |
 | qwen-math-1.5b fp16 | qwen | 2 | scored | .9453<br>±.0142 | .8242<br>±.0238 | .7773<br>±.0261 | .7773<br>±.0261 | 15.23 |
 
 > **Analysis.** 2/5 cells scored. Comparing to the `w_eff=10`
