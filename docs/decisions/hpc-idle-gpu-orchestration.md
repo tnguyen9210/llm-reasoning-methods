@@ -2,7 +2,7 @@
 
 **Moved to the Second Brain vault (2026-07-23, Tuan's call):**
 `second-brain/03_projects/llm-reasoning-workflow-routines/`
-`discussion/hpc-idle-gpu-orchestration.md`
+`discussions/hpc-idle-gpu-orchestration.md`
 
 Full content in git history (last in-repo revision: ea8b0fa).
 Historical note: the queue.yaml design here was superseded by

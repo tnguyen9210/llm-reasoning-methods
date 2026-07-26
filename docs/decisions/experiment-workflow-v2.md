@@ -2,8 +2,8 @@
 
 **Moved to the Second Brain vault (2026-07-23, Tuan's call):**
 `second-brain/03_projects/llm-reasoning-workflow-routines/`
-`discussion/experiment-workflow-v2.md`
+`discussions/experiment-workflow-v2.md`
 
 Full content in git history (last in-repo revision: ea8b0fa).
 Companion consolidation:
-`discussion/2026-07-23-complete-workflow-consolidated.md`.
+`guides/complete-workflow-consolidated.md`.

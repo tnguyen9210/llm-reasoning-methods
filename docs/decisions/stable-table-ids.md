@@ -2,7 +2,7 @@
 
 **Moved to the Second Brain vault (2026-07-23, Tuan's call):**
 `second-brain/03_projects/llm-reasoning-workflow-routines/`
-`discussion/stable-table-ids.md`
+`discussions/stable-table-ids.md`
 
 Full content in git history (last in-repo revision: ea8b0fa).
 Mechanism summary: every `####` table carries an immutable
