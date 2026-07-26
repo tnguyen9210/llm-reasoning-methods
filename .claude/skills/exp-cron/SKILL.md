@@ -159,13 +159,74 @@ Each firing does exactly this:
    - Fire-and-forget: do NOT wait for startup, do NOT re-check
      the process.
    Repeat 3-5 until idle jobs or inqueue entries run out.
-6. **Validate**: `yaml.safe_load` every ledger file you edited
+6. **Sync the docs**: for every ledger stem you edited this
+   firing, the doc's status cells are now stale. Run
+   `python orchestration/status.py --sync-doc <stem>` (dry-run),
+   and if it reports `mismatches=0`, re-run with `--apply`. The
+   table's status cell is DERIVED from the ledger — never
+   hand-edit it in parallel, never skip this. Omitting it on
+   2026-07-24 left 30 launched cells still reading `planned`/
+   `inqueue` across three docs.
+7. **Validate**: `yaml.safe_load` every ledger file you edited
    plus `jobs.yaml` still parse. Fix before ending the turn — a
    malformed ledger breaks every future firing.
 
+## 5b. The occupancy table (every firing reports it)
+
+After the launch pass, ALWAYS print:
+```
+python orchestration/status.py --running
+```
+It joins `squeue -t R` against the ledger's `running` entries on
+`launch.job_id` and emits, one row per live allocation:
+
+| job | wandb | experiment | family | elapsed | est. left | job left |
+
+- **wandb** — the run id, from the result manifest's `run_id` keyed
+  by the entry's stored `hash` (legacy `wandb_run_id.txt` sidecar as
+  fallback). Paste-ready for
+  `wandb.Api().run("tnguyen10/llm-reasoning/<id>")`. `?` means no
+  manifest matched the hash yet — normal for the first ~2 min of a
+  launch, suspicious after that.
+  **It is a pointer, not a liveness check.** W&B mislabels live runs
+  `crashed` when a heartbeat drops (confirmed 2026-07-25:
+  `vp63podo` read `crashed` while its process was demonstrably
+  alive). W&B state does not overrule the table — but table
+  presence does not prove alive either: a run can FINISH while
+  its allocation persists, leaving a stale row (2026-07-26: two
+  rows probed 0%/0MiB). §5.3's nvidia-smi probe is the only
+  liveness ground truth; a row whose GPU probes idle is a
+  completion for exp-check.
+- **elapsed** — now minus `launch.at` (the run's own age, not the
+  allocation's).
+- **est. left** — `expected_hr - elapsed`; renders `OVER <hr>` once
+  a run outlives its estimate. `OVER` is a soft signal, not a
+  failure: the estimate is a walltime-guard input, not a deadline.
+  Several hours OVER with `job left` still large means re-estimate;
+  `OVER` with `job left` near zero means the run will be cut off.
+- **job left** — the SLURM allocation's `%L`. If it drops below
+  `est. left`, the run cannot finish in this allocation — flag it.
+- Rows sort by `est. left` ascending, so the next GPU to free is
+  the top row.
+
+Paste the table verbatim into the report. Trust it over the raw
+ledger: a job id gets REUSED, so several entries can claim one job
+— `--running` keeps only the latest `launch.at` per job and lists
+the rest as `stale running`. Verified against a per-job cgroup
+process probe on 2026-07-25: all 15 rows correct.
+
+Also report the two counters the table prints:
+- `idle=N` — live jobs no `running` entry claims. Cross-check
+  against §5.3's nvidia-smi probe; a persistent disagreement means
+  a launch died or a ledger status is wrong.
+- `stale_running=N` — entries still marked `running` whose job
+  ended or was reused. These are unresolved completions, NOT
+  something this skill fixes; name the count and hand them to
+  `exp-check` (it decides scored/failed). Do NOT edit them here.
+
 Report the firing tersely: pool size, idle jobs, each
 (job → entry-id, pid) launched, skips and why, inqueue
-before/after.
+before/after, then the occupancy table.
 
 ## 6. Teardown + final report
 

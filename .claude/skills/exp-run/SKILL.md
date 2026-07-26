@@ -129,12 +129,50 @@ disown
 
 Repeat §4-§6 until idle jobs or inqueue entries run out.
 
-## 7. Report + validate
+## 7. Sync the docs, report + validate
 
-Report directly: pool size (excluded/pruned/added), idle jobs,
-each (job, entry-id) launch with pid, skips and why, and the
-inqueue count before/after. Then
-`python -c "import yaml; ..."`-validate every ledger file you
+**Sync first.** For every ledger you edited this cycle, the doc's
+status cells are now stale (`inqueue` rows that are actually
+`running`). Run, per affected ledger stem:
+```
+python orchestration/status.py --sync-doc <stem>          # dry-run
+python orchestration/status.py --sync-doc <stem> --apply  # if mismatches=0
+```
+The table's status cell is DERIVED from the ledger — never
+hand-edit it in parallel, and never skip this step. Omitting it on
+2026-07-24 left 30 launched cells still reading `planned`/
+`inqueue` across three docs.
+
+Then report directly: pool size (excluded/pruned/added), idle
+jobs, each (job, entry-id) launch with pid, skips and why, the
+inqueue count before/after, and the sync result (`patched=N`).
+
+**Always close the report with the occupancy table:**
+```
+python orchestration/status.py --running
+```
+One row per live allocation — `job | wandb | experiment | family |
+elapsed | est. left | job left` — sorted by `est. left` ascending,
+so the next GPU to free is the top row. `elapsed` is measured from
+`launch.at`; `est. left` is `expected_hr - elapsed` and shows
+`OVER <hr>` past the estimate (a soft signal — but `OVER` with
+`job left` near zero means the allocation will cut the run off).
+`wandb` is the run id from the result manifest, paste-ready for the
+W&B API; `?` means no manifest matched the entry's hash yet (normal
+for the first ~2 min of a launch). Treat it as a pointer, not a
+liveness check — W&B mislabels live runs `crashed` on a dropped
+heartbeat, and a row can be a FINISHED run whose allocation
+persists (its GPU probes 0%/0MiB — §4's probe is the liveness
+ground truth; such a row is a completion for exp-check). Paste
+the table verbatim.
+
+The table also prints `idle=N` (live jobs no `running` entry
+claims — cross-check §4's probe) and `stale_running=N` (entries
+marked `running` whose job ended or was reused, i.e. unresolved
+completions). Report `stale_running` as a count and hand it to
+`exp-check`; this skill never marks anything scored/failed (§0).
+
+Then `python -c "import yaml; ..."`-validate every ledger file you
 edited plus jobs.yaml still parse. A malformed ledger breaks
 every future cycle — fix before ending the turn.
 

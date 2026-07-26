@@ -30,6 +30,7 @@ Usage (from the repo root)
   python orchestration/status.py --planned --priority 1
   python orchestration/status.py --backfill  # yaml for orphan dirs
   python orchestration/status.py --planned --commands  # launch cmds
+  python orchestration/status.py --running  # live job -> experiment
   python orchestration/status.py --verify  # assert hashes still match
   python orchestration/status.py --check mcts_cnt_prm800k \
       llm=qwen_3b prm=qwen_prm search.gen_budget=320  # probe a cell
@@ -985,6 +986,183 @@ def list_queue(entries):
     return [e for _, e in work]
 
 
+# ------------------------------------------------------------------ #
+# --running: what is on each live allocation right now, and how much  #
+# time is left. Joins `squeue -t R` against the ledger's `running`    #
+# entries on launch.job_id. A job id gets REUSED across cells, so     #
+# several entries can claim one job -- the one with the latest        #
+# `launch.at` is the live occupant; older claims are stale `running`  #
+# statuses that exp-check should resolve to scored/failed.            #
+# ------------------------------------------------------------------ #
+SLURM_USER = os.environ.get("USER", "tnguyen9210")
+
+
+def _parse_slurm_dur(text):
+    """Slurm duration -> hours. Accepts D-HH:MM:SS, HH:MM:SS, MM:SS.
+    Returns None for UNLIMITED / INVALID / anything unparseable."""
+    text = (text or "").strip()
+    if not text or not text[0].isdigit():
+        return None
+    days = 0
+    if "-" in text:
+        d, _, text = text.partition("-")
+        days = int(d)
+    parts = [int(p) for p in text.split(":")]
+    while len(parts) < 3:
+        parts.insert(0, 0)
+    h, m, s = parts[-3:]
+    return days * 24 + h + m / 60 + s / 3600
+
+
+def _fmt_hr(hours):
+    """Hours -> compact `18h36m`, negative -> `-2h05m`."""
+    if hours is None:
+        return "?"
+    sign = "-" if hours < 0 else ""
+    hours = abs(hours)
+    h = int(hours)
+    m = int(round((hours - h) * 60))
+    if m == 60:
+        h, m = h + 1, 0
+    return f"{sign}{h}h{m:02d}m"
+
+
+def squeue_running():
+    """{job_id: {partition, node, left_hr, elapsed_hr}} for this
+    user's RUNNING gpu allocations. Empty dict if squeue is absent
+    (running off the login node)."""
+    import subprocess
+    cmd = ["squeue", "-u", SLURM_USER, "-h", "-t", "R",
+           "-o", "%i|%P|%N|%L|%M"]
+    try:
+        out = subprocess.run(cmd, capture_output=True, text=True,
+                             timeout=60).stdout
+    except (OSError, subprocess.SubprocessError):
+        return {}
+    live = {}
+    for line in out.splitlines():
+        cols = line.split("|")
+        if len(cols) < 5:
+            continue
+        jid, part, node, left, elapsed = (c.strip() for c in cols[:5])
+        if not part.startswith("gpu"):
+            continue
+        live[jid] = {
+            "partition": part,
+            "node": node,
+            "left_hr": _parse_slurm_dur(left),
+            "elapsed_hr": _parse_slurm_dur(elapsed),
+        }
+    return live
+
+
+def _wandb_ids_by_hash():
+    """{config_hash: wandb run id} from the result manifests. One glob
+    over results/, no Hydra compose -- the entry's stored `hash` is the
+    join key. Falls back to the legacy wandb_run_id.txt sidecar when
+    manifest.json predates the post-wandb.init rewrite (run_id=None)."""
+    from utils.configs import load_wandb_run_id
+    out = {}
+    for h, (rdir, rec) in scan_result_manifests().items():
+        rid = rec.get("run_id")
+        if not rid:
+            with contextlib.suppress(OSError, ValueError):
+                rid = load_wandb_run_id(rdir)
+        out[str(h)] = rid or None
+    return out
+
+
+def running_table(entries, now=None):
+    """Join live allocations to their occupying ledger entry.
+
+    Returns (rows, stale, idle) where
+      rows  -- one per live job WITH a matching running entry
+      stale -- running entries whose job is gone or superseded
+      idle  -- live job ids no running entry claims (candidates for
+               the next launch; confirm with the nvidia-smi probe)
+    """
+    import datetime
+    now = now or datetime.datetime.now()
+    live = squeue_running()
+    wandb_ids = _wandb_ids_by_hash()
+
+    claims = {}
+    for e in entries:
+        if e.get("status") != "running":
+            continue
+        jid = str((e.get("launch") or {}).get("job_id") or "")
+        claims.setdefault(jid, []).append(e)
+
+    def _at(entry):
+        raw = (entry.get("launch") or {}).get("at") or ""
+        for fmt in ("%Y-%m-%d %H:%M", "%Y-%m-%d %H:%M:%S"):
+            try:
+                return datetime.datetime.strptime(str(raw), fmt)
+            except ValueError:
+                continue
+        return None
+
+    rows, stale = [], []
+    for jid, group in claims.items():
+        group = sorted(group, key=lambda e: (_at(e) or
+                                             datetime.datetime.min))
+        occupant = group[-1] if jid in live else None
+        for e in group:
+            if e is occupant:
+                continue
+            why = ("job ended" if jid not in live
+                   else f"superseded on job {jid}")
+            stale.append((e, why))
+        if occupant is None:
+            continue
+        at = _at(occupant)
+        elapsed = ((now - at).total_seconds() / 3600
+                   if at else live[jid]["elapsed_hr"])
+        exp = occupant.get("expected_hr")
+        rows.append({
+            "job_id": jid,
+            "node": live[jid]["node"],
+            "partition": live[jid]["partition"],
+            "wandb": wandb_ids.get(str(occupant.get("hash"))),
+            "id": occupant.get("id"),
+            "group": occupant.get("group"),
+            "ledger": occupant.get("_ledger"),
+            "elapsed_hr": elapsed,
+            "expected_hr": exp,
+            "run_left_hr": (None if exp is None or elapsed is None
+                            else exp - elapsed),
+            "job_left_hr": live[jid]["left_hr"],
+        })
+
+    rows.sort(key=lambda r: (r["run_left_hr"] is None,
+                             r["run_left_hr"] if r["run_left_hr"]
+                             is not None else 0))
+    idle = sorted(j for j in live if j not in claims)
+    return rows, stale, idle
+
+
+def print_running(entries):
+    """Markdown table for the exp-run / exp-cron cycle report."""
+    rows, stale, idle = running_table(entries)
+    print("| job | wandb | experiment | family | elapsed | "
+          "est. left | job left |")
+    print("|---|---|---|---|---|---|---|")
+    for r in rows:
+        est = _fmt_hr(r["run_left_hr"])
+        if r["run_left_hr"] is not None and r["run_left_hr"] < 0:
+            est = f"OVER {_fmt_hr(-r['run_left_hr'])}"
+        print(f"| {r['job_id']} | {r['wandb'] or '?'} | {r['id']} | "
+              f"{r['group']} | {_fmt_hr(r['elapsed_hr'])} | "
+              f"{est} | {_fmt_hr(r['job_left_hr'])} |")
+    print(f"\n# live={len(rows)} idle={len(idle)} "
+          f"stale_running={len(stale)}")
+    if idle:
+        print(f"#   unclaimed jobs: {' '.join(idle)}")
+    for e, why in sorted(stale, key=lambda s: s[0].get("id") or ""):
+        print(f"#   stale running: {e.get('id')} "
+              f"[{e.get('_ledger')}] -- {why}")
+
+
 def uniqueness_problems(entries):
     """Global duplicate-id / duplicate-hash detection across all
     ledgers. Duplicate hashes mean two entries compose to the same
@@ -1115,6 +1293,10 @@ def main():
     ap.add_argument("--queue", action="store_true",
                     help="list inqueue entries in drain order "
                          "(priority asc) with launch commands")
+    ap.add_argument("--running", action="store_true",
+                    help="table of live allocations: job -> occupying "
+                         "experiment, elapsed, estimated time left, "
+                         "job walltime left (squeue x ledger join)")
     ap.add_argument("--check-running", action="store_true",
                     dest="check_running",
                     help="verdict every running entry: finished | "
@@ -1166,6 +1348,10 @@ def main():
                 print(f"    + L{start + 1} {tid}  {title}")
         for tid, a, b in out["dups"]:
             print(f"  !! DUPLICATE table-id {tid}: {a} AND {b}")
+        return
+
+    if args.running:
+        print_running(queue)
         return
 
     if args.check or args.dedup:

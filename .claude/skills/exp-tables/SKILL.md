@@ -10,13 +10,17 @@ kube-v02 at alpha=0.5", `/exp-tables`. Replaces the old
 `exp-check` (scores/records). Design:
 [docs/decisions/experiment-workflow-v2.md](../../../docs/decisions/experiment-workflow-v2.md).
 
-Creates two synchronized artifacts from one intent statement:
+Creates the doc-side artifact from one intent statement:
 1. a `####` comparison table in the right `docs/exp-comp-*.md`,
    every row's `status` reflecting repo reality, and
-2. matching entries in that doc's ledger
-   (`orchestration/ledgers/<stem>.yaml`) — `status: planned`
-   for net-new cells, REUSED entries for cells that already
-   exist anywhere.
+2. for cells that ALREADY have a ledger entry anywhere, a
+   targeted `feeds:` append on that entry — nothing else.
+
+**Net-new cells get NO ledger entry.** A `planned` table row is
+the plan; the ledger tracks only runs Tuan has decided to run.
+He adds an entry when he is ready for the cell to run, not when
+the table is authored (Tuan's rule, 2026-07-24). So a fresh table
+is normally 100% doc-side writes.
 
 It does NOT launch runs (`exp-run`) and does NOT commit.
 
@@ -30,6 +34,25 @@ It does NOT launch runs (`exp-run`) and does NOT commit.
   ledger, reuse that entry: append this table's feeds key to its
   `feeds:` list (targeted Edit) and carry its status + numbers
   into the new table. One config = one entry, forever.
+- **Never create a ledger entry for a net-new (unrun) cell.**
+  The doc row says `planned`; the ledger stays untouched. Tuan
+  queues a cell when he wants it run — that is when its entry is
+  born (`status: inqueue` + `priority`). Writing `planned`
+  entries en masse floods the ledger with cells nobody intends
+  to run and makes `planned` meaningless.
+- **THE SYNC RULE: any ledger status change is followed, in the
+  same turn, by**
+  ```
+  python orchestration/status.py --sync-doc <stem> --apply
+  ```
+  The table's status cell is derived from the ledger, never
+  hand-maintained in parallel. This applies to every transition
+  (`planned`->`inqueue` on queueing, `inqueue`->`running` on
+  launch, `->failed`, `->scored`). Skipping it silently desyncs
+  the doc: on 2026-07-24 three queued cells still read `planned`
+  and 30 launched cells still read `planned`/`inqueue` across
+  three docs. Read the dry-run first (no `--apply`) and check
+  `mismatches=0` before applying.
 - **Detect the mixed case.** A "new" table often has cells
   already on disk or already running — their rows get the real
   status (`running`, `scored` + numbers), not `planned`.
@@ -89,28 +112,42 @@ sibling tables.
    it's the entry's `trials`).
 3. **Show Tuan the resolved-cell table** and get go-ahead:
    `| cell | hash | on_disk | match (ledger/id/status) | -> action |`
-   action = `append planned` | `reuse <id> (status, k/n scored)`.
+   action = `doc row only (no ledger entry)` |
+   `reuse <id> (status, k/n scored)`.
 4. **Write the doc `####` section** (house style §5, placement
    per the doc's `## Tuning tables [gen_budget=N]` hierarchy).
    Reused scored cells get their numbers copied from the doc
    cell the matched entry's `feeds` points at (token-cheap, no
    recompute); other reused cells get the entry's live status.
-5. **Ledger writes** in `orchestration/ledgers/<stem>.yaml`:
-   - net-new cell -> append (bottom, never reorder):
-     ```yaml
-     - id: <human-id, queue-style>
-       launcher: <launcher>
-       hash: "<hash verbatim from --dedup>"
-       config_root: <config_root>
-       overrides: {<dict, no run.* keys>}
-       trials: <n>
-       feeds: [<this table's feeds-key>]
-       group: <family>
-       status: planned
-       note: <short label>
-     ```
-   - matched cell -> targeted Edit on the existing entry: append
-     this table's feeds key to its `feeds:` list. Nothing else.
+5. **Ledger writes** in `orchestration/ledgers/<stem>.yaml` —
+   there is only ONE case that writes:
+   - **matched cell** -> targeted Edit on the existing entry:
+     append this table's feeds key to its `feeds:` list. Nothing
+     else.
+   - **net-new cell** -> **no ledger write at all.** The doc row
+     carries `status: planned` and that is the whole record. Do
+     not append an entry, not even a `planned` one.
+
+   Keep each net-new cell's `hash` from step 2 in the *report*
+   (§8) so Tuan can queue it later without re-deriving. When he
+   says "queue cell X", that is when its entry is appended —
+   bottom, never reorder — and **the doc row must be re-synced in
+   the same turn** (see the sync rule below) so the table shows
+   `inqueue`, not a stale `planned`:
+   ```yaml
+   - id: <human-id, queue-style>
+     launcher: <launcher>
+     hash: "<hash verbatim from --dedup>"
+     config_root: <config_root>
+     overrides: {<dict, no run.* keys>}
+     trials: <n>
+     feeds: [<this table's feeds-key>]
+     group: <family>
+     status: inqueue
+     priority: <as Tuan specifies>
+     expected_hr: <estimate>
+     note: <short label>
+   ```
 6. **Mint the table's stable ID:** `python
    orchestration/status.py --mint-table-ids --apply` stamps a
    `<!-- table-id: tbl-xxxxxx -->` line under the new heading
@@ -124,9 +161,12 @@ sibling tables.
    (dry-run) — it should propose no changes to your fresh
    table.
 8. **Report**: N cells (new/reused/scored), the feeds key, and
-   what to do next: Tuan reviews + sets `status: inqueue` +
-   `priority` on the rows he wants run (on request, apply that
-   edit for him), then `/exp-run` drains them.
+   — for every net-new cell — its `hash` and derived launch
+   command, since no ledger entry holds them yet. Then state what
+   to do next: nothing is queued or launchable until Tuan names
+   the cells he wants run; on that request, append their entries
+   (`status: inqueue` + `priority`, per step 5) and `/exp-run`
+   drains them.
 
 ## 5. Doc house style
 
@@ -143,6 +183,9 @@ tbl-id is the durable one).
 
 - **Duplicate-append** (the worst): a matched cell appended as
   new. §0 / step 5.
+- **Appending `planned` entries for net-new cells** — the ledger
+  tracks intent-to-run, not the space of authored table cells.
+  A fresh table adds ZERO new ledger entries. §0 / step 5.
 - **Stale-status row**: writing `planned` for a cell that's on
   disk or running. Step 2's dedup output prevents it.
 - **feeds-key drift**: key not findable in the Limitations line
