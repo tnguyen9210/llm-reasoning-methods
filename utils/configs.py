@@ -701,6 +701,49 @@ class MCTSSemV01Config(SearchConfig):
     # pre-existing config_hash unchanged (see _HASH_EXCLUDE_IF_DEFAULT).
     cov_dtype: str = "fp64"           # "fp32" | "fp64"
 
+    # WHERE the covariance lives.
+    #   "global" — one V for the whole tree. Every selection anywhere
+    #              folds into it and every bonus reads it. The
+    #              original v02 behavior.
+    #   "local"  — one V per node, over the children THAT node has
+    #              selected. Sibling subtrees never see each other's
+    #              folds, so the bonus at n asks "which child points
+    #              somewhere n has not committed to yet?" instead of
+    #              "...somewhere the entire search has not visited?".
+    # Pairs with the per-node alpha schedule (sqrt(log(1+visits)) is
+    # already a per-node clock) and bounds the bonus's dynamic range
+    # to a node's own visit count rather than the run's total
+    # selections. Costs one d x d matrix per selected-through node —
+    # see the memory guard in MCTS.__init__.
+    # Hash: excluded iff equal to the pinned neutral "global".
+    cov_scope: str = "global"          # "global" | "local"
+
+    # WHAT vector represents a child in its parent's selection problem.
+    #   "absolute" — the child's own pooled embedding (original v02).
+    #   "relative" — the displacement x_child - x_parent, i.e. the
+    #                child in PARENT-CENTRED coordinates. "relative"
+    #                always means parent-relative: it is the only
+    #                reference implemented, and a second one (root,
+    #                grandparent) would arrive as its own knob
+    #                rather than another value here. Embeddings
+    #                are pooled over the whole text prefix, so siblings
+    #                share a long prefix and cluster tightly around the
+    #                parent's direction; that shared component
+    #                dominates sqrt(x^T V^-1 x) and leaves the sibling
+    #                differences — the thing being selected on — as a
+    #                small perturbation. Subtracting the parent scores
+    #                step DIRECTIONS instead of absolute positions.
+    # Orthogonal to cov_scope: meaningful under both. The root is
+    # embedded explicitly (core._embed_root: the question pooled
+    # with an empty answer) so "relative" applies at every depth;
+    # without that, one global V would accumulate a mixture of
+    # absolute positions and displacements. Mutually exclusive with
+    # embeds_center_mode="local" — that would double-center, and
+    # would center the one-element root batch to zero;
+    # MCTS.__init__ raises.
+    # Hash: excluded iff equal to the pinned neutral "absolute".
+    embeds_ref: str = "absolute"       # "absolute" | "relative"
+
     # Second (pooling) vLLM engine's share of GPU memory. Only used
     # when embeds_source == "policy". The generative engine uses
     # llm.gpu_memory_utilization; the two must sum to leave headroom
@@ -746,43 +789,6 @@ class MCTSSemV02Config(MCTSSemV01Config):
     # Which PRM hidden-state layer to pool (-1 = last, closest to the
     # reward head). The v02-specific knob; v01 has no analogue.
     prm_embeds_layer: int = -1
-
-
-@dataclass
-class MCTSSemV02LocalConfig(MCTSSemV02Config):
-    """Semantic MCTS — v02.01: per-node (local) diversity covariance.
-
-    Everything v02 has, with one added axis: WHERE the covariance V
-    lives. v02 keeps a single V for the whole tree and folds every
-    selection anywhere into it; v02.01 gives each node its own V over
-    the children IT has selected, so sibling subtrees never see each
-    other's folds. Core: core/mcts_sem_search_v02_01_00.py.
-
-    A separate schema rather than a `cov_scope` field on
-    MCTSSemV02Config, for two reasons:
-      1. Hash stability. config_hash drops a field only when it equals
-         a pinned neutral in _HASH_EXCLUDE_IF_DEFAULT; adding a knob
-         to the shared v02 schema would otherwise re-hash every
-         existing sem_v02 config (135 + 181 scored level-4/level-5
-         entries reference those hashes).
-      2. No silent no-ops. core/mcts_sem_search_v02_00_00.py does not
-         read cov_scope. If the knob lived on v02's schema, a config
-         setting cov_scope="local" with algo=mcts_sem_v02 would run
-         global and record "local" in its manifest. Keeping the knob
-         on the schema whose core actually honors it makes that
-         unrepresentable.
-
-    cov_scope="global" is retained here as the VERIFICATION lever, not
-    as an operating point: it makes this core reproduce v02 exactly,
-    so a v02-vs-v02.01 difference under "global" is a porting bug and
-    a difference under "local" is the ablation. See the module
-    docstring for the four checks this enables.
-    """
-    method: str = "mcts_sem_v02_01"
-
-    # "local"  — one V per node, over the children that node selected.
-    # "global" — one V for the tree (v02's behavior, bit-for-bit).
-    cov_scope: str = "local"
 
 
 @dataclass
@@ -1070,7 +1076,15 @@ _HASH_EXCLUDE = {
 # config_hash stays unchanged. The pinned value is frozen forever,
 # independent of the dataclass default above.
 _HASH_EXCLUDE_IF_DEFAULT = {
-    "search": {"cov_dtype": "fp64", "embeds_center_mode": "fixed"},
+    "search": {
+        "cov_dtype": "fp64",
+        "embeds_center_mode": "fixed",
+        # Added 2026-07-28 with the cov_scope/embeds_ref merge.
+        # Pinned to the pre-merge behavior so every config_hash
+        # recorded before the merge is unchanged.
+        "cov_scope": "global",
+        "embeds_ref": "absolute",
+    },
 }
 
 

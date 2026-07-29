@@ -60,6 +60,23 @@ cov_dtype: fp64  # "fp32" | "fp64" (precision of V/V_inv and the
                  #   docs/decisions/covariance-precision.md)
 revisit_policy: reuse   # "reuse" | "regenerate"
 
+# Where the covariance lives. "global" = one V for the whole tree
+# (the long-standing behavior); "local" = one V per node, over the
+# children that node selected, so sibling subtrees never see each
+# other's folds. "local" allocates one d x d matrix per
+# selected-through node, bounded by gen_budget -- MCTS.__init__
+# refuses combinations over 4 GiB/question.
+cov_scope: global       # "global" | "local"
+
+# What vector represents a child in its parent's selection problem.
+# "absolute" = the child's own pooled embedding; "relative" = the
+# displacement (child - parent), which strips the long shared text
+# prefix siblings have in common and scores step DIRECTIONS instead
+# of absolute positions. Falls back to absolute at the root (no
+# parent embedding). Cannot be combined with
+# embeds_center_mode=local -- that double-centers.
+embeds_ref: absolute    # "absolute" | "relative" (parent-relative)
+
 # NOTE: no embeds_gpu_memory_utilization here — v02 has no pooling
 # engine (embeds come from the PRM). The schema default is inherited
 # but unused; the generative engine's share is set on the llm group

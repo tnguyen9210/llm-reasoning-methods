@@ -50,8 +50,76 @@ utils/configs.py for defaults)
     prm_embeds_layer: int                          (default: -1 = last)
     cov_update      : "exact" | "sm" (Sherman-Morrison) (default: "exact")
     cov_dtype       : "fp32" | "fp64"              (default: "fp64")
+    cov_scope       : "global" | "local"           (default: "global")
+    embeds_ref      : "absolute" | "relative"      (default: "absolute")
     revisit_policy  : "reuse" | "regenerate"       (default: "reuse")
     prm_batch_size  : int                          (default: 4)
+
+The diversity covariance: two orthogonal axes (merged 2026-07-28,
+absorbing the former standalone mcts_sem_v02_01 file)
+
+    cov_scope — WHERE V lives.
+        "global"  one V for the whole tree. Every selection anywhere
+                  folds into it and every bonus reads it. This is the
+                  original behavior and the pinned hash neutral, so
+                  every run recorded before the merge is unaffected.
+        "local"   one V per node, over the children THAT node has
+                  selected. Sibling subtrees never see each other's
+                  folds, so the bonus at n asks "which child points
+                  somewhere n has not committed to yet?" rather than
+                  "...somewhere the entire search has not visited?".
+                  Motivation: (a) the alpha schedule is already a
+                  per-node clock (sqrt(log(1+parent_visits))), so a
+                  node-indexed multiplier against a globally
+                  accumulated V mixes two clocks; (b) with L2-normalized
+                  embeddings a direction covered k times scores
+                  ~1/sqrt(lam+k), and globally k grows with total
+                  selections (thousands), so ds_alpha means something
+                  different at the root than at depth 15 — locally k is
+                  the node's own visit count (tens).
+                  COSTS one d x d matrix per selected-through node,
+                  bounded by gen_budget; see the guard in __init__.
+
+    embeds_ref — WHAT vector represents a child (see _cov_vec).
+        "absolute" the child's own pooled embedding (original).
+        "relative" the displacement x_child - x_parent, i.e. the
+                   child expressed in coordinates centred on ITS
+                   PARENT. ("relative" always means parent-relative
+                   here; it is the only reference implemented. A
+                   second one — root, grandparent — would arrive as
+                   its own knob, not another value.) Embeddings are
+                   pooled over the whole text prefix, so siblings share
+                   a long prefix and cluster tightly around the parent's
+                   direction; that shared component dominates
+                   sqrt(x^T V^-1 x) and leaves the sibling differences —
+                   the thing being selected on — as a small
+                   perturbation. Subtracting the parent scores step
+                   DIRECTIONS instead of absolute positions.
+                   The root is embedded explicitly (_embed_root) so
+                   this applies at EVERY depth including depth 0.
+                   Without that the root has no embedding, its
+                   children fall back to absolute vectors, and under
+                   cov_scope="global" one V accumulates a MIXTURE of
+                   absolute positions and displacements — measured at
+                   25% / 75% before _embed_root existed. With it,
+                   global+relative genuinely does accumulate
+                   frame-free step directions across the whole tree.
+                   Rejected together with embeds_center_mode="local"
+                   — that double-centers, and it would also make the
+                   one-element root batch center to zero.
+
+    Under cov_scope="local", embeds_ref="relative" is the coherent
+    pairing: the parent is a fixed reference for the node's whole
+    lifetime, whereas embeds_center_mode="local"'s group mean is
+    recomputed at every expansion, so under revisit_policy=
+    "regenerate" one node's V would accumulate vectors measured from
+    different origins.
+
+    Verification: unittests/check_cov_scope_embeds_ref.py drives the
+    real selection loop from a scripted generator (no GPU) and pins
+    both the algebra and the RNG consumption. cov_scope="global" +
+    embeds_ref="absolute" was checked trace-for-trace against the
+    pre-merge file across 6 configurations.
 
 Algorithm sketch
     For each of `num_phases` phases:
@@ -80,6 +148,7 @@ papering over with shims.
 Variant lineage: docs/algorithms.md.
 """
 
+import gc
 import random
 import logging
 from collections import defaultdict
@@ -105,6 +174,19 @@ logging.basicConfig(format='%(message)s', level=logging.FATAL + 1)
 # multiplied against them (see MCTS.__init__, select_child,
 # _diverse_select).
 _COV_DTYPES = {"fp32": np.float32, "fp64": np.float64}
+
+# config.search.cov_scope -> where the covariance lives (MCTS._cov_read
+# / _cov_fold); config.search.embeds_ref -> what vector represents a
+# child in its parent's selection problem (MCTS._cov_vec).
+_COV_SCOPES = ("global", "local")
+_EMBEDS_REFS = ("absolute", "relative")
+
+# Ceiling on the worst-case per-question local-covariance footprint
+# (cov_scope="local" allocates one d x d matrix per selected-through
+# node, so cost scales with gen_budget). Enforced in MCTS.__init__;
+# see the guard there for why a legal config can otherwise reach tens
+# of GiB and die as a silent cgroup OOM kill.
+_LOCAL_COV_MAX_BYTES = 4 * 2**30      # 4 GiB
 
 
 # --------------------------------------------------------------------- #
@@ -432,6 +514,52 @@ def _embed_candidates(
     raise ValueError(f"unknown embeds_source: {source!r}")
 
 
+def _embed_root(
+    question, config, tokenizer, llm_vllm_embeds, prm,
+    response_start_idx,
+):
+    """The root's diversity embedding: the question with an EMPTY
+    answer, pooled through the same pipeline as every candidate.
+
+    Only computed under embeds_ref="relative", where each child is
+    represented by its displacement from its parent and the root
+    would otherwise have nothing to subtract. Without it the root's
+    children fall back to absolute vectors, which costs differently
+    under each scope:
+
+      cov_scope="global"  one V accumulates a MIXTURE of absolute
+                          positions (root's children) and
+                          displacements (everywhere else) — measured
+                          at 25% / 75% on a 100-fold descent. V^-1 is
+                          then fitted to a bimodal mixture and the
+                          bonus means different things at different
+                          depths.
+      cov_scope="local"   each V stays internally consistent, but the
+                          ROOT's V collects the tightly-clustered
+                          absolute sibling embeddings that relative
+                          mode exists to decorrelate — so depth 0,
+                          where the branching factor is widest, keeps
+                          the exact problem the knob was built to fix.
+
+    Implemented as _embed_candidates with one empty candidate, so
+    scope / pooling / projection / centering / normalize are
+    byte-identical to what every child gets — a root embedding built
+    any other way would not live in the same space as the children it
+    is subtracted from. Costs one extra PRM forward pass per
+    question, against `gen_budget` batched passes for the search.
+
+    Depends on the embeds_ref="relative" + embeds_center_mode="local"
+    guard in MCTS.__init__: a one-element batch centred on its own
+    group mean is exactly the zero vector, which would make every
+    child's displacement equal to its own embedding. That combination
+    is rejected there, so this function can never be reached with it.
+    """
+    return _embed_candidates(
+        question, [""], config, tokenizer, llm_vllm_embeds, prm,
+        response_start_idx,
+    )[0]
+
+
 # --------------------------------------------------------------------- #
 # Node and tree classes                                                 #
 # --------------------------------------------------------------------- #
@@ -467,6 +595,23 @@ class MCTSNode(BaseNode):
     # of making the q-value invariant explicit: only `update` may mutate.
     __visit_count: int = 0
     __value_sum: float = 0.0
+
+    # ---- per-node covariance (cov_scope="local" only) ---------------
+    # V_local / V_inv_local hold THIS node's own ridge covariance over
+    # the vectors of the children it has selected. They stay None
+    # until the first fold at this node (MCTS._cov_fold allocates), so
+    # nodes that are created but never selected through — the vast
+    # majority of leaves — cost nothing. Under cov_scope="global" they
+    # stay None forever and the tree-level MCTS.V / MCTS.V_inv are
+    # used instead.
+    #
+    # Which of the two is populated follows cov_update, exactly as at
+    # tree level: "sm" keeps only V_inv_local; "exact" keeps both.
+    # cov_n_folds counts folds at this node — the local analogue of
+    # "how much evidence V has seen".
+    V_local: Optional[Any] = None
+    V_inv_local: Optional[Any] = None
+    cov_n_folds: int = 0
 
     def q_value(self) -> float:
         if self.__visit_count == 0:
@@ -547,16 +692,30 @@ class MCTS(BaseTree):
     # completed_nodes must be a fresh list per question — a class-level
     # [] default is shared state waiting to happen).
     completed_nodes: List[Type[BaseNode]] = None
+    # Tree-level covariance: populated under cov_scope="global" only.
     V: NDArray[Shape["2048, 2048"], np.float32] = None
     V_inv: NDArray[Shape["2048, 2048"], np.float32] = None
     # Count of nodes that hit max_depth (mirrors mcts_cnt_search_v05's
     # cnt_node_max_depth); incremented in create_child.
     cnt_node_max_depth: int = 0
+    # How many nodes have allocated a local covariance. Under
+    # cov_scope="local" this is the memory multiplier: peak local
+    # covariance bytes ~= cnt_cov_nodes * d^2 * itemsize (x2 under
+    # cov_update="exact", which keeps V alongside V_inv). Bounded by
+    # the number of expansions, i.e. by gen_budget. Surfaced per
+    # question as results["q_cov_nodes"] under cov_scope="local"
+    # ONLY — see the gate at the end of _search for why global runs
+    # must not gain the key.
+    cnt_cov_nodes: int = 0
     # Precision for V/V_inv (config.search.cov_dtype), resolved to a
     # numpy dtype in __init__. MUST be declared here — MCTS is a
     # pydantic BaseModel, which raises on `self.attr = ...` for any
     # attribute not declared as a field (unlike V/V_inv above).
     cov_dtype: Any = np.float64
+    # Resolved config.search.cov_scope / embeds_ref; see _cov_read,
+    # _cov_fold, _cov_vec.
+    cov_scope: str = "global"
+    embeds_ref: str = "absolute"
 
     def __init__(self, **kwargs) -> None:
         super().__init__(**kwargs)
@@ -573,25 +732,228 @@ class MCTS(BaseTree):
         # Either way the start state is V_0 = lam*I, so
         # V_0^-1 = (1/lam)*I in closed form (no inverse call), and the
         # initial diversity term is uniform across arms.
-        embeds_dim = self.config.search.embeds_dim
-        lam = self.config.search.lam
+        sc = self.config.search
+        embeds_dim = sc.embeds_dim
         # cov_dtype fixes V/V_inv's precision explicitly (default
         # "fp64" matches the previous implicit behavior: np.eye() with
         # no dtype= already defaulted to float64).
-        cov_dtype_cfg = self.config.search.cov_dtype
+        cov_dtype_cfg = sc.cov_dtype
         if cov_dtype_cfg not in _COV_DTYPES:
             raise ValueError(f"unknown cov_dtype: {cov_dtype_cfg!r}")
         self.cov_dtype = _COV_DTYPES[cov_dtype_cfg]
-        if self.config.search.cov_update == "sm":
-            self.V = None
-            self.V_inv = (1.0 / lam) * np.eye(
-                embeds_dim, dtype=self.cov_dtype
+
+        cov_scope = sc.cov_scope
+        if cov_scope not in _COV_SCOPES:
+            raise ValueError(f"unknown cov_scope: {cov_scope!r}")
+        self.cov_scope = cov_scope
+
+        embeds_ref = sc.embeds_ref
+        if embeds_ref not in _EMBEDS_REFS:
+            raise ValueError(f"unknown embeds_ref: {embeds_ref!r}")
+        self.embeds_ref = embeds_ref
+
+        # Double-centering guard. embeds_center_mode="local" already
+        # subtracts the sibling-group mean; embeds_ref="relative"
+        # then
+        # subtracts the parent on top of that, so the vectors fed to V
+        # are differences of already-differenced quantities and
+        # neither knob means what its name says. They are two answers
+        # to the same question ("remove the offset siblings share"),
+        # so pick one. parent-relative is the more coherent of the two
+        # under cov_scope="local": the parent is a fixed reference for
+        # the node's whole lifetime, whereas the group mean is
+        # recomputed at every expansion (see _center_and_normalize).
+        if (embeds_ref == "relative" and sc.embeds_center
+                and sc.embeds_center_mode == "local"):
+            raise ValueError(
+                "embeds_ref='relative' with "
+                "embeds_center_mode='local' "
+                "double-centers: the group mean is subtracted, then "
+                "the parent. Choose one — set embeds_center=false, "
+                "or embeds_ref='absolute'."
             )
+
+        # Memory guard for the per-node covariance. Under "global"
+        # there is exactly one d x d matrix no matter what d is;
+        # under "local" there is one per selected-through node, so the
+        # same d costs gen_budget times as much. embeds_proj="none"
+        # forces embeds_dim to the raw PRM hidden size (4096), which
+        # is 128 MiB per node — a documented, legal v02 config that
+        # would need ~40 GiB per question here and die as a silent
+        # cgroup OOM kill with no traceback. Fail loudly instead.
+        if cov_scope == "local":
+            itemsize = np.dtype(self.cov_dtype).itemsize
+            per_node = embeds_dim * embeds_dim * itemsize
+            if sc.cov_update != "sm":
+                per_node *= 2      # "exact" keeps V beside V_inv
+            worst = per_node * sc.gen_budget
+            if worst > _LOCAL_COV_MAX_BYTES:
+                raise ValueError(
+                    f"cov_scope='local' would hold up to "
+                    f"{worst / 2**30:.1f} GiB of covariance per "
+                    f"question (embeds_dim={embeds_dim}, "
+                    f"gen_budget={sc.gen_budget}, cov_update="
+                    f"{sc.cov_update!r} -> {per_node / 2**20:.0f} MiB "
+                    f"per node), over the "
+                    f"{_LOCAL_COV_MAX_BYTES / 2**30:.0f} GiB cap. Use "
+                    f"embeds_proj='sparse' with a smaller embeds_dim, "
+                    f"or cov_scope='global'."
+                )
         else:
-            self.V = lam * np.eye(embeds_dim, dtype=self.cov_dtype)
-            self.V_inv = (1.0 / lam) * np.eye(
-                embeds_dim, dtype=self.cov_dtype
+            # Tree-level V, allocated exactly as before. Under "local"
+            # nothing is allocated here — each node allocates its own
+            # on first fold (see _cov_fold).
+            self.V, self.V_inv = self._new_cov()
+
+    # ----- Covariance plumbing --------------------------------------- #
+
+    def _new_cov(self):
+        """Allocate a fresh (V, V_inv) pair at the ridge init.
+
+        Ridge-regularized covariance V = lam*I + sum u u^T. The
+        diversity term sqrt(x^T V^-1 x) needs V^-1; how it is
+        maintained depends on cov_update:
+          "exact"  keep V; recompute V^-1 = inv(V) each fold, O(d^3).
+          "sm"     keep V^-1 directly and rank-1 update it per fold
+                   (O(d^2)); V isn't needed, so it stays None.
+        Either way the start state is V_0 = lam*I, so
+        V_0^-1 = (1/lam)*I in closed form (no inverse call), and the
+        initial diversity term is uniform across arms.
+
+        Called once per run under cov_scope="global", and once per
+        selected-through NODE under "local".
+        """
+        sc = self.config.search
+        embeds_dim = sc.embeds_dim
+        lam = sc.lam
+        V_inv = (1.0 / lam) * np.eye(embeds_dim, dtype=self.cov_dtype)
+        if sc.cov_update == "sm":
+            return None, V_inv
+        V = lam * np.eye(embeds_dim, dtype=self.cov_dtype)
+        return V, V_inv
+
+    def _cov_read(self, node):
+        """The V^-1 that governs selection among `node`'s children.
+
+        Under "global" that is the tree's single V_inv. Under "local"
+        it is the node's own.
+
+        The `V_inv_local is None` fallback below is defensive, not a
+        hot path: a node only reaches _select_by_diversity once its
+        visit_count exceeds 1, which means it was already selected
+        through once, which means _cov_fold already allocated. It is
+        kept so the accessor is total — a caller that reads before
+        any fold gets the mathematically correct ridge init rather
+        than an AttributeError.
+        """
+        if self.cov_scope == "global":
+            return self.V_inv
+        if node.V_inv_local is None:
+            lam = self.config.search.lam
+            return (1.0 / lam) * np.eye(
+                self.config.search.embeds_dim, dtype=self.cov_dtype
             )
+        return node.V_inv_local
+
+    def _cov_fold(self, node, u):
+        """Fold the direction `u` into the covariance owned by `node`.
+
+        `u` is the selected child's vector (see _cov_vec) as a (d, 1)
+        column, cast to cov_dtype by the caller. Under "global" this
+        mutates the tree-level V/V_inv; under "local" it mutates only
+        `node`'s, allocating on first use — so sibling subtrees never
+        see each other's folds, which IS the local-scope ablation.
+
+        The two cov_update paths:
+          "sm"    persistent rank-1 inverse update, O(d^2):
+                  (V + uu^T)^-1 = V^-1 - (V^-1 u)(V^-1 u)^T
+                                         / (1 + u^T V^-1 u)
+                  then symmetrize, to stop floating-point asymmetry
+                  compounding over the run.
+          "exact" accumulate V and re-solve, O(d^3). solve(V, I) over
+                  inv(V): same cost, slightly better-conditioned
+                  (avoids explicitly forming the inverse via a less
+                  stable routine).
+        """
+        if self.cov_scope == "global":
+            V, V_inv = self.V, self.V_inv
+        else:
+            if node.V_inv_local is None:
+                node.V_local, node.V_inv_local = self._new_cov()
+                self.cnt_cov_nodes += 1
+            V, V_inv = node.V_local, node.V_inv_local
+
+        if self.config.search.cov_update == "sm":
+            Vu = V_inv @ u
+            denom = 1.0 + float(u.T @ Vu)
+            V_inv = V_inv - (Vu @ Vu.T) / denom
+            V_inv = 0.5 * (V_inv + V_inv.T)
+        else:
+            V = V + u @ u.T
+            V_inv = np.linalg.solve(
+                V, np.eye(V.shape[0], dtype=self.cov_dtype)
+            )
+
+        if self.cov_scope == "global":
+            self.V, self.V_inv = V, V_inv
+        else:
+            node.V_local, node.V_inv_local = V, V_inv
+            node.cov_n_folds += 1
+
+    def _cov_vec(self, node, child):
+        """`child` as represented inside `node`'s selection problem.
+
+        This is BOTH what the diversity bonus scores and what the
+        fold accumulates — one function so the two can never diverge.
+        That is a correctness requirement, not tidiness: if the bonus
+        scored x_c - x_n while V_n accumulated x_c, V_n would live in
+        a different space than the queries and the bonus would be
+        meaningless.
+
+          embeds_ref="absolute" : the child's own pooled embedding
+                                  (the original v02 behavior).
+          embeds_ref="relative" : the DISPLACEMENT x_c - x_n, i.e.
+                                  the child in PARENT-CENTRED
+                                  coordinates ("relative" always
+                                  means parent-relative here). A
+                                  child's embedding is pooled over its
+                                  whole text prefix, so siblings share
+                                  a long common prefix and their
+                                  absolute embeddings cluster tightly
+                                  around the parent's direction. That
+                                  shared component dominates
+                                  sqrt(x^T V^-1 x), leaving the
+                                  sibling differences — the only thing
+                                  diversity selection cares about — as
+                                  a small perturbation. Subtracting
+                                  the parent removes it, so the bonus
+                                  is over step DIRECTIONS.
+
+        The root: `embeds` is otherwise set only in create_child, so
+        mcts_search calls _embed_root to give the root the question
+        pooled with an empty answer — the natural origin for a first
+        step. The `node.embeds is None` branch below is therefore a
+        DEFENSIVE fallback (a tree driven without that setup, e.g.
+        from a unit test), not the depth-0 path of a real run.
+
+        Renormalization follows embeds_normalize rather than adding
+        its own knob. ||x_c - x_n|| is well below 1 for clustered
+        siblings and the bonus scales linearly in ||x||, so raw
+        differences would shrink it several-fold and make ds_alpha
+        mean something different than it does in every existing
+        sweep. A zero difference passes through as the zero vector:
+        zero bonus, and a Sherman-Morrison fold of zero is a no-op
+        (denom == 1).
+        """
+        x = child.embeds
+        if self.embeds_ref == "absolute" or node.embeds is None:
+            return x
+        x = x - node.embeds
+        if self.config.search.embeds_normalize:
+            norm = float(np.linalg.norm(x))
+            if norm > 0:
+                x = x / norm
+        return x
 
     def create_node(self, parent=None):
         return MCTSNode(parent=parent)
@@ -692,7 +1054,7 @@ class MCTS(BaseTree):
         _children: List[Any] = []
         for ch in node.children:
             q_values.append(ch.q_value())
-            embeds.append(ch.embeds)
+            embeds.append(self._cov_vec(node, ch))
             _children.append(ch)
             logging.fatal(f"{ch.tag}")
             logging.fatal(f"   nvisit = {ch.visit_count():0.2f}")
@@ -703,7 +1065,7 @@ class MCTS(BaseTree):
 
         log_nvisit_parent = np.sqrt(np.log(1 + node.visit_count()))
         best_idx = _diverse_select(
-            self.V_inv, embeds, q_values,
+            self._cov_read(node), embeds, q_values,
             self.config.search.ds_alpha * log_nvisit_parent,
             self.config.search.ds_beta,
             cov_dtype=self.cov_dtype,
@@ -724,32 +1086,17 @@ class MCTS(BaseTree):
             return None
 
         # Covariance update — UNCONDITIONAL: it runs on BOTH branches,
-        # including the first-visit q-value path that never reads V_inv.
-        # That path still commits to a child, so its direction must
-        # enter the covariance or V_inv would go stale (no longer equal
-        # inv(V)) and later diversity bonuses would be wrong. This is
-        # the one place exact and sm (Sherman-Morrison) differ:
-        # Cast to cov_dtype so u's precision matches V/V_inv exactly —
-        # otherwise NumPy's mixed-dtype promotion decides silently.
-        u = selected_node.embeds.reshape(-1, 1).astype(self.cov_dtype)
-        if self.config.search.cov_update == "sm":
-            # Persistent rank-1 inverse update (O(d^2)), then symmetrize
-            # to stop floating-point asymmetry compounding over the run.
-            #   (V + uu^T)^-1 = V^-1 - (V^-1 u)(V^-1 u)^T / (1 + u^T V^-1 u)
-            Vu = self.V_inv @ u
-            denom = 1.0 + float(u.T @ Vu)
-            self.V_inv = self.V_inv - (Vu @ Vu.T) / denom
-            self.V_inv = 0.5 * (self.V_inv + self.V_inv.T)
-        else:
-            # Exact: accumulate V, recompute its inverse from scratch.
-            # solve(V, I) over inv(V): same O(d^3) cost, slightly
-            # better-conditioned (avoids explicitly forming the inverse
-            # via a less stable routine). This is the O(d^3)-per-
-            # selection baseline; sm above is the fast path.
-            self.V = self.V + u @ u.T
-            self.V_inv = np.linalg.solve(
-                self.V, np.eye(self.V.shape[0], dtype=self.cov_dtype)
-            )
+        # including the first-visit q-value path that never reads
+        # V_inv. That path still commits to a child, so its direction
+        # must enter the covariance or V_inv would go stale (no longer
+        # equal inv(V)) and later diversity bonuses would be wrong.
+        # _cov_vec builds the SAME representation _select_by_diversity
+        # scored; cast to cov_dtype so u's precision matches V/V_inv
+        # exactly, rather than letting NumPy's mixed-dtype promotion
+        # decide silently.
+        u = self._cov_vec(node, selected_node)
+        u = u.reshape(-1, 1).astype(self.cov_dtype)
+        self._cov_fold(node, u)
         logging.fatal(f"selected_node = {selected_node.tag}")
         return selected_node
 
@@ -932,6 +1279,17 @@ def mcts_search(question, agent, config, llm_vllm, llm_vllm_embeds, prm):
     response_start_idx = _compute_response_start_idx(
         question, config, tokenizer
     )
+    # Under embeds_ref="relative" the root needs a real embedding or
+    # its children have nothing to measure a displacement from (see
+    # _embed_root for what the fallback costs under each scope).
+    # Skipped under "absolute", where it would never be read and would
+    # buy a PRM forward pass for nothing — so this leaves every
+    # pre-existing config's behavior untouched.
+    if agent.embeds_ref == "relative":
+        agent.root.embeds = _embed_root(
+            question, config, tokenizer, llm_vllm_embeds, prm,
+            response_start_idx,
+        )
     revisit_policy = config.search.revisit_policy
 
     gen_cnt = 0
@@ -968,7 +1326,19 @@ def mcts_search(question, agent, config, llm_vllm, llm_vllm_embeds, prm):
                     current_node, infos, embeds, scores, p, gen_cnt
                 )
 
-            current_node = agent.select_child(current_node)
+            # select_child returns None only when the node ended up
+            # with zero children -- unreachable today (expand_node
+            # always appends batch_size>=1 candidates), but guarded so
+            # a length mismatch in its zip() degrades to ending the
+            # phase instead of an AttributeError one iteration later.
+            # Assign via a temp: writing None straight into
+            # current_node would lose the node we still need to
+            # backprop from.
+            nxt = agent.select_child(current_node)
+            if nxt is None:
+                agent.backprop(current_node)
+                break
+            current_node = nxt
             logging.fatal(f"gen_cnt = {gen_cnt}")
             if gen_cnt >= config.search.gen_budget:
                 break
@@ -999,6 +1369,7 @@ def mcts_search(question, agent, config, llm_vllm, llm_vllm_embeds, prm):
     return (
         completions, comp_depth, comp_phase, comp_gen,
         gen_cnt, p, phase_depths, agent.cnt_node_max_depth,
+        agent.cnt_cov_nodes,
     )
 
 
@@ -1026,6 +1397,7 @@ def _search(
     batch_q_last_phase = [[] for _ in range(n)]
     batch_phase_depths = [[] for _ in range(n)]
     batch_q_nodes_max_depth = [[] for _ in range(n)]
+    batch_q_cov_nodes = [[] for _ in range(n)]
 
     for q_idx, question in enumerate(batch_of_questions):
         seed = 100_000 + trial_idx
@@ -1038,7 +1410,7 @@ def _search(
         (
             completions, comp_depth, comp_phase, comp_gen,
             q_total_gens, q_last_phase, phase_depths,
-            q_nodes_max_depth,
+            q_nodes_max_depth, q_cov_nodes,
         ) = mcts_search(
             question, agent, config, llm_vllm, llm_vllm_embeds, prm
         )
@@ -1051,6 +1423,21 @@ def _search(
         batch_q_last_phase[q_idx] = q_last_phase
         batch_phase_depths[q_idx] = phase_depths
         batch_q_nodes_max_depth[q_idx] = q_nodes_max_depth
+        batch_q_cov_nodes[q_idx] = q_cov_nodes
+
+        # Drop the tree before building the next one. Every MCTSNode
+        # points at its parent and the parent at its children, so the
+        # whole tree is one big reference cycle: refcounting alone
+        # reclaims NOTHING when `agent` goes out of scope, and the
+        # generational GC triggers on allocation COUNTS, not bytes, so
+        # a few hundred multi-MiB arrays can sit unreclaimed for a
+        # long time. Harmless under cov_scope="global" (one d x d
+        # matrix per tree) but not under "local": measured 644 MiB
+        # held per question at d=512/fp64/gen_budget=320, and a
+        # 2.19x high-water mark across four questions without this
+        # call. With it, the peak is one question's worth.
+        del agent
+        gc.collect()
 
     # Key names match mcts_cnt_search_v01_00_00's results dict
     # (comp_depth/comp_phase/comp_gen/q_total_gens/q_last_phase/
@@ -1065,4 +1452,22 @@ def _search(
     results["q_last_phase"] = batch_q_last_phase
     results["phase_depths"] = batch_phase_depths
     results["q_nodes_max_depth"] = batch_q_nodes_max_depth
+
+    # Local-scope memory diagnostic: how many nodes allocated their
+    # own covariance, per question. Peak local covariance bytes ~=
+    # max(q_cov_nodes) * d^2 * itemsize (x2 under cov_update=
+    # "exact", which keeps V alongside V_inv). core.scoring.
+    # build_scored_dataset auto-attaches any per-question list as a
+    # dataset column, so nothing downstream needs changing.
+    #
+    # Gated on cov_scope="local" for two reasons. (1) Under "global"
+    # no node ever allocates a covariance, so the column would be
+    # all zeros — noise, not data. (2) It keeps every global run's
+    # scored JSONL schema identical to the runs already on disk, so
+    # a mixed-vintage set of trial files still unions cleanly in any
+    # ad-hoc load. Note the stats path is NOT at risk either way:
+    # utils.metrics.evaluate_correctness returns a fixed key tuple,
+    # so extra dataset columns never reach _load_trials.
+    if config.search.cov_scope == "local":
+        results["q_cov_nodes"] = batch_q_cov_nodes
     return results

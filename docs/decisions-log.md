@@ -14,6 +14,55 @@ scaffold, it also gets a standalone file in [decisions/](decisions/);
 the log entry then carries a one-line pointer to it rather than
 repeating the full writeup.
 
+## 2026-07-28 — Search, Config: per-node diversity covariance (`cov_scope` / `embeds_ref`) — one file, not two
+
+**Context:** asked for a variant of `mcts_sem_v02` in which the
+diversity covariance `V` is maintained per node rather than once per
+tree. **Decision:** two orthogonal flags on the existing
+`MCTSSemV02Config` — `cov_scope: "global" | "local"` (where `V`
+lives) and `embeds_ref: "absolute" | "relative"` (whether a child is
+represented by its own embedding or by its displacement from its
+parent) — both pinned in `_HASH_EXCLUDE_IF_DEFAULT` at the
+pre-existing behavior, so all 316 scored sem_v02 hashes are
+untouched (verified 204/204 on level 5). **This reverses a
+same-day decision** to build it as a standalone
+`mcts_sem_search_v02_01_00.py` + `MCTSSemV02LocalConfig`: the
+hash-stability argument that justified the split does not hold, since
+`_HASH_EXCLUDE_IF_DEFAULT` already exists for exactly this and had
+been used twice before (`cov_dtype`, `embeds_center_mode`). Merging
+also *dissolves* the verification problem the split created — with
+one file, `cov_scope="global"` is not "equivalent to" the old
+behavior, it **is** the old code path. The two files had differed by
+~80 lines of real code out of 1122, and two defects found in review
+already existed in both copies. The merge had a deadline: the
+variant had zero ledger entries, and the method string bakes into
+result-dir names, so file-vs-flag must be decided **before the first
+run**. **Measured, not asserted:** local scope holds 644 MiB of
+covariance per question at `embeds_dim=512`/fp64/`gen_budget=320`,
+and `del agent` frees *none* of it (parent<->children reference
+cycles), peaking at 2.19x across four questions until an explicit
+`gc.collect()` brought it to 1.01x; `embeds_proj="none"` (a
+documented config that forces `embeds_dim=4096`) would need ~40 GiB
+per question and die as a silent cgroup OOM, so `MCTS.__init__` now
+refuses it above a 4 GiB cap. **Verified by trace diff, not code
+review:** a scripted-generator stub drives the real selection loop
+on CPU, pinning RNG consumption as well as arithmetic — a GPU run
+was rejected because vLLM's own nondeterminism would confound the
+comparison. `global`/`absolute` reproduced the pre-merge file's
+selection traces and `gen_cnt` exactly across 6 configurations; 42
+checks pass. **Consequence for tuning:** the global operating point
+does **not** transfer — locally `k` in `1/sqrt(lam+k)` is a node's
+own fold count (~3) rather than the run's total selections (~300),
+a 10x stronger bonus for the same `ds_alpha`, so local's optimum
+should sit near `w_eff ≈ 1` against global's measured `w_eff = 10`,
+and sweeping local on the global grid would produce a
+uniformly-over-diversified artifact. **Doc organization is
+independent:** local scope gets its own `###` section with its own
+sweeps and zero code changes, because `--sync-doc` matches tables by
+`feeds:` tbl-id and never reads `group`. Full writeup, including the
+naming alternatives and the known-unfixed list, in
+[decisions/local-covariance-scope.md](decisions/local-covariance-scope.md).
+
 ## 2026-07-28 — Evaluation, Experiments: slice MATH by `level`, never by `subject` — subject is a post-hoc analysis axis
 
 **Context:** asked whether experiments should run on MATH subjects

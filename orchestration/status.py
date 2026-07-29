@@ -69,7 +69,7 @@ if ROOT not in sys.path:
 
 from utils.configs import (  # noqa: E402
     ExpConfig, MCTSCntConfig, MCTSSemV01Config,
-    MCTSSemV02Config, MCTSSemV02LocalConfig,
+    MCTSSemV02Config,
     BLMCTSCntConfig, BLMCTSCntV02Config,
     BLMCTSKubeV01Config, BLMCTSKubeV02Config,
     BLMCTSKdepthV01Config, BLMCTSKdepthV02Config,
@@ -139,10 +139,6 @@ _cs.store(name="exp_schema", node=ExpConfig)
 _cs.store(group="search", name="mcts_cnt_schema", node=MCTSCntConfig)
 _cs.store(group="search", name="mcts_sem_v01_schema", node=MCTSSemV01Config)
 _cs.store(group="search", name="mcts_sem_v02_schema", node=MCTSSemV02Config)
-_cs.store(
-    group="search", name="mcts_sem_v02_01_schema",
-    node=MCTSSemV02LocalConfig,
-)
 _cs.store(
     group="search", name="mcts_bl_cnt_v01_schema", node=BLMCTSCntConfig,
 )
@@ -376,7 +372,6 @@ _METHOD_TO_ROOT = {
     "mcts_cnt_v01": "mcts_cnt_prm800k",
     "mcts_sem_v01": "mcts_sem_v01_prm800k",
     "mcts_sem_v02": "mcts_sem_v02_prm800k",
-    "mcts_sem_v02_01": "mcts_sem_v02_01_prm800k",
     "mcts_bl_cnt_v01": "mcts_bl_cnt_v01_prm800k",
     "mcts_bl_cnt_v02": "mcts_bl_cnt_v02_prm800k",
     "mcts_bl_kube_v01": "mcts_bl_kube_v01_prm800k",
@@ -392,7 +387,6 @@ _METHOD_TO_LAUNCHER = {
     "mcts_cnt_v01": "generate_mcts_cnt.py",
     "mcts_sem_v01": "generate_mcts_sem.py",
     "mcts_sem_v02": "generate_mcts_sem.py",
-    "mcts_sem_v02_01": "generate_mcts_sem.py",
     "mcts_bl_cnt_v01": "generate_mcts_bl_cnt.py",
     "mcts_bl_cnt_v02": "generate_mcts_bl_cnt.py",
     "mcts_bl_kube_v01": "generate_mcts_bl_cnt.py",
@@ -428,10 +422,6 @@ _METHOD_TO_GROUP = {
     "mcts_cnt_v01": "cnt-mcts",
     "mcts_sem_v01": "sem-mcts",
     "mcts_sem_v02": "sem-mcts",
-    # Its own group: per-node vs tree-level covariance is a
-    # different algorithm, so it gets its own table rather than
-    # sharing rows with v02 (same rule as bl_cnt v01 vs v02).
-    "mcts_sem_v02_01": "sem-mcts-local-cov",
     "mcts_bl_cnt_v01": "cnt-mcts-bl",
     "mcts_bl_cnt_v02": "cnt-mcts-bl-v02",
     "mcts_bl_kube_v01": "kube-mcts-bl",
