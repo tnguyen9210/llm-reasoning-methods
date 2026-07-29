@@ -933,7 +933,7 @@ Two activities, two shapes:
 > prm_batch_size=1, llm=qwen-7b gptq-int4, **lam=0.01**,
 > data.level=5, run.num_trials=2.
 >
-> ⚠️ All 6 cells `planned` — authored 2026-07-28, not queued.
+> All 6 cells **queued at priority 1** on 2026-07-28.
 > Hashes: `w_eff=0` `14255c8b`, `0.1` `07d7f95a`, `0.3`
 > `6d120627`, `1` **`d5a1327c`**, `3` `0f4168dc`, `10`
 > `94840f6b`. The `w_eff=1` cell is **shared with the model
@@ -944,12 +944,12 @@ Two activities, two shapes:
 
 | llm | prm | lam | ds_alpha | w_eff | trials | status | pass@gb | naive@gb | wei@gb | maj@gb | hr/trial |
 |---|---|---|---|---|---|---|---|---|---|---|---|
-| qwen-7b gptq-int4 | qwen | 0.01 | 0 | 0 | — | planned | — | — | — | — | — |
-| qwen-7b gptq-int4 | qwen | 0.01 | 0.01 | 0.1 | — | planned | — | — | — | — | — |
-| qwen-7b gptq-int4 | qwen | 0.01 | 0.03 | 0.3 | — | planned | — | — | — | — | — |
-| qwen-7b gptq-int4 | qwen | 0.01 | 0.1 | 1 | — | planned | — | — | — | — | — |
-| qwen-7b gptq-int4 | qwen | 0.01 | 0.3 | 3 | — | planned | — | — | — | — | — |
-| qwen-7b gptq-int4 | qwen | 0.01 | 1.0 | 10 | — | planned | — | — | — | — | — |
+| qwen-7b gptq-int4 | qwen | 0.01 | 0 | 0 | — | running | — | — | — | — | — |
+| qwen-7b gptq-int4 | qwen | 0.01 | 0.01 | 0.1 | — | inqueue | — | — | — | — | — |
+| qwen-7b gptq-int4 | qwen | 0.01 | 0.03 | 0.3 | — | inqueue | — | — | — | — | — |
+| qwen-7b gptq-int4 | qwen | 0.01 | 0.1 | 1 | — | inqueue | — | — | — | — | — |
+| qwen-7b gptq-int4 | qwen | 0.01 | 0.3 | 3 | — | inqueue | — | — | — | — | — |
+| qwen-7b gptq-int4 | qwen | 0.01 | 1.0 | 10 | — | inqueue | — | — | — | — | — |
 
 > **Analysis.** No data yet. The one global anchor is
 > `w_eff=10` = .7687 pass@gb (.6231 naive, .6194 wei, .6119
@@ -1004,7 +1004,7 @@ Two activities, two shapes:
 > prm_batch_size=1, llm=qwen-3b fp16, **lam=0.01**,
 > data.level=5, run.num_trials=2.
 >
-> ⚠️ All 6 cells `planned` — authored 2026-07-28, not queued.
+> All 6 cells **queued at priority 1** on 2026-07-28.
 > Hashes: `w_eff=0` `c6e6733d`, `0.1` `47459a5b`, `0.3`
 > `fa088080`, `1` **`77b736ec`**, `3` `af5cb8a9`, `10`
 > `83febb1b`. The `w_eff=1` cell is **shared with the model
@@ -1015,12 +1015,12 @@ Two activities, two shapes:
 
 | llm | prm | lam | ds_alpha | w_eff | trials | status | pass@gb | naive@gb | wei@gb | maj@gb | hr/trial |
 |---|---|---|---|---|---|---|---|---|---|---|---|
-| qwen-3b | qwen | 0.01 | 0 | 0 | — | planned | — | — | — | — | — |
-| qwen-3b | qwen | 0.01 | 0.01 | 0.1 | — | planned | — | — | — | — | — |
-| qwen-3b | qwen | 0.01 | 0.03 | 0.3 | — | planned | — | — | — | — | — |
-| qwen-3b | qwen | 0.01 | 0.1 | 1 | — | planned | — | — | — | — | — |
-| qwen-3b | qwen | 0.01 | 0.3 | 3 | — | planned | — | — | — | — | — |
-| qwen-3b | qwen | 0.01 | 1.0 | 10 | — | planned | — | — | — | — | — |
+| qwen-3b | qwen | 0.01 | 0 | 0 | — | inqueue | — | — | — | — | — |
+| qwen-3b | qwen | 0.01 | 0.01 | 0.1 | — | inqueue | — | — | — | — | — |
+| qwen-3b | qwen | 0.01 | 0.03 | 0.3 | — | inqueue | — | — | — | — | — |
+| qwen-3b | qwen | 0.01 | 0.1 | 1 | — | inqueue | — | — | — | — | — |
+| qwen-3b | qwen | 0.01 | 0.3 | 3 | — | inqueue | — | — | — | — | — |
+| qwen-3b | qwen | 0.01 | 1.0 | 10 | — | inqueue | — | — | — | — | — |
 
 > **Analysis.** No data yet. Single global anchor at `w_eff=10`:
 > .6903 pass@gb, .5784 naive, .5597 wei, .5373 maj, 6.20
@@ -1110,9 +1110,18 @@ Two activities, two shapes:
 > ⚠️ **Provisional operating point.** Authored at
 > `lam=0.01, ds_alpha=0.1` (`w_eff=1`), the *predicted* local
 > optimum, not a measured one. The joint sweep above is the
-> gate: if it lands elsewhere, these five cells must be
-> re-derived at that point and the hashes below are void. Do not
-> queue this table before that sweep reports.
+> gate: if it lands elsewhere, these cells must be re-derived at
+> that point and the hashes below are void. Do not queue the
+> remaining cells before that sweep reports.
+>
+> **Two rows are already `inqueue`** — qwen-3b and qwen-7b
+> gptq-int4, queued 2026-07-28 at priority 1 *as sweep cells*
+> (`tbl-898c25` / `tbl-fa65d4` each own a `w_eff=1` point, and
+> one config is one ledger entry). They are not an early
+> commitment to this operating point: if the sweeps peak
+> elsewhere, these two rows stay valid at `w_eff=1` and the
+> table's operating point moves out from under them. The other
+> three — llama-1b, llama-3b, qwen-math-1.5b — remain gated.
 >
 > **The comparison this enables.** Local-vs-global must be read
 > with **each scope at its own optimum** — global at `w_eff=10`
@@ -1139,8 +1148,8 @@ Two activities, two shapes:
 |---|---|---|---|---|---|---|---|---|
 | llama-1b fp16 | qwen | — | planned | — | — | — | — | — |
 | llama-3b fp16 | qwen | — | planned | — | — | — | — | — |
-| qwen-3b fp16 | qwen | — | planned | — | — | — | — | — |
-| qwen-7b gptq-int4 | qwen | — | planned | — | — | — | — | — |
+| qwen-3b fp16 | qwen | — | inqueue | — | — | — | — | — |
+| qwen-7b gptq-int4 | qwen | — | inqueue | — | — | — | — | — |
 | qwen-math-1.5b fp16 | qwen | — | planned | — | — | — | — | — |
 
 > **Analysis.** No data yet. Global baselines at `w_eff=10`

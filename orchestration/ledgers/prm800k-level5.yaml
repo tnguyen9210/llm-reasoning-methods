@@ -4769,3 +4769,273 @@
     (mml6000 is rejected by vLLM for this model). expected_hr is an
     estimate - no b=320 qwen-math run has completed yet; its mml4096
     diagnostic (cfg-9748b857) is still running.
+- id: sem-mcts-l5-covlocal-qwen7bgptq-weff0
+  launcher: generate_mcts_sem.py
+  hash: "14255c8b"
+  config_root: mcts_sem_v02_prm800k
+  overrides:
+    llm: qwen_7b_gptq_int4
+    prm: qwen_prm
+    search.lam: 0.01
+    search.ds_alpha: 0
+    search.cov_scope: local
+    data.level: 5
+  trials: 2
+  feeds:
+  - tbl-898c25  # L5 local lam/ds_alpha sweep, qwen-7b gptq-int4
+  group: sem-mcts
+  status: running
+  priority: 1
+  expected_hr: 7
+  launch:
+    job_id: 23419787
+    node: r5u17n1
+    pid: 1466148
+    at: 2026-07-28 21:10
+  note: b=80 sem qwen-PRM qwen-7b gptq-int4 cov_scope=local, lam=0.01
+    ds_alpha=0 (w_eff=0). ds_alpha=0 is the sweep's floor - the
+    diversity bonus is off, so this is the pure-PRM control and the
+    only row whose value is scope-independent. expected_hr = 6 from
+    the global b=80 twins + 1 h margin; local scope is untimed.
+- id: sem-mcts-l5-covlocal-qwen7bgptq-weff0.1
+  launcher: generate_mcts_sem.py
+  hash: "07d7f95a"
+  config_root: mcts_sem_v02_prm800k
+  overrides:
+    llm: qwen_7b_gptq_int4
+    prm: qwen_prm
+    search.lam: 0.01
+    search.ds_alpha: 0.01
+    search.cov_scope: local
+    data.level: 5
+  trials: 2
+  feeds:
+  - tbl-898c25  # L5 local lam/ds_alpha sweep, qwen-7b gptq-int4
+  group: sem-mcts
+  status: inqueue
+  priority: 1
+  expected_hr: 7
+  note: b=80 sem qwen-PRM qwen-7b gptq-int4 cov_scope=local, lam=0.01
+    ds_alpha=0.01 (w_eff=0.1). expected_hr = 6 from the global b=80
+    twins + 1 h margin.
+- id: sem-mcts-l5-covlocal-qwen7bgptq-weff0.3
+  launcher: generate_mcts_sem.py
+  hash: "6d120627"
+  config_root: mcts_sem_v02_prm800k
+  overrides:
+    llm: qwen_7b_gptq_int4
+    prm: qwen_prm
+    search.lam: 0.01
+    search.ds_alpha: 0.03
+    search.cov_scope: local
+    data.level: 5
+  trials: 2
+  feeds:
+  - tbl-898c25  # L5 local lam/ds_alpha sweep, qwen-7b gptq-int4
+  group: sem-mcts
+  status: inqueue
+  priority: 1
+  expected_hr: 7
+  note: b=80 sem qwen-PRM qwen-7b gptq-int4 cov_scope=local, lam=0.01
+    ds_alpha=0.03 (w_eff=0.3). expected_hr = 6 from the global b=80
+    twins + 1 h margin.
+- id: sem-mcts-l5-covlocal-qwen7bgptq-weff1
+  launcher: generate_mcts_sem.py
+  hash: "d5a1327c"
+  config_root: mcts_sem_v02_prm800k
+  overrides:
+    llm: qwen_7b_gptq_int4
+    prm: qwen_prm
+    search.lam: 0.01
+    search.ds_alpha: 0.1
+    search.cov_scope: local
+    data.level: 5
+  trials: 2
+  feeds:
+  - tbl-898c25  # L5 local lam/ds_alpha sweep, qwen-7b gptq-int4
+  - tbl-bf15ee  # L5 local model family (shared cell, w_eff=1)
+  group: sem-mcts
+  status: inqueue
+  priority: 1
+  expected_hr: 7
+  note: b=80 sem qwen-PRM qwen-7b gptq-int4 cov_scope=local, lam=0.01
+    ds_alpha=0.1 (w_eff=1). THE PREDICTED LOCAL OPTIMUM - one entry
+    feeding two tables. tbl-bf15ee's other four cells stay unqueued
+    until this sweep confirms w_eff=1 is where the peak actually is.
+    expected_hr = 6 from the global b=80 twins + 1 h margin.
+- id: sem-mcts-l5-covlocal-qwen7bgptq-weff3
+  launcher: generate_mcts_sem.py
+  hash: "0f4168dc"
+  config_root: mcts_sem_v02_prm800k
+  overrides:
+    llm: qwen_7b_gptq_int4
+    prm: qwen_prm
+    search.lam: 0.01
+    search.ds_alpha: 0.3
+    search.cov_scope: local
+    data.level: 5
+  trials: 2
+  feeds:
+  - tbl-898c25  # L5 local lam/ds_alpha sweep, qwen-7b gptq-int4
+  group: sem-mcts
+  status: inqueue
+  priority: 1
+  expected_hr: 7
+  note: b=80 sem qwen-PRM qwen-7b gptq-int4 cov_scope=local, lam=0.01
+    ds_alpha=0.3 (w_eff=3). expected_hr = 6 from the global b=80
+    twins + 1 h margin.
+- id: sem-mcts-l5-covlocal-qwen7bgptq-weff10
+  launcher: generate_mcts_sem.py
+  hash: "94840f6b"
+  config_root: mcts_sem_v02_prm800k
+  overrides:
+    llm: qwen_7b_gptq_int4
+    prm: qwen_prm
+    search.lam: 0.01
+    search.ds_alpha: 1.0
+    search.cov_scope: local
+    data.level: 5
+  trials: 2
+  feeds:
+  - tbl-898c25  # L5 local lam/ds_alpha sweep, qwen-7b gptq-int4
+  group: sem-mcts
+  status: inqueue
+  priority: 1
+  expected_hr: 7
+  note: b=80 sem qwen-PRM qwen-7b gptq-int4 cov_scope=local, lam=0.01
+    ds_alpha=1.0 (w_eff=10). The ONLY row in this table with a
+    measured global counterpart (.7687 pass@gb), so it is the single
+    clean scope contrast until the global low end is queued.
+    expected_hr = 6 from the global b=80 twins + 1 h margin.
+- id: sem-mcts-l5-covlocal-qwen3b-weff0
+  launcher: generate_mcts_sem.py
+  hash: "c6e6733d"
+  config_root: mcts_sem_v02_prm800k
+  overrides:
+    llm: qwen_3b
+    prm: qwen_prm
+    search.lam: 0.01
+    search.ds_alpha: 0
+    search.cov_scope: local
+    data.level: 5
+  trials: 2
+  feeds:
+  - tbl-fa65d4  # L5 local lam/ds_alpha sweep, qwen-3b
+  group: sem-mcts
+  status: inqueue
+  priority: 1
+  expected_hr: 6
+  note: b=80 sem qwen-PRM qwen-3b cov_scope=local, lam=0.01
+    ds_alpha=0 (w_eff=0). The sweep's floor - diversity off, so a
+    pure-PRM control whose value is scope-independent. expected_hr =
+    5 from the global b=80 twins + 1 h margin; local is untimed.
+- id: sem-mcts-l5-covlocal-qwen3b-weff0.1
+  launcher: generate_mcts_sem.py
+  hash: "47459a5b"
+  config_root: mcts_sem_v02_prm800k
+  overrides:
+    llm: qwen_3b
+    prm: qwen_prm
+    search.lam: 0.01
+    search.ds_alpha: 0.01
+    search.cov_scope: local
+    data.level: 5
+  trials: 2
+  feeds:
+  - tbl-fa65d4  # L5 local lam/ds_alpha sweep, qwen-3b
+  group: sem-mcts
+  status: inqueue
+  priority: 1
+  expected_hr: 6
+  note: b=80 sem qwen-PRM qwen-3b cov_scope=local, lam=0.01
+    ds_alpha=0.01 (w_eff=0.1). expected_hr = 5 from the global b=80
+    twins + 1 h margin.
+- id: sem-mcts-l5-covlocal-qwen3b-weff0.3
+  launcher: generate_mcts_sem.py
+  hash: "fa088080"
+  config_root: mcts_sem_v02_prm800k
+  overrides:
+    llm: qwen_3b
+    prm: qwen_prm
+    search.lam: 0.01
+    search.ds_alpha: 0.03
+    search.cov_scope: local
+    data.level: 5
+  trials: 2
+  feeds:
+  - tbl-fa65d4  # L5 local lam/ds_alpha sweep, qwen-3b
+  group: sem-mcts
+  status: inqueue
+  priority: 1
+  expected_hr: 6
+  note: b=80 sem qwen-PRM qwen-3b cov_scope=local, lam=0.01
+    ds_alpha=0.03 (w_eff=0.3). expected_hr = 5 from the global b=80
+    twins + 1 h margin.
+- id: sem-mcts-l5-covlocal-qwen3b-weff1
+  launcher: generate_mcts_sem.py
+  hash: "77b736ec"
+  config_root: mcts_sem_v02_prm800k
+  overrides:
+    llm: qwen_3b
+    prm: qwen_prm
+    search.lam: 0.01
+    search.ds_alpha: 0.1
+    search.cov_scope: local
+    data.level: 5
+  trials: 2
+  feeds:
+  - tbl-fa65d4  # L5 local lam/ds_alpha sweep, qwen-3b
+  - tbl-bf15ee  # L5 local model family (shared cell, w_eff=1)
+  group: sem-mcts
+  status: inqueue
+  priority: 1
+  expected_hr: 6
+  note: b=80 sem qwen-PRM qwen-3b cov_scope=local, lam=0.01
+    ds_alpha=0.1 (w_eff=1). THE PREDICTED LOCAL OPTIMUM - one entry
+    feeding two tables. tbl-bf15ee's other cells stay unqueued until
+    the sweeps confirm w_eff=1 is the peak. expected_hr = 5 from the
+    global b=80 twins + 1 h margin.
+- id: sem-mcts-l5-covlocal-qwen3b-weff3
+  launcher: generate_mcts_sem.py
+  hash: "af5cb8a9"
+  config_root: mcts_sem_v02_prm800k
+  overrides:
+    llm: qwen_3b
+    prm: qwen_prm
+    search.lam: 0.01
+    search.ds_alpha: 0.3
+    search.cov_scope: local
+    data.level: 5
+  trials: 2
+  feeds:
+  - tbl-fa65d4  # L5 local lam/ds_alpha sweep, qwen-3b
+  group: sem-mcts
+  status: inqueue
+  priority: 1
+  expected_hr: 6
+  note: b=80 sem qwen-PRM qwen-3b cov_scope=local, lam=0.01
+    ds_alpha=0.3 (w_eff=3). expected_hr = 5 from the global b=80
+    twins + 1 h margin.
+- id: sem-mcts-l5-covlocal-qwen3b-weff10
+  launcher: generate_mcts_sem.py
+  hash: "83febb1b"
+  config_root: mcts_sem_v02_prm800k
+  overrides:
+    llm: qwen_3b
+    prm: qwen_prm
+    search.lam: 0.01
+    search.ds_alpha: 1.0
+    search.cov_scope: local
+    data.level: 5
+  trials: 2
+  feeds:
+  - tbl-fa65d4  # L5 local lam/ds_alpha sweep, qwen-3b
+  group: sem-mcts
+  status: inqueue
+  priority: 1
+  expected_hr: 6
+  note: b=80 sem qwen-PRM qwen-3b cov_scope=local, lam=0.01
+    ds_alpha=1.0 (w_eff=10). The only row here with a measured
+    global counterpart (.6903 pass@gb, tbl-73533c), so it is the
+    single clean scope contrast for this model. expected_hr = 5 from
+    the global b=80 twins + 1 h margin.
