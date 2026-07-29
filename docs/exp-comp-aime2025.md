@@ -11,6 +11,9 @@ cnt-bl / sem-bl) on AIME2025 — per-algorithm tuning tables grouped
 by gen_budget, plus a cross-algorithm best-config summary.
 
 
+
+
+
 <!-- toc:begin -- generated, do not hand-edit -->
 ## Contents
 
@@ -57,9 +60,8 @@ by gen_budget, plus a cross-algorithm best-config summary.
     - [model family, size, quantization comparison (QwenPRM, parent_blend/alpha=0.8)](#model-family-size-quantization-comparison-qwenprm-parent_blendalpha08-1) · `tbl-d81f40`
     - [model family, size, quantization comparison (QwenPRM, parent_blend/alpha=1.0)](#model-family-size-quantization-comparison-qwenprm-parent_blendalpha10-1) · `tbl-288646`
   - [sem-mcts-bl-v01](#sem-mcts-bl-v01)
-    - [model family, size, quantization comparison (QwenPRM, lam=0.01/ds_alpha=10)](#model-family-size-quantization-comparison-qwenprm-lam001ds_alpha10-1) · `tbl-065cf2`
     - [model family comparison (QwenPRM, lam=0.01/ds_alpha=10, max_model_len=6000)](#model-family-comparison-qwenprm-lam001ds_alpha10-max_model_len6000) · `tbl-df1eeb`
-    - [model family, size, quantization comparison (QwenPRM, lam=0.01/ds_alpha=1)](#model-family-size-quantization-comparison-qwenprm-lam001ds_alpha1-1) · `tbl-b3f9bb`
+    - [model family comparison (QwenPRM, lam=0.01/ds_alpha=1, max_model_len=6000)](#model-family-comparison-qwenprm-lam001ds_alpha1-max_model_len6000) · `tbl-b3f9bb`
   - [sem-mcts-bl-v02](#sem-mcts-bl-v02)
     - [model family, size, quantization comparison (QwenPRM, parent_blend/alpha=1.0, lam=0.01/ds_alpha=10)](#model-family-size-quantization-comparison-qwenprm-parent_blendalpha10-lam001ds_alpha10) · `tbl-396f65`
 - [**Tuning tables \[gen_budget=160, 320, …\] *(future)***](#tuning-tables-gen_budget160-320-future)
@@ -69,7 +71,7 @@ by gen_budget, plus a cross-algorithm best-config summary.
     - [model family comparison (b=320, QwenPRM, lam=0.1, w_eff=10)](#model-family-comparison-b320-qwenprm-lam01-w_eff10) · `tbl-b2d2d2`
     - [model family comparison (b=320, QwenPRM, lam=0.1, w_eff=100)](#model-family-comparison-b320-qwenprm-lam01-w_eff100) · `tbl-9d68e9`
 
-*37 tables. Regenerate with `python scripts/gen_toc.py`.*
+*36 tables. Regenerate with `python scripts/gen_toc.py`.*
 <!-- toc:end -->
 
 ## Purpose
@@ -369,15 +371,15 @@ Two activities, two shapes:
 | llama-1b | qwen | 1.0 | 3.0 | 3.0 | — | planned | — | — | — | — | — |
 | llama-1b | qwen | 0.1 | 0.949 | 3.0 | — | planned | — | — | — | — | — |
 | llama-1b | qwen | 0.01 | 0.3 | 3.0 | — | planned | — | — | — | — | — |
-| llama-1b | qwen | **1.0** | **10** | **10** | — | planned | — | — | — | — | — |
-| llama-1b | qwen | 0.1 | 3.16 | 10 | — | planned | — | — | — | — | — |
+| llama-1b | qwen | **1.0** | **10** | **10** | 4 | scored | .0167<br>±.0117 | .0000<br>±.0000 | .0000<br>±.0000 | .0000<br>±.0000 | 1.32 |
+| llama-1b | qwen | 0.1 | 3.16 | 10 | 4 | scored | .0250<br>±.0143 | .0250<br>±.0143 | .0167<br>±.0117 | .0083<br>±.0083 | 1.33 |
 | llama-1b | qwen | **0.01** | **1.0** | **10** | 4 | scored | .0333<br>±.0165 | .0167<br>±.0117 | .0167<br>±.0117 | .0000<br>±.0000 | 1.34 |
-| llama-1b | qwen | 1.0 | 100 | 100 | — | planned | — | — | — | — | — |
-| llama-1b | qwen | 0.1 | 31.6 | 100 | — | planned | — | — | — | — | — |
+| llama-1b | qwen | 1.0 | 100 | 100 | 4 | scored | .0167<br>±.0117 | .0167<br>±.0117 | .0167<br>±.0117 | .0083<br>±.0083 | 1.32 |
+| llama-1b | qwen | 0.1 | 31.6 | 100 | 4 | scored | .0250<br>±.0143 | .0167<br>±.0117 | .0083<br>±.0083 | .0083<br>±.0083 | 1.31 |
 | llama-1b | qwen | 0.01 | 10 | 100 | 4 | scored | .0000<br>±.0000 | .0000<br>±.0000 | .0000<br>±.0000 | .0000<br>±.0000 | 1.30 |
-| llama-1b | qwen | 1.0 | 1000 | 1000 | — | planned | — | — | — | — | — |
-| llama-1b | qwen | 0.1 | 316.2 | 1000 | — | planned | — | — | — | — | — |
-| llama-1b | qwen | 0.01 | 100 | 1000 | — | planned | — | — | — | — | — |
+| llama-1b | qwen | 1.0 | 1000 | 1000 | 4 | scored | .0083<br>±.0083 | .0000<br>±.0000 | .0000<br>±.0000 | .0000<br>±.0000 | 1.32 |
+| llama-1b | qwen | 0.1 | 316.2 | 1000 | 4 | scored | .0333<br>±.0165 | .0083<br>±.0083 | .0083<br>±.0083 | .0083<br>±.0083 | 1.33 |
+| llama-1b | qwen | 0.01 | 100 | 1000 | 4 | scored | .0083<br>±.0083 | .0000<br>±.0000 | .0000<br>±.0000 | .0000<br>±.0000 | 1.34 |
 
 > **Analysis.** No AIME2025 data yet — nothing to take away.
 > **Limitations / follow-up:** feeds
@@ -411,15 +413,15 @@ Two activities, two shapes:
 | llama-3b | qwen | 1.0 | 3.0 | 3.0 | — | planned | — | — | — | — | — |
 | llama-3b | qwen | 0.1 | 0.949 | 3.0 | — | planned | — | — | — | — | — |
 | llama-3b | qwen | 0.01 | 0.3 | 3.0 | — | planned | — | — | — | — | — |
-| llama-3b | qwen | **1.0** | **10** | **10** | — | planned | — | — | — | — | — |
-| llama-3b | qwen | 0.1 | 3.16 | 10 | — | planned | — | — | — | — | — |
+| llama-3b | qwen | **1.0** | **10** | **10** | 4 | scored | .0333<br>±.0165 | .0333<br>±.0165 | .0083<br>±.0083 | .0083<br>±.0083 | 1.83 |
+| llama-3b | qwen | 0.1 | 3.16 | 10 | 4 | scored | .0750<br>±.0241 | .0583<br>±.0215 | .0417<br>±.0183 | .0250<br>±.0143 | 1.78 |
 | llama-3b | qwen | **0.01** | **1.0** | **10** | 4 | scored | .0417<br>±.0183 | .0333<br>±.0165 | .0167<br>±.0117 | .0167<br>±.0117 | 1.78 |
-| llama-3b | qwen | 1.0 | 100 | 100 | — | planned | — | — | — | — | — |
-| llama-3b | qwen | 0.1 | 31.6 | 100 | — | planned | — | — | — | — | — |
+| llama-3b | qwen | 1.0 | 100 | 100 | 4 | scored | .0500<br>±.0200 | .0417<br>±.0183 | .0333<br>±.0165 | .0333<br>±.0165 | 1.81 |
+| llama-3b | qwen | 0.1 | 31.6 | 100 | 4 | scored | .0500<br>±.0200 | .0250<br>±.0143 | .0250<br>±.0143 | .0000<br>±.0000 | 1.84 |
 | llama-3b | qwen | 0.01 | 10 | 100 | 4 | scored | .0583<br>±.0215 | .0167<br>±.0117 | .0167<br>±.0117 | .0167<br>±.0117 | 1.90 |
-| llama-3b | qwen | 1.0 | 1000 | 1000 | — | planned | — | — | — | — | — |
-| llama-3b | qwen | 0.1 | 316.2 | 1000 | — | planned | — | — | — | — | — |
-| llama-3b | qwen | 0.01 | 100 | 1000 | — | planned | — | — | — | — | — |
+| llama-3b | qwen | 1.0 | 1000 | 1000 | 4 | scored | .0083<br>±.0083 | .0083<br>±.0083 | .0083<br>±.0083 | .0083<br>±.0083 | 1.80 |
+| llama-3b | qwen | 0.1 | 316.2 | 1000 | 4 | scored | .0667<br>±.0229 | .0500<br>±.0200 | .0417<br>±.0183 | .0333<br>±.0165 | 1.78 |
+| llama-3b | qwen | 0.01 | 100 | 1000 | 4 | scored | .0750<br>±.0241 | .0333<br>±.0165 | .0333<br>±.0165 | .0083<br>±.0083 | 1.84 |
 
 > **Analysis.** No AIME2025 data yet — nothing to take away.
 > **Limitations / follow-up:** feeds
@@ -453,15 +455,15 @@ Two activities, two shapes:
 | qwen-math-1.5b | qwen | 1.0 | 3.0 | 3.0 | — | planned | — | — | — | — | — |
 | qwen-math-1.5b | qwen | 0.1 | 0.949 | 3.0 | — | planned | — | — | — | — | — |
 | qwen-math-1.5b | qwen | 0.01 | 0.3 | 3.0 | — | planned | — | — | — | — | — |
-| qwen-math-1.5b | qwen | **1.0** | **10** | **10** | — | planned | — | — | — | — | — |
-| qwen-math-1.5b | qwen | 0.1 | 3.16 | 10 | — | planned | — | — | — | — | — |
+| qwen-math-1.5b | qwen | **1.0** | **10** | **10** | 4 | scored | .2417<br>±.0392 | .1917<br>±.0361 | .1500<br>±.0327 | .1333<br>±.0312 | 1.46 |
+| qwen-math-1.5b | qwen | 0.1 | 3.16 | 10 | 4 | scored | .2250<br>±.0383 | .1417<br>±.0320 | .1250<br>±.0303 | .1333<br>±.0312 | 1.42 |
 | qwen-math-1.5b | qwen | **0.01** | **1.0** | **10** | 4 | scored | .2583<br>±.0401 | .1833<br>±.0355 | .1583<br>±.0335 | .1500<br>±.0327 | 1.45 |
-| qwen-math-1.5b | qwen | 1.0 | 100 | 100 | — | planned | — | — | — | — | — |
-| qwen-math-1.5b | qwen | 0.1 | 31.6 | 100 | — | planned | — | — | — | — | — |
+| qwen-math-1.5b | qwen | 1.0 | 100 | 100 | 4 | scored | .2583<br>±.0401 | .1667<br>±.0342 | .1583<br>±.0335 | .1417<br>±.0320 | 1.41 |
+| qwen-math-1.5b | qwen | 0.1 | 31.6 | 100 | 4 | scored | .2583<br>±.0401 | .1750<br>±.0348 | .1583<br>±.0335 | .1333<br>±.0312 | 1.41 |
 | qwen-math-1.5b | qwen | 0.01 | 10 | 100 | 4 | scored | .1917<br>±.0361 | .1417<br>±.0320 | .1333<br>±.0312 | .1250<br>±.0303 | 1.39 |
-| qwen-math-1.5b | qwen | 1.0 | 1000 | 1000 | — | planned | — | — | — | — | — |
-| qwen-math-1.5b | qwen | 0.1 | 316.2 | 1000 | — | planned | — | — | — | — | — |
-| qwen-math-1.5b | qwen | 0.01 | 100 | 1000 | — | planned | — | — | — | — | — |
+| qwen-math-1.5b | qwen | 1.0 | 1000 | 1000 | 4 | scored | .2333<br>±.0388 | .1750<br>±.0348 | .1417<br>±.0320 | .1167<br>±.0294 | 1.42 |
+| qwen-math-1.5b | qwen | 0.1 | 316.2 | 1000 | — | failed | — | — | — | — | — |
+| qwen-math-1.5b | qwen | 0.01 | 100 | 1000 | — | failed | — | — | — | — | — |
 
 > **Analysis.** No AIME2025 data yet — nothing to take away.
 > **Limitations / follow-up:** feeds
@@ -496,15 +498,15 @@ Two activities, two shapes:
 | qwen-7b gptq-int4 | qwen | 1.0 | 3.0 | 3.0 | — | planned | — | — | — | — | — |
 | qwen-7b gptq-int4 | qwen | 0.1 | 0.949 | 3.0 | — | planned | — | — | — | — | — |
 | qwen-7b gptq-int4 | qwen | 0.01 | 0.3 | 3.0 | — | planned | — | — | — | — | — |
-| qwen-7b gptq-int4 | qwen | **1.0** | **10** | **10** | — | planned | — | — | — | — | — |
-| qwen-7b gptq-int4 | qwen | 0.1 | 3.16 | 10 | — | planned | — | — | — | — | — |
+| qwen-7b gptq-int4 | qwen | **1.0** | **10** | **10** | — | failed | — | — | — | — | — |
+| qwen-7b gptq-int4 | qwen | 0.1 | 3.16 | 10 | 4 | scored | .2250<br>±.0383 | .1417<br>±.0320 | .1083<br>±.0285 | .1000<br>±.0275 | 1.57 |
 | qwen-7b gptq-int4 | qwen | **0.01** | **1.0** | **10** | 4 | scored | .2250<br>±.0383 | .1167<br>±.0294 | .1333<br>±.0312 | .1250<br>±.0303 | 1.59 |
-| qwen-7b gptq-int4 | qwen | 1.0 | 100 | 100 | — | planned | — | — | — | — | — |
-| qwen-7b gptq-int4 | qwen | 0.1 | 31.6 | 100 | — | planned | — | — | — | — | — |
+| qwen-7b gptq-int4 | qwen | 1.0 | 100 | 100 | 4 | scored | .2083<br>±.0372 | .1417<br>±.0320 | .0917<br>±.0265 | .0833<br>±.0253 | 1.62 |
+| qwen-7b gptq-int4 | qwen | 0.1 | 31.6 | 100 | 4 | scored | .2083<br>±.0372 | .1500<br>±.0327 | .1250<br>±.0303 | .1167<br>±.0294 | 1.62 |
 | qwen-7b gptq-int4 | qwen | 0.01 | 10 | 100 | 4 | scored | .3000<br>±.0420 | .1833<br>±.0355 | .1333<br>±.0312 | .1167<br>±.0294 | 1.65 |
-| qwen-7b gptq-int4 | qwen | 1.0 | 1000 | 1000 | — | planned | — | — | — | — | — |
-| qwen-7b gptq-int4 | qwen | 0.1 | 316.2 | 1000 | — | planned | — | — | — | — | — |
-| qwen-7b gptq-int4 | qwen | 0.01 | 100 | 1000 | — | planned | — | — | — | — | — |
+| qwen-7b gptq-int4 | qwen | 1.0 | 1000 | 1000 | 4 | scored | .2000<br>±.0367 | .0917<br>±.0265 | .0750<br>±.0241 | .0667<br>±.0229 | 1.61 |
+| qwen-7b gptq-int4 | qwen | 0.1 | 316.2 | 1000 | 4 | scored | .2583<br>±.0401 | .1167<br>±.0294 | .0750<br>±.0241 | .0667<br>±.0229 | 1.60 |
+| qwen-7b gptq-int4 | qwen | 0.01 | 100 | 1000 | 4 | scored | .2750<br>±.0409 | .1417<br>±.0320 | .1167<br>±.0294 | .0917<br>±.0265 | 1.66 |
 
 > **Analysis.** No AIME2025 data yet — nothing to take away.
 > **Limitations / follow-up:** feeds
@@ -810,7 +812,7 @@ Two activities, two shapes:
 | llama-1b fp16 | 4 | scored | .0083<br>±.0083 | .0000<br>±.0000 | .0000<br>±.0000 | .0000<br>±.0000 | 0.8 |
 | llama-3b fp16 | 4 | scored | .0667<br>±.0229 | .0250<br>±.0143 | .0250<br>±.0143 | .0250<br>±.0143 | 1.2 |
 | qwen-3b fp16 | 4 | scored | .1000<br>±.0275 | .0833<br>±.0253 | .0833<br>±.0253 | .0833<br>±.0253 | 1.1 |
-| qwen-7b gptq-int4 | — | running | — | — | — | — | — |
+| qwen-7b gptq-int4 | 4 | scored | .2250<br>±.0383 | .1583<br>±.0335 | .1583<br>±.0335 | .1583<br>±.0335 | 1.05 |
 | qwen-math-1.5b fp16 | 4 | scored | .1583<br>±.0335 | .1167<br>±.0294 | .1083<br>±.0285 | .1083<br>±.0285 | 0.9 |
 
 > **Analysis.** AIME2025 is brutally hard for this scale: at
@@ -867,7 +869,7 @@ Two activities, two shapes:
 | qwen-3b fp16 | 8.0 | 4 | scored | .1250<br>±.0303 | .1000<br>±.0275 | .1000<br>±.0275 | .0917<br>±.0265 | 1.2 |
 | qwen-7b gptq-int4 | 0.1 | 4 | scored | .1917<br>±.0361 | .1667<br>±.0342 | .1000<br>±.0275 | .1083<br>±.0285 | 1.1 |
 | qwen-7b gptq-int4 | 0.5 | 4 | scored | .1917<br>±.0361 | .1500<br>±.0327 | .1167<br>±.0294 | .1167<br>±.0294 | 1.0 |
-| qwen-7b gptq-int4 | 2.0 | — | running | — | — | — | — | — |
+| qwen-7b gptq-int4 | 2.0 | 4 | scored | .2250<br>±.0383 | .1583<br>±.0335 | .1583<br>±.0335 | .1583<br>±.0335 | 1.05 |
 | qwen-7b gptq-int4 | 8.0 | 4 | scored | .2583<br>±.0401 | .1917<br>±.0361 | .1833<br>±.0355 | .1833<br>±.0355 | 1.1 |
 | qwen-math-1.5b fp16 | 0.1 | 4 | scored | .2167<br>±.0378 | .1583<br>±.0335 | .1333<br>±.0312 | .1333<br>±.0312 | 0.9 |
 | qwen-math-1.5b fp16 | 0.5 | 4 | scored | .1917<br>±.0361 | .1583<br>±.0335 | .1500<br>±.0327 | .1500<br>±.0327 | 0.9 |
@@ -1317,37 +1319,13 @@ Two activities, two shapes:
 
 ### sem-mcts-bl-v01
 
-#### model family, size, quantization comparison (QwenPRM, lam=0.01/ds_alpha=10)
-<!-- table-id: tbl-065cf2 -->
-> **Compares:** model family, size, and quantization jointly —
-> same 5-model/quant grid as cnt-mcts-bl-v01's equivalent table
-> above, so a direct bl_sem-vs-bl_cnt read is possible once both
-> are filled. Anchored to the **same (lam, ds_alpha) checkpoint
-> as sem-mcts-v02's `lam=0.01/ds_alpha=10` table** above (not
-> level-4 bl_sem_v01's `lam=0.1` convention), so bl_sem-vs-sem_v02
-> is apples-to-apples at this `w_eff`.
->
-> **Fixed:** method=`mcts_bl_sem_v01` (PRM embeds — prm=qwen for
-> both scoring AND diversity via `embeds_source=prm`, the schema
-> default, no second pooling engine), prm=qwen, agg_strategy=
-> `last`, bs-4, d-20, b=80, prm_batch_size=1,
-> `ds_alpha_schedule=global` (default — see decisions-log),
-> `cov_update=sm` (sherman_morrison), `embeds_proj=sparse512`
-> (`embeds_dim=512`, defaults), ds_beta=1.0, tmpl=model-family
-> default (native for Qwen, custom for Llama), **run.num_trials=4**.
-> **lam=0.01, ds_alpha=10** (`w_eff = ds_alpha/sqrt(lam) = 100`).
-
-| llm | trials | status | pass@gb | naive@gb | wei@gb | maj@gb | hr/trial |
-|---|---|---|---|---|---|---|---|
-| llama-1b fp16 | — | planned | — | — | — | — | — |
-| llama-3b fp16 | — | planned | — | — | — | — | — |
-| qwen-3b fp16 | — | planned | — | — | — | — | — |
-| qwen-7b gptq-int4 | — | planned | — | — | — | — | — |
-| qwen-math-1.5b fp16 | — | planned | — | — | — | — | — |
-
-> **Analysis.** No AIME2025 data yet — nothing to take away.
-> **Limitations / follow-up:** entire table planned; launch is
-> the prm800k-level5 counterpart's command with `data=aime2025`.
+> **Note (2026-07-26):** the two `max_model_len`-default tables
+> that used to head this section (`w_eff=100` and `w_eff=10`,
+> tbl-065cf2 and the old tbl-b3f9bb config) were removed unrun.
+> Every sem-bl llama cell on prm800k has died of context
+> overflow at the 5000 default, so a default-window AIME grid
+> would only reproduce that failure; both `w_eff` points are now
+> tracked at `max_model_len=6000` below.
 
 #### model family comparison (QwenPRM, lam=0.01/ds_alpha=10, max_model_len=6000)
 <!-- table-id: tbl-df1eeb -->
@@ -1375,44 +1353,72 @@ Two activities, two shapes:
 > relevant, so every cell is a distinct config from the 5000
 > table — nothing is shared).
 >
-> ⚠️ Entirely planned — no AIME2025 runs yet.
+> ⚠️ **qwen-math-1.5b cannot appear in this table at 6000:** its
+> `max_position_embeddings=4096`, so vLLM rejects
+> `max_model_len=6000` at engine construction. **Launched
+> 2026-07-28 at the default 4096 window**
+> (`sem-bl-v01-aime-mml4096-qwenmath15b`, `cfg-b82b9a25`): the
+> row is NOT window-matched to the other four — read it as a
+> diagnostic point, not as a like-for-like family comparison.
+> Its `w_eff=10` counterpart is
+> `sem-bl-v01-aime-ds1-mml4096-qwenmath15b` in the table below.
 
 | llm | trials | status | pass@gb | naive@gb | wei@gb | maj@gb | hr/trial |
 |---|---|---|---|---|---|---|---|
-| llama-1b fp16 | — | planned | — | — | — | — | — |
-| llama-3b fp16 | — | planned | — | — | — | — | — |
-| qwen-3b fp16 | — | planned | — | — | — | — | — |
-| qwen-7b gptq-int4 | — | planned | — | — | — | — | — |
-| qwen-math-1.5b fp16 | — | planned | — | — | — | — | — |
+| llama-1b fp16 | 4 | scored | .0083<br>±.0083 | .0000<br>±.0000 | .0000<br>±.0000 | .0000<br>±.0000 | 2.22 |
+| llama-3b fp16 | 4 | scored | .0500<br>±.0200 | .0167<br>±.0117 | .0000<br>±.0000 | .0000<br>±.0000 | 3.33 |
+| qwen-3b fp16 | 4 | scored | .0667<br>±.0229 | .0250<br>±.0143 | .0167<br>±.0117 | .0250<br>±.0143 | 1.76 |
+| qwen-7b gptq-int4 | 4 | scored | .1833<br>±.0355 | .1167<br>±.0294 | .0500<br>±.0200 | .0417<br>±.0183 | 1.71 |
+| qwen-math-1.5b fp16 | — | running | — | — | — | — | — |
 
 > **Analysis.** No AIME2025 data yet — nothing to take away.
 > **Limitations / follow-up:** entire table planned; launch is
 > the prm800k-level5 counterpart's command with `data=aime2025`.
 
-#### model family, size, quantization comparison (QwenPRM, lam=0.01/ds_alpha=1)
+#### model family comparison (QwenPRM, lam=0.01/ds_alpha=1, max_model_len=6000)
 <!-- table-id: tbl-b3f9bb -->
-> **Compares:** same 5-model/quant grid as the `lam=0.01/
-> ds_alpha=10` table above, at one order of magnitude lower
-> effective diversity weight — the two tables together give a
-> first (coarse) read on whether the model-family ranking is
-> sensitive to `w_eff` for this algorithm, ahead of a proper
-> `w_eff` sweep. Anchored to sem-mcts-v02's `lam=0.01/
-> ds_alpha=1` table above (`w_eff=10`).
+> **Compares:** same grid as the `lam=0.01/ds_alpha=10` table
+> above, at one order of magnitude lower effective diversity
+> weight — the two tables together give a first (coarse) read on
+> whether the model-family ranking is sensitive to `w_eff` for
+> this algorithm, ahead of a proper `w_eff` sweep. Anchored to
+> sem-mcts-v02's `lam=0.01/ds_alpha=1` table above (`w_eff=10`).
 >
 > **Fixed:** identical to the `lam=0.01/ds_alpha=10` table above
 > (method=`mcts_bl_sem_v01`, prm=qwen, agg_strategy=`last`, bs-4,
 > d-20, b=80, prm_batch_size=1, `ds_alpha_schedule=global`,
 > `cov_update=sm`, `embeds_proj=sparse512`, ds_beta=1.0, tmpl=
-> model-family default) except the diversity weight, **run.num_trials=4**.
+> model-family default, **`llm.max_model_len=6000`**) except the
+> diversity weight, **run.num_trials=4**.
 > **lam=0.01, ds_alpha=1.0** (`w_eff = ds_alpha/sqrt(lam) = 10`).
+>
+> **Why `max_model_len=6000` (changed 2026-07-26):** this table
+> was authored at the 5000 default and re-specified at 6000
+> before any cell ran, so nothing is lost and every cell keeps a
+> single config hash. Rationale is the sem-bl overflow record on
+> prm800k: every llama sem-bl cell has failed with
+> `decoder prompt + output > max_model_len` at 5000 (level-4 and
+> level-5, v01 and v02), while no qwen cell has. 6000 is the
+> same headroom the level-5 `tbl-9f7cda` table uses.
+>
+> ⚠️ **qwen-math-1.5b cannot appear in this table at 6000:** its
+> `max_position_embeddings=4096`, so vLLM rejects
+> `max_model_len=6000` at engine construction. Same exclusion as
+> the `ds_alpha=10` table above. Its `w_eff` point is therefore
+> measured at 4096 instead (see the level-5 b=320 mml4096
+> diagnostics). **Launched 2026-07-28 at the default 4096
+> window** (`sem-bl-v01-aime-ds1-mml4096-qwenmath15b`,
+> `cfg-29c1f655`): the row is marked `mml4096` and is NOT
+> window-matched to the other four — read it as a diagnostic
+> point, not as a like-for-like family comparison.
 
 | llm | trials | status | pass@gb | naive@gb | wei@gb | maj@gb | hr/trial |
 |---|---|---|---|---|---|---|---|
-| llama-1b fp16 | — | planned | — | — | — | — | — |
-| llama-3b fp16 | — | planned | — | — | — | — | — |
-| qwen-3b fp16 | — | planned | — | — | — | — | — |
-| qwen-7b gptq-int4 | — | planned | — | — | — | — | — |
-| qwen-math-1.5b fp16 | — | planned | — | — | — | — | — |
+| llama-1b fp16 | 4 | scored | .0083<br>±.0083 | .0000<br>±.0000 | .0000<br>±.0000 | .0000<br>±.0000 | 1.76 |
+| llama-3b fp16 | 4 | scored | .0417<br>±.0183 | .0250<br>±.0143 | .0083<br>±.0083 | .0000<br>±.0000 | 2.25 |
+| qwen-3b fp16 | 4 | scored | .1250<br>±.0303 | .0917<br>±.0265 | .1000<br>±.0275 | .0833<br>±.0253 | 1.75 |
+| qwen-7b gptq-int4 | 4 | scored | .2083<br>±.0372 | .1583<br>±.0335 | .1667<br>±.0342 | .1583<br>±.0335 | 1.69 |
+| qwen-math-1.5b fp16 | — | running | — | — | — | — | — |
 
 > **Analysis.** No AIME2025 data yet — nothing to take away.
 > **Limitations / follow-up:** entire table planned; launch is
@@ -1492,11 +1498,11 @@ Two activities, two shapes:
 
 | llm | prm | trials | status | pass@gb | naive@gb | wei@gb | maj@gb | hr/trial |
 |---|---|---|---|---|---|---|---|---|
-| llama-1b fp16 | qwen | — | planned | — | — | — | — | — |
-| llama-3b fp16 | qwen | — | planned | — | — | — | — | — |
-| qwen-3b fp16 | qwen | — | planned | — | — | — | — | — |
-| qwen-7b gptq-int4 | qwen | — | planned | — | — | — | — | — |
-| qwen-math-1.5b fp16 | qwen | — | planned | — | — | — | — | — |
+| llama-1b fp16 | qwen | 4 | scored | .0333<br>±.0165 | .0167<br>±.0117 | .0167<br>±.0117 | .0000<br>±.0000 | 3.23 |
+| llama-3b fp16 | qwen | 4 | scored | .1333<br>±.0312 | .0500<br>±.0200 | .0333<br>±.0165 | .0250<br>±.0143 | 5.31 |
+| qwen-3b fp16 | qwen | 4 | scored | .2833<br>±.0413 | .1167<br>±.0294 | .1000<br>±.0275 | .0833<br>±.0253 | 5.16 |
+| qwen-7b gptq-int4 | qwen | 4 | scored | .4000<br>±.0449 | .1417<br>±.0320 | .1667<br>±.0342 | .1667<br>±.0342 | 4.79 |
+| qwen-math-1.5b fp16 | qwen | 4 | scored | .3833<br>±.0446 | .2000<br>±.0367 | .2000<br>±.0367 | .2000<br>±.0367 | 4.00 |
 
 > **Analysis.** No AIME2025 data yet — nothing to take away.
 > **Limitations / follow-up:** entire table planned; launch is
@@ -1536,11 +1542,11 @@ Two activities, two shapes:
 
 | llm | prm | trials | status | pass@gb | naive@gb | wei@gb | maj@gb | hr/trial |
 |---|---|---|---|---|---|---|---|---|
-| llama-1b fp16 | qwen | — | planned | — | — | — | — | — |
-| llama-3b fp16 | qwen | — | planned | — | — | — | — | — |
-| qwen-3b fp16 | qwen | — | planned | — | — | — | — | — |
-| qwen-7b gptq-int4 | qwen | — | planned | — | — | — | — | — |
-| qwen-math-1.5b fp16 | qwen | — | planned | — | — | — | — | — |
+| llama-1b fp16 | qwen | 4 | scored | .0417<br>±.0183 | .0083<br>±.0083 | .0000<br>±.0000 | .0000<br>±.0000 | 5.24 |
+| llama-3b fp16 | qwen | 4 | scored | .1250<br>±.0303 | .0333<br>±.0165 | .0500<br>±.0200 | .0333<br>±.0165 | 6.50 |
+| qwen-3b fp16 | qwen | — | running | — | — | — | — | — |
+| qwen-7b gptq-int4 | qwen | — | running | — | — | — | — | — |
+| qwen-math-1.5b fp16 | qwen | 4 | scored | .3667<br>±.0442 | .1667<br>±.0342 | .1917<br>±.0361 | .1917<br>±.0361 | 4.93 |
 
 > **Analysis.** No AIME2025 data yet — nothing to take away.
 > **Limitations / follow-up:** entire table planned; launch is
@@ -1567,11 +1573,11 @@ Two activities, two shapes:
 
 | llm | prm | trials | status | pass@gb | naive@gb | wei@gb | maj@gb | hr/trial |
 |---|---|---|---|---|---|---|---|---|
-| llama-1b fp16 | qwen | — | planned | — | — | — | — | — |
-| llama-3b fp16 | qwen | — | planned | — | — | — | — | — |
-| qwen-3b fp16 | qwen | — | planned | — | — | — | — | — |
-| qwen-7b gptq-int4 | qwen | — | planned | — | — | — | — | — |
-| qwen-math-1.5b fp16 | qwen | — | planned | — | — | — | — | — |
+| llama-1b fp16 | qwen | — | running | — | — | — | — | — |
+| llama-3b fp16 | qwen | — | running | — | — | — | — | — |
+| qwen-3b fp16 | qwen | — | running | — | — | — | — | — |
+| qwen-7b gptq-int4 | qwen | — | running | — | — | — | — | — |
+| qwen-math-1.5b fp16 | qwen | — | running | — | — | — | — | — |
 
 > **Analysis.** No AIME2025 data yet — nothing to take away.
 > **Limitations / follow-up:** entire table planned; launch is

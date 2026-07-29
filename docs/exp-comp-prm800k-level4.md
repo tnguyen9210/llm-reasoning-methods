@@ -5,6 +5,9 @@ cnt-bl / sem-bl) on PRM800K — per-algorithm tuning tables grouped
 by gen_budget, plus a cross-algorithm best-config summary.
 
 
+
+
+
 <!-- toc:begin -- generated, do not hand-edit -->
 ## Contents
 
@@ -2203,9 +2206,9 @@ instead of one wide sparse grid.)
 | llm | prm | trials | status | pass@gb | naive@gb | wei@gb | maj@gb | hr/trial |
 |---|---|---|---|---|---|---|---|---|
 | llama-1b fp16 | qwen | 2 | scored | .7148<br>±.0283 | .5508<br>±.0311 | .4492<br>±.0311 | .4375<br>±.0311 | 16.18 |
-| llama-3b fp16 | qwen | — | failed | — | — | — | — | — |
-| qwen-3b fp16 | qwen | — | running | — | — | — | — | — |
-| qwen-7b gptq-int4 | qwen | — | running | — | — | — | — | — |
+| llama-3b fp16 | qwen | — | running | — | — | — | — | — |
+| qwen-3b fp16 | qwen | 2 | scored | .9336<br>±.0156 | .7969<br>±.0252 | .7539<br>±.0270 | .7461<br>±.0273 | 18.12 |
+| qwen-7b gptq-int4 | qwen | 2 | scored | .9375<br>±.0152 | .8086<br>±.0246 | .7891<br>±.0255 | .7734<br>±.0262 | 10.99 |
 | qwen-math-1.5b fp16 | qwen | 2 | scored | .9453<br>±.0142 | .8242<br>±.0238 | .7773<br>±.0261 | .7773<br>±.0261 | 15.23 |
 
 > **Analysis.** 2/5 cells scored. Comparing to the `w_eff=10`

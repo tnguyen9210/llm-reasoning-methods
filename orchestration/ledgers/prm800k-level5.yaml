@@ -3751,7 +3751,7 @@
   feeds:
   - tbl-a9e420  # alpha x kube_c joint sweep
   group: kube-mcts-bl-v02
-  status: running
+  status: scored
   priority: 1
   expected_hr: 8
   launch:
@@ -3780,7 +3780,7 @@
   feeds:
   - tbl-46d9c7  # gamma x kube_c joint sweep (path_decay)
   group: kube-mcts-bl-v02
-  status: running
+  status: scored
   priority: 2
   expected_hr: 8
   launch:
@@ -3806,7 +3806,7 @@
   feeds:
   - tbl-46d9c7  # gamma x kube_c joint sweep (path_decay)
   group: kube-mcts-bl-v02
-  status: running
+  status: scored
   priority: 2
   expected_hr: 8
   launch:
@@ -3832,14 +3832,14 @@
   feeds:
   - tbl-46d9c7  # gamma x kube_c joint sweep (path_decay)
   group: kube-mcts-bl-v02
-  status: inqueue
+  status: scored
   priority: 2
   expected_hr: 8
   launch:
-    job_id: 23335889
-    node: r5u11n1
-    pid: 1717486
-    at: 2026-07-24 02:42
+    job_id: 23419786
+    node: r5u15n1
+    pid: 2722022
+    at: '2026-07-27 04:32'
   note: pd-sweep g1.0 c0.1 qwen3b (starved-exploration column)
   history:
   - {at: '2026-07-26 10:00', job_id: 23335889, outcome: stalled, trials_done: 1}
@@ -3862,14 +3862,14 @@
   feeds:
   - tbl-46d9c7  # gamma x kube_c joint sweep (path_decay)
   group: kube-mcts-bl-v02
-  status: inqueue
+  status: scored
   priority: 3
   expected_hr: 8
   launch:
-    job_id: 23372304
-    node: r5u09n1
-    pid: 1733602
-    at: 2026-07-24 05:42
+    job_id: 23419787
+    node: r5u17n1
+    pid: 1075339
+    at: '2026-07-27 04:46'
   note: pd-sweep g0.0 c2.0 qwen3b (gamma=0 low-anchor)
   history:
   - {at: '2026-07-26 10:00', job_id: 23372304, outcome: stalled, trials_done: 0}
@@ -3888,7 +3888,7 @@
   feeds:
   - tbl-46d9c7  # gamma x kube_c joint sweep (path_decay)
   group: kube-mcts-bl-v02
-  status: running
+  status: scored
   priority: 2
   expected_hr: 8
   note: pd-sweep g0.0 c0.5 qwen3b (gamma=0 low-anchor)
@@ -3912,7 +3912,7 @@
   feeds:
   - tbl-46d9c7  # gamma x kube_c joint sweep (path_decay)
   group: kube-mcts-bl-v02
-  status: running
+  status: scored
   priority: 2
   expected_hr: 8
   note: pd-sweep g0.0 c0.1 qwen3b (gamma=0 low-anchor)
@@ -4018,7 +4018,7 @@
   feeds:
   - tbl-9f7cda  # model family at max_model_len=6000
   group: sem-mcts-bl
-  status: running
+  status: scored
   priority: 1
   expected_hr: 8
   launch:
@@ -4220,13 +4220,14 @@
   priority: 1
   expected_hr: 28
   launch:
-    job_id: 23419789
-    node: r5u17n1
-    pid: 2550287
-    at: 2026-07-26 10:30
+    job_id: 23419791
+    node: r5u15n1
+    pid: 1358160
+    at: 2026-07-28 08:41
   note: b=320 sem qwen-PRM llama-3b fp16 lam=0.01 ds_alpha=1.0 (w_eff=10, L5);
     mml6000 (b=320 overflows 5000-token window)
   history:
+  - {at: '2026-07-27 04:50', job_id: 23419789, outcome: stalled, trials_done: 1}
   - {at: '2026-07-26 10:00', job_id: 23346204, outcome: stalled, trials_done: 1}
 - id: sem-mcts-l5-b320-ds1-qwen3b
   launcher: generate_mcts_sem.py
@@ -4346,7 +4347,7 @@
   feeds:
   - tbl-01c466  # sem-mcts model-family b=320 QwenPRM lam=0.01 w_eff=100
   group: sem-mcts
-  status: running
+  status: scored
   priority: 1
   expected_hr: 28
   launch:
@@ -4455,7 +4456,7 @@
   feeds:
   - tbl-867868  # cnt-mcts model-family b=320 QwenPRM
   group: cnt-mcts
-  status: running
+  status: scored
   priority: 1.6
   expected_hr: 14
   launch:
@@ -4486,12 +4487,14 @@
   priority: 1.6
   expected_hr: 20
   launch:
-    job_id: 23335889
-    node: r5u11n1
-    pid: 2412909
-    at: 2026-07-25 15:43
+    job_id: 23419789
+    node: r5u17n1
+    pid: 1358228
+    at: 2026-07-28 08:41
   note: b=320 sem qwen-PRM qwen-math-1.5b lam=0.01 ds_alpha=1.0 (w_eff=10, L5)
     at its architectural 4096 window. Diagnostic - see cnt sibling.
+  history:
+  - {at: '2026-07-27 04:50', job_id: 23335889, outcome: stalled, trials_done: 1}
 - id: sem-mcts-l5-b320-ds10-qwenmath15b-mml4096
   launcher: generate_mcts_sem.py
   hash: "9748b857"
@@ -4512,9 +4515,11 @@
   priority: 1.6
   expected_hr: 20
   launch:
-    job_id: 23378153
-    node: r5u39n1
-    pid: 2415298
-    at: 2026-07-25 16:13
+    job_id: 23419790
+    node: r5u17n1
+    pid: 1358297
+    at: 2026-07-28 08:41
   note: b=320 sem qwen-PRM qwen-math-1.5b lam=0.01 ds_alpha=10 (w_eff=100, L5)
     at its architectural 4096 window. Diagnostic - see cnt sibling.
+  history:
+  - {at: '2026-07-27 04:50', job_id: 23378153, outcome: stalled, trials_done: 1}

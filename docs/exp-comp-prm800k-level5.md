@@ -7,6 +7,9 @@ cnt-bl / sem-bl) on PRM800K — per-algorithm tuning tables grouped
 by gen_budget, plus a cross-algorithm best-config summary.
 
 
+
+
+
 <!-- toc:begin -- generated, do not hand-edit -->
 ## Contents
 
@@ -1305,7 +1308,7 @@ Two activities, two shapes:
 | llama-3b | 0.5 | 0.1 | 2 | scored | .4963<br>±.0306 | .4030<br>±.0300 | .3993<br>±.0300 | .3955<br>±.0299 | 4.61 |
 | llama-3b | 0.0 | 2.0 | 2 | scored | .5000<br>±.0306 | .3657<br>±.0295 | .3433<br>±.0291 | .3284<br>±.0287 | 4.84 |
 | llama-3b | 0.0 | 0.5 | 2 | scored | .4851<br>±.0306 | .3470<br>±.0291 | .3396<br>±.0290 | .3284<br>±.0287 | 4.9 |
-| llama-3b | 0.0 | 0.1 | — | running | — | — | — | — | — |
+| llama-3b | 0.0 | 0.1 | 2 | scored | .5224<br>±.0306 | .3731<br>±.0296 | .3545<br>±.0293 | .3396<br>±.0290 | 5.16 |
 
 > **Analysis.** 11/12 scored (updated 2026-07-26 with the
 > alpha=0.8/c=2.0 and alpha=0.0/c=0.5 cells). **On pass@gb the
@@ -1388,16 +1391,16 @@ Two activities, two shapes:
 |---|---|---|---|---|---|---|---|---|---|
 | qwen-3b | 1.0 | 2.0 | 2 | scored | .6082<br>±.0299 | .5149<br>±.0306 | .4776<br>±.0306 | .4739<br>±.0306 | 3.97 |
 | qwen-3b | 1.0 | 0.5 | 2 | scored | .6269<br>±.0296 | .5187<br>±.0306 | .4664<br>±.0305 | .4440<br>±.0304 | 3.91 |
-| qwen-3b | 1.0 | 0.1 | — | inqueue | — | — | — | — | — |
+| qwen-3b | 1.0 | 0.1 | 2 | scored | .6045<br>±.0299 | .5224<br>±.0306 | .4888<br>±.0306 | .4701<br>±.0305 | 3.72 |
 | qwen-3b | 0.8 | 2.0 | 2 | scored | .6157<br>±.0298 | .5261<br>±.0306 | .4925<br>±.0306 | .4701<br>±.0305 | 3.87 |
 | qwen-3b | 0.8 | 0.5 | 2 | scored | .6269<br>±.0296 | .5261<br>±.0306 | .4813<br>±.0306 | .4813<br>±.0306 | — |
-| qwen-3b | 0.8 | 0.1 | — | running | — | — | — | — | — |
+| qwen-3b | 0.8 | 0.1 | 2 | scored | .6418<br>±.0293 | .5224<br>±.0306 | .5037<br>±.0306 | .4851<br>±.0306 | 3.78 |
 | qwen-3b | 0.5 | 2.0 | 2 | scored | .6269<br>±.0296 | .5112<br>±.0306 | .5000<br>±.0306 | .4851<br>±.0306 | 4.14 |
 | qwen-3b | 0.5 | 0.5 | 2 | scored | .6231<br>±.0297 | .5187<br>±.0306 | .4925<br>±.0306 | .4888<br>±.0306 | 3.97 |
-| qwen-3b | 0.5 | 0.1 | — | running | — | — | — | — | — |
-| qwen-3b | 0.0 | 2.0 | — | inqueue | — | — | — | — | — |
-| qwen-3b | 0.0 | 0.5 | — | running | — | — | — | — | — |
-| qwen-3b | 0.0 | 0.1 | — | running | — | — | — | — | — |
+| qwen-3b | 0.5 | 0.1 | 2 | scored | .6269<br>±.0296 | .5485<br>±.0305 | .5187<br>±.0306 | .5149<br>±.0306 | 3.87 |
+| qwen-3b | 0.0 | 2.0 | 2 | scored | .6231<br>±.0297 | .5410<br>±.0305 | .5037<br>±.0306 | .4925<br>±.0306 | 4.04 |
+| qwen-3b | 0.0 | 0.5 | 2 | scored | .5896<br>±.0301 | .5373<br>±.0305 | .5075<br>±.0306 | .5112<br>±.0306 | 4.00 |
+| qwen-3b | 0.0 | 0.1 | 2 | scored | .6343<br>±.0295 | .5672<br>±.0303 | .5448<br>±.0305 | .5485<br>±.0305 | 3.94 |
 
 > **Analysis.** 6/9 scored (2026-07-23); the kube_c=0.1 column
 > is queued. Early read on the two scored columns: pass@gb is
@@ -1746,7 +1749,7 @@ Two activities, two shapes:
 | llama-1b fp16 | — | failed | — | — | — | — | — |
 | llama-3b fp16 | — | failed | — | — | — | — | — |
 | qwen-3b fp16 | 2 | scored | .6045<br>±.0299 | .4216<br>±.0302 | .3507<br>±.0292 | .2985<br>±.0280 | 6.5 |
-| qwen-7b gptq-int4 | — | running | — | — | — | — | — |
+| qwen-7b gptq-int4 | 2 | scored | .7649<br>±.0260 | .5746<br>±.0303 | .4813<br>±.0306 | .4552<br>±.0305 | 5.75 |
 | qwen-math-1.5b fp16 | — | failed | — | — | — | — | — |
 
 > **Analysis.** 1/5 scored (2026-07-26) — and the diagnostic
@@ -1898,7 +1901,7 @@ Two activities, two shapes:
 | llama-3b fp16 | qwen | 2 | scored | .7015<br>±.0280 | .4328<br>±.0303 | .4142<br>±.0301 | .3619<br>±.0294 | 20.9 |
 | qwen-3b fp16 | qwen | 2 | scored | .8172<br>±.0237 | .6306<br>±.0295 | .5858<br>±.0301 | .5522<br>±.0304 | 18.2 |
 | qwen-7b gptq-int4 | qwen | 2 | scored | .8433<br>±.0222 | .6381<br>±.0294 | .5858<br>±.0301 | .5746<br>±.0303 | 14.5 |
-| qwen-math-1.5b fp16 | qwen | — | running | — | — | — | — | — |
+| qwen-math-1.5b fp16 | qwen | 2 | scored | .8470<br>±.0220 | .6940<br>±.0282 | .6567<br>±.0291 | .6269<br>±.0296 | 13.48 |
 
 > **Analysis.** 4/5 scored (2026-07-26). At b=320 the model
 > ordering is clean and wide — qwen-7b .8433 ≳ qwen-3b .8172 >
@@ -2061,7 +2064,7 @@ Two activities, two shapes:
 | llm | prm | trials | status | pass@gb | naive@gb | wei@gb | maj@gb | hr/trial |
 |---|---|---|---|---|---|---|---|---|
 | llama-1b fp16 | qwen | 2 | scored | .5373<br>±.0305 | .2649<br>±.0270 | .2127<br>±.0250 | .1828<br>±.0237 | 20.0 |
-| llama-3b fp16 | qwen | — | running | — | — | — | — | — |
+| llama-3b fp16 | qwen | 2 | scored | .7164<br>±.0276 | .4254<br>±.0303 | .3955<br>±.0299 | .3433<br>±.0291 | 29.08 |
 | qwen-3b fp16 | qwen | 2 | scored | .8396<br>±.0225 | .5896<br>±.0301 | .5560<br>±.0304 | .5299<br>±.0305 | 23.8 |
 | qwen-7b gptq-int4 | qwen | 2 | scored | .8582<br>±.0213 | .6007<br>±.0300 | .6007<br>±.0300 | .5821<br>±.0302 | 19.1 |
 | qwen-math-1.5b fp16 | qwen | — | running (mml4096) | — | — | — | — | — |

@@ -2227,15 +2227,15 @@
   feeds:
   - tbl-179d62  # L4 sem b320 model-family, lam=0.1 w_eff=100
   group: sem-mcts
-  status: failed
+  status: running
   priority: 1.5
-  expected_hr: 18
+  expected_hr: 22
   note: b=320 qwen-PRM llama-3b fp16 lam=0.1 ds_alpha=31.6 (w_eff=100, L4)
   launch:
-    job_id: 23376655
-    node: r5u33n1
-    pid: 2365590
-    at: 2026-07-25 08:04
+    job_id: 23419813
+    node: r5u09n1
+    pid: 1357268
+    at: 2026-07-28 08:36
   history:
   - {at: '2026-07-26 10:00', job_id: 23376655, outcome: stalled, trials_done: 1}
 - id: sem-mcts-0c3aba62
@@ -2252,7 +2252,7 @@
   feeds:
   - tbl-179d62  # L4 sem b320 model-family, lam=0.1 w_eff=100
   group: sem-mcts
-  status: running
+  status: scored
   priority: 1.5
   expected_hr: 19
   note: b=320 qwen-PRM qwen-3b fp16 lam=0.1 ds_alpha=31.6 (w_eff=100, L4)
@@ -2275,7 +2275,7 @@
   feeds:
   - tbl-179d62  # L4 sem b320 model-family, lam=0.1 w_eff=100
   group: sem-mcts
-  status: running
+  status: scored
   priority: 1
   expected_hr: 11
   note: b=320 qwen-PRM qwen-7b gptq-int4 lam=0.1 ds_alpha=31.6 (w_eff=100, L4)
