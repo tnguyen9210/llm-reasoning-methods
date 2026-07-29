@@ -34,14 +34,18 @@
   feeds:
   - tbl-01884a  # L3 cnt-mcts model family, b=80, QwenPRM
   group: cnt-mcts
-  status: inqueue
+  status: running
   priority: 2
   expected_hr: 8
   note: b=80 qwen-PRM llama1b (L3). Level-3 anchor for the
     cross-level model-family read; level-5 twin ran 2.98 hr/trial,
     and expected_hr is 2x that rounded up (level 3 is 105 questions
     vs 134, so this over-estimates deliberately).
-
+  launch:
+    job_id: 23428812
+    node: r5u33n1
+    pid: 1445538
+    at: 2026-07-28 19:41
 - id: cnt-mcts-l3-b080-qwen-llama3b
   launcher: generate_mcts_cnt.py
   hash: "4f1fa9c1"
@@ -54,9 +58,14 @@
   feeds:
   - tbl-01884a  # L3 cnt-mcts model family, b=80, QwenPRM
   group: cnt-mcts
-  status: inqueue
+  status: running
   priority: 2
   expected_hr: 12
+  launch:
+    job_id: 23419815
+    node: r5u09n1
+    pid: 1459977
+    at: 2026-07-28 20:46
   note: b=80 qwen-PRM llama3b (L3). Level-3 anchor for the
     cross-level model-family read; level-5 twin ran 5.13 hr/trial,
     and expected_hr is 2x that rounded up (level 3 is 105 questions

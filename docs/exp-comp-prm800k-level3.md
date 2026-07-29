@@ -88,8 +88,8 @@ Empty cells are `—`. Full workflow:
 
 | llm | trials | status | pass@gb | naive@gb | wei@gb | maj@gb | hr/trial |
 |---|---|---|---|---|---|---|---|
-| llama-1b fp16 | — | inqueue | — | — | — | — | — |
-| llama-3b fp16 | — | inqueue | — | — | — | — | — |
+| llama-1b fp16 | — | running | — | — | — | — | — |
+| llama-3b fp16 | — | running | — | — | — | — | — |
 | qwen-3b fp16 | — | inqueue | — | — | — | — | — |
 | qwen-7b gptq-int4 | — | inqueue | — | — | — | — | — |
 | qwen-math-1.5b fp16 | — | inqueue | — | — | — | — | — |
