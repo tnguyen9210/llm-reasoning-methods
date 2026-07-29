@@ -14,6 +14,44 @@ scaffold, it also gets a standalone file in [decisions/](decisions/);
 the log entry then carries a one-line pointer to it rather than
 repeating the full writeup.
 
+## 2026-07-28 — Evaluation, Experiments: slice MATH by `level`, never by `subject` — subject is a post-hoc analysis axis
+
+**Context:** asked whether experiments should run on MATH subjects
+instead of levels. **Decision:** no subject-filtered runs, ever;
+`level` stays the launch-time slice and subject-wise numbers come
+from re-slicing already-scored runs. Four reasons: (1) the axes are
+not symmetric — `data.level` filters at launch so a level slice
+costs a run, while every level run already spans all 7 subjects, so
+a subject filter would only shrink `n` at the same per-problem cost;
+(2) every scored trial record already carries `subject`, `level`,
+and `unique_id` next to `pred_*@gb`, so the breakdown is a groupby,
+not a GPU job; (3) power — subject cells inside a level are 10-36
+problems (SE ~.08-.15), which resolves the .1-.3 model-family gaps
+but not the ~.05 `w_eff` sweep effects, and repeated trials do not
+help because every trial reuses the same fixed question set; (4)
+`level` is a difficulty proxy that maps onto the hardness axis the
+FBMCTS bounds are stated in, while `subject` supports only a
+robustness claim, never a mechanism claim. Subject *is* worth using
+for failure-mode diagnosis (completion length by subject bears
+directly on the open `mml=8000` question in
+[decisions/context-length-overflow-guard.md](decisions/context-length-overflow-guard.md)),
+one model-family robustness table at level 5, and grading-flake
+checks. Verified not confounded: every subject spans all five
+levels and the L4+L5 share ranges only 45%-66%. **Considered and
+kept open:** dropping `data.level` and running the full 500, then
+deriving both the level tables and the subject tables from one run
+— strictly more informative (filtering by level reproduces the
+same question sets, so existing tables stay comparable) and it
+lifts subject cells to 38-124 (SE .045-.081). Estimated cost is
+1.6-1.8x the current L4+L5 pair, not 3.7x, since two level runs
+are already paid for; at b=320 one trial is ~42-46 h so 4 trials
+outrun a 3-day allocation, at b=80 it is ~6-12 hr/trial.
+Recommendation if pursued: pilot at b=80 on one model-family
+comparison, and never report the pooled 500 number (48% of the set
+is levels 1-3, which compresses the hard-instance signal). Full
+cross-tab, per-cell counts, and follow-ups in
+[decisions/math-subject-vs-level-slicing.md](decisions/math-subject-vs-level-slicing.md).
+
 ## 2026-07-20 — Search, Instrumentation: record six exploration-diagnostic keys in every bl_* results dict
 
 **Context:** the results dict recorded outcomes but almost nothing

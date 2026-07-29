@@ -1,0 +1,343 @@
+# Per-doc experiment ledger (workflow v2) -- one entry per
+# launchable run, cradle to grave. Companion doc:
+#   docs/exp-comp-prm800k-level3.md
+#
+# status: planned | inqueue | running | scored | failed
+#   planned  -> NOT USED: an authored-but-unqueued table cell
+#               has NO entry here at all (Tuan's rule,
+#               2026-07-24). Doc rows may read `planned`;
+#               a ledger entry is born when he queues it,
+#               i.e. at `inqueue`.
+#   inqueue  -> Tuan queued it (priority: lower drains first)
+#   running  -> launched (launch: block records where)
+#   scored   -> stats computed AND written into the doc
+#   failed   -> crash/stall/missing detected by exp-check;
+#               requeue (-> inqueue) only on Tuan's say-so
+# `hash:` is written once at append time; --verify audits drift.
+# Commands are DERIVED (launcher + config_root + overrides +
+# trials); never store a command string.
+#
+# Created 2026-07-28 alongside the level-3 doc; the five cells of
+# tbl-01884a were queued the same day (priority 2). Overrides
+# mirror the level-5 cnt-mcts b=80 QwenPRM entries with
+# `data.level: 3`.
+
+- id: cnt-mcts-l3-b080-qwen-llama1b
+  launcher: generate_mcts_cnt.py
+  hash: "31c833bf"
+  config_root: mcts_cnt_prm800k
+  overrides:
+    llm: llama_1b
+    prm: qwen_prm
+    data.level: 3
+  trials: 2
+  feeds:
+  - tbl-01884a  # L3 cnt-mcts model family, b=80, QwenPRM
+  group: cnt-mcts
+  status: inqueue
+  priority: 2
+  expected_hr: 8
+  note: b=80 qwen-PRM llama1b (L3). Level-3 anchor for the
+    cross-level model-family read; level-5 twin ran 2.98 hr/trial,
+    and expected_hr is 2x that rounded up (level 3 is 105 questions
+    vs 134, so this over-estimates deliberately).
+
+- id: cnt-mcts-l3-b080-qwen-llama3b
+  launcher: generate_mcts_cnt.py
+  hash: "4f1fa9c1"
+  config_root: mcts_cnt_prm800k
+  overrides:
+    llm: llama_3b
+    prm: qwen_prm
+    data.level: 3
+  trials: 2
+  feeds:
+  - tbl-01884a  # L3 cnt-mcts model family, b=80, QwenPRM
+  group: cnt-mcts
+  status: inqueue
+  priority: 2
+  expected_hr: 12
+  note: b=80 qwen-PRM llama3b (L3). Level-3 anchor for the
+    cross-level model-family read; level-5 twin ran 5.13 hr/trial,
+    and expected_hr is 2x that rounded up (level 3 is 105 questions
+    vs 134, so this over-estimates deliberately).
+
+- id: cnt-mcts-l3-b080-qwen-qwen3b
+  launcher: generate_mcts_cnt.py
+  hash: "83be287a"
+  config_root: mcts_cnt_prm800k
+  overrides:
+    llm: qwen_3b
+    prm: qwen_prm
+    data.level: 3
+  trials: 2
+  feeds:
+  - tbl-01884a  # L3 cnt-mcts model family, b=80, QwenPRM
+  group: cnt-mcts
+  status: inqueue
+  priority: 2
+  expected_hr: 11
+  note: b=80 qwen-PRM qwen3b (L3). Level-3 anchor for the
+    cross-level model-family read; level-5 twin ran 4.63 hr/trial,
+    and expected_hr is 2x that rounded up (level 3 is 105 questions
+    vs 134, so this over-estimates deliberately).
+
+- id: cnt-mcts-l3-b080-qwen-qwen7bgptq
+  launcher: generate_mcts_cnt.py
+  hash: "300917ba"
+  config_root: mcts_cnt_prm800k
+  overrides:
+    llm: qwen_7b_gptq_int4
+    prm: qwen_prm
+    data.level: 3
+  trials: 2
+  feeds:
+  - tbl-01884a  # L3 cnt-mcts model family, b=80, QwenPRM
+  group: cnt-mcts
+  status: inqueue
+  priority: 2
+  expected_hr: 10
+  note: b=80 qwen-PRM qwen7bgptq (L3). Level-3 anchor for the
+    cross-level model-family read; level-5 twin ran 4.19 hr/trial,
+    and expected_hr is 2x that rounded up (level 3 is 105 questions
+    vs 134, so this over-estimates deliberately).
+
+- id: cnt-mcts-l3-b080-qwen-qwenmath15b
+  launcher: generate_mcts_cnt.py
+  hash: "7f90051f"
+  config_root: mcts_cnt_prm800k
+  overrides:
+    llm: qwen_math_1_5b
+    prm: qwen_prm
+    data.level: 3
+  trials: 2
+  feeds:
+  - tbl-01884a  # L3 cnt-mcts model family, b=80, QwenPRM
+  group: cnt-mcts
+  status: inqueue
+  priority: 2
+  expected_hr: 8
+  note: b=80 qwen-PRM qwenmath15b (L3). Level-3 anchor for the
+    cross-level model-family read; level-5 twin ran 3.37 hr/trial,
+    and expected_hr is 2x that rounded up (level 3 is 105 questions
+    vs 134, so this over-estimates deliberately).
+
+- id: sem-mcts-l3-b080-ds1.0-llama1b
+  launcher: generate_mcts_sem.py
+  hash: "77034115"
+  config_root: mcts_sem_v02_prm800k
+  overrides:
+    llm: llama_1b
+    prm: qwen_prm
+    search.lam: 0.01
+    search.ds_alpha: 1.0
+    data.level: 3
+  trials: 2
+  feeds:
+  - tbl-8d2a3d  # L3 sem-mcts model family, b=80, QwenPRM, w_eff=10
+  group: sem-mcts
+  status: inqueue
+  priority: 2
+  expected_hr: 10
+  note: b=80 sem qwen-PRM llama1b lam=0.01 ds_alpha=1.0
+    (w_eff=10, L3). Level-5 twin ran 4.88 hr/trial; expected_hr
+    is 2x that rounded up (level 3 is 105 questions vs 134, so this
+    over-estimates deliberately).
+
+- id: sem-mcts-l3-b080-ds1.0-llama3b
+  launcher: generate_mcts_sem.py
+  hash: "9d847c40"
+  config_root: mcts_sem_v02_prm800k
+  overrides:
+    llm: llama_3b
+    prm: qwen_prm
+    search.lam: 0.01
+    search.ds_alpha: 1.0
+    data.level: 3
+  trials: 2
+  feeds:
+  - tbl-8d2a3d  # L3 sem-mcts model family, b=80, QwenPRM, w_eff=10
+  group: sem-mcts
+  status: inqueue
+  priority: 2
+  expected_hr: 14
+  note: b=80 sem qwen-PRM llama3b lam=0.01 ds_alpha=1.0
+    (w_eff=10, L3). Level-5 twin ran 6.93 hr/trial; expected_hr
+    is 2x that rounded up (level 3 is 105 questions vs 134, so this
+    over-estimates deliberately).
+
+- id: sem-mcts-l3-b080-ds1.0-qwen3b
+  launcher: generate_mcts_sem.py
+  hash: "d4b132a6"
+  config_root: mcts_sem_v02_prm800k
+  overrides:
+    llm: qwen_3b
+    prm: qwen_prm
+    search.lam: 0.01
+    search.ds_alpha: 1.0
+    data.level: 3
+  trials: 2
+  feeds:
+  - tbl-8d2a3d  # L3 sem-mcts model family, b=80, QwenPRM, w_eff=10
+  group: sem-mcts
+  status: inqueue
+  priority: 2
+  expected_hr: 13
+  note: b=80 sem qwen-PRM qwen3b lam=0.01 ds_alpha=1.0
+    (w_eff=10, L3). Level-5 twin ran 6.2 hr/trial; expected_hr
+    is 2x that rounded up (level 3 is 105 questions vs 134, so this
+    over-estimates deliberately).
+
+- id: sem-mcts-l3-b080-ds1.0-qwen7bgptq
+  launcher: generate_mcts_sem.py
+  hash: "3943d0e3"
+  config_root: mcts_sem_v02_prm800k
+  overrides:
+    llm: qwen_7b_gptq_int4
+    prm: qwen_prm
+    search.lam: 0.01
+    search.ds_alpha: 1.0
+    data.level: 3
+  trials: 2
+  feeds:
+  - tbl-8d2a3d  # L3 sem-mcts model family, b=80, QwenPRM, w_eff=10
+  group: sem-mcts
+  status: inqueue
+  priority: 2
+  expected_hr: 11
+  note: b=80 sem qwen-PRM qwen7bgptq lam=0.01 ds_alpha=1.0
+    (w_eff=10, L3). Level-5 twin ran 5.42 hr/trial; expected_hr
+    is 2x that rounded up (level 3 is 105 questions vs 134, so this
+    over-estimates deliberately).
+
+- id: sem-mcts-l3-b080-ds1.0-qwenmath15b
+  launcher: generate_mcts_sem.py
+  hash: "186bb900"
+  config_root: mcts_sem_v02_prm800k
+  overrides:
+    llm: qwen_math_1_5b
+    prm: qwen_prm
+    search.lam: 0.01
+    search.ds_alpha: 1.0
+    data.level: 3
+  trials: 2
+  feeds:
+  - tbl-8d2a3d  # L3 sem-mcts model family, b=80, QwenPRM, w_eff=10
+  group: sem-mcts
+  status: inqueue
+  priority: 2
+  expected_hr: 10
+  note: b=80 sem qwen-PRM qwenmath15b lam=0.01 ds_alpha=1.0
+    (w_eff=10, L3). Level-5 twin ran 4.79 hr/trial; expected_hr
+    is 2x that rounded up (level 3 is 105 questions vs 134, so this
+    over-estimates deliberately).
+
+- id: sem-mcts-l3-b080-ds10-llama1b
+  launcher: generate_mcts_sem.py
+  hash: "55d6fc87"
+  config_root: mcts_sem_v02_prm800k
+  overrides:
+    llm: llama_1b
+    prm: qwen_prm
+    search.lam: 0.01
+    search.ds_alpha: 10
+    data.level: 3
+  trials: 2
+  feeds:
+  - tbl-49eedf  # L3 sem-mcts model family, b=80, QwenPRM, w_eff=100
+  group: sem-mcts
+  status: inqueue
+  priority: 2
+  expected_hr: 10
+  note: b=80 sem qwen-PRM llama1b lam=0.01 ds_alpha=10
+    (w_eff=100, L3). Level-5 twin ran 4.85 hr/trial; expected_hr
+    is 2x that rounded up (level 3 is 105 questions vs 134, so this
+    over-estimates deliberately).
+
+- id: sem-mcts-l3-b080-ds10-llama3b
+  launcher: generate_mcts_sem.py
+  hash: "8ff0dca9"
+  config_root: mcts_sem_v02_prm800k
+  overrides:
+    llm: llama_3b
+    prm: qwen_prm
+    search.lam: 0.01
+    search.ds_alpha: 10
+    data.level: 3
+  trials: 2
+  feeds:
+  - tbl-49eedf  # L3 sem-mcts model family, b=80, QwenPRM, w_eff=100
+  group: sem-mcts
+  status: inqueue
+  priority: 2
+  expected_hr: 14
+  note: b=80 sem qwen-PRM llama3b lam=0.01 ds_alpha=10
+    (w_eff=100, L3). Level-5 twin ran 6.99 hr/trial; expected_hr
+    is 2x that rounded up (level 3 is 105 questions vs 134, so this
+    over-estimates deliberately).
+
+- id: sem-mcts-l3-b080-ds10-qwen3b
+  launcher: generate_mcts_sem.py
+  hash: "f8f225f0"
+  config_root: mcts_sem_v02_prm800k
+  overrides:
+    llm: qwen_3b
+    prm: qwen_prm
+    search.lam: 0.01
+    search.ds_alpha: 10
+    data.level: 3
+  trials: 2
+  feeds:
+  - tbl-49eedf  # L3 sem-mcts model family, b=80, QwenPRM, w_eff=100
+  group: sem-mcts
+  status: inqueue
+  priority: 2
+  expected_hr: 13
+  note: b=80 sem qwen-PRM qwen3b lam=0.01 ds_alpha=10
+    (w_eff=100, L3). Level-5 twin ran 6.07 hr/trial; expected_hr
+    is 2x that rounded up (level 3 is 105 questions vs 134, so this
+    over-estimates deliberately).
+
+- id: sem-mcts-l3-b080-ds10-qwen7bgptq
+  launcher: generate_mcts_sem.py
+  hash: "fa8166e0"
+  config_root: mcts_sem_v02_prm800k
+  overrides:
+    llm: qwen_7b_gptq_int4
+    prm: qwen_prm
+    search.lam: 0.01
+    search.ds_alpha: 10
+    data.level: 3
+  trials: 2
+  feeds:
+  - tbl-49eedf  # L3 sem-mcts model family, b=80, QwenPRM, w_eff=100
+  group: sem-mcts
+  status: inqueue
+  priority: 2
+  expected_hr: 12
+  note: b=80 sem qwen-PRM qwen7bgptq lam=0.01 ds_alpha=10
+    (w_eff=100, L3). Level-5 twin ran 5.54 hr/trial; expected_hr
+    is 2x that rounded up (level 3 is 105 questions vs 134, so this
+    over-estimates deliberately).
+
+- id: sem-mcts-l3-b080-ds10-qwenmath15b
+  launcher: generate_mcts_sem.py
+  hash: "7a26b4f9"
+  config_root: mcts_sem_v02_prm800k
+  overrides:
+    llm: qwen_math_1_5b
+    prm: qwen_prm
+    search.lam: 0.01
+    search.ds_alpha: 10
+    data.level: 3
+  trials: 2
+  feeds:
+  - tbl-49eedf  # L3 sem-mcts model family, b=80, QwenPRM, w_eff=100
+  group: sem-mcts
+  status: inqueue
+  priority: 2
+  expected_hr: 10
+  note: b=80 sem qwen-PRM qwenmath15b lam=0.01 ds_alpha=10
+    (w_eff=100, L3). Level-5 twin ran 4.83 hr/trial; expected_hr
+    is 2x that rounded up (level 3 is 105 questions vs 134, so this
+    over-estimates deliberately).
