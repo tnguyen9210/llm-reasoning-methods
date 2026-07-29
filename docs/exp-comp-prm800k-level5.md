@@ -33,6 +33,12 @@ by gen_budget, plus a cross-algorithm best-config summary.
     - [agg_strategy comparison (qwen-3b, qwen-math-1.5b, lam=0.01/ds_alpha=10)](#agg_strategy-comparison-qwen-3b-qwen-math-15b-lam001ds_alpha10) · `tbl-4cc5b9`
     - [model family, size, quantization comparison (QwenPRM, lam=0.01/ds_alpha=1)](#model-family-size-quantization-comparison-qwenprm-lam001ds_alpha1) · `tbl-73533c`
     - [model family, size, quantization comparison (QwenPRM, lam=0.01/ds_alpha=10)](#model-family-size-quantization-comparison-qwenprm-lam001ds_alpha10) · `tbl-cf8fea`
+  - [sem-mcts-v02 \[cov_scope=local\]](#sem-mcts-v02-cov_scopelocal)
+    - [lam / ds_alpha joint sweep (llama-1b)](#lam-ds_alpha-joint-sweep-llama-1b-1) · `tbl-375fa0`
+    - [lam / ds_alpha joint sweep (qwen-7b gptq-int4)](#lam-ds_alpha-joint-sweep-qwen-7b-gptq-int4-1) · `tbl-898c25`
+    - [lam / ds_alpha joint sweep (qwen-3b)](#lam-ds_alpha-joint-sweep-qwen-3b) · `tbl-fa65d4`
+    - [embeds_ref comparison (llama-1b, cov_scope=local)](#embeds_ref-comparison-llama-1b-cov_scopelocal) · `tbl-ea8196`
+    - [model family comparison (QwenPRM, cov_scope=local)](#model-family-comparison-qwenprm-cov_scopelocal) · `tbl-bf15ee`
   - [cnt-mcts-bl-v01](#cnt-mcts-bl-v01)
     - [model family, size, quantization comparison (QwenPRM)](#model-family-size-quantization-comparison-qwenprm-1) · `tbl-6557b7`
   - [cnt-mcts-bl-v02](#cnt-mcts-bl-v02)
@@ -67,8 +73,10 @@ by gen_budget, plus a cross-algorithm best-config summary.
   - [sem-mcts-v02](#sem-mcts-v02-1)
     - [model family comparison (b=320, QwenPRM, lam=0.01/ds_alpha=1)](#model-family-comparison-b320-qwenprm-lam001ds_alpha1) · `tbl-900e87`
     - [model family comparison (b=320, QwenPRM, lam=0.01/ds_alpha=10)](#model-family-comparison-b320-qwenprm-lam001ds_alpha10) · `tbl-01c466`
+    - [model family comparison (b=320, QwenPRM, lam=0.01/ds_alpha=1, embeds_center_mode=local)](#model-family-comparison-b320-qwenprm-lam001ds_alpha1-embeds_center_modelocal) · `tbl-6a015e`
+    - [model family comparison (b=320, QwenPRM, lam=0.01/ds_alpha=10, embeds_center_mode=local)](#model-family-comparison-b320-qwenprm-lam001ds_alpha10-embeds_center_modelocal) · `tbl-560ce2`
 
-*37 tables. Regenerate with `python scripts/gen_toc.py`.*
+*44 tables. Regenerate with `python scripts/gen_toc.py`.*
 <!-- toc:end -->
 
 ## Purpose
@@ -771,6 +779,380 @@ Two activities, two shapes:
 > **Limitations / follow-up:** resolve the flagged mismatch
 > before treating llama-1b/qwen-7b gptq-int4/qwen-math-1.5b rows
 > as verified.
+
+### sem-mcts-v02 [cov_scope=local]
+
+> **Same implementation, one flag.** Everything in this section
+> runs `core/mcts_sem_search_v02_00_00.py` — the identical file
+> the `sem-mcts-v02` section above uses — with
+> `search.cov_scope=local`. There is no separate method, no
+> separate `config_root`, and no separate launcher; the ledger
+> `method` stays `mcts_sem_v02` and the cells differ from their
+> global twins only by that override (and therefore by
+> `config_hash`). The section exists because **local scope needs
+> its own hyperparameter tuning**, not because it is a different
+> algorithm.
+>
+> **What the flag does.** Global scope keeps one covariance `V`
+> for the whole tree: every selection anywhere folds into it,
+> every bonus reads it. Local scope gives each node its own `V`
+> over the children *that node* has selected, so sibling
+> subtrees never see each other's folds. The bonus at node `n`
+> becomes "which child points somewhere `n` has not committed to
+> yet?" instead of "...somewhere the entire search has not
+> visited?".
+>
+> ⚠️ **The global operating point does not transfer — do not
+> reuse the `w_eff` grid from the section above.** With
+> L2-normalized embeddings and `V = lam*I + sum u u^T`, a
+> direction already covered `k` times scores `~1/sqrt(lam + k)`.
+> Under **global**, `k` is the run's *total* selections —
+> hundreds by mid-run — so the bonus decays far below its
+> nominal weight `w_eff = ds_alpha/sqrt(lam)`, which is only the
+> value at the ridge init. Under **local**, `k` is the node's
+> own fold count — typically 1–5, tens at the root — so the
+> bonus stays *near* `w_eff` for the whole run. Concretely at
+> `lam=0.01`: `1/sqrt(3.01) = .576` locally against
+> `1/sqrt(300) = .058` globally, a **10x stronger diversity
+> push for the same `ds_alpha`**.
+>
+> The prediction that follows: local's optimum should sit near
+> **`w_eff ≈ 1`**, roughly an order of magnitude below global's
+> measured optimum of `w_eff = 10`. Sweeping local on the global
+> grid would put every cell at or above the predicted optimum
+> and make local look uniformly over-diversified — a
+> measurement artifact, not a result. The sweep below is
+> therefore shifted down and denser at the low end.
+>
+> **`lam` is swept at one value only.** The global joint sweeps
+> (`tbl-a554c7` and siblings) found no independent `lam` effect
+> at this level once `w_eff` is held fixed — llama-1b `w_eff=10`
+> gave .3582 / .3433 / .3209 across `lam` 1.0 / 0.1 / 0.01, all
+> inside one SEM. That finding is inherited here, which cuts the
+> sweep from 22 cells to 6. If the local results look
+> `lam`-sensitive in a way the global ones didn't, that
+> assumption is the first thing to revisit.
+
+#### lam / ds_alpha joint sweep (llama-1b)
+<!-- table-id: tbl-375fa0 -->
+> **Compares:** the effective diversity weight
+> `w_eff = ds_alpha/sqrt(lam)` under per-node covariance, to
+> locate local scope's operating point. Direct counterpart of
+> the global `lam / ds_alpha joint sweep (llama-1b)`
+> (`tbl-a554c7`) above, at the same `lam=0.01` column, so every
+> row here pairs with a global row at the same nominal `w_eff`.
+>
+> ⚠️ **Named for its global counterpart, but `lam` is held at
+> 0.01** — this is the `lam=0.01` column of a joint sweep, not
+> the full 3x grid. See the section preamble for why (the
+> global sweeps found no independent `lam` effect at fixed
+> `w_eff`, which cuts 22 cells to 6). Adding the `lam=1.0` and
+> `lam=0.1` columns would make the title literal at 3x the
+> cost; do that only if the local results look `lam`-sensitive.
+>
+> Grid shifted down per the section note: `w_eff` ∈ {0, 0.1,
+> 0.3, 1, 3, 10}. The `w_eff=0` row is the no-diversity
+> baseline and is **scope-independent** — with `ds_alpha=0` the
+> covariance is multiplied by zero, so local and global must
+> agree exactly (asserted in
+> `unittests/check_cov_scope_embeds_ref.py`). It is included as
+> a correctness anchor: if that row differs from its global
+> twin, something is wrong with the plumbing, not the ablation.
+>
+> **Fixed:** method=`mcts_sem_v02`, **`cov_scope=local`**,
+> `embeds_ref=absolute`, prm=qwen, bs-4, d-20, b=80,
+> proj=sparse512, cov_update=sm, cov_dtype=fp64, ds_beta=1.0,
+> prm_batch_size=1, llm=llama-1b, **lam=0.01**, data.level=5,
+> run.num_trials=2.
+>
+> ⚠️ All 6 cells `planned` — authored 2026-07-28, not queued.
+> Hashes resolved: `w_eff=0` `419d1d2d`, `0.1` `34e3e90a`,
+> `0.3` `abef6586`, `1` `3dc685e4`, `3` `c3a4212b`, `10`
+> `a941cc35`.
+>
+> **W&B:** none yet.
+
+| llm | prm | lam | ds_alpha | w_eff | trials | status | pass@gb | naive@gb | wei@gb | maj@gb | hr/trial |
+|---|---|---|---|---|---|---|---|---|---|---|---|
+| llama-1b | qwen | 0.01 | 0 | 0 | — | planned | — | — | — | — | — |
+| llama-1b | qwen | 0.01 | 0.01 | 0.1 | — | planned | — | — | — | — | — |
+| llama-1b | qwen | 0.01 | 0.03 | 0.3 | — | planned | — | — | — | — | — |
+| llama-1b | qwen | 0.01 | 0.1 | 1 | — | planned | — | — | — | — | — |
+| llama-1b | qwen | 0.01 | 0.3 | 3 | — | planned | — | — | — | — | — |
+| llama-1b | qwen | 0.01 | 1.0 | 10 | — | planned | — | — | — | — | — |
+
+> **Analysis.** No data yet. Read against `tbl-a554c7`'s
+> `lam=0.01` rows, which are the same nominal `w_eff` under
+> global scope: .2985 (`w_eff=1`), .3321 (`3`), .3209 (`10`),
+> .3433 (`100`), .3769 (`1000`).
+> **Limitations / follow-up:** this table is the gate for the
+> rest of the section — the `embeds_ref` and model-family tables
+> below are both authored at the *predicted* optimum
+> (`w_eff=1`) and should be re-pointed if the sweep lands
+> elsewhere. Cheapest informative subset if the full 6 is too
+> much: `w_eff` ∈ {0.3, 1, 3}, which brackets the prediction; at
+> ~4.9 hr/trial × 2 trials that is ~30 GPU-hours against ~59 for
+> all six.
+
+#### lam / ds_alpha joint sweep (qwen-7b gptq-int4)
+<!-- table-id: tbl-898c25 -->
+> **Compares:** the same `w_eff` grid as the llama-1b sweep
+> above (`tbl-375fa0`), on the strongest model in the level-5
+> family grid. Counterpart of the global `lam / ds_alpha joint
+> sweep (qwen-7b gptq-int4)` (`tbl-21bde4`) in the section
+> above.
+>
+> **Why this model second.** llama-1b and qwen-7b gptq-int4
+> bracket the policy-strength range of the whole grid — .3209
+> against .7687 pass@gb at the global `w_eff=10` point. Running
+> the sweep at both ends tests whether **local scope's optimum
+> depends on policy strength**, which is not a neutral question:
+> the b=320 `w_eff` pairing found that raising diversity costs
+> maj@gb, and that the cost *shrinks* as the policy strengthens
+> (−.067 llama-1b, −.049 qwen-3b, −.034 qwen-7b). If that
+> pattern carries over, qwen-7b should tolerate a higher
+> `w_eff` than llama-1b under local scope, and a single
+> section-wide operating point would be the wrong abstraction.
+>
+> ⚠️ **Named for its global counterpart, but `lam` is held at
+> 0.01** — same as the llama-1b table; see the section preamble.
+>
+> ⚠️ **The global twin's low end is unmeasured.** That table has
+> `lam=0.01` scored only at `w_eff` 10 / 100 / 1000 (.7687 /
+> .7873 / .7649); its `w_eff` 0 / 0.1 / 0.3 / 1 / 3 rows are
+> still `planned`. So only the `w_eff=10` row here pairs with a
+> measured global value — the rest is new territory for this
+> model under either scope. If the local low end looks
+> interesting, queueing the five matching global cells is what
+> makes it interpretable as a scope effect rather than a
+> low-`w_eff` effect.
+>
+> **Fixed:** method=`mcts_sem_v02`, **`cov_scope=local`**,
+> `embeds_ref=absolute`, prm=qwen, bs-4, d-20, b=80,
+> proj=sparse512, cov_update=sm, cov_dtype=fp64, ds_beta=1.0,
+> prm_batch_size=1, llm=qwen-7b gptq-int4, **lam=0.01**,
+> data.level=5, run.num_trials=2.
+>
+> ⚠️ All 6 cells `planned` — authored 2026-07-28, not queued.
+> Hashes: `w_eff=0` `14255c8b`, `0.1` `07d7f95a`, `0.3`
+> `6d120627`, `1` **`d5a1327c`**, `3` `0f4168dc`, `10`
+> `94840f6b`. The `w_eff=1` cell is **shared with the model
+> family table below** (`tbl-bf15ee`) — one ledger entry, two
+> `feeds` — so this table's net new cost is 5 cells.
+>
+> **W&B:** none yet.
+
+| llm | prm | lam | ds_alpha | w_eff | trials | status | pass@gb | naive@gb | wei@gb | maj@gb | hr/trial |
+|---|---|---|---|---|---|---|---|---|---|---|---|
+| qwen-7b gptq-int4 | qwen | 0.01 | 0 | 0 | — | planned | — | — | — | — | — |
+| qwen-7b gptq-int4 | qwen | 0.01 | 0.01 | 0.1 | — | planned | — | — | — | — | — |
+| qwen-7b gptq-int4 | qwen | 0.01 | 0.03 | 0.3 | — | planned | — | — | — | — | — |
+| qwen-7b gptq-int4 | qwen | 0.01 | 0.1 | 1 | — | planned | — | — | — | — | — |
+| qwen-7b gptq-int4 | qwen | 0.01 | 0.3 | 3 | — | planned | — | — | — | — | — |
+| qwen-7b gptq-int4 | qwen | 0.01 | 1.0 | 10 | — | planned | — | — | — | — | — |
+
+> **Analysis.** No data yet. The one global anchor is
+> `w_eff=10` = .7687 pass@gb (.6231 naive, .6194 wei, .6119
+> maj, 5.42 hr/trial).
+> **Limitations / follow-up:** read this table *against*
+> `tbl-375fa0`, not just against its global twin — the question
+> it exists for is whether the two models' local optima land at
+> the same `w_eff`. If they do, the section can adopt one
+> operating point and the model-family table below is
+> well-posed as written. If they don't, the model-family table
+> needs a per-model `w_eff` rather than the single provisional
+> `w_eff=1` it currently assumes, and that is a bigger
+> re-think than a re-point. At ~5.4 hr/trial × 2 trials the six
+> cells are ~65 GPU-hours, against ~59 for the llama-1b sweep.
+
+#### lam / ds_alpha joint sweep (qwen-3b)
+<!-- table-id: tbl-fa65d4 -->
+> **Compares:** the same `w_eff` grid as the two sweeps above,
+> on the mid-strength model of the family grid.
+>
+> **Why this model third.** With llama-1b (.3209) and qwen-7b
+> gptq-int4 (.7687) already bracketing the range, qwen-3b
+> (.6903) turns the policy-strength question from a two-point
+> comparison into a **three-point curve**. That matters for what
+> can be concluded: two endpoints can only say "the optimum
+> moved" or "it didn't", whereas three points can distinguish a
+> monotone drift in the optimum from a non-monotone one, and it
+> is the monotone case that would justify making `w_eff` a
+> function of policy strength rather than a section-wide
+> constant.
+>
+> ⚠️ **No global counterpart sweep exists for this model.** The
+> section above sweeps `lam`/`ds_alpha` for llama-1b, llama-3b,
+> qwen-math-1.5b and qwen-7b gptq-int4 — **not** qwen-3b. So
+> unlike `tbl-375fa0` and `tbl-898c25`, this table cannot be
+> read as a local-vs-global scope effect at any point except
+> `w_eff=10`, where qwen-3b's global value is known from
+> `tbl-73533c` / `tbl-e58353` (.6903 pass@gb). Everywhere else
+> it is a standalone local tuning curve. If a scope comparison
+> on qwen-3b is wanted, the global sweep has to be authored
+> too — which is why llama-3b or qwen-math-1.5b would have been
+> the cheaper third pick for a *scope* question, and qwen-3b is
+> the right pick for a *policy-strength* one.
+>
+> ⚠️ **Named for its global counterpart, but `lam` is held at
+> 0.01** — same as the two tables above; see the section
+> preamble.
+>
+> **Fixed:** method=`mcts_sem_v02`, **`cov_scope=local`**,
+> `embeds_ref=absolute`, prm=qwen, bs-4, d-20, b=80,
+> proj=sparse512, cov_update=sm, cov_dtype=fp64, ds_beta=1.0,
+> prm_batch_size=1, llm=qwen-3b fp16, **lam=0.01**,
+> data.level=5, run.num_trials=2.
+>
+> ⚠️ All 6 cells `planned` — authored 2026-07-28, not queued.
+> Hashes: `w_eff=0` `c6e6733d`, `0.1` `47459a5b`, `0.3`
+> `fa088080`, `1` **`77b736ec`**, `3` `af5cb8a9`, `10`
+> `83febb1b`. The `w_eff=1` cell is **shared with the model
+> family table below** (`tbl-bf15ee`), so this table's net new
+> cost is 5 cells.
+>
+> **W&B:** none yet.
+
+| llm | prm | lam | ds_alpha | w_eff | trials | status | pass@gb | naive@gb | wei@gb | maj@gb | hr/trial |
+|---|---|---|---|---|---|---|---|---|---|---|---|
+| qwen-3b | qwen | 0.01 | 0 | 0 | — | planned | — | — | — | — | — |
+| qwen-3b | qwen | 0.01 | 0.01 | 0.1 | — | planned | — | — | — | — | — |
+| qwen-3b | qwen | 0.01 | 0.03 | 0.3 | — | planned | — | — | — | — | — |
+| qwen-3b | qwen | 0.01 | 0.1 | 1 | — | planned | — | — | — | — | — |
+| qwen-3b | qwen | 0.01 | 0.3 | 3 | — | planned | — | — | — | — | — |
+| qwen-3b | qwen | 0.01 | 1.0 | 10 | — | planned | — | — | — | — | — |
+
+> **Analysis.** No data yet. Single global anchor at `w_eff=10`:
+> .6903 pass@gb, .5784 naive, .5597 wei, .5373 maj, 6.20
+> hr/trial (`tbl-e58353`, `center=none` row).
+> **Limitations / follow-up:** the three local sweeps
+> (`tbl-375fa0`, `tbl-898c25`, this one) are one experiment, not
+> three — the readable quantity is where each model's curve
+> peaks, so a partially-filled set invites reading a
+> policy-strength effect that is really a
+> which-cells-finished effect. Queue them as a block or not at
+> all. Full cost across all three: ~18 cells, ~5–6 hr/trial ×
+> 2 trials ≈ 190 GPU-hours; the `{0.3, 1, 3}` subset on all
+> three models is ~95 and still brackets the predicted optimum
+> on every model.
+
+#### embeds_ref comparison (llama-1b, cov_scope=local)
+<!-- table-id: tbl-ea8196 -->
+> **Compares:** `embeds_ref="absolute"` (the child's own pooled
+> embedding) against `embeds_ref="relative"` (the displacement
+> `x_child - x_parent`), under local scope.
+>
+> **Why this pairing.** A child's embedding is pooled over its
+> whole text prefix, so siblings share a long common prefix and
+> their absolute embeddings cluster tightly around the parent's
+> direction — measured at 0.98 mean |cos| on synthetic clustered
+> siblings, dropping to 0.07 after subtracting the parent
+> (`unittests/check_cov_scope_embeds_ref.py`). That shared
+> component dominates `sqrt(x^T V^-1 x)` and leaves the sibling
+> *differences* — the only thing selection can act on — as a
+> small perturbation. Parent-relative removes it, so the bonus
+> scores step **directions**.
+>
+> Local scope is where this is most coherent: the parent is a
+> fixed reference for the node's entire lifetime, so every
+> vector folded into `V_n` shares one origin. (The existing
+> `embeds_center_mode=local` knob removes a similar offset but
+> recomputes the sibling-group mean at every expansion, so under
+> `revisit_policy=regenerate` one node's `V` would mix origins.
+> The two are mutually exclusive — `MCTS.__init__` rejects the
+> combination as double-centering.)
+>
+> **Fixed:** as the sweep above (`cov_scope=local`, lam=0.01,
+> llama-1b, b=80, level 5, 2 trials); only `embeds_ref` and
+> `ds_alpha` vary.
+>
+> **`relative` applies at every depth, including the root.**
+> The root is embedded explicitly (the question pooled with an
+> empty answer, through the same pipeline as every candidate),
+> so the two arms differ uniformly rather than differing at
+> depths 1+ and agreeing at depth 0. Without that the
+> comparison would be partly confounded — a null result could
+> just mean the root, where branching is widest, was identical
+> in both arms.
+>
+> ⚠️ The two `absolute` rows are the **same two cells** as the
+> sweep table above (`3dc685e4`, `a941cc35`) — one ledger entry
+> feeding two tables, not a re-run. Only the `relative` rows are
+> new: `w_eff=1` `478004b3`, `w_eff=10` `19215fb5`. Net cost of
+> this table is 2 cells.
+>
+> **W&B:** none yet.
+
+| llm | prm | embeds_ref | w_eff | trials | status | pass@gb | naive@gb | wei@gb | maj@gb | hr/trial |
+|---|---|---|---|---|---|---|---|---|---|---|
+| llama-1b | qwen | absolute | 1 | — | planned | — | — | — | — | — |
+| llama-1b | qwen | relative | 1 | — | planned | — | — | — | — | — |
+| llama-1b | qwen | absolute | 10 | — | planned | — | — | — | — | — |
+| llama-1b | qwen | relative | 10 | — | planned | — | — | — | — | — |
+
+> **Analysis.** No data yet.
+> **Limitations / follow-up:** two `w_eff` points rather than
+> one, because parent-relative changes the geometry of what `V`
+> accumulates — normalized displacements fill `V` far more
+> isotropically than clustered absolutes — so its own optimum
+> may not sit where `absolute`'s does. If the two points
+> disagree in sign, `embeds_ref` needs its own `w_eff` sweep
+> rather than a 2-point comparison.
+
+#### model family comparison (QwenPRM, cov_scope=local)
+<!-- table-id: tbl-bf15ee -->
+> **Compares:** the standard 5-model family/size/quantization
+> grid under per-node covariance — the local counterpart of
+> `tbl-73533c` (global, `lam=0.01/ds_alpha=1`, `w_eff=10`)
+> above, and the table that answers whether local scope is worth
+> adopting.
+>
+> ⚠️ **Provisional operating point.** Authored at
+> `lam=0.01, ds_alpha=0.1` (`w_eff=1`), the *predicted* local
+> optimum, not a measured one. The joint sweep above is the
+> gate: if it lands elsewhere, these five cells must be
+> re-derived at that point and the hashes below are void. Do not
+> queue this table before that sweep reports.
+>
+> **The comparison this enables.** Local-vs-global must be read
+> with **each scope at its own optimum** — global at `w_eff=10`
+> (`tbl-73533c`), local at whatever the sweep says. Comparing
+> local-at-global's-optimum against global-at-global's-optimum
+> would understate local by construction, which is the whole
+> reason this section exists rather than a single extra column
+> in the section above.
+>
+> **Fixed:** method=`mcts_sem_v02`, **`cov_scope=local`**,
+> `embeds_ref=absolute`, prm=qwen, bs-4, d-20, b=80,
+> proj=sparse512, cov_update=sm, ds_beta=1.0, prm_batch_size=1,
+> tmpl=model-family default, lam=0.01, ds_alpha=0.1
+> (`w_eff=1`), data.level=5, run.num_trials=2.
+>
+> ⚠️ Hashes at the provisional point: llama-1b `3dc685e4`
+> (**shared with both tables above**), llama-3b `08e67e7a`,
+> qwen-3b `77b736ec`, qwen-7b gptq-int4 `d5a1327c`,
+> qwen-math-1.5b `74a4b258`. Net new: 4 cells.
+>
+> **W&B:** none yet.
+
+| llm | prm | trials | status | pass@gb | naive@gb | wei@gb | maj@gb | hr/trial |
+|---|---|---|---|---|---|---|---|---|
+| llama-1b fp16 | qwen | — | planned | — | — | — | — | — |
+| llama-3b fp16 | qwen | — | planned | — | — | — | — | — |
+| qwen-3b fp16 | qwen | — | planned | — | — | — | — | — |
+| qwen-7b gptq-int4 | qwen | — | planned | — | — | — | — | — |
+| qwen-math-1.5b fp16 | qwen | — | planned | — | — | — | — | — |
+
+> **Analysis.** No data yet. Global baselines at `w_eff=10`
+> (`tbl-73533c`): llama-1b .3209, llama-3b .5784, qwen-3b .6903,
+> qwen-7b gptq-int4 .7687, qwen-math-1.5b .7500 pass@gb.
+> **Limitations / follow-up:** gated on the `w_eff` sweep, as
+> flagged above. At ~4.8–7.0 hr/trial × 2 trials these five
+> cells are ~55 GPU-hours. Expected shape if local works: the
+> weaker policies (llama-1b, llama-3b) should benefit most,
+> since a per-node covariance stops one subtree's folds from
+> flattening another's bonus, and weak policies produce the most
+> redundant branches.
 
 ### cnt-mcts-bl-v01
 
@@ -2101,5 +2483,164 @@ Two activities, two shapes:
 > and is still running. The qwen-math row awaits the mml4096
 > question (see the `ds_alpha=1` table's note); if 4096 proves
 > sufficient, both b=320 sem tables can be completed at 5/5.
+
+#### model family comparison (b=320, QwenPRM, lam=0.01/ds_alpha=1, embeds_center_mode=local)
+<!-- table-id: tbl-6a015e -->
+> **Compares:** the `ds_alpha=1` b=320 table above (`tbl-900e87`,
+> no centering) against the same five cells run with
+> `embeds_center=true, embeds_center_mode=local` — sibling-group
+> centering, where each expansion group's embeddings have that
+> group's own mean subtracted before the diversity bonus is
+> formed. Centering is the only axis that moves, so this is the
+> b=320 counterpart of the b=80 `embeds_center_mode comparison
+> (lam=0.01/ds_alpha=1)` table (`tbl-e58353`) above, which found
+> no consistent effect at b=80. The open question this table
+> answers: **does centering start to matter once the budget is
+> large enough for the tree to spread?** At b=80 the covariance
+> sees ~80 folded embeddings; at b=320 it sees 4×, so an
+> uncentered common direction has far more opportunity to
+> dominate `V` and flatten the bonus.
+>
+> **Fixed:** identical to `tbl-900e87` (method=`mcts_sem_v02`,
+> prm=qwen, bs-4, d-20, b=320, prm_batch_size=1,
+> `ds_alpha_schedule=global`, `cov_update=sm`, `cov_dtype=fp64`,
+> `embeds_dim=512`/`embeds_proj=sparse`, ds_beta=1.0,
+> tmpl=model-family default, **lam=0.01, ds_alpha=1.0**
+> (`w_eff=10`), data.level=5, run.num_trials=2) except
+> **`embeds_center=true` + `embeds_center_mode=local`**.
+>
+> **`max_model_len`:** 6000 for the four models that accept it,
+> for the reason given in `tbl-900e87` — b=320 prompts overflow
+> the 5000 default at level 5. **qwen-math-1.5b is at 4096**, not
+> 6000: its `max_position_embeddings=4096` makes 6000 impossible
+> at engine construction, so 6000 is not an authorable cell for
+> that model. 4096 is the value its `tbl-900e87` counterpart is
+> actually running at (`cfg-06533f44`), so the two qwen-math rows
+> still pair — but note the pair is a 4096↔4096 comparison while
+> the other four are 6000↔6000.
+>
+> ⚠️ All five cells are `planned` — authored 2026-07-28, **not
+> queued**, so no ledger entries exist yet. Config hashes are
+> resolved and recorded below so they can be queued without
+> re-deriving: llama-1b `54eb87b0`, llama-3b `ba3267b4`, qwen-3b
+> `991731e8`, qwen-7b gptq-int4 `2953ac47`, qwen-math-1.5b
+> (mml4096) `db906620`.
+>
+> ⚠️ **Cost before value:** at ~15–29 hr/trial × 2 trials × 5
+> cells this table is ~200–290 GPU-hours, and its b=80 twin found
+> every centering gap inside ~1 SEM. Worth queueing a subset
+> first — see the follow-up note below.
+>
+> **W&B:** none yet (no runs).
+
+| llm | prm | center | trials | status | pass@gb | naive@gb | wei@gb | maj@gb | hr/trial |
+|---|---|---|---|---|---|---|---|---|---|
+| llama-1b fp16 | qwen | local | — | inqueue | — | — | — | — | — |
+| llama-3b fp16 | qwen | local | — | inqueue | — | — | — | — | — |
+| qwen-3b fp16 | qwen | local | — | inqueue | — | — | — | — | — |
+| qwen-7b gptq-int4 | qwen | local | — | inqueue | — | — | — | — | — |
+| qwen-math-1.5b fp16 | qwen | local | — | inqueue | — | — | — | — | — |
+
+> **Analysis.** No data yet. Read each row against its
+> `tbl-900e87` twin (same model, same everything but centering):
+> llama-1b .5187, qwen-3b .8097, qwen-7b gptq-int4 .7985 pass@gb
+> are the uncentered baselines; llama-3b and qwen-math are still
+> running there, so those two pairs cannot be read until
+> `tbl-900e87` completes.
+> **Limitations / follow-up:** the b=80 twin (`tbl-e58353`)
+> found every `local`-vs-`none` gap within ~1 SEM at 2 trials,
+> so a null result here is the likely outcome and 2 trials/cell
+> will not resolve anything smaller than ~.06. If the point is
+> to test the budget-dependence hypothesis rather than to fill a
+> grid, **queue qwen-3b and llama-1b first** — qwen-3b is the
+> strongest uncentered b=320 cell and llama-1b showed the
+> largest (if insignificant) b=80 centering gain (.3209→.3806),
+> so they bracket the effect; the other three only become worth
+> their ~150 GPU-hours if that pair moves. The qwen-math row
+> additionally depends on the open 4096-window question in
+> `tbl-900e87`; if 4096 turns out to be insufficient at b=320,
+> that cell dies with its twin.
+
+#### model family comparison (b=320, QwenPRM, lam=0.01/ds_alpha=10, embeds_center_mode=local)
+<!-- table-id: tbl-560ce2 -->
+> **Compares:** same as the `ds_alpha=1, embeds_center_mode=local`
+> table above (`tbl-6a015e`), at the next `w_eff` checkpoint —
+> **ds_alpha=10**, `w_eff = ds_alpha/sqrt(lam) = 100`. It is the
+> centered counterpart of `tbl-01c466` (b=320, ds_alpha=10, no
+> centering) and completes a 2×2: {ds_alpha 1, 10} ×
+> {center none, local} at b=320. With all four tables filled,
+> the centering effect can be read *at each diversity weight
+> separately*, which matters because the two knobs plausibly
+> interact: `ds_alpha=10` already pushes selection toward
+> spread-out branches, and centering removes the common
+> direction that would otherwise inflate every embedding's
+> apparent novelty — so if centering ever helps, the
+> high-diversity regime is where it should show up least (the
+> bonus is already dominating) or most (the bonus is already
+> mis-calibrated), and those two predictions are
+> distinguishable.
+>
+> **Fixed:** identical to `tbl-6a015e` (method=`mcts_sem_v02`,
+> prm=qwen, bs-4, d-20, b=320, prm_batch_size=1,
+> `ds_alpha_schedule=global`, `cov_update=sm`, `cov_dtype=fp64`,
+> `embeds_dim=512`/`embeds_proj=sparse`, ds_beta=1.0,
+> tmpl=model-family default, **`embeds_center=true` +
+> `embeds_center_mode=local`**, lam=0.01, data.level=5,
+> run.num_trials=2) except **ds_alpha=10** (`w_eff=100`).
+>
+> **`max_model_len`:** 6000 for four models; **qwen-math-1.5b at
+> 4096** for the same architectural reason as `tbl-6a015e`
+> (`max_position_embeddings=4096` makes 6000 unstartable). Its
+> `tbl-01c466` twin is likewise running at 4096
+> (`cfg-9748b857`), so the pair is 4096↔4096 while the other
+> four are 6000↔6000.
+>
+> ⚠️ All five cells are `planned` — authored 2026-07-28, **not
+> queued**, no ledger entries. Resolved config hashes: llama-1b
+> `d14628de`, llama-3b `9d60bc89`, qwen-3b `965e3b55`, qwen-7b
+> gptq-int4 `038366a7`, qwen-math-1.5b (mml4096) `7e4e73e8`.
+>
+> ⚠️ **Cost:** ~19–29 hr/trial × 2 trials × 5 cells ≈ 200–290
+> GPU-hours, on top of `tbl-6a015e`'s comparable bill. The two
+> tables together are ~400–580 GPU-hours; queue selectively.
+>
+> ⚠️ **Baseline caveat inherited from the b=80 twin:** the b=80
+> `ds_alpha=10` center-mode table (`tbl-2e75f2`) has three of
+> its five `none` baselines flagged as unverified (recompute
+> disagreed with the doc beyond rounding, and the doc was not
+> overwritten). That flag is about b=80 bookkeeping and does not
+> touch this table's own cells — but it does mean the b=80
+> `ds_alpha=10` centering result is a weaker prior than the
+> `ds_alpha=1` one.
+>
+> **W&B:** none yet (no runs).
+
+| llm | prm | center | trials | status | pass@gb | naive@gb | wei@gb | maj@gb | hr/trial |
+|---|---|---|---|---|---|---|---|---|---|
+| llama-1b fp16 | qwen | local | — | inqueue | — | — | — | — | — |
+| llama-3b fp16 | qwen | local | — | inqueue | — | — | — | — | — |
+| qwen-3b fp16 | qwen | local | — | inqueue | — | — | — | — | — |
+| qwen-7b gptq-int4 | qwen | local | — | inqueue | — | — | — | — | — |
+| qwen-math-1.5b fp16 | qwen | local | — | inqueue | — | — | — | — | — |
+
+> **Analysis.** No data yet. Read each row against its
+> `tbl-01c466` twin: llama-1b .5373, llama-3b .7164, qwen-3b
+> .8396, qwen-7b gptq-int4 .8582 pass@gb are the uncentered
+> b=320 baselines at w_eff=100 (4/5 scored there, only qwen-math
+> outstanding) — so this table is better-anchored than
+> `tbl-6a015e`, whose llama-3b and qwen-math twins are still
+> running.
+> **Limitations / follow-up:** the b=80 evidence for centering at
+> `ds_alpha=10` (`tbl-2e75f2`) is the weaker of the two b=80
+> tables — three unverified `none` baselines, and of the two
+> clean pairs both trended higher under `local` (llama-3b
+> .5485→.5896, qwen-3b .6642→.6903) but within ~1 SEM. If only
+> one of the two b=320 centering tables gets run, **this is the
+> better one to run**: its uncentered baselines are 4/5 scored
+> rather than 3/5, and the b=80 hint of a `local` gain, weak as
+> it is, points this way rather than at `ds_alpha=1`. Same
+> subset logic as `tbl-6a015e` — qwen-3b and llama-3b are the
+> two cells whose b=80 pairs were clean, so they are the
+> cheapest test of whether the hint survives 4× budget.
 
 ---

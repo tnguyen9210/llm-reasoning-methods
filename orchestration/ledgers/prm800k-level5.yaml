@@ -4523,3 +4523,249 @@
     at its architectural 4096 window. Diagnostic - see cnt sibling.
   history:
   - {at: '2026-07-27 04:50', job_id: 23378153, outcome: stalled, trials_done: 1}
+- id: sem-mcts-l5-b320-ds1-ctrlocal-llama1b
+  launcher: generate_mcts_sem.py
+  hash: "54eb87b0"
+  config_root: mcts_sem_v02_prm800k
+  overrides:
+    llm: llama_1b
+    prm: qwen_prm
+    search.lam: 0.01
+    search.ds_alpha: 1.0
+    search.gen_budget: 320
+    search.embeds_center: true
+    search.embeds_center_mode: local
+    data.level: 5
+    llm.max_model_len: 6000
+  trials: 2
+  feeds:
+  - tbl-6a015e  # sem b=320 QwenPRM lam=0.01 w_eff=10 center=local
+  group: sem-mcts
+  status: inqueue
+  priority: 2
+  expected_hr: 37
+  note: b=320 sem qwen-PRM llama-1b fp16 lam=0.01 ds_alpha=1.0 (w_eff=10,
+    L5) with embeds_center_mode=local; mml6000. expected_hr = 2x the
+    uncentered twin's 18.5 hr/trial (tbl-900e87).
+- id: sem-mcts-l5-b320-ds1-ctrlocal-llama3b
+  launcher: generate_mcts_sem.py
+  hash: "ba3267b4"
+  config_root: mcts_sem_v02_prm800k
+  overrides:
+    llm: llama_3b
+    prm: qwen_prm
+    search.lam: 0.01
+    search.ds_alpha: 1.0
+    search.gen_budget: 320
+    search.embeds_center: true
+    search.embeds_center_mode: local
+    data.level: 5
+    llm.max_model_len: 6000
+  trials: 2
+  feeds:
+  - tbl-6a015e  # sem b=320 QwenPRM lam=0.01 w_eff=10 center=local
+  group: sem-mcts
+  status: inqueue
+  priority: 2
+  expected_hr: 50
+  note: b=320 sem qwen-PRM llama-3b fp16 lam=0.01 ds_alpha=1.0 (w_eff=10,
+    L5) with embeds_center_mode=local; mml6000. expected_hr = 2x the
+    uncentered twin's ~25 hr trial-1 (tbl-900e87, which timed out at
+    expected_hr=28 - deliberately generous here).
+- id: sem-mcts-l5-b320-ds1-ctrlocal-qwen3b
+  launcher: generate_mcts_sem.py
+  hash: "991731e8"
+  config_root: mcts_sem_v02_prm800k
+  overrides:
+    llm: qwen_3b
+    prm: qwen_prm
+    search.lam: 0.01
+    search.ds_alpha: 1.0
+    search.gen_budget: 320
+    search.embeds_center: true
+    search.embeds_center_mode: local
+    data.level: 5
+    llm.max_model_len: 6000
+  trials: 2
+  feeds:
+  - tbl-6a015e  # sem b=320 QwenPRM lam=0.01 w_eff=10 center=local
+  group: sem-mcts
+  status: inqueue
+  priority: 2
+  expected_hr: 47
+  note: b=320 sem qwen-PRM qwen-3b fp16 lam=0.01 ds_alpha=1.0 (w_eff=10,
+    L5) with embeds_center_mode=local; mml6000. expected_hr = 2x the
+    uncentered twin's 23.4 hr/trial (tbl-900e87).
+- id: sem-mcts-l5-b320-ds1-ctrlocal-qwen7bgptq
+  launcher: generate_mcts_sem.py
+  hash: "2953ac47"
+  config_root: mcts_sem_v02_prm800k
+  overrides:
+    llm: qwen_7b_gptq_int4
+    prm: qwen_prm
+    search.lam: 0.01
+    search.ds_alpha: 1.0
+    search.gen_budget: 320
+    search.embeds_center: true
+    search.embeds_center_mode: local
+    data.level: 5
+    llm.max_model_len: 6000
+  trials: 2
+  feeds:
+  - tbl-6a015e  # sem b=320 QwenPRM lam=0.01 w_eff=10 center=local
+  group: sem-mcts
+  status: inqueue
+  priority: 2
+  expected_hr: 30
+  note: b=320 sem qwen-PRM qwen-7b gptq-int4 lam=0.01 ds_alpha=1.0
+    (w_eff=10, L5) with embeds_center_mode=local; mml6000. expected_hr =
+    2x the uncentered twin's 14.6 hr/trial (tbl-900e87).
+- id: sem-mcts-l5-b320-ds1-ctrlocal-qwenmath15b-mml4096
+  launcher: generate_mcts_sem.py
+  hash: "db906620"
+  config_root: mcts_sem_v02_prm800k
+  overrides:
+    llm: qwen_math_1_5b
+    prm: qwen_prm
+    search.lam: 0.01
+    search.ds_alpha: 1.0
+    search.gen_budget: 320
+    search.embeds_center: true
+    search.embeds_center_mode: local
+    data.level: 5
+    llm.max_model_len: 4096
+  trials: 2
+  feeds:
+  - tbl-6a015e  # sem b=320 QwenPRM lam=0.01 w_eff=10 center=local
+  group: sem-mcts
+  status: inqueue
+  priority: 2
+  expected_hr: 40
+  note: b=320 sem qwen-PRM qwen-math-1.5b lam=0.01 ds_alpha=1.0 (w_eff=10,
+    L5) with embeds_center_mode=local, at its architectural 4096 window
+    (mml6000 is rejected by vLLM for this model). expected_hr is an
+    estimate - no b=320 qwen-math run has completed yet; its mml4096
+    diagnostic (cfg-06533f44) is still running.
+- id: sem-mcts-l5-b320-ds10-ctrlocal-llama1b
+  launcher: generate_mcts_sem.py
+  hash: "d14628de"
+  config_root: mcts_sem_v02_prm800k
+  overrides:
+    llm: llama_1b
+    prm: qwen_prm
+    search.lam: 0.01
+    search.ds_alpha: 10
+    search.gen_budget: 320
+    search.embeds_center: true
+    search.embeds_center_mode: local
+    data.level: 5
+    llm.max_model_len: 6000
+  trials: 2
+  feeds:
+  - tbl-560ce2  # sem b=320 QwenPRM lam=0.01 w_eff=100 center=local
+  group: sem-mcts
+  status: inqueue
+  priority: 2
+  expected_hr: 40
+  note: b=320 sem qwen-PRM llama-1b fp16 lam=0.01 ds_alpha=10 (w_eff=100,
+    L5) with embeds_center_mode=local; mml6000. expected_hr = 2x the
+    uncentered twin's 20.0 hr/trial (tbl-01c466).
+- id: sem-mcts-l5-b320-ds10-ctrlocal-llama3b
+  launcher: generate_mcts_sem.py
+  hash: "9d60bc89"
+  config_root: mcts_sem_v02_prm800k
+  overrides:
+    llm: llama_3b
+    prm: qwen_prm
+    search.lam: 0.01
+    search.ds_alpha: 10
+    search.gen_budget: 320
+    search.embeds_center: true
+    search.embeds_center_mode: local
+    data.level: 5
+    llm.max_model_len: 6000
+  trials: 2
+  feeds:
+  - tbl-560ce2  # sem b=320 QwenPRM lam=0.01 w_eff=100 center=local
+  group: sem-mcts
+  status: inqueue
+  priority: 2
+  expected_hr: 59
+  note: b=320 sem qwen-PRM llama-3b fp16 lam=0.01 ds_alpha=10 (w_eff=100,
+    L5) with embeds_center_mode=local; mml6000. expected_hr = 2x the
+    uncentered twin's 29.08 hr/trial (tbl-01c466) - the most expensive
+    cell in both tables; needs a near-fresh 3-day allocation.
+- id: sem-mcts-l5-b320-ds10-ctrlocal-qwen3b
+  launcher: generate_mcts_sem.py
+  hash: "965e3b55"
+  config_root: mcts_sem_v02_prm800k
+  overrides:
+    llm: qwen_3b
+    prm: qwen_prm
+    search.lam: 0.01
+    search.ds_alpha: 10
+    search.gen_budget: 320
+    search.embeds_center: true
+    search.embeds_center_mode: local
+    data.level: 5
+    llm.max_model_len: 6000
+  trials: 2
+  feeds:
+  - tbl-560ce2  # sem b=320 QwenPRM lam=0.01 w_eff=100 center=local
+  group: sem-mcts
+  status: inqueue
+  priority: 2
+  expected_hr: 48
+  note: b=320 sem qwen-PRM qwen-3b fp16 lam=0.01 ds_alpha=10 (w_eff=100,
+    L5) with embeds_center_mode=local; mml6000. expected_hr = 2x the
+    uncentered twin's 23.8 hr/trial (tbl-01c466).
+- id: sem-mcts-l5-b320-ds10-ctrlocal-qwen7bgptq
+  launcher: generate_mcts_sem.py
+  hash: "038366a7"
+  config_root: mcts_sem_v02_prm800k
+  overrides:
+    llm: qwen_7b_gptq_int4
+    prm: qwen_prm
+    search.lam: 0.01
+    search.ds_alpha: 10
+    search.gen_budget: 320
+    search.embeds_center: true
+    search.embeds_center_mode: local
+    data.level: 5
+    llm.max_model_len: 6000
+  trials: 2
+  feeds:
+  - tbl-560ce2  # sem b=320 QwenPRM lam=0.01 w_eff=100 center=local
+  group: sem-mcts
+  status: inqueue
+  priority: 2
+  expected_hr: 39
+  note: b=320 sem qwen-PRM qwen-7b gptq-int4 lam=0.01 ds_alpha=10
+    (w_eff=100, L5) with embeds_center_mode=local; mml6000. expected_hr =
+    2x the uncentered twin's 19.1 hr/trial (tbl-01c466).
+- id: sem-mcts-l5-b320-ds10-ctrlocal-qwenmath15b-mml4096
+  launcher: generate_mcts_sem.py
+  hash: "7e4e73e8"
+  config_root: mcts_sem_v02_prm800k
+  overrides:
+    llm: qwen_math_1_5b
+    prm: qwen_prm
+    search.lam: 0.01
+    search.ds_alpha: 10
+    search.gen_budget: 320
+    search.embeds_center: true
+    search.embeds_center_mode: local
+    data.level: 5
+    llm.max_model_len: 4096
+  trials: 2
+  feeds:
+  - tbl-560ce2  # sem b=320 QwenPRM lam=0.01 w_eff=100 center=local
+  group: sem-mcts
+  status: inqueue
+  priority: 2
+  expected_hr: 40
+  note: b=320 sem qwen-PRM qwen-math-1.5b lam=0.01 ds_alpha=10 (w_eff=100,
+    L5) with embeds_center_mode=local, at its architectural 4096 window
+    (mml6000 is rejected by vLLM for this model). expected_hr is an
+    estimate - no b=320 qwen-math run has completed yet; its mml4096
+    diagnostic (cfg-9748b857) is still running.
