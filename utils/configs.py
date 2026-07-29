@@ -749,6 +749,43 @@ class MCTSSemV02Config(MCTSSemV01Config):
 
 
 @dataclass
+class MCTSSemV02LocalConfig(MCTSSemV02Config):
+    """Semantic MCTS — v02.01: per-node (local) diversity covariance.
+
+    Everything v02 has, with one added axis: WHERE the covariance V
+    lives. v02 keeps a single V for the whole tree and folds every
+    selection anywhere into it; v02.01 gives each node its own V over
+    the children IT has selected, so sibling subtrees never see each
+    other's folds. Core: core/mcts_sem_search_v02_01_00.py.
+
+    A separate schema rather than a `cov_scope` field on
+    MCTSSemV02Config, for two reasons:
+      1. Hash stability. config_hash drops a field only when it equals
+         a pinned neutral in _HASH_EXCLUDE_IF_DEFAULT; adding a knob
+         to the shared v02 schema would otherwise re-hash every
+         existing sem_v02 config (135 + 181 scored level-4/level-5
+         entries reference those hashes).
+      2. No silent no-ops. core/mcts_sem_search_v02_00_00.py does not
+         read cov_scope. If the knob lived on v02's schema, a config
+         setting cov_scope="local" with algo=mcts_sem_v02 would run
+         global and record "local" in its manifest. Keeping the knob
+         on the schema whose core actually honors it makes that
+         unrepresentable.
+
+    cov_scope="global" is retained here as the VERIFICATION lever, not
+    as an operating point: it makes this core reproduce v02 exactly,
+    so a v02-vs-v02.01 difference under "global" is a porting bug and
+    a difference under "local" is the ablation. See the module
+    docstring for the four checks this enables.
+    """
+    method: str = "mcts_sem_v02_01"
+
+    # "local"  — one V per node, over the children that node selected.
+    # "global" — one V for the tree (v02's behavior, bit-for-bit).
+    cov_scope: str = "local"
+
+
+@dataclass
 class BLMCTSSemConfig(SearchConfig):
     """Semantic MCTS with best-first frontier selection.
 

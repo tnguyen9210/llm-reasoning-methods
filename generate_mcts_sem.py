@@ -20,13 +20,15 @@ import wandb
 from core import (
     mcts_sem_search_v01_00_00,
     mcts_sem_search_v02_00_00,
+    mcts_sem_search_v02_01_00,
     mcts_bl_sem_search_v01_00_00,
     mcts_bl_sem_search_v02_00_00,
 )
 from core.reward_models import build_prm
 from core.scoring import build_scored_dataset
 from utils.configs import (
-    ExpConfig, MCTSSemV01Config, MCTSSemV02Config, BLMCTSSemConfig,
+    ExpConfig, MCTSSemV01Config, MCTSSemV02Config,
+    MCTSSemV02LocalConfig, BLMCTSSemConfig,
     BLMCTSSemV02Config,
     config_name,
     level_dir, results_root, write_manifest, load_wandb_run_id,
@@ -44,6 +46,9 @@ from utils.load_data import load_data_hf
 algo_dict = {
     "mcts_sem_v01": mcts_sem_search_v01_00_00,
     "mcts_sem_v02": mcts_sem_search_v02_00_00,
+    # v02.01: v02 with the diversity covariance kept per node instead
+    # of once per tree (search.cov_scope).
+    "mcts_sem_v02_01": mcts_sem_search_v02_01_00,
     "mcts_bl_sem_v01": mcts_bl_sem_search_v01_00_00,
     "mcts_bl_sem_v02": mcts_bl_sem_search_v02_00_00,
 }
@@ -57,6 +62,10 @@ cs = ConfigStore.instance()
 cs.store(name="exp_schema", node=ExpConfig)
 cs.store(group="search", name="mcts_sem_v01_schema", node=MCTSSemV01Config)
 cs.store(group="search", name="mcts_sem_v02_schema", node=MCTSSemV02Config)
+cs.store(
+    group="search", name="mcts_sem_v02_01_schema",
+    node=MCTSSemV02LocalConfig,
+)
 cs.store(
     group="search", name="mcts_bl_sem_v01_schema", node=BLMCTSSemConfig,
 )

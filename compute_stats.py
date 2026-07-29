@@ -33,6 +33,7 @@ from utils.configs import (
     BLMCTSCntV02Config, BLMCTSKubeV01Config, BLMCTSKubeV02Config,
     BLMCTSKdepthV01Config, BLMCTSKdepthV02Config, BLMCTSSemConfig,
     BLMCTSSemV02Config, MCTSSemV01Config, MCTSSemV02Config,
+    MCTSSemV02LocalConfig,
     resolve_result_dir, load_wandb_run_id,
 )
 
@@ -65,6 +66,10 @@ cs.store(
 )
 cs.store(group="search", name="mcts_sem_v01_schema", node=MCTSSemV01Config)
 cs.store(group="search", name="mcts_sem_v02_schema", node=MCTSSemV02Config)
+cs.store(
+    group="search", name="mcts_sem_v02_01_schema",
+    node=MCTSSemV02LocalConfig,
+)
 cs.store(
     group="search", name="mcts_bl_sem_v01_schema", node=BLMCTSSemConfig,
 )

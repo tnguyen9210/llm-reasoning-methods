@@ -43,7 +43,8 @@ from core.reward_models import build_prm
 from core.scoring import build_scored_dataset
 from utils.configs import (
     ExpConfig, BoNConfig, MCTSCntConfig,
-    MCTSSemV01Config, MCTSSemV02Config, resolve_result_dir,
+    MCTSSemV01Config, MCTSSemV02Config, MCTSSemV02LocalConfig,
+    resolve_result_dir,
     BLMCTSCntConfig, BLMCTSCntV02Config,
     BLMCTSKubeV01Config, BLMCTSKubeV02Config,
     BLMCTSKdepthV01Config, BLMCTSKdepthV02Config,
@@ -59,6 +60,10 @@ cs.store(group="search", name="bon_schema", node=BoNConfig)
 cs.store(group="search", name="mcts_cnt_schema", node=MCTSCntConfig)
 cs.store(group="search", name="mcts_sem_v01_schema", node=MCTSSemV01Config)
 cs.store(group="search", name="mcts_sem_v02_schema", node=MCTSSemV02Config)
+cs.store(
+    group="search", name="mcts_sem_v02_01_schema",
+    node=MCTSSemV02LocalConfig,
+)
 cs.store(
     group="search", name="mcts_bl_cnt_v01_schema", node=BLMCTSCntConfig,
 )
