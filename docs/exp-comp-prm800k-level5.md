@@ -10,6 +10,7 @@ by gen_budget, plus a cross-algorithm best-config summary.
 
 
 
+
 <!-- toc:begin -- generated, do not hand-edit -->
 ## Contents
 
@@ -37,7 +38,16 @@ by gen_budget, plus a cross-algorithm best-config summary.
     - [lam / ds_alpha joint sweep (llama-1b)](#lam-ds_alpha-joint-sweep-llama-1b-1) · `tbl-375fa0`
     - [lam / ds_alpha joint sweep (qwen-7b gptq-int4)](#lam-ds_alpha-joint-sweep-qwen-7b-gptq-int4-1) · `tbl-898c25`
     - [lam / ds_alpha joint sweep (qwen-3b)](#lam-ds_alpha-joint-sweep-qwen-3b) · `tbl-fa65d4`
+    - [lam / ds_alpha joint sweep (llama-1b, embeds_ref=relative)](#lam-ds_alpha-joint-sweep-llama-1b-embeds_refrelative) · `tbl-ba6b11`
+    - [lam / ds_alpha joint sweep (llama-3b, embeds_ref=relative)](#lam-ds_alpha-joint-sweep-llama-3b-embeds_refrelative) · `tbl-cf849a`
+    - [lam / ds_alpha joint sweep (qwen-3b, embeds_ref=relative)](#lam-ds_alpha-joint-sweep-qwen-3b-embeds_refrelative) · `tbl-b1cb82`
+    - [lam / ds_alpha joint sweep (qwen-7b gptq-int4, embeds_ref=relative)](#lam-ds_alpha-joint-sweep-qwen-7b-gptq-int4-embeds_refrelative) · `tbl-5d64b1`
+    - [lam / ds_alpha joint sweep (qwen-math-1.5b, embeds_ref=relative)](#lam-ds_alpha-joint-sweep-qwen-math-15b-embeds_refrelative) · `tbl-3a76ce`
     - [embeds_ref comparison (llama-1b, cov_scope=local)](#embeds_ref-comparison-llama-1b-cov_scopelocal) · `tbl-ea8196`
+    - [embeds_ref comparison (llama-3b, cov_scope=local)](#embeds_ref-comparison-llama-3b-cov_scopelocal) · `tbl-7ee727`
+    - [embeds_ref comparison (qwen-3b, cov_scope=local)](#embeds_ref-comparison-qwen-3b-cov_scopelocal) · `tbl-6ac460`
+    - [embeds_ref comparison (qwen-7b gptq-int4, cov_scope=local)](#embeds_ref-comparison-qwen-7b-gptq-int4-cov_scopelocal) · `tbl-5cf136`
+    - [embeds_ref comparison (qwen-math-1.5b, cov_scope=local)](#embeds_ref-comparison-qwen-math-15b-cov_scopelocal) · `tbl-78da65`
     - [model family comparison (QwenPRM, cov_scope=local)](#model-family-comparison-qwenprm-cov_scopelocal) · `tbl-bf15ee`
   - [cnt-mcts-bl-v01](#cnt-mcts-bl-v01)
     - [model family, size, quantization comparison (QwenPRM)](#model-family-size-quantization-comparison-qwenprm-1) · `tbl-6557b7`
@@ -76,7 +86,7 @@ by gen_budget, plus a cross-algorithm best-config summary.
     - [model family comparison (b=320, QwenPRM, lam=0.01/ds_alpha=1, embeds_center_mode=local)](#model-family-comparison-b320-qwenprm-lam001ds_alpha1-embeds_center_modelocal) · `tbl-6a015e`
     - [model family comparison (b=320, QwenPRM, lam=0.01/ds_alpha=10, embeds_center_mode=local)](#model-family-comparison-b320-qwenprm-lam001ds_alpha10-embeds_center_modelocal) · `tbl-560ce2`
 
-*44 tables. Regenerate with `python scripts/gen_toc.py`.*
+*53 tables. Regenerate with `python scripts/gen_toc.py`.*
 <!-- toc:end -->
 
 ## Purpose
@@ -865,34 +875,51 @@ Two activities, two shapes:
 > prm_batch_size=1, llm=llama-1b, **lam=0.01**, data.level=5,
 > run.num_trials=2.
 >
-> ⚠️ All 6 cells `planned` — authored 2026-07-28, not queued.
+> ✅ All 6 cells `scored` as of 2026-08-02.
 > Hashes resolved: `w_eff=0` `419d1d2d`, `0.1` `34e3e90a`,
 > `0.3` `abef6586`, `1` `3dc685e4`, `3` `c3a4212b`, `10`
 > `a941cc35`.
 >
-> **W&B:** none yet.
+> **W&B:** mx11pexl (`w_eff=0.3`), 2xfjs5bq (`w_eff=1`),
+> qpsupawe (`w_eff=3`), axf4tdpb (`w_eff=10`).
 
 | llm | prm | lam | ds_alpha | w_eff | trials | status | pass@gb | naive@gb | wei@gb | maj@gb | hr/trial |
 |---|---|---|---|---|---|---|---|---|---|---|---|
-| llama-1b | qwen | 0.01 | 0 | 0 | — | planned | — | — | — | — | — |
-| llama-1b | qwen | 0.01 | 0.01 | 0.1 | — | planned | — | — | — | — | — |
-| llama-1b | qwen | 0.01 | 0.03 | 0.3 | — | planned | — | — | — | — | — |
-| llama-1b | qwen | 0.01 | 0.1 | 1 | — | planned | — | — | — | — | — |
-| llama-1b | qwen | 0.01 | 0.3 | 3 | — | planned | — | — | — | — | — |
-| llama-1b | qwen | 0.01 | 1.0 | 10 | — | planned | — | — | — | — | — |
+| llama-1b | qwen | 0.01 | 0 | 0 | 2 | scored | .2724<br>±.0272 | .2425<br>±.0262 | .2201<br>±.0254 | .1754<br>±.0233 | 4.44 |
+| llama-1b | qwen | 0.01 | 0.01 | 0.1 | 2 | scored | .3358<br>±.0289 | .2575<br>±.0268 | .2537<br>±.0266 | .2127<br>±.0250 | 4.73 |
+| llama-1b | qwen | 0.01 | 0.03 | 0.3 | 2 | scored | .3358<br>±.0289 | .2649<br>±.0270 | .2425<br>±.0262 | .2239<br>±.0255 | 4.83 |
+| llama-1b | qwen | 0.01 | 0.1 | 1 | 2 | scored | .3284<br>±.0287 | .2575<br>±.0268 | .2276<br>±.0257 | .2015<br>±.0245 | 4.73 |
+| llama-1b | qwen | 0.01 | 0.3 | 3 | 2 | scored | .3582<br>±.0293 | .2724<br>±.0272 | .2612<br>±.0269 | .1940<br>±.0242 | 4.70 |
+| llama-1b | qwen | 0.01 | 1.0 | 10 | 2 | scored | .3694<br>±.0295 | .2799<br>±.0275 | .2127<br>±.0250 | .1754<br>±.0233 | 4.90 |
 
-> **Analysis.** No data yet. Read against `tbl-a554c7`'s
-> `lam=0.01` rows, which are the same nominal `w_eff` under
-> global scope: .2985 (`w_eff=1`), .3321 (`3`), .3209 (`10`),
-> .3433 (`100`), .3769 (`1000`).
-> **Limitations / follow-up:** this table is the gate for the
-> rest of the section — the `embeds_ref` and model-family tables
-> below are both authored at the *predicted* optimum
-> (`w_eff=1`) and should be re-pointed if the sweep lands
-> elsewhere. Cheapest informative subset if the full 6 is too
-> much: `w_eff` ∈ {0.3, 1, 3}, which brackets the prediction; at
-> ~4.9 hr/trial × 2 trials that is ~30 GPU-hours against ~59 for
-> all six.
+> **Analysis.** Complete (6/6, closed 2026-08-02). pass@gb rises
+> across the sweep, .2724 at `w_eff=0` to **.3694 at `w_eff=10`**
+> — a +.097 span, the widest of any level-5 local sweep, though
+> only ~2.4 SE at these error bars. The interior is not clean:
+> .3358 at both 0.1 and 0.3, a dip to .3284 at 1, then .3582 and
+> .3694. Treat the 0.1–1 stretch as flat, not as structure.
+> Read against `tbl-a554c7`'s `lam=0.01` rows — the same nominal
+> `w_eff` under global scope: .2985 (`w_eff=1`), .3321 (`3`),
+> .3209 (`10`), .3433 (`100`), .3769 (`1000`) — local scope
+> leads at every shared point, by +.0485 at `w_eff=10`, and
+> global needs two more decades of `w_eff` to reach a comparable
+> .3769. That is the case for local scope on this model.
+> **The prediction this table was built to test failed.** The
+> `embeds_ref` and model-family tables below were authored at a
+> predicted optimum of `w_eff=1`, which is the sweep's *dip*.
+> The measured optimum is `w_eff=10`, an order of magnitude
+> higher.
+> **Limitations / follow-up:** every gap here is 1–2.4 SE at
+> n≈267 pooled over 2 trials, and the SEs are unpaired, so the
+> ordering is suggestive rather than established — the same
+> questions are graded in both arms, so the true paired error is
+> smaller than quoted, but by an unmeasured amount. The sweep
+> also never turns over: `w_eff=10` is the largest point tested
+> and is the maximum, so the optimum may lie beyond it (the
+> global arm keeps climbing to `w_eff=1000`). Extending to
+> `w_eff` ∈ {100, 1000} under local scope is the natural
+> follow-up, and re-pointing the downstream tables off `w_eff=1`
+> should wait for it.
 
 #### lam / ds_alpha joint sweep (qwen-7b gptq-int4)
 <!-- table-id: tbl-898c25 -->
@@ -944,12 +971,12 @@ Two activities, two shapes:
 
 | llm | prm | lam | ds_alpha | w_eff | trials | status | pass@gb | naive@gb | wei@gb | maj@gb | hr/trial |
 |---|---|---|---|---|---|---|---|---|---|---|---|
-| qwen-7b gptq-int4 | qwen | 0.01 | 0 | 0 | — | running | — | — | — | — | — |
-| qwen-7b gptq-int4 | qwen | 0.01 | 0.01 | 0.1 | — | inqueue | — | — | — | — | — |
-| qwen-7b gptq-int4 | qwen | 0.01 | 0.03 | 0.3 | — | inqueue | — | — | — | — | — |
-| qwen-7b gptq-int4 | qwen | 0.01 | 0.1 | 1 | — | inqueue | — | — | — | — | — |
-| qwen-7b gptq-int4 | qwen | 0.01 | 0.3 | 3 | — | inqueue | — | — | — | — | — |
-| qwen-7b gptq-int4 | qwen | 0.01 | 1.0 | 10 | — | inqueue | — | — | — | — | — |
+| qwen-7b gptq-int4 | qwen | 0.01 | 0 | 0 | 2 | scored | .6306<br>±.0295 | .5933<br>±.0301 | .5709<br>±.0303 | .5299<br>±.0305 | 2.59 |
+| qwen-7b gptq-int4 | qwen | 0.01 | 0.01 | 0.1 | 2 | scored | .6679<br>±.0288 | .5896<br>±.0301 | .5746<br>±.0303 | .5560<br>±.0304 | 3.89 |
+| qwen-7b gptq-int4 | qwen | 0.01 | 0.03 | 0.3 | 2 | scored | .7276<br>±.0272 | .6157<br>±.0298 | .6045<br>±.0299 | .5933<br>±.0301 | 4.57 |
+| qwen-7b gptq-int4 | qwen | 0.01 | 0.1 | 1 | 2 | scored | .7425<br>±.0268 | .6194<br>±.0297 | .5970<br>±.0300 | .5821<br>±.0302 | 4.97 |
+| qwen-7b gptq-int4 | qwen | 0.01 | 0.3 | 3 | 2 | scored | .7537<br>±.0264 | .5933<br>±.0301 | .5709<br>±.0303 | .5634<br>±.0304 | 5.35 |
+| qwen-7b gptq-int4 | qwen | 0.01 | 1.0 | 10 | 2 | scored | .7537<br>±.0264 | .5709<br>±.0303 | .5597<br>±.0304 | .5448<br>±.0305 | 5.61 |
 
 > **Analysis.** No data yet. The one global anchor is
 > `w_eff=10` = .7687 pass@gb (.6231 naive, .6194 wei, .6119
@@ -1015,12 +1042,12 @@ Two activities, two shapes:
 
 | llm | prm | lam | ds_alpha | w_eff | trials | status | pass@gb | naive@gb | wei@gb | maj@gb | hr/trial |
 |---|---|---|---|---|---|---|---|---|---|---|---|
-| qwen-3b | qwen | 0.01 | 0 | 0 | — | inqueue | — | — | — | — | — |
-| qwen-3b | qwen | 0.01 | 0.01 | 0.1 | — | inqueue | — | — | — | — | — |
-| qwen-3b | qwen | 0.01 | 0.03 | 0.3 | — | inqueue | — | — | — | — | — |
-| qwen-3b | qwen | 0.01 | 0.1 | 1 | — | inqueue | — | — | — | — | — |
-| qwen-3b | qwen | 0.01 | 0.3 | 3 | — | inqueue | — | — | — | — | — |
-| qwen-3b | qwen | 0.01 | 1.0 | 10 | — | inqueue | — | — | — | — | — |
+| qwen-3b | qwen | 0.01 | 0 | 0 | 2 | scored | .5970<br>±.0300 | .5410<br>±.0305 | .5224<br>±.0306 | .5000<br>±.0306 | 4.28 |
+| qwen-3b | qwen | 0.01 | 0.01 | 0.1 | 2 | scored | .6679<br>±.0288 | .5746<br>±.0303 | .5746<br>±.0303 | .5560<br>±.0304 | 5.90 |
+| qwen-3b | qwen | 0.01 | 0.03 | 0.3 | 2 | scored | .6828<br>±.0285 | .5970<br>±.0300 | .5896<br>±.0301 | .5560<br>±.0304 | 5.93 |
+| qwen-3b | qwen | 0.01 | 0.1 | 1 | 2 | scored | .7052<br>±.0279 | .5672<br>±.0303 | .5672<br>±.0303 | .5373<br>±.0305 | 6.12 |
+| qwen-3b | qwen | 0.01 | 0.3 | 3 | 2 | scored | .7015<br>±.0280 | .5746<br>±.0303 | .5821<br>±.0302 | .5560<br>±.0304 | 6.22 |
+| qwen-3b | qwen | 0.01 | 1.0 | 10 | 2 | scored | .6716<br>±.0287 | .5746<br>±.0303 | .5336<br>±.0305 | .5261<br>±.0306 | 6.21 |
 
 > **Analysis.** No data yet. Single global anchor at `w_eff=10`:
 > .6903 pass@gb, .5784 naive, .5597 wei, .5373 maj, 6.20
@@ -1035,6 +1062,415 @@ Two activities, two shapes:
 > 2 trials ≈ 190 GPU-hours; the `{0.3, 1, 3}` subset on all
 > three models is ~95 and still brackets the predicted optimum
 > on every model.
+
+#### lam / ds_alpha joint sweep (llama-1b, embeds_ref=relative)
+<!-- table-id: tbl-ba6b11 -->
+> **Compares:** the `absolute` llama-1b sweep's grid
+> (`tbl-375fa0`) with `embeds_ref="relative"` substituted,
+> **extended one point to `w_eff=100`**. This is the only model
+> whose `absolute` local sweep is **complete (6/6)**, so every
+> row here except `w_eff=100` has a measured twin and the paired
+> comparison is fully determined once these cells land.
+>
+> **Why this model matters most.** Its `embeds_ref` comparison
+> (`tbl-ea8196`) is the one that **crossed sign**: `relative`
+> leads by +.0373 at `w_eff=1` (.3657 vs .3284) and trails by
+> −.0560 at `w_eff=10` (.3134 vs .3694). Every other model in
+> the section has `relative` ahead at both points. Two points
+> can tell you a crossing happened; they cannot tell you where,
+> and the whole reading — "parent-relative helps at low `w_eff`
+> and hurts at high" — rests on locating it.
+>
+> **The two arms may peak at opposite ends.** `absolute` is
+> maximal at `w_eff=10` (.3694) and minimal at 0 (.2724);
+> `relative` is *worst* of its two measured points at `w_eff=10`
+> (.3134) and better at 1 (.3657). If `relative` peaks below 1,
+> the two arms want opposite operating points on the same model,
+> which no single `w_eff` for the section can serve.
+>
+> ⚠️ **Named for its global counterpart, but `lam` is held at
+> 0.01** — same convention as the `absolute` tables; see the
+> section preamble.
+>
+> ⚠️ **The `w_eff=0` row is `embeds_ref`-independent by
+> construction.** With `ds_alpha=0` the diversity bonus is
+> multiplied by zero, so this cell must reproduce `tbl-375fa0`'s
+> `w_eff=0` value (.2724) exactly. Listed for grid symmetry;
+> **do not queue it** except as a plumbing check.
+>
+> **Fixed:** method=`mcts_sem_v02`, **`cov_scope=local`**,
+> **`embeds_ref=relative`**, prm=qwen, bs-4, d-20, b=80,
+> proj=sparse512, cov_update=sm, cov_dtype=fp64, ds_beta=1.0,
+> prm_batch_size=1, llm=llama-1b, **lam=0.01**, data.level=5,
+> run.num_trials=2.
+>
+> ⚠️ Two cells are **already scored** and shared with the
+> `embeds_ref` comparison below (`tbl-ea8196`): `w_eff=1`
+> `478004b3`, `w_eff=10` `19215fb5` — one ledger entry, two
+> `feeds`, not a re-run. Net new: `w_eff=0` `f19d94cf`
+> (optional, see above), `0.1` `bf5f9bbc`, `0.3` `ea0bfae3`,
+> `3` `a6125069`, `100` `96f7b9df`. Net cost 4 cells if the
+> `w_eff=0` anchor is skipped, 5 with it. At ~4.9 hr/trial ×
+> 2 trials that is ~39 GPU-hours for the four.
+>
+> **W&B:** mrcj4roh (`w_eff=1`), 56py1gze (`w_eff=10`),
+> do0kywnf (`w_eff=0.1`), 6hd81evk (`w_eff=0.3`),
+> lfq6vnc6 (`w_eff=3`), z548ni00 (`w_eff=100`).
+
+| llm | prm | lam | ds_alpha | w_eff | trials | status | pass@gb | naive@gb | wei@gb | maj@gb | hr/trial |
+|---|---|---|---|---|---|---|---|---|---|---|---|
+| llama-1b | qwen | 0.01 | 0 | 0 | — | planned | — | — | — | — | — |
+| llama-1b | qwen | 0.01 | 0.01 | 0.1 | 2 | scored | .3358<br>±.0289 | .2687<br>±.0271 | .2388<br>±.0261 | .2276<br>±.0257 | 4.69 |
+| llama-1b | qwen | 0.01 | 0.03 | 0.3 | 2 | scored | .2948<br>±.0279 | .2276<br>±.0257 | .2052<br>±.0247 | .1940<br>±.0242 | 4.80 |
+| llama-1b | qwen | 0.01 | 0.1 | 1 | 2 | scored | .3657<br>±.0295 | .2463<br>±.0264 | .2537<br>±.0266 | .2090<br>±.0249 | 4.98 |
+| llama-1b | qwen | 0.01 | 0.3 | 3 | 2 | scored | .3731<br>±.0296 | .2873<br>±.0277 | .2537<br>±.0266 | .1903<br>±.0240 | 4.88 |
+| llama-1b | qwen | 0.01 | 1.0 | 10 | 2 | scored | .3134<br>±.0284 | .2351<br>±.0260 | .2239<br>±.0255 | .1828<br>±.0237 | 4.88 |
+| llama-1b | qwen | 0.01 | 10 | 100 | 2 | scored | .3246<br>±.0287 | .2164<br>±.0252 | .1978<br>±.0244 | .1679<br>±.0229 | 5.13 |
+
+> **Analysis.** Two of seven cells measured, both inherited from
+> the `embeds_ref` comparison, and they **disagree in sign**
+> against `absolute` — the only model in the section where that
+> happens. `relative` falls from .3657 at `w_eff=1` to .3134 at
+> 10 while `absolute` climbs from .3284 to .3694 over the same
+> span, so the arms are moving in opposite directions, not
+> merely offset. The five unmeasured cells decide whether that
+> is a real crossing or two ~1 SE wobbles.
+> **Limitations / follow-up:** the low end (`w_eff` 0.1, 0.3) is
+> where a `relative` peak would have to sit if the crossing is
+> real, and those two are the cheapest cells in the table —
+> queue them first. `w_eff=100` is the least informative here:
+> `relative` is already declining by 10, and on qwen-7b and
+> qwen-3b the 100 endpoint only confirmed monotone decay.
+> Feeds key: `tbl-ba6b11`.
+
+#### lam / ds_alpha joint sweep (llama-3b, embeds_ref=relative)
+<!-- table-id: tbl-cf849a -->
+> **Compares:** nothing yet, and that is the point to flag
+> first. **There is no `absolute` local sweep for llama-3b** —
+> the only `absolute` local points for this model are the two in
+> its `embeds_ref` comparison (`tbl-7ee727`, `w_eff` 1 and 10),
+> and both are still running. Until those land, this table is
+> **unpaired** and can only be read against global scope.
+>
+> **Why llama-3b anyway.** llama-1b is where `embeds_ref`
+> crossed sign, and the obvious explanation is that
+> parent-relative displacement helps a weak policy explore and
+> then starves it once `w_eff` is large. llama-3b is the
+> within-family size step that tests exactly that: same
+> architecture, same tokenizer, ~3× the parameters. If the
+> crossing is a weak-model artifact it should weaken or vanish
+> here; if it survives, it is a property of parent-relative
+> geometry rather than of model strength.
+>
+> **Global anchors** (`tbl-591232`, `lam=0.01`, same nominal
+> `w_eff`): .5261 (`w_eff=1`), .5261 (`3`), .5784 (`10`), .5485
+> (`100`), .5896 (`1000`). Global peaks late on this model,
+> which is the opposite of what local scope did on llama-1b.
+>
+> ⚠️ **Named for its global counterpart, but `lam` is held at
+> 0.01** — same convention as the `absolute` tables.
+>
+> ⚠️ **The `w_eff=0` row is `embeds_ref`-independent by
+> construction** and would reproduce the `absolute` local
+> `w_eff=0` value — which for this model **has never been
+> measured**. Unlike the other tables in this family, queuing it
+> here would produce a genuinely new number rather than a
+> plumbing check.
+>
+> **Fixed:** method=`mcts_sem_v02`, **`cov_scope=local`**,
+> **`embeds_ref=relative`**, prm=qwen, bs-4, d-20, b=80,
+> proj=sparse512, cov_update=sm, cov_dtype=fp64, ds_beta=1.0,
+> prm_batch_size=1, llm=llama-3b, **lam=0.01**, data.level=5,
+> run.num_trials=2.
+>
+> ⚠️ Two cells are **already running** and shared with the
+> `embeds_ref` comparison below (`tbl-7ee727`): `w_eff=1`
+> `a59384e1`, `w_eff=10` `01304a84` — one ledger entry, two
+> `feeds`, not a re-run. Net new: `w_eff=0` `02b5a038`,
+> `0.1` `5f1b182f`, `0.3` `00defb82`, `3` `a1600163`,
+> `100` `d2269ea6`. Net cost 5 cells, or 4 without the
+> `w_eff=0` anchor. At ~7.5 hr/trial × 2 trials (15 h per cell)
+> this is the **most expensive table in the family** — ~75
+> GPU-hours for all five, ~60 without the anchor.
+>
+> **W&B:** 78xtrykd (`w_eff=1`), 89h5elal (`w_eff=10`),
+> 67f2dbqa (`w_eff=0`), vhs7vds0 (`w_eff=0.1`).
+
+| llm | prm | lam | ds_alpha | w_eff | trials | status | pass@gb | naive@gb | wei@gb | maj@gb | hr/trial |
+|---|---|---|---|---|---|---|---|---|---|---|---|
+| llama-3b | qwen | 0.01 | 0 | 0 | 2 | scored | .4440<br>±.0304 | .3881<br>±.0298 | .3731<br>±.0296 | .3134<br>±.0284 | 5.02 |
+| llama-3b | qwen | 0.01 | 0.01 | 0.1 | 2 | scored | .5224<br>±.0306 | .4030<br>±.0300 | .3918<br>±.0299 | .3731<br>±.0296 | 6.46 |
+| llama-3b | qwen | 0.01 | 0.03 | 0.3 | — | running | — | — | — | — | — |
+| llama-3b | qwen | 0.01 | 0.1 | 1 | 2 | scored | .5784<br>±.0302 | .4216<br>±.0302 | .4067<br>±.0301 | .3731<br>±.0296 | 6.74 |
+| llama-3b | qwen | 0.01 | 0.3 | 3 | — | running | — | — | — | — | — |
+| llama-3b | qwen | 0.01 | 1.0 | 10 | 2 | scored | .5485<br>±.0305 | .3993<br>±.0300 | .3619<br>±.0294 | .3470<br>±.0291 | 7.08 |
+| llama-3b | qwen | 0.01 | 10 | 100 | — | running | — | — | — | — | — |
+
+> **Analysis.** Two of seven cells measured (2026-08-02), both
+> inherited from the `embeds_ref` comparison: .5784 at
+> `w_eff=1`, .5485 at `w_eff=10`. Declining across that span,
+> like every other `relative` arm in the section.
+> **The case for finishing this table got stronger.**
+> `tbl-7ee727` closed while these landed and showed that the
+> llama-1b sign crossing **reproduces** on llama-3b — so the
+> crossing is a llama-family property, not a weak-model
+> artifact. That makes locating it on a second model worth more
+> than it was when this table was authored, not less: the five
+> remaining cells turn "both llama models flip somewhere
+> between `w_eff` 1 and 10" into an actual position.
+> **Limitations / follow-up:** the `absolute` twin sweep still
+> does not exist for this model, so the paired comparison
+> remains one-armed except at `w_eff` 1 and 10 where
+> `tbl-7ee727` supplies the twins. `w_eff` ∈ {0.1, 0.3} are the
+> cells that bracket a low-side optimum and are worth more than
+> `w_eff=100`, which on qwen-7b and qwen-3b only confirmed
+> monotone decay. All five are queued at priority 2 (~75
+> GPU-hours). Feeds key: `tbl-cf849a`.
+
+#### lam / ds_alpha joint sweep (qwen-3b, embeds_ref=relative)
+<!-- table-id: tbl-b1cb82 -->
+> **Compares:** the `absolute` qwen-3b sweep's grid
+> (`tbl-fa65d4`) with `embeds_ref="relative"` substituted and
+> **extended one point to `w_eff=100`** — the qwen-3b
+> counterpart of the qwen-7b relative sweep above. The
+> `w_eff=100` row has no `absolute` twin yet (`2efb1af5`,
+> unqueued).
+>
+> **Why qwen-3b too.** The qwen-7b relative sweep alone cannot
+> separate "relative helps" from "relative helps the strongest
+> policy." qwen-3b is the mid-tier model with the most complete
+> `absolute` local sweep, so every row here has a measured twin
+> and the paired comparison is fully determined once these
+> cells land. Its two measured `relative` points already lead:
+> **+.0112** at `w_eff=1` (.7164 vs .7052) and **+.0374** at
+> `w_eff=10` (.7090 vs .6716) — same sign as qwen-7b but a
+> different profile, growing with `w_eff` rather than shrinking.
+>
+> **What the pair of sweeps buys.** If both models' `relative`
+> curves peak at the same `w_eff`, the section gets one
+> operating point and the model-family table below (`tbl-bf15ee`,
+> currently pinned to a provisional `w_eff=1`) can be re-pointed
+> once. If they peak at different `w_eff`, that table needs a
+> per-model point — the same risk the `absolute` sweeps were
+> queued to resolve, now inherited by the `relative` arm.
+>
+> ⚠️ **Named for its global counterpart, but `lam` is held at
+> 0.01** — same convention as the `absolute` tables.
+>
+> ⚠️ **The `w_eff=0` row is `embeds_ref`-independent by
+> construction** and must reproduce `tbl-fa65d4`'s `w_eff=0`
+> value (.5970) exactly. Listed for grid symmetry; **do not
+> queue it** except as a plumbing check.
+>
+> **Fixed:** method=`mcts_sem_v02`, **`cov_scope=local`**,
+> **`embeds_ref=relative`**, prm=qwen, bs-4, d-20, b=80,
+> proj=sparse512, cov_update=sm, cov_dtype=fp64, ds_beta=1.0,
+> prm_batch_size=1, llm=qwen-3b, **lam=0.01**, data.level=5,
+> run.num_trials=2.
+>
+> ⚠️ Two cells are **already scored** and shared with the
+> `embeds_ref` comparison below (`tbl-6ac460`): `w_eff=1`
+> `1ef89fdc`, `w_eff=10` `df8182ca` — one ledger entry, two
+> `feeds`, not a re-run. Net new: `w_eff=0` `d8b67e8b`
+> (optional, see above), `0.1` `507d12ce`, `0.3` `cb6356ce`,
+> `3` `65a044ea`, `100` `0a3fc03a`. Net cost 4 cells if the
+> `w_eff=0` anchor is skipped, 5 with it.
+>
+> **W&B:** decwj7la (`w_eff=10`), x52dugmp (`w_eff=100`),
+> u2i8huih (`w_eff=0.1`), spakquo1 (`w_eff=0.3`),
+> ntjhh9o9 (`w_eff=3`).
+
+| llm | prm | lam | ds_alpha | w_eff | trials | status | pass@gb | naive@gb | wei@gb | maj@gb | hr/trial |
+|---|---|---|---|---|---|---|---|---|---|---|---|
+| qwen-3b | qwen | 0.01 | 0 | 0 | — | planned | — | — | — | — | — |
+| qwen-3b | qwen | 0.01 | 0.01 | 0.1 | 2 | scored | .6530<br>±.0291 | .5485<br>±.0305 | .5336<br>±.0305 | .5075<br>±.0306 | 5.77 |
+| qwen-3b | qwen | 0.01 | 0.03 | 0.3 | 2 | scored | .6940<br>±.0282 | .5634<br>±.0304 | .5522<br>±.0304 | .5448<br>±.0305 | 6.05 |
+| qwen-3b | qwen | 0.01 | 0.1 | 1 | 2 | scored | .7164<br>±.0276 | .5821<br>±.0302 | .5634<br>±.0304 | .5410<br>±.0305 | 6.21 |
+| qwen-3b | qwen | 0.01 | 0.3 | 3 | 2 | scored | .7127<br>±.0277 | .6157<br>±.0298 | .5709<br>±.0303 | .5336<br>±.0305 | 6.35 |
+| qwen-3b | qwen | 0.01 | 1.0 | 10 | 2 | scored | .7090<br>±.0278 | .5970<br>±.0300 | .5522<br>±.0304 | .5149<br>±.0306 | 6.24 |
+| qwen-3b | qwen | 0.01 | 10 | 100 | 2 | scored | .6940<br>±.0282 | .5560<br>±.0304 | .5410<br>±.0305 | .5075<br>±.0306 | 6.11 |
+
+> **Analysis.** Three of seven cells measured — `w_eff` 1 and 10
+> inherited from the `embeds_ref` comparison, plus the
+> `w_eff=100` endpoint (.6940, scored 2026-08-02). Like qwen-7b,
+> the `relative` arm decays monotonically in `w_eff` (.7164 →
+> .7090 → .6940), so neither model's optimum sits above 1.
+> `relative` leads at both shared points,
+> and unlike qwen-7b the gap *widens* with `w_eff` (+.0112 at 1,
+> +.0374 at 10). The `absolute` arm for this model peaks at
+> `w_eff=1` (.7052) and falls to .6716 by `w_eff=10`; the
+> `relative` arm is nearly flat across the same span (.7164 →
+> .7090). Read together, that says parent-relative mostly buys
+> **robustness to over-weighting diversity**, not a higher peak
+> — which is a claim the three unmeasured cells can confirm or
+> kill.
+> **Limitations / follow-up:** neither model's `relative` curve
+> has a measured low end, so "the optimum moved left" is
+> currently an inference from two points on each. `w_eff` 0.1
+> and 0.3 are the cells that decide it, and they are the two
+> cheapest in both tables. If budget is tight, queue `{0.1,
+> 0.3}` on both models (4 cells, ~47 GPU-hours) and leave
+> `w_eff=3` for later. Feeds key: `tbl-b1cb82`.
+
+#### lam / ds_alpha joint sweep (qwen-7b gptq-int4, embeds_ref=relative)
+<!-- table-id: tbl-5d64b1 -->
+> **Compares:** the `absolute` qwen-7b sweep's grid
+> (`tbl-898c25`) with `embeds_ref="relative"` substituted,
+> **extended one point to `w_eff=100`**. Rows through `w_eff=10`
+> pair with an `absolute` row at the same nominal `w_eff`, so
+> the two tables read as one paired experiment; the `w_eff=100`
+> row has no `absolute` twin yet (`ddf897d9`, unqueued).
+>
+> **Why a full sweep rather than the 2-point comparison.** The
+> `embeds_ref` comparison tables below sample `w_eff` ∈ {1, 10}
+> only, and for this model both points already favour
+> `relative`: **+.0411** at `w_eff=1` (.7836 vs .7425, ~1.5 SE)
+> and **+.0224** at `w_eff=10` (.7761 vs .7537). That is a
+> consistent sign but a 2-point read cannot tell whether
+> `relative` shifts the optimum or just lifts the curve. The
+> `absolute` arm peaks flat across `w_eff` 3–10 (.7537 twice);
+> if `relative` peaks earlier, the operating point for the whole
+> section moves, which is a different conclusion from "relative
+> is a bit better everywhere."
+>
+> **Why this model first.** It is the strongest policy in the
+> grid and the one where `absolute` local scope still trails its
+> own global result (.7537 vs .7687). `relative` at `w_eff=1`
+> already clears that global number (.7836), so this sweep is
+> the one that can settle whether local scope beats global for
+> qwen-7b at all.
+>
+> ⚠️ **Named for its global counterpart, but `lam` is held at
+> 0.01** — same convention as the `absolute` tables; see the
+> section preamble.
+>
+> ⚠️ **The `w_eff=0` row is `embeds_ref`-independent by
+> construction.** With `ds_alpha=0` the diversity bonus is
+> multiplied by zero, so what `V` accumulates cannot affect
+> selection and this cell must reproduce `tbl-898c25`'s
+> `w_eff=0` value (.6306) exactly. It is listed for grid
+> symmetry and as a plumbing check only — **do not queue it**
+> unless you want that assertion tested end to end; the
+> `absolute` number is the answer.
+>
+> **Fixed:** method=`mcts_sem_v02`, **`cov_scope=local`**,
+> **`embeds_ref=relative`**, prm=qwen, bs-4, d-20, b=80,
+> proj=sparse512, cov_update=sm, cov_dtype=fp64, ds_beta=1.0,
+> prm_batch_size=1, llm=qwen-7b gptq-int4, **lam=0.01**,
+> data.level=5, run.num_trials=2.
+>
+> ⚠️ Two cells are **already scored** and shared with the
+> `embeds_ref` comparison below (`tbl-5cf136`): `w_eff=1`
+> `11ad13c7`, `w_eff=10` `b53d44dd` — one ledger entry, two
+> `feeds`, not a re-run. Net new: `w_eff=0` `504ff1a8`
+> (optional, see above), `0.1` `f5251f86`, `0.3` `45e2d3ac`,
+> `3` `3e3fe251`, `100` `f0fcf038`. Net cost 4 cells if the
+> `w_eff=0` anchor is skipped, 5 with it.
+>
+> **W&B:** bk2rou47 (`w_eff=1`), n2iiuppj (`w_eff=10`),
+> m1g6t5dk (`w_eff=100`), 1nv4x6v7 (`w_eff=0.1`),
+> pv3ievaa (`w_eff=0.3`), 1wbdyaki (`w_eff=3`).
+
+| llm | prm | lam | ds_alpha | w_eff | trials | status | pass@gb | naive@gb | wei@gb | maj@gb | hr/trial |
+|---|---|---|---|---|---|---|---|---|---|---|---|
+| qwen-7b gptq-int4 | qwen | 0.01 | 0 | 0 | — | planned | — | — | — | — | — |
+| qwen-7b gptq-int4 | qwen | 0.01 | 0.01 | 0.1 | 2 | scored | .7164<br>±.0276 | .6007<br>±.0300 | .5970<br>±.0300 | .5896<br>±.0301 | 4.70 |
+| qwen-7b gptq-int4 | qwen | 0.01 | 0.03 | 0.3 | 2 | scored | .7575<br>±.0262 | .6194<br>±.0297 | .5970<br>±.0300 | .5858<br>±.0301 | 5.15 |
+| qwen-7b gptq-int4 | qwen | 0.01 | 0.1 | 1 | 2 | scored | .7836<br>±.0252 | .6045<br>±.0299 | .5821<br>±.0302 | .5821<br>±.0302 | 5.54 |
+| qwen-7b gptq-int4 | qwen | 0.01 | 0.3 | 3 | 2 | scored | .7761<br>±.0255 | .6157<br>±.0298 | .5672<br>±.0303 | .5634<br>±.0304 | 5.58 |
+| qwen-7b gptq-int4 | qwen | 0.01 | 1.0 | 10 | 2 | scored | .7761<br>±.0255 | .5634<br>±.0304 | .5672<br>±.0303 | .5597<br>±.0304 | 5.59 |
+| qwen-7b gptq-int4 | qwen | 0.01 | 10 | 100 | 2 | scored | .7537<br>±.0264 | .5896<br>±.0301 | .5784<br>±.0302 | .5597<br>±.0304 | 5.61 |
+
+> **Analysis.** Three of seven cells measured — `w_eff` 1 and
+> 10 from the `embeds_ref` comparison, plus the `w_eff=100`
+> endpoint (.7537, scored 2026-08-02), which decays monotonically
+> from `w_eff=1` and lands exactly on the `absolute` plateau.
+> `relative` leads `absolute` at both shared
+> points (.7836 vs .7425, .7761 vs .7537) and the `w_eff=1`
+> value is the highest pass@gb recorded for this model under
+> either scope, above the global `w_eff=10` anchor of .7687.
+> Note the curve shape already differs: `absolute` rises to a
+> flat .7537 plateau at `w_eff` 3–10, while `relative` is
+> *higher at 1 than at 10*, hinting the optimum moved left.
+> The three unmeasured low/mid cells are what test that.
+> **Limitations / follow-up:** maj@gb tells a different story
+> from pass@gb — `relative` w_eff=1 reaches .5821 maj, equal to
+> `absolute` w_eff=1, so the pass@gb gain is not yet showing up
+> in the aggregation that matters for a single answer. If the
+> unmeasured cells keep that pattern, the honest claim is
+> "relative widens the candidate set" rather than "relative is
+> more accurate." Feeds key: `tbl-5d64b1`.
+
+#### lam / ds_alpha joint sweep (qwen-math-1.5b, embeds_ref=relative)
+<!-- table-id: tbl-3a76ce -->
+> **Compares:** as with llama-3b, **there is no `absolute` local
+> sweep for qwen-math-1.5b** — only the two `absolute` points in
+> its `embeds_ref` comparison (`tbl-78da65`, `w_eff` 1 and 10),
+> both still running. This table is **unpaired** until those
+> land.
+>
+> **Why qwen-math.** It is the math-specialized model and the
+> outlier of the family: strongest naive/wei/maj numbers in the
+> b=320 family table (`tbl-6a015e`: .6455/.6381/.6269) despite
+> being the smallest model in the grid at 1.5B. If
+> parent-relative geometry interacts with *what the embeddings
+> represent* rather than with model capacity, this is the model
+> where it should look different — its hidden states are shaped
+> by math pretraining, not general text.
+>
+> **Global anchors** (`tbl-a12d4f`, `lam=0.01`): .7500
+> (`w_eff=10`), .7164 (`100`), .7201 (`1000`); `w_eff` 1 and 3
+> are unmeasured there too. Global peaks at `w_eff=10` and
+> *declines* past it — the earliest peak of any model in the
+> section, which is the specific reason a low-`w_eff` local
+> sweep on this model is interesting.
+>
+> ⚠️ **Named for its global counterpart, but `lam` is held at
+> 0.01** — same convention as the `absolute` tables.
+>
+> ⚠️ **The `w_eff=0` row is `embeds_ref`-independent by
+> construction** and, as with llama-3b, has **no measured
+> `absolute` local counterpart** — queuing it here yields a new
+> number, not a plumbing check.
+>
+> **Fixed:** method=`mcts_sem_v02`, **`cov_scope=local`**,
+> **`embeds_ref=relative`**, prm=qwen, bs-4, d-20, b=80,
+> proj=sparse512, cov_update=sm, cov_dtype=fp64, ds_beta=1.0,
+> prm_batch_size=1, llm=qwen-math-1.5b, **lam=0.01**,
+> data.level=5, run.num_trials=2.
+>
+> ⚠️ Two cells are **already running** and shared with the
+> `embeds_ref` comparison below (`tbl-78da65`): `w_eff=1`
+> `43bd8117`, `w_eff=10` `70b52bb3` — one ledger entry, two
+> `feeds`, not a re-run. Net new: `w_eff=0` `8eaa1d3b`,
+> `0.1` `4fd0df23`, `0.3` `f9f7ff31`, `3` `e6bee4fd`,
+> `100` `33b07fae`. Net cost 5 cells, or 4 without the
+> `w_eff=0` anchor. At ~5.5 hr/trial × 2 trials that is ~44-55
+> GPU-hours — the **cheapest** of the three new tables.
+>
+> **W&B:** 6cf71i7r (`w_eff=1`), 9m9rooh6 (`w_eff=10`),
+> 23wzlc65 (`w_eff=0`).
+
+| llm | prm | lam | ds_alpha | w_eff | trials | status | pass@gb | naive@gb | wei@gb | maj@gb | hr/trial |
+|---|---|---|---|---|---|---|---|---|---|---|---|
+| qwen-math-1.5b | qwen | 0.01 | 0 | 0 | 2 | scored | .6791<br>±.0286 | .6082<br>±.0299 | .5970<br>±.0300 | .5634<br>±.0304 | 3.70 |
+| qwen-math-1.5b | qwen | 0.01 | 0.01 | 0.1 | — | running | — | — | — | — | — |
+| qwen-math-1.5b | qwen | 0.01 | 0.03 | 0.3 | — | running | — | — | — | — | — |
+| qwen-math-1.5b | qwen | 0.01 | 0.1 | 1 | 2 | scored | .7425<br>±.0268 | .6343<br>±.0295 | .6343<br>±.0295 | .6157<br>±.0298 | 4.84 |
+| qwen-math-1.5b | qwen | 0.01 | 0.3 | 3 | — | running | — | — | — | — | — |
+| qwen-math-1.5b | qwen | 0.01 | 1.0 | 10 | 2 | scored | .7612<br>±.0261 | .6269<br>±.0296 | .6194<br>±.0297 | .5821<br>±.0302 | 4.82 |
+| qwen-math-1.5b | qwen | 0.01 | 10 | 100 | — | running | — | — | — | — | — |
+
+> **Analysis.** No data yet — both running cells are the shared
+> `embeds_ref` pair.
+> **Limitations / follow-up:** best value-per-hour of the three
+> new tables, and the one that most cleanly tests whether the
+> llama-1b crossing is about model *family* rather than model
+> *size* (llama-3b tests size; this tests family and training
+> mix). Queue `w_eff` ∈ {0.1, 0.3} here alongside the llama-1b
+> pair — four cells, ~83 GPU-hours total, and between them they
+> cover both alternative explanations for the crossing.
+> Feeds key: `tbl-3a76ce`.
 
 #### embeds_ref comparison (llama-1b, cov_scope=local)
 <!-- table-id: tbl-ea8196 -->
@@ -1081,23 +1517,263 @@ Two activities, two shapes:
 > new: `w_eff=1` `478004b3`, `w_eff=10` `19215fb5`. Net cost of
 > this table is 2 cells.
 >
-> **W&B:** none yet.
+> **W&B:** axf4tdpb (`absolute`, `w_eff=10`), mrcj4roh
+> (`relative`, `w_eff=1`), 56py1gze (`relative`, `w_eff=10`).
 
 | llm | prm | embeds_ref | w_eff | trials | status | pass@gb | naive@gb | wei@gb | maj@gb | hr/trial |
 |---|---|---|---|---|---|---|---|---|---|---|
-| llama-1b | qwen | absolute | 1 | — | planned | — | — | — | — | — |
-| llama-1b | qwen | relative | 1 | — | planned | — | — | — | — | — |
-| llama-1b | qwen | absolute | 10 | — | planned | — | — | — | — | — |
-| llama-1b | qwen | relative | 10 | — | planned | — | — | — | — | — |
+| llama-1b | qwen | absolute | 1 | 2 | scored | .3284<br>±.0287 | .2575<br>±.0268 | .2276<br>±.0257 | .2015<br>±.0245 | 4.73 |
+| llama-1b | qwen | relative | 1 | 2 | scored | .3657<br>±.0295 | .2463<br>±.0264 | .2537<br>±.0266 | .2090<br>±.0249 | 4.98 |
+| llama-1b | qwen | absolute | 10 | 2 | scored | .3694<br>±.0295 | .2799<br>±.0275 | .2127<br>±.0250 | .1754<br>±.0233 | 4.90 |
+| llama-1b | qwen | relative | 10 | 2 | scored | .3134<br>±.0284 | .2351<br>±.0260 | .2239<br>±.0255 | .1828<br>±.0237 | 4.88 |
 
-> **Analysis.** No data yet.
-> **Limitations / follow-up:** two `w_eff` points rather than
+> **Analysis.** Complete (4/4, closed 2026-08-02). **The two
+> points disagree in sign on pass@gb** — `relative` leads by
+> +.0373 at `w_eff=1` (.3657 vs .3284) and trails by −.0560 at
+> `w_eff=10` (.3134 vs .3694). This is the contingency the
+> follow-up note below was written for, and it fires: on this
+> model `embeds_ref` interacts with `w_eff` rather than shifting
+> the curve uniformly. The crossing also runs *against* the
+> other models — qwen-7b (`tbl-5cf136`) and qwen-3b
+> (`tbl-6ac460`) both have `relative` ahead at both points — so
+> "parent-relative helps" does not hold family-wide at the weak
+> end. Note maj@gb does not cross: `relative` leads there at
+> both points (.2090 vs .2015, .1828 vs .1754), so the pass@gb
+> reversal at `w_eff=10` is a candidate-set effect, not a
+> collapse in answer quality.
+> **Limitations / follow-up:** each individual gap is ~1 SE
+> (+.0373 ≈ 0.9 SE, −.0560 ≈ 1.4 SE, unpaired), so the crossing
+> rests on two weak differences pointing opposite ways rather
+> than on either one being solid. Confirming it needs the low
+> end of a `relative` sweep on llama-1b, not more trials at
+> these two points. Two `w_eff` points rather than
 > one, because parent-relative changes the geometry of what `V`
 > accumulates — normalized displacements fill `V` far more
 > isotropically than clustered absolutes — so its own optimum
-> may not sit where `absolute`'s does. If the two points
+> may not sit where `absolute`'s does. Now that the two points
 > disagree in sign, `embeds_ref` needs its own `w_eff` sweep
 > rather than a 2-point comparison.
+
+#### embeds_ref comparison (llama-3b, cov_scope=local)
+<!-- table-id: tbl-7ee727 -->
+> **Compares:** `embeds_ref="absolute"` against
+> `embeds_ref="relative"` under local scope — the llama-3b
+> counterpart of the llama-1b table above. Same two `w_eff`
+> points, same rationale (see that table for why parent-relative
+> displacement is the interesting arm: siblings' absolute
+> embeddings sit at 0.98 mean |cos|, dropping to 0.07 after
+> subtracting the parent).
+>
+> **Why llama-3b too.** The llama-1b table alone cannot separate
+> "parent-relative helps" from "parent-relative helps a weak
+> model." llama-3b is the within-family size step that tests
+> exactly that: same tokenizer, same custom template, same
+> prompt formatting, one size up. Pairing it with the qwen-3b
+> table below also separates family from size — llama-3b and
+> qwen-3b are the same scale under different pretraining.
+>
+> **Fixed:** as the llama-1b table above (`cov_scope=local`,
+> lam=0.01, llama-3b, b=80, level 5, 2 trials); only
+> `embeds_ref` and `ds_alpha` vary.
+>
+> ⚠️ The `absolute` w_eff=1 row is the **same cell** as
+> llama-3b's row in the model family comparison below
+> (`08e67e7a`) — one config feeding two tables, not a re-run.
+> Net new here: `absolute` w_eff=10 `f45cd8a1`, `relative`
+> w_eff=1 `a59384e1`, `relative` w_eff=10 `01304a84`. Net cost
+> of this table is 3 cells.
+>
+> **W&B:** nnf53blu (`absolute`, `w_eff=1`), 78xtrykd
+> (`relative`, `w_eff=1`), gku3q8ph (`absolute`, `w_eff=10`),
+> 89h5elal (`relative`, `w_eff=10`).
+
+| llm | prm | embeds_ref | w_eff | trials | status | pass@gb | naive@gb | wei@gb | maj@gb | hr/trial |
+|---|---|---|---|---|---|---|---|---|---|---|
+| llama-3b | qwen | absolute | 1 | 2 | scored | .5448<br>±.0305 | .4366<br>±.0304 | .4328<br>±.0303 | .4104<br>±.0301 | 6.67 |
+| llama-3b | qwen | relative | 1 | 2 | scored | .5784<br>±.0302 | .4216<br>±.0302 | .4067<br>±.0301 | .3731<br>±.0296 | 6.74 |
+| llama-3b | qwen | absolute | 10 | 2 | scored | .5672<br>±.0303 | .4030<br>±.0300 | .3955<br>±.0299 | .3731<br>±.0296 | 7.02 |
+| llama-3b | qwen | relative | 10 | 2 | scored | .5485<br>±.0305 | .3993<br>±.0300 | .3619<br>±.0294 | .3470<br>±.0291 | 7.08 |
+
+> **Analysis.** Complete (4/4, closed 2026-08-02). **The
+> llama-1b sign crossing reproduces here.** `relative` leads by
+> +.0336 at `w_eff=1` (.5784 vs .5448) and trails by −.0187 at
+> `w_eff=10` (.5485 vs .5672) — the same direction of flip as
+> llama-1b (+.0373, then −.0560). The size step from 1B to 3B
+> did not remove it, so **the crossing is not a weak-model
+> artifact**, which is what this table was queued to test.
+> **The split is by model family, not by capacity.** Both llama
+> models cross; both qwen models do not — qwen-3b (`tbl-6ac460`)
+> and qwen-7b (`tbl-5cf136`) have `relative` ahead at *both*
+> `w_eff` points. Two families, four models, a clean partition.
+> **maj@gb is worse here than on llama-1b.** On llama-1b
+> `relative` led on maj at both points, which supported reading
+> the pass@gb reversal as a candidate-set effect. On llama-3b
+> `relative` *loses* maj at both — .3731 vs .4104 at `w_eff=1`
+> and .3470 vs .3731 at 10 — including at the point where it
+> wins pass@gb. That is a sharper negative: parent-relative
+> widens the candidate set without the aggregation converting
+> it, and the effect grows with model size.
+> **Limitations / follow-up:** every gap in this table is
+> **under 1 SE** (+.0336 ≈ 0.78 SE, −.0187 ≈ 0.43 SE, unpaired),
+> so llama-3b on its own confirms nothing. The value is that two
+> independent models show the same sign pattern in the same
+> places — an agreement argument, not a significance one.
+> Also note local scope does not dominate global on this model:
+> `absolute` beats its `tbl-591232` global twin at `w_eff=1`
+> (.5448 vs .5261) but loses at `w_eff=10` (.5672 vs .5784).
+> The queued llama-3b `relative` sweep (`tbl-cf849a`) is what
+> locates the crossing rather than just detecting it.
+> Feeds key: `tbl-7ee727`.
+
+#### embeds_ref comparison (qwen-3b, cov_scope=local)
+<!-- table-id: tbl-6ac460 -->
+> **Compares:** `embeds_ref="absolute"` against
+> `embeds_ref="relative"` under local scope — the qwen-3b
+> counterpart of the llama-1b table above. Same two `w_eff`
+> points, same rationale (see that table for why parent-relative
+> displacement is the interesting arm: siblings' absolute
+> embeddings sit at 0.98 mean |cos|, dropping to 0.07 after
+> subtracting the parent).
+>
+> **Why qwen-3b too.** The llama-1b table alone cannot separate
+> "parent-relative helps" from "parent-relative helps a weak
+> model." qwen-3b is the mid-tier model with the most complete
+> local sweep, so its `absolute` arm is already partly measured
+> and the comparison starts half-paid.
+>
+> **Fixed:** as the qwen-3b sweep above (`cov_scope=local`,
+> lam=0.01, qwen-3b, b=80, level 5, 2 trials); only
+> `embeds_ref` and `ds_alpha` vary.
+>
+> ⚠️ The two `absolute` rows are the **same two cells** as the
+> qwen-3b sweep table above (`77b736ec`, `83febb1b`) — one
+> ledger entry feeding two tables, not a re-run. `77b736ec` is
+> already scored; `83febb1b` is `inqueue` (requeued 2026-07-30
+> after its allocation timed out with 1/2 trials). Only the
+> `relative` rows are new: `w_eff=1` `1ef89fdc`, `w_eff=10`
+> `df8182ca`. Net cost of this table is 2 cells (~12 h each).
+>
+> **W&B:** fgy1e9sq (`absolute`, w_eff=1), decwj7la (`relative`,
+> w_eff=10).
+
+| llm | prm | embeds_ref | w_eff | trials | status | pass@gb | naive@gb | wei@gb | maj@gb | hr/trial |
+|---|---|---|---|---|---|---|---|---|---|---|
+| qwen-3b | qwen | absolute | 1 | 2 | scored | .7052<br>±.0279 | .5672<br>±.0303 | .5672<br>±.0303 | .5373<br>±.0305 | 6.12 |
+| qwen-3b | qwen | relative | 1 | 2 | scored | .7164<br>±.0276 | .5821<br>±.0302 | .5634<br>±.0304 | .5410<br>±.0305 | 6.21 |
+| qwen-3b | qwen | absolute | 10 | 2 | scored | .6716<br>±.0287 | .5746<br>±.0303 | .5336<br>±.0305 | .5261<br>±.0306 | 6.21 |
+| qwen-3b | qwen | relative | 10 | 2 | scored | .7090<br>±.0278 | .5970<br>±.0300 | .5522<br>±.0304 | .5149<br>±.0306 | 6.24 |
+
+> **Analysis.** One of four cells measured. The `absolute`
+> w_eff=1 baseline is .7052 pass@gb — the best qwen-3b local
+> number so far, and .0149 above the global w_eff=10 twin
+> (.6903), which is inside one standard error. `relative` has
+> to beat .7052 by more than ~.03 to be a real effect.
+> **Limitations / follow-up:** the `absolute` w_eff=10 row is
+> gated on the requeued sweep cell, so the two-point shape of
+> the `absolute` arm is not yet known for this model. Feeds key
+> is the table-id below; the two `relative` cells have no ledger
+> entry yet — queue them with hashes `1ef89fdc` and `df8182ca`.
+
+#### embeds_ref comparison (qwen-7b gptq-int4, cov_scope=local)
+<!-- table-id: tbl-5cf136 -->
+> **Compares:** `embeds_ref="absolute"` against
+> `embeds_ref="relative"` under local scope — the qwen-7b
+> counterpart of the two tables above. Same two `w_eff` points,
+> same rationale.
+>
+> **Why qwen-7b too.** It is the strongest model in the family
+> and the one whose local sweep shows the largest measured
+> effect anywhere in this section (`w_eff` 0 → 3 moves pass@gb
+> .6306 → .7537, ~4 SE). If parent-relative matters, the model
+> with the most headroom to lose is where a regression would
+> show first; if it does nothing here, the knob is unlikely to
+> repay a full sweep.
+>
+> **Fixed:** as the qwen-7b sweep above (`cov_scope=local`,
+> lam=0.01, qwen-7b gptq-int4, b=80, level 5, 2 trials); only
+> `embeds_ref` and `ds_alpha` vary.
+>
+> ⚠️ The two `absolute` rows are the **same two cells** as the
+> qwen-7b sweep table above (`d5a1327c`, `94840f6b`) — one
+> ledger entry feeding two tables, not a re-run. `94840f6b` is
+> already scored; `d5a1327c` is `inqueue` (requeued 2026-07-30,
+> resuming from trial 1). Only the `relative` rows are new:
+> `w_eff=1` `11ad13c7`, `w_eff=10` `b53d44dd`. Net cost of this
+> table is 2 cells (~11 h each).
+>
+> **W&B:** ip6rfqxy (`absolute`, w_eff=10), bk2rou47 (`relative`,
+> w_eff=1), n2iiuppj (`relative`, w_eff=10).
+
+| llm | prm | embeds_ref | w_eff | trials | status | pass@gb | naive@gb | wei@gb | maj@gb | hr/trial |
+|---|---|---|---|---|---|---|---|---|---|---|
+| qwen-7b gptq-int4 | qwen | absolute | 1 | 2 | scored | .7425<br>±.0268 | .6194<br>±.0297 | .5970<br>±.0300 | .5821<br>±.0302 | 4.97 |
+| qwen-7b gptq-int4 | qwen | relative | 1 | 2 | scored | .7836<br>±.0252 | .6045<br>±.0299 | .5821<br>±.0302 | .5821<br>±.0302 | 5.54 |
+| qwen-7b gptq-int4 | qwen | absolute | 10 | 2 | scored | .7537<br>±.0264 | .5709<br>±.0303 | .5597<br>±.0304 | .5448<br>±.0305 | 5.61 |
+| qwen-7b gptq-int4 | qwen | relative | 10 | 2 | scored | .7761<br>±.0255 | .5634<br>±.0304 | .5672<br>±.0303 | .5597<br>±.0304 | 5.59 |
+
+> **Analysis.** One of four cells measured. The `absolute`
+> w_eff=10 baseline is .7537 pass@gb, still .0150 below this
+> model's global w_eff=10 result (.7687) — so local scope has
+> not yet beaten global for qwen-7b, and `relative` is one of
+> the remaining candidates for closing that gap.
+> **Limitations / follow-up:** the `absolute` w_eff=1 row is
+> gated on the requeued sweep cell. Note this table's two
+> measured points come from opposite corners of the grid
+> relative to the qwen-3b table (w_eff=10 here, w_eff=1 there),
+> so the three `embeds_ref` tables cannot yet be read as a
+> family. The two `relative` cells have no ledger entry yet —
+> queue them with hashes `11ad13c7` and `b53d44dd`.
+
+#### embeds_ref comparison (qwen-math-1.5b, cov_scope=local)
+<!-- table-id: tbl-78da65 -->
+> **Compares:** `embeds_ref="absolute"` against
+> `embeds_ref="relative"` under local scope — the qwen-math
+> counterpart of the four tables above, which completes the
+> family. Same two `w_eff` points, same rationale.
+>
+> **Why qwen-math too.** It is the only math-specialized model
+> in the grid and the one whose generations are most
+> stylistically uniform: a model fine-tuned on a narrow domain
+> emits siblings that read alike, which is precisely the regime
+> where absolute embeddings should cluster hardest and
+> parent-relative should buy the most. It is the strongest test
+> of the mechanism the other four tables assume — if subtracting
+> the parent does nothing here, the knob is unlikely to matter
+> anywhere.
+>
+> **Fixed:** as the llama-1b table above (`cov_scope=local`,
+> lam=0.01, qwen-math-1.5b, b=80, level 5, 2 trials); only
+> `embeds_ref` and `ds_alpha` vary. No `llm.max_model_len`
+> override — that is a b=320 concern for this model (see the
+> b=320 tables, where it needs 4096), not a b=80 one.
+>
+> ⚠️ The `absolute` w_eff=1 row is the **same cell** as
+> qwen-math-1.5b's row in the model family comparison below
+> (`74a4b258`) — one config feeding two tables, not a re-run.
+> Net new here: `absolute` w_eff=10 `a4a229ee`, `relative`
+> w_eff=1 `43bd8117`, `relative` w_eff=10 `70b52bb3`. Net cost
+> of this table is 3 cells.
+>
+> **W&B:** t6wgq6yh (`absolute` w_eff=1), 6cf71i7r
+> (`relative` w_eff=1), k34dky0k (`absolute` w_eff=10),
+> 9m9rooh6 (`relative` w_eff=10).
+
+| llm | prm | embeds_ref | w_eff | trials | status | pass@gb | naive@gb | wei@gb | maj@gb | hr/trial |
+|---|---|---|---|---|---|---|---|---|---|---|
+| qwen-math-1.5b | qwen | absolute | 1 | 2 | scored | .7351<br>±.0270 | .6493<br>±.0292 | .6306<br>±.0295 | .6119<br>±.0298 | 4.87 |
+| qwen-math-1.5b | qwen | relative | 1 | 2 | scored | .7425<br>±.0268 | .6343<br>±.0295 | .6343<br>±.0295 | .6157<br>±.0298 | 4.84 |
+| qwen-math-1.5b | qwen | absolute | 10 | 2 | scored | .7313<br>±.0271 | .5970<br>±.0300 | .6082<br>±.0299 | .5933<br>±.0301 | 4.82 |
+| qwen-math-1.5b | qwen | relative | 10 | 2 | scored | .7612<br>±.0261 | .6269<br>±.0296 | .6194<br>±.0297 | .5821<br>±.0302 | 4.82 |
+
+> **Analysis.** No data yet.
+> **Limitations / follow-up:** this model is the one most likely
+> to break the b=80 assumptions — its b=320 runs needed
+> `max_model_len=4096` after the 6000 variants failed, so if
+> these cells die on context length the fix is the same override
+> and the comparison stays valid at a shorter budget. None of
+> the four cells has a ledger entry; queue with hashes
+> `74a4b258`, `43bd8117`, `a4a229ee`, `70b52bb3`. Feeds key:
+> `tbl-78da65`.
 
 #### model family comparison (QwenPRM, cov_scope=local)
 <!-- table-id: tbl-bf15ee -->
@@ -1142,17 +1818,25 @@ Two activities, two shapes:
 > qwen-3b `77b736ec`, qwen-7b gptq-int4 `d5a1327c`,
 > qwen-math-1.5b `74a4b258`. Net new: 4 cells.
 >
-> **W&B:** none yet.
+> **W&B:** 2xfjs5bq (llama-1b), nnf53blu (llama-3b),
+> t6wgq6yh (qwen-math-1.5b).
 
 | llm | prm | trials | status | pass@gb | naive@gb | wei@gb | maj@gb | hr/trial |
 |---|---|---|---|---|---|---|---|---|
-| llama-1b fp16 | qwen | — | planned | — | — | — | — | — |
-| llama-3b fp16 | qwen | — | planned | — | — | — | — | — |
-| qwen-3b fp16 | qwen | — | inqueue | — | — | — | — | — |
-| qwen-7b gptq-int4 | qwen | — | inqueue | — | — | — | — | — |
-| qwen-math-1.5b fp16 | qwen | — | planned | — | — | — | — | — |
+| llama-1b fp16 | qwen | 2 | scored | .3284<br>±.0287 | .2575<br>±.0268 | .2276<br>±.0257 | .2015<br>±.0245 | 4.73 |
+| llama-3b fp16 | qwen | 2 | scored | .5448<br>±.0305 | .4366<br>±.0304 | .4328<br>±.0303 | .4104<br>±.0301 | 6.67 |
+| qwen-3b fp16 | qwen | 2 | scored | .7052<br>±.0279 | .5672<br>±.0303 | .5672<br>±.0303 | .5373<br>±.0305 | 6.12 |
+| qwen-7b gptq-int4 | qwen | 2 | scored | .7425<br>±.0268 | .6194<br>±.0297 | .5970<br>±.0300 | .5821<br>±.0302 | 4.97 |
+| qwen-math-1.5b fp16 | qwen | 2 | scored | .7351<br>±.0270 | .6493<br>±.0292 | .6306<br>±.0295 | .6119<br>±.0298 | 4.87 |
 
-> **Analysis.** No data yet. Global baselines at `w_eff=10`
+> **Analysis.** One of two queued rows landed. qwen-3b at
+> `w_eff=1` local reaches **.7052** pass@gb against the global
+> `w_eff=10` baseline of **.6903** — a +.0149 edge, which is
+> inside one standard error (±.028) and so is not yet evidence
+> that local scope helps. The qwen-7b row `failed` (allocation
+> ended after trial 1 of 2), so the one model with the largest
+> global baseline is still unmeasured under local scope.
+> Global baselines at `w_eff=10`
 > (`tbl-73533c`): llama-1b .3209, llama-3b .5784, qwen-3b .6903,
 > qwen-7b gptq-int4 .7687, qwen-math-1.5b .7500 pass@gb.
 > **Limitations / follow-up:** gated on the `w_eff` sweep, as
@@ -2391,10 +3075,10 @@ Two activities, two shapes:
 | llm | prm | trials | status | pass@gb | naive@gb | wei@gb | maj@gb | hr/trial |
 |---|---|---|---|---|---|---|---|---|
 | llama-1b fp16 | qwen | 2 | scored | .5187<br>±.0306 | .3134<br>±.0284 | .2799<br>±.0275 | .2500<br>±.0265 | 18.5 |
-| llama-3b fp16 | qwen | — | running | — | — | — | — | — |
+| llama-3b fp16 | qwen | 2 | scored | .6754<br>±.0287 | .4291<br>±.0303 | .4627<br>±.0305 | .4440<br>±.0304 | 24.50 |
 | qwen-3b fp16 | qwen | 2 | scored | .8097<br>±.0240 | .6157<br>±.0298 | .5858<br>±.0301 | .5784<br>±.0302 | 23.4 |
 | qwen-7b gptq-int4 | qwen | 2 | scored | .7985<br>±.0245 | .6418<br>±.0293 | .6269<br>±.0296 | .6157<br>±.0298 | 14.6 |
-| qwen-math-1.5b fp16 | qwen | — | running (mml4096) | — | — | — | — | — |
+| qwen-math-1.5b fp16 | qwen | 2 | scored (mml4096) | .8396<br>±.0225 | .6828<br>±.0285 | .6642<br>±.0289 | .6493<br>±.0292 | 18.93 |
 
 > **Analysis.** 3/5 scored (2026-07-26). The two qwens are
 > statistically tied on pass@gb (.8097 vs .7985, ≪1 SEM) and both
@@ -2458,7 +3142,7 @@ Two activities, two shapes:
 | llama-3b fp16 | qwen | 2 | scored | .7164<br>±.0276 | .4254<br>±.0303 | .3955<br>±.0299 | .3433<br>±.0291 | 29.08 |
 | qwen-3b fp16 | qwen | 2 | scored | .8396<br>±.0225 | .5896<br>±.0301 | .5560<br>±.0304 | .5299<br>±.0305 | 23.8 |
 | qwen-7b gptq-int4 | qwen | 2 | scored | .8582<br>±.0213 | .6007<br>±.0300 | .6007<br>±.0300 | .5821<br>±.0302 | 19.1 |
-| qwen-math-1.5b fp16 | qwen | — | running (mml4096) | — | — | — | — | — |
+| qwen-math-1.5b fp16 | qwen | 2 | scored (mml4096) | .8321<br>±.0229 | .6343<br>±.0295 | .6194<br>±.0297 | .6082<br>±.0299 | 18.50 |
 
 > **Analysis.** 3/5 scored (2026-07-26). **The w_eff pairing this
 > table exists for now has an answer on 3 of 5 models, and it is
@@ -2540,23 +3224,43 @@ Two activities, two shapes:
 > every centering gap inside ~1 SEM. Worth queueing a subset
 > first — see the follow-up note below.
 >
-> **W&B:** none yet (no runs).
+> **W&B:** `jsbk9eds` (llama-1b), `etotz0u8` (llama-3b),
+> `d84v1o1a` (qwen-3b), `t3qf0n2i` (qwen-7b gptq-int4),
+> `57bxhktv` (qwen-math-1.5b).
 
 | llm | prm | center | trials | status | pass@gb | naive@gb | wei@gb | maj@gb | hr/trial |
 |---|---|---|---|---|---|---|---|---|---|
-| llama-1b fp16 | qwen | local | — | inqueue | — | — | — | — | — |
-| llama-3b fp16 | qwen | local | — | inqueue | — | — | — | — | — |
-| qwen-3b fp16 | qwen | local | — | inqueue | — | — | — | — | — |
-| qwen-7b gptq-int4 | qwen | local | — | inqueue | — | — | — | — | — |
-| qwen-math-1.5b fp16 | qwen | local | — | inqueue | — | — | — | — | — |
+| llama-1b fp16 | qwen | local | 2 | scored | .5261<br>±.0306 | .2687<br>±.0271 | .2388<br>±.0261 | .1940<br>±.0242 | 19.96 |
+| llama-3b fp16 | qwen | local | 2 | scored | .7090<br>±.0278 | .4478<br>±.0304 | .4216<br>±.0302 | .4067<br>±.0301 | 27.79 |
+| qwen-3b fp16 | qwen | local | 2 | scored | .8284<br>±.0231 | .5858<br>±.0301 | .5448<br>±.0305 | .5373<br>±.0305 | 24.84 |
+| qwen-7b gptq-int4 | qwen | local | 2 | scored | .8582<br>±.0213 | .5896<br>±.0301 | .5634<br>±.0304 | .5597<br>±.0304 | 18.27 |
+| qwen-math-1.5b fp16 | qwen | local | 2 | scored | .8507<br>±.0218 | .6455<br>±.0293 | .6381<br>±.0294 | .6269<br>±.0296 | 19.49 |
 
-> **Analysis.** No data yet. Read each row against its
-> `tbl-900e87` twin (same model, same everything but centering):
-> llama-1b .5187, qwen-3b .8097, qwen-7b gptq-int4 .7985 pass@gb
-> are the uncentered baselines; llama-3b and qwen-math are still
-> running there, so those two pairs cannot be read until
-> `tbl-900e87` completes.
-> **Limitations / follow-up:** the b=80 twin (`tbl-e58353`)
+> **Analysis.** Complete (5/5, closed 2026-08-02). Read each row
+> against its `tbl-900e87` twin (same model, same everything but
+> centering): llama-1b .5187, qwen-3b .8097, qwen-7b gptq-int4
+> .7985 pass@gb are the uncentered baselines; llama-3b and
+> qwen-math are still running there, so those two pairs cannot
+> be read until `tbl-900e87` completes.
+> On the three readable pairs the centering gain **grows with
+> model strength**: llama-1b +.0074 (.5187 → .5261), qwen-3b
+> +.0187 (.8097 → .8284), qwen-7b gptq-int4 **+.0597** (.7985 →
+> .8582, ~1.8 SE). Only the qwen-7b gap reaches the ~.06
+> resolution floor this table was warned about, so it is the one
+> cell that is even arguably non-null.
+> **This inverts the hypothesis the table was queued to test.**
+> llama-1b was picked because it showed the largest b=80
+> centering gain (.3209 → .3806) and was expected to show the
+> effect most clearly at b=320; it instead shows the smallest
+> gain of the three, essentially zero. The b=80 result did not
+> reproduce at b=320 for this model, and whatever centering buys
+> at large budget, it is not a weak-model effect.
+> **Limitations / follow-up:** with two of five pairs still
+> waiting on `tbl-900e87`, the "grows with model strength"
+> reading rests on three points and one ordering; llama-3b and
+> qwen-math are exactly the rows that would break or confirm it,
+> and qwen-math (.8507, the second-best pass@gb here) is the
+> cheapest of the two to finish. The b=80 twin (`tbl-e58353`)
 > found every `local`-vs-`none` gap within ~1 SEM at 2 trials,
 > so a null result here is the likely outcome and 2 trials/cell
 > will not resolve anything smaller than ~.06. If the point is
@@ -2622,15 +3326,16 @@ Two activities, two shapes:
 > `ds_alpha=10` centering result is a weaker prior than the
 > `ds_alpha=1` one.
 >
-> **W&B:** none yet (no runs).
+> **W&B:** `6bf6dagw` (llama-1b), `qpcd4vnh` (qwen-7b
+> gptq-int4), `tttarieg` (qwen-math-1.5b, mml4096).
 
 | llm | prm | center | trials | status | pass@gb | naive@gb | wei@gb | maj@gb | hr/trial |
 |---|---|---|---|---|---|---|---|---|---|
-| llama-1b fp16 | qwen | local | — | inqueue | — | — | — | — | — |
-| llama-3b fp16 | qwen | local | — | inqueue | — | — | — | — | — |
-| qwen-3b fp16 | qwen | local | — | inqueue | — | — | — | — | — |
-| qwen-7b gptq-int4 | qwen | local | — | inqueue | — | — | — | — | — |
-| qwen-math-1.5b fp16 | qwen | local | — | inqueue | — | — | — | — | — |
+| llama-1b fp16 | qwen | local | 2 | scored | .5037<br>±.0306 | .2985<br>±.0280 | .2575<br>±.0268 | .2090<br>±.0249 | 19.66 |
+| llama-3b fp16 | qwen | local | — | running | — | — | — | — | — |
+| qwen-3b fp16 | qwen | local | — | running | — | — | — | — | — |
+| qwen-7b gptq-int4 | qwen | local | 2 | scored | .8694<br>±.0206 | .6119<br>±.0298 | .5672<br>±.0303 | .5522<br>±.0304 | 19.00 |
+| qwen-math-1.5b fp16 | qwen | local | 2 | scored | .8321<br>±.0229 | .6381<br>±.0294 | .6343<br>±.0295 | .6082<br>±.0299 | 19.46 |
 
 > **Analysis.** No data yet. Read each row against its
 > `tbl-01c466` twin: llama-1b .5373, llama-3b .7164, qwen-3b

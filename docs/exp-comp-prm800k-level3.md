@@ -27,6 +27,7 @@ grids.
 
 
 
+
 <!-- toc:begin -- generated, do not hand-edit -->
 ## Contents
 
@@ -79,20 +80,21 @@ Empty cells are `—`. Full workflow:
 > `data.level=3` — config hashes and `--level-3--` run names
 > follow automatically.
 >
-> ⚠️ All five cells `inqueue` since 2026-07-28 (priority 2,
-> `expected_hr` 8–12, set as 2× the level-5 twin's hr/trial
-> rounded up — deliberately generous, since level 3 has 105
-> questions against level 5's 134).
+> ⚠️ `expected_hr` was set at 8–12 (2× the level-5 twin's
+> hr/trial, rounded up). Measured: **1.7–2.9 hr/trial**, so the
+> estimates were 3–6× too generous. Level 3's 105 questions
+> and shorter searches make it much cheaper than level 5.
 >
-> **W&B:** none yet (no level-3 runs).
+> **W&B:** 8dzw7eyr (llama-1b), s8z756dr (llama-3b), 7hsq6d3w
+> (qwen-3b), sgtyrdii (qwen-7b), oy0iw2ph (qwen-math-1.5b).
 
 | llm | trials | status | pass@gb | naive@gb | wei@gb | maj@gb | hr/trial |
 |---|---|---|---|---|---|---|---|
-| llama-1b fp16 | — | running | — | — | — | — | — |
-| llama-3b fp16 | — | running | — | — | — | — | — |
-| qwen-3b fp16 | — | inqueue | — | — | — | — | — |
-| qwen-7b gptq-int4 | — | inqueue | — | — | — | — | — |
-| qwen-math-1.5b fp16 | — | inqueue | — | — | — | — | — |
+| llama-1b fp16 | 2 | scored | .8000<br>±.0277 | .7048<br>±.0316 | .6810<br>±.0322 | .6381<br>±.0332 | 1.66 |
+| llama-3b fp16 | 2 | scored | .9286<br>±.0178 | .8571<br>±.0242 | .8286<br>±.0261 | .7952<br>±.0279 | 2.89 |
+| qwen-3b fp16 | 2 | scored | .9619<br>±.0132 | .9381<br>±.0167 | .9381<br>±.0167 | .9286<br>±.0178 | 2.54 |
+| qwen-7b gptq-int4 | 2 | scored | .9857<br>±.0082 | .9429<br>±.0161 | .9190<br>±.0189 | .9048<br>±.0203 | 1.94 |
+| qwen-math-1.5b fp16 | 2 | scored | .9857<br>±.0082 | .9476<br>±.0154 | .9381<br>±.0167 | .9381<br>±.0167 | 1.99 |
 
 > **Analysis.** No level-3 data yet — nothing to take away.
 > **Limitations / follow-up:** the comparison this table exists
@@ -123,20 +125,27 @@ Empty cells are `—`. Full workflow:
 > **Launch:** the level-5 counterpart's command plus
 > `data.level=3`.
 >
-> ⚠️ All five cells `inqueue` since 2026-07-28 (priority 2,
-> `expected_hr` 10–14 = 2× the level-5 twin's hr/trial rounded up).
+> ⚠️ `expected_hr` was set at 10–14 (2× the level-5 twin's
+> hr/trial). Measured: **2.6–3.7 hr/trial**, so the estimates
+> were 3–5× too generous.
 >
-> **W&B:** none yet (no level-3 runs).
+> **W&B:** aockwewn (llama-1b), ro7g3y5n (llama-3b), ye7ukzo8
+> (qwen-3b), sqg3c8s5 (qwen-7b), bxfl2j6f (qwen-math-1.5b).
 
 | llm | trials | status | pass@gb | naive@gb | wei@gb | maj@gb | hr/trial |
 |---|---|---|---|---|---|---|---|
-| llama-1b fp16 | — | inqueue | — | — | — | — | — |
-| llama-3b fp16 | — | inqueue | — | — | — | — | — |
-| qwen-3b fp16 | — | inqueue | — | — | — | — | — |
-| qwen-7b gptq-int4 | — | inqueue | — | — | — | — | — |
-| qwen-math-1.5b fp16 | — | inqueue | — | — | — | — | — |
+| llama-1b fp16 | 2 | scored | .7810<br>±.0286 | .7143<br>±.0312 | .6619<br>±.0327 | .6143<br>±.0337 | 2.85 |
+| llama-3b fp16 | 2 | scored | .9048<br>±.0203 | .8714<br>±.0232 | .8286<br>±.0261 | .8143<br>±.0269 | 3.66 |
+| qwen-3b fp16 | 2 | scored | .9619<br>±.0132 | .9286<br>±.0178 | .9286<br>±.0178 | .8952<br>±.0212 | 3.42 |
+| qwen-7b gptq-int4 | 2 | scored | .9762<br>±.0105 | .9238<br>±.0184 | .9190<br>±.0189 | .9095<br>±.0198 | 2.64 |
+| qwen-math-1.5b fp16 | 2 | scored | .9810<br>±.0095 | .9381<br>±.0167 | .9333<br>±.0173 | .9286<br>±.0178 | 2.83 |
 
-> **Analysis.** No level-3 data yet — nothing to take away.
+> **Analysis.** Level 3 compresses the model-family spread that
+> level 5 shows clearly. pass@gb runs .7810 → .9810 here against
+> level 5's .3209 → .7687, so the weakest model (llama-1b) gains
+> far more from the easier split than the strongest. qwen-math-
+> 1.5b edges out qwen-7b gptq-int4 on every metric despite being
+> ~4× smaller, matching the level-5 ordering on wei/maj.
 > **Limitations / follow-up:** level 5 has this table complete
 > (llama-1b .3209, llama-3b .5784, qwen-3b .6903, qwen-7b
 > gptq-int4 .7687, qwen-math-1.5b .7500 pass@gb), so the level-3
@@ -154,20 +163,34 @@ Empty cells are `—`. Full workflow:
 > **Launch:** the level-5 counterpart's command plus
 > `data.level=3`.
 >
-> ⚠️ All five cells `inqueue` since 2026-07-28 (priority 2,
-> `expected_hr` 10–14 = 2× the level-5 twin's hr/trial rounded up).
+> ⚠️ `expected_hr` was set at 10–14 (2× the level-5 twin's
+> hr/trial). Measured: **2.7–3.7 hr/trial**, so the estimates
+> were 3–5× too generous.
 >
-> **W&B:** none yet (no level-3 runs).
+> ⚠️ **qwen-math-1.5b is `failed`, not missing.** Its allocation
+> (23446851, gpu_windfall) was preempted after trial 1 of 2 and
+> re-queued; the run is resumable — the result dir is
+> hash-addressed, so a requeue skips the finished trial.
+>
+> **W&B:** it83yx2s (llama-1b), kvlybe2r (llama-3b), 81eni7sd
+> (qwen-3b), evzz4tch (qwen-7b). qwen-math-1.5b: none (failed).
 
 | llm | trials | status | pass@gb | naive@gb | wei@gb | maj@gb | hr/trial |
 |---|---|---|---|---|---|---|---|
-| llama-1b fp16 | — | inqueue | — | — | — | — | — |
-| llama-3b fp16 | — | inqueue | — | — | — | — | — |
-| qwen-3b fp16 | — | inqueue | — | — | — | — | — |
-| qwen-7b gptq-int4 | — | inqueue | — | — | — | — | — |
-| qwen-math-1.5b fp16 | — | inqueue | — | — | — | — | — |
+| llama-1b fp16 | 2 | scored | .8000<br>±.0277 | .7143<br>±.0312 | .6714<br>±.0325 | .5857<br>±.0341 | 2.84 |
+| llama-3b fp16 | 2 | scored | .9095<br>±.0198 | .8524<br>±.0245 | .8190<br>±.0266 | .8048<br>±.0274 | 3.74 |
+| qwen-3b fp16 | 2 | scored | .9619<br>±.0132 | .9048<br>±.0203 | .9143<br>±.0194 | .9000<br>±.0208 | 3.35 |
+| qwen-7b gptq-int4 | 2 | scored | .9810<br>±.0095 | .9286<br>±.0178 | .9000<br>±.0208 | .8905<br>±.0216 | 2.68 |
+| qwen-math-1.5b fp16 | — | failed | — | — | — | — | — |
 
-> **Analysis.** No level-3 data yet — nothing to take away.
+> **Analysis.** Four of five cells scored. Against the
+> `ds_alpha=1` table (`tbl-8d2a3d`), raising `w_eff` from 10 to
+> 100 moves pass@gb by at most .0190 on any model and the
+> direction is not consistent (llama-1b +.0190, qwen-7b +.0048,
+> qwen-3b .0000, llama-3b +.0047) — every gap is inside one
+> standard error, so at level 3 this knob does nothing
+> measurable. maj@gb on llama-1b is the one visible drop
+> (.6143 → .5857), also within error.
 > **Limitations / follow-up:** the level-5 counterpart carries a
 > ⚠️ mismatch flag — recomputing its cited llama-1b, qwen-7b
 > gptq-int4 and qwen-math-1.5b baselines produced different

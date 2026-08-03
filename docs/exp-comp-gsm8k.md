@@ -12,6 +12,7 @@ by gen_budget, plus a cross-algorithm best-config summary.
 
 
 
+
 <!-- toc:begin -- generated, do not hand-edit -->
 ## Contents
 

@@ -88,12 +88,47 @@ mention it in the summary; do not retry.
 These are 1-GPU allocations and the probe is cgroup-scoped. One
 idle job = capacity for exactly one launch.
 
-## 5. Walltime guard
+## 5. Walltime guard, then cancel-the-useless guard
 
-If the entry has `expected_hr` and the job's remaining time is
-less, skip this job for this entry (try the next idle job; the
-entry stays at the head). Entries without `expected_hr` launch
+For each idle job J, place the **highest-priority inqueue entry
+whose `expected_hr` fits inside J's `%L` remaining**. An entry
+that does not fit is skipped for J and stays at the head (try it
+on the next idle job). Entries without `expected_hr` fit
 anywhere; mention it.
+
+If **no** inqueue entry fits J — i.e. even the smallest
+`expected_hr` in the queue exceeds J's remaining time — then J
+can never host work before it expires. **`scancel` it
+immediately:**
+
+```
+scancel <jobid>
+```
+
+Then drop it from the pool for this cycle (the next `squeue`
+refresh drops it from `jobs.yaml` automatically) and report the
+cancellation with the numbers that justified it (`%L` left vs.
+the queue's minimum `expected_hr`).
+
+**Cancellation preconditions — ALL must hold.** This is the only
+destructive action in the skill; a wrong `scancel` throws away an
+allocation that took days to schedule.
+- J probed **idle** in §4 (`0 %` AND `0 MiB`). Never cancel on a
+  util-only signal.
+- J is **not** in `exclude:`.
+- J was **not claimed this cycle** (a job you launched onto
+  reads 0/0 for ~1-2 min — cancelling it would kill the run you
+  just started).
+- The queue is **non-empty**. With nothing `inqueue` there is no
+  yardstick, so cancel nothing and say so — an idle allocation
+  with hours left is an asset once Tuan queues more work.
+- **No** inqueue entry lacks `expected_hr` (an unsized entry
+  fits anywhere, so nothing is ever un-hostable).
+
+Safe because 0 MiB means the process is gone: `generate_*.py`
+holds both the vLLM engine and the PRM resident through scoring
+and the dataset write, and frees the GPU only at process exit —
+there is no live phase that reads 0 MiB (verified 2026-07-31).
 
 ## 6. Launch + mark
 
@@ -144,7 +179,8 @@ hand-edit it in parallel, and never skip this step. Omitting it on
 `inqueue` across three docs.
 
 Then report directly: pool size (excluded/pruned/added), idle
-jobs, each (job, entry-id) launch with pid, skips and why, the
+jobs, each (job, entry-id) launch with pid, skips and why, **any
+jobs `scancel`led and the numbers that justified it**, the
 inqueue count before/after, and the sync result (`patched=N`).
 
 **Always close the report with the occupancy table:**

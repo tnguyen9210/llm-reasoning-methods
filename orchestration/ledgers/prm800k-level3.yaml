@@ -34,7 +34,7 @@
   feeds:
   - tbl-01884a  # L3 cnt-mcts model family, b=80, QwenPRM
   group: cnt-mcts
-  status: running
+  status: scored
   priority: 2
   expected_hr: 8
   note: b=80 qwen-PRM llama1b (L3). Level-3 anchor for the
@@ -58,7 +58,7 @@
   feeds:
   - tbl-01884a  # L3 cnt-mcts model family, b=80, QwenPRM
   group: cnt-mcts
-  status: running
+  status: scored
   priority: 2
   expected_hr: 12
   launch:
@@ -83,13 +83,18 @@
   feeds:
   - tbl-01884a  # L3 cnt-mcts model family, b=80, QwenPRM
   group: cnt-mcts
-  status: inqueue
+  status: scored
   priority: 2
   expected_hr: 11
   note: b=80 qwen-PRM qwen3b (L3). Level-3 anchor for the
     cross-level model-family read; level-5 twin ran 4.63 hr/trial,
     and expected_hr is 2x that rounded up (level 3 is 105 questions
     vs 134, so this over-estimates deliberately).
+  launch:
+    job_id: 23419785
+    node: r5u31n1
+    pid: 2896659
+    at: 2026-07-29 15:00
 
 - id: cnt-mcts-l3-b080-qwen-qwen7bgptq
   launcher: generate_mcts_cnt.py
@@ -103,13 +108,18 @@
   feeds:
   - tbl-01884a  # L3 cnt-mcts model family, b=80, QwenPRM
   group: cnt-mcts
-  status: inqueue
+  status: scored
   priority: 2
   expected_hr: 10
   note: b=80 qwen-PRM qwen7bgptq (L3). Level-3 anchor for the
     cross-level model-family read; level-5 twin ran 4.19 hr/trial,
     and expected_hr is 2x that rounded up (level 3 is 105 questions
     vs 134, so this over-estimates deliberately).
+  launch:
+    job_id: 23419787
+    node: r5u17n1
+    pid: 2896660
+    at: 2026-07-29 15:00
 
 - id: cnt-mcts-l3-b080-qwen-qwenmath15b
   launcher: generate_mcts_cnt.py
@@ -123,13 +133,18 @@
   feeds:
   - tbl-01884a  # L3 cnt-mcts model family, b=80, QwenPRM
   group: cnt-mcts
-  status: inqueue
+  status: scored
   priority: 2
   expected_hr: 8
   note: b=80 qwen-PRM qwenmath15b (L3). Level-3 anchor for the
     cross-level model-family read; level-5 twin ran 3.37 hr/trial,
     and expected_hr is 2x that rounded up (level 3 is 105 questions
     vs 134, so this over-estimates deliberately).
+  launch:
+    job_id: 23446850
+    node: r5u37n1
+    pid: 2896661
+    at: 2026-07-29 15:00
 
 - id: sem-mcts-l3-b080-ds1.0-llama1b
   launcher: generate_mcts_sem.py
@@ -145,13 +160,18 @@
   feeds:
   - tbl-8d2a3d  # L3 sem-mcts model family, b=80, QwenPRM, w_eff=10
   group: sem-mcts
-  status: inqueue
+  status: scored
   priority: 2
   expected_hr: 10
   note: b=80 sem qwen-PRM llama1b lam=0.01 ds_alpha=1.0
     (w_eff=10, L3). Level-5 twin ran 4.88 hr/trial; expected_hr
     is 2x that rounded up (level 3 is 105 questions vs 134, so this
     over-estimates deliberately).
+  launch:
+    job_id: 23419792
+    node: r5u33n1
+    pid: 2906432
+    at: 2026-07-29 15:33
 
 - id: sem-mcts-l3-b080-ds1.0-llama3b
   launcher: generate_mcts_sem.py
@@ -167,13 +187,18 @@
   feeds:
   - tbl-8d2a3d  # L3 sem-mcts model family, b=80, QwenPRM, w_eff=10
   group: sem-mcts
-  status: inqueue
+  status: scored
   priority: 2
   expected_hr: 14
   note: b=80 sem qwen-PRM llama3b lam=0.01 ds_alpha=1.0
     (w_eff=10, L3). Level-5 twin ran 6.93 hr/trial; expected_hr
     is 2x that rounded up (level 3 is 105 questions vs 134, so this
     over-estimates deliberately).
+  launch:
+    job_id: 23431701
+    node: r5u25n1
+    pid: 2910843
+    at: 2026-07-29 16:16
 
 - id: sem-mcts-l3-b080-ds1.0-qwen3b
   launcher: generate_mcts_sem.py
@@ -189,13 +214,18 @@
   feeds:
   - tbl-8d2a3d  # L3 sem-mcts model family, b=80, QwenPRM, w_eff=10
   group: sem-mcts
-  status: inqueue
+  status: scored
   priority: 2
   expected_hr: 13
   note: b=80 sem qwen-PRM qwen3b lam=0.01 ds_alpha=1.0
     (w_eff=10, L3). Level-5 twin ran 6.2 hr/trial; expected_hr
     is 2x that rounded up (level 3 is 105 questions vs 134, so this
     over-estimates deliberately).
+  launch:
+    job_id: 23431699
+    node: r5u17n1
+    pid: 2914051
+    at: 2026-07-29 16:46
 
 - id: sem-mcts-l3-b080-ds1.0-qwen7bgptq
   launcher: generate_mcts_sem.py
@@ -211,13 +241,18 @@
   feeds:
   - tbl-8d2a3d  # L3 sem-mcts model family, b=80, QwenPRM, w_eff=10
   group: sem-mcts
-  status: inqueue
+  status: scored
   priority: 2
   expected_hr: 11
   note: b=80 sem qwen-PRM qwen7bgptq lam=0.01 ds_alpha=1.0
     (w_eff=10, L3). Level-5 twin ran 5.42 hr/trial; expected_hr
     is 2x that rounded up (level 3 is 105 questions vs 134, so this
     over-estimates deliberately).
+  launch:
+    job_id: 23446851
+    node: r5u37n1
+    pid: 2917742
+    at: 2026-07-29 17:46
 
 - id: sem-mcts-l3-b080-ds1.0-qwenmath15b
   launcher: generate_mcts_sem.py
@@ -233,13 +268,18 @@
   feeds:
   - tbl-8d2a3d  # L3 sem-mcts model family, b=80, QwenPRM, w_eff=10
   group: sem-mcts
-  status: inqueue
+  status: scored
   priority: 2
   expected_hr: 10
   note: b=80 sem qwen-PRM qwenmath15b lam=0.01 ds_alpha=1.0
     (w_eff=10, L3). Level-5 twin ran 4.79 hr/trial; expected_hr
     is 2x that rounded up (level 3 is 105 questions vs 134, so this
     over-estimates deliberately).
+  launch:
+    job_id: 23419786
+    node: r5u15n1
+    pid: 2915905
+    at: 2026-07-29 17:16
 
 - id: sem-mcts-l3-b080-ds10-llama1b
   launcher: generate_mcts_sem.py
@@ -255,7 +295,12 @@
   feeds:
   - tbl-49eedf  # L3 sem-mcts model family, b=80, QwenPRM, w_eff=100
   group: sem-mcts
-  status: inqueue
+  status: scored
+  launch:
+    job_id: 23428812
+    node: r5u33n1
+    pid: 2922509
+    at: 2026-07-29 18:45
   priority: 2
   expected_hr: 10
   note: b=80 sem qwen-PRM llama1b lam=0.01 ds_alpha=10
@@ -277,7 +322,12 @@
   feeds:
   - tbl-49eedf  # L3 sem-mcts model family, b=80, QwenPRM, w_eff=100
   group: sem-mcts
-  status: inqueue
+  status: scored
+  launch:
+    job_id: 23446850
+    node: r5u37n1
+    pid: 2924773
+    at: 2026-07-29 19:15
   priority: 2
   expected_hr: 14
   note: b=80 sem qwen-PRM llama3b lam=0.01 ds_alpha=10
@@ -299,7 +349,12 @@
   feeds:
   - tbl-49eedf  # L3 sem-mcts model family, b=80, QwenPRM, w_eff=100
   group: sem-mcts
-  status: inqueue
+  status: scored
+  launch:
+    job_id: 23431709
+    node: r5u25n1
+    pid: 2934018
+    at: 2026-07-29 20:45
   priority: 2
   expected_hr: 13
   note: b=80 sem qwen-PRM qwen3b lam=0.01 ds_alpha=10
@@ -321,7 +376,12 @@
   feeds:
   - tbl-49eedf  # L3 sem-mcts model family, b=80, QwenPRM, w_eff=100
   group: sem-mcts
-  status: inqueue
+  status: scored
+  launch:
+    job_id: 23419792
+    node: r5u33n1
+    pid: 2939677
+    at: 2026-07-29 21:45
   priority: 2
   expected_hr: 12
   note: b=80 sem qwen-PRM qwen7bgptq lam=0.01 ds_alpha=10
@@ -343,7 +403,17 @@
   feeds:
   - tbl-49eedf  # L3 sem-mcts model family, b=80, QwenPRM, w_eff=100
   group: sem-mcts
-  status: inqueue
+  status: failed
+  history:
+  - {at: 2026-07-30 22:03, job_id: 23446851, outcome: stalled,
+     trials_done: 1,
+     why: gpu_windfall allocation preempted; job re-queued as
+       PENDING (start 2026-07-30T23:38), process gone}
+  launch:
+    job_id: 23446851
+    node: r5u37n1
+    pid: 2948388
+    at: 2026-07-29 23:46
   priority: 2
   expected_hr: 10
   note: b=80 sem qwen-PRM qwenmath15b lam=0.01 ds_alpha=10

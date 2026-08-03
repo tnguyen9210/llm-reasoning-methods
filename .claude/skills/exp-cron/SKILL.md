@@ -133,9 +133,38 @@ Each firing does exactly this:
    vLLM run holds GBs even between batches; a momentary 0%-util
    dip alone is not idle). Any probe error -> that job is
    unavailable this firing; note it; do not retry.
-4. **Walltime guard.** If the entry has `expected_hr` and the
-   job's `%L` remaining is less, skip this job for this entry
-   (try the next idle job; the entry stays at the head).
+4. **Walltime guard, then cancel-the-useless guard.** For each
+   idle job J, place the highest-priority inqueue entry whose
+   `expected_hr` fits inside J's `%L` remaining. An entry that
+   does not fit is skipped for J and stays at the head (try it
+   on the next idle job).
+
+   If **no** inqueue entry fits J — even the smallest
+   `expected_hr` in the queue exceeds J's remaining time — J can
+   never host work before it expires. **`scancel <jobid>`
+   immediately**, drop it from the pool for this firing (the
+   next refresh drops it from `jobs.yaml`), and report the
+   cancellation with `%L` left vs. the queue's minimum
+   `expected_hr`.
+
+   **ALL preconditions must hold** — this is the only
+   destructive action in the skill, and it runs unattended:
+   - J probed **idle** in step 3 (`0 %` AND `0 MiB`). Never
+     cancel on a util-only signal.
+   - J is **not** in `exclude:`.
+   - J was **not claimed this firing** (a job you just launched
+     onto reads 0/0 for ~1-2 min — cancelling it kills the run
+     you just started).
+   - The queue is **non-empty** (no yardstick otherwise; an idle
+     allocation with hours left is an asset once Tuan queues
+     more).
+   - **No** inqueue entry lacks `expected_hr` (an unsized entry
+     fits anywhere, so nothing is un-hostable).
+
+   Safe because 0 MiB means the process is gone: `generate_*.py`
+   holds the vLLM engine and the PRM resident through scoring and
+   the dataset write, freeing the GPU only at process exit — no
+   live phase reads 0 MiB (verified 2026-07-31).
 5. **Launch + mark**, using the command `--queue` printed
    verbatim, from the repo root:
    ```
@@ -225,7 +254,8 @@ Also report the two counters the table prints:
   `exp-check` (it decides scored/failed). Do NOT edit them here.
 
 Report the firing tersely: pool size, idle jobs, each
-(job → entry-id, pid) launched, skips and why, inqueue
+(job → entry-id, pid) launched, skips and why, **any jobs
+`scancel`led and the numbers that justified it**, inqueue
 before/after, then the occupancy table.
 
 ## 6. Teardown + final report

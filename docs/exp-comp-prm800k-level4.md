@@ -8,6 +8,7 @@ by gen_budget, plus a cross-algorithm best-config summary.
 
 
 
+
 <!-- toc:begin -- generated, do not hand-edit -->
 ## Contents
 
@@ -2195,36 +2196,54 @@ instead of one wide sparse grid.)
 > Details:
 > [findings/coding-findings/qwen-math-4096-context-cap.md](findings/coding-findings/qwen-math-4096-context-cap.md).
 >
-> ⚠️ 2 of 5 cells scored (2026-07-13): llama-1b and
-> qwen-math-1.5b. No result dir exists yet for llama-3b, qwen-3b,
-> or qwen-7b gptq-int4 at this exact `lam=0.1, ds_alpha=31.6,
-> b=320` point — those 3 remain genuinely unrun, not a recording
-> gap.
+> ✅ 5 of 5 cells scored (llama-3b completed 2026-07-29). The
+> earlier ⚠️ on this table said 2 of 5 and named llama-3b,
+> qwen-3b and qwen-7b gptq-int4 as unrun; qwen-3b and qwen-7b
+> were in fact filled after it was written and the note was never
+> updated. llama-3b took two attempts (stalled on job 23376655
+> with 1/2 trials, resumed and finished on 23419813).
 >
-> **W&B:** llama-1b `ufv99olb`, qwen-math-1.5b `a2i0we44`.
+> **W&B:** llama-1b `ufv99olb`, llama-3b `7c79wk6z`, qwen-3b
+> `roclobp8`, qwen-7b gptq-int4 `c1ybuwgg`, qwen-math-1.5b
+> `a2i0we44`.
 
 | llm | prm | trials | status | pass@gb | naive@gb | wei@gb | maj@gb | hr/trial |
 |---|---|---|---|---|---|---|---|---|
 | llama-1b fp16 | qwen | 2 | scored | .7148<br>±.0283 | .5508<br>±.0311 | .4492<br>±.0311 | .4375<br>±.0311 | 16.18 |
-| llama-3b fp16 | qwen | — | running | — | — | — | — | — |
+| llama-3b fp16 | qwen | 2 | scored | .8320<br>±.0234 | .6680<br>±.0295 | .6406<br>±.0300 | .6211<br>±.0304 | 20.54 |
 | qwen-3b fp16 | qwen | 2 | scored | .9336<br>±.0156 | .7969<br>±.0252 | .7539<br>±.0270 | .7461<br>±.0273 | 18.12 |
 | qwen-7b gptq-int4 | qwen | 2 | scored | .9375<br>±.0152 | .8086<br>±.0246 | .7891<br>±.0255 | .7734<br>±.0262 | 10.99 |
 | qwen-math-1.5b fp16 | qwen | 2 | scored | .9453<br>±.0142 | .8242<br>±.0238 | .7773<br>±.0261 | .7773<br>±.0261 | 15.23 |
 
-> **Analysis.** 2/5 cells scored. Comparing to the `w_eff=10`
+> **Analysis.** 5/5 cells scored. Comparing to the `w_eff=10`
 > table for the models with both points: llama-1b pass@gb drops
 > from .7383 (w_eff=10) to .7148 (w_eff=100) — a small decline
 > consistent with the `sem-mcts-bl` finding that `w_eff=10`
 > outperforms `w_eff=100`. qwen-math-1.5b is essentially flat
 > (.9375 → .9453, within SEM), suggesting this model's pass@gb is
 > already saturated and insensitive to the diversity weight at
-> b=320. Too few models filled to confirm the plateau pattern
-> generally.
-> **Limitations / follow-up:** llama-3b, qwen-3b, and qwen-7b
-> gptq-int4 still need a launch at this operating point. Same
-> caveats as the `w_eff=10` table above (three axes moved at once
-> vs. the b=80 default-point table; no matched b=80 row at this
-> exact point for sem-mcts).
+> b=320.
+>
+> With the table complete, llama-3b lands at pass@gb .8320,
+> between llama-1b (.7148) and the three ≥1.5b qwen models
+> (.9336–.9453), so the model-family spread at this operating
+> point is dominated by family rather than size: both llama rows
+> sit well below every qwen row, including qwen-math-1.5b, which
+> is the smallest model in the table. llama-3b's downstream
+> metrics fall off more steeply than its pass@gb — maj@gb .6211
+> against a .8320 ceiling is a 21-point gap, versus 12 points for
+> qwen-7b gptq-int4 (.7734 vs .9375) — i.e. llama-3b generates a
+> correct candidate but the PRM selects it less often. That is the
+> qwen-PRM-on-llama-generator mismatch already noted elsewhere in
+> this doc, and it is the widest instance of it here. At 20.54
+> hr/trial llama-3b is also the slowest cell in the table.
+> **Limitations / follow-up:** the pass-to-maj gap reading is a
+> single-cell observation on 256 questions and llama-1b's own gap
+> (.7148 → .4375, 27 points) is wider still, so "llama generators
+> lose more at selection" needs the b=80 rows to confirm rather
+> than these two points. Same caveats as the `w_eff=10` table
+> above (three axes moved at once vs. the b=80 default-point
+> table; no matched b=80 row at this exact point for sem-mcts).
 
 ---
 

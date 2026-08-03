@@ -2227,7 +2227,7 @@
   feeds:
   - tbl-179d62  # L4 sem b320 model-family, lam=0.1 w_eff=100
   group: sem-mcts
-  status: running
+  status: scored
   priority: 1.5
   expected_hr: 22
   note: b=320 qwen-PRM llama-3b fp16 lam=0.1 ds_alpha=31.6 (w_eff=100, L4)
