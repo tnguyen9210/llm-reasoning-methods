@@ -1497,7 +1497,7 @@
   feeds:
   - tbl-b2d2d2  # AIME sem-mcts-v02 model family, b=320, w_eff=10
   group: sem-mcts
-  status: running
+  status: scored
   priority: 2
   expected_hr: 25
   note: sem-mcts-v02 AIME b=320 lam=0.1 w_eff=10 mml6000
@@ -1524,7 +1524,7 @@
   feeds:
   - tbl-b2d2d2  # AIME sem-mcts-v02 model family, b=320, w_eff=10
   group: sem-mcts
-  status: running
+  status: scored
   priority: 2
   expected_hr: 22
   note: sem-mcts-v02 AIME b=320 lam=0.1 w_eff=10 mml6000
@@ -2251,7 +2251,7 @@
   feeds:
   - tbl-9d68e9  # AIME model family b=320 lam=0.1 w_eff=100
   group: sem-mcts
-  status: running
+  status: scored
   priority: 2
   expected_hr: 20
   note: sem-mcts-v02 AIME b=320 lam=0.1 w_eff=100 mml6000
@@ -2276,7 +2276,7 @@
   feeds:
   - tbl-9d68e9  # AIME model family b=320 lam=0.1 w_eff=100
   group: sem-mcts
-  status: running
+  status: scored
   priority: 2
   expected_hr: 28
   note: sem-mcts-v02 AIME b=320 lam=0.1 w_eff=100 mml6000
@@ -2301,7 +2301,7 @@
   feeds:
   - tbl-9d68e9  # AIME model family b=320 lam=0.1 w_eff=100
   group: sem-mcts
-  status: running
+  status: scored
   priority: 2
   expected_hr: 25
   note: sem-mcts-v02 AIME b=320 lam=0.1 w_eff=100 mml6000
@@ -2326,7 +2326,7 @@
   feeds:
   - tbl-9d68e9  # AIME model family b=320 lam=0.1 w_eff=100
   group: sem-mcts
-  status: running
+  status: scored
   priority: 2
   expected_hr: 22
   note: sem-mcts-v02 AIME b=320 lam=0.1 w_eff=100 mml6000
@@ -2350,7 +2350,7 @@
   feeds:
   - tbl-9d68e9  # AIME model family b=320 lam=0.1 w_eff=100
   group: sem-mcts
-  status: running
+  status: scored
   priority: 2
   expected_hr: 20
   note: sem-mcts-v02 AIME b=320 lam=0.1 w_eff=100, native 4096 window (qwen-math caps at max_position_embeddings=4096; 6000 fails vLLM's context validator)
@@ -2374,7 +2374,7 @@
   feeds:
   - tbl-b3f9bb  # AIME sem-bl-v01 model family, w_eff=10
   group: sem-mcts-bl-v01
-  status: running
+  status: scored
   priority: 2
   expected_hr: 8
   note: sem-bl-v01 AIME w_eff=10 at qwen-math's native 4096 window
@@ -2401,7 +2401,7 @@
   feeds:
   - tbl-df1eeb  # AIME sem-bl-v01 model family, w_eff=100
   group: sem-mcts-bl-v01
-  status: running
+  status: scored
   priority: 2
   expected_hr: 8
   note: sem-bl-v01 AIME w_eff=100 at qwen-math's native 4096 window
@@ -2415,3 +2415,633 @@
     at: 2026-07-28 15:40
   history:
   - {at: 2026-07-28 13:20, job_id: 23428812, outcome: preempted, trials_done: 1}
+- id: sem-mcts-aime2025-covlocal-rel-llama1b-weff0p1
+  launcher: generate_mcts_sem.py
+  hash: "1f36bdc6"
+  config_root: mcts_sem_v02_prm800k
+  overrides:
+    llm: llama_1b
+    prm: qwen_prm
+    search.lam: 0.01
+    search.ds_alpha: 0.01
+    search.cov_scope: local
+    search.embeds_ref: relative
+    data: aime2025
+  trials: 4
+  feeds:
+  - tbl-2ef3dc  # AIME2025 lam/ds_alpha relative sweep, llama-1b
+  group: sem-mcts
+  status: running
+  priority: 1.5
+  expected_hr: 6
+  note: AIME covlocal-rel llama-1b w_eff=0.1
+  launch:
+    job_id: 23485244
+    node: r5u29n1
+    pid: 2647095
+    at: 2026-08-03 04:53
+- id: sem-mcts-aime2025-covlocal-rel-llama1b-weff0p3
+  launcher: generate_mcts_sem.py
+  hash: "ec52f52b"
+  config_root: mcts_sem_v02_prm800k
+  overrides:
+    llm: llama_1b
+    prm: qwen_prm
+    search.lam: 0.01
+    search.ds_alpha: 0.03
+    search.cov_scope: local
+    search.embeds_ref: relative
+    data: aime2025
+  trials: 4
+  feeds:
+  - tbl-2ef3dc  # AIME2025 lam/ds_alpha relative sweep, llama-1b
+  group: sem-mcts
+  status: running
+  priority: 1.5
+  expected_hr: 6
+  note: AIME covlocal-rel llama-1b w_eff=0.3
+  launch:
+    job_id: 23485237
+    node: r5u15n1
+    pid: 2647096
+    at: 2026-08-03 04:53
+- id: sem-mcts-aime2025-covlocal-rel-llama1b-weff1
+  launcher: generate_mcts_sem.py
+  hash: "144f0dff"
+  config_root: mcts_sem_v02_prm800k
+  overrides:
+    llm: llama_1b
+    prm: qwen_prm
+    search.lam: 0.01
+    search.ds_alpha: 0.1
+    search.cov_scope: local
+    search.embeds_ref: relative
+    data: aime2025
+  trials: 4
+  feeds:
+  - tbl-2ef3dc  # AIME2025 lam/ds_alpha relative sweep, llama-1b
+  group: sem-mcts
+  status: running
+  priority: 1.5
+  expected_hr: 6
+  note: AIME covlocal-rel llama-1b w_eff=1
+  launch:
+    job_id: 23485238
+    node: r5u25n1
+    pid: 2647097
+    at: 2026-08-03 04:53
+- id: sem-mcts-aime2025-covlocal-rel-llama1b-weff3
+  launcher: generate_mcts_sem.py
+  hash: "a53d59bd"
+  config_root: mcts_sem_v02_prm800k
+  overrides:
+    llm: llama_1b
+    prm: qwen_prm
+    search.lam: 0.01
+    search.ds_alpha: 0.3
+    search.cov_scope: local
+    search.embeds_ref: relative
+    data: aime2025
+  trials: 4
+  feeds:
+  - tbl-2ef3dc  # AIME2025 lam/ds_alpha relative sweep, llama-1b
+  group: sem-mcts
+  status: running
+  priority: 1.5
+  expected_hr: 6
+  note: AIME covlocal-rel llama-1b w_eff=3
+  launch:
+    job_id: 23460164
+    node: r5u09n1
+    pid: 2647098
+    at: 2026-08-03 04:53
+- id: sem-mcts-aime2025-covlocal-rel-llama1b-weff10
+  launcher: generate_mcts_sem.py
+  hash: "86b819d7"
+  config_root: mcts_sem_v02_prm800k
+  overrides:
+    llm: llama_1b
+    prm: qwen_prm
+    search.lam: 0.01
+    search.ds_alpha: 1.0
+    search.cov_scope: local
+    search.embeds_ref: relative
+    data: aime2025
+  trials: 4
+  feeds:
+  - tbl-2ef3dc  # AIME2025 lam/ds_alpha relative sweep, llama-1b
+  group: sem-mcts
+  status: running
+  priority: 1.5
+  expected_hr: 6
+  note: AIME covlocal-rel llama-1b w_eff=10
+  launch:
+    job_id: 23459947
+    node: r5u25n1
+    pid: 2647099
+    at: 2026-08-03 04:53
+- id: sem-mcts-aime2025-covlocal-rel-llama1b-weff100
+  launcher: generate_mcts_sem.py
+  hash: "bdf1f032"
+  config_root: mcts_sem_v02_prm800k
+  overrides:
+    llm: llama_1b
+    prm: qwen_prm
+    search.lam: 0.01
+    search.ds_alpha: 10
+    search.cov_scope: local
+    search.embeds_ref: relative
+    data: aime2025
+  trials: 4
+  feeds:
+  - tbl-2ef3dc  # AIME2025 lam/ds_alpha relative sweep, llama-1b
+  group: sem-mcts
+  status: running
+  priority: 1.5
+  expected_hr: 6
+  note: AIME covlocal-rel llama-1b w_eff=100
+  launch:
+    job_id: 23459948
+    node: r5u31n1
+    pid: 2647100
+    at: 2026-08-03 04:53
+- id: sem-mcts-aime2025-covlocal-rel-llama3b-weff0p1
+  launcher: generate_mcts_sem.py
+  hash: "d4e0f45f"
+  config_root: mcts_sem_v02_prm800k
+  overrides:
+    llm: llama_3b
+    prm: qwen_prm
+    search.lam: 0.01
+    search.ds_alpha: 0.01
+    search.cov_scope: local
+    search.embeds_ref: relative
+    data: aime2025
+  trials: 4
+  feeds:
+  - tbl-b94f3f  # AIME2025 lam/ds_alpha relative sweep, llama-3b
+  group: sem-mcts
+  status: inqueue
+  priority: 1.5
+  expected_hr: 8
+  note: AIME covlocal-rel llama-3b w_eff=0.1
+- id: sem-mcts-aime2025-covlocal-rel-llama3b-weff0p3
+  launcher: generate_mcts_sem.py
+  hash: "2dccd872"
+  config_root: mcts_sem_v02_prm800k
+  overrides:
+    llm: llama_3b
+    prm: qwen_prm
+    search.lam: 0.01
+    search.ds_alpha: 0.03
+    search.cov_scope: local
+    search.embeds_ref: relative
+    data: aime2025
+  trials: 4
+  feeds:
+  - tbl-b94f3f  # AIME2025 lam/ds_alpha relative sweep, llama-3b
+  group: sem-mcts
+  status: inqueue
+  priority: 1.5
+  expected_hr: 8
+  note: AIME covlocal-rel llama-3b w_eff=0.3
+- id: sem-mcts-aime2025-covlocal-rel-llama3b-weff1
+  launcher: generate_mcts_sem.py
+  hash: "d6134362"
+  config_root: mcts_sem_v02_prm800k
+  overrides:
+    llm: llama_3b
+    prm: qwen_prm
+    search.lam: 0.01
+    search.ds_alpha: 0.1
+    search.cov_scope: local
+    search.embeds_ref: relative
+    data: aime2025
+  trials: 4
+  feeds:
+  - tbl-b94f3f  # AIME2025 lam/ds_alpha relative sweep, llama-3b
+  group: sem-mcts
+  status: inqueue
+  priority: 1.5
+  expected_hr: 8
+  note: AIME covlocal-rel llama-3b w_eff=1
+- id: sem-mcts-aime2025-covlocal-rel-llama3b-weff3
+  launcher: generate_mcts_sem.py
+  hash: "2f426ea2"
+  config_root: mcts_sem_v02_prm800k
+  overrides:
+    llm: llama_3b
+    prm: qwen_prm
+    search.lam: 0.01
+    search.ds_alpha: 0.3
+    search.cov_scope: local
+    search.embeds_ref: relative
+    data: aime2025
+  trials: 4
+  feeds:
+  - tbl-b94f3f  # AIME2025 lam/ds_alpha relative sweep, llama-3b
+  group: sem-mcts
+  status: inqueue
+  priority: 1.5
+  expected_hr: 8
+  note: AIME covlocal-rel llama-3b w_eff=3
+- id: sem-mcts-aime2025-covlocal-rel-llama3b-weff10
+  launcher: generate_mcts_sem.py
+  hash: "a749ca4c"
+  config_root: mcts_sem_v02_prm800k
+  overrides:
+    llm: llama_3b
+    prm: qwen_prm
+    search.lam: 0.01
+    search.ds_alpha: 1.0
+    search.cov_scope: local
+    search.embeds_ref: relative
+    data: aime2025
+  trials: 4
+  feeds:
+  - tbl-b94f3f  # AIME2025 lam/ds_alpha relative sweep, llama-3b
+  group: sem-mcts
+  status: inqueue
+  priority: 1.5
+  expected_hr: 8
+  note: AIME covlocal-rel llama-3b w_eff=10
+- id: sem-mcts-aime2025-covlocal-rel-llama3b-weff100
+  launcher: generate_mcts_sem.py
+  hash: "83066656"
+  config_root: mcts_sem_v02_prm800k
+  overrides:
+    llm: llama_3b
+    prm: qwen_prm
+    search.lam: 0.01
+    search.ds_alpha: 10
+    search.cov_scope: local
+    search.embeds_ref: relative
+    data: aime2025
+  trials: 4
+  feeds:
+  - tbl-b94f3f  # AIME2025 lam/ds_alpha relative sweep, llama-3b
+  group: sem-mcts
+  status: inqueue
+  priority: 1.5
+  expected_hr: 8
+  note: AIME covlocal-rel llama-3b w_eff=100
+- id: sem-mcts-aime2025-covlocal-rel-qwen3b-weff0p1
+  launcher: generate_mcts_sem.py
+  hash: "762b7155"
+  config_root: mcts_sem_v02_prm800k
+  overrides:
+    llm: qwen_3b
+    prm: qwen_prm
+    search.lam: 0.01
+    search.ds_alpha: 0.01
+    search.cov_scope: local
+    search.embeds_ref: relative
+    data: aime2025
+  trials: 4
+  feeds:
+  - tbl-435dd3  # AIME2025 lam/ds_alpha relative sweep, qwen-3b
+  group: sem-mcts
+  status: inqueue
+  priority: 1.5
+  expected_hr: 7.5
+  note: AIME covlocal-rel qwen-3b w_eff=0.1
+- id: sem-mcts-aime2025-covlocal-rel-qwen3b-weff0p3
+  launcher: generate_mcts_sem.py
+  hash: "270ad11f"
+  config_root: mcts_sem_v02_prm800k
+  overrides:
+    llm: qwen_3b
+    prm: qwen_prm
+    search.lam: 0.01
+    search.ds_alpha: 0.03
+    search.cov_scope: local
+    search.embeds_ref: relative
+    data: aime2025
+  trials: 4
+  feeds:
+  - tbl-435dd3  # AIME2025 lam/ds_alpha relative sweep, qwen-3b
+  group: sem-mcts
+  status: inqueue
+  priority: 1.5
+  expected_hr: 7.5
+  note: AIME covlocal-rel qwen-3b w_eff=0.3
+- id: sem-mcts-aime2025-covlocal-rel-qwen3b-weff1
+  launcher: generate_mcts_sem.py
+  hash: "c2f78139"
+  config_root: mcts_sem_v02_prm800k
+  overrides:
+    llm: qwen_3b
+    prm: qwen_prm
+    search.lam: 0.01
+    search.ds_alpha: 0.1
+    search.cov_scope: local
+    search.embeds_ref: relative
+    data: aime2025
+  trials: 4
+  feeds:
+  - tbl-435dd3  # AIME2025 lam/ds_alpha relative sweep, qwen-3b
+  group: sem-mcts
+  status: inqueue
+  priority: 1.5
+  expected_hr: 7.5
+  note: AIME covlocal-rel qwen-3b w_eff=1
+- id: sem-mcts-aime2025-covlocal-rel-qwen3b-weff3
+  launcher: generate_mcts_sem.py
+  hash: "642cb44d"
+  config_root: mcts_sem_v02_prm800k
+  overrides:
+    llm: qwen_3b
+    prm: qwen_prm
+    search.lam: 0.01
+    search.ds_alpha: 0.3
+    search.cov_scope: local
+    search.embeds_ref: relative
+    data: aime2025
+  trials: 4
+  feeds:
+  - tbl-435dd3  # AIME2025 lam/ds_alpha relative sweep, qwen-3b
+  group: sem-mcts
+  status: inqueue
+  priority: 1.5
+  expected_hr: 7.5
+  note: AIME covlocal-rel qwen-3b w_eff=3
+- id: sem-mcts-aime2025-covlocal-rel-qwen3b-weff10
+  launcher: generate_mcts_sem.py
+  hash: "fc08cb02"
+  config_root: mcts_sem_v02_prm800k
+  overrides:
+    llm: qwen_3b
+    prm: qwen_prm
+    search.lam: 0.01
+    search.ds_alpha: 1.0
+    search.cov_scope: local
+    search.embeds_ref: relative
+    data: aime2025
+  trials: 4
+  feeds:
+  - tbl-435dd3  # AIME2025 lam/ds_alpha relative sweep, qwen-3b
+  group: sem-mcts
+  status: inqueue
+  priority: 1.5
+  expected_hr: 7.5
+  note: AIME covlocal-rel qwen-3b w_eff=10
+- id: sem-mcts-aime2025-covlocal-rel-qwen3b-weff100
+  launcher: generate_mcts_sem.py
+  hash: "48c043bd"
+  config_root: mcts_sem_v02_prm800k
+  overrides:
+    llm: qwen_3b
+    prm: qwen_prm
+    search.lam: 0.01
+    search.ds_alpha: 10
+    search.cov_scope: local
+    search.embeds_ref: relative
+    data: aime2025
+  trials: 4
+  feeds:
+  - tbl-435dd3  # AIME2025 lam/ds_alpha relative sweep, qwen-3b
+  group: sem-mcts
+  status: inqueue
+  priority: 1.5
+  expected_hr: 7.5
+  note: AIME covlocal-rel qwen-3b w_eff=100
+- id: sem-mcts-aime2025-covlocal-rel-qwen7bgptq-weff0p1
+  launcher: generate_mcts_sem.py
+  hash: "eb21276e"
+  config_root: mcts_sem_v02_prm800k
+  overrides:
+    llm: qwen_7b_gptq_int4
+    prm: qwen_prm
+    search.lam: 0.01
+    search.ds_alpha: 0.01
+    search.cov_scope: local
+    search.embeds_ref: relative
+    data: aime2025
+  trials: 4
+  feeds:
+  - tbl-7a3760  # AIME2025 lam/ds_alpha relative sweep, qwen-7b gptq-int4
+  group: sem-mcts
+  status: inqueue
+  priority: 1.5
+  expected_hr: 7
+  note: AIME covlocal-rel qwen-7b gptq-int4 w_eff=0.1
+- id: sem-mcts-aime2025-covlocal-rel-qwen7bgptq-weff0p3
+  launcher: generate_mcts_sem.py
+  hash: "acad86d8"
+  config_root: mcts_sem_v02_prm800k
+  overrides:
+    llm: qwen_7b_gptq_int4
+    prm: qwen_prm
+    search.lam: 0.01
+    search.ds_alpha: 0.03
+    search.cov_scope: local
+    search.embeds_ref: relative
+    data: aime2025
+  trials: 4
+  feeds:
+  - tbl-7a3760  # AIME2025 lam/ds_alpha relative sweep, qwen-7b gptq-int4
+  group: sem-mcts
+  status: inqueue
+  priority: 1.5
+  expected_hr: 7
+  note: AIME covlocal-rel qwen-7b gptq-int4 w_eff=0.3
+- id: sem-mcts-aime2025-covlocal-rel-qwen7bgptq-weff1
+  launcher: generate_mcts_sem.py
+  hash: "d467e471"
+  config_root: mcts_sem_v02_prm800k
+  overrides:
+    llm: qwen_7b_gptq_int4
+    prm: qwen_prm
+    search.lam: 0.01
+    search.ds_alpha: 0.1
+    search.cov_scope: local
+    search.embeds_ref: relative
+    data: aime2025
+  trials: 4
+  feeds:
+  - tbl-7a3760  # AIME2025 lam/ds_alpha relative sweep, qwen-7b gptq-int4
+  group: sem-mcts
+  status: inqueue
+  priority: 1.5
+  expected_hr: 7
+  note: AIME covlocal-rel qwen-7b gptq-int4 w_eff=1
+- id: sem-mcts-aime2025-covlocal-rel-qwen7bgptq-weff3
+  launcher: generate_mcts_sem.py
+  hash: "9c16fdd5"
+  config_root: mcts_sem_v02_prm800k
+  overrides:
+    llm: qwen_7b_gptq_int4
+    prm: qwen_prm
+    search.lam: 0.01
+    search.ds_alpha: 0.3
+    search.cov_scope: local
+    search.embeds_ref: relative
+    data: aime2025
+  trials: 4
+  feeds:
+  - tbl-7a3760  # AIME2025 lam/ds_alpha relative sweep, qwen-7b gptq-int4
+  group: sem-mcts
+  status: inqueue
+  priority: 1.5
+  expected_hr: 7
+  note: AIME covlocal-rel qwen-7b gptq-int4 w_eff=3
+- id: sem-mcts-aime2025-covlocal-rel-qwen7bgptq-weff10
+  launcher: generate_mcts_sem.py
+  hash: "abe44056"
+  config_root: mcts_sem_v02_prm800k
+  overrides:
+    llm: qwen_7b_gptq_int4
+    prm: qwen_prm
+    search.lam: 0.01
+    search.ds_alpha: 1.0
+    search.cov_scope: local
+    search.embeds_ref: relative
+    data: aime2025
+  trials: 4
+  feeds:
+  - tbl-7a3760  # AIME2025 lam/ds_alpha relative sweep, qwen-7b gptq-int4
+  group: sem-mcts
+  status: inqueue
+  priority: 1.5
+  expected_hr: 7
+  note: AIME covlocal-rel qwen-7b gptq-int4 w_eff=10
+- id: sem-mcts-aime2025-covlocal-rel-qwen7bgptq-weff100
+  launcher: generate_mcts_sem.py
+  hash: "25367189"
+  config_root: mcts_sem_v02_prm800k
+  overrides:
+    llm: qwen_7b_gptq_int4
+    prm: qwen_prm
+    search.lam: 0.01
+    search.ds_alpha: 10
+    search.cov_scope: local
+    search.embeds_ref: relative
+    data: aime2025
+  trials: 4
+  feeds:
+  - tbl-7a3760  # AIME2025 lam/ds_alpha relative sweep, qwen-7b gptq-int4
+  group: sem-mcts
+  status: inqueue
+  priority: 1.5
+  expected_hr: 7
+  note: AIME covlocal-rel qwen-7b gptq-int4 w_eff=100
+- id: sem-mcts-aime2025-covlocal-rel-qwenmath15b-weff0p1
+  launcher: generate_mcts_sem.py
+  hash: "ab915c9a"
+  config_root: mcts_sem_v02_prm800k
+  overrides:
+    llm: qwen_math_1_5b
+    prm: qwen_prm
+    search.lam: 0.01
+    search.ds_alpha: 0.01
+    search.cov_scope: local
+    search.embeds_ref: relative
+    data: aime2025
+  trials: 4
+  feeds:
+  - tbl-4ef506  # AIME2025 lam/ds_alpha relative sweep, qwen-math-1.5b
+  group: sem-mcts
+  status: inqueue
+  priority: 1.5
+  expected_hr: 6
+  note: AIME covlocal-rel qwen-math-1.5b w_eff=0.1
+- id: sem-mcts-aime2025-covlocal-rel-qwenmath15b-weff0p3
+  launcher: generate_mcts_sem.py
+  hash: "db55f46c"
+  config_root: mcts_sem_v02_prm800k
+  overrides:
+    llm: qwen_math_1_5b
+    prm: qwen_prm
+    search.lam: 0.01
+    search.ds_alpha: 0.03
+    search.cov_scope: local
+    search.embeds_ref: relative
+    data: aime2025
+  trials: 4
+  feeds:
+  - tbl-4ef506  # AIME2025 lam/ds_alpha relative sweep, qwen-math-1.5b
+  group: sem-mcts
+  status: inqueue
+  priority: 1.5
+  expected_hr: 6
+  note: AIME covlocal-rel qwen-math-1.5b w_eff=0.3
+- id: sem-mcts-aime2025-covlocal-rel-qwenmath15b-weff1
+  launcher: generate_mcts_sem.py
+  hash: "44397f4f"
+  config_root: mcts_sem_v02_prm800k
+  overrides:
+    llm: qwen_math_1_5b
+    prm: qwen_prm
+    search.lam: 0.01
+    search.ds_alpha: 0.1
+    search.cov_scope: local
+    search.embeds_ref: relative
+    data: aime2025
+  trials: 4
+  feeds:
+  - tbl-4ef506  # AIME2025 lam/ds_alpha relative sweep, qwen-math-1.5b
+  group: sem-mcts
+  status: inqueue
+  priority: 1.5
+  expected_hr: 6
+  note: AIME covlocal-rel qwen-math-1.5b w_eff=1
+- id: sem-mcts-aime2025-covlocal-rel-qwenmath15b-weff3
+  launcher: generate_mcts_sem.py
+  hash: "819aebc2"
+  config_root: mcts_sem_v02_prm800k
+  overrides:
+    llm: qwen_math_1_5b
+    prm: qwen_prm
+    search.lam: 0.01
+    search.ds_alpha: 0.3
+    search.cov_scope: local
+    search.embeds_ref: relative
+    data: aime2025
+  trials: 4
+  feeds:
+  - tbl-4ef506  # AIME2025 lam/ds_alpha relative sweep, qwen-math-1.5b
+  group: sem-mcts
+  status: inqueue
+  priority: 1.5
+  expected_hr: 6
+  note: AIME covlocal-rel qwen-math-1.5b w_eff=3
+- id: sem-mcts-aime2025-covlocal-rel-qwenmath15b-weff10
+  launcher: generate_mcts_sem.py
+  hash: "95395ca7"
+  config_root: mcts_sem_v02_prm800k
+  overrides:
+    llm: qwen_math_1_5b
+    prm: qwen_prm
+    search.lam: 0.01
+    search.ds_alpha: 1.0
+    search.cov_scope: local
+    search.embeds_ref: relative
+    data: aime2025
+  trials: 4
+  feeds:
+  - tbl-4ef506  # AIME2025 lam/ds_alpha relative sweep, qwen-math-1.5b
+  group: sem-mcts
+  status: inqueue
+  priority: 1.5
+  expected_hr: 6
+  note: AIME covlocal-rel qwen-math-1.5b w_eff=10
+- id: sem-mcts-aime2025-covlocal-rel-qwenmath15b-weff100
+  launcher: generate_mcts_sem.py
+  hash: "602868da"
+  config_root: mcts_sem_v02_prm800k
+  overrides:
+    llm: qwen_math_1_5b
+    prm: qwen_prm
+    search.lam: 0.01
+    search.ds_alpha: 10
+    search.cov_scope: local
+    search.embeds_ref: relative
+    data: aime2025
+  trials: 4
+  feeds:
+  - tbl-4ef506  # AIME2025 lam/ds_alpha relative sweep, qwen-math-1.5b
+  group: sem-mcts
+  status: inqueue
+  priority: 1.5
+  expected_hr: 6
+  note: AIME covlocal-rel qwen-math-1.5b w_eff=100

@@ -14,6 +14,7 @@ by gen_budget, plus a cross-algorithm best-config summary.
 
 
 
+
 <!-- toc:begin -- generated, do not hand-edit -->
 ## Contents
 
@@ -37,6 +38,12 @@ by gen_budget, plus a cross-algorithm best-config summary.
     - [agg_strategy comparison (qwen-3b, qwen-math-1.5b, lam=0.01/ds_alpha=10)](#agg_strategy-comparison-qwen-3b-qwen-math-15b-lam001ds_alpha10) · `tbl-4498f8`
     - [model family, size, quantization comparison (QwenPRM, lam=0.01/ds_alpha=1)](#model-family-size-quantization-comparison-qwenprm-lam001ds_alpha1) · `tbl-cfd7cf`
     - [model family, size, quantization comparison (QwenPRM, lam=0.01/ds_alpha=10)](#model-family-size-quantization-comparison-qwenprm-lam001ds_alpha10) · `tbl-878af9`
+  - [sem-mcts-v02 \[cov_scope=local\]](#sem-mcts-v02-cov_scopelocal)
+    - [lam / ds_alpha joint sweep (llama-1b, embeds_ref=relative)](#lam-ds_alpha-joint-sweep-llama-1b-embeds_refrelative) · `tbl-2ef3dc`
+    - [lam / ds_alpha joint sweep (llama-3b, embeds_ref=relative)](#lam-ds_alpha-joint-sweep-llama-3b-embeds_refrelative) · `tbl-b94f3f`
+    - [lam / ds_alpha joint sweep (qwen-3b, embeds_ref=relative)](#lam-ds_alpha-joint-sweep-qwen-3b-embeds_refrelative) · `tbl-435dd3`
+    - [lam / ds_alpha joint sweep (qwen-7b gptq-int4, embeds_ref=relative)](#lam-ds_alpha-joint-sweep-qwen-7b-gptq-int4-embeds_refrelative) · `tbl-7a3760`
+    - [lam / ds_alpha joint sweep (qwen-math-1.5b, embeds_ref=relative)](#lam-ds_alpha-joint-sweep-qwen-math-15b-embeds_refrelative) · `tbl-4ef506`
   - [cnt-mcts-bl-v01](#cnt-mcts-bl-v01)
     - [model family, size, quantization comparison (QwenPRM)](#model-family-size-quantization-comparison-qwenprm-1) · `tbl-c7dd39`
   - [cnt-mcts-bl-v02](#cnt-mcts-bl-v02)
@@ -71,7 +78,7 @@ by gen_budget, plus a cross-algorithm best-config summary.
     - [model family comparison (b=320, QwenPRM, lam=0.1, w_eff=10)](#model-family-comparison-b320-qwenprm-lam01-w_eff10) · `tbl-b2d2d2`
     - [model family comparison (b=320, QwenPRM, lam=0.1, w_eff=100)](#model-family-comparison-b320-qwenprm-lam01-w_eff100) · `tbl-9d68e9`
 
-*36 tables. Regenerate with `python scripts/gen_toc.py`.*
+*41 tables. Regenerate with `python scripts/gen_toc.py`.*
 <!-- toc:end -->
 
 ## Purpose
@@ -724,6 +731,286 @@ Two activities, two shapes:
 > wide; treat as directional only.
 
 
+### sem-mcts-v02 [cov_scope=local]
+
+> **Same implementation, two flags.** Everything in this section
+> runs the same `mcts_sem_v02` code, `config_root`, and launcher
+> as the section above, with `search.cov_scope=local` and
+> `search.embeds_ref=relative` overridden — cells differ from
+> their global twins only by those two overrides (and therefore
+> by `config_hash`). The full mechanism argument lives in the
+> PRM800K level-5 doc's `sem-mcts-v02 [cov_scope=local]`
+> section; the short version:
+>
+> - **Local scope re-scales `w_eff`.** Global scope folds every
+>   selection into one shared covariance, so the bonus has
+>   decayed far below its nominal weight by mid-run; local scope
+>   keeps each node's own fold count small, so the bonus stays
+>   near `w_eff` for the whole run. The grid below is therefore
+>   shifted down and denser at the low end than the global
+>   sweeps above — **do not reuse the global operating point**.
+> - **`embeds_ref=relative`** scores each child by its
+>   displacement from the parent's embedding rather than by its
+>   absolute position. On level-5 it matched or beat `absolute`
+>   at the shared points on every qwen model and crossed sign on
+>   both llama models (better at low `w_eff`, worse at high).
+>   These tables sweep the `relative` arm directly; **no
+>   `absolute` local sweeps exist for AIME2025**, so each table
+>   reads against the global tables above, not against a paired
+>   `absolute` twin.
+> - **`lam` is held at 0.01**, inheriting the level-5 finding
+>   that `lam` has no independent effect once `w_eff` is fixed.
+>   The AIME2025 global sweeps' measured rows are consistent
+>   with that within their wide error bars (largest spread:
+>   qwen-7b at `w_eff=100`, .2083–.3000 across `lam`, ~1.6 SE).
+> - **The transfer question.** Level-5 put the local+relative
+>   optimum near `w_eff ≈ 1–3` on four of five models (qwen-math
+>   is the exception, peaking at 10 among measured points) — an
+>   order of magnitude below the global optimum of 10–100.
+>   AIME2025 is much harder (pass@gb .03–.30 at b=80 against
+>   .27–.78 on level-5), so whether the optimum location
+>   transfers when the policy solves almost nothing is exactly
+>   what this section asks.
+> - **The `w_eff=0` rows are scope- and ref-independent.** With
+>   `ds_alpha=0` the bonus is multiplied by zero, so each equals
+>   the corresponding global sweep's (also unmeasured) `w_eff=0`
+>   row — three hash-distinct configs, one number. Queue at most
+>   one per model and cite it in all three places.
+>
+> Full section cost: 35 cells × 4 trials, ~230 GPU-hours. The
+> `{0.3, 1, 3}` × {qwen-3b, qwen-7b, qwen-math} subset (9 cells,
+> ~60 GPU-hours) brackets the level-5 optimum on the models with
+> headroom to show an effect.
+
+#### lam / ds_alpha joint sweep (llama-1b, embeds_ref=relative)
+<!-- table-id: tbl-2ef3dc -->
+> **Compares:** the level-5 relative sweep's grid (`tbl-ba6b11`)
+> on AIME2025. llama-1b is where `embeds_ref` first crossed sign
+> on level-5 — `relative` peaked at `w_eff` 1–3 (.3657/.3731)
+> and fell by 10 (.3134) while `absolute` kept climbing. Whether
+> any of that is visible here is doubtful: the model is at floor
+> on AIME2025 (global `lam=0.01` anchors, `tbl-b1a6d9`: .0333
+> pass@gb at `w_eff=10`, .0000 at 100), so this table is mostly
+> a floor check, and the cheapest table in the section.
+>
+> **Fixed:** method=`mcts_sem_v02`, **`cov_scope=local`**,
+> **`embeds_ref=relative`**, prm=qwen, bs-4, d-20, b=80,
+> proj=sparse512, cov_update=sm, cov_dtype=fp64, ds_beta=1.0,
+> prm_batch_size=1, llm=llama-1b, **lam=0.01**, data=aime2025,
+> **run.num_trials=4** (see the cnt-mcts tables above).
+>
+> 6 of 7 cells **queued at priority 1.5** on 2026-08-03; the
+> `w_eff=0` anchor stays `planned` (Tuan's call — no ledger
+> entry until it is wanted). Hashes:
+> `w_eff=0` `088d2e28`, `0.1` `1f36bdc6`, `0.3` `ec52f52b`,
+> `1` `144f0dff`, `3` `a53d59bd`, `10` `86b819d7`, `100`
+> `bdf1f032`. At ~1.4 hr/trial × 4 trials, ~39 GPU-hours.
+>
+> **W&B:** none yet (no AIME2025 local-scope runs).
+
+| llm | prm | lam | ds_alpha | w_eff | trials | status | pass@gb | naive@gb | wei@gb | maj@gb | hr/trial |
+|---|---|---|---|---|---|---|---|---|---|---|---|
+| llama-1b | qwen | 0.01 | 0 | 0 | — | planned | — | — | — | — | — |
+| llama-1b | qwen | 0.01 | 0.01 | 0.1 | — | running | — | — | — | — | — |
+| llama-1b | qwen | 0.01 | 0.03 | 0.3 | — | running | — | — | — | — | — |
+| llama-1b | qwen | 0.01 | 0.1 | 1 | — | running | — | — | — | — | — |
+| llama-1b | qwen | 0.01 | 0.3 | 3 | — | running | — | — | — | — | — |
+| llama-1b | qwen | 0.01 | 1.0 | 10 | — | running | — | — | — | — | — |
+| llama-1b | qwen | 0.01 | 10 | 100 | — | running | — | — | — | — | — |
+
+> **Analysis.** No AIME2025 data yet — nothing to take away.
+> **Limitations / follow-up:** with the global anchors at
+> .0000–.0333 pass@gb (0–4 of 120 graded), no `w_eff` can be
+> distinguished from any other at this n — queue this table
+> last, if at all; the qwen tables below carry the actual
+> transfer question. Feeds key: `tbl-2ef3dc`.
+
+#### lam / ds_alpha joint sweep (llama-3b, embeds_ref=relative)
+<!-- table-id: tbl-b94f3f -->
+> **Compares:** the level-5 relative sweep's grid (`tbl-cf849a`)
+> on AIME2025. Level-5 showed the llama-1b sign crossing
+> **reproduces** on llama-3b (`tbl-7ee727`) — `relative` falls
+> from .5784 at `w_eff=1` to .5485 at 10 while `absolute` rises
+> — so the crossing is a llama-family property, and llama-3b is
+> the family's only member with AIME2025 signal above floor.
+> Global anchors (`tbl-d0ed2a`, `lam=0.01`): .0417 pass@gb at
+> `w_eff=10`, .0583 at 100, .0750 at 1000 — a *late-peaking*
+> global profile, so a local+relative optimum at `w_eff ≤ 3`
+> here would be the clearest order-of-magnitude shift the
+> section can show on a llama model.
+>
+> **Fixed:** method=`mcts_sem_v02`, **`cov_scope=local`**,
+> **`embeds_ref=relative`**, prm=qwen, bs-4, d-20, b=80,
+> proj=sparse512, cov_update=sm, cov_dtype=fp64, ds_beta=1.0,
+> prm_batch_size=1, llm=llama-3b, **lam=0.01**, data=aime2025,
+> **run.num_trials=4** (see the cnt-mcts tables above).
+>
+> 6 of 7 cells **queued at priority 1.5** on 2026-08-03; the
+> `w_eff=0` anchor stays `planned` (Tuan's call — no ledger
+> entry until it is wanted). Hashes:
+> `w_eff=0` `84c25d6f`, `0.1` `d4e0f45f`, `0.3` `2dccd872`,
+> `1` `d6134362`, `3` `2f426ea2`, `10` `a749ca4c`, `100`
+> `83066656`. At ~1.9 hr/trial × 4 trials, ~53 GPU-hours — the
+> most expensive table in the section.
+>
+> **W&B:** none yet (no AIME2025 local-scope runs).
+
+| llm | prm | lam | ds_alpha | w_eff | trials | status | pass@gb | naive@gb | wei@gb | maj@gb | hr/trial |
+|---|---|---|---|---|---|---|---|---|---|---|---|
+| llama-3b | qwen | 0.01 | 0 | 0 | — | planned | — | — | — | — | — |
+| llama-3b | qwen | 0.01 | 0.01 | 0.1 | — | inqueue | — | — | — | — | — |
+| llama-3b | qwen | 0.01 | 0.03 | 0.3 | — | inqueue | — | — | — | — | — |
+| llama-3b | qwen | 0.01 | 0.1 | 1 | — | inqueue | — | — | — | — | — |
+| llama-3b | qwen | 0.01 | 0.3 | 3 | — | inqueue | — | — | — | — | — |
+| llama-3b | qwen | 0.01 | 1.0 | 10 | — | inqueue | — | — | — | — | — |
+| llama-3b | qwen | 0.01 | 10 | 100 | — | inqueue | — | — | — | — | — |
+
+> **Analysis.** No AIME2025 data yet — nothing to take away.
+> **Limitations / follow-up:** n=120 graded (30 questions × 4
+> trials) puts ~.02 SEs on pass@gb values near .05, so single
+> pairs will not separate — only a multi-cell trend is readable.
+> Queue `{0.3, 1, 3}` first if the goal is locating an optimum.
+> Feeds key: `tbl-b94f3f`.
+
+#### lam / ds_alpha joint sweep (qwen-3b, embeds_ref=relative)
+<!-- table-id: tbl-435dd3 -->
+> **Compares:** the level-5 relative sweep's grid (`tbl-b1cb82`)
+> on AIME2025. On level-5, `relative` led `absolute` at both
+> shared points (+.0112 at `w_eff=1`, +.0374 at 10) and was
+> near-flat across 1–10 (.7164 → .7090), reading as robustness
+> to over-weighted diversity rather than a higher peak. **No
+> AIME2025 global qwen-3b sweep exists** — the only global
+> anchors are the two family-table points (`tbl-cfd7cf` .1833 at
+> `w_eff=10`, `tbl-878af9` .1667 at 100), so below `w_eff=10`
+> this table is new territory for the model under either scope.
+>
+> **Fixed:** method=`mcts_sem_v02`, **`cov_scope=local`**,
+> **`embeds_ref=relative`**, prm=qwen, bs-4, d-20, b=80,
+> proj=sparse512, cov_update=sm, cov_dtype=fp64, ds_beta=1.0,
+> prm_batch_size=1, llm=qwen-3b, **lam=0.01**, data=aime2025,
+> **run.num_trials=4** (see the cnt-mcts tables above).
+>
+> 6 of 7 cells **queued at priority 1.5** on 2026-08-03; the
+> `w_eff=0` anchor stays `planned` (Tuan's call — no ledger
+> entry until it is wanted). Hashes:
+> `w_eff=0` `2ba68a6c`, `0.1` `762b7155`, `0.3` `270ad11f`,
+> `1` `c2f78139`, `3` `642cb44d`, `10` `fc08cb02`, `100`
+> `48c043bd`. At ~1.8 hr/trial × 4 trials, ~50 GPU-hours.
+>
+> **W&B:** none yet (no AIME2025 local-scope runs).
+
+| llm | prm | lam | ds_alpha | w_eff | trials | status | pass@gb | naive@gb | wei@gb | maj@gb | hr/trial |
+|---|---|---|---|---|---|---|---|---|---|---|---|
+| qwen-3b | qwen | 0.01 | 0 | 0 | — | planned | — | — | — | — | — |
+| qwen-3b | qwen | 0.01 | 0.01 | 0.1 | — | inqueue | — | — | — | — | — |
+| qwen-3b | qwen | 0.01 | 0.03 | 0.3 | — | inqueue | — | — | — | — | — |
+| qwen-3b | qwen | 0.01 | 0.1 | 1 | — | inqueue | — | — | — | — | — |
+| qwen-3b | qwen | 0.01 | 0.3 | 3 | — | inqueue | — | — | — | — | — |
+| qwen-3b | qwen | 0.01 | 1.0 | 10 | — | inqueue | — | — | — | — | — |
+| qwen-3b | qwen | 0.01 | 10 | 100 | — | inqueue | — | — | — | — | — |
+
+> **Analysis.** No AIME2025 data yet — nothing to take away.
+> **Limitations / follow-up:** the model's global AIME2025 curve
+> is sampled at only two points, so structure found here has no
+> global curve to compare against — queueing the global qwen-3b
+> `{0.1, 0.3, 1, 3}` cells is what would make it a scope effect
+> rather than a low-`w_eff` effect (same caveat as level-5's
+> qwen-3b sweep). Feeds key: `tbl-435dd3`.
+
+#### lam / ds_alpha joint sweep (qwen-7b gptq-int4, embeds_ref=relative)
+<!-- table-id: tbl-7a3760 -->
+> **Compares:** the level-5 relative sweep's grid (`tbl-5d64b1`)
+> on AIME2025, on the strongest policy in the grid. On level-5,
+> `relative` at `w_eff=1` (.7836) was this model's best number
+> under any scope, decaying monotonically to .7537 by 100. The
+> AIME2025 global anchors invert that shape (`tbl-ba8af1`,
+> `lam=0.01`): .2250 at `w_eff=10` and **.3000 at 100** — the
+> best AIME2025 pass@gb in the doc sits at a *high* `w_eff`.
+> That makes this the section's sharpest transfer test: if
+> local+relative moves the optimum an order of magnitude left
+> here too, the best cell lands near `w_eff` 1–3; if AIME2025's
+> hardness genuinely rewards heavier exploration, the peak stays
+> right and the level-5 tuning does not transfer.
+>
+> **Fixed:** method=`mcts_sem_v02`, **`cov_scope=local`**,
+> **`embeds_ref=relative`**, prm=qwen, bs-4, d-20, b=80,
+> proj=sparse512, cov_update=sm, cov_dtype=fp64, ds_beta=1.0,
+> prm_batch_size=1, llm=qwen-7b gptq-int4, **lam=0.01**,
+> data=aime2025, **run.num_trials=4** (see the cnt-mcts tables
+> above).
+>
+> 6 of 7 cells **queued at priority 1.5** on 2026-08-03; the
+> `w_eff=0` anchor stays `planned` (Tuan's call — no ledger
+> entry until it is wanted). Hashes:
+> `w_eff=0` `8831e73f`, `0.1` `eb21276e`, `0.3` `acad86d8`,
+> `1` `d467e471`, `3` `9c16fdd5`, `10` `abe44056`, `100`
+> `25367189`. At ~1.7 hr/trial × 4 trials, ~48 GPU-hours.
+>
+> **W&B:** none yet (no AIME2025 local-scope runs).
+
+| llm | prm | lam | ds_alpha | w_eff | trials | status | pass@gb | naive@gb | wei@gb | maj@gb | hr/trial |
+|---|---|---|---|---|---|---|---|---|---|---|---|
+| qwen-7b gptq-int4 | qwen | 0.01 | 0 | 0 | — | planned | — | — | — | — | — |
+| qwen-7b gptq-int4 | qwen | 0.01 | 0.01 | 0.1 | — | inqueue | — | — | — | — | — |
+| qwen-7b gptq-int4 | qwen | 0.01 | 0.03 | 0.3 | — | inqueue | — | — | — | — | — |
+| qwen-7b gptq-int4 | qwen | 0.01 | 0.1 | 1 | — | inqueue | — | — | — | — | — |
+| qwen-7b gptq-int4 | qwen | 0.01 | 0.3 | 3 | — | inqueue | — | — | — | — | — |
+| qwen-7b gptq-int4 | qwen | 0.01 | 1.0 | 10 | — | inqueue | — | — | — | — | — |
+| qwen-7b gptq-int4 | qwen | 0.01 | 10 | 100 | — | inqueue | — | — | — | — | — |
+
+> **Analysis.** No AIME2025 data yet — nothing to take away.
+> **Limitations / follow-up:** queue this table first — it
+> carries the transfer question, and the .3000 global anchor at
+> `w_eff=100` is the number any local cell has to beat before
+> the section can claim local scope helps on AIME2025. The
+> `w_eff=100` cell doubles as the direct scope comparison at the
+> global optimum. Feeds key: `tbl-7a3760`.
+
+#### lam / ds_alpha joint sweep (qwen-math-1.5b, embeds_ref=relative)
+<!-- table-id: tbl-4ef506 -->
+> **Compares:** the level-5 relative sweep's grid (`tbl-3a76ce`)
+> on AIME2025. qwen-math-1.5b is the family outlier twice over:
+> math-specialized embeddings, and the one level-5 model whose
+> measured `relative` points peak at `w_eff=10` (.7612, vs
+> .7425 at 1; its low end is still running). Global AIME2025
+> anchors (`tbl-8bf48f`, `lam=0.01`): .2583 pass@gb at
+> `w_eff=10`, .1917 at 100 — the earliest-declining global
+> curve in the family, same as on level-5. Cheapest qwen table.
+>
+> **Fixed:** method=`mcts_sem_v02`, **`cov_scope=local`**,
+> **`embeds_ref=relative`**, prm=qwen, bs-4, d-20, b=80,
+> proj=sparse512, cov_update=sm, cov_dtype=fp64, ds_beta=1.0,
+> prm_batch_size=1, llm=qwen-math-1.5b, **lam=0.01**,
+> data=aime2025, **run.num_trials=4** (see the cnt-mcts tables
+> above).
+>
+> 6 of 7 cells **queued at priority 1.5** on 2026-08-03; the
+> `w_eff=0` anchor stays `planned` (Tuan's call — no ledger
+> entry until it is wanted). Hashes:
+> `w_eff=0` `ad64a419`, `0.1` `ab915c9a`, `0.3` `db55f46c`,
+> `1` `44397f4f`, `3` `819aebc2`, `10` `95395ca7`, `100`
+> `602868da`. At ~1.45 hr/trial × 4 trials, ~41 GPU-hours.
+>
+> **W&B:** none yet (no AIME2025 local-scope runs).
+
+| llm | prm | lam | ds_alpha | w_eff | trials | status | pass@gb | naive@gb | wei@gb | maj@gb | hr/trial |
+|---|---|---|---|---|---|---|---|---|---|---|---|
+| qwen-math-1.5b | qwen | 0.01 | 0 | 0 | — | planned | — | — | — | — | — |
+| qwen-math-1.5b | qwen | 0.01 | 0.01 | 0.1 | — | inqueue | — | — | — | — | — |
+| qwen-math-1.5b | qwen | 0.01 | 0.03 | 0.3 | — | inqueue | — | — | — | — | — |
+| qwen-math-1.5b | qwen | 0.01 | 0.1 | 1 | — | inqueue | — | — | — | — | — |
+| qwen-math-1.5b | qwen | 0.01 | 0.3 | 3 | — | inqueue | — | — | — | — | — |
+| qwen-math-1.5b | qwen | 0.01 | 1.0 | 10 | — | inqueue | — | — | — | — | — |
+| qwen-math-1.5b | qwen | 0.01 | 10 | 100 | — | inqueue | — | — | — | — | — |
+
+> **Analysis.** No AIME2025 data yet — nothing to take away.
+> **Limitations / follow-up:** level-5's low-end cells for this
+> model (`tbl-3a76ce` `w_eff` 0.1/0.3/3/100) are still running;
+> if they land before these are queued, re-read the Compares —
+> a level-5 low-end peak would change which cells matter here.
+> Feeds key: `tbl-4ef506`.
+
+
 ### cnt-mcts-bl-v01
 
 #### model family, size, quantization comparison (QwenPRM)
@@ -1369,11 +1656,21 @@ Two activities, two shapes:
 | llama-3b fp16 | 4 | scored | .0500<br>±.0200 | .0167<br>±.0117 | .0000<br>±.0000 | .0000<br>±.0000 | 3.33 |
 | qwen-3b fp16 | 4 | scored | .0667<br>±.0229 | .0250<br>±.0143 | .0167<br>±.0117 | .0250<br>±.0143 | 1.76 |
 | qwen-7b gptq-int4 | 4 | scored | .1833<br>±.0355 | .1167<br>±.0294 | .0500<br>±.0200 | .0417<br>±.0183 | 1.71 |
-| qwen-math-1.5b fp16 | — | running | — | — | — | — | — |
+| qwen-math-1.5b fp16 | 4 | scored | .1750<br>±.0348 | .0833<br>±.0253 | .0750<br>±.0241 | .0583<br>±.0215 | 1.53 |
 
-> **Analysis.** No AIME2025 data yet — nothing to take away.
-> **Limitations / follow-up:** entire table planned; launch is
-> the prm800k-level5 counterpart's command with `data=aime2025`.
+> **Analysis.** Table complete (W&B me5s4zp4 for the
+> qwen-math-1.5b row). The window question this table was built
+> to answer is settled: both llama cells ran to completion at
+> 6000, so the headroom is sufficient — no overflow failures.
+> qwen-math-1.5b at its native 4096 window lands at .1750
+> pass@gb, statistically level with qwen-7b's .1833 and well
+> above the two llamas.
+> **Limitations / follow-up:** the qwen-math-1.5b row is NOT
+> window-matched (4096 vs 6000), so it is a diagnostic point,
+> not part of the like-for-like family comparison. Whether 6000
+> vs 5000 shifts pass@gb cannot be read here — the 5000 table's
+> llama cells never completed, which is precisely why this
+> table exists.
 
 #### model family comparison (QwenPRM, lam=0.01/ds_alpha=1, max_model_len=6000)
 <!-- table-id: tbl-b3f9bb -->
@@ -1418,11 +1715,24 @@ Two activities, two shapes:
 | llama-3b fp16 | 4 | scored | .0417<br>±.0183 | .0250<br>±.0143 | .0083<br>±.0083 | .0000<br>±.0000 | 2.25 |
 | qwen-3b fp16 | 4 | scored | .1250<br>±.0303 | .0917<br>±.0265 | .1000<br>±.0275 | .0833<br>±.0253 | 1.75 |
 | qwen-7b gptq-int4 | 4 | scored | .2083<br>±.0372 | .1583<br>±.0335 | .1667<br>±.0342 | .1583<br>±.0335 | 1.69 |
-| qwen-math-1.5b fp16 | — | running | — | — | — | — | — |
+| qwen-math-1.5b fp16 | 4 | scored | .2083<br>±.0372 | .1583<br>±.0335 | .1667<br>±.0342 | .1667<br>±.0342 | 1.42 |
 
-> **Analysis.** No AIME2025 data yet — nothing to take away.
-> **Limitations / follow-up:** entire table planned; launch is
-> the prm800k-level5 counterpart's command with `data=aime2025`.
+> **Analysis.** Table complete (W&B ofcu3huf for the
+> qwen-math-1.5b row). Read against the `ds_alpha=10` table
+> above, the lower diversity weight is better for the two Qwens
+> and neutral for the Llamas: qwen-3b .0667 → .1250, qwen-7b
+> .1833 → .2083, qwen-math-1.5b .1750 → .2083 pass@gb, with the
+> aggregated metrics moving in the same direction and by more
+> (qwen-math-1.5b maj@gb .0583 → .1667). qwen-math-1.5b ties
+> qwen-7b exactly on pass@gb at ~1/5 the parameters and the
+> lowest hr/trial in the table.
+> **Limitations / follow-up:** the qwen-math-1.5b row runs at a
+> 4096 window against the others' 6000, so its comparison to
+> qwen-7b conflates model and context length. The `w_eff`
+> direction here (lower is better) is the opposite of what the
+> b=320 sem-mcts-v02 tables show, where `w_eff` made no
+> difference at all — worth checking whether that is a b=80 vs
+> b=320 effect or a sem-bl vs sem-mcts one.
 
 ### sem-mcts-bl-v02
 
@@ -1534,23 +1844,29 @@ Two activities, two shapes:
 > table). **run.num_trials=4** (see the [gen_budget=80] tables
 > above).
 >
-> ⚠️ Entirely `planned` — no runs yet. Budget=320 is a 4×
-> generation-count increase over the b=80 table; no AIME2025
-> wall-clock reference point exists yet at any budget.
+> Measured 4.3–6.5 hr/trial across the five models.
 >
-> **W&B:** none yet (no AIME2025 runs).
+> **W&B:** 5zu4q5qs (qwen-3b), teeguzv7 (qwen-7b). llama-1b,
+> llama-3b and qwen-math-1.5b were scored in an earlier cycle.
 
 | llm | prm | trials | status | pass@gb | naive@gb | wei@gb | maj@gb | hr/trial |
 |---|---|---|---|---|---|---|---|---|
 | llama-1b fp16 | qwen | 4 | scored | .0417<br>±.0183 | .0083<br>±.0083 | .0000<br>±.0000 | .0000<br>±.0000 | 5.24 |
 | llama-3b fp16 | qwen | 4 | scored | .1250<br>±.0303 | .0333<br>±.0165 | .0500<br>±.0200 | .0333<br>±.0165 | 6.50 |
-| qwen-3b fp16 | qwen | — | running | — | — | — | — | — |
-| qwen-7b gptq-int4 | qwen | — | running | — | — | — | — | — |
+| qwen-3b fp16 | qwen | 4 | scored | .3167<br>±.0426 | .1333<br>±.0312 | .1667<br>±.0342 | .1583<br>±.0335 | 6.32 |
+| qwen-7b gptq-int4 | qwen | 4 | scored | .3083<br>±.0423 | .1833<br>±.0355 | .1667<br>±.0342 | .1750<br>±.0348 | 4.28 |
 | qwen-math-1.5b fp16 | qwen | 4 | scored | .3667<br>±.0442 | .1667<br>±.0342 | .1917<br>±.0361 | .1917<br>±.0361 | 4.93 |
 
-> **Analysis.** No AIME2025 data yet — nothing to take away.
-> **Limitations / follow-up:** entire table planned; launch is
-> the GSM8K counterpart's command with `data=aime2025`.
+> **Analysis.** Table complete. AIME2025 splits the models into
+> two tiers with nothing in between: the two Llamas reach
+> .0417/.1250 pass@gb while the three Qwens cluster at
+> .3083–.3667. qwen-math-1.5b leads on pass@gb despite being the
+> smallest Qwen, and llama-1b's wei/maj are exactly .0000 — it
+> never once agreed with itself on a correct answer.
+> **Limitations / follow-up:** pass@gb is 2–3× the aggregated
+> metrics on every Qwen row, so the search finds correct
+> solutions that none of the three aggregators can select. That
+> gap, not the model ranking, is the actionable finding here.
 
 #### model family comparison (b=320, QwenPRM, lam=0.1, w_eff=100)
 <!-- table-id: tbl-9d68e9 -->
@@ -1567,20 +1883,31 @@ Two activities, two shapes:
 > default, **run.num_trials=4**) except the diversity weight.
 > **lam=0.1, ds_alpha=31.6** (`w_eff=100`).
 >
-> ⚠️ Entirely `planned` — no runs yet.
+> Measured 5.4–7.7 hr/trial across the five models.
 >
-> **W&B:** none yet (no AIME2025 runs).
+> **W&B:** ua58yrf0 (llama-1b), 3tabmsr6 (llama-3b), tq780e5r
+> (qwen-3b), 1whjad9v (qwen-7b), yzl0mbhl (qwen-math-1.5b).
 
 | llm | prm | trials | status | pass@gb | naive@gb | wei@gb | maj@gb | hr/trial |
 |---|---|---|---|---|---|---|---|---|
-| llama-1b fp16 | qwen | — | running | — | — | — | — | — |
-| llama-3b fp16 | qwen | — | running | — | — | — | — | — |
-| qwen-3b fp16 | qwen | — | running | — | — | — | — | — |
-| qwen-7b gptq-int4 | qwen | — | running | — | — | — | — | — |
-| qwen-math-1.5b fp16 | qwen | — | running | — | — | — | — | — |
+| llama-1b fp16 | qwen | 4 | scored | .0333<br>±.0165 | .0083<br>±.0083 | .0167<br>±.0117 | .0083<br>±.0083 | 5.64 |
+| llama-3b fp16 | qwen | 4 | scored | .1500<br>±.0327 | .0583<br>±.0215 | .0500<br>±.0200 | .0333<br>±.0165 | 7.69 |
+| qwen-3b fp16 | qwen | 4 | scored | .3250<br>±.0429 | .1167<br>±.0294 | .0917<br>±.0265 | .0917<br>±.0265 | 6.81 |
+| qwen-7b gptq-int4 | qwen | 4 | scored | .3083<br>±.0423 | .1500<br>±.0327 | .1500<br>±.0327 | .1500<br>±.0327 | 6.04 |
+| qwen-math-1.5b fp16 | qwen | 4 | scored | .3667<br>±.0442 | .1333<br>±.0312 | .1500<br>±.0327 | .1583<br>±.0335 | 5.40 |
 
-> **Analysis.** No AIME2025 data yet — nothing to take away.
-> **Limitations / follow-up:** entire table planned; launch is
-> the GSM8K counterpart's command with `data=aime2025`.
+> **Analysis.** Table complete, and paired with the `w_eff=10`
+> table above this isolates `w_eff` at b=320. pass@gb is
+> essentially unchanged by the 10× diversity weight — the
+> largest move on any model is .0167 (llama-1b .0417 → .0333,
+> qwen-3b .3167 → .3250), all well inside one standard error.
+> The aggregated metrics drift down slightly more (qwen-3b
+> wei@gb .1667 → .0917, maj@gb .1583 → .0917), but at ±.03 those
+> are also not separable.
+> **Limitations / follow-up:** with 4 trials on 30 questions,
+> ±.03–.04 is the resolution floor here, and the whole `w_eff`
+> effect lives below it. Deciding this axis on AIME2025 would
+> need either many more trials or a metric with less variance;
+> the level-5 sweeps are the better place to tune it.
 
 ---
