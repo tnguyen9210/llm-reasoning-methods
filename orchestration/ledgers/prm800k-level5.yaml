@@ -4718,7 +4718,7 @@
   feeds:
   - tbl-560ce2  # sem b=320 QwenPRM lam=0.01 w_eff=100 center=local
   group: sem-mcts
-  status: running
+  status: scored
   priority: 2
   expected_hr: 59
   launch:
@@ -4748,7 +4748,7 @@
   feeds:
   - tbl-560ce2  # sem b=320 QwenPRM lam=0.01 w_eff=100 center=local
   group: sem-mcts
-  status: running
+  status: scored
   priority: 2
   expected_hr: 48
   launch:
@@ -6204,7 +6204,7 @@
   feeds:
   - tbl-cf849a  # L5 lam/ds_alpha relative sweep, llama-3b
   group: sem-mcts
-  status: running
+  status: scored
   priority: 2
   expected_hr: 15
   note: b=80 sem qwen-PRM llama-3b cov_scope=local embeds_ref=relative, lam=0.01 ds_alpha=0.03 (w_eff=0.3). Fills the llama-3b relative sweep.
@@ -6230,7 +6230,7 @@
   feeds:
   - tbl-cf849a  # L5 lam/ds_alpha relative sweep, llama-3b
   group: sem-mcts
-  status: running
+  status: scored
   priority: 2
   expected_hr: 15
   note: b=80 sem qwen-PRM llama-3b cov_scope=local embeds_ref=relative, lam=0.01 ds_alpha=0.3 (w_eff=3). Fills the llama-3b relative sweep.
@@ -6256,7 +6256,7 @@
   feeds:
   - tbl-cf849a  # L5 lam/ds_alpha relative sweep, llama-3b
   group: sem-mcts
-  status: running
+  status: scored
   priority: 2
   expected_hr: 15
   note: b=80 sem qwen-PRM llama-3b cov_scope=local embeds_ref=relative, lam=0.01 ds_alpha=10 (w_eff=100). Fills the llama-3b relative sweep.
@@ -6308,7 +6308,7 @@
   feeds:
   - tbl-3a76ce  # L5 lam/ds_alpha relative sweep, qwen-math-1.5b
   group: sem-mcts
-  status: running
+  status: scored
   priority: 2
   expected_hr: 11
   note: b=80 sem qwen-PRM qwen-math-1.5b cov_scope=local embeds_ref=relative, lam=0.01 ds_alpha=0.01 (w_eff=0.1). Fills the qwen-math-1.5b relative sweep.
@@ -6334,7 +6334,7 @@
   feeds:
   - tbl-3a76ce  # L5 lam/ds_alpha relative sweep, qwen-math-1.5b
   group: sem-mcts
-  status: running
+  status: scored
   priority: 2
   expected_hr: 11
   note: b=80 sem qwen-PRM qwen-math-1.5b cov_scope=local embeds_ref=relative, lam=0.01 ds_alpha=0.03 (w_eff=0.3). Fills the qwen-math-1.5b relative sweep.
@@ -6360,7 +6360,7 @@
   feeds:
   - tbl-3a76ce  # L5 lam/ds_alpha relative sweep, qwen-math-1.5b
   group: sem-mcts
-  status: running
+  status: scored
   priority: 2
   expected_hr: 11
   note: b=80 sem qwen-PRM qwen-math-1.5b cov_scope=local embeds_ref=relative, lam=0.01 ds_alpha=0.3 (w_eff=3). Fills the qwen-math-1.5b relative sweep.
@@ -6386,7 +6386,7 @@
   feeds:
   - tbl-3a76ce  # L5 lam/ds_alpha relative sweep, qwen-math-1.5b
   group: sem-mcts
-  status: running
+  status: scored
   priority: 2
   expected_hr: 11
   note: b=80 sem qwen-PRM qwen-math-1.5b cov_scope=local embeds_ref=relative, lam=0.01 ds_alpha=10 (w_eff=100). Fills the qwen-math-1.5b relative sweep.

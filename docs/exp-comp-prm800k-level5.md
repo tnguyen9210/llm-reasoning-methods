@@ -1194,38 +1194,46 @@ Two activities, two shapes:
 > GPU-hours for all five, ~60 without the anchor.
 >
 > **W&B:** 78xtrykd (`w_eff=1`), 89h5elal (`w_eff=10`),
-> 67f2dbqa (`w_eff=0`), vhs7vds0 (`w_eff=0.1`).
+> 67f2dbqa (`w_eff=0`), vhs7vds0 (`w_eff=0.1`),
+> vdavflbd (`w_eff=0.3`), hu3gedj8 (`w_eff=3`),
+> 3glufzax (`w_eff=100`).
 
 | llm | prm | lam | ds_alpha | w_eff | trials | status | pass@gb | naive@gb | wei@gb | maj@gb | hr/trial |
 |---|---|---|---|---|---|---|---|---|---|---|---|
 | llama-3b | qwen | 0.01 | 0 | 0 | 2 | scored | .4440<br>±.0304 | .3881<br>±.0298 | .3731<br>±.0296 | .3134<br>±.0284 | 5.02 |
 | llama-3b | qwen | 0.01 | 0.01 | 0.1 | 2 | scored | .5224<br>±.0306 | .4030<br>±.0300 | .3918<br>±.0299 | .3731<br>±.0296 | 6.46 |
-| llama-3b | qwen | 0.01 | 0.03 | 0.3 | — | running | — | — | — | — | — |
+| llama-3b | qwen | 0.01 | 0.03 | 0.3 | 2 | scored | .5709<br>±.0303 | .4627<br>±.0305 | .4254<br>±.0303 | .4067<br>±.0301 | 6.74 |
 | llama-3b | qwen | 0.01 | 0.1 | 1 | 2 | scored | .5784<br>±.0302 | .4216<br>±.0302 | .4067<br>±.0301 | .3731<br>±.0296 | 6.74 |
-| llama-3b | qwen | 0.01 | 0.3 | 3 | — | running | — | — | — | — | — |
+| llama-3b | qwen | 0.01 | 0.3 | 3 | 2 | scored | .5821<br>±.0302 | .4291<br>±.0303 | .3918<br>±.0299 | .3731<br>±.0296 | 6.85 |
 | llama-3b | qwen | 0.01 | 1.0 | 10 | 2 | scored | .5485<br>±.0305 | .3993<br>±.0300 | .3619<br>±.0294 | .3470<br>±.0291 | 7.08 |
-| llama-3b | qwen | 0.01 | 10 | 100 | — | running | — | — | — | — | — |
+| llama-3b | qwen | 0.01 | 10 | 100 | 2 | scored | .5522<br>±.0304 | .4254<br>±.0303 | .3993<br>±.0300 | .3694<br>±.0295 | 7.05 |
 
-> **Analysis.** Two of seven cells measured (2026-08-02), both
-> inherited from the `embeds_ref` comparison: .5784 at
-> `w_eff=1`, .5485 at `w_eff=10`. Declining across that span,
-> like every other `relative` arm in the section.
-> **The case for finishing this table got stronger.**
-> `tbl-7ee727` closed while these landed and showed that the
-> llama-1b sign crossing **reproduces** on llama-3b — so the
-> crossing is a llama-family property, not a weak-model
-> artifact. That makes locating it on a second model worth more
-> than it was when this table was authored, not less: the five
-> remaining cells turn "both llama models flip somewhere
-> between `w_eff` 1 and 10" into an actual position.
-> **Limitations / follow-up:** the `absolute` twin sweep still
-> does not exist for this model, so the paired comparison
-> remains one-armed except at `w_eff` 1 and 10 where
-> `tbl-7ee727` supplies the twins. `w_eff` ∈ {0.1, 0.3} are the
-> cells that bracket a low-side optimum and are worth more than
-> `w_eff=100`, which on qwen-7b and qwen-3b only confirmed
-> monotone decay. All five are queued at priority 2 (~75
-> GPU-hours). Feeds key: `tbl-cf849a`.
+> **Analysis.** Complete (7/7, closed 2026-08-03). The curve
+> rises steadily off the no-diversity baseline and then turns
+> over: .4440 (`w_eff=0`), .5224 (`0.1`), .5709 (`0.3`), .5784
+> (`1`), **.5821 (`3`, the maximum)**, .5485 (`10`), .5522
+> (`100`). That is a +.138 span from 0 to the peak — the
+> clearest interior optimum in the section, and ~4.5 SE, well
+> clear of the noise the other tables sit inside.
+> **The crossing is located.** `tbl-7ee727` had shown only that
+> `relative` beats `absolute` at `w_eff=1` and loses by 10; the
+> peak at 3 with a .034 drop by 10 says the turnover happens
+> **between `w_eff` 3 and 10**, not below 1. So the earlier
+> reading — "parent-relative helps at low `w_eff` and hurts at
+> high" — survives, but the boundary is an order of magnitude
+> higher than the two-point view implied, and the whole
+> `w_eff` ∈ [0.3, 3] plateau (.5709–.5821, all within 0.4 SE of
+> each other) is usable operating range rather than a single
+> point.
+> **Limitations / follow-up:** the top four cells are separated
+> by ≤.011 — the peak's *location* inside [0.3, 3] is not
+> resolved at n≈267 pooled over 2 trials, only its existence and
+> the fall past 10. The `absolute` twin sweep still does not
+> exist for this model, so the paired scope comparison remains
+> one-armed except at `w_eff` 1 and 10. The tail is also flat,
+> not monotone (.5485 then .5522), which is consistent with
+> both settling onto the same over-diversified plateau. Feeds
+> key: `tbl-cf849a`.
 
 #### lam / ds_alpha joint sweep (qwen-3b, embeds_ref=relative)
 <!-- table-id: tbl-b1cb82 -->
@@ -1449,27 +1457,43 @@ Two activities, two shapes:
 > GPU-hours — the **cheapest** of the three new tables.
 >
 > **W&B:** 6cf71i7r (`w_eff=1`), 9m9rooh6 (`w_eff=10`),
-> 23wzlc65 (`w_eff=0`).
+> 23wzlc65 (`w_eff=0`), tkdotrkv (`w_eff=0.1`),
+> jlkqzn16 (`w_eff=0.3`), u2z0lokg (`w_eff=3`),
+> hv0bwrkw (`w_eff=100`).
 
 | llm | prm | lam | ds_alpha | w_eff | trials | status | pass@gb | naive@gb | wei@gb | maj@gb | hr/trial |
 |---|---|---|---|---|---|---|---|---|---|---|---|
 | qwen-math-1.5b | qwen | 0.01 | 0 | 0 | 2 | scored | .6791<br>±.0286 | .6082<br>±.0299 | .5970<br>±.0300 | .5634<br>±.0304 | 3.70 |
-| qwen-math-1.5b | qwen | 0.01 | 0.01 | 0.1 | — | running | — | — | — | — | — |
-| qwen-math-1.5b | qwen | 0.01 | 0.03 | 0.3 | — | running | — | — | — | — | — |
+| qwen-math-1.5b | qwen | 0.01 | 0.01 | 0.1 | 2 | scored | .7090<br>±.0278 | .6231<br>±.0297 | .6269<br>±.0296 | .5933<br>±.0301 | 4.75 |
+| qwen-math-1.5b | qwen | 0.01 | 0.03 | 0.3 | 2 | scored | .7537<br>±.0264 | .6269<br>±.0296 | .6343<br>±.0295 | .6045<br>±.0299 | 4.84 |
 | qwen-math-1.5b | qwen | 0.01 | 0.1 | 1 | 2 | scored | .7425<br>±.0268 | .6343<br>±.0295 | .6343<br>±.0295 | .6157<br>±.0298 | 4.84 |
-| qwen-math-1.5b | qwen | 0.01 | 0.3 | 3 | — | running | — | — | — | — | — |
+| qwen-math-1.5b | qwen | 0.01 | 0.3 | 3 | 2 | scored | .7239<br>±.0274 | .6082<br>±.0299 | .5933<br>±.0301 | .5970<br>±.0300 | 4.93 |
 | qwen-math-1.5b | qwen | 0.01 | 1.0 | 10 | 2 | scored | .7612<br>±.0261 | .6269<br>±.0296 | .6194<br>±.0297 | .5821<br>±.0302 | 4.82 |
-| qwen-math-1.5b | qwen | 0.01 | 10 | 100 | — | running | — | — | — | — | — |
+| qwen-math-1.5b | qwen | 0.01 | 10 | 100 | 2 | scored | .7425<br>±.0268 | .6306<br>±.0295 | .6007<br>±.0300 | .5784<br>±.0302 | 4.95 |
 
-> **Analysis.** No data yet — both running cells are the shared
-> `embeds_ref` pair.
-> **Limitations / follow-up:** best value-per-hour of the three
-> new tables, and the one that most cleanly tests whether the
-> llama-1b crossing is about model *family* rather than model
-> *size* (llama-3b tests size; this tests family and training
-> mix). Queue `w_eff` ∈ {0.1, 0.3} here alongside the llama-1b
-> pair — four cells, ~83 GPU-hours total, and between them they
-> cover both alternative explanations for the crossing.
+> **Analysis.** Complete (7/7, closed 2026-08-03): .6791
+> (`w_eff=0`), .7090 (`0.1`), .7537 (`0.3`), .7425 (`1`), .7239
+> (`3`), **.7612 (`10`, the maximum)**, .7425 (`100`). Only one
+> comparison here is real: **turning diversity on is worth
+> +.05–.08** (`w_eff=0` sits 1.5–2 SE below every other cell).
+> Above that, the six non-zero cells span .7090–.7612 with SEs
+> of ~.027 — a range of ~1 SE end to end, and the ordering is
+> non-monotone (a dip at 3 between two higher neighbours). Read
+> it as **flat from 0.3 up**, not as a peak at 10.
+> **This model does not reproduce the llama pattern**, which is
+> what the table was built to test: no interior optimum, no
+> turnover by `w_eff=100`, where llama-3b (`tbl-cf849a`) peaks
+> at 3 and drops .034 by 10. Whatever drives the llama crossing
+> — family, tokenizer, or the geometry of a general-text
+> embedding space — qwen-math's math-pretrained hidden states
+> do not have it, so the crossing is not a universal property of
+> parent-relative displacement.
+> **Limitations / follow-up:** "flat" is a statement about n≈267
+> pooled over 2 trials; a 4-trial rerun of `{0.3, 3, 10}` would
+> settle whether the dip at 3 is noise (most likely) or a real
+> notch. The `absolute` local sweep for this model still does
+> not exist, so `w_eff=0` is the only scope-independent anchor
+> and the `relative`-vs-`absolute` question remains open here.
 > Feeds key: `tbl-3a76ce`.
 
 #### embeds_ref comparison (llama-1b, cov_scope=local)
@@ -3308,10 +3332,11 @@ Two activities, two shapes:
 > (`cfg-9748b857`), so the pair is 4096↔4096 while the other
 > four are 6000↔6000.
 >
-> ⚠️ All five cells are `planned` — authored 2026-07-28, **not
-> queued**, no ledger entries. Resolved config hashes: llama-1b
-> `d14628de`, llama-3b `9d60bc89`, qwen-3b `965e3b55`, qwen-7b
-> gptq-int4 `038366a7`, qwen-math-1.5b (mml4096) `7e4e73e8`.
+> Authored 2026-07-28 with all five cells `planned`; four are
+> now `scored` and llama-3b is still running (2026-08-03).
+> Resolved config hashes: llama-1b `d14628de`, llama-3b
+> `9d60bc89`, qwen-3b `965e3b55`, qwen-7b gptq-int4 `038366a7`,
+> qwen-math-1.5b (mml4096) `7e4e73e8`.
 >
 > ⚠️ **Cost:** ~19–29 hr/trial × 2 trials × 5 cells ≈ 200–290
 > GPU-hours, on top of `tbl-6a015e`'s comparable bill. The two
@@ -3326,35 +3351,43 @@ Two activities, two shapes:
 > `ds_alpha=10` centering result is a weaker prior than the
 > `ds_alpha=1` one.
 >
-> **W&B:** `6bf6dagw` (llama-1b), `qpcd4vnh` (qwen-7b
-> gptq-int4), `tttarieg` (qwen-math-1.5b, mml4096).
+> **W&B:** `6bf6dagw` (llama-1b), `ovav837s` (llama-3b),
+> `g8gac5e5` (qwen-3b), `qpcd4vnh` (qwen-7b gptq-int4),
+> `tttarieg` (qwen-math-1.5b, mml4096).
 
 | llm | prm | center | trials | status | pass@gb | naive@gb | wei@gb | maj@gb | hr/trial |
 |---|---|---|---|---|---|---|---|---|---|
 | llama-1b fp16 | qwen | local | 2 | scored | .5037<br>±.0306 | .2985<br>±.0280 | .2575<br>±.0268 | .2090<br>±.0249 | 19.66 |
-| llama-3b fp16 | qwen | local | — | running | — | — | — | — | — |
-| qwen-3b fp16 | qwen | local | — | running | — | — | — | — | — |
+| llama-3b fp16 | qwen | local | 2 | scored | .7201<br>±.0275 | .4590<br>±.0305 | .3955<br>±.0299 | .3545<br>±.0293 | 27.67 |
+| qwen-3b fp16 | qwen | local | 2 | scored | .8134<br>±.0238 | .6082<br>±.0299 | .5634<br>±.0304 | .5336<br>±.0305 | 25.07 |
 | qwen-7b gptq-int4 | qwen | local | 2 | scored | .8694<br>±.0206 | .6119<br>±.0298 | .5672<br>±.0303 | .5522<br>±.0304 | 19.00 |
 | qwen-math-1.5b fp16 | qwen | local | 2 | scored | .8321<br>±.0229 | .6381<br>±.0294 | .6343<br>±.0295 | .6082<br>±.0299 | 19.46 |
 
-> **Analysis.** No data yet. Read each row against its
-> `tbl-01c466` twin: llama-1b .5373, llama-3b .7164, qwen-3b
-> .8396, qwen-7b gptq-int4 .8582 pass@gb are the uncentered
-> b=320 baselines at w_eff=100 (4/5 scored there, only qwen-math
-> outstanding) — so this table is better-anchored than
-> `tbl-6a015e`, whose llama-3b and qwen-math twins are still
-> running.
-> **Limitations / follow-up:** the b=80 evidence for centering at
-> `ds_alpha=10` (`tbl-2e75f2`) is the weaker of the two b=80
-> tables — three unverified `none` baselines, and of the two
-> clean pairs both trended higher under `local` (llama-3b
-> .5485→.5896, qwen-3b .6642→.6903) but within ~1 SEM. If only
-> one of the two b=320 centering tables gets run, **this is the
-> better one to run**: its uncentered baselines are 4/5 scored
-> rather than 3/5, and the b=80 hint of a `local` gain, weak as
-> it is, points this way rather than at `ds_alpha=1`. Same
-> subset logic as `tbl-6a015e` — qwen-3b and llama-3b are the
-> two cells whose b=80 pairs were clean, so they are the
-> cheapest test of whether the hint survives 4× budget.
+> **Analysis.** Complete (5/5, closed 2026-08-03). Read against
+> the uncentered `tbl-01c466` twins at the same `w_eff=100`:
+> llama-1b .5037 vs .5373, llama-3b .7201 vs .7164, qwen-3b
+> .8134 vs .8396, qwen-7b gptq-int4 .8694 vs .8582. **Centering
+> does not help at b=320.** Three of four measured pairs move
+> against `local` (−.034, −.026, and llama-1b's −.034) and the
+> one gain is +.011 on qwen-7b — every gap is inside ~1.2 SE, so
+> the honest read is *no effect*, with the point estimates
+> leaning slightly negative.
+> **That kills the b=80 hint.** `tbl-2e75f2`'s two clean pairs
+> both trended *up* under `local` (llama-3b .5485→.5896, qwen-3b
+> .6642→.6903); at 4× the budget the same two models go the
+> other way (llama-3b +.004, qwen-3b −.026). A hint that
+> reverses sign when the budget grows is noise, not a
+> budget-dependent effect. Model ranking is unchanged from every
+> other b=320 table: qwen-7b > qwen-math > qwen-3b > llama-3b >
+> llama-1b on pass@gb.
+> **Limitations / follow-up:** n≈267 pooled over 2 trials, and
+> the `tbl-01c466` qwen-math twin is still unscored, so one of
+> the five pairs cannot be formed. The pass@gb-vs-maj@gb split
+> is worth noting independently of centering — llama-3b reaches
+> .7201 pass but only .3545 maj, the widest gap in the table,
+> which says the b=320 budget is finding correct branches this
+> model's aggregation cannot pick out. Nothing further is needed
+> for the centering question: at two budgets and five models it
+> has not produced an effect worth chasing.
 
 ---

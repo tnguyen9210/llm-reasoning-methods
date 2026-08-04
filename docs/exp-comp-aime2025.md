@@ -806,24 +806,44 @@ Two activities, two shapes:
 > `1` `144f0dff`, `3` `a53d59bd`, `10` `86b819d7`, `100`
 > `bdf1f032`. At ~1.4 hr/trial × 4 trials, ~39 GPU-hours.
 >
-> **W&B:** none yet (no AIME2025 local-scope runs).
+> **W&B:** brw3pht0 (`w_eff=0.1`), x0g4ifht (`w_eff=0.3`),
+> 15bl4u7o (`w_eff=1`), nciclzqg (`w_eff=3`),
+> im2kla67 (`w_eff=10`), dlj079h6 (`w_eff=100`).
 
 | llm | prm | lam | ds_alpha | w_eff | trials | status | pass@gb | naive@gb | wei@gb | maj@gb | hr/trial |
 |---|---|---|---|---|---|---|---|---|---|---|---|
 | llama-1b | qwen | 0.01 | 0 | 0 | — | planned | — | — | — | — | — |
-| llama-1b | qwen | 0.01 | 0.01 | 0.1 | — | running | — | — | — | — | — |
-| llama-1b | qwen | 0.01 | 0.03 | 0.3 | — | running | — | — | — | — | — |
-| llama-1b | qwen | 0.01 | 0.1 | 1 | — | running | — | — | — | — | — |
-| llama-1b | qwen | 0.01 | 0.3 | 3 | — | running | — | — | — | — | — |
-| llama-1b | qwen | 0.01 | 1.0 | 10 | — | running | — | — | — | — | — |
-| llama-1b | qwen | 0.01 | 10 | 100 | — | running | — | — | — | — | — |
+| llama-1b | qwen | 0.01 | 0.01 | 0.1 | 4 | scored | .0083<br>±.0083 | .0083<br>±.0083 | .0083<br>±.0083 | .0000<br>±.0000 | 1.31 |
+| llama-1b | qwen | 0.01 | 0.03 | 0.3 | 4 | scored | .0250<br>±.0143 | .0167<br>±.0117 | .0167<br>±.0117 | .0000<br>±.0000 | 1.27 |
+| llama-1b | qwen | 0.01 | 0.1 | 1 | 4 | scored | .0083<br>±.0083 | .0083<br>±.0083 | .0000<br>±.0000 | .0000<br>±.0000 | 1.29 |
+| llama-1b | qwen | 0.01 | 0.3 | 3 | 4 | scored | .0083<br>±.0083 | .0083<br>±.0083 | .0083<br>±.0083 | .0083<br>±.0083 | 1.34 |
+| llama-1b | qwen | 0.01 | 1.0 | 10 | 4 | scored | .0083<br>±.0083 | .0000<br>±.0000 | .0000<br>±.0000 | .0000<br>±.0000 | 1.30 |
+| llama-1b | qwen | 0.01 | 10 | 100 | 4 | scored | .0250<br>±.0143 | .0000<br>±.0000 | .0000<br>±.0000 | .0083<br>±.0083 | 1.31 |
 
-> **Analysis.** No AIME2025 data yet — nothing to take away.
-> **Limitations / follow-up:** with the global anchors at
-> .0000–.0333 pass@gb (0–4 of 120 graded), no `w_eff` can be
-> distinguished from any other at this n — queue this table
-> last, if at all; the qwen tables below carry the actual
-> transfer question. Feeds key: `tbl-2ef3dc`.
+> **Analysis.** Complete (6/7, closed 2026-08-03; only the
+> `w_eff=0` anchor is unqueued). **The model is at the floor and
+> the sweep is uninformative, exactly as predicted when this
+> table was authored.** pass@gb reads .0083, .0250, .0083,
+> .0083, .0083, .0250 across `w_eff` 0.1 → 100 — that is 1 or 3
+> solved out of 120 graded, and every cell is within 1 SE of
+> every other. maj@gb is .0000 in four of six cells. No `w_eff`
+> can be ranked against any other here, and nothing about the
+> level-5 llama-3b optimum at `w_eff=3` can be confirmed or
+> refuted on this model.
+> **What it does establish** is a negative control: local scope
+> plus parent-relative embeddings does **not** rescue a weak
+> policy on hard problems. The level-5 llama-1b relative sweep
+> spans .2948–.3731 across the same grid; on AIME2025 the same
+> configuration collapses to ~.01. Search geometry cannot
+> substitute for a policy that almost never produces a correct
+> chain — the diversity bonus only reallocates a budget among
+> branches, and here no branch is right.
+> **Limitations / follow-up:** at 1–3 solved of 120 the
+> per-cell SE (~.008–.014) is larger than any plausible effect,
+> so **do not read the two .0250 cells as a signal** — they are
+> 3/120 against 1/120. The qwen tables below carry the actual
+> transfer question; this one is now closed and needs no further
+> compute. Feeds key: `tbl-2ef3dc`.
 
 #### lam / ds_alpha joint sweep (llama-3b, embeds_ref=relative)
 <!-- table-id: tbl-b94f3f -->
@@ -853,24 +873,44 @@ Two activities, two shapes:
 > `83066656`. At ~1.9 hr/trial × 4 trials, ~53 GPU-hours — the
 > most expensive table in the section.
 >
-> **W&B:** none yet (no AIME2025 local-scope runs).
+> **W&B:** 2dlqe5yz (`w_eff=0.1`), 3epxxoh9 (`0.3`),
+> kwziq7zb (`1`), m3q0x26b (`3`), mxcfrmy6 (`10`),
+> lf5mom0m (`100`).
 
 | llm | prm | lam | ds_alpha | w_eff | trials | status | pass@gb | naive@gb | wei@gb | maj@gb | hr/trial |
 |---|---|---|---|---|---|---|---|---|---|---|---|
 | llama-3b | qwen | 0.01 | 0 | 0 | — | planned | — | — | — | — | — |
-| llama-3b | qwen | 0.01 | 0.01 | 0.1 | — | inqueue | — | — | — | — | — |
-| llama-3b | qwen | 0.01 | 0.03 | 0.3 | — | inqueue | — | — | — | — | — |
-| llama-3b | qwen | 0.01 | 0.1 | 1 | — | inqueue | — | — | — | — | — |
-| llama-3b | qwen | 0.01 | 0.3 | 3 | — | inqueue | — | — | — | — | — |
-| llama-3b | qwen | 0.01 | 1.0 | 10 | — | inqueue | — | — | — | — | — |
-| llama-3b | qwen | 0.01 | 10 | 100 | — | inqueue | — | — | — | — | — |
+| llama-3b | qwen | 0.01 | 0.01 | 0.1 | 4 | scored | .0667<br>±.0229 | .0250<br>±.0143 | .0250<br>±.0143 | .0083<br>±.0083 | 1.70 |
+| llama-3b | qwen | 0.01 | 0.03 | 0.3 | 4 | scored | .0583<br>±.0215 | .0500<br>±.0200 | .0417<br>±.0183 | .0333<br>±.0165 | 1.69 |
+| llama-3b | qwen | 0.01 | 0.1 | 1 | 4 | scored | .0667<br>±.0229 | .0333<br>±.0165 | .0250<br>±.0143 | .0167<br>±.0117 | 1.73 |
+| llama-3b | qwen | 0.01 | 0.3 | 3 | 4 | scored | .0667<br>±.0229 | .0333<br>±.0165 | .0167<br>±.0117 | .0167<br>±.0117 | 1.79 |
+| llama-3b | qwen | 0.01 | 1.0 | 10 | 4 | scored | .0500<br>±.0200 | .0417<br>±.0183 | .0167<br>±.0117 | .0167<br>±.0117 | 1.82 |
+| llama-3b | qwen | 0.01 | 10 | 100 | 4 | scored | .0667<br>±.0229 | .0333<br>±.0165 | .0250<br>±.0143 | .0083<br>±.0083 | 1.84 |
 
-> **Analysis.** No AIME2025 data yet — nothing to take away.
-> **Limitations / follow-up:** n=120 graded (30 questions × 4
-> trials) puts ~.02 SEs on pass@gb values near .05, so single
-> pairs will not separate — only a multi-cell trend is readable.
-> Queue `{0.3, 1, 3}` first if the goal is locating an optimum.
-> Feeds key: `tbl-b94f3f`.
+> **Analysis.** Complete (6/7, closed 2026-08-03; only the
+> `w_eff=0` anchor is unqueued). pass@gb is **flat across the
+> entire grid**: .0667, .0583, .0667, .0667, .0500, .0667 for
+> `w_eff` 0.1 → 100 — a total spread of .0167, well under one
+> SE (~.022), and 6–8 solved of 120 in every cell. No optimum,
+> no turnover, no ordering.
+> **The level-5 result does not transfer.** On level-5 this
+> model has the section's clearest interior optimum —
+> `tbl-cf849a` rises .4440 → **.5821 at `w_eff=3`** → .5485 by
+> 10, a +.138 span at ~4.5 SE. Here the same model on the same
+> grid produces nothing distinguishable. The natural reading is
+> that `w_eff` tuning only matters once the policy solves a
+> non-trivial fraction of problems: at ~6 % there are too few
+> correct branches for a diversity bonus to reallocate budget
+> toward. Note the global AIME anchors (`tbl-d0ed2a`, .0417 at
+> `w_eff=10`, .0583 at 100, .0750 at 1000) sit in the same band,
+> so local+relative does not separate from global scope either.
+> **Limitations / follow-up:** at 6–8 of 120 the per-cell SE
+> (~.022) exceeds the whole observed spread, so this table can
+> only report a null — it cannot bound how large a real effect
+> would have to be. maj@gb is more scattered (.0083–.0333) but
+> on 1–4 questions, so read nothing into it. More trials would
+> be needed to say anything positive here; the qwen tables carry
+> the transfer question. Feeds key: `tbl-b94f3f`.
 
 #### lam / ds_alpha joint sweep (qwen-3b, embeds_ref=relative)
 <!-- table-id: tbl-435dd3 -->
@@ -897,25 +937,46 @@ Two activities, two shapes:
 > `1` `c2f78139`, `3` `642cb44d`, `10` `fc08cb02`, `100`
 > `48c043bd`. At ~1.8 hr/trial × 4 trials, ~50 GPU-hours.
 >
-> **W&B:** none yet (no AIME2025 local-scope runs).
+> **W&B:** 1si32174 (`w_eff=0.1`), t7wpqzcx (`0.3`),
+> jko40dhd (`3`), 1ek80or7 (`10`), a6es7xcl (`100`);
+> `w_eff=1` failed (preemption), no usable run.
 
 | llm | prm | lam | ds_alpha | w_eff | trials | status | pass@gb | naive@gb | wei@gb | maj@gb | hr/trial |
 |---|---|---|---|---|---|---|---|---|---|---|---|
 | qwen-3b | qwen | 0.01 | 0 | 0 | — | planned | — | — | — | — | — |
-| qwen-3b | qwen | 0.01 | 0.01 | 0.1 | — | inqueue | — | — | — | — | — |
-| qwen-3b | qwen | 0.01 | 0.03 | 0.3 | — | inqueue | — | — | — | — | — |
-| qwen-3b | qwen | 0.01 | 0.1 | 1 | — | inqueue | — | — | — | — | — |
-| qwen-3b | qwen | 0.01 | 0.3 | 3 | — | inqueue | — | — | — | — | — |
-| qwen-3b | qwen | 0.01 | 1.0 | 10 | — | inqueue | — | — | — | — | — |
-| qwen-3b | qwen | 0.01 | 10 | 100 | — | inqueue | — | — | — | — | — |
+| qwen-3b | qwen | 0.01 | 0.01 | 0.1 | 4 | scored | .2167<br>±.0378 | .1167<br>±.0294 | .1250<br>±.0303 | .1083<br>±.0285 | 1.61 |
+| qwen-3b | qwen | 0.01 | 0.03 | 0.3 | 4 | scored | .1750<br>±.0348 | .1333<br>±.0312 | .0917<br>±.0265 | .0917<br>±.0265 | 1.65 |
+| qwen-3b | qwen | 0.01 | 0.1 | 1 | — | running | — | — | — | — | — |
+| qwen-3b | qwen | 0.01 | 0.3 | 3 | 4 | scored | .1917<br>±.0361 | .0917<br>±.0265 | .0417<br>±.0183 | .0500<br>±.0200 | 1.79 |
+| qwen-3b | qwen | 0.01 | 1.0 | 10 | 4 | scored | .1417<br>±.0320 | .1167<br>±.0294 | .0750<br>±.0241 | .0833<br>±.0253 | 1.76 |
+| qwen-3b | qwen | 0.01 | 10 | 100 | 4 | scored | .2083<br>±.0372 | .1333<br>±.0312 | .0833<br>±.0253 | .0917<br>±.0265 | 1.78 |
 
-> **Analysis.** No AIME2025 data yet — nothing to take away.
-> **Limitations / follow-up:** the model's global AIME2025 curve
-> is sampled at only two points, so structure found here has no
-> global curve to compare against — queueing the global qwen-3b
-> `{0.1, 0.3, 1, 3}` cells is what would make it a scope effect
-> rather than a low-`w_eff` effect (same caveat as level-5's
-> qwen-3b sweep). Feeds key: `tbl-435dd3`.
+> **Analysis.** 5 of 7 cells measured (2026-08-03); `w_eff=0` is
+> unqueued and **`w_eff=1` failed** (its allocation was
+> preempted mid-run — see the ledger `history`). Measured:
+> .2167 (`0.1`), .1750 (`0.3`), .1917 (`3`), .1417 (`10`),
+> .2083 (`100`). Spread .0750 against SEs of ~.035, so the
+> extremes are ~2 SE apart — suggestive but not separated, and
+> the ordering is non-monotone (high at 0.1, dip at 0.3, second
+> dip at 10, back up at 100). **Read it as no reliable `w_eff`
+> effect**, with a weak hint that the low end is not worse than
+> the high end.
+> **The missing `w_eff=1` cell is the expensive one.** On
+> level-5, qwen-3b's `relative` arm peaks at exactly `w_eff=1`
+> (.7164) — so the one point this table would most want is the
+> one the preemption took. Re-running it is the single highest-
+> value cell in the AIME section.
+> **Against the global anchors** (`tbl-cfd7cf` .1833 at
+> `w_eff=10`, `tbl-878af9` .1667 at 100): local+relative is
+> +.025 and +.042 at the shared points — same direction as
+> level-5, but both inside 1 SE, so this is not yet evidence
+> that local scope helps on AIME.
+> **Limitations / follow-up:** n=120 graded, ~.035 SE per cell.
+> Requeue `w_eff=1` before drawing any curve from this table;
+> after that, the global qwen-3b low-end cells would make the
+> comparison a scope effect rather than a low-`w_eff` effect
+> (same caveat as level-5's qwen-3b sweep). Feeds key:
+> `tbl-435dd3`.
 
 #### lam / ds_alpha joint sweep (qwen-7b gptq-int4, embeds_ref=relative)
 <!-- table-id: tbl-7a3760 -->
@@ -946,17 +1007,18 @@ Two activities, two shapes:
 > `1` `d467e471`, `3` `9c16fdd5`, `10` `abe44056`, `100`
 > `25367189`. At ~1.7 hr/trial × 4 trials, ~48 GPU-hours.
 >
-> **W&B:** none yet (no AIME2025 local-scope runs).
+> **W&B:** vvtgz5hc (`w_eff=0.1`), 6tea8hre (`0.3`),
+> 0pdey277 (`1`).
 
 | llm | prm | lam | ds_alpha | w_eff | trials | status | pass@gb | naive@gb | wei@gb | maj@gb | hr/trial |
 |---|---|---|---|---|---|---|---|---|---|---|---|
 | qwen-7b gptq-int4 | qwen | 0.01 | 0 | 0 | — | planned | — | — | — | — | — |
-| qwen-7b gptq-int4 | qwen | 0.01 | 0.01 | 0.1 | — | inqueue | — | — | — | — | — |
-| qwen-7b gptq-int4 | qwen | 0.01 | 0.03 | 0.3 | — | inqueue | — | — | — | — | — |
-| qwen-7b gptq-int4 | qwen | 0.01 | 0.1 | 1 | — | inqueue | — | — | — | — | — |
-| qwen-7b gptq-int4 | qwen | 0.01 | 0.3 | 3 | — | inqueue | — | — | — | — | — |
-| qwen-7b gptq-int4 | qwen | 0.01 | 1.0 | 10 | — | inqueue | — | — | — | — | — |
-| qwen-7b gptq-int4 | qwen | 0.01 | 10 | 100 | — | inqueue | — | — | — | — | — |
+| qwen-7b gptq-int4 | qwen | 0.01 | 0.01 | 0.1 | 4 | scored | .2583<br>±.0401 | .1583<br>±.0335 | .1333<br>±.0312 | .1500<br>±.0327 | 1.35 |
+| qwen-7b gptq-int4 | qwen | 0.01 | 0.03 | 0.3 | 4 | scored | .2667<br>±.0405 | .1750<br>±.0348 | .1833<br>±.0355 | .1500<br>±.0327 | 1.53 |
+| qwen-7b gptq-int4 | qwen | 0.01 | 0.1 | 1 | 4 | scored | .2833<br>±.0413 | .1667<br>±.0342 | .1667<br>±.0342 | .1583<br>±.0335 | 1.66 |
+| qwen-7b gptq-int4 | qwen | 0.01 | 0.3 | 3 | — | running | — | — | — | — | — |
+| qwen-7b gptq-int4 | qwen | 0.01 | 1.0 | 10 | — | running | — | — | — | — | — |
+| qwen-7b gptq-int4 | qwen | 0.01 | 10 | 100 | — | running | — | — | — | — | — |
 
 > **Analysis.** No AIME2025 data yet — nothing to take away.
 > **Limitations / follow-up:** queue this table first — it
@@ -996,12 +1058,12 @@ Two activities, two shapes:
 | llm | prm | lam | ds_alpha | w_eff | trials | status | pass@gb | naive@gb | wei@gb | maj@gb | hr/trial |
 |---|---|---|---|---|---|---|---|---|---|---|---|
 | qwen-math-1.5b | qwen | 0.01 | 0 | 0 | — | planned | — | — | — | — | — |
-| qwen-math-1.5b | qwen | 0.01 | 0.01 | 0.1 | — | inqueue | — | — | — | — | — |
-| qwen-math-1.5b | qwen | 0.01 | 0.03 | 0.3 | — | inqueue | — | — | — | — | — |
-| qwen-math-1.5b | qwen | 0.01 | 0.1 | 1 | — | inqueue | — | — | — | — | — |
-| qwen-math-1.5b | qwen | 0.01 | 0.3 | 3 | — | inqueue | — | — | — | — | — |
-| qwen-math-1.5b | qwen | 0.01 | 1.0 | 10 | — | inqueue | — | — | — | — | — |
-| qwen-math-1.5b | qwen | 0.01 | 10 | 100 | — | inqueue | — | — | — | — | — |
+| qwen-math-1.5b | qwen | 0.01 | 0.01 | 0.1 | — | running | — | — | — | — | — |
+| qwen-math-1.5b | qwen | 0.01 | 0.03 | 0.3 | — | running | — | — | — | — | — |
+| qwen-math-1.5b | qwen | 0.01 | 0.1 | 1 | — | running | — | — | — | — | — |
+| qwen-math-1.5b | qwen | 0.01 | 0.3 | 3 | — | running | — | — | — | — | — |
+| qwen-math-1.5b | qwen | 0.01 | 1.0 | 10 | — | running | — | — | — | — | — |
+| qwen-math-1.5b | qwen | 0.01 | 10 | 100 | — | running | — | — | — | — | — |
 
 > **Analysis.** No AIME2025 data yet — nothing to take away.
 > **Limitations / follow-up:** level-5's low-end cells for this

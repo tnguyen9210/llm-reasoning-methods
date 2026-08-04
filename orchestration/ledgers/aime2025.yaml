@@ -2431,7 +2431,7 @@
   feeds:
   - tbl-2ef3dc  # AIME2025 lam/ds_alpha relative sweep, llama-1b
   group: sem-mcts
-  status: running
+  status: scored
   priority: 1.5
   expected_hr: 6
   note: AIME covlocal-rel llama-1b w_eff=0.1
@@ -2456,7 +2456,7 @@
   feeds:
   - tbl-2ef3dc  # AIME2025 lam/ds_alpha relative sweep, llama-1b
   group: sem-mcts
-  status: running
+  status: scored
   priority: 1.5
   expected_hr: 6
   note: AIME covlocal-rel llama-1b w_eff=0.3
@@ -2481,7 +2481,7 @@
   feeds:
   - tbl-2ef3dc  # AIME2025 lam/ds_alpha relative sweep, llama-1b
   group: sem-mcts
-  status: running
+  status: scored
   priority: 1.5
   expected_hr: 6
   note: AIME covlocal-rel llama-1b w_eff=1
@@ -2506,7 +2506,7 @@
   feeds:
   - tbl-2ef3dc  # AIME2025 lam/ds_alpha relative sweep, llama-1b
   group: sem-mcts
-  status: running
+  status: scored
   priority: 1.5
   expected_hr: 6
   note: AIME covlocal-rel llama-1b w_eff=3
@@ -2531,7 +2531,7 @@
   feeds:
   - tbl-2ef3dc  # AIME2025 lam/ds_alpha relative sweep, llama-1b
   group: sem-mcts
-  status: running
+  status: scored
   priority: 1.5
   expected_hr: 6
   note: AIME covlocal-rel llama-1b w_eff=10
@@ -2556,7 +2556,7 @@
   feeds:
   - tbl-2ef3dc  # AIME2025 lam/ds_alpha relative sweep, llama-1b
   group: sem-mcts
-  status: running
+  status: scored
   priority: 1.5
   expected_hr: 6
   note: AIME covlocal-rel llama-1b w_eff=100
@@ -2581,10 +2581,15 @@
   feeds:
   - tbl-b94f3f  # AIME2025 lam/ds_alpha relative sweep, llama-3b
   group: sem-mcts
-  status: inqueue
+  status: scored
   priority: 1.5
   expected_hr: 8
   note: AIME covlocal-rel llama-3b w_eff=0.1
+  launch:
+    job_id: 23446852
+    node: r5u09n1
+    pid: 2659953
+    at: 2026-08-03 07:53
 - id: sem-mcts-aime2025-covlocal-rel-llama3b-weff0p3
   launcher: generate_mcts_sem.py
   hash: "2dccd872"
@@ -2601,10 +2606,15 @@
   feeds:
   - tbl-b94f3f  # AIME2025 lam/ds_alpha relative sweep, llama-3b
   group: sem-mcts
-  status: inqueue
+  status: scored
   priority: 1.5
   expected_hr: 8
   note: AIME covlocal-rel llama-3b w_eff=0.3
+  launch:
+    job_id: 23485296
+    node: r5u25n1
+    pid: 2661846
+    at: 2026-08-03 08:23
 - id: sem-mcts-aime2025-covlocal-rel-llama3b-weff1
   launcher: generate_mcts_sem.py
   hash: "d6134362"
@@ -2621,10 +2631,15 @@
   feeds:
   - tbl-b94f3f  # AIME2025 lam/ds_alpha relative sweep, llama-3b
   group: sem-mcts
-  status: inqueue
+  status: scored
   priority: 1.5
   expected_hr: 8
   note: AIME covlocal-rel llama-3b w_eff=1
+  launch:
+    job_id: 23477898
+    node: r5u25n1
+    pid: 2663875
+    at: 2026-08-03 08:53
 - id: sem-mcts-aime2025-covlocal-rel-llama3b-weff3
   launcher: generate_mcts_sem.py
   hash: "2f426ea2"
@@ -2641,10 +2656,15 @@
   feeds:
   - tbl-b94f3f  # AIME2025 lam/ds_alpha relative sweep, llama-3b
   group: sem-mcts
-  status: inqueue
+  status: scored
   priority: 1.5
   expected_hr: 8
   note: AIME covlocal-rel llama-3b w_eff=3
+  launch:
+    job_id: 23461277
+    node: r5u03n1
+    pid: 2666008
+    at: 2026-08-03 09:23
 - id: sem-mcts-aime2025-covlocal-rel-llama3b-weff10
   launcher: generate_mcts_sem.py
   hash: "a749ca4c"
@@ -2661,10 +2681,15 @@
   feeds:
   - tbl-b94f3f  # AIME2025 lam/ds_alpha relative sweep, llama-3b
   group: sem-mcts
-  status: inqueue
+  status: scored
   priority: 1.5
   expected_hr: 8
   note: AIME covlocal-rel llama-3b w_eff=10
+  launch:
+    job_id: 23446851
+    node: r5u37n1
+    pid: 2668213
+    at: 2026-08-03 09:53
 - id: sem-mcts-aime2025-covlocal-rel-llama3b-weff100
   launcher: generate_mcts_sem.py
   hash: "83066656"
@@ -2681,10 +2706,15 @@
   feeds:
   - tbl-b94f3f  # AIME2025 lam/ds_alpha relative sweep, llama-3b
   group: sem-mcts
-  status: inqueue
+  status: scored
   priority: 1.5
   expected_hr: 8
   note: AIME covlocal-rel llama-3b w_eff=100
+  launch:
+    job_id: 23460167
+    node: r5u09n1
+    pid: 2668214
+    at: 2026-08-03 09:53
 - id: sem-mcts-aime2025-covlocal-rel-qwen3b-weff0p1
   launcher: generate_mcts_sem.py
   hash: "762b7155"
@@ -2701,10 +2731,15 @@
   feeds:
   - tbl-435dd3  # AIME2025 lam/ds_alpha relative sweep, qwen-3b
   group: sem-mcts
-  status: inqueue
+  status: scored
   priority: 1.5
   expected_hr: 7.5
   note: AIME covlocal-rel qwen-3b w_eff=0.1
+  launch:
+    job_id: 23485237
+    node: r5u15n1
+    pid: 2694266
+    at: 2026-08-03 10:23
 - id: sem-mcts-aime2025-covlocal-rel-qwen3b-weff0p3
   launcher: generate_mcts_sem.py
   hash: "270ad11f"
@@ -2721,10 +2756,15 @@
   feeds:
   - tbl-435dd3  # AIME2025 lam/ds_alpha relative sweep, qwen-3b
   group: sem-mcts
-  status: inqueue
+  status: scored
   priority: 1.5
   expected_hr: 7.5
   note: AIME covlocal-rel qwen-3b w_eff=0.3
+  launch:
+    job_id: 23485238
+    node: r5u25n1
+    pid: 2694267
+    at: 2026-08-03 10:23
 - id: sem-mcts-aime2025-covlocal-rel-qwen3b-weff1
   launcher: generate_mcts_sem.py
   hash: "c2f78139"
@@ -2741,7 +2781,16 @@
   feeds:
   - tbl-435dd3  # AIME2025 lam/ds_alpha relative sweep, qwen-3b
   group: sem-mcts
-  status: inqueue
+  status: running
+  history:
+  - {at: 2026-08-03 22:00, job_id: 23485244, outcome: stalled,
+     trials_done: 2, cause: SLURM preemption+requeue of the
+     gpu_windfall allocation at 15:06; process killed mid-run}
+  launch:
+    job_id: 23485244
+    node: r5u09n1
+    pid: 2765425
+    at: 2026-08-03 22:58
   priority: 1.5
   expected_hr: 7.5
   note: AIME covlocal-rel qwen-3b w_eff=1
@@ -2761,10 +2810,15 @@
   feeds:
   - tbl-435dd3  # AIME2025 lam/ds_alpha relative sweep, qwen-3b
   group: sem-mcts
-  status: inqueue
+  status: scored
   priority: 1.5
   expected_hr: 7.5
   note: AIME covlocal-rel qwen-3b w_eff=3
+  launch:
+    job_id: 23460164
+    node: r5u09n1
+    pid: 2694269
+    at: 2026-08-03 10:23
 - id: sem-mcts-aime2025-covlocal-rel-qwen3b-weff10
   launcher: generate_mcts_sem.py
   hash: "fc08cb02"
@@ -2781,10 +2835,15 @@
   feeds:
   - tbl-435dd3  # AIME2025 lam/ds_alpha relative sweep, qwen-3b
   group: sem-mcts
-  status: inqueue
+  status: scored
   priority: 1.5
   expected_hr: 7.5
   note: AIME covlocal-rel qwen-3b w_eff=10
+  launch:
+    job_id: 23459947
+    node: r5u25n1
+    pid: 2694270
+    at: 2026-08-03 10:23
 - id: sem-mcts-aime2025-covlocal-rel-qwen3b-weff100
   launcher: generate_mcts_sem.py
   hash: "48c043bd"
@@ -2801,10 +2860,15 @@
   feeds:
   - tbl-435dd3  # AIME2025 lam/ds_alpha relative sweep, qwen-3b
   group: sem-mcts
-  status: inqueue
+  status: scored
   priority: 1.5
   expected_hr: 7.5
   note: AIME covlocal-rel qwen-3b w_eff=100
+  launch:
+    job_id: 23459949
+    node: r5u17n1
+    pid: 2694271
+    at: 2026-08-03 10:23
 - id: sem-mcts-aime2025-covlocal-rel-qwen7bgptq-weff0p1
   launcher: generate_mcts_sem.py
   hash: "eb21276e"
@@ -2821,10 +2885,15 @@
   feeds:
   - tbl-7a3760  # AIME2025 lam/ds_alpha relative sweep, qwen-7b gptq-int4
   group: sem-mcts
-  status: inqueue
+  status: scored
   priority: 1.5
   expected_hr: 7
   note: AIME covlocal-rel qwen-7b gptq-int4 w_eff=0.1
+  launch:
+    job_id: 23485292
+    node: r5u29n1
+    pid: 2696394
+    at: 2026-08-03 10:53
 - id: sem-mcts-aime2025-covlocal-rel-qwen7bgptq-weff0p3
   launcher: generate_mcts_sem.py
   hash: "acad86d8"
@@ -2841,10 +2910,15 @@
   feeds:
   - tbl-7a3760  # AIME2025 lam/ds_alpha relative sweep, qwen-7b gptq-int4
   group: sem-mcts
-  status: inqueue
+  status: scored
   priority: 1.5
   expected_hr: 7
   note: AIME covlocal-rel qwen-7b gptq-int4 w_eff=0.3
+  launch:
+    job_id: 23485244
+    node: r5u09n1
+    pid: 2730038
+    at: 2026-08-03 15:23
 - id: sem-mcts-aime2025-covlocal-rel-qwen7bgptq-weff1
   launcher: generate_mcts_sem.py
   hash: "d467e471"
@@ -2861,10 +2935,15 @@
   feeds:
   - tbl-7a3760  # AIME2025 lam/ds_alpha relative sweep, qwen-7b gptq-int4
   group: sem-mcts
-  status: inqueue
+  status: scored
   priority: 1.5
   expected_hr: 7
   note: AIME covlocal-rel qwen-7b gptq-int4 w_eff=1
+  launch:
+    job_id: 23485296
+    node: r5u25n1
+    pid: 2730039
+    at: 2026-08-03 15:23
 - id: sem-mcts-aime2025-covlocal-rel-qwen7bgptq-weff3
   launcher: generate_mcts_sem.py
   hash: "9c16fdd5"
@@ -2881,10 +2960,15 @@
   feeds:
   - tbl-7a3760  # AIME2025 lam/ds_alpha relative sweep, qwen-7b gptq-int4
   group: sem-mcts
-  status: inqueue
+  status: running
   priority: 1.5
   expected_hr: 7
   note: AIME covlocal-rel qwen-7b gptq-int4 w_eff=3
+  launch:
+    job_id: 23477898
+    node: r5u25n1
+    pid: 2733973
+    at: 2026-08-03 16:23
 - id: sem-mcts-aime2025-covlocal-rel-qwen7bgptq-weff10
   launcher: generate_mcts_sem.py
   hash: "abe44056"
@@ -2901,10 +2985,15 @@
   feeds:
   - tbl-7a3760  # AIME2025 lam/ds_alpha relative sweep, qwen-7b gptq-int4
   group: sem-mcts
-  status: inqueue
+  status: running
   priority: 1.5
   expected_hr: 7
   note: AIME covlocal-rel qwen-7b gptq-int4 w_eff=10
+  launch:
+    job_id: 23461277
+    node: r5u03n1
+    pid: 2736009
+    at: 2026-08-03 16:53
 - id: sem-mcts-aime2025-covlocal-rel-qwen7bgptq-weff100
   launcher: generate_mcts_sem.py
   hash: "25367189"
@@ -2921,10 +3010,15 @@
   feeds:
   - tbl-7a3760  # AIME2025 lam/ds_alpha relative sweep, qwen-7b gptq-int4
   group: sem-mcts
-  status: inqueue
+  status: running
   priority: 1.5
   expected_hr: 7
   note: AIME covlocal-rel qwen-7b gptq-int4 w_eff=100
+  launch:
+    job_id: 23485292
+    node: r5u29n1
+    pid: 2736010
+    at: 2026-08-03 16:53
 - id: sem-mcts-aime2025-covlocal-rel-qwenmath15b-weff0p1
   launcher: generate_mcts_sem.py
   hash: "ab915c9a"
@@ -2941,10 +3035,15 @@
   feeds:
   - tbl-4ef506  # AIME2025 lam/ds_alpha relative sweep, qwen-math-1.5b
   group: sem-mcts
-  status: inqueue
+  status: running
   priority: 1.5
   expected_hr: 6
   note: AIME covlocal-rel qwen-math-1.5b w_eff=0.1
+  launch:
+    job_id: 23446851
+    node: r5u37n1
+    pid: 2738137
+    at: 2026-08-03 17:23
 - id: sem-mcts-aime2025-covlocal-rel-qwenmath15b-weff0p3
   launcher: generate_mcts_sem.py
   hash: "db55f46c"
@@ -2961,10 +3060,15 @@
   feeds:
   - tbl-4ef506  # AIME2025 lam/ds_alpha relative sweep, qwen-math-1.5b
   group: sem-mcts
-  status: inqueue
+  status: running
   priority: 1.5
   expected_hr: 6
   note: AIME covlocal-rel qwen-math-1.5b w_eff=0.3
+  launch:
+    job_id: 23485237
+    node: r5u15n1
+    pid: 2738138
+    at: 2026-08-03 17:23
 - id: sem-mcts-aime2025-covlocal-rel-qwenmath15b-weff1
   launcher: generate_mcts_sem.py
   hash: "44397f4f"
@@ -2981,10 +3085,15 @@
   feeds:
   - tbl-4ef506  # AIME2025 lam/ds_alpha relative sweep, qwen-math-1.5b
   group: sem-mcts
-  status: inqueue
+  status: running
   priority: 1.5
   expected_hr: 6
   note: AIME covlocal-rel qwen-math-1.5b w_eff=1
+  launch:
+    job_id: 23485238
+    node: r5u25n1
+    pid: 2738139
+    at: 2026-08-03 17:23
 - id: sem-mcts-aime2025-covlocal-rel-qwenmath15b-weff3
   launcher: generate_mcts_sem.py
   hash: "819aebc2"
@@ -3001,10 +3110,15 @@
   feeds:
   - tbl-4ef506  # AIME2025 lam/ds_alpha relative sweep, qwen-math-1.5b
   group: sem-mcts
-  status: inqueue
+  status: running
   priority: 1.5
   expected_hr: 6
   note: AIME covlocal-rel qwen-math-1.5b w_eff=3
+  launch:
+    job_id: 23459949
+    node: r5u17n1
+    pid: 2740045
+    at: 2026-08-03 17:53
 - id: sem-mcts-aime2025-covlocal-rel-qwenmath15b-weff10
   launcher: generate_mcts_sem.py
   hash: "95395ca7"
@@ -3021,10 +3135,15 @@
   feeds:
   - tbl-4ef506  # AIME2025 lam/ds_alpha relative sweep, qwen-math-1.5b
   group: sem-mcts
-  status: inqueue
+  status: running
   priority: 1.5
   expected_hr: 6
   note: AIME covlocal-rel qwen-math-1.5b w_eff=10
+  launch:
+    job_id: 23459947
+    node: r5u25n1
+    pid: 2740046
+    at: 2026-08-03 17:53
 - id: sem-mcts-aime2025-covlocal-rel-qwenmath15b-weff100
   launcher: generate_mcts_sem.py
   hash: "602868da"
@@ -3041,7 +3160,12 @@
   feeds:
   - tbl-4ef506  # AIME2025 lam/ds_alpha relative sweep, qwen-math-1.5b
   group: sem-mcts
-  status: inqueue
+  status: running
   priority: 1.5
   expected_hr: 6
   note: AIME covlocal-rel qwen-math-1.5b w_eff=100
+  launch:
+    job_id: 23460164
+    node: r5u09n1
+    pid: 2740047
+    at: 2026-08-03 17:53
