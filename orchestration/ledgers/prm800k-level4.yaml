@@ -2349,15 +2349,15 @@
   feeds:
   - tbl-db0cf7  # L4 b=80 lam/ds_alpha rel sweep, llama-1b
   group: sem-mcts
-  status: inqueue
+  status: running
   priority: 2
   expected_hr: 8
   note: L4 b80 covlocal-rel llama-1b w_eff=0.3
   launch:
-    job_id: 23492916
-    node: r5u31n1
-    pid: 4144657
-    at: 2026-08-05 13:49
+    job_id: 23485244
+    node: r5u09n1
+    pid: 246184
+    at: 2026-08-06 15:57
   history:
   - {at: 2026-08-05 23:05, job_id: 23492916, outcome: stalled,
      trials_done: 1, cause: 'gpu_windfall preemption ~17:4x on 23492916

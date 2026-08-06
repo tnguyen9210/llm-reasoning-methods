@@ -74,7 +74,14 @@ def process(path):
     lines = text.split("\n")
     toc = build_toc(lines)
     idx = next(i for i, l in enumerate(lines) if l.startswith("## "))
-    lines[idx:idx] = toc
+    # The block above ends with a blank line, and stripping it leaves
+    # that blank behind -- so every re-run used to add one more.
+    # Collapse the whole run of blanks above the TOC to exactly one.
+    start = idx
+    while start > 0 and lines[start - 1] == "":
+        start -= 1
+    lines[start:idx] = [""]
+    lines[start + 1:start + 1] = toc
     open(path, "w").write("\n".join(lines))
     n_tbl = sum(1 for l in toc if "`tbl-" in l)
     print(f"{os.path.basename(path):32s} {n_tbl} tables, "

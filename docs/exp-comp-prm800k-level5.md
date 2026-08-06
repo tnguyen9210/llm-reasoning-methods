@@ -6,18 +6,13 @@ Central tracker for every MCTS search experiment (cnt / sem /
 cnt-bl / sem-bl) on PRM800K — per-algorithm tuning tables grouped
 by gen_budget, plus a cross-algorithm best-config summary.
 
-
-
-
-
-
-
 <!-- toc:begin -- generated, do not hand-edit -->
 ## Contents
 
 - [**Purpose**](#purpose)
 - [**Structure and use**](#structure-and-use)
 - [**Cross-algorithm summary \[gen_budget=80\] (QwenPRM)**](#cross-algorithm-summary-gen_budget80-qwenprm)
+- [**Cross-algorithm summary \[gen_budget=320\] (QwenPRM)**](#cross-algorithm-summary-gen_budget320-qwenprm)
 - [**Tuning tables \[gen_budget=80\]**](#tuning-tables-gen_budget80)
   - [cnt-mcts](#cnt-mcts)
     - [model family, size, quantization comparison (RLHFlowPRM)](#model-family-size-quantization-comparison-rlhflowprm) · `tbl-d6065d`
@@ -137,7 +132,9 @@ Two activities, two shapes:
 > `docs/exp-comp-aime2025.md` summaries. Each row is the best
 > config for that (algorithm, model) pair, picked across **all**
 > of that variant's tuning knobs jointly by pass@gb, ties broken
-> naive → wei → maj. Fixed: b=80, bs-4, d-20, agg_strategy=`last`,
+> naive → wei → maj. Every cell is **2 trials**, `scored` (the two
+> constant columns were dropped; a row of em-dashes means
+> `planned`). Fixed: b=80, bs-4, d-20, agg_strategy=`last`,
 > tmpl=model-family default (native for Qwen, custom for Llama),
 > prm=qwen, data.level=5.
 >
@@ -230,43 +227,43 @@ Two activities, two shapes:
 -->
 **llama-1b fp16**
 
-| algorithm | trials | status | pass@gb | naive@gb | wei@gb | maj@gb | ncomps | depth | nphases | ndepths | hr/trial |
-|---|---|---|---|---|---|---|---|---|---|---|---|
-| cnt-mcts | 2 | scored | .3619<br>±.0294 | .2724<br>±.0272 | .2127<br>±.0250 | .1903<br>±.0240 | 10.8<br>±0.5 | 10.5<br>±0.2 | 36.0<br>±9.8 | 11.5<br>±0.2 | 2.98 |
-| sem-mcts-v02 | 2 | scored | .3806<br>±.0297 | .2724<br>±.0272 | .2575<br>±.0268 | .2201<br>±.0254 | 10.8<br>±0.5 | 11.0<br>±0.2 | 50.5<br>±12.2 | 12.1<br>±0.3 | 4.86 |
-| sem-mcts-v02 (local) | 2 | scored | .3731<br>±.0296 | .2873<br>±.0277 | .2537<br>±.0266 | .1903<br>±.0240 | 11.2<br>±0.6 | 10.4<br>±0.2 | 54.0<br>±12.0 | 11.6<br>±0.3 | 4.88 |
+| algorithm | pass@gb | naive@gb | wei@gb | maj@gb | ncomps | depth | nphases | ndepths | hr/trial |
+|---|---|---|---|---|---|---|---|---|---|
+| cnt-mcts | .3619<br>±.0294 | .2724<br>±.0272 | .2127<br>±.0250 | .1903<br>±.0240 | 10.8<br>±0.5 | 10.5<br>±0.2 | 36.0<br>±9.8 | 11.5<br>±0.2 | 2.98 |
+| sem-mcts-v02 | .3806<br>±.0297 | .2724<br>±.0272 | .2575<br>±.0268 | .2201<br>±.0254 | 10.8<br>±0.5 | 11.0<br>±0.2 | 50.5<br>±12.2 | 12.1<br>±0.3 | 4.86 |
+| sem-mcts-v02 (local) | .3731<br>±.0296 | .2873<br>±.0277 | .2537<br>±.0266 | .1903<br>±.0240 | 11.2<br>±0.6 | 10.4<br>±0.2 | 54.0<br>±12.0 | 11.6<br>±0.3 | 4.88 |
 
 **llama-3b fp16**
 
-| algorithm | trials | status | pass@gb | naive@gb | wei@gb | maj@gb | ncomps | depth | nphases | ndepths | hr/trial |
-|---|---|---|---|---|---|---|---|---|---|---|---|
-| cnt-mcts | 2 | scored | .5522<br>±.0304 | .4291<br>±.0303 | .4104<br>±.0301 | .3619<br>±.0294 | 21.0<br>±1.0 | 9.0<br>±0.2 | 48.0<br>±11.1 | 9.9<br>±0.2 | 5.13 |
-| sem-mcts-v02 | 2 | scored | .5896<br>±.0301 | .4366<br>±.0304 | .4179<br>±.0302 | .3955<br>±.0299 | 21.8<br>±1.0 | 9.2<br>±0.2 | 80.6<br>±15.3 | 9.8<br>±0.3 | 6.85 |
-| sem-mcts-v02 (local) | 2 | scored | .5821<br>±.0302 | .4291<br>±.0303 | .3918<br>±.0299 | .3731<br>±.0296 | 21.5<br>±1.0 | 9.2<br>±0.2 | 81.7<br>±15.2 | 9.7<br>±0.3 | 6.85 |
+| algorithm | pass@gb | naive@gb | wei@gb | maj@gb | ncomps | depth | nphases | ndepths | hr/trial |
+|---|---|---|---|---|---|---|---|---|---|
+| cnt-mcts | .5522<br>±.0304 | .4291<br>±.0303 | .4104<br>±.0301 | .3619<br>±.0294 | 21.0<br>±1.0 | 9.0<br>±0.2 | 48.0<br>±11.1 | 9.9<br>±0.2 | 5.13 |
+| sem-mcts-v02 | .5896<br>±.0301 | .4366<br>±.0304 | .4179<br>±.0302 | .3955<br>±.0299 | 21.8<br>±1.0 | 9.2<br>±0.2 | 80.6<br>±15.3 | 9.8<br>±0.3 | 6.85 |
+| sem-mcts-v02 (local) | .5821<br>±.0302 | .4291<br>±.0303 | .3918<br>±.0299 | .3731<br>±.0296 | 21.5<br>±1.0 | 9.2<br>±0.2 | 81.7<br>±15.2 | 9.7<br>±0.3 | 6.85 |
 
 **qwen-3b fp16**
 
-| algorithm | trials | status | pass@gb | naive@gb | wei@gb | maj@gb | ncomps | depth | nphases | ndepths | hr/trial |
-|---|---|---|---|---|---|---|---|---|---|---|---|
-| cnt-mcts | 2 | scored | .6978<br>±.0281 | .5896<br>±.0301 | .5896<br>±.0301 | .5410<br>±.0305 | 21.1<br>±1.0 | 10.1<br>±0.2 | 10.1<br>±0.7 | 10.9<br>±0.2 | 4.63 |
-| sem-mcts-v02 | 2 | scored | .6978<br>±.0281 | .5634<br>±.0304 | .5336<br>±.0305 | .5112<br>±.0306 | 21.8<br>±1.0 | 10.4<br>±0.2 | 13.5<br>±3.7 | 11.1<br>±0.2 | 6.33 |
-| sem-mcts-v02 (local) | 2 | scored | .7164<br>±.0276 | .5821<br>±.0302 | .5634<br>±.0304 | .5410<br>±.0305 | 22.8<br>±1.0 | 10.3<br>±0.2 | 30.7<br>±7.8 | 10.8<br>±0.2 | 6.21 |
+| algorithm | pass@gb | naive@gb | wei@gb | maj@gb | ncomps | depth | nphases | ndepths | hr/trial |
+|---|---|---|---|---|---|---|---|---|---|
+| cnt-mcts | .6978<br>±.0281 | .5896<br>±.0301 | .5896<br>±.0301 | .5410<br>±.0305 | 21.1<br>±1.0 | 10.1<br>±0.2 | 10.1<br>±0.7 | 10.9<br>±0.2 | 4.63 |
+| sem-mcts-v02 | .6978<br>±.0281 | .5634<br>±.0304 | .5336<br>±.0305 | .5112<br>±.0306 | 21.8<br>±1.0 | 10.4<br>±0.2 | 13.5<br>±3.7 | 11.1<br>±0.2 | 6.33 |
+| sem-mcts-v02 (local) | .7164<br>±.0276 | .5821<br>±.0302 | .5634<br>±.0304 | .5410<br>±.0305 | 22.8<br>±1.0 | 10.3<br>±0.2 | 30.7<br>±7.8 | 10.8<br>±0.2 | 6.21 |
 
 **qwen-7b gptq-int4**
 
-| algorithm | trials | status | pass@gb | naive@gb | wei@gb | maj@gb | ncomps | depth | nphases | ndepths | hr/trial |
-|---|---|---|---|---|---|---|---|---|---|---|---|
-| cnt-mcts | 2 | scored | .7537<br>±.0264 | .6157<br>±.0298 | .5784<br>±.0302 | .5634<br>±.0304 | 33.3<br>±1.1 | 7.0<br>±0.2 | 75.5<br>±13.8 | 7.1<br>±0.2 | 4.19 |
-| sem-mcts-v02 | 2 | scored | .7873<br>±.0250 | .6045<br>±.0299 | .5634<br>±.0304 | .5634<br>±.0304 | 36.2<br>±1.2 | 7.3<br>±0.2 | 101.8<br>±14.8 | 7.1<br>±0.2 | 5.54 |
-| sem-mcts-v02 (local) | 2 | scored | .7836<br>±.0252 | .6045<br>±.0299 | .5821<br>±.0302 | .5821<br>±.0302 | 34.8<br>±1.1 | 7.0<br>±0.1 | 222.6<br>±23.8 | 6.9<br>±0.2 | 5.54 |
+| algorithm | pass@gb | naive@gb | wei@gb | maj@gb | ncomps | depth | nphases | ndepths | hr/trial |
+|---|---|---|---|---|---|---|---|---|---|
+| cnt-mcts | .7537<br>±.0264 | .6157<br>±.0298 | .5784<br>±.0302 | .5634<br>±.0304 | 33.3<br>±1.1 | 7.0<br>±0.2 | 75.5<br>±13.8 | 7.1<br>±0.2 | 4.19 |
+| sem-mcts-v02 | .7873<br>±.0250 | .6045<br>±.0299 | .5634<br>±.0304 | .5634<br>±.0304 | 36.2<br>±1.2 | 7.3<br>±0.2 | 101.8<br>±14.8 | 7.1<br>±0.2 | 5.54 |
+| sem-mcts-v02 (local) | .7836<br>±.0252 | .6045<br>±.0299 | .5821<br>±.0302 | .5821<br>±.0302 | 34.8<br>±1.1 | 7.0<br>±0.1 | 222.6<br>±23.8 | 6.9<br>±0.2 | 5.54 |
 
 **qwen-math-1.5b fp16**
 
-| algorithm | trials | status | pass@gb | naive@gb | wei@gb | maj@gb | ncomps | depth | nphases | ndepths | hr/trial |
-|---|---|---|---|---|---|---|---|---|---|---|---|
-| cnt-mcts | 2 | scored | .7575<br>±.0262 | .6418<br>±.0293 | .6455<br>±.0293 | .6269<br>±.0296 | 16.5<br>±0.8 | 10.7<br>±0.2 | 9.9<br>±1.7 | 11.7<br>±0.2 | 3.37 |
-| sem-mcts-v02 | 2 | scored | .7500<br>±.0265 | .6418<br>±.0293 | .6082<br>±.0299 | .6045<br>±.0299 | 17.5<br>±1.0 | 10.6<br>±0.2 | 25.9<br>±7.7 | 11.6<br>±0.2 | 4.85 |
-| sem-mcts-v02 (local) | 2 | scored | .7612<br>±.0261 | .6269<br>±.0296 | .6194<br>±.0297 | .5821<br>±.0302 | 17.2<br>±0.8 | 10.6<br>±0.2 | 8.4<br>±0.4 | 11.5<br>±0.2 | 4.82 |
+| algorithm | pass@gb | naive@gb | wei@gb | maj@gb | ncomps | depth | nphases | ndepths | hr/trial |
+|---|---|---|---|---|---|---|---|---|---|
+| cnt-mcts | .7575<br>±.0262 | .6418<br>±.0293 | .6455<br>±.0293 | .6269<br>±.0296 | 16.5<br>±0.8 | 10.7<br>±0.2 | 9.9<br>±1.7 | 11.7<br>±0.2 | 3.37 |
+| sem-mcts-v02 | .7500<br>±.0265 | .6418<br>±.0293 | .6082<br>±.0299 | .6045<br>±.0299 | 17.5<br>±1.0 | 10.6<br>±0.2 | 25.9<br>±7.7 | 11.6<br>±0.2 | 4.85 |
+| sem-mcts-v02 (local) | .7612<br>±.0261 | .6269<br>±.0296 | .6194<br>±.0297 | .5821<br>±.0302 | 17.2<br>±0.8 | 10.6<br>±0.2 | 8.4<br>±0.4 | 11.5<br>±0.2 | 4.82 |
 
 
 > **Analysis.** Promoted configs. `sem-mcts-v02`: llama-1b, qwen-3b
@@ -312,6 +309,99 @@ Two activities, two shapes:
 > comparison is wanted again.
 
 ---
+
+## Cross-algorithm summary [gen_budget=320] (QwenPRM)
+> Same construction as the b=80 summary above, at
+> `gen_budget=320`. Sources: `cnt-mcts` from `tbl-867868`;
+> `sem-mcts-v02` pooling the four b=320 model-family tables
+> (`tbl-900e87` ds_alpha=1, `tbl-01c466` ds_alpha=10, `tbl-6a015e`
+> and `tbl-560ce2` the same two with `embeds_center_mode=local`),
+> all at `lam=0.01`. Every cell is **2 trials**, `scored` (the two
+> constant columns were dropped; a row of em-dashes means
+> `planned`). Cost columns as defined in the b=80 preamble.
+>
+> ⚠️ `sem-mcts-v02 (local)` is `planned` on every model: there is
+> **no `cov_scope=local` run at b=320 for level 5**. The two-way
+> cnt-vs-global comparison below is therefore not the same
+> comparison as the b=80 tables or the AIME b=320 tables, and in
+> particular it cannot speak to the local-beats-global-at-large-
+> budget reading. Filling this row needs a b=320 ds_alpha sweep
+> with `search.cov_scope=local search.embeds_ref=relative`.
+>
+> ⚠️ qwen-math-1.5b ran at `max_model_len=4096` where the other
+> four models used 6000 — both its rows, so the within-model
+> comparison holds, but do not read its absolute numbers against
+> the other models.
+
+**llama-1b fp16**
+
+| algorithm | pass@gb | naive@gb | wei@gb | maj@gb | ncomps | depth | nphases | ndepths | hr/trial |
+|---|---|---|---|---|---|---|---|---|---|
+| cnt-mcts | .5672<br>±.0303 | .3246<br>±.0287 | .2463<br>±.0264 | .2164<br>±.0252 | 52.4<br>±2.7 | 10.8<br>±0.2 | 77.0<br>±10.4 | 11.8<br>±0.3 | 12.1 |
+| sem-mcts-v02 | .5373<br>±.0305 | .2649<br>±.0270 | .2127<br>±.0250 | .1828<br>±.0237 | 54.2<br>±2.6 | 10.9<br>±0.2 | 107.6<br>±13.4 | 11.6<br>±0.3 | 20.0 |
+| sem-mcts-v02 (local) | — | — | — | — | — | — | — | — | — |
+
+**llama-3b fp16**
+
+| algorithm | pass@gb | naive@gb | wei@gb | maj@gb | ncomps | depth | nphases | ndepths | hr/trial |
+|---|---|---|---|---|---|---|---|---|---|
+| cnt-mcts | .7015<br>±.0280 | .4328<br>±.0303 | .4142<br>±.0301 | .3619<br>±.0294 | 107.6<br>±4.9 | 9.4<br>±0.2 | 120.1<br>±13.0 | 9.7<br>±0.3 | 20.9 |
+| sem-mcts-v02 | .7201<br>±.0275 | .4590<br>±.0305 | .3955<br>±.0299 | .3545<br>±.0293 | 106.8<br>±5.7 | 9.3<br>±0.2 | 177.2<br>±18.7 | 10.0<br>±0.3 | 27.67 |
+| sem-mcts-v02 (local) | — | — | — | — | — | — | — | — | — |
+
+**qwen-3b fp16**
+
+| algorithm | pass@gb | naive@gb | wei@gb | maj@gb | ncomps | depth | nphases | ndepths | hr/trial |
+|---|---|---|---|---|---|---|---|---|---|
+| cnt-mcts | .8172<br>±.0237 | .6306<br>±.0295 | .5858<br>±.0301 | .5522<br>±.0304 | 107.7<br>±4.1 | 9.9<br>±0.2 | 62.6<br>±6.6 | 10.6<br>±0.2 | 18.2 |
+| sem-mcts-v02 | .8396<br>±.0225 | .5896<br>±.0301 | .5560<br>±.0304 | .5299<br>±.0305 | 96.7<br>±3.6 | 10.9<br>±0.1 | 77.7<br>±8.8 | 11.5<br>±0.2 | 23.8 |
+| sem-mcts-v02 (local) | — | — | — | — | — | — | — | — | — |
+
+**qwen-7b gptq-int4**
+
+| algorithm | pass@gb | naive@gb | wei@gb | maj@gb | ncomps | depth | nphases | ndepths | hr/trial |
+|---|---|---|---|---|---|---|---|---|---|
+| cnt-mcts | .8433<br>±.0222 | .6381<br>±.0294 | .5858<br>±.0301 | .5746<br>±.0303 | 175.1<br>±5.9 | 6.9<br>±0.1 | 286.7<br>±21.3 | 6.7<br>±0.1 | 14.5 |
+| sem-mcts-v02 | .8694<br>±.0206 | .6119<br>±.0298 | .5672<br>±.0303 | .5522<br>±.0304 | 168.2<br>±5.9 | 7.1<br>±0.1 | 386.1<br>±24.3 | 6.8<br>±0.2 | 19.00 |
+| sem-mcts-v02 (local) | — | — | — | — | — | — | — | — | — |
+
+**qwen-math-1.5b fp16 ⚠ mml=4096**
+
+| algorithm | pass@gb | naive@gb | wei@gb | maj@gb | ncomps | depth | nphases | ndepths | hr/trial |
+|---|---|---|---|---|---|---|---|---|---|
+| cnt-mcts | .8470<br>±.0220 | .6940<br>±.0282 | .6567<br>±.0291 | .6269<br>±.0296 | 86.0<br>±3.6 | 10.5<br>±0.2 | 56.2<br>±6.4 | 11.5<br>±0.2 | 13.48 |
+| sem-mcts-v02 | .8507<br>±.0218 | .6455<br>±.0293 | .6381<br>±.0294 | .6269<br>±.0296 | 96.4<br>±3.7 | 10.6<br>±0.2 | 100.3<br>±12.1 | 11.3<br>±0.2 | 19.49 |
+| sem-mcts-v02 (local) | — | — | — | — | — | — | — | — | — |
+
+> **Analysis.** Promoted `sem-mcts-v02` configs (all `lam=0.01`):
+> llama-1b and qwen-3b `ds_alpha=10` (`tbl-01c466`); llama-3b and
+> qwen-7b gptq-int4 `ds_alpha=10, embeds_center=local`
+> (`tbl-560ce2`); qwen-math-1.5b `ds_alpha=1, center=local`
+> (`tbl-6a015e`).
+>
+> sem-mcts-v02 beats cnt-mcts on four of five models (llama-3b
+> +.0186, qwen-3b +.0224, qwen-7b gptq-int4 +.0261,
+> qwen-math-1.5b +.0037) and **loses on llama-1b** (.5373 vs
+> .5672, −.0299, the largest single gap in the table). That is
+> the reverse of the b=80 cut, where llama-1b was one of the
+> models sem won. Four of five in one direction is not
+> significant on its own (sign test p≈0.19), and no individual
+> gap clears 1.2 SEM.
+>
+> `ncomps` shows no completion collapse: within ~1 SEM on four
+> models, with qwen-3b the one exception (96.7 vs 107.7, ~2 SEM
+> fewer completions for a *higher* pass@gb). `nphases` runs
+> 1.2-1.5× higher for sem on every model, consistent with the
+> b=80 picture and far from the 8-10× blowup seen on AIME b=320.
+> Cost: sem is 31-66 % slower per trial, and the gap widens with
+> budget (b=80 was 30-60 %).
+> **Limitations / follow-up:** 2 trials; the missing
+> `cov_scope=local` arm is the important gap — until it is run,
+> this table cannot be compared like-for-like with either the
+> level-5 b=80 summary or the AIME b=320 summary.
+
+---
+
 
 ## Tuning tables [gen_budget=80]
 > Hierarchy: `### <algorithm>` → `##### <model family + size>`

@@ -8,12 +8,6 @@ Central tracker for every MCTS search experiment (cnt / sem /
 cnt-bl / sem-bl) on GSM8K — per-algorithm tuning tables grouped
 by gen_budget, plus a cross-algorithm best-config summary.
 
-
-
-
-
-
-
 <!-- toc:begin -- generated, do not hand-edit -->
 ## Contents
 

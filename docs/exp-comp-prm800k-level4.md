@@ -4,12 +4,6 @@ Central tracker for every MCTS search experiment (cnt / sem /
 cnt-bl / sem-bl) on PRM800K — per-algorithm tuning tables grouped
 by gen_budget, plus a cross-algorithm best-config summary.
 
-
-
-
-
-
-
 <!-- toc:begin -- generated, do not hand-edit -->
 ## Contents
 
@@ -1797,7 +1791,7 @@ instead of one wide sparse grid.)
 |---|---|---|---|---|---|---|---|---|---|---|---|
 | llama-1b | qwen | 0.01 | 0 | 0 | 2 | scored | .5469<br>±.0312 | .5078<br>±.0313 | .4883<br>±.0313 | .4375<br>±.0311 | 3.24 |
 | llama-1b | qwen | 0.01 | 0.01 | 0.1 | 2 | scored | .5703<br>±.0310 | .5273<br>±.0313 | .4805<br>±.0313 | .4609<br>±.0312 | 3.56 |
-| llama-1b | qwen | 0.01 | 0.03 | 0.3 | — | inqueue | — | — | — | — | — |
+| llama-1b | qwen | 0.01 | 0.03 | 0.3 | — | running | — | — | — | — | — |
 | llama-1b | qwen | 0.01 | 0.1 | 1 | 2 | scored | .6289<br>±.0303 | .5469<br>±.0312 | .5078<br>±.0313 | .4648<br>±.0312 | 3.82 |
 | llama-1b | qwen | 0.01 | 0.3 | 3 | 2 | scored | .6367<br>±.0301 | .5273<br>±.0313 | .4922<br>±.0313 | .4609<br>±.0312 | 3.82 |
 | llama-1b | qwen | 0.01 | 1.0 | 10 | 2 | scored | .6406<br>±.0300 | .5312<br>±.0312 | .4805<br>±.0313 | .4219<br>±.0309 | 3.95 |

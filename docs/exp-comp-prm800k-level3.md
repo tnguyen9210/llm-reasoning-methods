@@ -25,10 +25,6 @@ be read against its level-4 and level-5 counterparts
 (`tbl-afdda0` there) without importing the rest of those docs'
 grids.
 
-
-
-
-
 <!-- toc:begin -- generated, do not hand-edit -->
 ## Contents
 
