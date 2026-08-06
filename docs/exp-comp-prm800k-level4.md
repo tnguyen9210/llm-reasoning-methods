@@ -9,6 +9,7 @@ by gen_budget, plus a cross-algorithm best-config summary.
 
 
 
+
 <!-- toc:begin -- generated, do not hand-edit -->
 ## Contents
 
@@ -48,6 +49,12 @@ by gen_budget, plus a cross-algorithm best-config summary.
     - [agg_strategy comparison (qwen-3b, qwen-math-1.5b, lam=0.1, w_eff=10)](#agg_strategy-comparison-qwen-3b-qwen-math-15b-lam01-w_eff10) · `tbl-b1e565`
     - [agg_strategy comparison (qwen-3b, qwen-math-1.5b, lam=0.1, w_eff=100)](#agg_strategy-comparison-qwen-3b-qwen-math-15b-lam01-w_eff100) · `tbl-db5810`
     - [LLM vs PRM embeds comparison](#llm-vs-prm-embeds-comparison) · `tbl-1eed5c`
+  - [sem-mcts-v02 \[cov_scope=local\]](#sem-mcts-v02-cov_scopelocal)
+    - [lam / ds_alpha joint sweep (llama-1b, embeds_ref=relative)](#lam-ds_alpha-joint-sweep-llama-1b-embeds_refrelative) · `tbl-db0cf7`
+    - [lam / ds_alpha joint sweep (llama-3b, embeds_ref=relative)](#lam-ds_alpha-joint-sweep-llama-3b-embeds_refrelative) · `tbl-43996a`
+    - [lam / ds_alpha joint sweep (qwen-3b, embeds_ref=relative)](#lam-ds_alpha-joint-sweep-qwen-3b-embeds_refrelative) · `tbl-ecabc0`
+    - [lam / ds_alpha joint sweep (qwen-7b gptq-int4, embeds_ref=relative)](#lam-ds_alpha-joint-sweep-qwen-7b-gptq-int4-embeds_refrelative) · `tbl-e6a2f9`
+    - [lam / ds_alpha joint sweep (qwen-math-1.5b, embeds_ref=relative)](#lam-ds_alpha-joint-sweep-qwen-math-15b-embeds_refrelative) · `tbl-c76d49`
   - [cnt-mcts-bl-v01](#cnt-mcts-bl-v01)
     - [model family, size, quantization comparison (qwen PRM)](#model-family-size-quantization-comparison-qwen-prm-2) · `tbl-deb9f9`
   - [kube-mcts-bl-v01](#kube-mcts-bl-v01)
@@ -68,7 +75,7 @@ by gen_budget, plus a cross-algorithm best-config summary.
 - [**Standing comparison questions**](#standing-comparison-questions)
 - [**Links & connections**](#links-connections)
 
-*34 tables. Regenerate with `python scripts/gen_toc.py`.*
+*39 tables. Regenerate with `python scripts/gen_toc.py`.*
 <!-- toc:end -->
 
 ## Purpose

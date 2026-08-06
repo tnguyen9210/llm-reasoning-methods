@@ -15,77 +15,76 @@ by gen_budget, plus a cross-algorithm best-config summary.
 
 
 
+
 <!-- toc:begin -- generated, do not hand-edit -->
 ## Contents
 
-- [LLM Reasoning — MCTS Experiment Comparison — AIME2025](#llm-reasoning--mcts-experiment-comparison--aime2025)
-  - [Contents](#contents)
-  - [Purpose](#purpose)
-  - [Structure and use](#structure-and-use)
-  - [Cross-algorithm summary \[gen\_budget=80\] (QwenPRM)](#cross-algorithm-summary-gen_budget80-qwenprm)
-  - [Cross-algorithm summary \[gen\_budget=320\] (QwenPRM)](#cross-algorithm-summary-gen_budget320-qwenprm)
-  - [Tuning tables \[gen\_budget=80\]](#tuning-tables-gen_budget80)
-    - [cnt-mcts](#cnt-mcts)
-      - [model family, size, quantization comparison (RLHFlowPRM)](#model-family-size-quantization-comparison-rlhflowprm)
-      - [model family, size, quantization comparison (QwenPRM)](#model-family-size-quantization-comparison-qwenprm)
-      - [agg\_strategy comparison (qwen-3b, qwen-math-1.5b)](#agg_strategy-comparison-qwen-3b-qwen-math-15b)
-    - [sem-mcts-v02](#sem-mcts-v02)
-      - [embeds\_strategy × scope sweep (QwenPRM)](#embeds_strategy--scope-sweep-qwenprm)
-      - [lam / ds\_alpha joint sweep (llama-1b)](#lam--ds_alpha-joint-sweep-llama-1b)
-      - [lam / ds\_alpha joint sweep (llama-3b)](#lam--ds_alpha-joint-sweep-llama-3b)
-      - [lam / ds\_alpha joint sweep (qwen-math-1.5b)](#lam--ds_alpha-joint-sweep-qwen-math-15b)
-      - [lam / ds\_alpha joint sweep (qwen-7b gptq-int4)](#lam--ds_alpha-joint-sweep-qwen-7b-gptq-int4)
-      - [embeds\_center\_mode comparison (lam=0.01/ds\_alpha=1)](#embeds_center_mode-comparison-lam001ds_alpha1)
-      - [embeds\_center\_mode comparison (lam=0.01/ds\_alpha=10)](#embeds_center_mode-comparison-lam001ds_alpha10)
-      - [agg\_strategy comparison (qwen-3b, qwen-math-1.5b, lam=0.01/ds\_alpha=1)](#agg_strategy-comparison-qwen-3b-qwen-math-15b-lam001ds_alpha1)
-      - [agg\_strategy comparison (qwen-3b, qwen-math-1.5b, lam=0.01/ds\_alpha=10)](#agg_strategy-comparison-qwen-3b-qwen-math-15b-lam001ds_alpha10)
-      - [model family, size, quantization comparison (QwenPRM, lam=0.01/ds\_alpha=1)](#model-family-size-quantization-comparison-qwenprm-lam001ds_alpha1)
-      - [model family, size, quantization comparison (QwenPRM, lam=0.01/ds\_alpha=10)](#model-family-size-quantization-comparison-qwenprm-lam001ds_alpha10)
-    - [sem-mcts-v02 \[cov\_scope=local\]](#sem-mcts-v02-cov_scopelocal)
-      - [lam / ds\_alpha joint sweep (llama-1b, embeds\_ref=relative)](#lam--ds_alpha-joint-sweep-llama-1b-embeds_refrelative)
-      - [lam / ds\_alpha joint sweep (llama-3b, embeds\_ref=relative)](#lam--ds_alpha-joint-sweep-llama-3b-embeds_refrelative)
-      - [lam / ds\_alpha joint sweep (qwen-3b, embeds\_ref=relative)](#lam--ds_alpha-joint-sweep-qwen-3b-embeds_refrelative)
-      - [lam / ds\_alpha joint sweep (qwen-7b gptq-int4, embeds\_ref=relative)](#lam--ds_alpha-joint-sweep-qwen-7b-gptq-int4-embeds_refrelative)
-      - [lam / ds\_alpha joint sweep (qwen-math-1.5b, embeds\_ref=relative)](#lam--ds_alpha-joint-sweep-qwen-math-15b-embeds_refrelative)
-    - [cnt-mcts-bl-v01](#cnt-mcts-bl-v01)
-      - [model family, size, quantization comparison (QwenPRM)](#model-family-size-quantization-comparison-qwenprm-1)
-    - [cnt-mcts-bl-v02](#cnt-mcts-bl-v02)
-      - [score\_mode sweep: parent\_blend (alpha) vs. path\_decay (gamma × cpuct) (qwen-3b, QwenPRM)](#score_mode-sweep-parent_blend-alpha-vs-path_decay-gamma--cpuct-qwen-3b-qwenprm)
-    - [kube-mcts-bl-v01](#kube-mcts-bl-v01)
-      - [model family, size, quantization comparison (QwenPRM)](#model-family-size-quantization-comparison-qwenprm-2)
-      - [kube\_c sweep × model family (QwenPRM)](#kube_c-sweep--model-family-qwenprm)
-    - [kube-mcts-bl-v02](#kube-mcts-bl-v02)
-      - [score\_mode sweep: parent\_blend (alpha) vs. path\_decay (gamma × kube\_c) (qwen-3b, QwenPRM)](#score_mode-sweep-parent_blend-alpha-vs-path_decay-gamma--kube_c-qwen-3b-qwenprm)
-      - [model family, size, quantization comparison (QwenPRM, parent\_blend/alpha=0.8)](#model-family-size-quantization-comparison-qwenprm-parent_blendalpha08)
-      - [model family, size, quantization comparison (QwenPRM, parent\_blend/alpha=1.0)](#model-family-size-quantization-comparison-qwenprm-parent_blendalpha10)
-      - [model family, size, quantization comparison (QwenPRM, parent\_blend/alpha=0.0)](#model-family-size-quantization-comparison-qwenprm-parent_blendalpha00)
-      - [alpha × kube\_c joint sweep (llama-3b, QwenPRM, parent\_blend)](#alpha--kube_c-joint-sweep-llama-3b-qwenprm-parent_blend)
-      - [gamma × kube\_c joint sweep (qwen-3b, QwenPRM, path\_decay)](#gamma--kube_c-joint-sweep-qwen-3b-qwenprm-path_decay)
-    - [kdepth-mcts-bl-v01](#kdepth-mcts-bl-v01)
-      - [model family, size, quantization comparison (QwenPRM)](#model-family-size-quantization-comparison-qwenprm-3)
-      - [model family, size, quantization comparison (QwenPRM, depth\_alpha=0.5)](#model-family-size-quantization-comparison-qwenprm-depth_alpha05)
-      - [model family, size, quantization comparison (QwenPRM, depth\_alpha=2.0)](#model-family-size-quantization-comparison-qwenprm-depth_alpha20)
-    - [kdepth-mcts-bl-v02](#kdepth-mcts-bl-v02)
-      - [score\_mode sweep: parent\_blend (alpha) vs. path\_decay (gamma) (qwen-3b, QwenPRM)](#score_mode-sweep-parent_blend-alpha-vs-path_decay-gamma-qwen-3b-qwenprm)
-      - [model family, size, quantization comparison (QwenPRM, parent\_blend/alpha=0.8)](#model-family-size-quantization-comparison-qwenprm-parent_blendalpha08-1)
-      - [model family, size, quantization comparison (QwenPRM, parent\_blend/alpha=1.0)](#model-family-size-quantization-comparison-qwenprm-parent_blendalpha10-1)
-    - [sem-mcts-bl-v01](#sem-mcts-bl-v01)
-      - [model family comparison (QwenPRM, lam=0.01/ds\_alpha=10, max\_model\_len=6000)](#model-family-comparison-qwenprm-lam001ds_alpha10-max_model_len6000)
-      - [model family comparison (QwenPRM, lam=0.01/ds\_alpha=1, max\_model\_len=6000)](#model-family-comparison-qwenprm-lam001ds_alpha1-max_model_len6000)
-    - [sem-mcts-bl-v02](#sem-mcts-bl-v02)
-      - [model family, size, quantization comparison (QwenPRM, parent\_blend/alpha=1.0, lam=0.01/ds\_alpha=10)](#model-family-size-quantization-comparison-qwenprm-parent_blendalpha10-lam001ds_alpha10)
-  - [Tuning tables \[gen\_budget=160, 320, …\] *(future)*](#tuning-tables-gen_budget160-320--future)
-    - [cnt-mcts](#cnt-mcts-1)
-      - [model family comparison (b=320, QwenPRM)](#model-family-comparison-b320-qwenprm)
-    - [sem-mcts-v02](#sem-mcts-v02-1)
-      - [model family comparison (b=320, QwenPRM, lam=0.1, w\_eff=10)](#model-family-comparison-b320-qwenprm-lam01-w_eff10)
-      - [model family comparison (b=320, QwenPRM, lam=0.1, w\_eff=100)](#model-family-comparison-b320-qwenprm-lam01-w_eff100)
-    - [sem-mcts-v02 \[cov\_scope=local\]](#sem-mcts-v02-cov_scopelocal-1)
-      - [lam / ds\_alpha joint sweep (b=320, llama-1b, embeds\_ref=relative)](#lam--ds_alpha-joint-sweep-b320-llama-1b-embeds_refrelative)
-      - [lam / ds\_alpha joint sweep (b=320, llama-3b, embeds\_ref=relative)](#lam--ds_alpha-joint-sweep-b320-llama-3b-embeds_refrelative)
-      - [lam / ds\_alpha joint sweep (b=320, qwen-3b, embeds\_ref=relative)](#lam--ds_alpha-joint-sweep-b320-qwen-3b-embeds_refrelative)
-      - [lam / ds\_alpha joint sweep (b=320, qwen-7b gptq-int4, embeds\_ref=relative)](#lam--ds_alpha-joint-sweep-b320-qwen-7b-gptq-int4-embeds_refrelative)
-      - [lam / ds\_alpha joint sweep (b=320, qwen-math-1.5b, embeds\_ref=relative)](#lam--ds_alpha-joint-sweep-b320-qwen-math-15b-embeds_refrelative)
+- [**Purpose**](#purpose)
+- [**Structure and use**](#structure-and-use)
+- [**Cross-algorithm summary \[gen_budget=80\] (QwenPRM)**](#cross-algorithm-summary-gen_budget80-qwenprm)
+- [**Cross-algorithm summary \[gen_budget=320\] (QwenPRM)**](#cross-algorithm-summary-gen_budget320-qwenprm)
+- [**Tuning tables \[gen_budget=80\]**](#tuning-tables-gen_budget80)
+  - [cnt-mcts](#cnt-mcts)
+    - [model family, size, quantization comparison (RLHFlowPRM)](#model-family-size-quantization-comparison-rlhflowprm) · `tbl-161a03`
+    - [model family, size, quantization comparison (QwenPRM)](#model-family-size-quantization-comparison-qwenprm) · `tbl-e742a7`
+    - [agg_strategy comparison (qwen-3b, qwen-math-1.5b)](#agg_strategy-comparison-qwen-3b-qwen-math-15b) · `tbl-6dad4f`
+  - [sem-mcts-v02](#sem-mcts-v02)
+    - [embeds_strategy × scope sweep (QwenPRM)](#embeds_strategy-scope-sweep-qwenprm) · `tbl-0c55e1`
+    - [lam / ds_alpha joint sweep (llama-1b)](#lam-ds_alpha-joint-sweep-llama-1b) · `tbl-b1a6d9`
+    - [lam / ds_alpha joint sweep (llama-3b)](#lam-ds_alpha-joint-sweep-llama-3b) · `tbl-d0ed2a`
+    - [lam / ds_alpha joint sweep (qwen-math-1.5b)](#lam-ds_alpha-joint-sweep-qwen-math-15b) · `tbl-8bf48f`
+    - [lam / ds_alpha joint sweep (qwen-7b gptq-int4)](#lam-ds_alpha-joint-sweep-qwen-7b-gptq-int4) · `tbl-ba8af1`
+    - [embeds_center_mode comparison (lam=0.01/ds_alpha=1)](#embeds_center_mode-comparison-lam001ds_alpha1) · `tbl-4f8220`
+    - [embeds_center_mode comparison (lam=0.01/ds_alpha=10)](#embeds_center_mode-comparison-lam001ds_alpha10) · `tbl-ddf79e`
+    - [agg_strategy comparison (qwen-3b, qwen-math-1.5b, lam=0.01/ds_alpha=1)](#agg_strategy-comparison-qwen-3b-qwen-math-15b-lam001ds_alpha1) · `tbl-6ef336`
+    - [agg_strategy comparison (qwen-3b, qwen-math-1.5b, lam=0.01/ds_alpha=10)](#agg_strategy-comparison-qwen-3b-qwen-math-15b-lam001ds_alpha10) · `tbl-4498f8`
+    - [model family, size, quantization comparison (QwenPRM, lam=0.01/ds_alpha=1)](#model-family-size-quantization-comparison-qwenprm-lam001ds_alpha1) · `tbl-cfd7cf`
+    - [model family, size, quantization comparison (QwenPRM, lam=0.01/ds_alpha=10)](#model-family-size-quantization-comparison-qwenprm-lam001ds_alpha10) · `tbl-878af9`
+  - [sem-mcts-v02 \[cov_scope=local\]](#sem-mcts-v02-cov_scopelocal)
+    - [lam / ds_alpha joint sweep (llama-1b, embeds_ref=relative)](#lam-ds_alpha-joint-sweep-llama-1b-embeds_refrelative) · `tbl-2ef3dc`
+    - [lam / ds_alpha joint sweep (llama-3b, embeds_ref=relative)](#lam-ds_alpha-joint-sweep-llama-3b-embeds_refrelative) · `tbl-b94f3f`
+    - [lam / ds_alpha joint sweep (qwen-3b, embeds_ref=relative)](#lam-ds_alpha-joint-sweep-qwen-3b-embeds_refrelative) · `tbl-435dd3`
+    - [lam / ds_alpha joint sweep (qwen-7b gptq-int4, embeds_ref=relative)](#lam-ds_alpha-joint-sweep-qwen-7b-gptq-int4-embeds_refrelative) · `tbl-7a3760`
+    - [lam / ds_alpha joint sweep (qwen-math-1.5b, embeds_ref=relative)](#lam-ds_alpha-joint-sweep-qwen-math-15b-embeds_refrelative) · `tbl-4ef506`
+  - [cnt-mcts-bl-v01](#cnt-mcts-bl-v01)
+    - [model family, size, quantization comparison (QwenPRM)](#model-family-size-quantization-comparison-qwenprm-1) · `tbl-c7dd39`
+  - [cnt-mcts-bl-v02](#cnt-mcts-bl-v02)
+    - [score_mode sweep: parent_blend (alpha) vs. path_decay (gamma × cpuct) (qwen-3b, QwenPRM)](#score_mode-sweep-parent_blend-alpha-vs-path_decay-gamma-cpuct-qwen-3b-qwenprm) · `tbl-40a360`
+  - [kube-mcts-bl-v01](#kube-mcts-bl-v01)
+    - [model family, size, quantization comparison (QwenPRM)](#model-family-size-quantization-comparison-qwenprm-2) · `tbl-d34700`
+    - [kube_c sweep × model family (QwenPRM)](#kube_c-sweep-model-family-qwenprm) · `tbl-9d3944`
+  - [kube-mcts-bl-v02](#kube-mcts-bl-v02)
+    - [score_mode sweep: parent_blend (alpha) vs. path_decay (gamma × kube_c) (qwen-3b, QwenPRM)](#score_mode-sweep-parent_blend-alpha-vs-path_decay-gamma-kube_c-qwen-3b-qwenprm) · `tbl-bdeba2`
+    - [model family, size, quantization comparison (QwenPRM, parent_blend/alpha=0.8)](#model-family-size-quantization-comparison-qwenprm-parent_blendalpha08) · `tbl-bda3a8`
+    - [model family, size, quantization comparison (QwenPRM, parent_blend/alpha=1.0)](#model-family-size-quantization-comparison-qwenprm-parent_blendalpha10) · `tbl-b3d812`
+    - [model family, size, quantization comparison (QwenPRM, parent_blend/alpha=0.0)](#model-family-size-quantization-comparison-qwenprm-parent_blendalpha00) · `tbl-7c1779`
+    - [alpha × kube_c joint sweep (llama-3b, QwenPRM, parent_blend)](#alpha-kube_c-joint-sweep-llama-3b-qwenprm-parent_blend) · `tbl-86e0b6`
+    - [gamma × kube_c joint sweep (qwen-3b, QwenPRM, path_decay)](#gamma-kube_c-joint-sweep-qwen-3b-qwenprm-path_decay) · `tbl-434915`
+  - [kdepth-mcts-bl-v01](#kdepth-mcts-bl-v01)
+    - [model family, size, quantization comparison (QwenPRM)](#model-family-size-quantization-comparison-qwenprm-3) · `tbl-acca74`
+    - [model family, size, quantization comparison (QwenPRM, depth_alpha=0.5)](#model-family-size-quantization-comparison-qwenprm-depth_alpha05) · `tbl-b429d0`
+    - [model family, size, quantization comparison (QwenPRM, depth_alpha=2.0)](#model-family-size-quantization-comparison-qwenprm-depth_alpha20) · `tbl-3fbc68`
+  - [kdepth-mcts-bl-v02](#kdepth-mcts-bl-v02)
+    - [score_mode sweep: parent_blend (alpha) vs. path_decay (gamma) (qwen-3b, QwenPRM)](#score_mode-sweep-parent_blend-alpha-vs-path_decay-gamma-qwen-3b-qwenprm) · `tbl-59ccb9`
+    - [model family, size, quantization comparison (QwenPRM, parent_blend/alpha=0.8)](#model-family-size-quantization-comparison-qwenprm-parent_blendalpha08-1) · `tbl-d81f40`
+    - [model family, size, quantization comparison (QwenPRM, parent_blend/alpha=1.0)](#model-family-size-quantization-comparison-qwenprm-parent_blendalpha10-1) · `tbl-288646`
+  - [sem-mcts-bl-v01](#sem-mcts-bl-v01)
+    - [model family comparison (QwenPRM, lam=0.01/ds_alpha=10, max_model_len=6000)](#model-family-comparison-qwenprm-lam001ds_alpha10-max_model_len6000) · `tbl-df1eeb`
+    - [model family comparison (QwenPRM, lam=0.01/ds_alpha=1, max_model_len=6000)](#model-family-comparison-qwenprm-lam001ds_alpha1-max_model_len6000) · `tbl-b3f9bb`
+  - [sem-mcts-bl-v02](#sem-mcts-bl-v02)
+    - [model family, size, quantization comparison (QwenPRM, parent_blend/alpha=1.0, lam=0.01/ds_alpha=10)](#model-family-size-quantization-comparison-qwenprm-parent_blendalpha10-lam001ds_alpha10) · `tbl-396f65`
+- [**Tuning tables \[gen_budget=160, 320, …\] *(future)***](#tuning-tables-gen_budget160-320-future)
+  - [cnt-mcts](#cnt-mcts-1)
+    - [model family comparison (b=320, QwenPRM)](#model-family-comparison-b320-qwenprm) · `tbl-f31bf0`
+  - [sem-mcts-v02](#sem-mcts-v02-1)
+    - [model family comparison (b=320, QwenPRM, lam=0.1, w_eff=10)](#model-family-comparison-b320-qwenprm-lam01-w_eff10) · `tbl-b2d2d2`
+    - [model family comparison (b=320, QwenPRM, lam=0.1, w_eff=100)](#model-family-comparison-b320-qwenprm-lam01-w_eff100) · `tbl-9d68e9`
+  - [sem-mcts-v02 \[cov_scope=local\]](#sem-mcts-v02-cov_scopelocal-1)
+    - [lam / ds_alpha joint sweep (b=320, llama-1b, embeds_ref=relative)](#lam-ds_alpha-joint-sweep-b320-llama-1b-embeds_refrelative) · `tbl-568027`
+    - [lam / ds_alpha joint sweep (b=320, llama-3b, embeds_ref=relative)](#lam-ds_alpha-joint-sweep-b320-llama-3b-embeds_refrelative) · `tbl-f0eec8`
+    - [lam / ds_alpha joint sweep (b=320, qwen-3b, embeds_ref=relative)](#lam-ds_alpha-joint-sweep-b320-qwen-3b-embeds_refrelative) · `tbl-4abc69`
+    - [lam / ds_alpha joint sweep (b=320, qwen-7b gptq-int4, embeds_ref=relative)](#lam-ds_alpha-joint-sweep-b320-qwen-7b-gptq-int4-embeds_refrelative) · `tbl-f6fc16`
+    - [lam / ds_alpha joint sweep (b=320, qwen-math-1.5b, embeds_ref=relative)](#lam-ds_alpha-joint-sweep-b320-qwen-math-15b-embeds_refrelative) · `tbl-a488ce`
 
 *46 tables. Regenerate with `python scripts/gen_toc.py`.*
 <!-- toc:end -->

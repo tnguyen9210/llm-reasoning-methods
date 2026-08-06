@@ -11,12 +11,13 @@ by gen_budget, plus a cross-algorithm best-config summary.
 
 
 
+
 <!-- toc:begin -- generated, do not hand-edit -->
 ## Contents
 
 - [**Purpose**](#purpose)
 - [**Structure and use**](#structure-and-use)
-- [**Cross-algorithm summary (QwenPRM)**](#cross-algorithm-summary-qwenprm)
+- [**Cross-algorithm summary \[gen_budget=80\] (QwenPRM)**](#cross-algorithm-summary-gen_budget80-qwenprm)
 - [**Tuning tables \[gen_budget=80\]**](#tuning-tables-gen_budget80)
   - [cnt-mcts](#cnt-mcts)
     - [model family, size, quantization comparison (RLHFlowPRM)](#model-family-size-quantization-comparison-rlhflowprm) · `tbl-d6065d`
@@ -131,38 +132,51 @@ Two activities, two shapes:
 
 ---
 
-## Cross-algorithm summary (QwenPRM)
-> One table per model, one row per algorithm — pulled directly from
-> each algorithm's own "model family, size, quantization comparison
-> (QwenPRM)" table above/below (`cnt-mcts`, `sem-mcts`,
-> `cnt-mcts-bl-v01`, `kube-mcts-bl-v01`, `kdepth-mcts-bl-v01`,
-> `sem-mcts-bl-v01`). All rows fixed at b=80, bs-4, d-20,
-> agg_strategy=`last`, tmpl=model-family default (native for Qwen,
-> custom for Llama), prm=qwen. `cnt-mcts` row is method=`mcts_cnt_v01`
-> (the only cnt-mcts entry point at this level — see the
-> `### cnt-mcts` section above). `sem-mcts` row is `mcts_sem_v02` (PRM embeds),
-> `ds_alpha=100` (w_eff not applicable — that knob is bl_sem-specific).
-> `sem-mcts-bl-v01` row uses the `w_eff=100` table; see that
-> algorithm's own section for the `w_eff=10` comparison point.
-> `kube-mcts-bl-v01` (Fractional KUBE) and `kdepth-mcts-bl-v01`
-> (depth-shaping) — see `docs/decisions/bl-kube-bonus-schedule.md` /
+## Cross-algorithm summary [gen_budget=80] (QwenPRM)
+> One table per model, one row per algorithm, matching the
+> `docs/exp-comp-aime2025.md` summaries. Each row is the best
+> config for that (algorithm, model) pair, picked across **all**
+> of that variant's tuning knobs jointly by pass@gb, ties broken
+> naive → wei → maj. Fixed: b=80, bs-4, d-20, agg_strategy=`last`,
+> tmpl=model-family default (native for Qwen, custom for Llama),
+> prm=qwen, data.level=5.
+>
+> Sources: `cnt-mcts` = method `mcts_cnt_v01` (`tbl-afdda0`, the
+> only cnt-mcts entry point at this level). `sem-mcts-v02` = the
+> global-scope section, pooling its lam × ds_alpha sweeps with the
+> `embeds_center_mode` arms. `sem-mcts-v02 (local)` = the whole
+> `### sem-mcts-v02 [cov_scope=local]` section, pooling the
+> `embeds_ref` absolute and relative sweeps.
+>
+> Search-cost columns (mean ± SEM over questions × trials, from
+> `compute_stats` / W&B `eval/*` — see `utils/metrics.py`
+> `_eval_question`): `ncomps` = completed solutions per question
+> (`len(completions)`); `depth` = mean depth of those completions
+> (`comp_depth`); `nphases` = the phase index the search ended on
+> (`q_last_phase`); `ndepths` = mean per-phase depth
+> (`phase_depths`). `ncomps` is the one to read first — it is how
+> much of the generation budget actually became a usable solution.
+>
+> ⚠️ The previous six-algorithm snapshot (adding `cnt-mcts-bl-v01`,
+> `kube-mcts-bl-v01`, `kdepth-mcts-bl-v01`, `sem-mcts-bl-v01`) is
+> commented out directly below, not deleted. Those families are
+> unchanged; they are simply out of scope for this cut. See
+> `docs/decisions/bl-kube-bonus-schedule.md`,
 > `kube-affordability-restriction.md` and
-> `docs/decisions/bl-kdepth-knapsack-bonus.md` for the
-> algorithms.
+> `docs/decisions/bl-kdepth-knapsack-bonus.md` for the algorithms.
 
-> Each cell is the **best available** result for that (algorithm,
-> model) pair by pass@gb (tie → wei@gb). Non-bl rows (`cnt-mcts`,
-> `sem-mcts`) pull from their own model-family QwenPRM tables below;
-> `sem-mcts` takes the better of its ds_alpha=1/10 arms. The four
-> `*-bl-v01` rows pull the best config from that family's tuning
-> tables (kube: parent_blend arms; kdepth: the depth_alpha sweep;
-> sem-bl: ds_alpha=1/10). bl-v01 SEMs are from direct
-> compute_stats scoring (2 trials); hr/trial not captured for those.
-
+<!-- TEMPORARILY COMMENTED OUT 2026-08-06: six-algorithm
+     best-available snapshot (cnt/sem/cnt-bl/kube-bl/kdepth-bl/
+     sem-bl). Superseded below by the three-row cnt-mcts /
+     sem-mcts-v02 / sem-mcts-v02 (local) tables, matching the
+     AIME2025 doc. To restore: uncomment and replace U+2011
+     (non-breaking hyphen) with ASCII hyphens in the separator
+     rows; they were swapped only because a doubled ASCII hyphen
+     cannot appear inside an HTML comment.
 **llama-1b fp16**
 
 | algorithm | trials | status | pass@gb | naive@gb | wei@gb | maj@gb | hr/trial |
-|---|---|---|---|---|---|---|---|
+|‑‑‑|‑‑‑|‑‑‑|‑‑‑|‑‑‑|‑‑‑|‑‑‑|‑‑‑|
 | cnt-mcts | 2 | scored | .3619<br>±.0294 | .2724 | .2127 | .1903 | 2.98 |
 | sem-mcts | 2 | scored | .3433<br>±.0291 | .2537 | .1978 | .1679 | 4.85 |
 | cnt-mcts-bl-v01 | 2 | scored | .2313<br>±.0258 | .2090 | .1940 | .1940 | 2.74 |
@@ -173,7 +187,7 @@ Two activities, two shapes:
 **llama-3b fp16**
 
 | algorithm | trials | status | pass@gb | naive@gb | wei@gb | maj@gb | hr/trial |
-|---|---|---|---|---|---|---|---|
+|‑‑‑|‑‑‑|‑‑‑|‑‑‑|‑‑‑|‑‑‑|‑‑‑|‑‑‑|
 | cnt-mcts | 2 | scored | .5522<br>±.0304 | .4291 | .4104 | .3619 | 5.13 |
 | sem-mcts | 2 | scored | .5784<br>±.0302 | .4403 | .4291 | .3881 | 6.93 |
 | cnt-mcts-bl-v01 | 2 | scored | .3731<br>±.0296 | .3209 | .3321 | .3209 | 4.76 |
@@ -184,7 +198,7 @@ Two activities, two shapes:
 **qwen-3b fp16**
 
 | algorithm | trials | status | pass@gb | naive@gb | wei@gb | maj@gb | hr/trial |
-|---|---|---|---|---|---|---|---|
+|‑‑‑|‑‑‑|‑‑‑|‑‑‑|‑‑‑|‑‑‑|‑‑‑|‑‑‑|
 | cnt-mcts | 2 | scored | .6978<br>±.0281 | .5896 | .5896 | .5410 | 4.63 |
 | sem-mcts | 2 | scored | .6903<br>±.0283 | .5784 | .5597 | .5373 | 6.20 |
 | cnt-mcts-bl-v01 | — | running | — | — | — | — | — |
@@ -195,7 +209,7 @@ Two activities, two shapes:
 **qwen-7b gptq-int4**
 
 | algorithm | trials | status | pass@gb | naive@gb | wei@gb | maj@gb | hr/trial |
-|---|---|---|---|---|---|---|---|
+|‑‑‑|‑‑‑|‑‑‑|‑‑‑|‑‑‑|‑‑‑|‑‑‑|‑‑‑|
 | cnt-mcts | 2 | scored | .7537<br>±.0264 | .6157 | .5784 | .5634 | 4.19 |
 | sem-mcts | 2 | scored | .7873<br>±.0250 | .6045 | .5634 | .5634 | 5.54 |
 | cnt-mcts-bl-v01 | 2 | scored | .6343<br>±.0295 | .5709 | .5672 | .5522 | 3.97 |
@@ -206,37 +220,96 @@ Two activities, two shapes:
 **qwen-math-1.5b fp16**
 
 | algorithm | trials | status | pass@gb | naive@gb | wei@gb | maj@gb | hr/trial |
-|---|---|---|---|---|---|---|---|
+|‑‑‑|‑‑‑|‑‑‑|‑‑‑|‑‑‑|‑‑‑|‑‑‑|‑‑‑|
 | cnt-mcts | 2 | scored | .7575<br>±.0262 | .6418 | .6455 | .6269 | 3.37 |
 | sem-mcts | 2 | scored | .7500<br>±.0265 | .6343 | .6157 | .6007 | 4.79 |
 | cnt-mcts-bl-v01 | 2 | scored | .4366<br>±.0304 | .4142 | .4104 | .3955 | 3.31 |
 | kube-mcts-bl-v01 | 2 | scored | .6493<br>±.0292 | .5784 | .5672 | .5522 | — |
 | kdepth-mcts-bl-v01 | 2 | scored | .6455<br>±.0293 | .5522 | .5485 | .5336 | — |
 | sem-mcts-bl-v01 | 2 | scored | .6567<br>±.0291 | .5410 | .4627 | .4552 | — |
+-->
+**llama-1b fp16**
 
-> **Analysis.** Best-available snapshot, 24/30 cells scored
-> (all 5 model blocks visible as of 2026-07-22; the llama-1b and
-> qwen-3b blocks were restored after their kube-bl cells landed).
-> Ordering is model-driven: qwen-math-1.5b and qwen-7b-gptq top
-> every algorithm (pass@gb .65–.79), qwen-3b sits mid (.62–.70),
-> llama-1b trails (.23–.36). Non-bl cnt/sem-mcts lead their bl
-> counterparts on every model with data (qwen-7b: sem-mcts .7873
-> vs sem-bl-v01 .7537, cnt-mcts .7537 vs cnt-bl-v01 .6343;
-> qwen-3b: cnt-mcts .6978 vs kube-bl .6157). Within the bl
-> families no single variant dominates: sem-bl-v01 tops qwen-7b
-> (.7537) and qwen-math (.6567), kdepth tops llama-3b (.5000),
-> kube tops the two models where the others are unfilled
-> (llama-1b .3060, qwen-3b .6157) — and the kube/kdepth/sem-bl
-> spreads sit within ~1 SEM of each other per model, so treat
-> the bl-internal ranking as provisional. The robust reads:
-> cnt-bl-v01 is uniformly weakest (its qwen-math collapse .4366
-> is the standout anomaly), and every bl variant trails plain
-> cnt/sem-mcts on every model.
-> **Limitations / follow-up:** 6 cells still running — llama-1b
-> kdepth/sem-bl, qwen-3b cnt-bl/kdepth/sem-bl, qwen-7b kdepth
-> (runs done on disk, awaiting compute_stats + verification).
-> hr/trial missing for most bl cells (compute_stats path doesn't
-> capture it; backfill from timing_state.json pending).
+| algorithm | trials | status | pass@gb | naive@gb | wei@gb | maj@gb | ncomps | depth | nphases | ndepths | hr/trial |
+|---|---|---|---|---|---|---|---|---|---|---|---|
+| cnt-mcts | 2 | scored | .3619<br>±.0294 | .2724<br>±.0272 | .2127<br>±.0250 | .1903<br>±.0240 | 10.8<br>±0.5 | 10.5<br>±0.2 | 36.0<br>±9.8 | 11.5<br>±0.2 | 2.98 |
+| sem-mcts-v02 | 2 | scored | .3806<br>±.0297 | .2724<br>±.0272 | .2575<br>±.0268 | .2201<br>±.0254 | 10.8<br>±0.5 | 11.0<br>±0.2 | 50.5<br>±12.2 | 12.1<br>±0.3 | 4.86 |
+| sem-mcts-v02 (local) | 2 | scored | .3731<br>±.0296 | .2873<br>±.0277 | .2537<br>±.0266 | .1903<br>±.0240 | 11.2<br>±0.6 | 10.4<br>±0.2 | 54.0<br>±12.0 | 11.6<br>±0.3 | 4.88 |
+
+**llama-3b fp16**
+
+| algorithm | trials | status | pass@gb | naive@gb | wei@gb | maj@gb | ncomps | depth | nphases | ndepths | hr/trial |
+|---|---|---|---|---|---|---|---|---|---|---|---|
+| cnt-mcts | 2 | scored | .5522<br>±.0304 | .4291<br>±.0303 | .4104<br>±.0301 | .3619<br>±.0294 | 21.0<br>±1.0 | 9.0<br>±0.2 | 48.0<br>±11.1 | 9.9<br>±0.2 | 5.13 |
+| sem-mcts-v02 | 2 | scored | .5896<br>±.0301 | .4366<br>±.0304 | .4179<br>±.0302 | .3955<br>±.0299 | 21.8<br>±1.0 | 9.2<br>±0.2 | 80.6<br>±15.3 | 9.8<br>±0.3 | 6.85 |
+| sem-mcts-v02 (local) | 2 | scored | .5821<br>±.0302 | .4291<br>±.0303 | .3918<br>±.0299 | .3731<br>±.0296 | 21.5<br>±1.0 | 9.2<br>±0.2 | 81.7<br>±15.2 | 9.7<br>±0.3 | 6.85 |
+
+**qwen-3b fp16**
+
+| algorithm | trials | status | pass@gb | naive@gb | wei@gb | maj@gb | ncomps | depth | nphases | ndepths | hr/trial |
+|---|---|---|---|---|---|---|---|---|---|---|---|
+| cnt-mcts | 2 | scored | .6978<br>±.0281 | .5896<br>±.0301 | .5896<br>±.0301 | .5410<br>±.0305 | 21.1<br>±1.0 | 10.1<br>±0.2 | 10.1<br>±0.7 | 10.9<br>±0.2 | 4.63 |
+| sem-mcts-v02 | 2 | scored | .6978<br>±.0281 | .5634<br>±.0304 | .5336<br>±.0305 | .5112<br>±.0306 | 21.8<br>±1.0 | 10.4<br>±0.2 | 13.5<br>±3.7 | 11.1<br>±0.2 | 6.33 |
+| sem-mcts-v02 (local) | 2 | scored | .7164<br>±.0276 | .5821<br>±.0302 | .5634<br>±.0304 | .5410<br>±.0305 | 22.8<br>±1.0 | 10.3<br>±0.2 | 30.7<br>±7.8 | 10.8<br>±0.2 | 6.21 |
+
+**qwen-7b gptq-int4**
+
+| algorithm | trials | status | pass@gb | naive@gb | wei@gb | maj@gb | ncomps | depth | nphases | ndepths | hr/trial |
+|---|---|---|---|---|---|---|---|---|---|---|---|
+| cnt-mcts | 2 | scored | .7537<br>±.0264 | .6157<br>±.0298 | .5784<br>±.0302 | .5634<br>±.0304 | 33.3<br>±1.1 | 7.0<br>±0.2 | 75.5<br>±13.8 | 7.1<br>±0.2 | 4.19 |
+| sem-mcts-v02 | 2 | scored | .7873<br>±.0250 | .6045<br>±.0299 | .5634<br>±.0304 | .5634<br>±.0304 | 36.2<br>±1.2 | 7.3<br>±0.2 | 101.8<br>±14.8 | 7.1<br>±0.2 | 5.54 |
+| sem-mcts-v02 (local) | 2 | scored | .7836<br>±.0252 | .6045<br>±.0299 | .5821<br>±.0302 | .5821<br>±.0302 | 34.8<br>±1.1 | 7.0<br>±0.1 | 222.6<br>±23.8 | 6.9<br>±0.2 | 5.54 |
+
+**qwen-math-1.5b fp16**
+
+| algorithm | trials | status | pass@gb | naive@gb | wei@gb | maj@gb | ncomps | depth | nphases | ndepths | hr/trial |
+|---|---|---|---|---|---|---|---|---|---|---|---|
+| cnt-mcts | 2 | scored | .7575<br>±.0262 | .6418<br>±.0293 | .6455<br>±.0293 | .6269<br>±.0296 | 16.5<br>±0.8 | 10.7<br>±0.2 | 9.9<br>±1.7 | 11.7<br>±0.2 | 3.37 |
+| sem-mcts-v02 | 2 | scored | .7500<br>±.0265 | .6418<br>±.0293 | .6082<br>±.0299 | .6045<br>±.0299 | 17.5<br>±1.0 | 10.6<br>±0.2 | 25.9<br>±7.7 | 11.6<br>±0.2 | 4.85 |
+| sem-mcts-v02 (local) | 2 | scored | .7612<br>±.0261 | .6269<br>±.0296 | .6194<br>±.0297 | .5821<br>±.0302 | 17.2<br>±0.8 | 10.6<br>±0.2 | 8.4<br>±0.4 | 11.5<br>±0.2 | 4.82 |
+
+
+> **Analysis.** Promoted configs. `sem-mcts-v02`: llama-1b, qwen-3b
+> and qwen-math-1.5b `lam=0.01, ds_alpha=1, embeds_center=local`
+> (`tbl-e58353`); llama-3b `lam=0.01, ds_alpha=10, center=local`
+> (`tbl-2e75f2`); qwen-7b gptq-int4 `lam=0.01, ds_alpha=10`
+> (`tbl-21bde4`). `sem-mcts-v02 (local)` (all `lam=0.01`,
+> `embeds_ref=relative`): llama-1b and llama-3b `ds_alpha=0.3`
+> (`tbl-ba6b11`, `tbl-cf849a`); qwen-3b and qwen-7b gptq-int4
+> `ds_alpha=0.1` (`tbl-b1cb82`, `tbl-5d64b1`); qwen-math-1.5b
+> `ds_alpha=1.0` (`tbl-3a76ce`).
+>
+> **A sem-mcts variant beats cnt-mcts on all five models** —
+> llama-1b +.0187, llama-3b +.0374, qwen-3b +.0186, qwen-7b
+> gptq-int4 +.0336, qwen-math-1.5b +.0037. No single gap clears
+> 1.3 SEM (±.026-.031 at n≈267 question-trials), so none is
+> individually significant; but five out of five in the same
+> direction is a sign test at p≈0.03. Treat that as the finding,
+> not any one row. Caveat: the five models share one PRM and one
+> question set, so the five signs are not fully independent.
+>
+> Global takes three models (llama-1b, llama-3b, qwen-7b), local
+> two (qwen-3b, qwen-math-1.5b), and every global winner uses
+> `embeds_center=local` rather than the plain lam × ds_alpha grid.
+> Note the contrast with `docs/exp-comp-aime2025.md`, where local
+> beat global on 4/4 models at b=320 but the two traded wins at
+> b=80. Level 5 is a b=80 cut and lands mixed, which is what the
+> budget-dependence reading of that result predicts.
+>
+> `ncomps` does **not** show the pathology seen at AIME b=320
+> (where global completed ~45 % fewer solutions). Here all three
+> methods complete within ~1 SEM of each other on every model
+> (e.g. qwen-7b 33.3 / 36.2 / 34.8), so the budget is being
+> converted comparably and the accuracy differences are not a
+> completion-count artifact. `nphases` still separates them —
+> local runs 222.6 on qwen-7b against cnt-mcts 75.5 — but at
+> b=80 that extra phase count does not cost completions.
+> **Limitations / follow-up:** 2 trials only; every conclusion
+> above is one replication deep. hr/trial shows sem costing
+> 30-60 % more than cnt-mcts on every model, unchanged from the
+> previous snapshot. The four `*-bl-v01` families are commented
+> out above, not retired — restore that block if the bl
+> comparison is wanted again.
 
 ---
 
