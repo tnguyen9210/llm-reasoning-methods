@@ -2035,17 +2035,17 @@
   feeds:
   - tbl-8bf48f  # AIME lam/ds_alpha sweep (qwenmath15b)
   group: sem-mcts
-  status: failed
+  status: scored
   priority: 2
   expected_hr: 8
   note: sem-mcts AIME sweep lam=0.1 ds_alpha=316.2 (w_eff=1000)
-  launch:
-    job_id: 23419784
-    node: r5u31n1
-    pid: 1281960
-    at: 2026-07-28 01:11
   history:
   - {at: 2026-07-28 03:25, job_id: 23419784, outcome: missing, trials_done: 0}
+  launch:
+    job_id: 23485237
+    node: r5u15n1
+    pid: 4123460
+    at: 2026-08-05 09:07
 - id: sem-mcts-aime-sweep-qwenmath15b-lam0.01-ds100
   launcher: generate_mcts_sem.py
   hash: "d2219d3e"
@@ -2060,17 +2060,17 @@
   feeds:
   - tbl-8bf48f  # AIME lam/ds_alpha sweep (qwenmath15b)
   group: sem-mcts
-  status: failed
+  status: scored
   priority: 2
   expected_hr: 8
   note: sem-mcts AIME sweep lam=0.01 ds_alpha=100 (w_eff=1000)
-  launch:
-    job_id: 23419789
-    node: r5u17n1
-    pid: 1281961
-    at: 2026-07-28 01:11
   history:
   - {at: 2026-07-28 03:25, job_id: 23419789, outcome: missing, trials_done: 0}
+  launch:
+    job_id: 23485238
+    node: r5u25n1
+    pid: 4123461
+    at: 2026-08-05 09:07
 - id: sem-mcts-aime-sweep-qwen7bgptq-lam1.0-ds10
   launcher: generate_mcts_sem.py
   hash: "29158a26"
@@ -2085,17 +2085,17 @@
   feeds:
   - tbl-ba8af1  # AIME lam/ds_alpha sweep (qwen7bgptq)
   group: sem-mcts
-  status: failed
+  status: scored
   priority: 2
   expected_hr: 8
   note: sem-mcts AIME sweep lam=1.0 ds_alpha=10 (w_eff=10)
-  launch:
-    job_id: 23419815
-    node: r5u09n1
-    pid: 1281963
-    at: 2026-07-28 01:11
   history:
   - {at: 2026-07-28 03:25, job_id: 23419815, outcome: missing, trials_done: 0}
+  launch:
+    job_id: 23492607
+    node: r5u15n1
+    pid: 4123462
+    at: 2026-08-05 09:07
 - id: sem-mcts-aime-sweep-qwen7bgptq-lam0.1-ds3.16
   launcher: generate_mcts_sem.py
   hash: "b8f47fbd"
@@ -2781,7 +2781,7 @@
   feeds:
   - tbl-435dd3  # AIME2025 lam/ds_alpha relative sweep, qwen-3b
   group: sem-mcts
-  status: running
+  status: scored
   history:
   - {at: 2026-08-03 22:00, job_id: 23485244, outcome: stalled,
      trials_done: 2, cause: SLURM preemption+requeue of the
@@ -2960,7 +2960,7 @@
   feeds:
   - tbl-7a3760  # AIME2025 lam/ds_alpha relative sweep, qwen-7b gptq-int4
   group: sem-mcts
-  status: running
+  status: scored
   priority: 1.5
   expected_hr: 7
   note: AIME covlocal-rel qwen-7b gptq-int4 w_eff=3
@@ -2985,7 +2985,7 @@
   feeds:
   - tbl-7a3760  # AIME2025 lam/ds_alpha relative sweep, qwen-7b gptq-int4
   group: sem-mcts
-  status: running
+  status: scored
   priority: 1.5
   expected_hr: 7
   note: AIME covlocal-rel qwen-7b gptq-int4 w_eff=10
@@ -3010,7 +3010,7 @@
   feeds:
   - tbl-7a3760  # AIME2025 lam/ds_alpha relative sweep, qwen-7b gptq-int4
   group: sem-mcts
-  status: running
+  status: scored
   priority: 1.5
   expected_hr: 7
   note: AIME covlocal-rel qwen-7b gptq-int4 w_eff=100
@@ -3035,7 +3035,7 @@
   feeds:
   - tbl-4ef506  # AIME2025 lam/ds_alpha relative sweep, qwen-math-1.5b
   group: sem-mcts
-  status: running
+  status: scored
   priority: 1.5
   expected_hr: 6
   note: AIME covlocal-rel qwen-math-1.5b w_eff=0.1
@@ -3060,7 +3060,7 @@
   feeds:
   - tbl-4ef506  # AIME2025 lam/ds_alpha relative sweep, qwen-math-1.5b
   group: sem-mcts
-  status: running
+  status: scored
   priority: 1.5
   expected_hr: 6
   note: AIME covlocal-rel qwen-math-1.5b w_eff=0.3
@@ -3085,7 +3085,7 @@
   feeds:
   - tbl-4ef506  # AIME2025 lam/ds_alpha relative sweep, qwen-math-1.5b
   group: sem-mcts
-  status: running
+  status: scored
   priority: 1.5
   expected_hr: 6
   note: AIME covlocal-rel qwen-math-1.5b w_eff=1
@@ -3110,7 +3110,7 @@
   feeds:
   - tbl-4ef506  # AIME2025 lam/ds_alpha relative sweep, qwen-math-1.5b
   group: sem-mcts
-  status: running
+  status: scored
   priority: 1.5
   expected_hr: 6
   note: AIME covlocal-rel qwen-math-1.5b w_eff=3
@@ -3135,7 +3135,7 @@
   feeds:
   - tbl-4ef506  # AIME2025 lam/ds_alpha relative sweep, qwen-math-1.5b
   group: sem-mcts
-  status: running
+  status: scored
   priority: 1.5
   expected_hr: 6
   note: AIME covlocal-rel qwen-math-1.5b w_eff=10
@@ -3160,7 +3160,7 @@
   feeds:
   - tbl-4ef506  # AIME2025 lam/ds_alpha relative sweep, qwen-math-1.5b
   group: sem-mcts
-  status: running
+  status: scored
   priority: 1.5
   expected_hr: 6
   note: AIME covlocal-rel qwen-math-1.5b w_eff=100
@@ -3169,3 +3169,680 @@
     node: r5u09n1
     pid: 2740047
     at: 2026-08-03 17:53
+- id: sem-mcts-aime2025-b320-covlocal-rel-llama3b-weff1
+  launcher: generate_mcts_sem.py
+  hash: "174d06d2"
+  config_root: mcts_sem_v02_prm800k
+  overrides:
+    llm: llama_3b
+    prm: qwen_prm
+    search.lam: 0.01
+    search.ds_alpha: 0.1
+    search.cov_scope: local
+    search.embeds_ref: relative
+    search.gen_budget: 320
+    llm.max_model_len: 6000
+    data: aime2025
+  trials: 4
+  feeds:
+  - tbl-f0eec8  # AIME2025 b=320 lam/ds_alpha rel sweep, llama-3b
+  group: sem-mcts
+  status: scored
+  priority: 1.5
+  expected_hr: 28
+  note: AIME b320 covlocal-rel llama-3b w_eff=1
+  launch:
+    job_id: 23477898
+    node: r5u25n1
+    pid: 2777442
+    at: 2026-08-04 00:12
+- id: sem-mcts-aime2025-b320-covlocal-rel-llama3b-weff3
+  launcher: generate_mcts_sem.py
+  hash: "b38f7eb5"
+  config_root: mcts_sem_v02_prm800k
+  overrides:
+    llm: llama_3b
+    prm: qwen_prm
+    search.lam: 0.01
+    search.ds_alpha: 0.3
+    search.cov_scope: local
+    search.embeds_ref: relative
+    search.gen_budget: 320
+    llm.max_model_len: 6000
+    data: aime2025
+  trials: 4
+  feeds:
+  - tbl-f0eec8  # AIME2025 b=320 lam/ds_alpha rel sweep, llama-3b
+  group: sem-mcts
+  status: scored
+  priority: 1.5
+  expected_hr: 28
+  note: AIME b320 covlocal-rel llama-3b w_eff=3
+  launch:
+    job_id: 23485237
+    node: r5u15n1
+    pid: 2777443
+    at: 2026-08-04 00:12
+- id: sem-mcts-aime2025-b320-covlocal-rel-llama3b-weff10
+  launcher: generate_mcts_sem.py
+  hash: "2239c615"
+  config_root: mcts_sem_v02_prm800k
+  overrides:
+    llm: llama_3b
+    prm: qwen_prm
+    search.lam: 0.01
+    search.ds_alpha: 1.0
+    search.cov_scope: local
+    search.embeds_ref: relative
+    search.gen_budget: 320
+    llm.max_model_len: 6000
+    data: aime2025
+  trials: 4
+  feeds:
+  - tbl-f0eec8  # AIME2025 b=320 lam/ds_alpha rel sweep, llama-3b
+  group: sem-mcts
+  status: scored
+  priority: 1.5
+  expected_hr: 28
+  note: AIME b320 covlocal-rel llama-3b w_eff=10
+  launch:
+    job_id: 23485238
+    node: r5u25n1
+    pid: 2777444
+    at: 2026-08-04 00:12
+- id: sem-mcts-aime2025-b320-covlocal-rel-qwen7bgptq-weff0p3
+  launcher: generate_mcts_sem.py
+  hash: "2521431c"
+  config_root: mcts_sem_v02_prm800k
+  overrides:
+    llm: qwen_7b_gptq_int4
+    prm: qwen_prm
+    search.lam: 0.01
+    search.ds_alpha: 0.03
+    search.cov_scope: local
+    search.embeds_ref: relative
+    search.gen_budget: 320
+    llm.max_model_len: 6000
+    data: aime2025
+  trials: 4
+  feeds:
+  - tbl-f6fc16  # AIME2025 b=320 lam/ds_alpha rel sweep, qwen-7b
+  group: sem-mcts
+  status: scored
+  priority: 1.5
+  expected_hr: 22
+  note: AIME b320 covlocal-rel qwen-7b gptq-int4 w_eff=0.3
+  launch:
+    job_id: 23485296
+    node: r5u25n1
+    pid: 2777445
+    at: 2026-08-04 00:12
+- id: sem-mcts-aime2025-b320-covlocal-rel-qwen7bgptq-weff1
+  launcher: generate_mcts_sem.py
+  hash: "cb365919"
+  config_root: mcts_sem_v02_prm800k
+  overrides:
+    llm: qwen_7b_gptq_int4
+    prm: qwen_prm
+    search.lam: 0.01
+    search.ds_alpha: 0.1
+    search.cov_scope: local
+    search.embeds_ref: relative
+    search.gen_budget: 320
+    llm.max_model_len: 6000
+    data: aime2025
+  trials: 4
+  feeds:
+  - tbl-f6fc16  # AIME2025 b=320 lam/ds_alpha rel sweep, qwen-7b
+  group: sem-mcts
+  status: scored
+  priority: 1.5
+  expected_hr: 22
+  note: AIME b320 covlocal-rel qwen-7b gptq-int4 w_eff=1
+  launch:
+    job_id: 23485292
+    node: r5u29n1
+    pid: 2777446
+    at: 2026-08-04 00:12
+- id: sem-mcts-aime2025-b320-covlocal-rel-qwen7bgptq-weff3
+  launcher: generate_mcts_sem.py
+  hash: "f66a9fc1"
+  config_root: mcts_sem_v02_prm800k
+  overrides:
+    llm: qwen_7b_gptq_int4
+    prm: qwen_prm
+    search.lam: 0.01
+    search.ds_alpha: 0.3
+    search.cov_scope: local
+    search.embeds_ref: relative
+    search.gen_budget: 320
+    llm.max_model_len: 6000
+    data: aime2025
+  trials: 4
+  feeds:
+  - tbl-f6fc16  # AIME2025 b=320 lam/ds_alpha rel sweep, qwen-7b
+  group: sem-mcts
+  status: scored
+  priority: 1.5
+  expected_hr: 22
+  note: AIME b320 covlocal-rel qwen-7b gptq-int4 w_eff=3
+  launch:
+    job_id: 23492607
+    node: r5u15n1
+    pid: 2777447
+    at: 2026-08-04 00:12
+- id: sem-mcts-aime2025-b320-covlocal-rel-llama3b-weff100
+  launcher: generate_mcts_sem.py
+  hash: "56776048"
+  config_root: mcts_sem_v02_prm800k
+  overrides:
+    llm: llama_3b
+    prm: qwen_prm
+    search.lam: 0.01
+    search.ds_alpha: 10
+    search.cov_scope: local
+    search.embeds_ref: relative
+    search.gen_budget: 320
+    llm.max_model_len: 6000
+    data: aime2025
+  trials: 4
+  feeds:
+  - tbl-f0eec8  # AIME2025 b=320 lam/ds_alpha rel sweep, llama-3b
+  group: sem-mcts
+  status: scored
+  priority: 2
+  expected_hr: 28
+  note: AIME b320 covlocal-rel llama-3b w_eff=100
+  launch:
+    job_id: 23485293
+    node: r5u25n1
+    pid: 2778189
+    at: 2026-08-04 00:16
+- id: sem-mcts-aime2025-b320-covlocal-rel-qwen3b-weff10
+  launcher: generate_mcts_sem.py
+  hash: "e410d48c"
+  config_root: mcts_sem_v02_prm800k
+  overrides:
+    llm: qwen_3b
+    prm: qwen_prm
+    search.lam: 0.01
+    search.ds_alpha: 1.0
+    search.cov_scope: local
+    search.embeds_ref: relative
+    search.gen_budget: 320
+    llm.max_model_len: 6000
+    data: aime2025
+  trials: 4
+  feeds:
+  - tbl-4abc69  # AIME2025 b=320 lam/ds_alpha rel sweep, qwen-3b
+  group: sem-mcts
+  status: scored
+  priority: 2
+  expected_hr: 25
+  note: AIME b320 covlocal-rel qwen-3b w_eff=10
+  history:
+    - {at: 2026-08-05 08:22, job_id: 23492909, outcome: stalled,
+       trials_done: 2}
+  launch:
+    job_id: 23485293
+    node: r5u25n1
+    pid: 4123565
+    at: 2026-08-05 09:07
+- id: sem-mcts-aime2025-b320-covlocal-rel-qwen3b-weff100
+  launcher: generate_mcts_sem.py
+  hash: "a734d6ea"
+  config_root: mcts_sem_v02_prm800k
+  overrides:
+    llm: qwen_3b
+    prm: qwen_prm
+    search.lam: 0.01
+    search.ds_alpha: 10
+    search.cov_scope: local
+    search.embeds_ref: relative
+    search.gen_budget: 320
+    llm.max_model_len: 6000
+    data: aime2025
+  trials: 4
+  feeds:
+  - tbl-4abc69  # AIME2025 b=320 lam/ds_alpha rel sweep, qwen-3b
+  group: sem-mcts
+  status: scored
+  priority: 2
+  expected_hr: 25
+  note: AIME b320 covlocal-rel qwen-3b w_eff=100
+  history:
+    - {at: 2026-08-05 08:22, job_id: 23492910, outcome: stalled,
+       trials_done: 2}
+  launch:
+    job_id: 23492910
+    node: r5u11n1
+    pid: 4123566
+    at: 2026-08-05 09:07
+- id: sem-mcts-aime2025-b320-covlocal-rel-qwen7bgptq-weff10
+  launcher: generate_mcts_sem.py
+  hash: "9731ba69"
+  config_root: mcts_sem_v02_prm800k
+  overrides:
+    llm: qwen_7b_gptq_int4
+    prm: qwen_prm
+    search.lam: 0.01
+    search.ds_alpha: 1.0
+    search.cov_scope: local
+    search.embeds_ref: relative
+    search.gen_budget: 320
+    llm.max_model_len: 6000
+    data: aime2025
+  trials: 4
+  feeds:
+  - tbl-f6fc16  # AIME2025 b=320 lam/ds_alpha rel sweep, qwen-7b
+  group: sem-mcts
+  status: scored
+  priority: 2
+  expected_hr: 22
+  note: AIME b320 covlocal-rel qwen-7b gptq-int4 w_eff=10 (requeued
+    2026-08-04 after preemption; 1/4 trials on disk, resume ~16.5 h)
+  launch:
+    job_id: 23492911
+    node: r5u27n1
+    pid: 2845924
+    at: 2026-08-04 12:43
+  history:
+  - {at: 2026-08-04 09:50, job_id: 23492911, outcome: stalled,
+     trials_done: 1, cause: gpu_windfall preemption ~07:45; job
+     requeued on r5u29n1 with fresh walltime and the process was
+     killed at ~7h40m of a 22 h estimate}
+- id: sem-mcts-aime2025-b320-covlocal-rel-qwen7bgptq-weff100
+  launcher: generate_mcts_sem.py
+  hash: "c334c8bc"
+  config_root: mcts_sem_v02_prm800k
+  overrides:
+    llm: qwen_7b_gptq_int4
+    prm: qwen_prm
+    search.lam: 0.01
+    search.ds_alpha: 10
+    search.cov_scope: local
+    search.embeds_ref: relative
+    search.gen_budget: 320
+    llm.max_model_len: 6000
+    data: aime2025
+  trials: 4
+  feeds:
+  - tbl-f6fc16  # AIME2025 b=320 lam/ds_alpha rel sweep, qwen-7b
+  group: sem-mcts
+  status: inqueue
+  priority: 2
+  expected_hr: 22
+  note: AIME b320 covlocal-rel qwen-7b gptq-int4 w_eff=100
+  history:
+  - {at: 2026-08-05 23:05, job_id: 23492911, outcome: stalled, trials_done: 1,
+     cause: 'gpu_windfall preemption ~13:00 on 23492911; SECOND death of this cell (first 2026-08-04 14:20). Killed at ~4h12m of 22 h.'}
+  - {at: 2026-08-04 14:20, job_id: 23492914, outcome: stalled,
+     trials_done: 1, cause: gpu_windfall preemption ~11:5x; job
+     requeued onto r5u29n1 and the process was killed at ~11h12m
+     of a 22 h estimate -- the largest single loss of the run}
+  launch:
+    job_id: 23492911
+    node: r5u27n1
+    pid: 4123567
+    at: 2026-08-05 09:07
+- id: sem-mcts-aime2025-b320-covlocal-rel-qwenmath15b-weff10
+  launcher: generate_mcts_sem.py
+  hash: "63cbde95"
+  config_root: mcts_sem_v02_prm800k
+  overrides:
+    llm: qwen_math_1_5b
+    prm: qwen_prm
+    search.lam: 0.01
+    search.ds_alpha: 1.0
+    search.cov_scope: local
+    search.embeds_ref: relative
+    search.gen_budget: 320
+    data: aime2025
+  trials: 4
+  feeds:
+  - tbl-a488ce  # AIME2025 b=320 lam/ds_alpha rel sweep, qwen-math-1.5b
+  group: sem-mcts
+  status: inqueue
+  priority: 2
+  expected_hr: 20
+  note: AIME b320 covlocal-rel qwen-math-1.5b w_eff=10
+  history:
+    - {at: 2026-08-05 23:05, job_id: 23492914, outcome: stalled, trials_done: 3,
+       cause: 'gpu_windfall preemption ~13:00 on 23492914; killed at ~4h12m of 20 h.'}
+    - {at: 2026-08-05 08:22, job_id: 23461277, outcome: stalled,
+       trials_done: 3}
+  launch:
+    job_id: 23492914
+    node: r5u29n1
+    pid: 4123568
+    at: 2026-08-05 09:07
+- id: sem-mcts-aime2025-b320-covlocal-rel-qwenmath15b-weff100
+  launcher: generate_mcts_sem.py
+  hash: "ef470dc4"
+  config_root: mcts_sem_v02_prm800k
+  overrides:
+    llm: qwen_math_1_5b
+    prm: qwen_prm
+    search.lam: 0.01
+    search.ds_alpha: 10
+    search.cov_scope: local
+    search.embeds_ref: relative
+    search.gen_budget: 320
+    data: aime2025
+  trials: 4
+  feeds:
+  - tbl-a488ce  # AIME2025 b=320 lam/ds_alpha rel sweep, qwen-math-1.5b
+  group: sem-mcts
+  status: scored
+  priority: 2
+  expected_hr: 20
+  note: AIME b320 covlocal-rel qwen-math-1.5b w_eff=100
+  launch:
+    job_id: 23492916
+    node: r5u17n1
+    pid: 2783940
+    at: 2026-08-04 00:31
+- id: sem-mcts-aime2025-b320-covlocal-rel-llama3b-weff0p1
+  launcher: generate_mcts_sem.py
+  hash: "f3a92344"
+  config_root: mcts_sem_v02_prm800k
+  overrides:
+    llm: llama_3b
+    prm: qwen_prm
+    search.lam: 0.01
+    search.ds_alpha: 0.01
+    search.cov_scope: local
+    search.embeds_ref: relative
+    search.gen_budget: 320
+    llm.max_model_len: 6000
+    data: aime2025
+  trials: 4
+  feeds:
+  - tbl-f0eec8  # AIME2025 b=320 lam/ds_alpha rel sweep, llama-3b
+  group: sem-mcts
+  status: scored
+  priority: 3
+  expected_hr: 28
+  note: AIME b320 covlocal-rel llama-3b w_eff=0.1
+  launch:
+    job_id: 23485244
+    node: r5u09n1
+    pid: 2798526
+    at: 2026-08-04 02:43
+- id: sem-mcts-aime2025-b320-covlocal-rel-llama3b-weff0p3
+  launcher: generate_mcts_sem.py
+  hash: "035b5d56"
+  config_root: mcts_sem_v02_prm800k
+  overrides:
+    llm: llama_3b
+    prm: qwen_prm
+    search.lam: 0.01
+    search.ds_alpha: 0.03
+    search.cov_scope: local
+    search.embeds_ref: relative
+    search.gen_budget: 320
+    llm.max_model_len: 6000
+    data: aime2025
+  trials: 4
+  feeds:
+  - tbl-f0eec8  # AIME2025 b=320 lam/ds_alpha rel sweep, llama-3b
+  group: sem-mcts
+  status: scored
+  priority: 3
+  expected_hr: 28
+  note: AIME b320 covlocal-rel llama-3b w_eff=0.3
+  history:
+  - {at: 2026-08-04 14:20, job_id: 23492911, outcome: stalled,
+     trials_done: 0, cause: gpu_windfall preemption ~10:43; job
+     requeued onto r5u27n1 and the process was killed at ~2h00m
+     of a 28 h estimate, before trial 1 finished}
+  launch:
+    job_id: 23498282
+    node: r5u33n1
+    pid: 4130514
+    at: 2026-08-05 10:49
+- id: sem-mcts-aime2025-b320-covlocal-rel-qwen3b-weff0p1
+  launcher: generate_mcts_sem.py
+  hash: "7551f5fe"
+  config_root: mcts_sem_v02_prm800k
+  overrides:
+    llm: qwen_3b
+    prm: qwen_prm
+    search.lam: 0.01
+    search.ds_alpha: 0.01
+    search.cov_scope: local
+    search.embeds_ref: relative
+    search.gen_budget: 320
+    llm.max_model_len: 6000
+    data: aime2025
+  trials: 4
+  feeds:
+  - tbl-4abc69  # AIME2025 b=320 lam/ds_alpha rel sweep, qwen-3b
+  group: sem-mcts
+  status: scored
+  priority: 3
+  expected_hr: 25
+  note: AIME b320 covlocal-rel qwen-3b w_eff=0.1
+  launch:
+    job_id: 23492914
+    node: r5u29n1
+    pid: 2846005
+    at: 2026-08-04 12:43
+- id: sem-mcts-aime2025-b320-covlocal-rel-qwen3b-weff0p3
+  launcher: generate_mcts_sem.py
+  hash: "65fef8bf"
+  config_root: mcts_sem_v02_prm800k
+  overrides:
+    llm: qwen_3b
+    prm: qwen_prm
+    search.lam: 0.01
+    search.ds_alpha: 0.03
+    search.cov_scope: local
+    search.embeds_ref: relative
+    search.gen_budget: 320
+    llm.max_model_len: 6000
+    data: aime2025
+  trials: 4
+  feeds:
+  - tbl-4abc69  # AIME2025 b=320 lam/ds_alpha rel sweep, qwen-3b
+  group: sem-mcts
+  status: scored
+  priority: 3
+  expected_hr: 25
+  note: AIME b320 covlocal-rel qwen-3b w_eff=0.3
+  launch:
+    job_id: 23498282
+    node: r5u33n1
+    pid: 2856308
+    at: 2026-08-04 14:13
+- id: sem-mcts-aime2025-b320-covlocal-rel-qwen3b-weff1
+  launcher: generate_mcts_sem.py
+  hash: "1dc29f25"
+  config_root: mcts_sem_v02_prm800k
+  overrides:
+    llm: qwen_3b
+    prm: qwen_prm
+    search.lam: 0.01
+    search.ds_alpha: 0.1
+    search.cov_scope: local
+    search.embeds_ref: relative
+    search.gen_budget: 320
+    llm.max_model_len: 6000
+    data: aime2025
+  trials: 4
+  feeds:
+  - tbl-4abc69  # AIME2025 b=320 lam/ds_alpha rel sweep, qwen-3b
+  group: sem-mcts
+  status: scored
+  priority: 3
+  expected_hr: 25
+  note: AIME b320 covlocal-rel qwen-3b w_eff=1
+  launch:
+    job_id: 23485296
+    node: r5u25n1
+    pid: 2859722
+    at: 2026-08-04 14:43
+- id: sem-mcts-aime2025-b320-covlocal-rel-qwen3b-weff3
+  launcher: generate_mcts_sem.py
+  hash: "6076dbaf"
+  config_root: mcts_sem_v02_prm800k
+  overrides:
+    llm: qwen_3b
+    prm: qwen_prm
+    search.lam: 0.01
+    search.ds_alpha: 0.3
+    search.cov_scope: local
+    search.embeds_ref: relative
+    search.gen_budget: 320
+    llm.max_model_len: 6000
+    data: aime2025
+  trials: 4
+  feeds:
+  - tbl-4abc69  # AIME2025 b=320 lam/ds_alpha rel sweep, qwen-3b
+  group: sem-mcts
+  status: scored
+  priority: 3
+  expected_hr: 25
+  note: AIME b320 covlocal-rel qwen-3b w_eff=3
+  launch:
+    job_id: 23492909
+    node: r5u37n1
+    pid: 2889733
+    at: 2026-08-04 20:13
+- id: sem-mcts-aime2025-b320-covlocal-rel-qwen7bgptq-weff0p1
+  launcher: generate_mcts_sem.py
+  hash: "b50b74ea"
+  config_root: mcts_sem_v02_prm800k
+  overrides:
+    llm: qwen_7b_gptq_int4
+    prm: qwen_prm
+    search.lam: 0.01
+    search.ds_alpha: 0.01
+    search.cov_scope: local
+    search.embeds_ref: relative
+    search.gen_budget: 320
+    llm.max_model_len: 6000
+    data: aime2025
+  trials: 4
+  feeds:
+  - tbl-f6fc16  # AIME2025 b=320 lam/ds_alpha rel sweep, qwen-7b
+  group: sem-mcts
+  status: scored
+  priority: 3
+  expected_hr: 22
+  note: AIME b320 covlocal-rel qwen-7b gptq-int4 w_eff=0.1
+  launch:
+    job_id: 23492910
+    node: r5u11n1
+    pid: 2889804
+    at: 2026-08-04 20:13
+- id: sem-mcts-aime2025-b320-covlocal-rel-qwenmath15b-weff0p1
+  launcher: generate_mcts_sem.py
+  hash: "431003de"
+  config_root: mcts_sem_v02_prm800k
+  overrides:
+    llm: qwen_math_1_5b
+    prm: qwen_prm
+    search.lam: 0.01
+    search.ds_alpha: 0.01
+    search.cov_scope: local
+    search.embeds_ref: relative
+    search.gen_budget: 320
+    data: aime2025
+  trials: 4
+  feeds:
+  - tbl-a488ce  # AIME2025 b=320 lam/ds_alpha rel sweep, qwen-math-1.5b
+  group: sem-mcts
+  status: scored
+  priority: 3
+  expected_hr: 20
+  note: AIME b320 covlocal-rel qwen-math-1.5b w_eff=0.1
+  launch:
+    job_id: 23485244
+    node: r5u09n1
+    pid: 2894131
+    at: 2026-08-04 21:13
+- id: sem-mcts-aime2025-b320-covlocal-rel-qwenmath15b-weff0p3
+  launcher: generate_mcts_sem.py
+  hash: "c2e3d16f"
+  config_root: mcts_sem_v02_prm800k
+  overrides:
+    llm: qwen_math_1_5b
+    prm: qwen_prm
+    search.lam: 0.01
+    search.ds_alpha: 0.03
+    search.cov_scope: local
+    search.embeds_ref: relative
+    search.gen_budget: 320
+    data: aime2025
+  trials: 4
+  feeds:
+  - tbl-a488ce  # AIME2025 b=320 lam/ds_alpha rel sweep, qwen-math-1.5b
+  group: sem-mcts
+  status: scored
+  priority: 3
+  expected_hr: 20
+  note: AIME b320 covlocal-rel qwen-math-1.5b w_eff=0.3
+  launch:
+    job_id: 23485292
+    node: r5u29n1
+    pid: 2894199
+    at: 2026-08-04 21:13
+- id: sem-mcts-aime2025-b320-covlocal-rel-qwenmath15b-weff1
+  launcher: generate_mcts_sem.py
+  hash: "2f0e1496"
+  config_root: mcts_sem_v02_prm800k
+  overrides:
+    llm: qwen_math_1_5b
+    prm: qwen_prm
+    search.lam: 0.01
+    search.ds_alpha: 0.1
+    search.cov_scope: local
+    search.embeds_ref: relative
+    search.gen_budget: 320
+    data: aime2025
+  trials: 4
+  feeds:
+  - tbl-a488ce  # AIME2025 b=320 lam/ds_alpha rel sweep, qwen-math-1.5b
+  group: sem-mcts
+  status: inqueue
+  priority: 2
+  expected_hr: 20
+  note: AIME b320 covlocal-rel qwen-math-1.5b w_eff=1
+  launch:
+    job_id: 23492916
+    node: r5u17n1
+    pid: 4069545
+    at: 2026-08-05 00:18
+  history:
+    - {at: 2026-08-05 23:05, job_id: 23492916, outcome: stalled, trials_done: 2,
+       cause: 'gpu_windfall preemption ~13:00 on 23492916; killed at ~13h01m of 20 h -- largest single loss of the run.'}
+- id: sem-mcts-aime2025-b320-covlocal-rel-qwenmath15b-weff3
+  launcher: generate_mcts_sem.py
+  hash: "be5f6de9"
+  config_root: mcts_sem_v02_prm800k
+  overrides:
+    llm: qwen_math_1_5b
+    prm: qwen_prm
+    search.lam: 0.01
+    search.ds_alpha: 0.3
+    search.cov_scope: local
+    search.embeds_ref: relative
+    search.gen_budget: 320
+    data: aime2025
+  trials: 4
+  feeds:
+  - tbl-a488ce  # AIME2025 b=320 lam/ds_alpha rel sweep, qwen-math-1.5b
+  group: sem-mcts
+  status: inqueue
+  priority: 2
+  expected_hr: 20
+  note: AIME b320 covlocal-rel qwen-math-1.5b w_eff=3
+  launch:
+    job_id: 23477898
+    node: r5u25n1
+    pid: 4069613
+    at: 2026-08-05 00:18
+  history:
+    - {at: 2026-08-05 23:05, job_id: 23477898, outcome: stalled, trials_done: 3,
+       cause: 'SLURM walltime expiry ~21:38 on 23477898; run reached ~21h20m of a 20 h estimate and lost trial 4.'}

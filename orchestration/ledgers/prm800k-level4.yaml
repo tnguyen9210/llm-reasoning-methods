@@ -2286,3 +2286,851 @@
     at: 2026-07-26 10:30
   history:
   - {at: '2026-07-26 10:00', job_id: 23346202, outcome: stalled, trials_done: 1}
+- id: sem-mcts-l4-covlocal-rel-llama1b-weff0
+  launcher: generate_mcts_sem.py
+  hash: "fbb31dde"
+  config_root: mcts_sem_v02_prm800k
+  overrides:
+    llm: llama_1b
+    prm: qwen_prm
+    search.lam: 0.01
+    search.ds_alpha: 0
+    search.cov_scope: local
+    search.embeds_ref: relative
+  trials: 2
+  feeds:
+  - tbl-db0cf7  # L4 b=80 lam/ds_alpha rel sweep, llama-1b
+  group: sem-mcts
+  status: scored
+  priority: 1
+  expected_hr: 8
+  note: L4 b80 covlocal-rel llama-1b w_eff=0
+  launch:
+    job_id: 23485244
+    node: r5u09n1
+    pid: 4140456
+    at: 2026-08-05 12:49
+- id: sem-mcts-l4-covlocal-rel-llama1b-weff0p1
+  launcher: generate_mcts_sem.py
+  hash: "f66e19ba"
+  config_root: mcts_sem_v02_prm800k
+  overrides:
+    llm: llama_1b
+    prm: qwen_prm
+    search.lam: 0.01
+    search.ds_alpha: 0.01
+    search.cov_scope: local
+    search.embeds_ref: relative
+  trials: 2
+  feeds:
+  - tbl-db0cf7  # L4 b=80 lam/ds_alpha rel sweep, llama-1b
+  group: sem-mcts
+  status: scored
+  priority: 1
+  expected_hr: 8
+  note: L4 b80 covlocal-rel llama-1b w_eff=0.1
+  launch:
+    job_id: 23492914
+    node: r5u37n1
+    pid: 4142578
+    at: 2026-08-05 13:19
+- id: sem-mcts-l4-covlocal-rel-llama1b-weff0p3
+  launcher: generate_mcts_sem.py
+  hash: "ce199eeb"
+  config_root: mcts_sem_v02_prm800k
+  overrides:
+    llm: llama_1b
+    prm: qwen_prm
+    search.lam: 0.01
+    search.ds_alpha: 0.03
+    search.cov_scope: local
+    search.embeds_ref: relative
+  trials: 2
+  feeds:
+  - tbl-db0cf7  # L4 b=80 lam/ds_alpha rel sweep, llama-1b
+  group: sem-mcts
+  status: inqueue
+  priority: 2
+  expected_hr: 8
+  note: L4 b80 covlocal-rel llama-1b w_eff=0.3
+  launch:
+    job_id: 23492916
+    node: r5u31n1
+    pid: 4144657
+    at: 2026-08-05 13:49
+  history:
+  - {at: 2026-08-05 23:05, job_id: 23492916, outcome: stalled,
+     trials_done: 1, cause: 'gpu_windfall preemption ~17:4x on 23492916
+       (that allocation''s second preemption of the day); killed at
+       ~3h30m of 8 h'}
+- id: sem-mcts-l4-covlocal-rel-llama1b-weff1
+  launcher: generate_mcts_sem.py
+  hash: "6c5eeb02"
+  config_root: mcts_sem_v02_prm800k
+  overrides:
+    llm: llama_1b
+    prm: qwen_prm
+    search.lam: 0.01
+    search.ds_alpha: 0.1
+    search.cov_scope: local
+    search.embeds_ref: relative
+  trials: 2
+  feeds:
+  - tbl-db0cf7  # L4 b=80 lam/ds_alpha rel sweep, llama-1b
+  group: sem-mcts
+  status: scored
+  priority: 1
+  expected_hr: 8
+  note: L4 b80 covlocal-rel llama-1b w_eff=1
+  launch:
+    job_id: 23492911
+    node: r5u09n1
+    pid: 4144658
+    at: 2026-08-05 13:49
+- id: sem-mcts-l4-covlocal-rel-llama1b-weff3
+  launcher: generate_mcts_sem.py
+  hash: "6c898a2d"
+  config_root: mcts_sem_v02_prm800k
+  overrides:
+    llm: llama_1b
+    prm: qwen_prm
+    search.lam: 0.01
+    search.ds_alpha: 0.3
+    search.cov_scope: local
+    search.embeds_ref: relative
+  trials: 2
+  feeds:
+  - tbl-db0cf7  # L4 b=80 lam/ds_alpha rel sweep, llama-1b
+  group: sem-mcts
+  status: scored
+  priority: 1
+  expected_hr: 8
+  note: L4 b80 covlocal-rel llama-1b w_eff=3
+  launch:
+    job_id: 23485292
+    node: r5u29n1
+    pid: 4150946
+    at: 2026-08-05 15:19
+- id: sem-mcts-l4-covlocal-rel-llama1b-weff10
+  launcher: generate_mcts_sem.py
+  hash: "b000cb1a"
+  config_root: mcts_sem_v02_prm800k
+  overrides:
+    llm: llama_1b
+    prm: qwen_prm
+    search.lam: 0.01
+    search.ds_alpha: 1.0
+    search.cov_scope: local
+    search.embeds_ref: relative
+  trials: 2
+  feeds:
+  - tbl-db0cf7  # L4 b=80 lam/ds_alpha rel sweep, llama-1b
+  group: sem-mcts
+  status: scored
+  priority: 1
+  expected_hr: 8
+  note: L4 b80 covlocal-rel llama-1b w_eff=10
+  launch:
+    job_id: 23485237
+    node: r5u15n1
+    pid: 4150947
+    at: 2026-08-05 15:19
+- id: sem-mcts-l4-covlocal-rel-llama1b-weff100
+  launcher: generate_mcts_sem.py
+  hash: "138af4b2"
+  config_root: mcts_sem_v02_prm800k
+  overrides:
+    llm: llama_1b
+    prm: qwen_prm
+    search.lam: 0.01
+    search.ds_alpha: 10
+    search.cov_scope: local
+    search.embeds_ref: relative
+  trials: 2
+  feeds:
+  - tbl-db0cf7  # L4 b=80 lam/ds_alpha rel sweep, llama-1b
+  group: sem-mcts
+  status: scored
+  priority: 1
+  expected_hr: 8
+  note: L4 b80 covlocal-rel llama-1b w_eff=100
+  launch:
+    job_id: 23485238
+    node: r5u25n1
+    pid: 4150948
+    at: 2026-08-05 15:19
+- id: sem-mcts-l4-covlocal-rel-llama3b-weff0
+  launcher: generate_mcts_sem.py
+  hash: "afb5e2bd"
+  config_root: mcts_sem_v02_prm800k
+  overrides:
+    llm: llama_3b
+    prm: qwen_prm
+    search.lam: 0.01
+    search.ds_alpha: 0
+    search.cov_scope: local
+    search.embeds_ref: relative
+  trials: 2
+  feeds:
+  - tbl-43996a  # L4 b=80 lam/ds_alpha rel sweep, llama-3b
+  group: sem-mcts
+  status: scored
+  priority: 1
+  expected_hr: 10
+  note: L4 b80 covlocal-rel llama-3b w_eff=0
+  launch:
+    job_id: 23492607
+    node: r5u15n1
+    pid: 4153335
+    at: 2026-08-05 15:49
+- id: sem-mcts-l4-covlocal-rel-llama3b-weff0p1
+  launcher: generate_mcts_sem.py
+  hash: "09317996"
+  config_root: mcts_sem_v02_prm800k
+  overrides:
+    llm: llama_3b
+    prm: qwen_prm
+    search.lam: 0.01
+    search.ds_alpha: 0.01
+    search.cov_scope: local
+    search.embeds_ref: relative
+  trials: 2
+  feeds:
+  - tbl-43996a  # L4 b=80 lam/ds_alpha rel sweep, llama-3b
+  group: sem-mcts
+  status: scored
+  priority: 1
+  expected_hr: 10
+  note: L4 b80 covlocal-rel llama-3b w_eff=0.1
+  launch:
+    job_id: 23485296
+    node: r5u25n1
+    pid: 4161521
+    at: 2026-08-05 17:49
+- id: sem-mcts-l4-covlocal-rel-llama3b-weff0p3
+  launcher: generate_mcts_sem.py
+  hash: "de1fafaa"
+  config_root: mcts_sem_v02_prm800k
+  overrides:
+    llm: llama_3b
+    prm: qwen_prm
+    search.lam: 0.01
+    search.ds_alpha: 0.03
+    search.cov_scope: local
+    search.embeds_ref: relative
+  trials: 2
+  feeds:
+  - tbl-43996a  # L4 b=80 lam/ds_alpha rel sweep, llama-3b
+  group: sem-mcts
+  status: scored
+  priority: 1
+  expected_hr: 10
+  note: L4 b80 covlocal-rel llama-3b w_eff=0.3
+  launch:
+    job_id: 23492916
+    node: r5u31n1
+    pid: 4163851
+    at: 2026-08-05 18:19
+- id: sem-mcts-l4-covlocal-rel-llama3b-weff1
+  launcher: generate_mcts_sem.py
+  hash: "7a146260"
+  config_root: mcts_sem_v02_prm800k
+  overrides:
+    llm: llama_3b
+    prm: qwen_prm
+    search.lam: 0.01
+    search.ds_alpha: 0.1
+    search.cov_scope: local
+    search.embeds_ref: relative
+  trials: 2
+  feeds:
+  - tbl-43996a  # L4 b=80 lam/ds_alpha rel sweep, llama-3b
+  group: sem-mcts
+  status: scored
+  priority: 1
+  expected_hr: 10
+  note: L4 b80 covlocal-rel llama-3b w_eff=1
+  launch:
+    job_id: 23485244
+    node: r5u09n1
+    pid: 4170425
+    at: 2026-08-05 19:49
+- id: sem-mcts-l4-covlocal-rel-llama3b-weff3
+  launcher: generate_mcts_sem.py
+  hash: "7a7987a7"
+  config_root: mcts_sem_v02_prm800k
+  overrides:
+    llm: llama_3b
+    prm: qwen_prm
+    search.lam: 0.01
+    search.ds_alpha: 0.3
+    search.cov_scope: local
+    search.embeds_ref: relative
+  trials: 2
+  feeds:
+  - tbl-43996a  # L4 b=80 lam/ds_alpha rel sweep, llama-3b
+  group: sem-mcts
+  status: scored
+  priority: 1
+  expected_hr: 10
+  note: L4 b80 covlocal-rel llama-3b w_eff=3
+  launch:
+    job_id: 23492914
+    node: r5u37n1
+    pid: 4175775
+    at: 2026-08-05 20:49
+- id: sem-mcts-l4-covlocal-rel-llama3b-weff10
+  launcher: generate_mcts_sem.py
+  hash: "ba510c33"
+  config_root: mcts_sem_v02_prm800k
+  overrides:
+    llm: llama_3b
+    prm: qwen_prm
+    search.lam: 0.01
+    search.ds_alpha: 1.0
+    search.cov_scope: local
+    search.embeds_ref: relative
+  trials: 2
+  feeds:
+  - tbl-43996a  # L4 b=80 lam/ds_alpha rel sweep, llama-3b
+  group: sem-mcts
+  status: scored
+  priority: 1
+  expected_hr: 10
+  note: L4 b80 covlocal-rel llama-3b w_eff=10
+  launch:
+    job_id: 23492908
+    node: r5u25n1
+    pid: 4188170
+    at: 2026-08-05 21:49
+- id: sem-mcts-l4-covlocal-rel-llama3b-weff100
+  launcher: generate_mcts_sem.py
+  hash: "520c07e0"
+  config_root: mcts_sem_v02_prm800k
+  overrides:
+    llm: llama_3b
+    prm: qwen_prm
+    search.lam: 0.01
+    search.ds_alpha: 10
+    search.cov_scope: local
+    search.embeds_ref: relative
+  trials: 2
+  feeds:
+  - tbl-43996a  # L4 b=80 lam/ds_alpha rel sweep, llama-3b
+  group: sem-mcts
+  status: scored
+  priority: 1
+  expected_hr: 10
+  note: L4 b80 covlocal-rel llama-3b w_eff=100
+  launch:
+    job_id: 23492911
+    node: r5u09n1
+    pid: 4188171
+    at: 2026-08-05 21:49
+- id: sem-mcts-l4-covlocal-rel-qwen3b-weff0
+  launcher: generate_mcts_sem.py
+  hash: "3ed3ca68"
+  config_root: mcts_sem_v02_prm800k
+  overrides:
+    llm: qwen_3b
+    prm: qwen_prm
+    search.lam: 0.01
+    search.ds_alpha: 0
+    search.cov_scope: local
+    search.embeds_ref: relative
+  trials: 2
+  feeds:
+  - tbl-ecabc0  # L4 b=80 lam/ds_alpha rel sweep, qwen-3b
+  group: sem-mcts
+  status: scored
+  priority: 1
+  expected_hr: 10
+  note: L4 b80 covlocal-rel qwen-3b w_eff=0
+  launch:
+    job_id: 23492607
+    node: r5u15n1
+    pid: 4193480
+    at: 2026-08-05 22:55
+- id: sem-mcts-l4-covlocal-rel-qwen3b-weff0p1
+  launcher: generate_mcts_sem.py
+  hash: "549920dc"
+  config_root: mcts_sem_v02_prm800k
+  overrides:
+    llm: qwen_3b
+    prm: qwen_prm
+    search.lam: 0.01
+    search.ds_alpha: 0.01
+    search.cov_scope: local
+    search.embeds_ref: relative
+  trials: 2
+  feeds:
+  - tbl-ecabc0  # L4 b=80 lam/ds_alpha rel sweep, qwen-3b
+  group: sem-mcts
+  status: scored
+  priority: 1
+  expected_hr: 10
+  note: L4 b80 covlocal-rel qwen-3b w_eff=0.1
+  launch:
+    job_id: 23485292
+    node: r5u29n1
+    pid: 126049
+    at: 2026-08-05 23:28
+- id: sem-mcts-l4-covlocal-rel-qwen3b-weff0p3
+  launcher: generate_mcts_sem.py
+  hash: "3baaf51e"
+  config_root: mcts_sem_v02_prm800k
+  overrides:
+    llm: qwen_3b
+    prm: qwen_prm
+    search.lam: 0.01
+    search.ds_alpha: 0.03
+    search.cov_scope: local
+    search.embeds_ref: relative
+  trials: 2
+  feeds:
+  - tbl-ecabc0  # L4 b=80 lam/ds_alpha rel sweep, qwen-3b
+  group: sem-mcts
+  status: scored
+  priority: 1
+  expected_hr: 10
+  note: L4 b80 covlocal-rel qwen-3b w_eff=0.3
+  launch:
+    job_id: 23485237
+    node: r5u15n1
+    pid: 126050
+    at: 2026-08-05 23:28
+- id: sem-mcts-l4-covlocal-rel-qwen3b-weff1
+  launcher: generate_mcts_sem.py
+  hash: "80cdbfe5"
+  config_root: mcts_sem_v02_prm800k
+  overrides:
+    llm: qwen_3b
+    prm: qwen_prm
+    search.lam: 0.01
+    search.ds_alpha: 0.1
+    search.cov_scope: local
+    search.embeds_ref: relative
+  trials: 2
+  feeds:
+  - tbl-ecabc0  # L4 b=80 lam/ds_alpha rel sweep, qwen-3b
+  group: sem-mcts
+  status: scored
+  priority: 1
+  expected_hr: 10
+  note: L4 b80 covlocal-rel qwen-3b w_eff=1
+  launch:
+    job_id: 23485238
+    node: r5u25n1
+    pid: 126051
+    at: 2026-08-05 23:28
+- id: sem-mcts-l4-covlocal-rel-qwen3b-weff3
+  launcher: generate_mcts_sem.py
+  hash: "59140c01"
+  config_root: mcts_sem_v02_prm800k
+  overrides:
+    llm: qwen_3b
+    prm: qwen_prm
+    search.lam: 0.01
+    search.ds_alpha: 0.3
+    search.cov_scope: local
+    search.embeds_ref: relative
+  trials: 2
+  feeds:
+  - tbl-ecabc0  # L4 b=80 lam/ds_alpha rel sweep, qwen-3b
+  group: sem-mcts
+  status: scored
+  priority: 1
+  expected_hr: 10
+  note: L4 b80 covlocal-rel qwen-3b w_eff=3
+  launch:
+    job_id: 23492910
+    node: r5u11n1
+    pid: 128324
+    at: 2026-08-05 23:58
+- id: sem-mcts-l4-covlocal-rel-qwen3b-weff10
+  launcher: generate_mcts_sem.py
+  hash: "e1a6081a"
+  config_root: mcts_sem_v02_prm800k
+  overrides:
+    llm: qwen_3b
+    prm: qwen_prm
+    search.lam: 0.01
+    search.ds_alpha: 1.0
+    search.cov_scope: local
+    search.embeds_ref: relative
+  trials: 2
+  feeds:
+  - tbl-ecabc0  # L4 b=80 lam/ds_alpha rel sweep, qwen-3b
+  group: sem-mcts
+  status: scored
+  priority: 1
+  expected_hr: 10
+  note: L4 b80 covlocal-rel qwen-3b w_eff=10
+  launch:
+    job_id: 23485293
+    node: r5u25n1
+    pid: 130841
+    at: 2026-08-06 00:28
+- id: sem-mcts-l4-covlocal-rel-qwen3b-weff100
+  launcher: generate_mcts_sem.py
+  hash: "fcaec765"
+  config_root: mcts_sem_v02_prm800k
+  overrides:
+    llm: qwen_3b
+    prm: qwen_prm
+    search.lam: 0.01
+    search.ds_alpha: 10
+    search.cov_scope: local
+    search.embeds_ref: relative
+  trials: 2
+  feeds:
+  - tbl-ecabc0  # L4 b=80 lam/ds_alpha rel sweep, qwen-3b
+  group: sem-mcts
+  status: running
+  priority: 1
+  expected_hr: 10
+  note: L4 b80 covlocal-rel qwen-3b w_eff=100
+  launch:
+    job_id: 23492909
+    node: r5u37n1
+    pid: 136669
+    at: 2026-08-06 01:58
+- id: sem-mcts-l4-covlocal-rel-qwen7bgptq-weff0
+  launcher: generate_mcts_sem.py
+  hash: "e8d0e900"
+  config_root: mcts_sem_v02_prm800k
+  overrides:
+    llm: qwen_7b_gptq_int4
+    prm: qwen_prm
+    search.lam: 0.01
+    search.ds_alpha: 0
+    search.cov_scope: local
+    search.embeds_ref: relative
+  trials: 2
+  feeds:
+  - tbl-e6a2f9  # L4 b=80 lam/ds_alpha rel sweep, qwen-7b gptq-int4
+  group: sem-mcts
+  status: scored
+  priority: 1
+  expected_hr: 9
+  note: L4 b80 covlocal-rel qwen-7b gptq-int4 w_eff=0
+  launch:
+    job_id: 23485296
+    node: r5u25n1
+    pid: 145986
+    at: 2026-08-06 04:28
+- id: sem-mcts-l4-covlocal-rel-qwen7bgptq-weff0p1
+  launcher: generate_mcts_sem.py
+  hash: "133b42af"
+  config_root: mcts_sem_v02_prm800k
+  overrides:
+    llm: qwen_7b_gptq_int4
+    prm: qwen_prm
+    search.lam: 0.01
+    search.ds_alpha: 0.01
+    search.cov_scope: local
+    search.embeds_ref: relative
+  trials: 2
+  feeds:
+  - tbl-e6a2f9  # L4 b=80 lam/ds_alpha rel sweep, qwen-7b gptq-int4
+  group: sem-mcts
+  status: failed
+  priority: 1
+  expected_hr: 9
+  note: L4 b80 covlocal-rel qwen-7b gptq-int4 w_eff=0.1
+  launch:
+    job_id: 23492916
+    node: r5u31n1
+    pid: 162876
+    at: 2026-08-06 05:07
+  history:
+  - {at: 2026-08-06 11:05, job_id: 23492916, outcome: stalled, trials_done: 1}
+- id: sem-mcts-l4-covlocal-rel-qwen7bgptq-weff0p3
+  launcher: generate_mcts_sem.py
+  hash: "f3dfbad0"
+  config_root: mcts_sem_v02_prm800k
+  overrides:
+    llm: qwen_7b_gptq_int4
+    prm: qwen_prm
+    search.lam: 0.01
+    search.ds_alpha: 0.03
+    search.cov_scope: local
+    search.embeds_ref: relative
+  trials: 2
+  feeds:
+  - tbl-e6a2f9  # L4 b=80 lam/ds_alpha rel sweep, qwen-7b gptq-int4
+  group: sem-mcts
+  status: running
+  priority: 1
+  expected_hr: 9
+  note: L4 b80 covlocal-rel qwen-7b gptq-int4 w_eff=0.3
+  launch:
+    job_id: 23492607
+    node: r5u15n1
+    pid: 167904
+    at: 2026-08-06 05:58
+- id: sem-mcts-l4-covlocal-rel-qwen7bgptq-weff1
+  launcher: generate_mcts_sem.py
+  hash: "18c404a0"
+  config_root: mcts_sem_v02_prm800k
+  overrides:
+    llm: qwen_7b_gptq_int4
+    prm: qwen_prm
+    search.lam: 0.01
+    search.ds_alpha: 0.1
+    search.cov_scope: local
+    search.embeds_ref: relative
+  trials: 2
+  feeds:
+  - tbl-e6a2f9  # L4 b=80 lam/ds_alpha rel sweep, qwen-7b gptq-int4
+  group: sem-mcts
+  status: running
+  priority: 1
+  expected_hr: 9
+  note: L4 b80 covlocal-rel qwen-7b gptq-int4 w_eff=1
+  launch:
+    job_id: 23498282
+    node: r5u33n1
+    pid: 171786
+    at: 2026-08-06 06:58
+- id: sem-mcts-l4-covlocal-rel-qwen7bgptq-weff3
+  launcher: generate_mcts_sem.py
+  hash: "7fe1efc3"
+  config_root: mcts_sem_v02_prm800k
+  overrides:
+    llm: qwen_7b_gptq_int4
+    prm: qwen_prm
+    search.lam: 0.01
+    search.ds_alpha: 0.3
+    search.cov_scope: local
+    search.embeds_ref: relative
+  trials: 2
+  feeds:
+  - tbl-e6a2f9  # L4 b=80 lam/ds_alpha rel sweep, qwen-7b gptq-int4
+  group: sem-mcts
+  status: running
+  priority: 1
+  expected_hr: 9
+  note: L4 b80 covlocal-rel qwen-7b gptq-int4 w_eff=3
+  launch:
+    job_id: 23485244
+    node: r5u09n1
+    pid: 171787
+    at: 2026-08-06 06:58
+- id: sem-mcts-l4-covlocal-rel-qwen7bgptq-weff10
+  launcher: generate_mcts_sem.py
+  hash: "35c74979"
+  config_root: mcts_sem_v02_prm800k
+  overrides:
+    llm: qwen_7b_gptq_int4
+    prm: qwen_prm
+    search.lam: 0.01
+    search.ds_alpha: 1.0
+    search.cov_scope: local
+    search.embeds_ref: relative
+  trials: 2
+  feeds:
+  - tbl-e6a2f9  # L4 b=80 lam/ds_alpha rel sweep, qwen-7b gptq-int4
+  group: sem-mcts
+  status: running
+  priority: 1
+  expected_hr: 9
+  note: L4 b80 covlocal-rel qwen-7b gptq-int4 w_eff=10
+  launch:
+    job_id: 23492914
+    node: r5u37n1
+    pid: 175591
+    at: 2026-08-06 07:58
+- id: sem-mcts-l4-covlocal-rel-qwen7bgptq-weff100
+  launcher: generate_mcts_sem.py
+  hash: "d1956239"
+  config_root: mcts_sem_v02_prm800k
+  overrides:
+    llm: qwen_7b_gptq_int4
+    prm: qwen_prm
+    search.lam: 0.01
+    search.ds_alpha: 10
+    search.cov_scope: local
+    search.embeds_ref: relative
+  trials: 2
+  feeds:
+  - tbl-e6a2f9  # L4 b=80 lam/ds_alpha rel sweep, qwen-7b gptq-int4
+  group: sem-mcts
+  status: running
+  priority: 1
+  expected_hr: 9
+  note: L4 b80 covlocal-rel qwen-7b gptq-int4 w_eff=100
+  launch:
+    job_id: 23485296
+    node: r5u25n1
+    pid: 177587
+    at: 2026-08-06 08:28
+- id: sem-mcts-l4-covlocal-rel-qwenmath15b-weff0
+  launcher: generate_mcts_sem.py
+  hash: "6fc76e8f"
+  config_root: mcts_sem_v02_prm800k
+  overrides:
+    llm: qwen_math_1_5b
+    prm: qwen_prm
+    search.lam: 0.01
+    search.ds_alpha: 0
+    search.cov_scope: local
+    search.embeds_ref: relative
+  trials: 2
+  feeds:
+  - tbl-c76d49  # L4 b=80 lam/ds_alpha rel sweep, qwen-math-1.5b
+  group: sem-mcts
+  status: running
+  priority: 1
+  expected_hr: 8
+  note: L4 b80 covlocal-rel qwen-math-1.5b w_eff=0
+  launch:
+    job_id: 23492908
+    node: r5u25n1
+    pid: 188415
+    at: 2026-08-06 09:28
+- id: sem-mcts-l4-covlocal-rel-qwenmath15b-weff0p1
+  launcher: generate_mcts_sem.py
+  hash: "53828b81"
+  config_root: mcts_sem_v02_prm800k
+  overrides:
+    llm: qwen_math_1_5b
+    prm: qwen_prm
+    search.lam: 0.01
+    search.ds_alpha: 0.01
+    search.cov_scope: local
+    search.embeds_ref: relative
+  trials: 2
+  feeds:
+  - tbl-c76d49  # L4 b=80 lam/ds_alpha rel sweep, qwen-math-1.5b
+  group: sem-mcts
+  status: running
+  priority: 1
+  expected_hr: 8
+  note: L4 b80 covlocal-rel qwen-math-1.5b w_eff=0.1
+  launch:
+    job_id: 23492911
+    node: r5u09n1
+    pid: 188416
+    at: 2026-08-06 09:28
+- id: sem-mcts-l4-covlocal-rel-qwenmath15b-weff0p3
+  launcher: generate_mcts_sem.py
+  hash: "cb61ed5b"
+  config_root: mcts_sem_v02_prm800k
+  overrides:
+    llm: qwen_math_1_5b
+    prm: qwen_prm
+    search.lam: 0.01
+    search.ds_alpha: 0.03
+    search.cov_scope: local
+    search.embeds_ref: relative
+  trials: 2
+  feeds:
+  - tbl-c76d49  # L4 b=80 lam/ds_alpha rel sweep, qwen-math-1.5b
+  group: sem-mcts
+  status: running
+  priority: 1
+  expected_hr: 8
+  note: L4 b80 covlocal-rel qwen-math-1.5b w_eff=0.3
+  launch:
+    job_id: 23485292
+    node: r5u29n1
+    pid: 190623
+    at: 2026-08-06 09:58
+- id: sem-mcts-l4-covlocal-rel-qwenmath15b-weff1
+  launcher: generate_mcts_sem.py
+  hash: "d70fcc1a"
+  config_root: mcts_sem_v02_prm800k
+  overrides:
+    llm: qwen_math_1_5b
+    prm: qwen_prm
+    search.lam: 0.01
+    search.ds_alpha: 0.1
+    search.cov_scope: local
+    search.embeds_ref: relative
+  trials: 2
+  feeds:
+  - tbl-c76d49  # L4 b=80 lam/ds_alpha rel sweep, qwen-math-1.5b
+  group: sem-mcts
+  status: running
+  priority: 1
+  expected_hr: 8
+  note: L4 b80 covlocal-rel qwen-math-1.5b w_eff=1
+  launch:
+    job_id: 23485237
+    node: r5u15n1
+    pid: 190624
+    at: 2026-08-06 09:58
+- id: sem-mcts-l4-covlocal-rel-qwenmath15b-weff3
+  launcher: generate_mcts_sem.py
+  hash: "299a4ef1"
+  config_root: mcts_sem_v02_prm800k
+  overrides:
+    llm: qwen_math_1_5b
+    prm: qwen_prm
+    search.lam: 0.01
+    search.ds_alpha: 0.3
+    search.cov_scope: local
+    search.embeds_ref: relative
+  trials: 2
+  feeds:
+  - tbl-c76d49  # L4 b=80 lam/ds_alpha rel sweep, qwen-math-1.5b
+  group: sem-mcts
+  status: running
+  priority: 1
+  expected_hr: 8
+  note: L4 b80 covlocal-rel qwen-math-1.5b w_eff=3
+  launch:
+    job_id: 23485238
+    node: r5u25n1
+    pid: 190625
+    at: 2026-08-06 09:58
+- id: sem-mcts-l4-covlocal-rel-qwenmath15b-weff10
+  launcher: generate_mcts_sem.py
+  hash: "9b65eee8"
+  config_root: mcts_sem_v02_prm800k
+  overrides:
+    llm: qwen_math_1_5b
+    prm: qwen_prm
+    search.lam: 0.01
+    search.ds_alpha: 1.0
+    search.cov_scope: local
+    search.embeds_ref: relative
+  trials: 2
+  feeds:
+  - tbl-c76d49  # L4 b=80 lam/ds_alpha rel sweep, qwen-math-1.5b
+  group: sem-mcts
+  status: running
+  priority: 1
+  expected_hr: 8
+  note: L4 b80 covlocal-rel qwen-math-1.5b w_eff=10
+  launch:
+    job_id: 23492910
+    node: r5u11n1
+    pid: 192768
+    at: 2026-08-06 10:28
+- id: sem-mcts-l4-covlocal-rel-qwenmath15b-weff100
+  launcher: generate_mcts_sem.py
+  hash: "29b8e78b"
+  config_root: mcts_sem_v02_prm800k
+  overrides:
+    llm: qwen_math_1_5b
+    prm: qwen_prm
+    search.lam: 0.01
+    search.ds_alpha: 10
+    search.cov_scope: local
+    search.embeds_ref: relative
+  trials: 2
+  feeds:
+  - tbl-c76d49  # L4 b=80 lam/ds_alpha rel sweep, qwen-math-1.5b
+  group: sem-mcts
+  status: running
+  priority: 1
+  expected_hr: 8
+  note: L4 b80 covlocal-rel qwen-math-1.5b w_eff=100
+
+  launch:
+    job_id: 23485293
+    node: r5u25n1
+    pid: 194855
+    at: 2026-08-06 10:58

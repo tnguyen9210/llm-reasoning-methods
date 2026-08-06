@@ -403,7 +403,7 @@
   feeds:
   - tbl-49eedf  # L3 sem-mcts model family, b=80, QwenPRM, w_eff=100
   group: sem-mcts
-  status: failed
+  status: inqueue
   history:
   - {at: 2026-07-30 22:03, job_id: 23446851, outcome: stalled,
      trials_done: 1,

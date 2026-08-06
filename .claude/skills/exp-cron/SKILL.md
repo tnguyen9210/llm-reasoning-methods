@@ -122,7 +122,9 @@ Each firing does exactly this:
    ```
    Each entry prints as a `# id ledger prio expected_hr hash`
    comment plus its exact launch command, priority-sorted.
-   Empty -> nothing to launch this firing; exit the pass.
+   Empty -> nothing to LAUNCH this firing, but **do NOT exit the
+   pass**: still probe (step 3), because with an empty queue
+   every idle allocation is now a cancel target (step 4).
 3. **Probe each pooled job** NOT in `exclude` and NOT already
    claimed this firing:
    ```
@@ -139,13 +141,23 @@ Each firing does exactly this:
    does not fit is skipped for J and stays at the head (try it
    on the next idle job).
 
-   If **no** inqueue entry fits J — even the smallest
-   `expected_hr` in the queue exceeds J's remaining time — J can
-   never host work before it expires. **`scancel <jobid>`
-   immediately**, drop it from the pool for this firing (the
-   next refresh drops it from `jobs.yaml`), and report the
-   cancellation with `%L` left vs. the queue's minimum
-   `expected_hr`.
+   **`scancel <jobid>` an idle J in EITHER case:**
+   - **Queue non-empty, nothing fits** — even the smallest
+     `expected_hr` exceeds J's `%L`, so J can never host work
+     before it expires. Report `%L` left vs. the queue's minimum
+     `expected_hr`.
+   - **Queue empty** — with `inqueue=0` an idle allocation has no
+     work to wait for, so release it. Report `%L` left and
+     `inqueue=0` as the justification. (Set 2026-08-05 at Tuan's
+     explicit direction, reversing the previous "keep it, it is
+     an asset once he queues more" rule. Tradeoff he accepted:
+     on 2026-08-05 six idle allocations with 43-83 h left were
+     kept under the old rule and all six were refilled within
+     ~9 h; under this rule they would have been cancelled and
+     re-queueing costs days of scheduler wait.)
+
+   Then drop J from the pool for this firing (the next refresh
+   drops it from `jobs.yaml`).
 
    **ALL preconditions must hold** — this is the only
    destructive action in the skill, and it runs unattended:
@@ -155,11 +167,13 @@ Each firing does exactly this:
    - J was **not claimed this firing** (a job you just launched
      onto reads 0/0 for ~1-2 min — cancelling it kills the run
      you just started).
-   - The queue is **non-empty** (no yardstick otherwise; an idle
-     allocation with hours left is an asset once Tuan queues
-     more).
    - **No** inqueue entry lacks `expected_hr` (an unsized entry
-     fits anywhere, so nothing is un-hostable).
+     fits anywhere, so nothing is un-hostable). Vacuously true
+     when the queue is empty.
+   - The idle reading is **not** a known-completion artifact you
+     have not yet handed to exp-check — a finished run's GPU
+     reads 0/0, and cancelling is fine, but say so in the report
+     so the completion is not lost.
 
    Safe because 0 MiB means the process is gone: `generate_*.py`
    holds the vLLM engine and the PRM resident through scoring and

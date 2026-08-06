@@ -1722,6 +1722,250 @@ instead of one wide sparse grid.)
 > (matched trial count to the v02 rows already on hand) would
 > complete this comparison in one batch.
 
+### sem-mcts-v02 [cov_scope=local]
+
+> **Same implementation, one flag.** Everything in this section
+> runs `core/mcts_sem_search_v02_00_00.py` — the identical file
+> the `sem-mcts-v02` section above uses — with
+> `search.cov_scope=local`. No separate method, no separate
+> `config_root`, no separate launcher; the cells differ from
+> their global twins only by that override (and therefore by
+> `config_hash`).
+>
+> **The reasoning behind the shifted grid lives in the level-5
+> doc** (`docs/exp-comp-prm800k-level5.md`, same section
+> heading) and is inherited verbatim: under local scope the
+> per-node fold count `k` stays small (1–5, tens at the root)
+> instead of running to the hundreds, so the diversity bonus
+> stays *near* its nominal `w_eff = ds_alpha/sqrt(lam)` for the
+> whole run rather than decaying an order of magnitude below
+> it. Local's optimum should therefore sit near **`w_eff ≈ 1`**,
+> roughly 10x below global's measured optimum of `w_eff = 10`.
+> The grid below is shifted down and denser at the low end for
+> that reason.
+>
+> **`lam` is swept at one value only** (0.01), inheriting the
+> global joint sweeps' finding that `lam` has no independent
+> effect once `w_eff` is fixed. If the local results look
+> `lam`-sensitive in a way the global ones did not, that
+> assumption is the first thing to revisit.
+>
+> ⚠️ **This section is the level-4 twin of level-5's
+> `cov_scope=local` block.** Every table below has a
+> same-model, same-grid counterpart there
+> (`tbl-ba6b11`, `tbl-cf849a`, `tbl-b1cb82`, `tbl-5d64b1`,
+> `tbl-3a76ce`). The comparison the section exists to serve is
+> **does the local operating point transfer across difficulty**
+> — level 4 is the easier split, so if the optimum sits at a
+> different `w_eff` here than at level 5, `w_eff` has to be
+> tuned per difficulty and cannot be fixed once for the
+> program.
+
+#### lam / ds_alpha joint sweep (llama-1b, embeds_ref=relative)
+<!-- table-id: tbl-db0cf7 -->
+
+> **Compares:** level-5's llama-1b local+relative sweep
+> (`tbl-ba6b11`) on the easier level-4 split, same seven-point
+> grid. At level 5 this model is the one whose `embeds_ref`
+> comparison **crossed sign** — `relative` ahead at `w_eff=1`,
+> behind at `w_eff=10` — so its curve shape is the most
+> informative in the family and the most worth re-measuring
+> where the problems are easier.
+>
+> **Fixed:** method=`mcts_sem_v02`, **`cov_scope=local`**,
+> **`embeds_ref=relative`**, prm=qwen, bs-4, d-20, b=80,
+> proj=sparse512, cov_update=sm, cov_dtype=fp64, ds_beta=1.0,
+> prm_batch_size=1, llm=llama-1b, **lam=0.01**, level=4
+> (config default), run.num_trials=2.
+>
+> ⚠️ **The `w_eff=0` row is `embeds_ref`-independent by
+> construction.** With `ds_alpha=0` the diversity bonus is
+> multiplied by zero, so this cell must reproduce the global
+> `w_eff=0` value exactly. Queued here as a plumbing check on
+> the relative path.
+>
+> **W&B:** —
+
+| llm | prm | lam | ds_alpha | w_eff | trials | status | pass@gb | naive@gb | wei@gb | maj@gb | hr/trial |
+|---|---|---|---|---|---|---|---|---|---|---|---|
+| llama-1b | qwen | 0.01 | 0 | 0 | 2 | scored | .5469<br>±.0312 | .5078<br>±.0313 | .4883<br>±.0313 | .4375<br>±.0311 | 3.24 |
+| llama-1b | qwen | 0.01 | 0.01 | 0.1 | 2 | scored | .5703<br>±.0310 | .5273<br>±.0313 | .4805<br>±.0313 | .4609<br>±.0312 | 3.56 |
+| llama-1b | qwen | 0.01 | 0.03 | 0.3 | — | inqueue | — | — | — | — | — |
+| llama-1b | qwen | 0.01 | 0.1 | 1 | 2 | scored | .6289<br>±.0303 | .5469<br>±.0312 | .5078<br>±.0313 | .4648<br>±.0312 | 3.82 |
+| llama-1b | qwen | 0.01 | 0.3 | 3 | 2 | scored | .6367<br>±.0301 | .5273<br>±.0313 | .4922<br>±.0313 | .4609<br>±.0312 | 3.82 |
+| llama-1b | qwen | 0.01 | 1.0 | 10 | 2 | scored | .6406<br>±.0300 | .5312<br>±.0312 | .4805<br>±.0313 | .4219<br>±.0309 | 3.95 |
+| llama-1b | qwen | 0.01 | 10 | 100 | 2 | scored | .6055<br>±.0306 | .5156<br>±.0313 | .4805<br>±.0313 | .4375<br>±.0311 | 3.94 |
+
+> **Analysis.** No data yet — nothing to take away.
+> **Limitations / follow-up:** the five tables in this section
+> are one experiment, not five — the readable quantity is
+> whether each model's peak sits at the same `w_eff` as its
+> level-5 twin, so a partially-filled set invites reading a
+> model effect that is really a which-cells-finished effect.
+> At ~3.8 hr/trial × 2 trials this table is ~53 GPU-hours.
+> Feeds key: `tbl-db0cf7`.
+
+#### lam / ds_alpha joint sweep (llama-3b, embeds_ref=relative)
+<!-- table-id: tbl-43996a -->
+
+> **Compares:** level-5's llama-3b local+relative sweep
+> (`tbl-cf849a`) on level 4. `tbl-cf849a` gives this model the
+> **clearest interior optimum anywhere in the program** —
+> .4440 → .5821 at `w_eff=3` → .5485 by 10, a +.138 span at
+> ~4.5 SE. Whether that interior peak survives on an easier
+> split is the single sharpest transfer question in the
+> section: an interior optimum that moves with difficulty
+> cannot be tuned once.
+>
+> **Fixed:** method=`mcts_sem_v02`, **`cov_scope=local`**,
+> **`embeds_ref=relative`**, prm=qwen, bs-4, d-20, b=80,
+> proj=sparse512, cov_update=sm, cov_dtype=fp64, ds_beta=1.0,
+> prm_batch_size=1, llm=llama-3b, **lam=0.01**, level=4
+> (config default), run.num_trials=2.
+>
+> ⚠️ `w_eff=0` is `embeds_ref`-independent by construction; see
+> the llama-1b table above.
+>
+> **W&B:** —
+
+| llm | prm | lam | ds_alpha | w_eff | trials | status | pass@gb | naive@gb | wei@gb | maj@gb | hr/trial |
+|---|---|---|---|---|---|---|---|---|---|---|---|
+| llama-3b | qwen | 0.01 | 0 | 0 | 2 | scored | .7031<br>±.0286 | .6797<br>±.0292 | .6797<br>±.0292 | .6406<br>±.0300 | 2.98 |
+| llama-3b | qwen | 0.01 | 0.01 | 0.1 | 2 | scored | .7266<br>±.0279 | .6602<br>±.0297 | .6367<br>±.0301 | .6406<br>±.0300 | 4.96 |
+| llama-3b | qwen | 0.01 | 0.03 | 0.3 | 2 | scored | .7070<br>±.0285 | .6367<br>±.0301 | .6289<br>±.0303 | .6250<br>±.0303 | 4.97 |
+| llama-3b | qwen | 0.01 | 0.1 | 1 | 2 | scored | .7617<br>±.0267 | .6797<br>±.0292 | .6602<br>±.0297 | .6406<br>±.0300 | 5.24 |
+| llama-3b | qwen | 0.01 | 0.3 | 3 | 2 | scored | .7578<br>±.0268 | .6641<br>±.0296 | .6680<br>±.0295 | .6484<br>±.0299 | 5.38 |
+| llama-3b | qwen | 0.01 | 1.0 | 10 | 2 | scored | .7812<br>±.0259 | .6289<br>±.0303 | .6406<br>±.0300 | .6133<br>±.0305 | 5.61 |
+| llama-3b | qwen | 0.01 | 10 | 100 | 2 | scored | .7852<br>±.0257 | .6523<br>±.0298 | .6250<br>±.0303 | .6211<br>±.0304 | 5.64 |
+
+> **Analysis.** No data yet — nothing to take away.
+> **Limitations / follow-up:** the level-5 twin's interior peak
+> at `w_eff=3` is the prediction this table tests; a flat grid
+> here would mean the peak is a level-5 artifact rather than a
+> property of the model. At ~5.0 hr/trial × 2 trials this table
+> is ~70 GPU-hours — the most expensive of the five.
+> Feeds key: `tbl-43996a`.
+
+#### lam / ds_alpha joint sweep (qwen-3b, embeds_ref=relative)
+<!-- table-id: tbl-ecabc0 -->
+
+> **Compares:** level-5's qwen-3b local+relative sweep
+> (`tbl-b1cb82`) on level 4. On AIME2025 at b=320 the qwen-3b
+> grid was the one the analysis flagged as **most likely to
+> report a null** (no monotone structure, whole spread ~2 SE);
+> level 4 is the split where a real effect, if there is one,
+> should be easiest to resolve, so this table doubles as the
+> test of whether that null is a hardness artifact.
+>
+> **Fixed:** method=`mcts_sem_v02`, **`cov_scope=local`**,
+> **`embeds_ref=relative`**, prm=qwen, bs-4, d-20, b=80,
+> proj=sparse512, cov_update=sm, cov_dtype=fp64, ds_beta=1.0,
+> prm_batch_size=1, llm=qwen-3b, **lam=0.01**, level=4
+> (config default), run.num_trials=2.
+>
+> ⚠️ `w_eff=0` is `embeds_ref`-independent by construction; see
+> the llama-1b table above.
+>
+> **W&B:** —
+
+| llm | prm | lam | ds_alpha | w_eff | trials | status | pass@gb | naive@gb | wei@gb | maj@gb | hr/trial |
+|---|---|---|---|---|---|---|---|---|---|---|---|
+| qwen-3b | qwen | 0.01 | 0 | 0 | 2 | scored | .7891<br>±.0255 | .7500<br>±.0271 | .7539<br>±.0270 | .7422<br>±.0274 | 3.37 |
+| qwen-3b | qwen | 0.01 | 0.01 | 0.1 | 2 | scored | .8750<br>±.0207 | .7812<br>±.0259 | .7773<br>±.0261 | .7656<br>±.0265 | 4.93 |
+| qwen-3b | qwen | 0.01 | 0.03 | 0.3 | 2 | scored | .8672<br>±.0213 | .7617<br>±.0267 | .7617<br>±.0267 | .7461<br>±.0273 | 5.05 |
+| qwen-3b | qwen | 0.01 | 0.1 | 1 | 2 | scored | .8672<br>±.0213 | .7891<br>±.0255 | .7461<br>±.0273 | .7305<br>±.0278 | 5.03 |
+| qwen-3b | qwen | 0.01 | 0.3 | 3 | 2 | scored | .8711<br>±.0210 | .7812<br>±.0259 | .7461<br>±.0273 | .7188<br>±.0282 | 4.97 |
+| qwen-3b | qwen | 0.01 | 1.0 | 10 | 2 | scored | .8828<br>±.0201 | .7695<br>±.0264 | .7734<br>±.0262 | .7539<br>±.0270 | 5.04 |
+| qwen-3b | qwen | 0.01 | 10 | 100 | — | running | — | — | — | — | — |
+
+> **Analysis.** No data yet — nothing to take away.
+> **Limitations / follow-up:** if this grid is flat at level 4
+> too, qwen-3b is the model to drop from future local sweeps —
+> two nulls at two difficulties is enough. At ~4.9 hr/trial ×
+> 2 trials this table is ~69 GPU-hours.
+> Feeds key: `tbl-ecabc0`.
+
+#### lam / ds_alpha joint sweep (qwen-7b gptq-int4, embeds_ref=relative)
+<!-- table-id: tbl-e6a2f9 -->
+
+> **Compares:** level-5's qwen-7b local+relative sweep
+> (`tbl-5d64b1`) on level 4, on the strongest policy in the
+> grid. At level 5 `relative` peaked at `w_eff=1` (.7836) and
+> decayed monotonically to .7537 by 100 — a *left* optimum.
+> The AIME2025 b=320 counterpart is still climbing at
+> `w_eff=3` (.3667) with 100 in flight, i.e. pointing *right*.
+> Level 4 sits between those two difficulties and should say
+> which way the optimum actually moves with hardness.
+>
+> **Fixed:** method=`mcts_sem_v02`, **`cov_scope=local`**,
+> **`embeds_ref=relative`**, prm=qwen, bs-4, d-20, b=80,
+> proj=sparse512, cov_update=sm, cov_dtype=fp64, ds_beta=1.0,
+> prm_batch_size=1, llm=qwen-7b gptq-int4, **lam=0.01**,
+> level=4 (config default), run.num_trials=2.
+>
+> ⚠️ `w_eff=0` is `embeds_ref`-independent by construction; see
+> the llama-1b table above.
+>
+> **W&B:** —
+
+| llm | prm | lam | ds_alpha | w_eff | trials | status | pass@gb | naive@gb | wei@gb | maj@gb | hr/trial |
+|---|---|---|---|---|---|---|---|---|---|---|---|
+| qwen-7b gptq-int4 | qwen | 0.01 | 0 | 0 | 2 | scored | .8008<br>±.0250 | .7852<br>±.0257 | .7734<br>±.0262 | .7461<br>±.0273 | 1.76 |
+| qwen-7b gptq-int4 | qwen | 0.01 | 0.01 | 0.1 | — | failed | — | — | — | — | — |
+| qwen-7b gptq-int4 | qwen | 0.01 | 0.03 | 0.3 | — | running | — | — | — | — | — |
+| qwen-7b gptq-int4 | qwen | 0.01 | 0.1 | 1 | — | running | — | — | — | — | — |
+| qwen-7b gptq-int4 | qwen | 0.01 | 0.3 | 3 | — | running | — | — | — | — | — |
+| qwen-7b gptq-int4 | qwen | 0.01 | 1.0 | 10 | — | running | — | — | — | — | — |
+| qwen-7b gptq-int4 | qwen | 0.01 | 10 | 100 | — | running | — | — | — | — | — |
+
+> **Analysis.** No data yet — nothing to take away.
+> **Limitations / follow-up:** this is the one table in the
+> section with a *contradiction* to resolve rather than a
+> prediction to confirm — level 5 says the optimum is left,
+> AIME2025 says right. At ~4.2 hr/trial × 2 trials it is
+> ~59 GPU-hours. Feeds key: `tbl-e6a2f9`.
+
+#### lam / ds_alpha joint sweep (qwen-math-1.5b, embeds_ref=relative)
+<!-- table-id: tbl-c76d49 -->
+
+> **Compares:** level-5's qwen-math-1.5b local+relative sweep
+> (`tbl-3a76ce`) on level 4. This model is the family outlier
+> twice over: math-specialized embeddings, and the one level-5
+> model whose measured `relative` points peak at `w_eff=10`
+> rather than low. On AIME2025 b=320 it posted **.4000**, the
+> best pass@gb in that doc, also at a high `w_eff`. If its peak
+> stays right at level 4 while the others sit near 1, the
+> per-model tuning story is about the embedding space, not the
+> difficulty.
+>
+> **Fixed:** method=`mcts_sem_v02`, **`cov_scope=local`**,
+> **`embeds_ref=relative`**, prm=qwen, bs-4, d-20, b=80,
+> proj=sparse512, cov_update=sm, cov_dtype=fp64, ds_beta=1.0,
+> prm_batch_size=1, llm=qwen-math-1.5b, **lam=0.01**, level=4
+> (config default), run.num_trials=2.
+>
+> ⚠️ `w_eff=0` is `embeds_ref`-independent by construction; see
+> the llama-1b table above.
+>
+> **W&B:** —
+
+| llm | prm | lam | ds_alpha | w_eff | trials | status | pass@gb | naive@gb | wei@gb | maj@gb | hr/trial |
+|---|---|---|---|---|---|---|---|---|---|---|---|
+| qwen-math-1.5b | qwen | 0.01 | 0 | 0 | — | running | — | — | — | — | — |
+| qwen-math-1.5b | qwen | 0.01 | 0.01 | 0.1 | — | running | — | — | — | — | — |
+| qwen-math-1.5b | qwen | 0.01 | 0.03 | 0.3 | — | running | — | — | — | — | — |
+| qwen-math-1.5b | qwen | 0.01 | 0.1 | 1 | — | running | — | — | — | — | — |
+| qwen-math-1.5b | qwen | 0.01 | 0.3 | 3 | — | running | — | — | — | — | — |
+| qwen-math-1.5b | qwen | 0.01 | 1.0 | 10 | — | running | — | — | — | — | — |
+| qwen-math-1.5b | qwen | 0.01 | 10 | 100 | — | running | — | — | — | — | — |
+
+> **Analysis.** No data yet — nothing to take away.
+> **Limitations / follow-up:** cheapest table in the section at
+> ~4.0 hr/trial × 2 trials ≈ 56 GPU-hours, and the one whose
+> result is most likely to differ from the other four — queue
+> it even if the section gets cut for compute.
+> Feeds key: `tbl-c76d49`.
+
 ### cnt-mcts-bl-v01
 > knobs: template, cpuct (bs-4, d-20 fixed). method=`mcts_bl_cnt_v01`.
 > No cpuct sweep yet — every row is the default 2.0. Same
