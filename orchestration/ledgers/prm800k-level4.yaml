@@ -2786,7 +2786,7 @@
   feeds:
   - tbl-ecabc0  # L4 b=80 lam/ds_alpha rel sweep, qwen-3b
   group: sem-mcts
-  status: running
+  status: scored
   priority: 1
   expected_hr: 10
   note: L4 b80 covlocal-rel qwen-3b w_eff=100
@@ -2860,7 +2860,7 @@
   feeds:
   - tbl-e6a2f9  # L4 b=80 lam/ds_alpha rel sweep, qwen-7b gptq-int4
   group: sem-mcts
-  status: running
+  status: scored
   priority: 1
   expected_hr: 9
   note: L4 b80 covlocal-rel qwen-7b gptq-int4 w_eff=0.3

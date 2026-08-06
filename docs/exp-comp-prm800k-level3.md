@@ -181,7 +181,7 @@ Empty cells are `—`. Full workflow:
 | llama-3b fp16 | 2 | scored | .9095<br>±.0198 | .8524<br>±.0245 | .8190<br>±.0266 | .8048<br>±.0274 | 3.74 |
 | qwen-3b fp16 | 2 | scored | .9619<br>±.0132 | .9048<br>±.0203 | .9143<br>±.0194 | .9000<br>±.0208 | 3.35 |
 | qwen-7b gptq-int4 | 2 | scored | .9810<br>±.0095 | .9286<br>±.0178 | .9000<br>±.0208 | .8905<br>±.0216 | 2.68 |
-| qwen-math-1.5b fp16 | — | inqueue | — | — | — | — | — |
+| qwen-math-1.5b fp16 | — | running | — | — | — | — | — |
 
 > **Analysis.** Four of five cells scored. Against the
 > `ds_alpha=1` table (`tbl-8d2a3d`), raising `w_eff` from 10 to

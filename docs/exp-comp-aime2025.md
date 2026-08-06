@@ -18,71 +18,74 @@ by gen_budget, plus a cross-algorithm best-config summary.
 <!-- toc:begin -- generated, do not hand-edit -->
 ## Contents
 
-- [**Purpose**](#purpose)
-- [**Structure and use**](#structure-and-use)
-- [**Cross-algorithm summary (QwenPRM)**](#cross-algorithm-summary-qwenprm)
-- [**Tuning tables \[gen_budget=80\]**](#tuning-tables-gen_budget80)
-  - [cnt-mcts](#cnt-mcts)
-    - [model family, size, quantization comparison (RLHFlowPRM)](#model-family-size-quantization-comparison-rlhflowprm) · `tbl-161a03`
-    - [model family, size, quantization comparison (QwenPRM)](#model-family-size-quantization-comparison-qwenprm) · `tbl-e742a7`
-    - [agg_strategy comparison (qwen-3b, qwen-math-1.5b)](#agg_strategy-comparison-qwen-3b-qwen-math-15b) · `tbl-6dad4f`
-  - [sem-mcts-v02](#sem-mcts-v02)
-    - [embeds_strategy × scope sweep (QwenPRM)](#embeds_strategy-scope-sweep-qwenprm) · `tbl-0c55e1`
-    - [lam / ds_alpha joint sweep (llama-1b)](#lam-ds_alpha-joint-sweep-llama-1b) · `tbl-b1a6d9`
-    - [lam / ds_alpha joint sweep (llama-3b)](#lam-ds_alpha-joint-sweep-llama-3b) · `tbl-d0ed2a`
-    - [lam / ds_alpha joint sweep (qwen-math-1.5b)](#lam-ds_alpha-joint-sweep-qwen-math-15b) · `tbl-8bf48f`
-    - [lam / ds_alpha joint sweep (qwen-7b gptq-int4)](#lam-ds_alpha-joint-sweep-qwen-7b-gptq-int4) · `tbl-ba8af1`
-    - [embeds_center_mode comparison (lam=0.01/ds_alpha=1)](#embeds_center_mode-comparison-lam001ds_alpha1) · `tbl-4f8220`
-    - [embeds_center_mode comparison (lam=0.01/ds_alpha=10)](#embeds_center_mode-comparison-lam001ds_alpha10) · `tbl-ddf79e`
-    - [agg_strategy comparison (qwen-3b, qwen-math-1.5b, lam=0.01/ds_alpha=1)](#agg_strategy-comparison-qwen-3b-qwen-math-15b-lam001ds_alpha1) · `tbl-6ef336`
-    - [agg_strategy comparison (qwen-3b, qwen-math-1.5b, lam=0.01/ds_alpha=10)](#agg_strategy-comparison-qwen-3b-qwen-math-15b-lam001ds_alpha10) · `tbl-4498f8`
-    - [model family, size, quantization comparison (QwenPRM, lam=0.01/ds_alpha=1)](#model-family-size-quantization-comparison-qwenprm-lam001ds_alpha1) · `tbl-cfd7cf`
-    - [model family, size, quantization comparison (QwenPRM, lam=0.01/ds_alpha=10)](#model-family-size-quantization-comparison-qwenprm-lam001ds_alpha10) · `tbl-878af9`
-  - [sem-mcts-v02 \[cov_scope=local\]](#sem-mcts-v02-cov_scopelocal)
-    - [lam / ds_alpha joint sweep (llama-1b, embeds_ref=relative)](#lam-ds_alpha-joint-sweep-llama-1b-embeds_refrelative) · `tbl-2ef3dc`
-    - [lam / ds_alpha joint sweep (llama-3b, embeds_ref=relative)](#lam-ds_alpha-joint-sweep-llama-3b-embeds_refrelative) · `tbl-b94f3f`
-    - [lam / ds_alpha joint sweep (qwen-3b, embeds_ref=relative)](#lam-ds_alpha-joint-sweep-qwen-3b-embeds_refrelative) · `tbl-435dd3`
-    - [lam / ds_alpha joint sweep (qwen-7b gptq-int4, embeds_ref=relative)](#lam-ds_alpha-joint-sweep-qwen-7b-gptq-int4-embeds_refrelative) · `tbl-7a3760`
-    - [lam / ds_alpha joint sweep (qwen-math-1.5b, embeds_ref=relative)](#lam-ds_alpha-joint-sweep-qwen-math-15b-embeds_refrelative) · `tbl-4ef506`
-  - [cnt-mcts-bl-v01](#cnt-mcts-bl-v01)
-    - [model family, size, quantization comparison (QwenPRM)](#model-family-size-quantization-comparison-qwenprm-1) · `tbl-c7dd39`
-  - [cnt-mcts-bl-v02](#cnt-mcts-bl-v02)
-    - [score_mode sweep: parent_blend (alpha) vs. path_decay (gamma × cpuct) (qwen-3b, QwenPRM)](#score_mode-sweep-parent_blend-alpha-vs-path_decay-gamma-cpuct-qwen-3b-qwenprm) · `tbl-40a360`
-  - [kube-mcts-bl-v01](#kube-mcts-bl-v01)
-    - [model family, size, quantization comparison (QwenPRM)](#model-family-size-quantization-comparison-qwenprm-2) · `tbl-d34700`
-    - [kube_c sweep × model family (QwenPRM)](#kube_c-sweep-model-family-qwenprm) · `tbl-9d3944`
-  - [kube-mcts-bl-v02](#kube-mcts-bl-v02)
-    - [score_mode sweep: parent_blend (alpha) vs. path_decay (gamma × kube_c) (qwen-3b, QwenPRM)](#score_mode-sweep-parent_blend-alpha-vs-path_decay-gamma-kube_c-qwen-3b-qwenprm) · `tbl-bdeba2`
-    - [model family, size, quantization comparison (QwenPRM, parent_blend/alpha=0.8)](#model-family-size-quantization-comparison-qwenprm-parent_blendalpha08) · `tbl-bda3a8`
-    - [model family, size, quantization comparison (QwenPRM, parent_blend/alpha=1.0)](#model-family-size-quantization-comparison-qwenprm-parent_blendalpha10) · `tbl-b3d812`
-    - [model family, size, quantization comparison (QwenPRM, parent_blend/alpha=0.0)](#model-family-size-quantization-comparison-qwenprm-parent_blendalpha00) · `tbl-7c1779`
-    - [alpha × kube_c joint sweep (llama-3b, QwenPRM, parent_blend)](#alpha-kube_c-joint-sweep-llama-3b-qwenprm-parent_blend) · `tbl-86e0b6`
-    - [gamma × kube_c joint sweep (qwen-3b, QwenPRM, path_decay)](#gamma-kube_c-joint-sweep-qwen-3b-qwenprm-path_decay) · `tbl-434915`
-  - [kdepth-mcts-bl-v01](#kdepth-mcts-bl-v01)
-    - [model family, size, quantization comparison (QwenPRM)](#model-family-size-quantization-comparison-qwenprm-3) · `tbl-acca74`
-    - [model family, size, quantization comparison (QwenPRM, depth_alpha=0.5)](#model-family-size-quantization-comparison-qwenprm-depth_alpha05) · `tbl-b429d0`
-    - [model family, size, quantization comparison (QwenPRM, depth_alpha=2.0)](#model-family-size-quantization-comparison-qwenprm-depth_alpha20) · `tbl-3fbc68`
-  - [kdepth-mcts-bl-v02](#kdepth-mcts-bl-v02)
-    - [score_mode sweep: parent_blend (alpha) vs. path_decay (gamma) (qwen-3b, QwenPRM)](#score_mode-sweep-parent_blend-alpha-vs-path_decay-gamma-qwen-3b-qwenprm) · `tbl-59ccb9`
-    - [model family, size, quantization comparison (QwenPRM, parent_blend/alpha=0.8)](#model-family-size-quantization-comparison-qwenprm-parent_blendalpha08-1) · `tbl-d81f40`
-    - [model family, size, quantization comparison (QwenPRM, parent_blend/alpha=1.0)](#model-family-size-quantization-comparison-qwenprm-parent_blendalpha10-1) · `tbl-288646`
-  - [sem-mcts-bl-v01](#sem-mcts-bl-v01)
-    - [model family comparison (QwenPRM, lam=0.01/ds_alpha=10, max_model_len=6000)](#model-family-comparison-qwenprm-lam001ds_alpha10-max_model_len6000) · `tbl-df1eeb`
-    - [model family comparison (QwenPRM, lam=0.01/ds_alpha=1, max_model_len=6000)](#model-family-comparison-qwenprm-lam001ds_alpha1-max_model_len6000) · `tbl-b3f9bb`
-  - [sem-mcts-bl-v02](#sem-mcts-bl-v02)
-    - [model family, size, quantization comparison (QwenPRM, parent_blend/alpha=1.0, lam=0.01/ds_alpha=10)](#model-family-size-quantization-comparison-qwenprm-parent_blendalpha10-lam001ds_alpha10) · `tbl-396f65`
-- [**Tuning tables \[gen_budget=160, 320, …\] *(future)***](#tuning-tables-gen_budget160-320-future)
-  - [cnt-mcts](#cnt-mcts-1)
-    - [model family comparison (b=320, QwenPRM)](#model-family-comparison-b320-qwenprm) · `tbl-f31bf0`
-  - [sem-mcts-v02](#sem-mcts-v02-1)
-    - [model family comparison (b=320, QwenPRM, lam=0.1, w_eff=10)](#model-family-comparison-b320-qwenprm-lam01-w_eff10) · `tbl-b2d2d2`
-    - [model family comparison (b=320, QwenPRM, lam=0.1, w_eff=100)](#model-family-comparison-b320-qwenprm-lam01-w_eff100) · `tbl-9d68e9`
-  - [sem-mcts-v02 \[cov_scope=local\]](#sem-mcts-v02-cov_scopelocal-1)
-    - [lam / ds_alpha joint sweep (b=320, llama-1b, embeds_ref=relative)](#lam-ds_alpha-joint-sweep-b320-llama-1b-embeds_refrelative) · `tbl-568027`
-    - [lam / ds_alpha joint sweep (b=320, llama-3b, embeds_ref=relative)](#lam-ds_alpha-joint-sweep-b320-llama-3b-embeds_refrelative) · `tbl-f0eec8`
-    - [lam / ds_alpha joint sweep (b=320, qwen-3b, embeds_ref=relative)](#lam-ds_alpha-joint-sweep-b320-qwen-3b-embeds_refrelative) · `tbl-4abc69`
-    - [lam / ds_alpha joint sweep (b=320, qwen-7b gptq-int4, embeds_ref=relative)](#lam-ds_alpha-joint-sweep-b320-qwen-7b-gptq-int4-embeds_refrelative) · `tbl-f6fc16`
-    - [lam / ds_alpha joint sweep (b=320, qwen-math-1.5b, embeds_ref=relative)](#lam-ds_alpha-joint-sweep-b320-qwen-math-15b-embeds_refrelative) · `tbl-a488ce`
+- [LLM Reasoning — MCTS Experiment Comparison — AIME2025](#llm-reasoning--mcts-experiment-comparison--aime2025)
+  - [Contents](#contents)
+  - [Purpose](#purpose)
+  - [Structure and use](#structure-and-use)
+  - [Cross-algorithm summary \[gen\_budget=80\] (QwenPRM)](#cross-algorithm-summary-gen_budget80-qwenprm)
+  - [Cross-algorithm summary \[gen\_budget=320\] (QwenPRM)](#cross-algorithm-summary-gen_budget320-qwenprm)
+  - [Tuning tables \[gen\_budget=80\]](#tuning-tables-gen_budget80)
+    - [cnt-mcts](#cnt-mcts)
+      - [model family, size, quantization comparison (RLHFlowPRM)](#model-family-size-quantization-comparison-rlhflowprm)
+      - [model family, size, quantization comparison (QwenPRM)](#model-family-size-quantization-comparison-qwenprm)
+      - [agg\_strategy comparison (qwen-3b, qwen-math-1.5b)](#agg_strategy-comparison-qwen-3b-qwen-math-15b)
+    - [sem-mcts-v02](#sem-mcts-v02)
+      - [embeds\_strategy × scope sweep (QwenPRM)](#embeds_strategy--scope-sweep-qwenprm)
+      - [lam / ds\_alpha joint sweep (llama-1b)](#lam--ds_alpha-joint-sweep-llama-1b)
+      - [lam / ds\_alpha joint sweep (llama-3b)](#lam--ds_alpha-joint-sweep-llama-3b)
+      - [lam / ds\_alpha joint sweep (qwen-math-1.5b)](#lam--ds_alpha-joint-sweep-qwen-math-15b)
+      - [lam / ds\_alpha joint sweep (qwen-7b gptq-int4)](#lam--ds_alpha-joint-sweep-qwen-7b-gptq-int4)
+      - [embeds\_center\_mode comparison (lam=0.01/ds\_alpha=1)](#embeds_center_mode-comparison-lam001ds_alpha1)
+      - [embeds\_center\_mode comparison (lam=0.01/ds\_alpha=10)](#embeds_center_mode-comparison-lam001ds_alpha10)
+      - [agg\_strategy comparison (qwen-3b, qwen-math-1.5b, lam=0.01/ds\_alpha=1)](#agg_strategy-comparison-qwen-3b-qwen-math-15b-lam001ds_alpha1)
+      - [agg\_strategy comparison (qwen-3b, qwen-math-1.5b, lam=0.01/ds\_alpha=10)](#agg_strategy-comparison-qwen-3b-qwen-math-15b-lam001ds_alpha10)
+      - [model family, size, quantization comparison (QwenPRM, lam=0.01/ds\_alpha=1)](#model-family-size-quantization-comparison-qwenprm-lam001ds_alpha1)
+      - [model family, size, quantization comparison (QwenPRM, lam=0.01/ds\_alpha=10)](#model-family-size-quantization-comparison-qwenprm-lam001ds_alpha10)
+    - [sem-mcts-v02 \[cov\_scope=local\]](#sem-mcts-v02-cov_scopelocal)
+      - [lam / ds\_alpha joint sweep (llama-1b, embeds\_ref=relative)](#lam--ds_alpha-joint-sweep-llama-1b-embeds_refrelative)
+      - [lam / ds\_alpha joint sweep (llama-3b, embeds\_ref=relative)](#lam--ds_alpha-joint-sweep-llama-3b-embeds_refrelative)
+      - [lam / ds\_alpha joint sweep (qwen-3b, embeds\_ref=relative)](#lam--ds_alpha-joint-sweep-qwen-3b-embeds_refrelative)
+      - [lam / ds\_alpha joint sweep (qwen-7b gptq-int4, embeds\_ref=relative)](#lam--ds_alpha-joint-sweep-qwen-7b-gptq-int4-embeds_refrelative)
+      - [lam / ds\_alpha joint sweep (qwen-math-1.5b, embeds\_ref=relative)](#lam--ds_alpha-joint-sweep-qwen-math-15b-embeds_refrelative)
+    - [cnt-mcts-bl-v01](#cnt-mcts-bl-v01)
+      - [model family, size, quantization comparison (QwenPRM)](#model-family-size-quantization-comparison-qwenprm-1)
+    - [cnt-mcts-bl-v02](#cnt-mcts-bl-v02)
+      - [score\_mode sweep: parent\_blend (alpha) vs. path\_decay (gamma × cpuct) (qwen-3b, QwenPRM)](#score_mode-sweep-parent_blend-alpha-vs-path_decay-gamma--cpuct-qwen-3b-qwenprm)
+    - [kube-mcts-bl-v01](#kube-mcts-bl-v01)
+      - [model family, size, quantization comparison (QwenPRM)](#model-family-size-quantization-comparison-qwenprm-2)
+      - [kube\_c sweep × model family (QwenPRM)](#kube_c-sweep--model-family-qwenprm)
+    - [kube-mcts-bl-v02](#kube-mcts-bl-v02)
+      - [score\_mode sweep: parent\_blend (alpha) vs. path\_decay (gamma × kube\_c) (qwen-3b, QwenPRM)](#score_mode-sweep-parent_blend-alpha-vs-path_decay-gamma--kube_c-qwen-3b-qwenprm)
+      - [model family, size, quantization comparison (QwenPRM, parent\_blend/alpha=0.8)](#model-family-size-quantization-comparison-qwenprm-parent_blendalpha08)
+      - [model family, size, quantization comparison (QwenPRM, parent\_blend/alpha=1.0)](#model-family-size-quantization-comparison-qwenprm-parent_blendalpha10)
+      - [model family, size, quantization comparison (QwenPRM, parent\_blend/alpha=0.0)](#model-family-size-quantization-comparison-qwenprm-parent_blendalpha00)
+      - [alpha × kube\_c joint sweep (llama-3b, QwenPRM, parent\_blend)](#alpha--kube_c-joint-sweep-llama-3b-qwenprm-parent_blend)
+      - [gamma × kube\_c joint sweep (qwen-3b, QwenPRM, path\_decay)](#gamma--kube_c-joint-sweep-qwen-3b-qwenprm-path_decay)
+    - [kdepth-mcts-bl-v01](#kdepth-mcts-bl-v01)
+      - [model family, size, quantization comparison (QwenPRM)](#model-family-size-quantization-comparison-qwenprm-3)
+      - [model family, size, quantization comparison (QwenPRM, depth\_alpha=0.5)](#model-family-size-quantization-comparison-qwenprm-depth_alpha05)
+      - [model family, size, quantization comparison (QwenPRM, depth\_alpha=2.0)](#model-family-size-quantization-comparison-qwenprm-depth_alpha20)
+    - [kdepth-mcts-bl-v02](#kdepth-mcts-bl-v02)
+      - [score\_mode sweep: parent\_blend (alpha) vs. path\_decay (gamma) (qwen-3b, QwenPRM)](#score_mode-sweep-parent_blend-alpha-vs-path_decay-gamma-qwen-3b-qwenprm)
+      - [model family, size, quantization comparison (QwenPRM, parent\_blend/alpha=0.8)](#model-family-size-quantization-comparison-qwenprm-parent_blendalpha08-1)
+      - [model family, size, quantization comparison (QwenPRM, parent\_blend/alpha=1.0)](#model-family-size-quantization-comparison-qwenprm-parent_blendalpha10-1)
+    - [sem-mcts-bl-v01](#sem-mcts-bl-v01)
+      - [model family comparison (QwenPRM, lam=0.01/ds\_alpha=10, max\_model\_len=6000)](#model-family-comparison-qwenprm-lam001ds_alpha10-max_model_len6000)
+      - [model family comparison (QwenPRM, lam=0.01/ds\_alpha=1, max\_model\_len=6000)](#model-family-comparison-qwenprm-lam001ds_alpha1-max_model_len6000)
+    - [sem-mcts-bl-v02](#sem-mcts-bl-v02)
+      - [model family, size, quantization comparison (QwenPRM, parent\_blend/alpha=1.0, lam=0.01/ds\_alpha=10)](#model-family-size-quantization-comparison-qwenprm-parent_blendalpha10-lam001ds_alpha10)
+  - [Tuning tables \[gen\_budget=160, 320, …\] *(future)*](#tuning-tables-gen_budget160-320--future)
+    - [cnt-mcts](#cnt-mcts-1)
+      - [model family comparison (b=320, QwenPRM)](#model-family-comparison-b320-qwenprm)
+    - [sem-mcts-v02](#sem-mcts-v02-1)
+      - [model family comparison (b=320, QwenPRM, lam=0.1, w\_eff=10)](#model-family-comparison-b320-qwenprm-lam01-w_eff10)
+      - [model family comparison (b=320, QwenPRM, lam=0.1, w\_eff=100)](#model-family-comparison-b320-qwenprm-lam01-w_eff100)
+    - [sem-mcts-v02 \[cov\_scope=local\]](#sem-mcts-v02-cov_scopelocal-1)
+      - [lam / ds\_alpha joint sweep (b=320, llama-1b, embeds\_ref=relative)](#lam--ds_alpha-joint-sweep-b320-llama-1b-embeds_refrelative)
+      - [lam / ds\_alpha joint sweep (b=320, llama-3b, embeds\_ref=relative)](#lam--ds_alpha-joint-sweep-b320-llama-3b-embeds_refrelative)
+      - [lam / ds\_alpha joint sweep (b=320, qwen-3b, embeds\_ref=relative)](#lam--ds_alpha-joint-sweep-b320-qwen-3b-embeds_refrelative)
+      - [lam / ds\_alpha joint sweep (b=320, qwen-7b gptq-int4, embeds\_ref=relative)](#lam--ds_alpha-joint-sweep-b320-qwen-7b-gptq-int4-embeds_refrelative)
+      - [lam / ds\_alpha joint sweep (b=320, qwen-math-1.5b, embeds\_ref=relative)](#lam--ds_alpha-joint-sweep-b320-qwen-math-15b-embeds_refrelative)
 
 *46 tables. Regenerate with `python scripts/gen_toc.py`.*
 <!-- toc:end -->
@@ -129,7 +132,7 @@ Two activities, two shapes:
 
 ---
 
-## Cross-algorithm summary (QwenPRM)
+## Cross-algorithm summary [gen_budget=80] (QwenPRM)
 > One table per model, one row per algorithm — pulled directly from
 > each algorithm's own "model family, size, quantization comparison
 > (QwenPRM)" table above/below (`cnt-mcts`, `sem-mcts`,
@@ -138,8 +141,12 @@ Two activities, two shapes:
 > agg_strategy=`last`, tmpl=model-family default (native for Qwen,
 > custom for Llama), prm=qwen. `cnt-mcts` row is method=`mcts_cnt_v01`
 > (the only cnt-mcts entry point at this level — see the
-> `### cnt-mcts` section above). `sem-mcts` row is `mcts_sem_v02` (PRM embeds),
-> `ds_alpha=100` (w_eff not applicable — that knob is bl_sem-specific).
+> `### cnt-mcts` section above). `sem-mcts` row is `mcts_sem_v02` (PRM
+> embeds); its config is **not** fixed — per the promotion rule above it
+> is the best config across all tuning knobs jointly (lam × ds_alpha ×
+> embeds_center_mode), chosen by pass@gb with ties broken naive → wei →
+> maj. The winning config differs per model; each is named in the
+> Analysis note below. (w_eff not applicable — bl_sem-specific.)
 > `sem-mcts-bl-v01` row uses the `w_eff=100` table; see that
 > algorithm's own section for the `w_eff=10` comparison point.
 > `kube-mcts-bl-v01` (Fractional KUBE) and `kdepth-mcts-bl-v01`
@@ -153,59 +160,185 @@ Two activities, two shapes:
 | algorithm | trials | status | pass@gb | naive@gb | wei@gb | maj@gb | hr/trial |
 |---|---|---|---|---|---|---|---|
 | cnt-mcts | — | planned | — | — | — | — | — |
-| sem-mcts | — | planned | — | — | — | — | — |
-| cnt-mcts-bl-v01 | — | planned | — | — | — | — | — |
-| kube-mcts-bl-v01 | — | planned | — | — | — | — | — |
-| kdepth-mcts-bl-v01 | — | planned | — | — | — | — | — |
-| sem-mcts-bl-v01 | — | planned | — | — | — | — | — |
+| sem-mcts-v02 | — | planned | — | — | — | — | — |
+| sem-mcts-v02 (local) | — | planned | — | — | — | — | — |
 
 **llama-3b fp16**
 
-| algorithm | trials | status | pass@gb | naive@gb | wei@gb | maj@gb | hr/trial |
-|---|---|---|---|---|---|---|---|
-| cnt-mcts | — | planned | — | — | — | — | — |
-| sem-mcts | — | planned | — | — | — | — | — |
-| cnt-mcts-bl-v01 | — | planned | — | — | — | — | — |
-| kube-mcts-bl-v01 | — | planned | — | — | — | — | — |
-| kdepth-mcts-bl-v01 | — | planned | — | — | — | — | — |
-| sem-mcts-bl-v01 | — | planned | — | — | — | — | — |
+| algorithm | trials | status | pass@gb | naive@gb | wei@gb | maj@gb | ncomps | depth | nphases | ndepths | hr/trial |
+|---|---|---|---|---|---|---|---|---|---|---|---|
+| cnt-mcts | 4 | scored | .0750<br>±.0241 | .0500<br>±.0200 | .0333<br>±.0165 | .0167<br>±.0117 | 18.7<br>±1.0 | 11.7<br>±0.2 | 7.2<br>±0.4 | 12.6<br>±0.3 | 1.33 |
+| sem-mcts-v02 | 4 | scored | .0750<br>±.0241 | .0583<br>±.0215 | .0417<br>±.0183 | .0250<br>±.0143 | 19.0<br>±1.2 | 12.2<br>±0.2 | 64.0<br>±18.5 | 12.6<br>±0.3 | 1.78 |
+| sem-mcts-v02 (local) | 4 | scored | .0667<br>±.0229 | .0333<br>±.0165 | .0250<br>±.0143 | .0167<br>±.0117 | 17.7<br>±0.9 | 11.6<br>±0.2 | 125.6<br>±29.4 | 12.1<br>±0.4 | 1.73 |
+
 
 **qwen-3b fp16**
 
-| algorithm | trials | status | pass@gb | naive@gb | wei@gb | maj@gb | hr/trial |
-|---|---|---|---|---|---|---|---|
-| cnt-mcts | — | planned | — | — | — | — | — |
-| sem-mcts | — | planned | — | — | — | — | — |
-| cnt-mcts-bl-v01 | — | planned | — | — | — | — | — |
-| kube-mcts-bl-v01 | — | planned | — | — | — | — | — |
-| kdepth-mcts-bl-v01 | — | planned | — | — | — | — | — |
-| sem-mcts-bl-v01 | — | planned | — | — | — | — | — |
+| algorithm | trials | status | pass@gb | naive@gb | wei@gb | maj@gb | ncomps | depth | nphases | ndepths | hr/trial |
+|---|---|---|---|---|---|---|---|---|---|---|---|
+| cnt-mcts | 4 | scored | .1417<br>±.0320 | .0667<br>±.0229 | .0917<br>±.0265 | .0917<br>±.0265 | 15.9<br>±0.7 | 11.4<br>±0.3 | 6.6<br>±0.2 | 12.3<br>±0.2 | 1.28 |
+| sem-mcts-v02 | 4 | scored | .2000<br>±.0367 | .1333<br>±.0312 | .0917<br>±.0265 | .0583<br>±.0215 | 16.8<br>±0.9 | 11.5<br>±0.2 | 7.1<br>±0.3 | 12.2<br>±0.2 | 1.77 |
+| sem-mcts-v02 (local) | 4 | scored | .2167<br>±.0378 | .1167<br>±.0294 | .1250<br>±.0303 | .1083<br>±.0285 | 13.3<br>±0.8 | 12.0<br>±0.3 | 331.1<br>±42.3 | 12.1<br>±0.3 | 1.61 |
 
 **qwen-7b gptq-int4**
 
-| algorithm | trials | status | pass@gb | naive@gb | wei@gb | maj@gb | hr/trial |
-|---|---|---|---|---|---|---|---|
-| cnt-mcts | — | planned | — | — | — | — | — |
-| sem-mcts | — | planned | — | — | — | — | — |
-| cnt-mcts-bl-v01 | — | planned | — | — | — | — | — |
-| kube-mcts-bl-v01 | — | planned | — | — | — | — | — |
-| kdepth-mcts-bl-v01 | — | planned | — | — | — | — | — |
-| sem-mcts-bl-v01 | — | planned | — | — | — | — | — |
+| algorithm | trials | status | pass@gb | naive@gb | wei@gb | maj@gb | ncomps | depth | nphases | ndepths | hr/trial |
+|---|---|---|---|---|---|---|---|---|---|---|---|
+| cnt-mcts | 4 | scored | .2500<br>±.0397 | .1417<br>±.0320 | .1167<br>±.0294 | .1083<br>±.0285 | 23.5<br>±1.3 | 8.8<br>±0.2 | 19.1<br>±8.2 | 9.3<br>±0.2 | 1.25 |
+| sem-mcts-v02 | 4 | scored | .3000<br>±.0420 | .1833<br>±.0355 | .1333<br>±.0312 | .1167<br>±.0294 | 24.0<br>±1.3 | 9.2<br>±0.2 | 15.0<br>±1.7 | 9.4<br>±0.2 | 1.65 |
+| sem-mcts-v02 (local) | 4 | scored | .2833<br>±.0413 | .1667<br>±.0342 | .1667<br>±.0342 | .1583<br>±.0335 | 24.0<br>±1.2 | 9.2<br>±0.2 | 88.6<br>±23.4 | 9.3<br>±0.3 | 1.66 |
+
 
 **qwen-math-1.5b fp16**
 
-| algorithm | trials | status | pass@gb | naive@gb | wei@gb | maj@gb | hr/trial |
-|---|---|---|---|---|---|---|---|
-| cnt-mcts | — | planned | — | — | — | — | — |
-| sem-mcts | — | planned | — | — | — | — | — |
-| cnt-mcts-bl-v01 | — | planned | — | — | — | — | — |
-| kube-mcts-bl-v01 | — | planned | — | — | — | — | — |
-| kdepth-mcts-bl-v01 | — | planned | — | — | — | — | — |
-| sem-mcts-bl-v01 | — | planned | — | — | — | — | — |
+| algorithm | trials | status | pass@gb | naive@gb | wei@gb | maj@gb | ncomps | depth | nphases | ndepths | hr/trial |
+|---|---|---|---|---|---|---|---|---|---|---|---|
+| cnt-mcts | 4 | scored | .2667<br>±.0405 | .1917<br>±.0361 | .1667<br>±.0342 | .1500<br>±.0327 | 16.0<br>±1.0 | 11.6<br>±0.3 | 7.0<br>±0.3 | 12.3<br>±0.3 | 1.02 |
+| sem-mcts-v02 | 4 | scored | .2583<br>±.0401 | .1833<br>±.0355 | .1583<br>±.0335 | .1500<br>±.0327 | 16.2<br>±0.9 | 11.9<br>±0.2 | 32.1<br>±10.4 | 12.1<br>±0.2 | 1.45 |
+| sem-mcts-v02 (local) | 4 | scored | .3083<br>±.0423 | .1833<br>±.0355 | .1833<br>±.0355 | .1583<br>±.0335 | 16.7<br>±0.9 | 10.5<br>±0.3 | 7.5<br>±0.4 | 11.6<br>±0.2 | 1.45 |
 
-> **Analysis.** No AIME2025 data yet — nothing to take away.
-> **Limitations / follow-up:** entire table planned; launch is
-> the GSM8K counterpart's command with `data=aime2025`.
+
+> **Analysis.** Promoted configs — best pass@gb over each
+> variant's own knob space (ties naive → wei → maj).
+> `sem-mcts-v02` (lam × ds_alpha × embeds_center_mode):
+> llama-3b `lam=0.1, ds_alpha=3.16` (`tbl-d0ed2a`); qwen-3b
+> `lam=0.01, ds_alpha=10, center=local` (`tbl-ddf79e`); qwen-7b
+> gptq-int4 `lam=0.01, ds_alpha=10` (`tbl-ba8af1`);
+> qwen-math-1.5b `lam=0.01, ds_alpha=1.0` (`tbl-8bf48f`).
+> `sem-mcts-v02 (local)` (all `lam=0.01`, `embeds_ref=relative`,
+> ds_alpha swept): llama-3b `0.1` (`tbl-b94f3f`); qwen-3b `0.01`
+> (`tbl-435dd3`); qwen-7b gptq-int4 `0.1` (`tbl-7a3760`);
+> qwen-math-1.5b `10` (`tbl-4ef506`).
+>
+> Best-of-three per model: llama-3b cnt/global tie (.0750),
+> qwen-3b local (.2167), qwen-7b gptq-int4 global (.3000),
+> qwen-math-1.5b local (.3083). A sem-mcts variant is at or
+> above cnt-mcts on all four models, but **which** variant wins
+> is not stable across models — global takes qwen-7b, local
+> takes qwen-3b and qwen-math-1.5b. Note that on
+> qwen-math-1.5b, global alone *loses* to cnt-mcts (.2583 vs
+> .2667) and only the local variant clears it; the
+> global-vs-local choice is doing real work in that row.
+> On cost, local is the cheaper of the two sem variants in 3 of
+> 4 rows (e.g. qwen-3b 1.61 vs 1.77 hr/trial), so it is not
+> buying its accuracy with extra compute — but both sem
+> variants still run 15-40 % slower per trial than cnt-mcts.
+> **Limitations / follow-up:** every gap here is within ~1.5
+> SEM at 30 questions x 4 trials, so no ranking is resolved;
+> treat the ordering as provisional until trials increase.
+> The global-vs-local inconsistency in particular is exactly
+> what 4 trials cannot distinguish from noise — check it
+> against the level-4/level-5 PRM800K sweeps, which have far
+> more questions.
+> llama-1b is deliberately left `planned` — it solves 1-4 of
+> 120 question-trials, below the benchmark's resolution.
+
+---
+
+## Cross-algorithm summary [gen_budget=320] (QwenPRM)
+> Same construction as the b=80 summary above, at
+> `gen_budget=320`: one table per model, one row per algorithm,
+> each row the best config for that (algorithm, model, budget)
+> picked across all of that variant's tuning knobs jointly by
+> pass@gb, ties broken naive → wei → maj. Sources: `cnt-mcts`
+> from `tbl-f31bf0`; `sem-mcts-v02` from `tbl-b2d2d2`
+> (`lam=0.1, w_eff=10`) and `tbl-9d68e9` (`lam=0.1, w_eff=100`);
+> `sem-mcts-v02 (local)` from the per-model b=320 `lam / ds_alpha`
+> sweeps (`embeds_ref=relative`, `lam=0.01`, ds_alpha swept).
+> Fixed: bs-4, d-20, `max_model_len=6000`, agg_strategy=`last`,
+> tmpl=model-family default, prm=qwen.
+>
+> Search-cost columns (mean ± SEM over questions × trials, from
+> `compute_stats` / W&B `eval/*` — see `utils/metrics.py`
+> `_eval_question`): `ncomps` = completed solutions per question
+> (`len(completions)`); `depth` = mean depth of those completions
+> (`comp_depth`); `nphases` = the phase index the search ended on
+> (`q_last_phase`); `ndepths` = mean per-phase depth
+> (`phase_depths`). `ncomps` is the one to read first — it is how
+> much of the generation budget actually became a usable solution.
+>
+> ⚠️ Two `(local)` rows sit on **incomplete** sweeps and are
+> best-so-far, not final: qwen-7b gptq-int4 is 5/6 (`ds_alpha=10`
+> still running) and qwen-math-1.5b is 3/6 (`ds_alpha=0.1/0.3/1.0`
+> running or queued). Both promoted cells could be displaced when
+> those land — re-run this promotion after the b=320 sweeps close.
+> llama-1b is omitted for the same reason as at b=80: it solves
+> 4-5 of 120 question-trials, below the benchmark's resolution.
+> Its numbers, if wanted, are `tbl-f31bf0` (.0333) and
+> `tbl-b2d2d2` (.0417).
+
+**llama-3b fp16**
+
+| algorithm | trials | status | pass@gb | naive@gb | wei@gb | maj@gb | ncomps | depth | nphases | ndepths | hr/trial |
+|---|---|---|---|---|---|---|---|---|---|---|---|
+| cnt-mcts | 4 | scored | .1333<br>±.0312 | .0500<br>±.0200 | .0333<br>±.0165 | .0250<br>±.0143 | 89.2<br>±4.4 | 11.4<br>±0.2 | 49.9<br>±6.8 | 11.8<br>±0.3 | 5.31 |
+| sem-mcts-v02 | 4 | scored | .1500<br>±.0327 | .0583<br>±.0215 | .0500<br>±.0200 | .0333<br>±.0165 | 91.8<br>±4.1 | 12.0<br>±0.1 | 82.6<br>±12.4 | 11.8<br>±0.3 | 7.69 |
+| sem-mcts-v02 (local) | 4 | scored | .2000<br>±.0367 | .0750<br>±.0241 | .0500<br>±.0200 | .0167<br>±.0117 | 85.9<br>±3.9 | 11.5<br>±0.2 | 38.6<br>±3.2 | 12.3<br>±0.3 | 7.55 |
+
+**qwen-3b fp16**
+
+| algorithm | trials | status | pass@gb | naive@gb | wei@gb | maj@gb | ncomps | depth | nphases | ndepths | hr/trial |
+|---|---|---|---|---|---|---|---|---|---|---|---|
+| cnt-mcts | 4 | scored | .2833<br>±.0413 | .1167<br>±.0294 | .1000<br>±.0275 | .0833<br>±.0253 | 90.4<br>±3.6 | 11.0<br>±0.2 | 38.5<br>±2.0 | 11.8<br>±0.2 | 5.16 |
+| sem-mcts-v02 | 4 | scored | .3250<br>±.0429 | .1167<br>±.0294 | .0917<br>±.0265 | .0917<br>±.0265 | 91.4<br>±4.4 | 12.4<br>±0.2 | 86.7<br>±12.7 | 12.2<br>±0.3 | 6.81 |
+| sem-mcts-v02 (local) | 4 | scored | .3750<br>±.0444 | .1333<br>±.0312 | .0833<br>±.0253 | .0917<br>±.0265 | 86.9<br>±3.7 | 10.8<br>±0.2 | 36.1<br>±1.2 | 11.8<br>±0.2 | 7.13 |
+
+**qwen-7b gptq-int4**
+
+| algorithm | trials | status | pass@gb | naive@gb | wei@gb | maj@gb | ncomps | depth | nphases | ndepths | hr/trial |
+|---|---|---|---|---|---|---|---|---|---|---|---|
+| cnt-mcts | 4 | scored | .4000<br>±.0449 | .1417<br>±.0320 | .1667<br>±.0342 | .1667<br>±.0342 | 124.3<br>±6.0 | 8.4<br>±0.2 | 84.9<br>±11.7 | 8.6<br>±0.2 | 4.79 |
+| sem-mcts-v02 | 4 | scored | .3083<br>±.0423 | .1833<br>±.0355 | .1667<br>±.0342 | .1750<br>±.0348 | 56.8<br>±2.7 | 10.8<br>±0.2 | 817.1<br>±28.6 | 9.5<br>±0.2 | 4.28 |
+| sem-mcts-v02 (local) | 4 | scored | .3917<br>±.0447 | .1667<br>±.0342 | .1667<br>±.0342 | .1667<br>±.0342 | 127.1<br>±6.1 | 8.4<br>±0.2 | 110.6<br>±17.7 | 8.5<br>±0.2 | 6.46 |
+
+**qwen-math-1.5b fp16**
+
+| algorithm | trials | status | pass@gb | naive@gb | wei@gb | maj@gb | ncomps | depth | nphases | ndepths | hr/trial |
+|---|---|---|---|---|---|---|---|---|---|---|---|
+| cnt-mcts | 4 | scored | .3833<br>±.0446 | .2000<br>±.0367 | .2000<br>±.0367 | .2000<br>±.0367 | 84.0<br>±3.6 | 10.5<br>±0.2 | 38.4<br>±1.4 | 11.7<br>±0.3 | 4.00 |
+| sem-mcts-v02 | 4 | scored | .3667<br>±.0442 | .1667<br>±.0342 | .1917<br>±.0361 | .1917<br>±.0361 | 69.3<br>±3.3 | 12.6<br>±0.2 | 553.9<br>±37.7 | 11.5<br>±0.2 | 4.93 |
+| sem-mcts-v02 (local) | 4 | scored | .4000<br>±.0449 | .2000<br>±.0367 | .1833<br>±.0355 | .1750<br>±.0348 | 85.1<br>±3.7 | 10.4<br>±0.2 | 38.7<br>±1.6 | 11.6<br>±0.2 | 5.76 |
+
+
+> **Analysis.** Promoted configs — `sem-mcts-v02`: llama-3b and
+> qwen-3b `w_eff=100` (`tbl-9d68e9`), qwen-7b gptq-int4 and
+> qwen-math-1.5b `w_eff=10` (`tbl-b2d2d2`). `sem-mcts-v02
+> (local)`: llama-3b, qwen-3b, qwen-math-1.5b `ds_alpha=10`;
+> qwen-7b gptq-int4 `ds_alpha=1.0` (best of 5 so far).
+>
+> The clearest signal in this doc: **local beats global on all
+> four models at b=320** (+.050, +.050, +.083, +.033), where at
+> b=80 the two traded wins. If it holds, the ordering
+> local > global is budget-dependent — a larger budget gives the
+> frontier more nodes over which a local coverage scope can
+> discriminate, while a global scope dilutes. That is a testable
+> claim, not yet a tested one.
+> Against cnt-mcts the record is 3-1: local leads on llama-3b
+> (+.067), qwen-3b (+.092) and qwen-math-1.5b (+.017), and
+> **loses** on qwen-7b gptq-int4 (.3917 vs .4000) — the one model
+> where the count-based baseline is still ahead at this budget.
+> Cost still runs against sem: 6.46-7.69 hr/trial for local vs
+> 4.00-5.31 for cnt-mcts, i.e. ~40-50 % more wall-clock for the
+> same generation budget.
+>
+> **`ncomps` explains where global loses.** On the two models
+> where global trails both other methods it is also the only one
+> failing to convert budget into completed solutions: qwen-7b
+> gptq-int4 56.8 completions vs 124.3 (cnt) and 127.1 (local),
+> and qwen-math-1.5b 69.3 vs 84.0 and 85.1. Both coincide with a
+> runaway `nphases` (817.1 and 553.9, against 38-110 elsewhere) —
+> the global scope keeps expanding phases without terminating
+> trajectories, so the same `gen_budget` yields ~45 % fewer
+> solutions to select from. Local does not show this: its
+> `ncomps` and `nphases` track cnt-mcts closely on every model.
+> That is a mechanism, not just a score, and it is the clearest
+> argument in this doc for scoping coverage locally.
+> **Limitations / follow-up:** 30 questions × 4 trials, so ±.045
+> SEM — the qwen-math-1.5b margin (+.017 = two problems) and the
+> qwen-7b deficit (-.008 = one problem) are both noise. Only the
+> qwen-3b local-vs-cnt gap (+.092 ≈ 2 SEM) is near
+> significance. Re-derive both incomplete `(local)` rows once
+> `tbl-f6fc16` and `tbl-a488ce` close.
 
 ---
 
@@ -2334,7 +2467,7 @@ Two activities, two shapes:
 | qwen-7b gptq-int4 | qwen | 0.01 | 0.1 | 1 | 4 | scored | .3250<br>±.0429 | .1667<br>±.0342 | .1333<br>±.0312 | .1250<br>±.0303 | 4.99 |
 | qwen-7b gptq-int4 | qwen | 0.01 | 0.3 | 3 | 4 | scored | .3667<br>±.0442 | .1417<br>±.0320 | .1333<br>±.0312 | .1250<br>±.0303 | 6.10 |
 | qwen-7b gptq-int4 | qwen | 0.01 | 1.0 | 10 | 4 | scored | .3917<br>±.0447 | .1667<br>±.0342 | .1667<br>±.0342 | .1667<br>±.0342 | 6.46 |
-| qwen-7b gptq-int4 | qwen | 0.01 | 10 | 100 | — | inqueue | — | — | — | — | — |
+| qwen-7b gptq-int4 | qwen | 0.01 | 10 | 100 | — | running | — | — | — | — | — |
 
 > **Analysis.** No data yet — nothing to take away.
 > **Limitations / follow-up:** **queue this table first.** It
@@ -2385,9 +2518,9 @@ Two activities, two shapes:
 | qwen-math-1.5b | qwen | 0.01 | 0 | 0 | — | planned | — | — | — | — | — |
 | qwen-math-1.5b | qwen | 0.01 | 0.01 | 0.1 | 4 | scored | .2667<br>±.0405 | .1500<br>±.0327 | .1917<br>±.0361 | .1917<br>±.0361 | 3.48 |
 | qwen-math-1.5b | qwen | 0.01 | 0.03 | 0.3 | 4 | scored | .3333<br>±.0432 | .1500<br>±.0327 | .1750<br>±.0348 | .1667<br>±.0342 | 4.35 |
-| qwen-math-1.5b | qwen | 0.01 | 0.1 | 1 | — | inqueue | — | — | — | — | — |
-| qwen-math-1.5b | qwen | 0.01 | 0.3 | 3 | — | inqueue | — | — | — | — | — |
-| qwen-math-1.5b | qwen | 0.01 | 1.0 | 10 | 3 | inqueue | — | — | — | — | — |
+| qwen-math-1.5b | qwen | 0.01 | 0.1 | 1 | — | running | — | — | — | — | — |
+| qwen-math-1.5b | qwen | 0.01 | 0.3 | 3 | — | running | — | — | — | — | — |
+| qwen-math-1.5b | qwen | 0.01 | 1.0 | 10 | 3 | running | — | — | — | — | — |
 | qwen-math-1.5b | qwen | 0.01 | 10 | 100 | 4 | scored | .4000<br>±.0449 | .2000<br>±.0367 | .1833<br>±.0355 | .1750<br>±.0348 | 5.76 |
 
 > **Analysis.** No data yet — nothing to take away.

@@ -3469,7 +3469,7 @@
   feeds:
   - tbl-f6fc16  # AIME2025 b=320 lam/ds_alpha rel sweep, qwen-7b
   group: sem-mcts
-  status: inqueue
+  status: running
   priority: 2
   expected_hr: 22
   note: AIME b320 covlocal-rel qwen-7b gptq-int4 w_eff=100
@@ -3481,10 +3481,10 @@
      requeued onto r5u29n1 and the process was killed at ~11h12m
      of a 22 h estimate -- the largest single loss of the run}
   launch:
-    job_id: 23492911
-    node: r5u27n1
-    pid: 4123567
-    at: 2026-08-05 09:07
+    job_id: 23492909
+    node: r5u37n1
+    pid: 215068
+    at: 2026-08-06 12:28
 - id: sem-mcts-aime2025-b320-covlocal-rel-qwenmath15b-weff10
   launcher: generate_mcts_sem.py
   hash: "63cbde95"
@@ -3502,7 +3502,7 @@
   feeds:
   - tbl-a488ce  # AIME2025 b=320 lam/ds_alpha rel sweep, qwen-math-1.5b
   group: sem-mcts
-  status: inqueue
+  status: running
   priority: 2
   expected_hr: 20
   note: AIME b320 covlocal-rel qwen-math-1.5b w_eff=10
@@ -3512,10 +3512,10 @@
     - {at: 2026-08-05 08:22, job_id: 23461277, outcome: stalled,
        trials_done: 3}
   launch:
-    job_id: 23492914
-    node: r5u29n1
-    pid: 4123568
-    at: 2026-08-05 09:07
+    job_id: 23492916
+    node: r5u05n1
+    pid: 218854
+    at: 2026-08-06 13:27
 - id: sem-mcts-aime2025-b320-covlocal-rel-qwenmath15b-weff100
   launcher: generate_mcts_sem.py
   hash: "ef470dc4"
@@ -3805,15 +3805,15 @@
   feeds:
   - tbl-a488ce  # AIME2025 b=320 lam/ds_alpha rel sweep, qwen-math-1.5b
   group: sem-mcts
-  status: inqueue
+  status: running
   priority: 2
   expected_hr: 20
   note: AIME b320 covlocal-rel qwen-math-1.5b w_eff=1
   launch:
-    job_id: 23492916
-    node: r5u17n1
-    pid: 4069545
-    at: 2026-08-05 00:18
+    job_id: 23492607
+    node: r5u15n1
+    pid: 225864
+    at: 2026-08-06 14:27
   history:
     - {at: 2026-08-05 23:05, job_id: 23492916, outcome: stalled, trials_done: 2,
        cause: 'gpu_windfall preemption ~13:00 on 23492916; killed at ~13h01m of 20 h -- largest single loss of the run.'}
@@ -3834,15 +3834,15 @@
   feeds:
   - tbl-a488ce  # AIME2025 b=320 lam/ds_alpha rel sweep, qwen-math-1.5b
   group: sem-mcts
-  status: inqueue
+  status: running
   priority: 2
   expected_hr: 20
   note: AIME b320 covlocal-rel qwen-math-1.5b w_eff=3
   launch:
-    job_id: 23477898
+    job_id: 23492908
     node: r5u25n1
-    pid: 4069613
-    at: 2026-08-05 00:18
+    pid: 239963
+    at: 2026-08-06 15:38
   history:
     - {at: 2026-08-05 23:05, job_id: 23477898, outcome: stalled, trials_done: 3,
        cause: 'SLURM walltime expiry ~21:38 on 23477898; run reached ~21h20m of a 20 h estimate and lost trial 4.'}

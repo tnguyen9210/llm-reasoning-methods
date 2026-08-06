@@ -403,17 +403,17 @@
   feeds:
   - tbl-49eedf  # L3 sem-mcts model family, b=80, QwenPRM, w_eff=100
   group: sem-mcts
-  status: inqueue
+  status: running
   history:
   - {at: 2026-07-30 22:03, job_id: 23446851, outcome: stalled,
      trials_done: 1,
      why: gpu_windfall allocation preempted; job re-queued as
        PENDING (start 2026-07-30T23:38), process gone}
   launch:
-    job_id: 23446851
-    node: r5u37n1
-    pid: 2948388
-    at: 2026-07-29 23:46
+    job_id: 23498282
+    node: r5u33n1
+    pid: 239964
+    at: 2026-08-06 15:38
   priority: 2
   expected_hr: 10
   note: b=80 sem qwen-PRM qwenmath15b lam=0.01 ds_alpha=10

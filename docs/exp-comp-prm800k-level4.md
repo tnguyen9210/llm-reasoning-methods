@@ -1876,7 +1876,7 @@ instead of one wide sparse grid.)
 | qwen-3b | qwen | 0.01 | 0.1 | 1 | 2 | scored | .8672<br>±.0213 | .7891<br>±.0255 | .7461<br>±.0273 | .7305<br>±.0278 | 5.03 |
 | qwen-3b | qwen | 0.01 | 0.3 | 3 | 2 | scored | .8711<br>±.0210 | .7812<br>±.0259 | .7461<br>±.0273 | .7188<br>±.0282 | 4.97 |
 | qwen-3b | qwen | 0.01 | 1.0 | 10 | 2 | scored | .8828<br>±.0201 | .7695<br>±.0264 | .7734<br>±.0262 | .7539<br>±.0270 | 5.04 |
-| qwen-3b | qwen | 0.01 | 10 | 100 | — | running | — | — | — | — | — |
+| qwen-3b | qwen | 0.01 | 10 | 100 | 2 | scored | .8672<br>±.0213 | .7539<br>±.0270 | .7305<br>±.0278 | .7227<br>±.0280 | 5.09 |
 
 > **Analysis.** No data yet — nothing to take away.
 > **Limitations / follow-up:** if this grid is flat at level 4
@@ -1912,7 +1912,7 @@ instead of one wide sparse grid.)
 |---|---|---|---|---|---|---|---|---|---|---|---|
 | qwen-7b gptq-int4 | qwen | 0.01 | 0 | 0 | 2 | scored | .8008<br>±.0250 | .7852<br>±.0257 | .7734<br>±.0262 | .7461<br>±.0273 | 1.76 |
 | qwen-7b gptq-int4 | qwen | 0.01 | 0.01 | 0.1 | — | failed | — | — | — | — | — |
-| qwen-7b gptq-int4 | qwen | 0.01 | 0.03 | 0.3 | — | running | — | — | — | — | — |
+| qwen-7b gptq-int4 | qwen | 0.01 | 0.03 | 0.3 | 2 | scored | .8984<br>±.0189 | .7969<br>±.0252 | .8164<br>±.0242 | .8086<br>±.0246 | 3.86 |
 | qwen-7b gptq-int4 | qwen | 0.01 | 0.1 | 1 | — | running | — | — | — | — | — |
 | qwen-7b gptq-int4 | qwen | 0.01 | 0.3 | 3 | — | running | — | — | — | — | — |
 | qwen-7b gptq-int4 | qwen | 0.01 | 1.0 | 10 | — | running | — | — | — | — | — |
