@@ -133,7 +133,12 @@ Each firing does exactly this:
    ```
    **Idle ⇔ `0 %` utilization AND `0 MiB` memory** (an active
    vLLM run holds GBs even between batches; a momentary 0%-util
-   dip alone is not idle). Any probe error -> that job is
+   dip alone is not idle). **Compare EXACTLY**: read each job's
+   raw probe line and require both values to be exactly 0
+   (`0 %, 0 MiB`). Never substring-filter the output —
+   `grep "0 %"` matches `10 %` and nearly double-booked 4 GPUs
+   on 2026-07-25; if filtering programmatically, parse both
+   numbers and require `== 0`. Any probe error -> that job is
    unavailable this firing; note it; do not retry.
 4. **Walltime guard, then cancel-the-useless guard.** For each
    idle job J, place the highest-priority inqueue entry whose
