@@ -164,13 +164,11 @@ Empty cells are `—`. Full workflow:
 > hr/trial). Measured: **2.7–3.7 hr/trial**, so the estimates
 > were 3–5× too generous.
 >
-> ⚠️ **qwen-math-1.5b is `failed`, not missing.** Its allocation
-> (23446851, gpu_windfall) was preempted after trial 1 of 2 and
-> re-queued; the run is resumable — the result dir is
-> hash-addressed, so a requeue skips the finished trial.
->
 > **W&B:** it83yx2s (llama-1b), kvlybe2r (llama-3b), 81eni7sd
-> (qwen-3b), evzz4tch (qwen-7b). qwen-math-1.5b: none (failed).
+> (qwen-3b), evzz4tch (qwen-7b), l5w8vwti (qwen-math-1.5b).
+> qwen-math-1.5b took three attempts: preempted off 23446851
+> (gpu_windfall) after trial 1 on 2026-07-30, requeued
+> 2026-08-06, and completed on 23498282.
 
 | llm | trials | status | pass@gb | naive@gb | wei@gb | maj@gb | hr/trial |
 |---|---|---|---|---|---|---|---|
@@ -178,9 +176,9 @@ Empty cells are `—`. Full workflow:
 | llama-3b fp16 | 2 | scored | .9095<br>±.0198 | .8524<br>±.0245 | .8190<br>±.0266 | .8048<br>±.0274 | 3.74 |
 | qwen-3b fp16 | 2 | scored | .9619<br>±.0132 | .9048<br>±.0203 | .9143<br>±.0194 | .9000<br>±.0208 | 3.35 |
 | qwen-7b gptq-int4 | 2 | scored | .9810<br>±.0095 | .9286<br>±.0178 | .9000<br>±.0208 | .8905<br>±.0216 | 2.68 |
-| qwen-math-1.5b fp16 | — | running | — | — | — | — | — |
+| qwen-math-1.5b fp16 | 2 | scored | .9762<br>±.0105 | .9286<br>±.0178 | .9238<br>±.0184 | .9190<br>±.0189 | 2.86 |
 
-> **Analysis.** Four of five cells scored. Against the
+> **Analysis.** All five cells scored. Against the
 > `ds_alpha=1` table (`tbl-8d2a3d`), raising `w_eff` from 10 to
 > 100 moves pass@gb by at most .0190 on any model and the
 > direction is not consistent (llama-1b +.0190, qwen-7b +.0048,

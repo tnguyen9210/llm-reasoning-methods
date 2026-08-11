@@ -3469,7 +3469,7 @@
   feeds:
   - tbl-f6fc16  # AIME2025 b=320 lam/ds_alpha rel sweep, qwen-7b
   group: sem-mcts
-  status: running
+  status: scored
   priority: 2
   expected_hr: 22
   note: AIME b320 covlocal-rel qwen-7b gptq-int4 w_eff=100
@@ -3502,7 +3502,7 @@
   feeds:
   - tbl-a488ce  # AIME2025 b=320 lam/ds_alpha rel sweep, qwen-math-1.5b
   group: sem-mcts
-  status: running
+  status: scored
   priority: 2
   expected_hr: 20
   note: AIME b320 covlocal-rel qwen-math-1.5b w_eff=10
@@ -3805,7 +3805,7 @@
   feeds:
   - tbl-a488ce  # AIME2025 b=320 lam/ds_alpha rel sweep, qwen-math-1.5b
   group: sem-mcts
-  status: running
+  status: scored
   priority: 2
   expected_hr: 20
   note: AIME b320 covlocal-rel qwen-math-1.5b w_eff=1
@@ -3834,7 +3834,7 @@
   feeds:
   - tbl-a488ce  # AIME2025 b=320 lam/ds_alpha rel sweep, qwen-math-1.5b
   group: sem-mcts
-  status: running
+  status: scored
   priority: 2
   expected_hr: 20
   note: AIME b320 covlocal-rel qwen-math-1.5b w_eff=3

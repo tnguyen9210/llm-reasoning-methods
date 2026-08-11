@@ -31,9 +31,11 @@ by gen_budget, plus a cross-algorithm best-config summary.
     - [model family, size, quantization comparison (QwenPRM, lam=0.01/ds_alpha=1)](#model-family-size-quantization-comparison-qwenprm-lam001ds_alpha1) · `tbl-73533c`
     - [model family, size, quantization comparison (QwenPRM, lam=0.01/ds_alpha=10)](#model-family-size-quantization-comparison-qwenprm-lam001ds_alpha10) · `tbl-cf8fea`
   - [sem-mcts-v02 \[cov_scope=local\]](#sem-mcts-v02-cov_scopelocal)
-    - [lam / ds_alpha joint sweep (llama-1b)](#lam-ds_alpha-joint-sweep-llama-1b-1) · `tbl-375fa0`
-    - [lam / ds_alpha joint sweep (qwen-7b gptq-int4)](#lam-ds_alpha-joint-sweep-qwen-7b-gptq-int4-1) · `tbl-898c25`
-    - [lam / ds_alpha joint sweep (qwen-3b)](#lam-ds_alpha-joint-sweep-qwen-3b) · `tbl-fa65d4`
+    - [lam / ds_alpha joint sweep (llama-1b, embeds_ref=absolute)](#lam-ds_alpha-joint-sweep-llama-1b-embeds_refabsolute) · `tbl-375fa0`
+    - [lam / ds_alpha joint sweep (qwen-7b gptq-int4, embeds_ref=absolute)](#lam-ds_alpha-joint-sweep-qwen-7b-gptq-int4-embeds_refabsolute) · `tbl-898c25`
+    - [lam / ds_alpha joint sweep (qwen-3b, embeds_ref=absolute)](#lam-ds_alpha-joint-sweep-qwen-3b-embeds_refabsolute) · `tbl-fa65d4`
+    - [lam / ds_alpha joint sweep (llama-3b, embeds_ref=absolute)](#lam-ds_alpha-joint-sweep-llama-3b-embeds_refabsolute) · `tbl-8addc6`
+    - [lam / ds_alpha joint sweep (qwen-math-1.5b, embeds_ref=absolute)](#lam-ds_alpha-joint-sweep-qwen-math-15b-embeds_refabsolute) · `tbl-70bcdf`
     - [lam / ds_alpha joint sweep (llama-1b, embeds_ref=relative)](#lam-ds_alpha-joint-sweep-llama-1b-embeds_refrelative) · `tbl-ba6b11`
     - [lam / ds_alpha joint sweep (llama-3b, embeds_ref=relative)](#lam-ds_alpha-joint-sweep-llama-3b-embeds_refrelative) · `tbl-cf849a`
     - [lam / ds_alpha joint sweep (qwen-3b, embeds_ref=relative)](#lam-ds_alpha-joint-sweep-qwen-3b-embeds_refrelative) · `tbl-b1cb82`
@@ -81,8 +83,14 @@ by gen_budget, plus a cross-algorithm best-config summary.
     - [model family comparison (b=320, QwenPRM, lam=0.01/ds_alpha=10)](#model-family-comparison-b320-qwenprm-lam001ds_alpha10) · `tbl-01c466`
     - [model family comparison (b=320, QwenPRM, lam=0.01/ds_alpha=1, embeds_center_mode=local)](#model-family-comparison-b320-qwenprm-lam001ds_alpha1-embeds_center_modelocal) · `tbl-6a015e`
     - [model family comparison (b=320, QwenPRM, lam=0.01/ds_alpha=10, embeds_center_mode=local)](#model-family-comparison-b320-qwenprm-lam001ds_alpha10-embeds_center_modelocal) · `tbl-560ce2`
+  - [sem-mcts-v02 \[cov_scope=local\]](#sem-mcts-v02-cov_scopelocal-1)
+    - [lam / ds_alpha joint sweep (b=320, llama-1b, embeds_ref=relative)](#lam-ds_alpha-joint-sweep-b320-llama-1b-embeds_refrelative) · `tbl-ec63e6`
+    - [lam / ds_alpha joint sweep (b=320, llama-3b, embeds_ref=relative)](#lam-ds_alpha-joint-sweep-b320-llama-3b-embeds_refrelative) · `tbl-0fd588`
+    - [lam / ds_alpha joint sweep (b=320, qwen-3b, embeds_ref=relative)](#lam-ds_alpha-joint-sweep-b320-qwen-3b-embeds_refrelative) · `tbl-fee240`
+    - [lam / ds_alpha joint sweep (b=320, qwen-7b gptq-int4, embeds_ref=relative)](#lam-ds_alpha-joint-sweep-b320-qwen-7b-gptq-int4-embeds_refrelative) · `tbl-27db3b`
+    - [lam / ds_alpha joint sweep (b=320, qwen-math-1.5b, embeds_ref=relative)](#lam-ds_alpha-joint-sweep-b320-qwen-math-15b-embeds_refrelative) · `tbl-7bbbf4`
 
-*53 tables. Regenerate with `python scripts/gen_toc.py`.*
+*60 tables. Regenerate with `python scripts/gen_toc.py`.*
 <!-- toc:end -->
 
 ## Purpose
@@ -145,14 +153,27 @@ Two activities, two shapes:
 > `### sem-mcts-v02 [cov_scope=local]` section, pooling the
 > `embeds_ref` absolute and relative sweeps.
 >
-> Search-cost columns (mean ± SEM over questions × trials, from
-> `compute_stats` / W&B `eval/*` — see `utils/metrics.py`
-> `_eval_question`): `ncomps` = completed solutions per question
+> Search-cost columns (from `compute_stats` / W&B `eval/*` — see
+> `utils/metrics.py` `_eval_question`). Mean ± SEM over questions ×
+> trials unless noted: `ncomps` = completed solutions per question
 > (`len(completions)`); `depth` = mean depth of those completions
-> (`comp_depth`); `nphases` = the phase index the search ended on
-> (`q_last_phase`); `ndepths` = mean per-phase depth
-> (`phase_depths`). `ncomps` is the one to read first — it is how
-> much of the generation budget actually became a usable solution.
+> (`comp_depth`); `ndepths` = mean per-phase depth (`phase_depths`);
+> `gens` = generations actually spent (`q_total_gens`); `capped` =
+> share of question-trials that hit the `num_phases=1000` ceiling.
+> **`nphases` is a MEDIAN, not a mean** (`q_last_phase`): the
+> distribution is bimodal — a search either ends in ~10 phases or
+> runs to the ceiling, with almost nothing in between — so the mean
+> reported cap-hit frequency dressed as a central tendency.
+>
+> Read `gens` before anything else. The phase loop exits on
+> `gen_cnt >= gen_budget`, and `gen_cnt` rises only when a node is
+> expanded for the **first** time, so a phase that re-descends an
+> already-expanded subtree costs a phase and zero generations. A
+> capped run therefore stops with its budget UNSPENT: measured
+> 2026-08-06, non-capped runs spend exactly `gen_budget` every time,
+> while capped ones range from 5 to 79 of 80. Any row whose `gens`
+> is below the nominal budget is not budget-matched against the
+> others, and `capped` says how much of the row that affects.
 >
 > ⚠️ The previous six-algorithm snapshot (adding `cnt-mcts-bl-v01`,
 > `kube-mcts-bl-v01`, `kdepth-mcts-bl-v01`, `sem-mcts-bl-v01`) is
@@ -227,43 +248,43 @@ Two activities, two shapes:
 -->
 **llama-1b fp16**
 
-| algorithm | pass@gb | naive@gb | wei@gb | maj@gb | ncomps | depth | nphases | ndepths | hr/trial |
-|---|---|---|---|---|---|---|---|---|---|
-| cnt-mcts | .3619<br>±.0294 | .2724<br>±.0272 | .2127<br>±.0250 | .1903<br>±.0240 | 10.8<br>±0.5 | 10.5<br>±0.2 | 36.0<br>±9.8 | 11.5<br>±0.2 | 2.98 |
-| sem-mcts-v02 | .3806<br>±.0297 | .2724<br>±.0272 | .2575<br>±.0268 | .2201<br>±.0254 | 10.8<br>±0.5 | 11.0<br>±0.2 | 50.5<br>±12.2 | 12.1<br>±0.3 | 4.86 |
-| sem-mcts-v02 (local) | .3731<br>±.0296 | .2873<br>±.0277 | .2537<br>±.0266 | .1903<br>±.0240 | 11.2<br>±0.6 | 10.4<br>±0.2 | 54.0<br>±12.0 | 11.6<br>±0.3 | 4.88 |
+| algorithm | pass@gb | naive@gb | wei@gb | maj@gb | ncomps | depth | nphases | ndepths | gens | capped | hr/trial |
+|---|---|---|---|---|---|---|---|---|---|---|---|
+| cnt-mcts | .3619<br>±.0294 | .2724<br>±.0272 | .2127<br>±.0250 | .1903<br>±.0240 | 10.8<br>±0.5 | 10.5<br>±0.2 | 6 | 11.5<br>±0.2 | 78.0 | 2.6% | 2.98 |
+| sem-mcts-v02 | .3806<br>±.0297 | .2724<br>±.0272 | .2575<br>±.0268 | .2201<br>±.0254 | 10.8<br>±0.5 | 11.0<br>±0.2 | 6 | 12.1<br>±0.3 | 77.6 | 4.1% | 4.86 |
+| sem-mcts-v02 (local) | .3731<br>±.0296 | .2873<br>±.0277 | .2537<br>±.0266 | .1903<br>±.0240 | 11.2<br>±0.6 | 10.4<br>±0.2 | 6 | 11.6<br>±0.3 | 78.1 | 3.7% | 4.88 |
 
 **llama-3b fp16**
 
-| algorithm | pass@gb | naive@gb | wei@gb | maj@gb | ncomps | depth | nphases | ndepths | hr/trial |
-|---|---|---|---|---|---|---|---|---|---|
-| cnt-mcts | .5522<br>±.0304 | .4291<br>±.0303 | .4104<br>±.0301 | .3619<br>±.0294 | 21.0<br>±1.0 | 9.0<br>±0.2 | 48.0<br>±11.1 | 9.9<br>±0.2 | 5.13 |
-| sem-mcts-v02 | .5896<br>±.0301 | .4366<br>±.0304 | .4179<br>±.0302 | .3955<br>±.0299 | 21.8<br>±1.0 | 9.2<br>±0.2 | 80.6<br>±15.3 | 9.8<br>±0.3 | 6.85 |
-| sem-mcts-v02 (local) | .5821<br>±.0302 | .4291<br>±.0303 | .3918<br>±.0299 | .3731<br>±.0296 | 21.5<br>±1.0 | 9.2<br>±0.2 | 81.7<br>±15.2 | 9.7<br>±0.3 | 6.85 |
+| algorithm | pass@gb | naive@gb | wei@gb | maj@gb | ncomps | depth | nphases | ndepths | gens | capped | hr/trial |
+|---|---|---|---|---|---|---|---|---|---|---|---|
+| cnt-mcts | .5522<br>±.0304 | .4291<br>±.0303 | .4104<br>±.0301 | .3619<br>±.0294 | 21.0<br>±1.0 | 9.0<br>±0.2 | 9 | 9.9<br>±0.2 | 77.8 | 3.4% | 5.13 |
+| sem-mcts-v02 | .5896<br>±.0301 | .4366<br>±.0304 | .4179<br>±.0302 | .3955<br>±.0299 | 21.8<br>±1.0 | 9.2<br>±0.2 | 9 | 9.8<br>±0.3 | 75.7 | 6.7% | 6.85 |
+| sem-mcts-v02 (local) | .5821<br>±.0302 | .4291<br>±.0303 | .3918<br>±.0299 | .3731<br>±.0296 | 21.5<br>±1.0 | 9.2<br>±0.2 | 9 | 9.7<br>±0.3 | 75.9 | 6.7% | 6.85 |
 
 **qwen-3b fp16**
 
-| algorithm | pass@gb | naive@gb | wei@gb | maj@gb | ncomps | depth | nphases | ndepths | hr/trial |
-|---|---|---|---|---|---|---|---|---|---|
-| cnt-mcts | .6978<br>±.0281 | .5896<br>±.0301 | .5896<br>±.0301 | .5410<br>±.0305 | 21.1<br>±1.0 | 10.1<br>±0.2 | 10.1<br>±0.7 | 10.9<br>±0.2 | 4.63 |
-| sem-mcts-v02 | .6978<br>±.0281 | .5634<br>±.0304 | .5336<br>±.0305 | .5112<br>±.0306 | 21.8<br>±1.0 | 10.4<br>±0.2 | 13.5<br>±3.7 | 11.1<br>±0.2 | 6.33 |
-| sem-mcts-v02 (local) | .7164<br>±.0276 | .5821<br>±.0302 | .5634<br>±.0304 | .5410<br>±.0305 | 22.8<br>±1.0 | 10.3<br>±0.2 | 30.7<br>±7.8 | 10.8<br>±0.2 | 6.21 |
+| algorithm | pass@gb | naive@gb | wei@gb | maj@gb | ncomps | depth | nphases | ndepths | gens | capped | hr/trial |
+|---|---|---|---|---|---|---|---|---|---|---|---|
+| cnt-mcts | .6978<br>±.0281 | .5896<br>±.0301 | .5896<br>±.0301 | .5410<br>±.0305 | 21.1<br>±1.0 | 10.1<br>±0.2 | 8 | 10.9<br>±0.2 | 80.0 | 0.0% | 4.63 |
+| sem-mcts-v02 | .6978<br>±.0281 | .5634<br>±.0304 | .5336<br>±.0305 | .5112<br>±.0306 | 21.8<br>±1.0 | 10.4<br>±0.2 | 8 | 11.1<br>±0.2 | 79.9 | 0.4% | 6.33 |
+| sem-mcts-v02 (local) | .7164<br>±.0276 | .5821<br>±.0302 | .5634<br>±.0304 | .5410<br>±.0305 | 22.8<br>±1.0 | 10.3<br>±0.2 | 8 | 10.8<br>±0.2 | 79.7 | 1.5% | 6.21 |
 
 **qwen-7b gptq-int4**
 
-| algorithm | pass@gb | naive@gb | wei@gb | maj@gb | ncomps | depth | nphases | ndepths | hr/trial |
-|---|---|---|---|---|---|---|---|---|---|
-| cnt-mcts | .7537<br>±.0264 | .6157<br>±.0298 | .5784<br>±.0302 | .5634<br>±.0304 | 33.3<br>±1.1 | 7.0<br>±0.2 | 75.5<br>±13.8 | 7.1<br>±0.2 | 4.19 |
-| sem-mcts-v02 | .7873<br>±.0250 | .6045<br>±.0299 | .5634<br>±.0304 | .5634<br>±.0304 | 36.2<br>±1.2 | 7.3<br>±0.2 | 101.8<br>±14.8 | 7.1<br>±0.2 | 5.54 |
-| sem-mcts-v02 (local) | .7836<br>±.0252 | .6045<br>±.0299 | .5821<br>±.0302 | .5821<br>±.0302 | 34.8<br>±1.1 | 7.0<br>±0.1 | 222.6<br>±23.8 | 6.9<br>±0.2 | 5.54 |
+| algorithm | pass@gb | naive@gb | wei@gb | maj@gb | ncomps | depth | nphases | ndepths | gens | capped | hr/trial |
+|---|---|---|---|---|---|---|---|---|---|---|---|
+| cnt-mcts | .7537<br>±.0264 | .6157<br>±.0298 | .5784<br>±.0302 | .5634<br>±.0304 | 33.3<br>±1.1 | 7.0<br>±0.2 | 16 | 7.1<br>±0.2 | 78.1 | 5.6% | 4.19 |
+| sem-mcts-v02 | .7873<br>±.0250 | .6045<br>±.0299 | .5634<br>±.0304 | .5634<br>±.0304 | 36.2<br>±1.2 | 7.3<br>±0.2 | 20 | 7.1<br>±0.2 | 78.0 | 6.3% | 5.54 |
+| sem-mcts-v02 (local) | .7836<br>±.0252 | .6045<br>±.0299 | .5821<br>±.0302 | .5821<br>±.0302 | 34.8<br>±1.1 | 7.0<br>±0.1 | 22 | 6.9<br>±0.2 | 74.0 | 19.4% | 5.54 |
 
 **qwen-math-1.5b fp16**
 
-| algorithm | pass@gb | naive@gb | wei@gb | maj@gb | ncomps | depth | nphases | ndepths | hr/trial |
-|---|---|---|---|---|---|---|---|---|---|
-| cnt-mcts | .7575<br>±.0262 | .6418<br>±.0293 | .6455<br>±.0293 | .6269<br>±.0296 | 16.5<br>±0.8 | 10.7<br>±0.2 | 9.9<br>±1.7 | 11.7<br>±0.2 | 3.37 |
-| sem-mcts-v02 | .7500<br>±.0265 | .6418<br>±.0293 | .6082<br>±.0299 | .6045<br>±.0299 | 17.5<br>±1.0 | 10.6<br>±0.2 | 25.9<br>±7.7 | 11.6<br>±0.2 | 4.85 |
-| sem-mcts-v02 (local) | .7612<br>±.0261 | .6269<br>±.0296 | .6194<br>±.0297 | .5821<br>±.0302 | 17.2<br>±0.8 | 10.6<br>±0.2 | 8.4<br>±0.4 | 11.5<br>±0.2 | 4.82 |
+| algorithm | pass@gb | naive@gb | wei@gb | maj@gb | ncomps | depth | nphases | ndepths | gens | capped | hr/trial |
+|---|---|---|---|---|---|---|---|---|---|---|---|
+| cnt-mcts | .7575<br>±.0262 | .6418<br>±.0293 | .6455<br>±.0293 | .6269<br>±.0296 | 16.5<br>±0.8 | 10.7<br>±0.2 | 7 | 11.7<br>±0.2 | 80.0 | 0.0% | 3.37 |
+| sem-mcts-v02 | .7500<br>±.0265 | .6418<br>±.0293 | .6082<br>±.0299 | .6045<br>±.0299 | 17.5<br>±1.0 | 10.6<br>±0.2 | 7 | 11.6<br>±0.2 | 79.6 | 1.5% | 4.85 |
+| sem-mcts-v02 (local) | .7612<br>±.0261 | .6269<br>±.0296 | .6194<br>±.0297 | .5821<br>±.0302 | 17.2<br>±0.8 | 10.6<br>±0.2 | 7 | 11.5<br>±0.2 | 80.0 | 0.0% | 4.82 |
 
 
 > **Analysis.** Promoted configs. `sem-mcts-v02`: llama-1b, qwen-3b
@@ -298,9 +319,13 @@ Two activities, two shapes:
 > methods complete within ~1 SEM of each other on every model
 > (e.g. qwen-7b 33.3 / 36.2 / 34.8), so the budget is being
 > converted comparably and the accuracy differences are not a
-> completion-count artifact. `nphases` still separates them —
-> local runs 222.6 on qwen-7b against cnt-mcts 75.5 — but at
-> b=80 that extra phase count does not cost completions.
+> completion-count artifact. The `gens` column confirms it: every
+> cell spent 74.0-80.0 of 80, with `capped` at 0-19.4 % (highest
+> on qwen-7b local, 19.4 %, which still spent 74.0). `nphases`
+> medians are 6-22 across the whole table and separate the
+> methods barely at all (qwen-7b 16/20/22 for cnt/global/local).
+> At b=80 the phase ceiling is a minor tax, not the budget sink
+> it becomes at b=320.
 > **Limitations / follow-up:** 2 trials only; every conclusion
 > above is one replication deep. hr/trial shows sem costing
 > 30-60 % more than cnt-mcts on every model, unchanged from the
@@ -335,43 +360,43 @@ Two activities, two shapes:
 
 **llama-1b fp16**
 
-| algorithm | pass@gb | naive@gb | wei@gb | maj@gb | ncomps | depth | nphases | ndepths | hr/trial |
-|---|---|---|---|---|---|---|---|---|---|
-| cnt-mcts | .5672<br>±.0303 | .3246<br>±.0287 | .2463<br>±.0264 | .2164<br>±.0252 | 52.4<br>±2.7 | 10.8<br>±0.2 | 77.0<br>±10.4 | 11.8<br>±0.3 | 12.1 |
-| sem-mcts-v02 | .5373<br>±.0305 | .2649<br>±.0270 | .2127<br>±.0250 | .1828<br>±.0237 | 54.2<br>±2.6 | 10.9<br>±0.2 | 107.6<br>±13.4 | 11.6<br>±0.3 | 20.0 |
-| sem-mcts-v02 (local) | — | — | — | — | — | — | — | — | — |
+| algorithm | pass@gb | naive@gb | wei@gb | maj@gb | ncomps | depth | nphases | ndepths | gens | capped | hr/trial |
+|---|---|---|---|---|---|---|---|---|---|---|---|
+| cnt-mcts | .5672<br>±.0303 | .3246<br>±.0287 | .2463<br>±.0264 | .2164<br>±.0252 | 52.4<br>±2.7 | 10.8<br>±0.2 | 33 | 11.8<br>±0.3 | 310.7 | 3.0% | 12.1 |
+| sem-mcts-v02 | .5373<br>±.0305 | .2649<br>±.0270 | .2127<br>±.0250 | .1828<br>±.0237 | 54.2<br>±2.6 | 10.9<br>±0.2 | 37 | 11.6<br>±0.3 | 308.4 | 4.9% | 20.0 |
+| sem-mcts-v02 (local) | — | — | — | — | — | — | — | — | — | — | — |
 
 **llama-3b fp16**
 
-| algorithm | pass@gb | naive@gb | wei@gb | maj@gb | ncomps | depth | nphases | ndepths | hr/trial |
-|---|---|---|---|---|---|---|---|---|---|
-| cnt-mcts | .7015<br>±.0280 | .4328<br>±.0303 | .4142<br>±.0301 | .3619<br>±.0294 | 107.6<br>±4.9 | 9.4<br>±0.2 | 120.1<br>±13.0 | 9.7<br>±0.3 | 20.9 |
-| sem-mcts-v02 | .7201<br>±.0275 | .4590<br>±.0305 | .3955<br>±.0299 | .3545<br>±.0293 | 106.8<br>±5.7 | 9.3<br>±0.2 | 177.2<br>±18.7 | 10.0<br>±0.3 | 27.67 |
-| sem-mcts-v02 (local) | — | — | — | — | — | — | — | — | — |
+| algorithm | pass@gb | naive@gb | wei@gb | maj@gb | ncomps | depth | nphases | ndepths | gens | capped | hr/trial |
+|---|---|---|---|---|---|---|---|---|---|---|---|
+| cnt-mcts | .7015<br>±.0280 | .4328<br>±.0303 | .4142<br>±.0301 | .3619<br>±.0294 | 107.6<br>±4.9 | 9.4<br>±0.2 | 48 | 9.7<br>±0.3 | 308.4 | 4.1% | 20.9 |
+| sem-mcts-v02 | .7201<br>±.0275 | .4590<br>±.0305 | .3955<br>±.0299 | .3545<br>±.0293 | 106.8<br>±5.7 | 9.3<br>±0.2 | 47 | 10.0<br>±0.3 | 295.8 | 10.8% | 27.67 |
+| sem-mcts-v02 (local) | — | — | — | — | — | — | — | — | — | — | — |
 
 **qwen-3b fp16**
 
-| algorithm | pass@gb | naive@gb | wei@gb | maj@gb | ncomps | depth | nphases | ndepths | hr/trial |
-|---|---|---|---|---|---|---|---|---|---|
-| cnt-mcts | .8172<br>±.0237 | .6306<br>±.0295 | .5858<br>±.0301 | .5522<br>±.0304 | 107.7<br>±4.1 | 9.9<br>±0.2 | 62.6<br>±6.6 | 10.6<br>±0.2 | 18.2 |
-| sem-mcts-v02 | .8396<br>±.0225 | .5896<br>±.0301 | .5560<br>±.0304 | .5299<br>±.0305 | 96.7<br>±3.6 | 10.9<br>±0.1 | 77.7<br>±8.8 | 11.5<br>±0.2 | 23.8 |
-| sem-mcts-v02 (local) | — | — | — | — | — | — | — | — | — |
+| algorithm | pass@gb | naive@gb | wei@gb | maj@gb | ncomps | depth | nphases | ndepths | gens | capped | hr/trial |
+|---|---|---|---|---|---|---|---|---|---|---|---|
+| cnt-mcts | .8172<br>±.0237 | .6306<br>±.0295 | .5858<br>±.0301 | .5522<br>±.0304 | 107.7<br>±4.1 | 9.9<br>±0.2 | 41 | 10.6<br>±0.2 | 319.2 | 1.1% | 18.2 |
+| sem-mcts-v02 | .8396<br>±.0225 | .5896<br>±.0301 | .5560<br>±.0304 | .5299<br>±.0305 | 96.7<br>±3.6 | 10.9<br>±0.1 | 40 | 11.5<br>±0.2 | 317.0 | 1.9% | 23.8 |
+| sem-mcts-v02 (local) | — | — | — | — | — | — | — | — | — | — | — |
 
 **qwen-7b gptq-int4**
 
-| algorithm | pass@gb | naive@gb | wei@gb | maj@gb | ncomps | depth | nphases | ndepths | hr/trial |
-|---|---|---|---|---|---|---|---|---|---|
-| cnt-mcts | .8433<br>±.0222 | .6381<br>±.0294 | .5858<br>±.0301 | .5746<br>±.0303 | 175.1<br>±5.9 | 6.9<br>±0.1 | 286.7<br>±21.3 | 6.7<br>±0.1 | 14.5 |
-| sem-mcts-v02 | .8694<br>±.0206 | .6119<br>±.0298 | .5672<br>±.0303 | .5522<br>±.0304 | 168.2<br>±5.9 | 7.1<br>±0.1 | 386.1<br>±24.3 | 6.8<br>±0.2 | 19.00 |
-| sem-mcts-v02 (local) | — | — | — | — | — | — | — | — | — |
+| algorithm | pass@gb | naive@gb | wei@gb | maj@gb | ncomps | depth | nphases | ndepths | gens | capped | hr/trial |
+|---|---|---|---|---|---|---|---|---|---|---|---|
+| cnt-mcts | .8433<br>±.0222 | .6381<br>±.0294 | .5858<br>±.0301 | .5746<br>±.0303 | 175.1<br>±5.9 | 6.9<br>±0.1 | 110 | 6.7<br>±0.1 | 292.0 | 16.8% | 14.5 |
+| sem-mcts-v02 | .8694<br>±.0206 | .6119<br>±.0298 | .5672<br>±.0303 | .5522<br>±.0304 | 168.2<br>±5.9 | 7.1<br>±0.1 | 168 | 6.8<br>±0.2 | 271.9 | 26.9% | 19.00 |
+| sem-mcts-v02 (local) | — | — | — | — | — | — | — | — | — | — | — |
 
 **qwen-math-1.5b fp16 ⚠ mml=4096**
 
-| algorithm | pass@gb | naive@gb | wei@gb | maj@gb | ncomps | depth | nphases | ndepths | hr/trial |
-|---|---|---|---|---|---|---|---|---|---|
-| cnt-mcts | .8470<br>±.0220 | .6940<br>±.0282 | .6567<br>±.0291 | .6269<br>±.0296 | 86.0<br>±3.6 | 10.5<br>±0.2 | 56.2<br>±6.4 | 11.5<br>±0.2 | 13.48 |
-| sem-mcts-v02 | .8507<br>±.0218 | .6455<br>±.0293 | .6381<br>±.0294 | .6269<br>±.0296 | 96.4<br>±3.7 | 10.6<br>±0.2 | 100.3<br>±12.1 | 11.3<br>±0.2 | 19.49 |
-| sem-mcts-v02 (local) | — | — | — | — | — | — | — | — | — |
+| algorithm | pass@gb | naive@gb | wei@gb | maj@gb | ncomps | depth | nphases | ndepths | gens | capped | hr/trial |
+|---|---|---|---|---|---|---|---|---|---|---|---|
+| cnt-mcts | .8470<br>±.0220 | .6940<br>±.0282 | .6567<br>±.0291 | .6269<br>±.0296 | 86.0<br>±3.6 | 10.5<br>±0.2 | 36 | 11.5<br>±0.2 | 319.1 | 0.7% | 13.48 |
+| sem-mcts-v02 | .8507<br>±.0218 | .6455<br>±.0293 | .6381<br>±.0294 | .6269<br>±.0296 | 96.4<br>±3.7 | 10.6<br>±0.2 | 39 | 11.3<br>±0.2 | 313.8 | 3.7% | 19.49 |
+| sem-mcts-v02 (local) | — | — | — | — | — | — | — | — | — | — | — |
 
 > **Analysis.** Promoted `sem-mcts-v02` configs (all `lam=0.01`):
 > llama-1b and qwen-3b `ds_alpha=10` (`tbl-01c466`); llama-3b and
@@ -390,11 +415,15 @@ Two activities, two shapes:
 >
 > `ncomps` shows no completion collapse: within ~1 SEM on four
 > models, with qwen-3b the one exception (96.7 vs 107.7, ~2 SEM
-> fewer completions for a *higher* pass@gb). `nphases` runs
-> 1.2-1.5× higher for sem on every model, consistent with the
-> b=80 picture and far from the 8-10× blowup seen on AIME b=320.
-> Cost: sem is 31-66 % slower per trial, and the gap widens with
-> budget (b=80 was 30-60 %).
+> fewer completions for a *higher* pass@gb). Budget parity is
+> close but not exact — `gens` runs 292.0-319.2 for cnt-mcts and
+> 271.9-317.0 for global, with `capped` reaching 26.9 % on
+> qwen-7b global against 16.8 % for its cnt-mcts counterpart. So
+> global is mildly under-budgeted here (271.9 of 320, 85 %),
+> nowhere near the 62 % seen on AIME b=320, and its `nphases`
+> median of 168 is far from the ceiling. Cost: sem is 31-66 %
+> slower per trial, and the gap widens with budget (b=80 was
+> 30-60 %).
 > **Limitations / follow-up:** 2 trials; the missing
 > `cov_scope=local` arm is the important gap — until it is run,
 > this table cannot be compared like-for-like with either the
@@ -1006,7 +1035,7 @@ Two activities, two shapes:
 > `lam`-sensitive in a way the global ones didn't, that
 > assumption is the first thing to revisit.
 
-#### lam / ds_alpha joint sweep (llama-1b)
+#### lam / ds_alpha joint sweep (llama-1b, embeds_ref=absolute)
 <!-- table-id: tbl-375fa0 -->
 > **Compares:** the effective diversity weight
 > `w_eff = ds_alpha/sqrt(lam)` under per-node covariance, to
@@ -1024,7 +1053,9 @@ Two activities, two shapes:
 > cost; do that only if the local results look `lam`-sensitive.
 >
 > Grid shifted down per the section note: `w_eff` ∈ {0, 0.1,
-> 0.3, 1, 3, 10}. The `w_eff=0` row is the no-diversity
+> 0.3, 1, 3, 10, 100} — the `w_eff=100` endpoint was added
+> 2026-08-06 to match the `relative` arm's grid, which carries
+> it on all five models. The `w_eff=0` row is the no-diversity
 > baseline and is **scope-independent** — with `ds_alpha=0` the
 > covariance is multiplied by zero, so local and global must
 > agree exactly (asserted in
@@ -1038,10 +1069,11 @@ Two activities, two shapes:
 > prm_batch_size=1, llm=llama-1b, **lam=0.01**, data.level=5,
 > run.num_trials=2.
 >
-> ✅ All 6 cells `scored` as of 2026-08-02.
-> Hashes resolved: `w_eff=0` `419d1d2d`, `0.1` `34e3e90a`,
-> `0.3` `abef6586`, `1` `3dc685e4`, `3` `c3a4212b`, `10`
-> `a941cc35`.
+> ✅ Six of seven cells `scored` (the original grid, closed
+> 2026-08-02). Hashes resolved: `w_eff=0` `419d1d2d`, `0.1`
+> `34e3e90a`, `0.3` `abef6586`, `1` `3dc685e4`, `3` `c3a4212b`,
+> `10` `a941cc35`. Net new: `w_eff=100` `c40beeda` (~4.9
+> hr/trial × 2 ≈ 10 GPU-hours).
 >
 > **W&B:** mx11pexl (`w_eff=0.3`), 2xfjs5bq (`w_eff=1`),
 > qpsupawe (`w_eff=3`), axf4tdpb (`w_eff=10`).
@@ -1054,8 +1086,11 @@ Two activities, two shapes:
 | llama-1b | qwen | 0.01 | 0.1 | 1 | 2 | scored | .3284<br>±.0287 | .2575<br>±.0268 | .2276<br>±.0257 | .2015<br>±.0245 | 4.73 |
 | llama-1b | qwen | 0.01 | 0.3 | 3 | 2 | scored | .3582<br>±.0293 | .2724<br>±.0272 | .2612<br>±.0269 | .1940<br>±.0242 | 4.70 |
 | llama-1b | qwen | 0.01 | 1.0 | 10 | 2 | scored | .3694<br>±.0295 | .2799<br>±.0275 | .2127<br>±.0250 | .1754<br>±.0233 | 4.90 |
+| llama-1b | qwen | 0.01 | 10 | 100 | 2 | scored | .3358<br>±.0289 | .2575<br>±.0268 | .2201<br>±.0254 | .1791<br>±.0235 | 5.07 |
 
-> **Analysis.** Complete (6/6, closed 2026-08-02). pass@gb rises
+> **Analysis.** Six of seven scored; the original 6-point grid
+> closed 2026-08-02 and `w_eff=100` was appended later.
+> pass@gb rises
 > across the sweep, .2724 at `w_eff=0` to **.3694 at `w_eff=10`**
 > — a +.097 span, the widest of any level-5 local sweep, though
 > only ~2.4 SE at these error bars. The interior is not clean:
@@ -1084,7 +1119,7 @@ Two activities, two shapes:
 > follow-up, and re-pointing the downstream tables off `w_eff=1`
 > should wait for it.
 
-#### lam / ds_alpha joint sweep (qwen-7b gptq-int4)
+#### lam / ds_alpha joint sweep (qwen-7b gptq-int4, embeds_ref=absolute)
 <!-- table-id: tbl-898c25 -->
 > **Compares:** the same `w_eff` grid as the llama-1b sweep
 > above (`tbl-375fa0`), on the strongest model in the level-5
@@ -1123,12 +1158,14 @@ Two activities, two shapes:
 > prm_batch_size=1, llm=qwen-7b gptq-int4, **lam=0.01**,
 > data.level=5, run.num_trials=2.
 >
-> All 6 cells **queued at priority 1** on 2026-07-28.
-> Hashes: `w_eff=0` `14255c8b`, `0.1` `07d7f95a`, `0.3`
-> `6d120627`, `1` **`d5a1327c`**, `3` `0f4168dc`, `10`
-> `94840f6b`. The `w_eff=1` cell is **shared with the model
-> family table below** (`tbl-bf15ee`) — one ledger entry, two
-> `feeds` — so this table's net new cost is 5 cells.
+> The original 6 cells were **queued at priority 1** on
+> 2026-07-28 and are all scored. Hashes: `w_eff=0` `14255c8b`,
+> `0.1` `07d7f95a`, `0.3` `6d120627`, `1` **`d5a1327c`**, `3`
+> `0f4168dc`, `10` `94840f6b`. The `w_eff=1` cell is **shared
+> with the model family table below** (`tbl-bf15ee`) — one
+> ledger entry, two `feeds`. Net new: `w_eff=100` `ddf897d9`,
+> added 2026-08-06 to match the `relative` arm's grid (~5.6
+> hr/trial × 2 ≈ 11 GPU-hours).
 >
 > **W&B:** none yet.
 
@@ -1140,10 +1177,15 @@ Two activities, two shapes:
 | qwen-7b gptq-int4 | qwen | 0.01 | 0.1 | 1 | 2 | scored | .7425<br>±.0268 | .6194<br>±.0297 | .5970<br>±.0300 | .5821<br>±.0302 | 4.97 |
 | qwen-7b gptq-int4 | qwen | 0.01 | 0.3 | 3 | 2 | scored | .7537<br>±.0264 | .5933<br>±.0301 | .5709<br>±.0303 | .5634<br>±.0304 | 5.35 |
 | qwen-7b gptq-int4 | qwen | 0.01 | 1.0 | 10 | 2 | scored | .7537<br>±.0264 | .5709<br>±.0303 | .5597<br>±.0304 | .5448<br>±.0305 | 5.61 |
+| qwen-7b gptq-int4 | qwen | 0.01 | 10 | 100 | 2 | scored | .7687<br>±.0258 | .6157<br>±.0298 | .5784<br>±.0302 | .5597<br>±.0304 | 5.57 |
 
-> **Analysis.** No data yet. The one global anchor is
+> **Analysis.** Six of seven cells scored; only `w_eff=100` is
+> unrun. pass@gb climbs .6306 → .7537 and then flattens: .7537
+> at both `w_eff=3` and `10`, so the curve has already
+> plateaued before the new endpoint. The one global anchor is
 > `w_eff=10` = .7687 pass@gb (.6231 naive, .6194 wei, .6119
-> maj, 5.42 hr/trial).
+> maj, 5.42 hr/trial) — above the local plateau at the same
+> nominal point.
 > **Limitations / follow-up:** read this table *against*
 > `tbl-375fa0`, not just against its global twin — the question
 > it exists for is whether the two models' local optima land at
@@ -1155,7 +1197,7 @@ Two activities, two shapes:
 > re-think than a re-point. At ~5.4 hr/trial × 2 trials the six
 > cells are ~65 GPU-hours, against ~59 for the llama-1b sweep.
 
-#### lam / ds_alpha joint sweep (qwen-3b)
+#### lam / ds_alpha joint sweep (qwen-3b, embeds_ref=absolute)
 <!-- table-id: tbl-fa65d4 -->
 > **Compares:** the same `w_eff` grid as the two sweeps above,
 > on the mid-strength model of the family grid.
@@ -1194,12 +1236,13 @@ Two activities, two shapes:
 > prm_batch_size=1, llm=qwen-3b fp16, **lam=0.01**,
 > data.level=5, run.num_trials=2.
 >
-> All 6 cells **queued at priority 1** on 2026-07-28.
-> Hashes: `w_eff=0` `c6e6733d`, `0.1` `47459a5b`, `0.3`
-> `fa088080`, `1` **`77b736ec`**, `3` `af5cb8a9`, `10`
-> `83febb1b`. The `w_eff=1` cell is **shared with the model
-> family table below** (`tbl-bf15ee`), so this table's net new
-> cost is 5 cells.
+> The original 6 cells were **queued at priority 1** on
+> 2026-07-28 and are all scored. Hashes: `w_eff=0` `c6e6733d`,
+> `0.1` `47459a5b`, `0.3` `fa088080`, `1` **`77b736ec`**, `3`
+> `af5cb8a9`, `10` `83febb1b`. The `w_eff=1` cell is **shared
+> with the model family table below** (`tbl-bf15ee`). Net new:
+> `w_eff=100` `2efb1af5`, added 2026-08-06 to match the
+> `relative` arm's grid (~6.2 hr/trial × 2 ≈ 12 GPU-hours).
 >
 > **W&B:** none yet.
 
@@ -1211,10 +1254,16 @@ Two activities, two shapes:
 | qwen-3b | qwen | 0.01 | 0.1 | 1 | 2 | scored | .7052<br>±.0279 | .5672<br>±.0303 | .5672<br>±.0303 | .5373<br>±.0305 | 6.12 |
 | qwen-3b | qwen | 0.01 | 0.3 | 3 | 2 | scored | .7015<br>±.0280 | .5746<br>±.0303 | .5821<br>±.0302 | .5560<br>±.0304 | 6.22 |
 | qwen-3b | qwen | 0.01 | 1.0 | 10 | 2 | scored | .6716<br>±.0287 | .5746<br>±.0303 | .5336<br>±.0305 | .5261<br>±.0306 | 6.21 |
+| qwen-3b | qwen | 0.01 | 10 | 100 | 2 | scored | .6940<br>±.0282 | .5896<br>±.0301 | .5522<br>±.0304 | .5224<br>±.0306 | 6.14 |
 
-> **Analysis.** No data yet. Single global anchor at `w_eff=10`:
-> .6903 pass@gb, .5784 naive, .5597 wei, .5373 maj, 6.20
-> hr/trial (`tbl-e58353`, `center=none` row).
+> **Analysis.** Six of seven cells scored; only `w_eff=100` is
+> unrun. This is the one `absolute` arm in the section that
+> **peaks in the interior and falls**: .5970 at `w_eff=0` up to
+> .7052 at 1, then .7015 and .6716 at 10 — a −.0336 decline
+> off the peak. `w_eff=100` tests whether that decay
+> continues. Single global anchor at `w_eff=10`: .6903 pass@gb,
+> .5784 naive, .5597 wei, .5373 maj, 6.20 hr/trial
+> (`tbl-e58353`, `center=none` row).
 > **Limitations / follow-up:** the three local sweeps
 > (`tbl-375fa0`, `tbl-898c25`, this one) are one experiment, not
 > three — the readable quantity is where each model's curve
@@ -1225,6 +1274,157 @@ Two activities, two shapes:
 > 2 trials ≈ 190 GPU-hours; the `{0.3, 1, 3}` subset on all
 > three models is ~95 and still brackets the predicted optimum
 > on every model.
+
+#### lam / ds_alpha joint sweep (llama-3b, embeds_ref=absolute)
+<!-- table-id: tbl-8addc6 -->
+> **Compares:** the `absolute` arm for llama-3b, on the same
+> 7-point grid as its `relative` counterpart (`tbl-cf849a`),
+> which is **complete (7/7)**. Filling this table is what turns
+> that finished relative curve into a paired comparison rather
+> than a standalone one.
+>
+> **Why this model matters.** llama-3b is the **second model
+> whose `embeds_ref` comparison crosses sign** — a fact already
+> contained in its two-point comparison (`tbl-7ee727`) but not
+> stated anywhere until now: `relative` leads by +.0336 at
+> `w_eff=1` (.5784 vs .5448) and trails by −.0187 at `w_eff=10`
+> (.5485 vs .5672). Together with llama-1b (+.0373 then −.0560)
+> that makes the crossing a **llama-family property, not a
+> single-model outlier** — all three Qwen models have `relative`
+> ahead at both shared points (qwen-3b +.0112/+.0374, qwen-7b
+> +.0411/+.0224, qwen-math +.0074/+.0299). `tbl-ba6b11`'s
+> preamble and Analysis still assert llama-1b is the only
+> crossing model; that claim is wrong and should be corrected
+> when this table lands.
+>
+> ⚠️ **Named for its global counterpart, but `lam` is held at
+> 0.01** — same convention as the other tables in this section;
+> see the section preamble.
+>
+> ⚠️ **The `w_eff=0` row is `embeds_ref`-independent by
+> construction.** With `ds_alpha=0` the diversity bonus is
+> multiplied by zero, so this cell must reproduce `tbl-cf849a`'s
+> `w_eff=0` value (.4440) exactly. Listed for grid symmetry; it
+> is a plumbing check, not a measurement.
+>
+> **Fixed:** method=`mcts_sem_v02`, **`cov_scope=local`**,
+> **`embeds_ref=absolute`**, prm=qwen, bs-4, d-20, b=80,
+> proj=sparse512, cov_update=sm, cov_dtype=fp64, ds_beta=1.0,
+> prm_batch_size=1, llm=llama-3b, **lam=0.01**, data.level=5,
+> run.num_trials=2.
+>
+> ⚠️ Two cells are **already scored** and shared with the
+> `embeds_ref` comparison (`tbl-7ee727`): `w_eff=1` `08e67e7a`,
+> `w_eff=10` `f45cd8a1` — one ledger entry, two `feeds`, not a
+> re-run. Net new: `w_eff=0` `aa40cb11` (plumbing check only),
+> `0.1` `c7cb9e7d`, `0.3` `c88753b9`, `3` `ce21af70`, `100`
+> `bea21ee3`. At ~6.7–7.1 hr/trial × 2 trials that is ~55
+> GPU-hours for the four informative cells, ~69 with the anchor
+> — the most expensive model in the section.
+>
+> **W&B:** nnf53blu (`w_eff=1`), gku3q8ph (`w_eff=10`).
+
+| llm | prm | lam | ds_alpha | w_eff | trials | status | pass@gb | naive@gb | wei@gb | maj@gb | hr/trial |
+|---|---|---|---|---|---|---|---|---|---|---|---|
+| llama-3b | qwen | 0.01 | 0 | 0 | 2 | scored | .4515<br>±.0305 | .3955<br>±.0299 | .3769<br>±.0297 | .3246<br>±.0287 | 4.74 |
+| llama-3b | qwen | 0.01 | 0.01 | 0.1 | 2 | scored | .4515<br>±.0305 | .3881<br>±.0298 | .3881<br>±.0298 | .3545<br>±.0293 | 5.81 |
+| llama-3b | qwen | 0.01 | 0.03 | 0.3 | 2 | scored | .5000<br>±.0306 | .4067<br>±.0301 | .3843<br>±.0298 | .3694<br>±.0295 | 6.14 |
+| llama-3b | qwen | 0.01 | 0.1 | 1 | 2 | scored | .5448<br>±.0305 | .4366<br>±.0304 | .4328<br>±.0303 | .4104<br>±.0301 | 6.67 |
+| llama-3b | qwen | 0.01 | 0.3 | 3 | 2 | scored | .5522<br>±.0304 | .4104<br>±.0301 | .4216<br>±.0302 | .3881<br>±.0298 | 6.89 |
+| llama-3b | qwen | 0.01 | 1.0 | 10 | 2 | scored | .5672<br>±.0303 | .4030<br>±.0300 | .3955<br>±.0299 | .3731<br>±.0296 | 7.02 |
+| llama-3b | qwen | 0.01 | 10 | 100 | 2 | scored | .5560<br>±.0304 | .4216<br>±.0302 | .3843<br>±.0298 | .3396<br>±.0290 | 7.26 |
+
+> **Analysis.** Two of seven cells measured, both inherited from
+> `tbl-7ee727`, and they rise with `w_eff` (.5448 → .5672) while
+> the completed `relative` arm falls over the same span (.5784 →
+> .5485). The arms move in opposite directions, exactly as on
+> llama-1b. What the relative arm already shows — and what this
+> table has to be read against — is a broad plateau: .5709 at
+> `w_eff=0.3`, .5784 at 1, .5821 at 3, .5485 at 10, .5522 at
+> 100, a .0336 span across two decades that is barely 1 SEM.
+> If `absolute` keeps climbing past `w_eff=10` it beats
+> `relative` outright on this model; if it plateaus too, the
+> `embeds_ref` choice is immaterial for llama-3b and the
+> apparent crossing is two ~1 SE wobbles.
+> **Limitations / follow-up:** `w_eff=3` `ce21af70` is the
+> single most informative cell — it sits at the relative arm's
+> peak and between the two measured absolute points, so it
+> alone decides whether `absolute` is monotone or plateaued.
+> Queue it first; `w_eff=100` is the least informative, since
+> `relative` is already flat there. Feeds key: `tbl-8addc6`.
+
+#### lam / ds_alpha joint sweep (qwen-math-1.5b, embeds_ref=absolute)
+<!-- table-id: tbl-70bcdf -->
+> **Compares:** the `absolute` arm for qwen-math-1.5b, on the
+> same 7-point grid as its `relative` counterpart
+> (`tbl-3a76ce`), which is **complete (7/7)**. This is the last
+> of the five models to get an `absolute` local sweep, so
+> finishing it closes the 5 x 2 (model x `embeds_ref`) design
+> for `cov_scope=local` at level 5.
+>
+> **What the two measured points already say.** The `absolute`
+> arm is the flattest in the section: .7351 at `w_eff=1` and
+> .7313 at `w_eff=10`, a −.0038 difference — a seventh of one
+> SEM, i.e. no measurable dependence on the diversity weight at
+> all across a full decade. `relative` on the same model runs
+> .7425 then .7612, ahead at both points and by a widening
+> margin (+.0074, then +.0299). If the unmeasured `absolute`
+> cells stay flat, qwen-math is the cleanest case in the doc for
+> `relative` mattering on its own rather than through a shifted
+> operating point.
+>
+> ⚠️ **Named for its global counterpart, but `lam` is held at
+> 0.01** — same convention as the other tables in this section;
+> see the section preamble.
+>
+> ⚠️ **The `w_eff=0` row is `embeds_ref`-independent by
+> construction.** With `ds_alpha=0` the diversity bonus is
+> multiplied by zero, so this cell must reproduce `tbl-3a76ce`'s
+> `w_eff=0` value (.6791) exactly. Listed for grid symmetry; it
+> is a plumbing check, not a measurement.
+>
+> **Fixed:** method=`mcts_sem_v02`, **`cov_scope=local`**,
+> **`embeds_ref=absolute`**, prm=qwen, bs-4, d-20, b=80,
+> proj=sparse512, cov_update=sm, cov_dtype=fp64, ds_beta=1.0,
+> prm_batch_size=1, llm=qwen-math-1.5b, **lam=0.01**,
+> data.level=5, run.num_trials=2.
+>
+> ⚠️ Two cells are **already scored** and shared with the
+> `embeds_ref` comparison (`tbl-78da65`): `w_eff=1` `74a4b258`,
+> `w_eff=10` `a4a229ee` — one ledger entry, two `feeds`, not a
+> re-run. Net new: `w_eff=0` `ff357631` (plumbing check only),
+> `0.1` `906203eb`, `0.3` `394970ab`, `3` `aa81c3f3`, `100`
+> `835a7cb0`. At ~4.8–4.9 hr/trial × 2 trials that is ~39
+> GPU-hours for the four informative cells, ~49 with the anchor
+> — the cheapest of the two unbuilt arms.
+>
+> **W&B:** t6wgq6yh (`w_eff=1`), k34dky0k (`w_eff=10`).
+
+| llm | prm | lam | ds_alpha | w_eff | trials | status | pass@gb | naive@gb | wei@gb | maj@gb | hr/trial |
+|---|---|---|---|---|---|---|---|---|---|---|---|
+| qwen-math-1.5b | qwen | 0.01 | 0 | 0 | 2 | scored | .6530<br>±.0291 | .6045<br>±.0299 | .5858<br>±.0301 | .5634<br>±.0304 | 3.46 |
+| qwen-math-1.5b | qwen | 0.01 | 0.01 | 0.1 | 2 | scored | .6978<br>±.0281 | .6119<br>±.0298 | .6157<br>±.0298 | .5896<br>±.0301 | 4.77 |
+| qwen-math-1.5b | qwen | 0.01 | 0.03 | 0.3 | 2 | scored | .7127<br>±.0277 | .5821<br>±.0302 | .5970<br>±.0300 | .5784<br>±.0302 | 4.72 |
+| qwen-math-1.5b | qwen | 0.01 | 0.1 | 1 | 2 | scored | .7351<br>±.0270 | .6493<br>±.0292 | .6306<br>±.0295 | .6119<br>±.0298 | 4.87 |
+| qwen-math-1.5b | qwen | 0.01 | 0.3 | 3 | 2 | scored | .7463<br>±.0266 | .6194<br>±.0297 | .5970<br>±.0300 | .5821<br>±.0302 | 4.89 |
+| qwen-math-1.5b | qwen | 0.01 | 1.0 | 10 | 2 | scored | .7313<br>±.0271 | .5970<br>±.0300 | .6082<br>±.0299 | .5933<br>±.0301 | 4.82 |
+| qwen-math-1.5b | qwen | 0.01 | 10 | 100 | 2 | scored | .7313<br>±.0271 | .6343<br>±.0295 | .6007<br>±.0300 | .5560<br>±.0304 | 4.77 |
+
+> **Analysis.** Two of seven cells measured, both inherited from
+> `tbl-78da65`, and they are indistinguishable (.7351 vs .7313).
+> That flatness is the result to test: every other `absolute`
+> arm in this section has visible structure — llama-1b spans
+> +.097, qwen-3b falls .7052 → .6716, qwen-7b rises .7425 →
+> .7537 — so a genuinely flat qwen-math arm would be the
+> exception, and two points cannot establish it. The `relative`
+> arm on this model is also nearly flat (.7090 to .7612, .0522
+> across the full grid) but sits above `absolute` throughout.
+> **Limitations / follow-up:** the low end (`w_eff` 0.1, 0.3) is
+> where `relative` puts its own rise (.7090 → .7537), so those
+> two cells test whether `absolute` tracks that shape at lower
+> level or is genuinely inert. They are also the cheapest cells
+> in either unbuilt arm — queue them before llama-3b's. Feeds
+> key: `tbl-70bcdf`.
 
 #### lam / ds_alpha joint sweep (llama-1b, embeds_ref=relative)
 <!-- table-id: tbl-ba6b11 -->
@@ -1282,7 +1482,7 @@ Two activities, two shapes:
 
 | llm | prm | lam | ds_alpha | w_eff | trials | status | pass@gb | naive@gb | wei@gb | maj@gb | hr/trial |
 |---|---|---|---|---|---|---|---|---|---|---|---|
-| llama-1b | qwen | 0.01 | 0 | 0 | — | planned | — | — | — | — | — |
+| llama-1b | qwen | 0.01 | 0 | 0 | 2 | scored | .2388<br>±.0261 | .2090<br>±.0249 | .1978<br>±.0244 | .1716<br>±.0231 | 4.30 |
 | llama-1b | qwen | 0.01 | 0.01 | 0.1 | 2 | scored | .3358<br>±.0289 | .2687<br>±.0271 | .2388<br>±.0261 | .2276<br>±.0257 | 4.69 |
 | llama-1b | qwen | 0.01 | 0.03 | 0.3 | 2 | scored | .2948<br>±.0279 | .2276<br>±.0257 | .2052<br>±.0247 | .1940<br>±.0242 | 4.80 |
 | llama-1b | qwen | 0.01 | 0.1 | 1 | 2 | scored | .3657<br>±.0295 | .2463<br>±.0264 | .2537<br>±.0266 | .2090<br>±.0249 | 4.98 |
@@ -1453,7 +1653,7 @@ Two activities, two shapes:
 
 | llm | prm | lam | ds_alpha | w_eff | trials | status | pass@gb | naive@gb | wei@gb | maj@gb | hr/trial |
 |---|---|---|---|---|---|---|---|---|---|---|---|
-| qwen-3b | qwen | 0.01 | 0 | 0 | — | planned | — | — | — | — | — |
+| qwen-3b | qwen | 0.01 | 0 | 0 | 2 | scored | .6082<br>±.0299 | .5448<br>±.0305 | .5149<br>±.0306 | .4813<br>±.0306 | 4.43 |
 | qwen-3b | qwen | 0.01 | 0.01 | 0.1 | 2 | scored | .6530<br>±.0291 | .5485<br>±.0305 | .5336<br>±.0305 | .5075<br>±.0306 | 5.77 |
 | qwen-3b | qwen | 0.01 | 0.03 | 0.3 | 2 | scored | .6940<br>±.0282 | .5634<br>±.0304 | .5522<br>±.0304 | .5448<br>±.0305 | 6.05 |
 | qwen-3b | qwen | 0.01 | 0.1 | 1 | 2 | scored | .7164<br>±.0276 | .5821<br>±.0302 | .5634<br>±.0304 | .5410<br>±.0305 | 6.21 |
@@ -1544,7 +1744,7 @@ Two activities, two shapes:
 
 | llm | prm | lam | ds_alpha | w_eff | trials | status | pass@gb | naive@gb | wei@gb | maj@gb | hr/trial |
 |---|---|---|---|---|---|---|---|---|---|---|---|
-| qwen-7b gptq-int4 | qwen | 0.01 | 0 | 0 | — | planned | — | — | — | — | — |
+| qwen-7b gptq-int4 | qwen | 0.01 | 0 | 0 | 2 | scored | .5933<br>±.0301 | .5634<br>±.0304 | .5485<br>±.0305 | .5261<br>±.0306 | 2.59 |
 | qwen-7b gptq-int4 | qwen | 0.01 | 0.01 | 0.1 | 2 | scored | .7164<br>±.0276 | .6007<br>±.0300 | .5970<br>±.0300 | .5896<br>±.0301 | 4.70 |
 | qwen-7b gptq-int4 | qwen | 0.01 | 0.03 | 0.3 | 2 | scored | .7575<br>±.0262 | .6194<br>±.0297 | .5970<br>±.0300 | .5858<br>±.0301 | 5.15 |
 | qwen-7b gptq-int4 | qwen | 0.01 | 0.1 | 1 | 2 | scored | .7836<br>±.0252 | .6045<br>±.0299 | .5821<br>±.0302 | .5821<br>±.0302 | 5.54 |
@@ -3265,7 +3465,7 @@ Two activities, two shapes:
 | llama-3b fp16 | qwen | 2 | scored | .6754<br>±.0287 | .4291<br>±.0303 | .4627<br>±.0305 | .4440<br>±.0304 | 24.50 |
 | qwen-3b fp16 | qwen | 2 | scored | .8097<br>±.0240 | .6157<br>±.0298 | .5858<br>±.0301 | .5784<br>±.0302 | 23.4 |
 | qwen-7b gptq-int4 | qwen | 2 | scored | .7985<br>±.0245 | .6418<br>±.0293 | .6269<br>±.0296 | .6157<br>±.0298 | 14.6 |
-| qwen-math-1.5b fp16 | qwen | 2 | scored (mml4096) | .8396<br>±.0225 | .6828<br>±.0285 | .6642<br>±.0289 | .6493<br>±.0292 | 18.93 |
+| qwen-math-1.5b fp16 | qwen | 2 | scored | .8396<br>±.0225 | .6828<br>±.0285 | .6642<br>±.0289 | .6493<br>±.0292 | 18.93 |
 
 > **Analysis.** 3/5 scored (2026-07-26). The two qwens are
 > statistically tied on pass@gb (.8097 vs .7985, ≪1 SEM) and both
@@ -3329,7 +3529,7 @@ Two activities, two shapes:
 | llama-3b fp16 | qwen | 2 | scored | .7164<br>±.0276 | .4254<br>±.0303 | .3955<br>±.0299 | .3433<br>±.0291 | 29.08 |
 | qwen-3b fp16 | qwen | 2 | scored | .8396<br>±.0225 | .5896<br>±.0301 | .5560<br>±.0304 | .5299<br>±.0305 | 23.8 |
 | qwen-7b gptq-int4 | qwen | 2 | scored | .8582<br>±.0213 | .6007<br>±.0300 | .6007<br>±.0300 | .5821<br>±.0302 | 19.1 |
-| qwen-math-1.5b fp16 | qwen | 2 | scored (mml4096) | .8321<br>±.0229 | .6343<br>±.0295 | .6194<br>±.0297 | .6082<br>±.0299 | 18.50 |
+| qwen-math-1.5b fp16 | qwen | 2 | scored | .8321<br>±.0229 | .6343<br>±.0295 | .6194<br>±.0297 | .6082<br>±.0299 | 18.50 |
 
 > **Analysis.** 3/5 scored (2026-07-26). **The w_eff pairing this
 > table exists for now has an answer on 3 of 5 models, and it is
@@ -3552,5 +3752,363 @@ Two activities, two shapes:
 > model's aggregation cannot pick out. Nothing further is needed
 > for the centering question: at two budgets and five models it
 > has not produced an effect worth chasing.
+
+### sem-mcts-v02 [cov_scope=local]
+
+> **The b=80 local sweeps, re-run at 4x the budget.** The
+> `sem-mcts-v02 [cov_scope=local]` section under *Tuning tables
+> [gen_budget=80]* now has a **complete `embeds_ref=relative`
+> arm on all five models** (7 points each, `w_eff` 0 to 100).
+> These five tables are that grid at `gen_budget=320`, same
+> `lam=0.01` column, same `cov_scope=local`, same
+> `embeds_ref=relative` — so budget is the only axis that moves
+> and every cell pairs with a measured b=80 cell.
+>
+> **The prediction, and why it is worth 35 cells.** Under local
+> scope the bonus at a node decays as `1/sqrt(lam + k)` in that
+> node's own fold count `k`. Quadrupling the budget quadruples
+> the selections the search makes, so `k` at any given node
+> grows and the realized bonus shrinks for the same nominal
+> `w_eff`. The operating point should therefore **move up** with
+> budget — the mirror image of the argument in the b=80 section
+> preamble, which moved it *down* going from global to local.
+>
+> **The global b=320 tables already point that way.** Comparing
+> `tbl-900e87` (`w_eff=10`) against `tbl-01c466` (`w_eff=100`)
+> at this budget, the higher weight wins on **four of five
+> models**: llama-1b .5373 vs .5187, llama-3b .7164 vs .6754,
+> qwen-3b .8396 vs .8097, qwen-7b .8582 vs .7985; only qwen-math
+> reverses (.8321 vs .8396). At b=80 under global scope the
+> optimum sat at `w_eff=10`. That is one budget-driven shift
+> already observed under global scope; these tables ask whether
+> local scope shifts the same way.
+>
+> ⚠️ **Cost. This is the most expensive block in the doc: ~1,470
+> GPU-hours.** At b=320 on level 5 a single trial runs 14.6-29.1
+> hr (`tbl-900e87` / `tbl-01c466`), so at 2 trials one cell
+> costs ~34 h (qwen-7b) to ~54 h (llama-3b), and one `w_eff`
+> column across all five models is ~210 h. **Do not queue the
+> full grid.** Two cheaper readings of the same question:
+> - **One column, five models** (~210 h) at `w_eff=100`, the
+>   point the global tables say should win at this budget.
+> - **One model, full curve** (~34 h x 7 = ~240 h) on qwen-7b
+>   gptq-int4, the cheapest per cell and the model with the
+>   sharpest b=80 peak.
+>
+> ⚠️ **A 54-hour cell needs a 54-hour allocation.** llama-3b and
+> qwen-3b cells exceed the walltime of most allocations in the
+> pool; `expected_hr` must be set from the table above, not
+> guessed, or the walltime guard will place them on jobs that
+> cannot finish them.
+>
+> ⚠️ **`llm.max_model_len` is not the default here.** b=320 on
+> level 5 overruns the 5000-token default and raises the vLLM
+> "decoder prompt longer than the maximum model length" error
+> that killed the earlier `sem-bl-v01` cells. Every cell below
+> therefore pins **`llm.max_model_len=6000`**, except
+> qwen-math-1.5b, which caps at `max_position_embeddings=4096`
+> and is pinned to **4096** — the same split the existing b=320
+> tables use (`-mml4096` entries).
+
+#### lam / ds_alpha joint sweep (b=320, llama-1b, embeds_ref=relative)
+<!-- table-id: tbl-ec63e6 -->
+> **Compares:** the b=80 `lam / ds_alpha joint sweep (llama-1b,
+> embeds_ref=relative)` grid (`tbl-ba6b11`) at `gen_budget=320`.
+> Same `lam=0.01`, `cov_scope=local`, `embeds_ref=relative`;
+> budget is the only axis that moves, so all seven rows pair
+> with measured b=80 cells.
+>
+> **What the b=80 twin shows.** The curve peaks at `w_eff=3` (.3731) with a shallow, noisy interior — .3358 at 0.1, a dip to .2948 at 0.3, .3657 at 1. The question
+> here is whether that location survives a 4x budget or moves
+> right, per the section preamble.
+>
+> **Why this model.** Weakest model in the grid (.5187/.5373 at b=320 global). Its b=80 relative curve is the noisiest of the five, so a budget shift will be the hardest to resolve here — this is the table to queue last.
+>
+> **Fixed:** method=`mcts_sem_v02`, **`cov_scope=local`**,
+> **`embeds_ref=relative`**, prm=qwen, bs-4, d-20, **b=320**,
+> **`llm.max_model_len=6000`**, proj=sparse512, cov_update=sm,
+> cov_dtype=fp64, ds_beta=1.0, prm_batch_size=1, llm=llama-1b,
+> **lam=0.01**, data.level=5, run.num_trials=2.
+>
+> **All 7 cells scored.** Hashes, in `w_eff` order 0 / 0.1 /
+> 0.3 / 1 / 3 / 10 / 100: `23ac020f`, `43a54c9e`, `6d6f1797`,
+> `6b6f7ba6`, `90aa8dc3`, `29968ec6`, `28603062`.
+> Estimated at ~19 hr/trial (~38 GPU-hours per cell, ~266 for
+> the table); **measured 9.37 -> 20.56 hr/trial**, i.e. cost
+> rises monotonically with `w_eff`, so the flat estimate was
+> ~2x too high at `w_eff=0` and ~8% too low at the top.
+> Table total: **~225 GPU-hours**.
+>
+> **W&B:** `qhmx8m1h`, `ral7kogs`, `2pa9l8dw`, `6kuu2a04`,
+> `by677a86`, `qrc14n85`, `3riihetg` (same `w_eff` order).
+
+| llm | prm | lam | ds_alpha | w_eff | trials | status | pass@gb | naive@gb | wei@gb | maj@gb | hr/trial |
+|---|---|---|---|---|---|---|---|---|---|---|---|
+| llama-1b | qwen | 0.01 | 0 | 0 | 2 | scored | .3470<br>±.0291 | .2761<br>±.0274 | .2463<br>±.0264 | .1978<br>±.0244 | 9.37 |
+| llama-1b | qwen | 0.01 | 0.01 | 0.1 | 2 | scored | .4030<br>±.0300 | .2910<br>±.0278 | .2687<br>±.0271 | .2351<br>±.0260 | 13.12 |
+| llama-1b | qwen | 0.01 | 0.03 | 0.3 | 2 | scored | .4627<br>±.0305 | .2985<br>±.0280 | .2500<br>±.0265 | .2276<br>±.0257 | 14.45 |
+| llama-1b | qwen | 0.01 | 0.1 | 1 | 2 | scored | .5149<br>±.0306 | .3022<br>±.0281 | .2836<br>±.0276 | .2500<br>±.0265 | 16.58 |
+| llama-1b | qwen | 0.01 | 0.3 | 3 | 2 | scored | .5373<br>±.0305 | .3097<br>±.0283 | .2388<br>±.0261 | .2052<br>±.0247 | 18.12 |
+| llama-1b | qwen | 0.01 | 1.0 | 10 | 2 | scored | .5896<br>±.0301 | .3358<br>±.0289 | .2201<br>±.0254 | .2090<br>±.0249 | 20.16 |
+| llama-1b | qwen | 0.01 | 10 | 100 | 2 | scored | .5746<br>±.0303 | .2948<br>±.0279 | .2276<br>±.0257 | .1978<br>±.0244 | 20.56 |
+
+> **Analysis.** Complete, 7 of 7. **The optimum moved right
+> with budget: `w_eff` 3 at b=80 (.3731) -> `w_eff` 10 at
+> b=320 (.5896).** That is the section's question answered
+> for this model, and this is the first complete b=320
+> sweep in the section. The b=80 curve was the noisiest of the
+> five (a .2948 dip at 0.3 between .3358 and .3657); at b=320
+> that noise is gone — pass@gb rises monotonically .3470 ->
+> .5896 across six consecutive `w_eff` values, then falls
+> once to .5746 at 100. A clean interior peak, not a plateau.
+>
+> **But only pass@gb moves.** naive tracks it weakly (.2761 ->
+> .3358, peak also at 10), while **wei and maj peak at
+> `w_eff=1`** (.2836 / .2500) and are *lower* at `w_eff=10`
+> (.2201 / .2090) than at `w_eff=0.1`. So diversity buys
+> coverage that neither the PRM-weighted nor the majority
+> selector can convert: the correct answer is in the tree at
+> 10, and both selectors pick a wrong one. Peak pass@gb
+> exceeds peak wei@gb by **.3060**.
+> **Limitations / follow-up:** 2 trials, so the .5896/.5746
+> top pair is within noise (±.0301) and "peak at 10 vs 100"
+> is not resolved — only "peak above 3" is. The
+> selection-gap result is the more actionable finding and
+> argues for a reranker experiment at `w_eff=10`, not for
+> more budget. Feeds key: `tbl-ec63e6`.
+
+
+#### lam / ds_alpha joint sweep (b=320, llama-3b, embeds_ref=relative)
+<!-- table-id: tbl-0fd588 -->
+> **Compares:** the b=80 `lam / ds_alpha joint sweep (llama-3b,
+> embeds_ref=relative)` grid (`tbl-cf849a`) at `gen_budget=320`.
+> Same `lam=0.01`, `cov_scope=local`, `embeds_ref=relative`;
+> budget is the only axis that moves, so all seven rows pair
+> with measured b=80 cells.
+>
+> **What the b=80 twin shows.** The curve peaks at `w_eff=3` (.5821) on a broad plateau — .5709 at 0.3, .5784 at 1, .5485 at 10. The question
+> here is whether that location survives a 4x budget or moves
+> right, per the section preamble.
+>
+> **Why this model.** **Most expensive cell in the doc at ~54 GPU-hours.** Also the model whose global b=320 arm moved most between w_eff 10 and 100 (+.0410), so it has the largest predicted shift — high information, high price.
+>
+> **Fixed:** method=`mcts_sem_v02`, **`cov_scope=local`**,
+> **`embeds_ref=relative`**, prm=qwen, bs-4, d-20, **b=320**,
+> **`llm.max_model_len=6000`**, proj=sparse512, cov_update=sm,
+> cov_dtype=fp64, ds_beta=1.0, prm_batch_size=1, llm=llama-3b,
+> **lam=0.01**, data.level=5, run.num_trials=2.
+>
+> **5 of 7 cells scored**; `w_eff` 10 and 100 still running.
+> Hashes, in `w_eff` order 0 / 0.1 / 0.3 / 1 /
+> 3 / 10 / 100: `a3e0ebee`, `d3f2c271`, `c1783962`,
+> `6d3e6eaf`, `cb87f45a`, `0962b9ea`, `241a5113`.
+> Estimated at ~27 hr/trial (~54 GPU-hours per cell, ~378 for
+> the table); **measured 8.15 -> 25.49 hr/trial over the five
+> scored cells**, still climbing, so the two pending cells are
+> the ones the flat estimate is likeliest to under-call.
+>
+> **W&B:** `ybyetj8y`, `puxo2wg6`, `3xgi6avd`, `zy9zv9hu`,
+> `ggz0bnli` (`w_eff` 0 / 0.1 / 0.3 / 1 / 3).
+
+| llm | prm | lam | ds_alpha | w_eff | trials | status | pass@gb | naive@gb | wei@gb | maj@gb | hr/trial |
+|---|---|---|---|---|---|---|---|---|---|---|---|
+| llama-3b | qwen | 0.01 | 0 | 0 | 2 | scored | .4888<br>±.0306 | .4328<br>±.0303 | .4067<br>±.0301 | .3619<br>±.0294 | 8.15 |
+| llama-3b | qwen | 0.01 | 0.01 | 0.1 | 2 | scored | .5784<br>±.0302 | .4216<br>±.0302 | .4216<br>±.0302 | .4030<br>±.0300 | 16.09 |
+| llama-3b | qwen | 0.01 | 0.03 | 0.3 | 2 | scored | .6231<br>±.0297 | .4291<br>±.0303 | .4179<br>±.0302 | .4104<br>±.0301 | 17.74 |
+| llama-3b | qwen | 0.01 | 0.1 | 1 | 2 | scored | .6418<br>±.0293 | .4403<br>±.0304 | .4030<br>±.0300 | .3881<br>±.0298 | 21.13 |
+| llama-3b | qwen | 0.01 | 0.3 | 3 | 2 | scored | .7052<br>±.0279 | .4366<br>±.0304 | .4104<br>±.0301 | .3843<br>±.0298 | 25.49 |
+| llama-3b | qwen | 0.01 | 1.0 | 10 | — | running | — | — | — | — | — |
+| llama-3b | qwen | 0.01 | 10 | 100 | — | running | — | — | — | — | — |
+
+> **Analysis.** 5 of 7. **pass@gb is still climbing at the
+> last scored cell** — .4888 / .5784 / .6231 / .6418 / .7052
+> across `w_eff` 0 -> 3, monotone, +.2164 total. The b=80 twin
+> (`tbl-cf849a`) peaked at `w_eff=3` on a broad plateau; here
+> `w_eff=3` is the *highest* point measured and the curve has
+> not turned over, so the peak is at 3 or beyond and the two
+> pending cells decide it. Same direction as llama-1b
+> (`tbl-ec63e6`), which resolved to 10.
+>
+> **The selection gap is starker than llama-1b's.** naive,
+> wei and maj are flat across the whole scored range — naive
+> .4328 -> .4366, wei .4067 -> .4104, maj .3619 -> .3843,
+> every step inside ±.0304. So a **+.2164 gain in coverage
+> converts to +.0038 in naive** and nothing at all in wei.
+> Whatever the extra diversity puts in the tree, none of the
+> three selectors finds it.
+> **Limitations / follow-up:** 2 trials. The flat-selector
+> result is already sharp enough to act on and does not need
+> the last two cells; the peak location does. Feeds key:
+> `tbl-0fd588`.
+
+
+#### lam / ds_alpha joint sweep (b=320, qwen-3b, embeds_ref=relative)
+<!-- table-id: tbl-fee240 -->
+> **Compares:** the b=80 `lam / ds_alpha joint sweep (qwen-3b,
+> embeds_ref=relative)` grid (`tbl-b1cb82`) at `gen_budget=320`.
+> Same `lam=0.01`, `cov_scope=local`, `embeds_ref=relative`;
+> budget is the only axis that moves, so all seven rows pair
+> with measured b=80 cells.
+>
+> **What the b=80 twin shows.** The curve peaks at `w_eff=1` (.7164) and declines monotonically after — .7127 at 3, .7090 at 10, .6940 at 100. The question
+> here is whether that location survives a 4x budget or moves
+> right, per the section preamble.
+>
+> **Why this model.** The cleanest b=80 curve of the five: a single interior peak with monotone decay either side. If the optimum moves with budget, this is the table where it will be visible without argument.
+>
+> **Fixed:** method=`mcts_sem_v02`, **`cov_scope=local`**,
+> **`embeds_ref=relative`**, prm=qwen, bs-4, d-20, **b=320**,
+> **`llm.max_model_len=6000`**, proj=sparse512, cov_update=sm,
+> cov_dtype=fp64, ds_beta=1.0, prm_batch_size=1, llm=qwen-3b,
+> **lam=0.01**, data.level=5, run.num_trials=2.
+>
+> **1 of 7 cells scored**; the other six are running.
+> Hashes, in `w_eff` order 0 / 0.1 / 0.3 / 1 /
+> 3 / 10 / 100: `6ee91354`, `20b9913f`, `5a2adf1e`,
+> `d57e81fe`, `cbd8aa53`, `185cadb5`, `7ef3ad23`.
+> Estimated at ~24 hr/trial (~47 GPU-hours per cell, ~329 for
+> the table); the one measured cell came in at **6.13
+> hr/trial**, but it is `w_eff=0`, the cheapest point on every
+> model's curve, so it does not yet test the estimate.
+>
+> **W&B:** `s6hfr5h7` (`w_eff` 0).
+
+| llm | prm | lam | ds_alpha | w_eff | trials | status | pass@gb | naive@gb | wei@gb | maj@gb | hr/trial |
+|---|---|---|---|---|---|---|---|---|---|---|---|
+| qwen-3b | qwen | 0.01 | 0 | 0 | 2 | scored | .6493<br>±.0292 | .5896<br>±.0301 | .5560<br>±.0304 | .5299<br>±.0305 | 6.13 |
+| qwen-3b | qwen | 0.01 | 0.01 | 0.1 | — | running | — | — | — | — | — |
+| qwen-3b | qwen | 0.01 | 0.03 | 0.3 | — | running | — | — | — | — | — |
+| qwen-3b | qwen | 0.01 | 0.1 | 1 | — | running | — | — | — | — | — |
+| qwen-3b | qwen | 0.01 | 0.3 | 3 | — | running | — | — | — | — | — |
+| qwen-3b | qwen | 0.01 | 1.0 | 10 | — | running | — | — | — | — | — |
+| qwen-3b | qwen | 0.01 | 10 | 100 | — | running | — | — | — | — | — |
+
+> **Analysis.** 1 of 7 — the `w_eff=0` anchor only (.6493
+> pass, .5896 naive, .5560 wei, .5299 maj). One point is not a
+> curve, so the table's question is still open; the value of
+> this row is as the no-diversity baseline the other six will
+> be read against. Its pass-minus-wei gap at `w_eff=0` is
+> .0933, mid-pack among the four models with a scored
+> `w_eff=0` cell (qwen-7b .0597, llama-3b .0821, llama-1b
+> .1007) — the gap that matters is how far it *widens* with
+> `w_eff`, which needs the pending cells.
+> **Limitations / follow-up:** 2 trials; six cells outstanding
+> and all six are running, so this table resolves on its own
+> without further queueing. Feeds key: `tbl-fee240`.
+
+
+#### lam / ds_alpha joint sweep (b=320, qwen-7b gptq-int4, embeds_ref=relative)
+<!-- table-id: tbl-27db3b -->
+> **Compares:** the b=80 `lam / ds_alpha joint sweep (qwen-7b gptq-int4,
+> embeds_ref=relative)` grid (`tbl-5d64b1`) at `gen_budget=320`.
+> Same `lam=0.01`, `cov_scope=local`, `embeds_ref=relative`;
+> budget is the only axis that moves, so all seven rows pair
+> with measured b=80 cells.
+>
+> **What the b=80 twin shows.** The curve peaks at `w_eff=1` (.7836) — the highest pass@gb recorded for this model under either scope — then .7761 at 3 and 10, .7537 at 100. The question
+> here is whether that location survives a 4x budget or moves
+> right, per the section preamble.
+>
+> **Why this model.** **Cheapest cell in the block (~34 h) and the sharpest b=80 peak.** If only one model's full curve is affordable, this is it. Its global b=320 arm also shows the largest w_eff 10 -> 100 gain of any model (+.0597).
+>
+> **Fixed:** method=`mcts_sem_v02`, **`cov_scope=local`**,
+> **`embeds_ref=relative`**, prm=qwen, bs-4, d-20, **b=320**,
+> **`llm.max_model_len=6000`**, proj=sparse512, cov_update=sm,
+> cov_dtype=fp64, ds_beta=1.0, prm_batch_size=1, llm=qwen-7b gptq-int4,
+> **lam=0.01**, data.level=5, run.num_trials=2.
+>
+> **3 of 7 cells scored**; `w_eff` 1, 3 and 10 running,
+> `w_eff=100` inqueue.
+> Hashes, in `w_eff` order 0 / 0.1 / 0.3 / 1 /
+> 3 / 10 / 100: `de70c40c`, `a611b9af`, `ea5b753c`,
+> `e7d52d10`, `3b12c605`, `b2e76a52`, `9d5af8ad`.
+> Estimated at ~17 hr/trial (~34 GPU-hours per cell, ~238 for
+> the table); **measured 2.73 / 10.13 / 12.03 hr/trial** at
+> `w_eff` 0 / 0.1 / 0.3 — far under the flat estimate so far,
+> and still the cheapest model in the block.
+>
+> **W&B:** `st7f0ucw`, `cet7evxz`, `jrrronst` (`w_eff` 0 /
+> 0.1 / 0.3).
+
+| llm | prm | lam | ds_alpha | w_eff | trials | status | pass@gb | naive@gb | wei@gb | maj@gb | hr/trial |
+|---|---|---|---|---|---|---|---|---|---|---|---|
+| qwen-7b gptq-int4 | qwen | 0.01 | 0 | 0 | 2 | scored | .6716<br>±.0287 | .6343<br>±.0295 | .6119<br>±.0298 | .5858<br>±.0301 | 2.73 |
+| qwen-7b gptq-int4 | qwen | 0.01 | 0.01 | 0.1 | 2 | scored | .7239<br>±.0274 | .6306<br>±.0295 | .5821<br>±.0302 | .5821<br>±.0302 | 10.13 |
+| qwen-7b gptq-int4 | qwen | 0.01 | 0.03 | 0.3 | 2 | scored | .7575<br>±.0262 | .6157<br>±.0298 | .6157<br>±.0298 | .6082<br>±.0299 | 12.03 |
+| qwen-7b gptq-int4 | qwen | 0.01 | 0.1 | 1 | — | running | — | — | — | — | — |
+| qwen-7b gptq-int4 | qwen | 0.01 | 0.3 | 3 | — | running | — | — | — | — | — |
+| qwen-7b gptq-int4 | qwen | 0.01 | 1.0 | 10 | — | running | — | — | — | — | — |
+| qwen-7b gptq-int4 | qwen | 0.01 | 10 | 100 | — | running | — | — | — | — | — |
+
+> **Analysis.** 3 of 7 — the low-`w_eff` end only. pass@gb
+> rises .6716 -> .7239 -> .7575 across `w_eff` 0 -> 0.3, so
+> the curve is climbing here as it does for the two llamas,
+> but every scored point is still below the b=80 twin's peak
+> (`tbl-5d64b1`, .7836 at `w_eff=1`) — and the b=320
+> `w_eff=1` cell, the direct comparison, has not landed.
+> **No budget claim can be made from these three rows.**
+>
+> Selection behaves differently here than on the llamas:
+> naive *falls* slightly (.6343 -> .6306 -> .6157) while pass
+> gains +.0859, and wei/maj move within noise. The
+> pass-minus-wei gap widens .0597 -> .1418 over three steps —
+> the same coverage-without-selection pattern, appearing this
+> early on the strongest model in the grid.
+> **Limitations / follow-up:** 2 trials; the four cells that
+> carry the table's question (`w_eff` 1, 3, 10, 100) are all
+> outstanding, three running and one inqueue. Feeds key:
+> `tbl-27db3b`.
+
+
+#### lam / ds_alpha joint sweep (b=320, qwen-math-1.5b, embeds_ref=relative)
+<!-- table-id: tbl-7bbbf4 -->
+> **Compares:** the b=80 `lam / ds_alpha joint sweep (qwen-math-1.5b,
+> embeds_ref=relative)` grid (`tbl-3a76ce`) at `gen_budget=320`.
+> Same `lam=0.01`, `cov_scope=local`, `embeds_ref=relative`;
+> budget is the only axis that moves, so all seven rows pair
+> with measured b=80 cells.
+>
+> **What the b=80 twin shows.** The curve is nearly flat — .7090 at 0.1 up to .7537 at 0.3, then .7425, .7239, .7612 at 10 and .7425 at 100, a .0522 span. The question
+> here is whether that location survives a 4x budget or moves
+> right, per the section preamble.
+>
+> **Why this model.** **The one model whose global b=320 arm moves the wrong way** (.8321 at w_eff=100 against .8396 at 10), and the strongest model in the grid. Pinned to `max_model_len=4096`; the 6000 override is rejected by vLLM at startup for this model.
+>
+> **Fixed:** method=`mcts_sem_v02`, **`cov_scope=local`**,
+> **`embeds_ref=relative`**, prm=qwen, bs-4, d-20, **b=320**,
+> **`llm.max_model_len=4096`**, proj=sparse512, cov_update=sm,
+> cov_dtype=fp64, ds_beta=1.0, prm_batch_size=1, llm=qwen-math-1.5b,
+> **lam=0.01**, data.level=5, run.num_trials=2.
+>
+> ⚠️ **All 7 cells are net-new — none is on disk and none has a
+> ledger entry.** Hashes, in `w_eff` order 0 / 0.1 / 0.3 / 1 /
+> 3 / 10 / 100: `471e8dcc`, `182fb907`, `34a1cede`,
+> `4e04da94`, `e8b44db3`, `284579d3`, `99e2a082`.
+> At ~19 hr/trial x 2 trials that is **~37 GPU-hours per
+> cell, ~259 for the table**.
+>
+> **W&B:** none yet.
+
+| llm | prm | lam | ds_alpha | w_eff | trials | status | pass@gb | naive@gb | wei@gb | maj@gb | hr/trial |
+|---|---|---|---|---|---|---|---|---|---|---|---|
+| qwen-math-1.5b | qwen | 0.01 | 0 | 0 | — | running | — | — | — | — | — |
+| qwen-math-1.5b | qwen | 0.01 | 0.01 | 0.1 | — | running | — | — | — | — | — |
+| qwen-math-1.5b | qwen | 0.01 | 0.03 | 0.3 | — | running | — | — | — | — | — |
+| qwen-math-1.5b | qwen | 0.01 | 0.1 | 1 | — | running | — | — | — | — | — |
+| qwen-math-1.5b | qwen | 0.01 | 0.3 | 3 | — | running | — | — | — | — | — |
+| qwen-math-1.5b | qwen | 0.01 | 1.0 | 10 | — | running | — | — | — | — | — |
+| qwen-math-1.5b | qwen | 0.01 | 10 | 100 | — | running | — | — | — | — | — |
+
+> **Analysis.** No data yet — 0 of 7 cells run. The b=80 twin
+> (`tbl-3a76ce`) is complete, so every row here has a measured
+> counterpart waiting; nothing can be said until at least the
+> `w_eff` 10 and 100 rows land, which are the two the global
+> b=320 tables disagree on.
+> **Limitations / follow-up:** queue by column, not by table —
+> one `w_eff` value across all five models answers "did the
+> optimum move" for ~210 GPU-hours, whereas this table alone
+> costs ~259 and answers it for one model. Feeds key:
+> `tbl-7bbbf4`.
+
 
 ---

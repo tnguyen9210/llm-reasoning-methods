@@ -2349,7 +2349,7 @@
   feeds:
   - tbl-db0cf7  # L4 b=80 lam/ds_alpha rel sweep, llama-1b
   group: sem-mcts
-  status: running
+  status: scored
   priority: 2
   expected_hr: 8
   note: L4 b80 covlocal-rel llama-1b w_eff=0.3
@@ -2834,17 +2834,22 @@
   feeds:
   - tbl-e6a2f9  # L4 b=80 lam/ds_alpha rel sweep, qwen-7b gptq-int4
   group: sem-mcts
-  status: failed
+  status: scored
   priority: 1
-  expected_hr: 9
-  note: L4 b80 covlocal-rel qwen-7b gptq-int4 w_eff=0.1
+  expected_hr: 5
+  note: L4 b80 covlocal-rel qwen-7b gptq-int4 w_eff=0.1. Requeued
+    2026-08-06 20:26 after a windfall preemption; trial 0 is on disk
+    and scored, so expected_hr cut 9 -> 5 (one trial left).
   launch:
     job_id: 23492916
-    node: r5u31n1
-    pid: 162876
-    at: 2026-08-06 05:07
+    node: r5u05n1
+    pid: 290296
+    at: 2026-08-06 20:26
   history:
-  - {at: 2026-08-06 11:05, job_id: 23492916, outcome: stalled, trials_done: 1}
+  - {at: 2026-08-06 11:05, job_id: 23492916, outcome: stalled, trials_done: 1,
+     cause: 'gpu_windfall preemption of 23492916 -- the allocation was
+       requeued onto r5u05n1 (was r5u31n1), killing the srun inside.
+       Died ~1.9 h into trial 1; W&B q4zf5t5m heartbeat stopped 10:42.'}
 - id: sem-mcts-l4-covlocal-rel-qwen7bgptq-weff0p3
   launcher: generate_mcts_sem.py
   hash: "f3dfbad0"
@@ -2884,7 +2889,7 @@
   feeds:
   - tbl-e6a2f9  # L4 b=80 lam/ds_alpha rel sweep, qwen-7b gptq-int4
   group: sem-mcts
-  status: running
+  status: scored
   priority: 1
   expected_hr: 9
   note: L4 b80 covlocal-rel qwen-7b gptq-int4 w_eff=1
@@ -2908,7 +2913,7 @@
   feeds:
   - tbl-e6a2f9  # L4 b=80 lam/ds_alpha rel sweep, qwen-7b gptq-int4
   group: sem-mcts
-  status: running
+  status: scored
   priority: 1
   expected_hr: 9
   note: L4 b80 covlocal-rel qwen-7b gptq-int4 w_eff=3
@@ -2932,7 +2937,7 @@
   feeds:
   - tbl-e6a2f9  # L4 b=80 lam/ds_alpha rel sweep, qwen-7b gptq-int4
   group: sem-mcts
-  status: running
+  status: scored
   priority: 1
   expected_hr: 9
   note: L4 b80 covlocal-rel qwen-7b gptq-int4 w_eff=10
@@ -2956,7 +2961,7 @@
   feeds:
   - tbl-e6a2f9  # L4 b=80 lam/ds_alpha rel sweep, qwen-7b gptq-int4
   group: sem-mcts
-  status: running
+  status: scored
   priority: 1
   expected_hr: 9
   note: L4 b80 covlocal-rel qwen-7b gptq-int4 w_eff=100
@@ -2980,7 +2985,7 @@
   feeds:
   - tbl-c76d49  # L4 b=80 lam/ds_alpha rel sweep, qwen-math-1.5b
   group: sem-mcts
-  status: running
+  status: scored
   priority: 1
   expected_hr: 8
   note: L4 b80 covlocal-rel qwen-math-1.5b w_eff=0
@@ -3004,7 +3009,7 @@
   feeds:
   - tbl-c76d49  # L4 b=80 lam/ds_alpha rel sweep, qwen-math-1.5b
   group: sem-mcts
-  status: running
+  status: scored
   priority: 1
   expected_hr: 8
   note: L4 b80 covlocal-rel qwen-math-1.5b w_eff=0.1
@@ -3028,7 +3033,7 @@
   feeds:
   - tbl-c76d49  # L4 b=80 lam/ds_alpha rel sweep, qwen-math-1.5b
   group: sem-mcts
-  status: running
+  status: scored
   priority: 1
   expected_hr: 8
   note: L4 b80 covlocal-rel qwen-math-1.5b w_eff=0.3
@@ -3052,7 +3057,7 @@
   feeds:
   - tbl-c76d49  # L4 b=80 lam/ds_alpha rel sweep, qwen-math-1.5b
   group: sem-mcts
-  status: running
+  status: scored
   priority: 1
   expected_hr: 8
   note: L4 b80 covlocal-rel qwen-math-1.5b w_eff=1
@@ -3076,7 +3081,7 @@
   feeds:
   - tbl-c76d49  # L4 b=80 lam/ds_alpha rel sweep, qwen-math-1.5b
   group: sem-mcts
-  status: running
+  status: scored
   priority: 1
   expected_hr: 8
   note: L4 b80 covlocal-rel qwen-math-1.5b w_eff=3
@@ -3100,7 +3105,7 @@
   feeds:
   - tbl-c76d49  # L4 b=80 lam/ds_alpha rel sweep, qwen-math-1.5b
   group: sem-mcts
-  status: running
+  status: scored
   priority: 1
   expected_hr: 8
   note: L4 b80 covlocal-rel qwen-math-1.5b w_eff=10
@@ -3124,7 +3129,7 @@
   feeds:
   - tbl-c76d49  # L4 b=80 lam/ds_alpha rel sweep, qwen-math-1.5b
   group: sem-mcts
-  status: running
+  status: scored
   priority: 1
   expected_hr: 8
   note: L4 b80 covlocal-rel qwen-math-1.5b w_eff=100

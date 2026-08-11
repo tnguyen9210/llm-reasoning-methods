@@ -152,45 +152,45 @@ Two activities, two shapes:
 
 **llama-1b fp16**
 
-| algorithm | pass@gb | naive@gb | wei@gb | maj@gb | hr/trial |
-|---|---|---|---|---|---|
-| cnt-mcts | — | — | — | — | — |
-| sem-mcts-v02 | — | — | — | — | — |
-| sem-mcts-v02 (local) | — | — | — | — | — |
+| algorithm | pass@gb | naive@gb | wei@gb | maj@gb | ncomps | depth | nphases | ndepths | gens | capped | hr/trial |
+|---|---|---|---|---|---|---|---|---|---|---|---|
+| cnt-mcts | — | — | — | — | — | — | — | — | — | — | — |
+| sem-mcts-v02 | — | — | — | — | — | — | — | — | — | — | — |
+| sem-mcts-v02 (local) | — | — | — | — | — | — | — | — | — | — | — |
 
 **llama-3b fp16**
 
-| algorithm | pass@gb | naive@gb | wei@gb | maj@gb | ncomps | depth | nphases | ndepths | hr/trial |
-|---|---|---|---|---|---|---|---|---|---|
-| cnt-mcts | .0750<br>±.0241 | .0500<br>±.0200 | .0333<br>±.0165 | .0167<br>±.0117 | 18.7<br>±1.0 | 11.7<br>±0.2 | 7.2<br>±0.4 | 12.6<br>±0.3 | 1.33 |
-| sem-mcts-v02 | .0750<br>±.0241 | .0583<br>±.0215 | .0417<br>±.0183 | .0250<br>±.0143 | 19.0<br>±1.2 | 12.2<br>±0.2 | 64.0<br>±18.5 | 12.6<br>±0.3 | 1.78 |
-| sem-mcts-v02 (local) | .0667<br>±.0229 | .0333<br>±.0165 | .0250<br>±.0143 | .0167<br>±.0117 | 17.7<br>±0.9 | 11.6<br>±0.2 | 125.6<br>±29.4 | 12.1<br>±0.4 | 1.73 |
+| algorithm | pass@gb | naive@gb | wei@gb | maj@gb | ncomps | depth | nphases | ndepths | gens | capped | hr/trial |
+|---|---|---|---|---|---|---|---|---|---|---|---|
+| cnt-mcts | .0750<br>±.0241 | .0500<br>±.0200 | .0333<br>±.0165 | .0167<br>±.0117 | 18.7<br>±1.0 | 11.7<br>±0.2 | 6 | 12.6<br>±0.3 | 80.0 | 0.0% | 1.33 |
+| sem-mcts-v02 | .0750<br>±.0241 | .0583<br>±.0215 | .0417<br>±.0183 | .0250<br>±.0143 | 19.0<br>±1.2 | 12.2<br>±0.2 | 7 | 12.6<br>±0.3 | 79.1 | 3.3% | 1.78 |
+| sem-mcts-v02 (local) | .0667<br>±.0229 | .0333<br>±.0165 | .0250<br>±.0143 | .0167<br>±.0117 | 17.7<br>±0.9 | 11.6<br>±0.2 | 6 | 12.1<br>±0.4 | 75.8 | 11.7% | 1.73 |
 
 
 **qwen-3b fp16**
 
-| algorithm | pass@gb | naive@gb | wei@gb | maj@gb | ncomps | depth | nphases | ndepths | hr/trial |
-|---|---|---|---|---|---|---|---|---|---|
-| cnt-mcts | .1417<br>±.0320 | .0667<br>±.0229 | .0917<br>±.0265 | .0917<br>±.0265 | 15.9<br>±0.7 | 11.4<br>±0.3 | 6.6<br>±0.2 | 12.3<br>±0.2 | 1.28 |
-| sem-mcts-v02 | .2000<br>±.0367 | .1333<br>±.0312 | .0917<br>±.0265 | .0583<br>±.0215 | 16.8<br>±0.9 | 11.5<br>±0.2 | 7.1<br>±0.3 | 12.2<br>±0.2 | 1.77 |
-| sem-mcts-v02 (local) | .2167<br>±.0378 | .1167<br>±.0294 | .1250<br>±.0303 | .1083<br>±.0285 | 13.3<br>±0.8 | 12.0<br>±0.3 | 331.1<br>±42.3 | 12.1<br>±0.3 | 1.61 |
+| algorithm | pass@gb | naive@gb | wei@gb | maj@gb | ncomps | depth | nphases | ndepths | gens | capped | hr/trial |
+|---|---|---|---|---|---|---|---|---|---|---|---|
+| cnt-mcts | .1417<br>±.0320 | .0667<br>±.0229 | .0917<br>±.0265 | .0917<br>±.0265 | 15.9<br>±0.7 | 11.4<br>±0.3 | 6 | 12.3<br>±0.2 | 80.0 | 0.0% | 1.28 |
+| sem-mcts-v02 | .2000<br>±.0367 | .1333<br>±.0312 | .0917<br>±.0265 | .0583<br>±.0215 | 16.8<br>±0.9 | 11.5<br>±0.2 | 6 | 12.2<br>±0.2 | 80.0 | 0.0% | 1.77 |
+| sem-mcts-v02 (local) | .2167<br>±.0378 | .1167<br>±.0294 | .1250<br>±.0303 | .1083<br>±.0285 | 13.3<br>±0.8 | 12.0<br>±0.3 | 9 | 12.1<br>±0.3 | 68.9 | 31.7% | 1.61 |
 
 **qwen-7b gptq-int4**
 
-| algorithm | pass@gb | naive@gb | wei@gb | maj@gb | ncomps | depth | nphases | ndepths | hr/trial |
-|---|---|---|---|---|---|---|---|---|---|
-| cnt-mcts | .2500<br>±.0397 | .1417<br>±.0320 | .1167<br>±.0294 | .1083<br>±.0285 | 23.5<br>±1.3 | 8.8<br>±0.2 | 19.1<br>±8.2 | 9.3<br>±0.2 | 1.25 |
-| sem-mcts-v02 | .3000<br>±.0420 | .1833<br>±.0355 | .1333<br>±.0312 | .1167<br>±.0294 | 24.0<br>±1.3 | 9.2<br>±0.2 | 15.0<br>±1.7 | 9.4<br>±0.2 | 1.65 |
-| sem-mcts-v02 (local) | .2833<br>±.0413 | .1667<br>±.0342 | .1667<br>±.0342 | .1583<br>±.0335 | 24.0<br>±1.2 | 9.2<br>±0.2 | 88.6<br>±23.4 | 9.3<br>±0.3 | 1.66 |
+| algorithm | pass@gb | naive@gb | wei@gb | maj@gb | ncomps | depth | nphases | ndepths | gens | capped | hr/trial |
+|---|---|---|---|---|---|---|---|---|---|---|---|
+| cnt-mcts | .2500<br>±.0397 | .1417<br>±.0320 | .1167<br>±.0294 | .1083<br>±.0285 | 23.5<br>±1.3 | 8.8<br>±0.2 | 10 | 9.3<br>±0.2 | 79.9 | 0.8% | 1.25 |
+| sem-mcts-v02 | .3000<br>±.0420 | .1833<br>±.0355 | .1333<br>±.0312 | .1167<br>±.0294 | 24.0<br>±1.3 | 9.2<br>±0.2 | 10 | 9.4<br>±0.2 | 80.0 | 0.0% | 1.65 |
+| sem-mcts-v02 (local) | .2833<br>±.0413 | .1667<br>±.0342 | .1667<br>±.0342 | .1583<br>±.0335 | 24.0<br>±1.2 | 9.2<br>±0.2 | 11 | 9.3<br>±0.3 | 77.7 | 6.7% | 1.66 |
 
 
 **qwen-math-1.5b fp16**
 
-| algorithm | pass@gb | naive@gb | wei@gb | maj@gb | ncomps | depth | nphases | ndepths | hr/trial |
-|---|---|---|---|---|---|---|---|---|---|
-| cnt-mcts | .2667<br>±.0405 | .1917<br>±.0361 | .1667<br>±.0342 | .1500<br>±.0327 | 16.0<br>±1.0 | 11.6<br>±0.3 | 7.0<br>±0.3 | 12.3<br>±0.3 | 1.02 |
-| sem-mcts-v02 | .2583<br>±.0401 | .1833<br>±.0355 | .1583<br>±.0335 | .1500<br>±.0327 | 16.2<br>±0.9 | 11.9<br>±0.2 | 32.1<br>±10.4 | 12.1<br>±0.2 | 1.45 |
-| sem-mcts-v02 (local) | .3083<br>±.0423 | .1833<br>±.0355 | .1833<br>±.0355 | .1583<br>±.0335 | 16.7<br>±0.9 | 10.5<br>±0.3 | 7.5<br>±0.4 | 11.6<br>±0.2 | 1.45 |
+| algorithm | pass@gb | naive@gb | wei@gb | maj@gb | ncomps | depth | nphases | ndepths | gens | capped | hr/trial |
+|---|---|---|---|---|---|---|---|---|---|---|---|
+| cnt-mcts | .2667<br>±.0405 | .1917<br>±.0361 | .1667<br>±.0342 | .1500<br>±.0327 | 16.0<br>±1.0 | 11.6<br>±0.3 | 6 | 12.3<br>±0.3 | 80.0 | 0.0% | 1.02 |
+| sem-mcts-v02 | .2583<br>±.0401 | .1833<br>±.0355 | .1583<br>±.0335 | .1500<br>±.0327 | 16.2<br>±0.9 | 11.9<br>±0.2 | 8 | 12.1<br>±0.2 | 79.6 | 0.8% | 1.45 |
+| sem-mcts-v02 (local) | .3083<br>±.0423 | .1833<br>±.0355 | .1833<br>±.0355 | .1583<br>±.0335 | 16.7<br>±0.9 | 10.5<br>±0.3 | 7 | 11.6<br>±0.2 | 80.0 | 0.0% | 1.45 |
 
 
 > **Analysis.** Promoted configs — best pass@gb over each
@@ -245,14 +245,27 @@ Two activities, two shapes:
 > Fixed: bs-4, d-20, `max_model_len=6000`, agg_strategy=`last`,
 > tmpl=model-family default, prm=qwen.
 >
-> Search-cost columns (mean ± SEM over questions × trials, from
-> `compute_stats` / W&B `eval/*` — see `utils/metrics.py`
-> `_eval_question`): `ncomps` = completed solutions per question
+> Search-cost columns (from `compute_stats` / W&B `eval/*` — see
+> `utils/metrics.py` `_eval_question`). Mean ± SEM over questions ×
+> trials unless noted: `ncomps` = completed solutions per question
 > (`len(completions)`); `depth` = mean depth of those completions
-> (`comp_depth`); `nphases` = the phase index the search ended on
-> (`q_last_phase`); `ndepths` = mean per-phase depth
-> (`phase_depths`). `ncomps` is the one to read first — it is how
-> much of the generation budget actually became a usable solution.
+> (`comp_depth`); `ndepths` = mean per-phase depth (`phase_depths`);
+> `gens` = generations actually spent (`q_total_gens`); `capped` =
+> share of question-trials that hit the `num_phases=1000` ceiling.
+> **`nphases` is a MEDIAN, not a mean** (`q_last_phase`): the
+> distribution is bimodal — a search either ends in ~10 phases or
+> runs to the ceiling, with almost nothing in between — so the mean
+> reported cap-hit frequency dressed as a central tendency.
+>
+> Read `gens` before anything else. The phase loop exits on
+> `gen_cnt >= gen_budget`, and `gen_cnt` rises only when a node is
+> expanded for the **first** time, so a phase that re-descends an
+> already-expanded subtree costs a phase and zero generations. A
+> capped run therefore stops with its budget UNSPENT: measured
+> 2026-08-06, non-capped runs spend exactly `gen_budget` every time,
+> while capped ones range from 5 to 79 of 80. Any row whose `gens`
+> is below the nominal budget is not budget-matched against the
+> others, and `capped` says how much of the row that affects.
 >
 > ⚠️ Two `(local)` rows sit on **incomplete** sweeps and are
 > best-so-far, not final: qwen-7b gptq-int4 is 5/6 (`ds_alpha=10`
@@ -266,35 +279,35 @@ Two activities, two shapes:
 
 **llama-3b fp16**
 
-| algorithm | pass@gb | naive@gb | wei@gb | maj@gb | ncomps | depth | nphases | ndepths | hr/trial |
-|---|---|---|---|---|---|---|---|---|---|
-| cnt-mcts | .1333<br>±.0312 | .0500<br>±.0200 | .0333<br>±.0165 | .0250<br>±.0143 | 89.2<br>±4.4 | 11.4<br>±0.2 | 49.9<br>±6.8 | 11.8<br>±0.3 | 5.31 |
-| sem-mcts-v02 | .1500<br>±.0327 | .0583<br>±.0215 | .0500<br>±.0200 | .0333<br>±.0165 | 91.8<br>±4.1 | 12.0<br>±0.1 | 82.6<br>±12.4 | 11.8<br>±0.3 | 7.69 |
-| sem-mcts-v02 (local) | .2000<br>±.0367 | .0750<br>±.0241 | .0500<br>±.0200 | .0167<br>±.0117 | 85.9<br>±3.9 | 11.5<br>±0.2 | 38.6<br>±3.2 | 12.3<br>±0.3 | 7.55 |
+| algorithm | pass@gb | naive@gb | wei@gb | maj@gb | ncomps | depth | nphases | ndepths | gens | capped | hr/trial |
+|---|---|---|---|---|---|---|---|---|---|---|---|
+| cnt-mcts | .1333<br>±.0312 | .0500<br>±.0200 | .0333<br>±.0165 | .0250<br>±.0143 | 89.2<br>±4.4 | 11.4<br>±0.2 | 32 | 11.8<br>±0.3 | 320.0 | 0.0% | 5.31 |
+| sem-mcts-v02 | .1500<br>±.0327 | .0583<br>±.0215 | .0500<br>±.0200 | .0333<br>±.0165 | 91.8<br>±4.1 | 12.0<br>±0.1 | 44 | 11.8<br>±0.3 | 319.0 | 1.7% | 7.69 |
+| sem-mcts-v02 (local) | .2000<br>±.0367 | .0750<br>±.0241 | .0500<br>±.0200 | .0167<br>±.0117 | 85.9<br>±3.9 | 11.5<br>±0.2 | 31 | 12.3<br>±0.3 | 320.0 | 0.0% | 7.55 |
 
 **qwen-3b fp16**
 
-| algorithm | pass@gb | naive@gb | wei@gb | maj@gb | ncomps | depth | nphases | ndepths | hr/trial |
-|---|---|---|---|---|---|---|---|---|---|
-| cnt-mcts | .2833<br>±.0413 | .1167<br>±.0294 | .1000<br>±.0275 | .0833<br>±.0253 | 90.4<br>±3.6 | 11.0<br>±0.2 | 38.5<br>±2.0 | 11.8<br>±0.2 | 5.16 |
-| sem-mcts-v02 | .3250<br>±.0429 | .1167<br>±.0294 | .0917<br>±.0265 | .0917<br>±.0265 | 91.4<br>±4.4 | 12.4<br>±0.2 | 86.7<br>±12.7 | 12.2<br>±0.3 | 6.81 |
-| sem-mcts-v02 (local) | .3750<br>±.0444 | .1333<br>±.0312 | .0833<br>±.0253 | .0917<br>±.0265 | 86.9<br>±3.7 | 10.8<br>±0.2 | 36.1<br>±1.2 | 11.8<br>±0.2 | 7.13 |
+| algorithm | pass@gb | naive@gb | wei@gb | maj@gb | ncomps | depth | nphases | ndepths | gens | capped | hr/trial |
+|---|---|---|---|---|---|---|---|---|---|---|---|
+| cnt-mcts | .2833<br>±.0413 | .1167<br>±.0294 | .1000<br>±.0275 | .0833<br>±.0253 | 90.4<br>±3.6 | 11.0<br>±0.2 | 32 | 11.8<br>±0.2 | 320.0 | 0.0% | 5.16 |
+| sem-mcts-v02 | .3250<br>±.0429 | .1167<br>±.0294 | .0917<br>±.0265 | .0917<br>±.0265 | 91.4<br>±4.4 | 12.4<br>±0.2 | 47 | 12.2<br>±0.3 | 319.8 | 1.7% | 6.81 |
+| sem-mcts-v02 (local) | .3750<br>±.0444 | .1333<br>±.0312 | .0833<br>±.0253 | .0917<br>±.0265 | 86.9<br>±3.7 | 10.8<br>±0.2 | 33 | 11.8<br>±0.2 | 320.0 | 0.0% | 7.13 |
 
 **qwen-7b gptq-int4**
 
-| algorithm | pass@gb | naive@gb | wei@gb | maj@gb | ncomps | depth | nphases | ndepths | hr/trial |
-|---|---|---|---|---|---|---|---|---|---|
-| cnt-mcts | .4000<br>±.0449 | .1417<br>±.0320 | .1667<br>±.0342 | .1667<br>±.0342 | 124.3<br>±6.0 | 8.4<br>±0.2 | 84.9<br>±11.7 | 8.6<br>±0.2 | 4.79 |
-| sem-mcts-v02 | .3083<br>±.0423 | .1833<br>±.0355 | .1667<br>±.0342 | .1750<br>±.0348 | 56.8<br>±2.7 | 10.8<br>±0.2 | 817.1<br>±28.6 | 9.5<br>±0.2 | 4.28 |
-| sem-mcts-v02 (local) | .3917<br>±.0447 | .1667<br>±.0342 | .1667<br>±.0342 | .1667<br>±.0342 | 127.1<br>±6.1 | 8.4<br>±0.2 | 110.6<br>±17.7 | 8.5<br>±0.2 | 6.46 |
+| algorithm | pass@gb | naive@gb | wei@gb | maj@gb | ncomps | depth | nphases | ndepths | gens | capped | hr/trial |
+|---|---|---|---|---|---|---|---|---|---|---|---|
+| cnt-mcts | .4000<br>±.0449 | .1417<br>±.0320 | .1667<br>±.0342 | .1667<br>±.0342 | 124.3<br>±6.0 | 8.4<br>±0.2 | 56 | 8.6<br>±0.2 | 316.4 | 1.7% | 4.79 |
+| sem-mcts-v02 | .3083<br>±.0423 | .1833<br>±.0355 | .1667<br>±.0342 | .1750<br>±.0348 | 56.8<br>±2.7 | 10.8<br>±0.2 | 999 | 9.5<br>±0.2 | 198.2 | 69.2% | 4.28 |
+| sem-mcts-v02 (local) | .3917<br>±.0447 | .1667<br>±.0342 | .1667<br>±.0342 | .1667<br>±.0342 | 127.1<br>±6.1 | 8.4<br>±0.2 | 59 | 8.5<br>±0.2 | 316.0 | 4.2% | 6.46 |
 
 **qwen-math-1.5b fp16**
 
-| algorithm | pass@gb | naive@gb | wei@gb | maj@gb | ncomps | depth | nphases | ndepths | hr/trial |
-|---|---|---|---|---|---|---|---|---|---|
-| cnt-mcts | .3833<br>±.0446 | .2000<br>±.0367 | .2000<br>±.0367 | .2000<br>±.0367 | 84.0<br>±3.6 | 10.5<br>±0.2 | 38.4<br>±1.4 | 11.7<br>±0.3 | 4.00 |
-| sem-mcts-v02 | .3667<br>±.0442 | .1667<br>±.0342 | .1917<br>±.0361 | .1917<br>±.0361 | 69.3<br>±3.3 | 12.6<br>±0.2 | 553.9<br>±37.7 | 11.5<br>±0.2 | 4.93 |
-| sem-mcts-v02 (local) | .4000<br>±.0449 | .2000<br>±.0367 | .1833<br>±.0355 | .1750<br>±.0348 | 85.1<br>±3.7 | 10.4<br>±0.2 | 38.7<br>±1.6 | 11.6<br>±0.2 | 5.76 |
+| algorithm | pass@gb | naive@gb | wei@gb | maj@gb | ncomps | depth | nphases | ndepths | gens | capped | hr/trial |
+|---|---|---|---|---|---|---|---|---|---|---|---|
+| cnt-mcts | .3833<br>±.0446 | .2000<br>±.0367 | .2000<br>±.0367 | .2000<br>±.0367 | 84.0<br>±3.6 | 10.5<br>±0.2 | 36 | 11.7<br>±0.3 | 320.0 | 0.0% | 4.00 |
+| sem-mcts-v02 | .3667<br>±.0442 | .1667<br>±.0342 | .1917<br>±.0361 | .1917<br>±.0361 | 69.3<br>±3.3 | 12.6<br>±0.2 | 588 | 11.5<br>±0.2 | 277.4 | 41.7% | 4.93 |
+| sem-mcts-v02 (local) | .4000<br>±.0449 | .2000<br>±.0367 | .1833<br>±.0355 | .1750<br>±.0348 | 85.1<br>±3.7 | 10.4<br>±0.2 | 34 | 11.6<br>±0.2 | 320.0 | 0.0% | 5.76 |
 
 
 > **Analysis.** Promoted configs — `sem-mcts-v02`: llama-3b and
@@ -314,22 +327,31 @@ Two activities, two shapes:
 > (+.067), qwen-3b (+.092) and qwen-math-1.5b (+.017), and
 > **loses** on qwen-7b gptq-int4 (.3917 vs .4000) — the one model
 > where the count-based baseline is still ahead at this budget.
-> Cost still runs against sem: 6.46-7.69 hr/trial for local vs
-> 4.00-5.31 for cnt-mcts, i.e. ~40-50 % more wall-clock for the
-> same generation budget.
+> Cost runs against sem on wall-clock: 6.46-7.69 hr/trial for
+> local vs 4.00-5.31 for cnt-mcts, ~40-50 % more.
 >
-> **`ncomps` explains where global loses.** On the two models
-> where global trails both other methods it is also the only one
-> failing to convert budget into completed solutions: qwen-7b
-> gptq-int4 56.8 completions vs 124.3 (cnt) and 127.1 (local),
-> and qwen-math-1.5b 69.3 vs 84.0 and 85.1. Both coincide with a
-> runaway `nphases` (817.1 and 553.9, against 38-110 elsewhere) —
-> the global scope keeps expanding phases without terminating
-> trajectories, so the same `gen_budget` yields ~45 % fewer
-> solutions to select from. Local does not show this: its
-> `ncomps` and `nphases` track cnt-mcts closely on every model.
-> That is a mechanism, not just a score, and it is the clearest
-> argument in this doc for scoping coverage locally.
+> **Global loses these two rows because it never spent the
+> budget.** qwen-7b gptq-int4 completes 56.8 solutions against
+> 124.3 (cnt) and 127.1 (local); qwen-math-1.5b 69.3 against 84.0
+> and 85.1. The `gens` column gives the cause: global spent only
+> **198.2 of 320** generations on qwen-7b (69.2 % of its
+> question-trials capped) and 277.4 on qwen-math (41.7 % capped),
+> while every other cell in the table spent 316-320 with ≤4.2 %
+> capped. Its `nphases` median is 999 and 588 — the phase loop ran
+> to the ceiling instead of exiting on budget, and a phase that
+> re-descends an already-expanded subtree buys no generations. So
+> the chain is: capped → budget unspent → fewer completions →
+> lower pass@gb. Local does not show it (`capped` ≤4.2 %, `gens`
+> 316-320, `nphases` median 31-59, tracking cnt-mcts).
+>
+> Two consequences. **These two global rows are not
+> budget-matched** — global was handed 62 % and 87 % of the
+> nominal budget, so the comparison understates it, and the
+> "equal generation budget" framing does not hold for them.
+> And **this is plausibly fixable rather than intrinsic**: raising
+> `num_phases`, or breaking the loop when a phase expands nothing,
+> would let those runs spend their 320. Whether that closes the
+> pass@gb gap is untested.
 > **Limitations / follow-up:** 30 questions × 4 trials, so ±.045
 > SEM — the qwen-math-1.5b margin (+.017 = two problems) and the
 > qwen-7b deficit (-.008 = one problem) are both noise. Only the
@@ -2464,7 +2486,7 @@ Two activities, two shapes:
 | qwen-7b gptq-int4 | qwen | 0.01 | 0.1 | 1 | 4 | scored | .3250<br>±.0429 | .1667<br>±.0342 | .1333<br>±.0312 | .1250<br>±.0303 | 4.99 |
 | qwen-7b gptq-int4 | qwen | 0.01 | 0.3 | 3 | 4 | scored | .3667<br>±.0442 | .1417<br>±.0320 | .1333<br>±.0312 | .1250<br>±.0303 | 6.10 |
 | qwen-7b gptq-int4 | qwen | 0.01 | 1.0 | 10 | 4 | scored | .3917<br>±.0447 | .1667<br>±.0342 | .1667<br>±.0342 | .1667<br>±.0342 | 6.46 |
-| qwen-7b gptq-int4 | qwen | 0.01 | 10 | 100 | — | running | — | — | — | — | — |
+| qwen-7b gptq-int4 | qwen | 0.01 | 10 | 100 | 4 | scored | .3750<br>±.0444 | .1583<br>±.0335 | .1500<br>±.0327 | .1417<br>±.0320 | 6.56 |
 
 > **Analysis.** No data yet — nothing to take away.
 > **Limitations / follow-up:** **queue this table first.** It
@@ -2515,9 +2537,9 @@ Two activities, two shapes:
 | qwen-math-1.5b | qwen | 0.01 | 0 | 0 | — | planned | — | — | — | — | — |
 | qwen-math-1.5b | qwen | 0.01 | 0.01 | 0.1 | 4 | scored | .2667<br>±.0405 | .1500<br>±.0327 | .1917<br>±.0361 | .1917<br>±.0361 | 3.48 |
 | qwen-math-1.5b | qwen | 0.01 | 0.03 | 0.3 | 4 | scored | .3333<br>±.0432 | .1500<br>±.0327 | .1750<br>±.0348 | .1667<br>±.0342 | 4.35 |
-| qwen-math-1.5b | qwen | 0.01 | 0.1 | 1 | — | running | — | — | — | — | — |
-| qwen-math-1.5b | qwen | 0.01 | 0.3 | 3 | — | running | — | — | — | — | — |
-| qwen-math-1.5b | qwen | 0.01 | 1.0 | 10 | 3 | running | — | — | — | — | — |
+| qwen-math-1.5b | qwen | 0.01 | 0.1 | 1 | 4 | scored | .4000<br>±.0449 | .1667<br>±.0342 | .1750<br>±.0348 | .1833<br>±.0355 | 5.33 |
+| qwen-math-1.5b | qwen | 0.01 | 0.3 | 3 | 4 | scored | .4000<br>±.0449 | .1833<br>±.0355 | .1833<br>±.0355 | .1917<br>±.0361 | 5.81 |
+| qwen-math-1.5b | qwen | 0.01 | 1.0 | 10 | 4 | scored | .3750<br>±.0444 | .1833<br>±.0355 | .2000<br>±.0367 | .1917<br>±.0361 | 5.88 |
 | qwen-math-1.5b | qwen | 0.01 | 10 | 100 | 4 | scored | .4000<br>±.0449 | .2000<br>±.0367 | .1833<br>±.0355 | .1750<br>±.0348 | 5.76 |
 
 > **Analysis.** No data yet — nothing to take away.

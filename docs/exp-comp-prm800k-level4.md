@@ -1791,7 +1791,7 @@ instead of one wide sparse grid.)
 |---|---|---|---|---|---|---|---|---|---|---|---|
 | llama-1b | qwen | 0.01 | 0 | 0 | 2 | scored | .5469<br>±.0312 | .5078<br>±.0313 | .4883<br>±.0313 | .4375<br>±.0311 | 3.24 |
 | llama-1b | qwen | 0.01 | 0.01 | 0.1 | 2 | scored | .5703<br>±.0310 | .5273<br>±.0313 | .4805<br>±.0313 | .4609<br>±.0312 | 3.56 |
-| llama-1b | qwen | 0.01 | 0.03 | 0.3 | — | running | — | — | — | — | — |
+| llama-1b | qwen | 0.01 | 0.03 | 0.3 | 2 | scored | .6250<br>±.0303 | .5391<br>±.0312 | .4922<br>±.0313 | .4648<br>±.0312 | 3.58 |
 | llama-1b | qwen | 0.01 | 0.1 | 1 | 2 | scored | .6289<br>±.0303 | .5469<br>±.0312 | .5078<br>±.0313 | .4648<br>±.0312 | 3.82 |
 | llama-1b | qwen | 0.01 | 0.3 | 3 | 2 | scored | .6367<br>±.0301 | .5273<br>±.0313 | .4922<br>±.0313 | .4609<br>±.0312 | 3.82 |
 | llama-1b | qwen | 0.01 | 1.0 | 10 | 2 | scored | .6406<br>±.0300 | .5312<br>±.0312 | .4805<br>±.0313 | .4219<br>±.0309 | 3.95 |
@@ -1912,12 +1912,12 @@ instead of one wide sparse grid.)
 | llm | prm | lam | ds_alpha | w_eff | trials | status | pass@gb | naive@gb | wei@gb | maj@gb | hr/trial |
 |---|---|---|---|---|---|---|---|---|---|---|---|
 | qwen-7b gptq-int4 | qwen | 0.01 | 0 | 0 | 2 | scored | .8008<br>±.0250 | .7852<br>±.0257 | .7734<br>±.0262 | .7461<br>±.0273 | 1.76 |
-| qwen-7b gptq-int4 | qwen | 0.01 | 0.01 | 0.1 | — | failed | — | — | — | — | — |
+| qwen-7b gptq-int4 | qwen | 0.01 | 0.01 | 0.1 | 2 | scored | .8945<br>±.0192 | .8164<br>±.0242 | .8281<br>±.0236 | .8164<br>±.0242 | 3.64 |
 | qwen-7b gptq-int4 | qwen | 0.01 | 0.03 | 0.3 | 2 | scored | .8984<br>±.0189 | .7969<br>±.0252 | .8164<br>±.0242 | .8086<br>±.0246 | 3.86 |
-| qwen-7b gptq-int4 | qwen | 0.01 | 0.1 | 1 | — | running | — | — | — | — | — |
-| qwen-7b gptq-int4 | qwen | 0.01 | 0.3 | 3 | — | running | — | — | — | — | — |
-| qwen-7b gptq-int4 | qwen | 0.01 | 1.0 | 10 | — | running | — | — | — | — | — |
-| qwen-7b gptq-int4 | qwen | 0.01 | 10 | 100 | — | running | — | — | — | — | — |
+| qwen-7b gptq-int4 | qwen | 0.01 | 0.1 | 1 | 2 | scored | .9141<br>±.0176 | .7891<br>±.0255 | .8242<br>±.0238 | .8164<br>±.0242 | 4.12 |
+| qwen-7b gptq-int4 | qwen | 0.01 | 0.3 | 3 | 2 | scored | .9219<br>±.0168 | .8047<br>±.0248 | .8125<br>±.0244 | .7930<br>±.0254 | 4.26 |
+| qwen-7b gptq-int4 | qwen | 0.01 | 1.0 | 10 | 2 | scored | .9062<br>±.0183 | .8242<br>±.0238 | .8008<br>±.0250 | .7969<br>±.0252 | 4.25 |
+| qwen-7b gptq-int4 | qwen | 0.01 | 10 | 100 | 2 | scored | .9219<br>±.0168 | .7773<br>±.0261 | .7930<br>±.0254 | .7891<br>±.0255 | 4.32 |
 
 > **Analysis.** No data yet — nothing to take away.
 > **Limitations / follow-up:** this is the one table in the
@@ -1952,13 +1952,13 @@ instead of one wide sparse grid.)
 
 | llm | prm | lam | ds_alpha | w_eff | trials | status | pass@gb | naive@gb | wei@gb | maj@gb | hr/trial |
 |---|---|---|---|---|---|---|---|---|---|---|---|
-| qwen-math-1.5b | qwen | 0.01 | 0 | 0 | — | running | — | — | — | — | — |
-| qwen-math-1.5b | qwen | 0.01 | 0.01 | 0.1 | — | running | — | — | — | — | — |
-| qwen-math-1.5b | qwen | 0.01 | 0.03 | 0.3 | — | running | — | — | — | — | — |
-| qwen-math-1.5b | qwen | 0.01 | 0.1 | 1 | — | running | — | — | — | — | — |
-| qwen-math-1.5b | qwen | 0.01 | 0.3 | 3 | — | running | — | — | — | — | — |
-| qwen-math-1.5b | qwen | 0.01 | 1.0 | 10 | — | running | — | — | — | — | — |
-| qwen-math-1.5b | qwen | 0.01 | 10 | 100 | — | running | — | — | — | — | — |
+| qwen-math-1.5b | qwen | 0.01 | 0 | 0 | 2 | scored | .8203<br>±.0240 | .7891<br>±.0255 | .7734<br>±.0262 | .7383<br>±.0275 | 2.83 |
+| qwen-math-1.5b | qwen | 0.01 | 0.01 | 0.1 | 2 | scored | .9141<br>±.0176 | .7930<br>±.0254 | .8008<br>±.0250 | .8047<br>±.0248 | 4.06 |
+| qwen-math-1.5b | qwen | 0.01 | 0.03 | 0.3 | 2 | scored | .9141<br>±.0176 | .7812<br>±.0259 | .8047<br>±.0248 | .7969<br>±.0252 | 4.06 |
+| qwen-math-1.5b | qwen | 0.01 | 0.1 | 1 | 2 | scored | .8984<br>±.0189 | .7812<br>±.0259 | .7891<br>±.0255 | .7812<br>±.0259 | 4.11 |
+| qwen-math-1.5b | qwen | 0.01 | 0.3 | 3 | 2 | scored | .8750<br>±.0207 | .7852<br>±.0257 | .7812<br>±.0259 | .7617<br>±.0267 | 4.11 |
+| qwen-math-1.5b | qwen | 0.01 | 1.0 | 10 | 2 | scored | .8828<br>±.0201 | .7500<br>±.0271 | .7695<br>±.0264 | .7461<br>±.0273 | 3.99 |
+| qwen-math-1.5b | qwen | 0.01 | 10 | 100 | 2 | scored | .8594<br>±.0218 | .7852<br>±.0257 | .7656<br>±.0265 | .7500<br>±.0271 | 4.05 |
 
 > **Analysis.** No data yet — nothing to take away.
 > **Limitations / follow-up:** cheapest table in the section at
