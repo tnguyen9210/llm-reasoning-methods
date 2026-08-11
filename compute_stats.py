@@ -91,13 +91,17 @@ def main(cfg: ExpConfig):
 
     # Summary columns:
     #   pass@gb, naive@gb, weighted@gb, maj@gb,
-    #   ncomps, depth, nphases, ndepths   (each: mean ± SEM)
+    #   ncomps, depth, nphases, ndepths,
+    #   total_gens, capped                (each: mean ± SEM)
     # +num_proc=N parallelizes grading over questions (default 48;
     # use 1 when many compute_stats processes run concurrently —
     # all of them share one SLURM job cgroup's CPU/memory).
+    # num_phases is the phase ceiling `capped` compares against; bon
+    # has no phase loop, so it resolves to None and capped stays nan.
     summary = metrics.compute_stats_basics(
         result_dir, run_name, cfg.run.num_trials, cfg.data.grader_name,
         num_proc=cfg.get("num_proc", 48),
+        num_phases=cfg.search.get("num_phases", None),
     )
 
     # Reattach to the generation run (id saved at generation time) and

@@ -98,21 +98,49 @@ def _grade_pred(pred_field, gt_answer, grader_name='math', timeout=2):
 # Per-dataset correctness evaluation                              #
 # --------------------------------------------------------------- #
 
+def _phase_key(data):
+    """Scored-dataset key holding the question's last phase index."""
+    return "q_last_phase" if "q_last_phase" in data else "last_phases"
+
+
+def _search_spend(data, num_phases):
+    """Per-question search spend, defined whether or not the search
+    completed anything (unlike depth/ndepths, which average over
+    completions). Returns (total_gens, capped).
+
+    `capped` is 1.0 when the phase loop ran to its `num_phases`
+    ceiling instead of exiting on the generation budget -- those
+    runs stop early and UNDERSPEND `gen_budget` (measured 2026-08-06:
+    ~45 of 80 on the AIME b=80 cov_scope=local cells), so an
+    all-cells budget-parity claim needs this column to back it.
+    nan when the run predates the key or the config has no phase
+    loop (bon), so the nan-aware averages drop it.
+    """
+    total_gens = data.get("q_total_gens", np.nan)
+    key = _phase_key(data)
+    if num_phases is None or key not in data:
+        return total_gens, np.nan
+    return total_gens, float(data[key] >= num_phases - 1)
+
+
 def _eval_question(args):
     """Grade one question; module-level so Pool can pickle it.
 
     Returns a dict of per-question scalars (the fields
     evaluate_correctness assembles into arrays).
     """
-    data, grader_name, timeout = args
+    data, grader_name, timeout, num_phases = args
     _, gt_answer = parser.parse_ground_truth(data, grader_name)
     completions = data["completions"]
+    total_gens, capped = _search_spend(data, num_phases)
 
     # No completions: the search produced nothing for this
     # question. Correctness is 0 (a genuine failure — it stays in
     # the denominator), but the search-cost stats are undefined
     # (mean over an empty list), so mark them nan to drop them
     # from the nan-aware averages rather than fabricate a 0.
+    # total_gens/capped are exempt: they describe the search, not
+    # its completions, so they stay real here.
     if len(completions) == 0:
         return {
             "pass_gb": 0.0,
@@ -123,6 +151,8 @@ def _eval_question(args):
             "depth": np.nan,
             "nphases": np.nan,
             "ndepths": np.nan,
+            "total_gens": total_gens,
+            "capped": capped,
         }
 
     row = {}
@@ -151,9 +181,7 @@ def _eval_question(args):
     # c_depths/last_phases/ndepths_arr); fall back to those so
     # those runs remain readable without re-scoring.
     depth_key = "comp_depth" if "comp_depth" in data else "c_depths"
-    phase_key = (
-        "q_last_phase" if "q_last_phase" in data else "last_phases"
-    )
+    phase_key = _phase_key(data)
     ndepths_key = (
         "phase_depths" if "phase_depths" in data else "ndepths_arr"
     )
@@ -161,11 +189,13 @@ def _eval_question(args):
     row["depth"] = np.mean(data[depth_key])
     row["nphases"] = data[phase_key]
     row["ndepths"] = np.mean(data[ndepths_key])
+    row["total_gens"] = total_gens
+    row["capped"] = capped
     return row
 
 
 def evaluate_correctness(dataset, grader_name='math', timeout=2,
-                         num_proc=1):
+                         num_proc=1, num_phases=None):
     """Per-question metrics for one trial's scored dataset.
 
     `grader_name` selects the utils/parser.py `data_name` vocabulary
@@ -178,11 +208,18 @@ def evaluate_correctness(dataset, grader_name='math', timeout=2,
     its own, and Pool's daemonic workers may not have children.
     <= 1 keeps the original serial path.
 
+    `num_phases` is the run's `cfg.search.num_phases` phase ceiling,
+    needed to decide `capped`; None (bon, which has no phase loop)
+    leaves that column nan.
+
     Returns a dict of 1-D arrays (one entry per question):
       pass_gb, naive_gb, weighted_gb, maj_gb  (correctness in {0,1})
       ncomps, depth, nphases, ndepths     (search-cost stats)
+      total_gens, capped                  (search spend)
     """
-    items = [(data, grader_name, timeout) for data in dataset]
+    items = [
+        (data, grader_name, timeout, num_phases) for data in dataset
+    ]
     if num_proc > 1 and len(items) > 1:
         procs = min(num_proc, len(items))
         with ProcessPoolExecutor(max_workers=procs) as pool:
@@ -193,6 +230,7 @@ def evaluate_correctness(dataset, grader_name='math', timeout=2,
     keys = (
         "pass_gb", "naive_gb", "weighted_gb", "maj_gb",
         "ncomps", "depth", "nphases", "ndepths",
+        "total_gens", "capped",
     )
     return {
         k: np.array([float(r[k]) for r in rows]) for k in keys
@@ -200,7 +238,7 @@ def evaluate_correctness(dataset, grader_name='math', timeout=2,
 
 
 def _load_trials(result_dir, config_name, num_trials, grader_name='math',
-                 num_proc=1):
+                 num_proc=1, num_phases=None):
     """Load + evaluate each trial, returning per-metric arrays
     concatenated over all trials x questions. Trials whose scored
     .jsonl is missing are skipped (and reported), so stats can be
@@ -221,6 +259,7 @@ def _load_trials(result_dir, config_name, num_trials, grader_name='math',
         per_trial.append(
             evaluate_correctness(
                 dataset_res, grader_name, num_proc=num_proc,
+                num_phases=num_phases,
             )
         )
 
@@ -251,18 +290,19 @@ def _mean_sem(arr):
 
 def compute_stats_basics(
     result_dir, config_name, num_trials, grader_name='math',
-    num_proc=1,
+    num_proc=1, num_phases=None,
 ):
     """Aggregate correctness + search-cost stats across trials,
     save the per-question correctness arrays, and print a summary
     line. `grader_name` selects the utils/parser.py `data_name`
     vocabulary ("math", "gsm8k", ...) -- pass `cfg.data.grader_name`.
     `num_proc` > 1 parallelizes grading over questions (see
-    evaluate_correctness). Returns the stats dict
-    (metric -> (mean, sem))."""
+    evaluate_correctness). `num_phases` is the run's phase ceiling
+    (`cfg.search.num_phases`), needed for the `capped` column; None
+    leaves it nan. Returns the stats dict (metric -> (mean, sem))."""
     stats = _load_trials(
         result_dir, config_name, num_trials, grader_name,
-        num_proc=num_proc,
+        num_proc=num_proc, num_phases=num_phases,
     )
 
     # Persist the raw per-question correctness for downstream tests.
@@ -274,6 +314,7 @@ def compute_stats_basics(
     order = [
         "pass_gb", "naive_gb", "weighted_gb", "maj_gb",
         "ncomps", "depth", "nphases", "ndepths",
+        "total_gens", "capped",
     ]
     summary = {k: _mean_sem(stats[k]) for k in order}
 
@@ -285,7 +326,19 @@ def compute_stats_basics(
         f"{summary[k][0]:0.1f} (±{summary[k][1]:0.1f})"
         for k in ("ncomps", "depth", "nphases", "ndepths")
     )
+    # nphases' mean is a poor summary -- the distribution is bimodal
+    # (terminate in ~10 phases, or run to the ceiling), so report the
+    # median too, plus how often the ceiling was hit and what the
+    # generation spend actually was. `capped`>0 means gen_budget was
+    # NOT fully spent on those questions (measured 2026-08-06).
+    med = np.nanmedian(stats["nphases"])
+    spend = (
+        f"nphases_med {med:0.0f}, "
+        f"gens {summary['total_gens'][0]:0.1f}, "
+        f"capped {100 * summary['capped'][0]:0.1f}%"
+    )
     print(f"{corr}, {cost}")
+    print(spend)
     return summary
 
 
