@@ -149,48 +149,58 @@ Two activities, two shapes:
 > `kube-affordability-restriction.md` and
 > `docs/decisions/bl-kdepth-knapsack-bonus.md` for the
 > algorithms.
+>
+> **`peak@gb`** (added 2026-08-13): the best top-1 accuracy any
+> **single shared stopping budget** achieves — max over b ≤
+> gen_budget of the pooled mean naive@b curve, so
+> `naive@gb ≤ peak@gb ≤ pass@gb`. It answers "what if we had
+> stopped every question at the best common b" (NOT a
+> per-question oracle). From `compute_stats` (`eval/peak_gb`;
+> the argmax budget is in `eval/peak_b`, and the full mean
+> curve is saved as `peak_curve_<config>.txt` in the result
+> dir).
 
 **llama-1b fp16**
 
-| algorithm | pass@gb | naive@gb | wei@gb | maj@gb | ncomps | depth | nphases | ndepths | gens | capped | hr/trial |
-|---|---|---|---|---|---|---|---|---|---|---|---|
-| cnt-mcts | — | — | — | — | — | — | — | — | — | — | — |
-| sem-mcts-v02 | — | — | — | — | — | — | — | — | — | — | — |
-| sem-mcts-v02 (local) | — | — | — | — | — | — | — | — | — | — | — |
+| algorithm | pass@gb | naive@gb | peak@gb | wei@gb | maj@gb | ncomps | depth | nphases | ndepths | gens | capped | hr/trial |
+|---|---|---|---|---|---|---|---|---|---|---|---|---|
+| cnt-mcts | — | — | — | — | — | — | — | — | — | — | — | — |
+| sem-mcts-v02 | — | — | — | — | — | — | — | — | — | — | — | — |
+| sem-mcts-v02 (local) | — | — | — | — | — | — | — | — | — | — | — | — |
 
 **llama-3b fp16**
 
-| algorithm | pass@gb | naive@gb | wei@gb | maj@gb | ncomps | depth | nphases | ndepths | gens | capped | hr/trial |
-|---|---|---|---|---|---|---|---|---|---|---|---|
-| cnt-mcts | .0750<br>±.0241 | .0500<br>±.0200 | .0333<br>±.0165 | .0167<br>±.0117 | 18.7<br>±1.0 | 11.7<br>±0.2 | 6 | 12.6<br>±0.3 | 80.0 | 0.0% | 1.33 |
-| sem-mcts-v02 | .0750<br>±.0241 | .0583<br>±.0215 | .0417<br>±.0183 | .0250<br>±.0143 | 19.0<br>±1.2 | 12.2<br>±0.2 | 7 | 12.6<br>±0.3 | 79.1 | 3.3% | 1.78 |
-| sem-mcts-v02 (local) | .0667<br>±.0229 | .0333<br>±.0165 | .0250<br>±.0143 | .0167<br>±.0117 | 17.7<br>±0.9 | 11.6<br>±0.2 | 6 | 12.1<br>±0.4 | 75.8 | 11.7% | 1.73 |
+| algorithm | pass@gb | naive@gb | peak@gb | wei@gb | maj@gb | ncomps | depth | nphases | ndepths | gens | capped | hr/trial |
+|---|---|---|---|---|---|---|---|---|---|---|---|---|
+| cnt-mcts | .0750<br>±.0241 | .0500<br>±.0200 | .0583<br>±.0215 | .0333<br>±.0165 | .0167<br>±.0117 | 18.7<br>±1.0 | 11.7<br>±0.2 | 6 | 12.6<br>±0.3 | 80.0 | 0.0% | 1.33 |
+| sem-mcts-v02 | .0750<br>±.0241 | .0583<br>±.0215 | .0583<br>±.0215 | .0417<br>±.0183 | .0250<br>±.0143 | 19.0<br>±1.2 | 12.2<br>±0.2 | 7 | 12.6<br>±0.3 | 79.1 | 3.3% | 1.78 |
+| sem-mcts-v02 (local) | .0667<br>±.0229 | .0333<br>±.0165 | .0333<br>±.0165 | .0250<br>±.0143 | .0167<br>±.0117 | 17.7<br>±0.9 | 11.6<br>±0.2 | 6 | 12.1<br>±0.4 | 75.8 | 11.7% | 1.73 |
 
 
 **qwen-3b fp16**
 
-| algorithm | pass@gb | naive@gb | wei@gb | maj@gb | ncomps | depth | nphases | ndepths | gens | capped | hr/trial |
-|---|---|---|---|---|---|---|---|---|---|---|---|
-| cnt-mcts | .1417<br>±.0320 | .0667<br>±.0229 | .0917<br>±.0265 | .0917<br>±.0265 | 15.9<br>±0.7 | 11.4<br>±0.3 | 6 | 12.3<br>±0.2 | 80.0 | 0.0% | 1.28 |
-| sem-mcts-v02 | .2000<br>±.0367 | .1333<br>±.0312 | .0917<br>±.0265 | .0583<br>±.0215 | 16.8<br>±0.9 | 11.5<br>±0.2 | 6 | 12.2<br>±0.2 | 80.0 | 0.0% | 1.77 |
-| sem-mcts-v02 (local) | .2167<br>±.0378 | .1167<br>±.0294 | .1250<br>±.0303 | .1083<br>±.0285 | 13.3<br>±0.8 | 12.0<br>±0.3 | 9 | 12.1<br>±0.3 | 68.9 | 31.7% | 1.61 |
+| algorithm | pass@gb | naive@gb | peak@gb | wei@gb | maj@gb | ncomps | depth | nphases | ndepths | gens | capped | hr/trial |
+|---|---|---|---|---|---|---|---|---|---|---|---|---|
+| cnt-mcts | .1417<br>±.0320 | .0667<br>±.0229 | .0750<br>±.0241 | .0917<br>±.0265 | .0917<br>±.0265 | 15.9<br>±0.7 | 11.4<br>±0.3 | 6 | 12.3<br>±0.2 | 80.0 | 0.0% | 1.28 |
+| sem-mcts-v02 | .2000<br>±.0367 | .1333<br>±.0312 | .1333<br>±.0312 | .0917<br>±.0265 | .0583<br>±.0215 | 16.8<br>±0.9 | 11.5<br>±0.2 | 6 | 12.2<br>±0.2 | 80.0 | 0.0% | 1.77 |
+| sem-mcts-v02 (local) | .2167<br>±.0378 | .1167<br>±.0294 | .1167<br>±.0294 | .1250<br>±.0303 | .1083<br>±.0285 | 13.3<br>±0.8 | 12.0<br>±0.3 | 9 | 12.1<br>±0.3 | 68.9 | 31.7% | 1.61 |
 
 **qwen-7b gptq-int4**
 
-| algorithm | pass@gb | naive@gb | wei@gb | maj@gb | ncomps | depth | nphases | ndepths | gens | capped | hr/trial |
-|---|---|---|---|---|---|---|---|---|---|---|---|
-| cnt-mcts | .2500<br>±.0397 | .1417<br>±.0320 | .1167<br>±.0294 | .1083<br>±.0285 | 23.5<br>±1.3 | 8.8<br>±0.2 | 10 | 9.3<br>±0.2 | 79.9 | 0.8% | 1.25 |
-| sem-mcts-v02 | .3000<br>±.0420 | .1833<br>±.0355 | .1333<br>±.0312 | .1167<br>±.0294 | 24.0<br>±1.3 | 9.2<br>±0.2 | 10 | 9.4<br>±0.2 | 80.0 | 0.0% | 1.65 |
-| sem-mcts-v02 (local) | .2833<br>±.0413 | .1667<br>±.0342 | .1667<br>±.0342 | .1583<br>±.0335 | 24.0<br>±1.2 | 9.2<br>±0.2 | 11 | 9.3<br>±0.3 | 77.7 | 6.7% | 1.66 |
+| algorithm | pass@gb | naive@gb | peak@gb | wei@gb | maj@gb | ncomps | depth | nphases | ndepths | gens | capped | hr/trial |
+|---|---|---|---|---|---|---|---|---|---|---|---|---|
+| cnt-mcts | .2500<br>±.0397 | .1417<br>±.0320 | .1500<br>±.0327 | .1167<br>±.0294 | .1083<br>±.0285 | 23.5<br>±1.3 | 8.8<br>±0.2 | 10 | 9.3<br>±0.2 | 79.9 | 0.8% | 1.25 |
+| sem-mcts-v02 | .3000<br>±.0420 | .1833<br>±.0355 | .1833<br>±.0355 | .1333<br>±.0312 | .1167<br>±.0294 | 24.0<br>±1.3 | 9.2<br>±0.2 | 10 | 9.4<br>±0.2 | 80.0 | 0.0% | 1.65 |
+| sem-mcts-v02 (local) | .2833<br>±.0413 | .1667<br>±.0342 | .1667<br>±.0342 | .1667<br>±.0342 | .1583<br>±.0335 | 24.0<br>±1.2 | 9.2<br>±0.2 | 11 | 9.3<br>±0.3 | 77.7 | 6.7% | 1.66 |
 
 
 **qwen-math-1.5b fp16**
 
-| algorithm | pass@gb | naive@gb | wei@gb | maj@gb | ncomps | depth | nphases | ndepths | gens | capped | hr/trial |
-|---|---|---|---|---|---|---|---|---|---|---|---|
-| cnt-mcts | .2667<br>±.0405 | .1917<br>±.0361 | .1667<br>±.0342 | .1500<br>±.0327 | 16.0<br>±1.0 | 11.6<br>±0.3 | 6 | 12.3<br>±0.3 | 80.0 | 0.0% | 1.02 |
-| sem-mcts-v02 | .2583<br>±.0401 | .1833<br>±.0355 | .1583<br>±.0335 | .1500<br>±.0327 | 16.2<br>±0.9 | 11.9<br>±0.2 | 8 | 12.1<br>±0.2 | 79.6 | 0.8% | 1.45 |
-| sem-mcts-v02 (local) | .3083<br>±.0423 | .1833<br>±.0355 | .1833<br>±.0355 | .1583<br>±.0335 | 16.7<br>±0.9 | 10.5<br>±0.3 | 7 | 11.6<br>±0.2 | 80.0 | 0.0% | 1.45 |
+| algorithm | pass@gb | naive@gb | peak@gb | wei@gb | maj@gb | ncomps | depth | nphases | ndepths | gens | capped | hr/trial |
+|---|---|---|---|---|---|---|---|---|---|---|---|---|
+| cnt-mcts | .2667<br>±.0405 | .1917<br>±.0361 | .1917<br>±.0361 | .1667<br>±.0342 | .1500<br>±.0327 | 16.0<br>±1.0 | 11.6<br>±0.3 | 6 | 12.3<br>±0.3 | 80.0 | 0.0% | 1.02 |
+| sem-mcts-v02 | .2583<br>±.0401 | .1833<br>±.0355 | .1833<br>±.0355 | .1583<br>±.0335 | .1500<br>±.0327 | 16.2<br>±0.9 | 11.9<br>±0.2 | 8 | 12.1<br>±0.2 | 79.6 | 0.8% | 1.45 |
+| sem-mcts-v02 (local) | .3083<br>±.0423 | .1833<br>±.0355 | .1833<br>±.0355 | .1833<br>±.0355 | .1583<br>±.0335 | 16.7<br>±0.9 | 10.5<br>±0.3 | 7 | 11.6<br>±0.2 | 80.0 | 0.0% | 1.45 |
 
 
 > **Analysis.** Promoted configs — best pass@gb over each
@@ -267,11 +277,16 @@ Two activities, two shapes:
 > is below the nominal budget is not budget-matched against the
 > others, and `capped` says how much of the row that affects.
 >
-> ⚠️ Two `(local)` rows sit on **incomplete** sweeps and are
-> best-so-far, not final: qwen-7b gptq-int4 is 5/6 (`ds_alpha=10`
-> still running) and qwen-math-1.5b is 3/6 (`ds_alpha=0.1/0.3/1.0`
-> running or queued). Both promoted cells could be displaced when
-> those land — re-run this promotion after the b=320 sweeps close.
+> `peak@gb` as defined in the b=80 summary preamble
+> (`naive@gb ≤ peak@gb ≤ pass@gb`; argmax budget in
+> `eval/peak_b`).
+>
+> Both `(local)` sweeps **closed** and the promotion was
+> re-derived 2026-08-13 — both promoted cells survive: qwen-7b
+> gptq-int4 keeps `ds_alpha=1.0` (.3917; the late `ds_alpha=10`
+> landed at .3750), and qwen-math-1.5b's three-way .4000 tie
+> (`w_eff` 1/3/100) resolves to `ds_alpha=10` on the naive
+> tie-break (.2000).
 > llama-1b is omitted for the same reason as at b=80: it solves
 > 4-5 of 120 question-trials, below the benchmark's resolution.
 > Its numbers, if wanted, are `tbl-f31bf0` (.0333) and
@@ -279,42 +294,43 @@ Two activities, two shapes:
 
 **llama-3b fp16**
 
-| algorithm | pass@gb | naive@gb | wei@gb | maj@gb | ncomps | depth | nphases | ndepths | gens | capped | hr/trial |
-|---|---|---|---|---|---|---|---|---|---|---|---|
-| cnt-mcts | .1333<br>±.0312 | .0500<br>±.0200 | .0333<br>±.0165 | .0250<br>±.0143 | 89.2<br>±4.4 | 11.4<br>±0.2 | 32 | 11.8<br>±0.3 | 320.0 | 0.0% | 5.31 |
-| sem-mcts-v02 | .1500<br>±.0327 | .0583<br>±.0215 | .0500<br>±.0200 | .0333<br>±.0165 | 91.8<br>±4.1 | 12.0<br>±0.1 | 44 | 11.8<br>±0.3 | 319.0 | 1.7% | 7.69 |
-| sem-mcts-v02 (local) | .2000<br>±.0367 | .0750<br>±.0241 | .0500<br>±.0200 | .0167<br>±.0117 | 85.9<br>±3.9 | 11.5<br>±0.2 | 31 | 12.3<br>±0.3 | 320.0 | 0.0% | 7.55 |
+| algorithm | pass@gb | naive@gb | peak@gb | wei@gb | maj@gb | ncomps | depth | nphases | ndepths | gens | capped | hr/trial |
+|---|---|---|---|---|---|---|---|---|---|---|---|---|
+| cnt-mcts | .1333<br>±.0312 | .0500<br>±.0200 | .0500<br>±.0200 | .0333<br>±.0165 | .0250<br>±.0143 | 89.2<br>±4.4 | 11.4<br>±0.2 | 32 | 11.8<br>±0.3 | 320.0 | 0.0% | 5.31 |
+| sem-mcts-v02 | .1500<br>±.0327 | .0583<br>±.0215 | .0583<br>±.0215 | .0500<br>±.0200 | .0333<br>±.0165 | 91.8<br>±4.1 | 12.0<br>±0.1 | 44 | 11.8<br>±0.3 | 319.0 | 1.7% | 7.69 |
+| sem-mcts-v02 (local) | .2000<br>±.0367 | .0750<br>±.0241 | .0750<br>±.0241 | .0500<br>±.0200 | .0167<br>±.0117 | 85.9<br>±3.9 | 11.5<br>±0.2 | 31 | 12.3<br>±0.3 | 320.0 | 0.0% | 7.55 |
 
 **qwen-3b fp16**
 
-| algorithm | pass@gb | naive@gb | wei@gb | maj@gb | ncomps | depth | nphases | ndepths | gens | capped | hr/trial |
-|---|---|---|---|---|---|---|---|---|---|---|---|
-| cnt-mcts | .2833<br>±.0413 | .1167<br>±.0294 | .1000<br>±.0275 | .0833<br>±.0253 | 90.4<br>±3.6 | 11.0<br>±0.2 | 32 | 11.8<br>±0.2 | 320.0 | 0.0% | 5.16 |
-| sem-mcts-v02 | .3250<br>±.0429 | .1167<br>±.0294 | .0917<br>±.0265 | .0917<br>±.0265 | 91.4<br>±4.4 | 12.4<br>±0.2 | 47 | 12.2<br>±0.3 | 319.8 | 1.7% | 6.81 |
-| sem-mcts-v02 (local) | .3750<br>±.0444 | .1333<br>±.0312 | .0833<br>±.0253 | .0917<br>±.0265 | 86.9<br>±3.7 | 10.8<br>±0.2 | 33 | 11.8<br>±0.2 | 320.0 | 0.0% | 7.13 |
+| algorithm | pass@gb | naive@gb | peak@gb | wei@gb | maj@gb | ncomps | depth | nphases | ndepths | gens | capped | hr/trial |
+|---|---|---|---|---|---|---|---|---|---|---|---|---|
+| cnt-mcts | .2833<br>±.0413 | .1167<br>±.0294 | .1167<br>±.0294 | .1000<br>±.0275 | .0833<br>±.0253 | 90.4<br>±3.6 | 11.0<br>±0.2 | 32 | 11.8<br>±0.2 | 320.0 | 0.0% | 5.16 |
+| sem-mcts-v02 | .3250<br>±.0429 | .1167<br>±.0294 | .1167<br>±.0294 | .0917<br>±.0265 | .0917<br>±.0265 | 91.4<br>±4.4 | 12.4<br>±0.2 | 47 | 12.2<br>±0.3 | 319.8 | 1.7% | 6.81 |
+| sem-mcts-v02 (local) | .3750<br>±.0444 | .1333<br>±.0312 | .1417<br>±.0320 | .0833<br>±.0253 | .0917<br>±.0265 | 86.9<br>±3.7 | 10.8<br>±0.2 | 33 | 11.8<br>±0.2 | 320.0 | 0.0% | 7.13 |
 
 **qwen-7b gptq-int4**
 
-| algorithm | pass@gb | naive@gb | wei@gb | maj@gb | ncomps | depth | nphases | ndepths | gens | capped | hr/trial |
-|---|---|---|---|---|---|---|---|---|---|---|---|
-| cnt-mcts | .4000<br>±.0449 | .1417<br>±.0320 | .1667<br>±.0342 | .1667<br>±.0342 | 124.3<br>±6.0 | 8.4<br>±0.2 | 56 | 8.6<br>±0.2 | 316.4 | 1.7% | 4.79 |
-| sem-mcts-v02 | .3083<br>±.0423 | .1833<br>±.0355 | .1667<br>±.0342 | .1750<br>±.0348 | 56.8<br>±2.7 | 10.8<br>±0.2 | 999 | 9.5<br>±0.2 | 198.2 | 69.2% | 4.28 |
-| sem-mcts-v02 (local) | .3917<br>±.0447 | .1667<br>±.0342 | .1667<br>±.0342 | .1667<br>±.0342 | 127.1<br>±6.1 | 8.4<br>±0.2 | 59 | 8.5<br>±0.2 | 316.0 | 4.2% | 6.46 |
+| algorithm | pass@gb | naive@gb | peak@gb | wei@gb | maj@gb | ncomps | depth | nphases | ndepths | gens | capped | hr/trial |
+|---|---|---|---|---|---|---|---|---|---|---|---|---|
+| cnt-mcts | .4000<br>±.0449 | .1417<br>±.0320 | .1500<br>±.0327 | .1667<br>±.0342 | .1667<br>±.0342 | 124.3<br>±6.0 | 8.4<br>±0.2 | 56 | 8.6<br>±0.2 | 316.4 | 1.7% | 4.79 |
+| sem-mcts-v02 | .3083<br>±.0423 | .1833<br>±.0355 | .1833<br>±.0355 | .1667<br>±.0342 | .1750<br>±.0348 | 56.8<br>±2.7 | 10.8<br>±0.2 | 999 | 9.5<br>±0.2 | 198.2 | 69.2% | 4.28 |
+| sem-mcts-v02 (local) | .3917<br>±.0447 | .1667<br>±.0342 | .1667<br>±.0342 | .1667<br>±.0342 | .1667<br>±.0342 | 127.1<br>±6.1 | 8.4<br>±0.2 | 59 | 8.5<br>±0.2 | 316.0 | 4.2% | 6.46 |
 
 **qwen-math-1.5b fp16**
 
-| algorithm | pass@gb | naive@gb | wei@gb | maj@gb | ncomps | depth | nphases | ndepths | gens | capped | hr/trial |
-|---|---|---|---|---|---|---|---|---|---|---|---|
-| cnt-mcts | .3833<br>±.0446 | .2000<br>±.0367 | .2000<br>±.0367 | .2000<br>±.0367 | 84.0<br>±3.6 | 10.5<br>±0.2 | 36 | 11.7<br>±0.3 | 320.0 | 0.0% | 4.00 |
-| sem-mcts-v02 | .3667<br>±.0442 | .1667<br>±.0342 | .1917<br>±.0361 | .1917<br>±.0361 | 69.3<br>±3.3 | 12.6<br>±0.2 | 588 | 11.5<br>±0.2 | 277.4 | 41.7% | 4.93 |
-| sem-mcts-v02 (local) | .4000<br>±.0449 | .2000<br>±.0367 | .1833<br>±.0355 | .1750<br>±.0348 | 85.1<br>±3.7 | 10.4<br>±0.2 | 34 | 11.6<br>±0.2 | 320.0 | 0.0% | 5.76 |
+| algorithm | pass@gb | naive@gb | peak@gb | wei@gb | maj@gb | ncomps | depth | nphases | ndepths | gens | capped | hr/trial |
+|---|---|---|---|---|---|---|---|---|---|---|---|---|
+| cnt-mcts | .3833<br>±.0446 | .2000<br>±.0367 | .2083<br>±.0372 | .2000<br>±.0367 | .2000<br>±.0367 | 84.0<br>±3.6 | 10.5<br>±0.2 | 36 | 11.7<br>±0.3 | 320.0 | 0.0% | 4.00 |
+| sem-mcts-v02 | .3667<br>±.0442 | .1667<br>±.0342 | .1750<br>±.0348 | .1917<br>±.0361 | .1917<br>±.0361 | 69.3<br>±3.3 | 12.6<br>±0.2 | 588 | 11.5<br>±0.2 | 277.4 | 41.7% | 4.93 |
+| sem-mcts-v02 (local) | .4000<br>±.0449 | .2000<br>±.0367 | .2167<br>±.0378 | .1833<br>±.0355 | .1750<br>±.0348 | 85.1<br>±3.7 | 10.4<br>±0.2 | 34 | 11.6<br>±0.2 | 320.0 | 0.0% | 5.76 |
 
 
 > **Analysis.** Promoted configs — `sem-mcts-v02`: llama-3b and
 > qwen-3b `w_eff=100` (`tbl-9d68e9`), qwen-7b gptq-int4 and
 > qwen-math-1.5b `w_eff=10` (`tbl-b2d2d2`). `sem-mcts-v02
 > (local)`: llama-3b, qwen-3b, qwen-math-1.5b `ds_alpha=10`;
-> qwen-7b gptq-int4 `ds_alpha=1.0` (best of 5 so far).
+> qwen-7b gptq-int4 `ds_alpha=1.0` (confirmed best after the
+> sweep closed 2026-08-13).
 >
 > The clearest signal in this doc: **local beats global on all
 > four models at b=320** (+.050, +.050, +.083, +.033), where at
@@ -356,8 +372,9 @@ Two activities, two shapes:
 > SEM — the qwen-math-1.5b margin (+.017 = two problems) and the
 > qwen-7b deficit (-.008 = one problem) are both noise. Only the
 > qwen-3b local-vs-cnt gap (+.092 ≈ 2 SEM) is near
-> significance. Re-derive both incomplete `(local)` rows once
-> `tbl-f6fc16` and `tbl-a488ce` close.
+> significance. Both `(local)` sweeps have since closed and the
+> promotions were confirmed (see preamble) — this caveat is
+> resolved.
 
 ---
 

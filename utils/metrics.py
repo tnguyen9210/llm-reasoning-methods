@@ -123,13 +123,57 @@ def _search_spend(data, num_phases):
     return total_gens, float(data[key] >= num_phases - 1)
 
 
+def _peak_curve(data, gt_answer, grader_name, timeout, step_budget):
+    """Correctness-vs-budget curve of the running score-argmax.
+
+    curve[b-1] = 1 iff the highest-`agg_scores` completion among
+    those finished within the first b generations (`comp_gen`)
+    grades correct — i.e. naive@b if the search had stopped at
+    budget b. Grades only when the argmax improves, so the cost is
+    O(#improvements) gradings + O(step_budget) fill. Completions
+    with comp_gen > step_budget fold into the last step. Returns
+    all-nan when the run has no generation axis (`comp_gen`
+    absent, e.g. bon) — nan-aware pooling then drops it.
+    """
+    if step_budget is None or "comp_gen" not in data:
+        return np.full(step_budget or 1, np.nan)
+    curve = np.zeros(step_budget)
+    completions = data["completions"]
+    if len(completions) == 0:
+        return curve
+    agg_scores = data["agg_scores"]
+    events = sorted(
+        zip(data["comp_gen"], range(len(completions))),
+        key=lambda e: e[0],
+    )
+    best_score = float("-inf")
+    cur = 0.0
+    i = 0
+    for b in range(1, step_budget + 1):
+        while (i < len(events)
+               and min(events[i][0], step_budget) <= b):
+            idx = events[i][1]
+            if agg_scores[idx] > best_score:
+                best_score = agg_scores[idx]
+                _, ok = run_with_timeout(
+                    parser.extract_answer, grader2.math_equal,
+                    completions[idx], gt_answer, grader_name,
+                    timeout,
+                )
+                cur = 1.0 if ok is True else 0.0
+            i += 1
+        curve[b - 1] = cur
+    return curve
+
+
 def _eval_question(args):
     """Grade one question; module-level so Pool can pickle it.
 
     Returns a dict of per-question scalars (the fields
-    evaluate_correctness assembles into arrays).
+    evaluate_correctness assembles into arrays) plus the
+    `peak_curve` array (see _peak_curve).
     """
-    data, grader_name, timeout, num_phases = args
+    data, grader_name, timeout, num_phases, step_budget = args
     _, gt_answer = parser.parse_ground_truth(data, grader_name)
     completions = data["completions"]
     total_gens, capped = _search_spend(data, num_phases)
@@ -153,6 +197,9 @@ def _eval_question(args):
             "ndepths": np.nan,
             "total_gens": total_gens,
             "capped": capped,
+            "peak_curve": _peak_curve(
+                data, gt_answer, grader_name, timeout, step_budget,
+            ),
         }
 
     row = {}
@@ -191,11 +238,15 @@ def _eval_question(args):
     row["ndepths"] = np.mean(data[ndepths_key])
     row["total_gens"] = total_gens
     row["capped"] = capped
+    row["peak_curve"] = _peak_curve(
+        data, gt_answer, grader_name, timeout, step_budget,
+    )
     return row
 
 
 def evaluate_correctness(dataset, grader_name='math', timeout=2,
-                         num_proc=1, num_phases=None):
+                         num_proc=1, num_phases=None,
+                         step_budget=None):
     """Per-question metrics for one trial's scored dataset.
 
     `grader_name` selects the utils/parser.py `data_name` vocabulary
@@ -212,13 +263,19 @@ def evaluate_correctness(dataset, grader_name='math', timeout=2,
     needed to decide `capped`; None (bon, which has no phase loop)
     leaves that column nan.
 
+    `step_budget` (the run's `cfg.search.gen_budget`) sizes the
+    per-question correctness-vs-budget curve behind `peak@gb`;
+    None skips it (all-nan curves of length 1).
+
     Returns a dict of 1-D arrays (one entry per question):
       pass_gb, naive_gb, weighted_gb, maj_gb  (correctness in {0,1})
       ncomps, depth, nphases, ndepths     (search-cost stats)
       total_gens, capped                  (search spend)
+    plus `peak_curve`, a (questions x step_budget) 2-D array.
     """
     items = [
-        (data, grader_name, timeout, num_phases) for data in dataset
+        (data, grader_name, timeout, num_phases, step_budget)
+        for data in dataset
     ]
     if num_proc > 1 and len(items) > 1:
         procs = min(num_proc, len(items))
@@ -232,13 +289,15 @@ def evaluate_correctness(dataset, grader_name='math', timeout=2,
         "ncomps", "depth", "nphases", "ndepths",
         "total_gens", "capped",
     )
-    return {
+    out = {
         k: np.array([float(r[k]) for r in rows]) for k in keys
     }
+    out["peak_curve"] = np.stack([r["peak_curve"] for r in rows])
+    return out
 
 
 def _load_trials(result_dir, config_name, num_trials, grader_name='math',
-                 num_proc=1, num_phases=None):
+                 num_proc=1, num_phases=None, step_budget=None):
     """Load + evaluate each trial, returning per-metric arrays
     concatenated over all trials x questions. Trials whose scored
     .jsonl is missing are skipped (and reported), so stats can be
@@ -259,7 +318,7 @@ def _load_trials(result_dir, config_name, num_trials, grader_name='math',
         per_trial.append(
             evaluate_correctness(
                 dataset_res, grader_name, num_proc=num_proc,
-                num_phases=num_phases,
+                num_phases=num_phases, step_budget=step_budget,
             )
         )
 
@@ -290,7 +349,7 @@ def _mean_sem(arr):
 
 def compute_stats_basics(
     result_dir, config_name, num_trials, grader_name='math',
-    num_proc=1, num_phases=None,
+    num_proc=1, num_phases=None, step_budget=None,
 ):
     """Aggregate correctness + search-cost stats across trials,
     save the per-question correctness arrays, and print a summary
@@ -299,10 +358,15 @@ def compute_stats_basics(
     `num_proc` > 1 parallelizes grading over questions (see
     evaluate_correctness). `num_phases` is the run's phase ceiling
     (`cfg.search.num_phases`), needed for the `capped` column; None
-    leaves it nan. Returns the stats dict (metric -> (mean, sem))."""
+    leaves it nan. `step_budget` (`cfg.search.gen_budget`) enables
+    `peak_gb` = max over budgets b of the pooled mean naive@b curve
+    -- the best top-1 accuracy any single stopping budget <= gb
+    achieves (naive_gb <= peak_gb <= pass_gb). Returns the stats
+    dict (metric -> (mean, sem))."""
     stats = _load_trials(
         result_dir, config_name, num_trials, grader_name,
         num_proc=num_proc, num_phases=num_phases,
+        step_budget=step_budget,
     )
 
     # Persist the raw per-question correctness for downstream tests.
@@ -337,8 +401,32 @@ def compute_stats_basics(
         f"gens {summary['total_gens'][0]:0.1f}, "
         f"capped {100 * summary['capped'][0]:0.1f}%"
     )
+
+    # peak_gb: max over budgets of the pooled mean curve. The max
+    # is over ONE stopping budget shared by all questions (a
+    # tunable-knob claim), not a per-question oracle stop.
+    curves = stats["peak_curve"]
+    curve_mean = np.nanmean(curves, axis=0)
+    if np.all(np.isnan(curve_mean)):
+        summary["peak_gb"] = (np.nan, np.nan)
+        peak = "peak_gb nan (no comp_gen axis)"
+    else:
+        peak_idx = int(np.nanargmax(curve_mean))
+        col = curves[:, peak_idx]
+        peak_sem = np.nanstd(col, ddof=1) / np.sqrt(len(col))
+        summary["peak_gb"] = (curve_mean[peak_idx], peak_sem)
+        summary["peak_b"] = (float(peak_idx + 1), 0.0)
+        np.savetxt(
+            f"{result_dir}/peak_curve_{config_name}.txt",
+            curve_mean,
+        )
+        peak = (
+            f"peak_gb {curve_mean[peak_idx]:0.4f} "
+            f"(±{peak_sem:0.4f}) at b={peak_idx + 1}"
+        )
+
     print(f"{corr}, {cost}")
-    print(spend)
+    print(f"{spend}, {peak}")
     return summary
 
 

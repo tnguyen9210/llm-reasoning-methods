@@ -93,6 +93,10 @@ def main(cfg: ExpConfig):
     #   pass@gb, naive@gb, weighted@gb, maj@gb,
     #   ncomps, depth, nphases, ndepths,
     #   total_gens, capped                (each: mean ± SEM)
+    #   peak_gb / peak_b — best naive@b over stopping budgets
+    #   b <= gen_budget, and the budget where it happens
+    #   (naive_gb <= peak_gb <= pass_gb; nan for runs without a
+    #   comp_gen axis, e.g. bon).
     # +num_proc=N parallelizes grading over questions (default 48;
     # use 1 when many compute_stats processes run concurrently —
     # all of them share one SLURM job cgroup's CPU/memory).
@@ -102,6 +106,7 @@ def main(cfg: ExpConfig):
         result_dir, run_name, cfg.run.num_trials, cfg.data.grader_name,
         num_proc=cfg.get("num_proc", 48),
         num_phases=cfg.search.get("num_phases", None),
+        step_budget=cfg.search.get("gen_budget", None),
     )
 
     # Reattach to the generation run (id saved at generation time) and
