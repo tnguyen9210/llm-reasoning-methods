@@ -14,6 +14,31 @@ scaffold, it also gets a standalone file in [decisions/](decisions/);
 the log entry then carries a one-line pointer to it rather than
 repeating the full writeup.
 
+## 2026-08-12 — Workflow, Docs: trial-count continuations reuse the entry; n=4 tables live in the same doc, n=2 tables freeze (undecided)
+
+**Context:** extending the `cov_scope=local` `embeds_ref=relative`
+sweeps from 2 to 4 trials, with separate tables for the n=2 and n=4
+readings; the level-5 doc is ~4,300 lines, so a new file was on the
+table. **Status: undecided** — proposal recorded, nothing executed.
+**Proposed:** a continuation is an in-place edit of the existing
+ledger entry (`trials: 2→4`, `status: scored→inqueue`) — never a new
+entry, since `run.num_trials` is hash-excluded and resume skips
+finished trials. The n=4 tables go in the SAME doc under a mirrored
+`## Tuning tables [trials=4]` section with fresh tbl-ids; each n=2
+table freezes (⚠ "frozen at n=2, superseded by tbl-XXXXXX") and its
+entry's `feeds` key MOVES to the n=4 table, because `--sync-doc`
+derives every fed row's status and would otherwise flip the frozen
+snapshot back to `running`. Prose that needs no status cells may
+move to untracked `docs/analysis-*.md`; tables stay synced.
+**Why:** the doc↔ledger map is hard-coded 1:1 (`status.py` DOC_MAP)
+and hash uniqueness is global, so a second synced doc needs code
+changes or a ledger split that would orphan shared-feed comparison
+tables; dual-feeding un-freezes the snapshot; a dummy-override new
+hash re-runs trials 0–1 from scratch. Caveat recorded: compute_stats
+refreshes W&B `eval/*` in place, so frozen tables become the only
+n=2 record after the rescore.
+Full writeup: [decisions/trials-4-continuation-tables.md](decisions/trials-4-continuation-tables.md).
+
 ## 2026-07-28 — Search, Config: per-node diversity covariance (`cov_scope` / `embeds_ref`) — one file, not two
 
 **Context:** asked for a variant of `mcts_sem_v02` in which the
