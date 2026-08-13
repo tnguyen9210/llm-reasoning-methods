@@ -123,44 +123,65 @@ def _search_spend(data, num_phases):
     return total_gens, float(data[key] >= num_phases - 1)
 
 
-def _peak_curve(data, gt_answer, grader_name, timeout, step_budget):
+def _peak_walk(data, gt_answer, grader_name, timeout):
+    """Running score-argmax correctness, one mark per completion.
+
+    The shared engine behind peak@gb and peak@n (ComputePeakScore):
+    completions are taken in generation order (stable sort by
+    `comp_gen` when present, stored order otherwise — ties keep
+    the earlier completion, i.e. the smaller-index tiebreak), and
+    marks[i] = 1.0 iff the highest-`agg_scores` completion among
+    the first i+1 grades correct. Grades only when the argmax
+    strictly improves, so the cost is O(#improvements) gradings.
+
+    Returns (marks, gens): `marks` is the count-indexed A_{p,i}
+    sequence of ComputePeakScore verbatim; `gens` is each
+    completion's `comp_gen` in the same order, or None when the
+    run has no generation axis (e.g. bon).
+    """
+    completions = data["completions"]
+    agg_scores = data["agg_scores"]
+    if "comp_gen" in data:
+        order = sorted(range(len(completions)),
+                       key=lambda j: data["comp_gen"][j])
+        gens = [data["comp_gen"][j] for j in order]
+    else:
+        order = list(range(len(completions)))
+        gens = None
+    marks = np.zeros(len(order))
+    best_score = float("-inf")
+    cur = 0.0
+    for i, idx in enumerate(order):
+        if agg_scores[idx] > best_score:
+            best_score = agg_scores[idx]
+            _, ok = run_with_timeout(
+                parser.extract_answer, grader2.math_equal,
+                completions[idx], gt_answer, grader_name, timeout,
+            )
+            cur = 1.0 if ok is True else 0.0
+        marks[i] = cur
+    return marks, gens
+
+
+def _peak_curve(marks, gens, step_budget):
     """Correctness-vs-budget curve of the running score-argmax.
 
-    curve[b-1] = 1 iff the highest-`agg_scores` completion among
-    those finished within the first b generations (`comp_gen`)
-    grades correct — i.e. naive@b if the search had stopped at
-    budget b. Grades only when the argmax improves, so the cost is
-    O(#improvements) gradings + O(step_budget) fill. Completions
-    with comp_gen > step_budget fold into the last step. Returns
-    all-nan when the run has no generation axis (`comp_gen`
-    absent, e.g. bon) — nan-aware pooling then drops it.
+    Pure remapping of a _peak_walk onto the generation axis:
+    curve[b-1] = 1 iff the argmax among completions finished
+    within the first b generations grades correct — naive@b if
+    the search had stopped at budget b. Completions with comp_gen
+    > step_budget fold into the last step. Returns all-nan when
+    the run has no generation axis (`gens` is None) or no
+    step_budget — nan-aware pooling then drops it.
     """
-    if step_budget is None or "comp_gen" not in data:
+    if step_budget is None or gens is None:
         return np.full(step_budget or 1, np.nan)
     curve = np.zeros(step_budget)
-    completions = data["completions"]
-    if len(completions) == 0:
-        return curve
-    agg_scores = data["agg_scores"]
-    events = sorted(
-        zip(data["comp_gen"], range(len(completions))),
-        key=lambda e: e[0],
-    )
-    best_score = float("-inf")
     cur = 0.0
     i = 0
     for b in range(1, step_budget + 1):
-        while (i < len(events)
-               and min(events[i][0], step_budget) <= b):
-            idx = events[i][1]
-            if agg_scores[idx] > best_score:
-                best_score = agg_scores[idx]
-                _, ok = run_with_timeout(
-                    parser.extract_answer, grader2.math_equal,
-                    completions[idx], gt_answer, grader_name,
-                    timeout,
-                )
-                cur = 1.0 if ok is True else 0.0
+        while i < len(marks) and min(gens[i], step_budget) <= b:
+            cur = marks[i]
             i += 1
         curve[b - 1] = cur
     return curve
@@ -171,7 +192,10 @@ def _eval_question(args):
 
     Returns a dict of per-question scalars (the fields
     evaluate_correctness assembles into arrays) plus the
-    `peak_curve` array (see _peak_curve).
+    `peak_curve` array (see _peak_curve) and the `peak_n_marks`
+    count-indexed walk (see _peak_walk; length ncomps, min 1 —
+    a question with no completions contributes an all-wrong
+    mark so it stays in the pooled denominator).
     """
     data, grader_name, timeout, num_phases, step_budget = args
     _, gt_answer = parser.parse_ground_truth(data, grader_name)
@@ -198,8 +222,11 @@ def _eval_question(args):
             "total_gens": total_gens,
             "capped": capped,
             "peak_curve": _peak_curve(
-                data, gt_answer, grader_name, timeout, step_budget,
+                np.zeros(0),
+                [] if "comp_gen" in data else None,
+                step_budget,
             ),
+            "peak_n_marks": np.zeros(1),
         }
 
     row = {}
@@ -238,9 +265,9 @@ def _eval_question(args):
     row["ndepths"] = np.mean(data[ndepths_key])
     row["total_gens"] = total_gens
     row["capped"] = capped
-    row["peak_curve"] = _peak_curve(
-        data, gt_answer, grader_name, timeout, step_budget,
-    )
+    marks, gens = _peak_walk(data, gt_answer, grader_name, timeout)
+    row["peak_curve"] = _peak_curve(marks, gens, step_budget)
+    row["peak_n_marks"] = marks if len(marks) else np.zeros(1)
     return row
 
 
@@ -271,7 +298,11 @@ def evaluate_correctness(dataset, grader_name='math', timeout=2,
       pass_gb, naive_gb, weighted_gb, maj_gb  (correctness in {0,1})
       ncomps, depth, nphases, ndepths     (search-cost stats)
       total_gens, capped                  (search spend)
-    plus `peak_curve`, a (questions x step_budget) 2-D array.
+    plus `peak_curve`, a (questions x step_budget) 2-D array, and
+    `peak_n_marks`, a LIST of per-question 1-D arrays (ragged —
+    one entry per completion in generation order; padded to a
+    common length only at aggregation time, ComputePeakScore's
+    a_{N_p:N-bar} = a_{N_p} rule).
     """
     items = [
         (data, grader_name, timeout, num_phases, step_budget)
@@ -293,6 +324,7 @@ def evaluate_correctness(dataset, grader_name='math', timeout=2,
         k: np.array([float(r[k]) for r in rows]) for k in keys
     }
     out["peak_curve"] = np.stack([r["peak_curve"] for r in rows])
+    out["peak_n_marks"] = [r["peak_n_marks"] for r in rows]
     return out
 
 
@@ -331,8 +363,15 @@ def _load_trials(result_dir, config_name, num_trials, grader_name='math',
         )
 
     keys = per_trial[0].keys()
+    # peak_n_marks is a ragged list of per-question arrays, not a
+    # stackable array — concatenate it as a list.
     return {
-        k: np.concatenate([t[k] for t in per_trial]) for k in keys
+        k: (
+            [m for t in per_trial for m in t[k]]
+            if isinstance(per_trial[0][k], list)
+            else np.concatenate([t[k] for t in per_trial])
+        )
+        for k in keys
     }
 
 
@@ -361,8 +400,12 @@ def compute_stats_basics(
     leaves it nan. `step_budget` (`cfg.search.gen_budget`) enables
     `peak_gb` = max over budgets b of the pooled mean naive@b curve
     -- the best top-1 accuracy any single stopping budget <= gb
-    achieves (naive_gb <= peak_gb <= pass_gb). Returns the stats
-    dict (metric -> (mean, sem))."""
+    achieves (naive_gb <= peak_gb <= pass_gb). `peak_n` is the
+    completion-count twin (ComputePeakScore verbatim): max over i
+    of the pooled mean best-of-first-i-completions curve, each
+    question's curve padded flat to the common N-bar = max ncomps;
+    needs no generation axis, so it is defined for bon too.
+    Returns the stats dict (metric -> (mean, sem))."""
     stats = _load_trials(
         result_dir, config_name, num_trials, grader_name,
         num_proc=num_proc, num_phases=num_phases,
@@ -425,8 +468,32 @@ def compute_stats_basics(
             f"(±{peak_sem:0.4f}) at b={peak_idx + 1}"
         )
 
+    # peak_n: ComputePeakScore — same pooled max, but over the
+    # completion-count axis. Each question's walk is padded flat
+    # (a_{N_p:N-bar} = a_{N_p}) to N-bar = max ncomps; nanargmax
+    # takes the FIRST hit of the max = smaller-index tiebreak.
+    marks_list = stats["peak_n_marks"]
+    n_bar = max(len(m) for m in marks_list)
+    padded = np.stack([
+        np.concatenate([m, np.full(n_bar - len(m), m[-1])])
+        for m in marks_list
+    ])
+    curve_n = padded.mean(axis=0)
+    n_idx = int(np.argmax(curve_n))
+    n_col = padded[:, n_idx]
+    n_sem = np.std(n_col, ddof=1) / np.sqrt(len(n_col))
+    summary["peak_n"] = (curve_n[n_idx], n_sem)
+    summary["peak_n_at"] = (float(n_idx + 1), 0.0)
+    np.savetxt(
+        f"{result_dir}/peak_curve_n_{config_name}.txt", curve_n,
+    )
+    peak_n = (
+        f"peak_n {curve_n[n_idx]:0.4f} "
+        f"(±{n_sem:0.4f}) at n={n_idx + 1}"
+    )
+
     print(f"{corr}, {cost}")
-    print(f"{spend}, {peak}")
+    print(f"{spend}, {peak}, {peak_n}")
     return summary
 
 

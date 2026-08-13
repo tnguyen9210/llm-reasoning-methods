@@ -97,6 +97,10 @@ def main(cfg: ExpConfig):
     #   b <= gen_budget, and the budget where it happens
     #   (naive_gb <= peak_gb <= pass_gb; nan for runs without a
     #   comp_gen axis, e.g. bon).
+    #   peak_n / peak_n_at — ComputePeakScore: the same pooled
+    #   max over the completion-COUNT axis (best-of-first-i
+    #   completions, padded flat to the common max ncomps);
+    #   defined for bon too (needs no comp_gen).
     # +num_proc=N parallelizes grading over questions (default 48;
     # use 1 when many compute_stats processes run concurrently —
     # all of them share one SLURM job cgroup's CPU/memory).
