@@ -1461,10 +1461,22 @@ Two activities, two shapes:
 > `w_eff=0` value (.2724) exactly. Listed for grid symmetry;
 > **do not queue it** except as a plumbing check.
 >
+> ⚠️ **The `w_eff=∞` row is the opposite bookend of `w_eff=0`:
+> `ds_beta=0`, q-value dropped from selection.** After each
+> node's first visit (which stays a pure q argmax regardless of
+> coefficients), children are ranked by the diversity bonus
+> alone; ties break uniformly at random, so no q leaks in. With
+> `ds_beta=0` the argmax is invariant to `ds_alpha`'s positive
+> scale, so `ds_alpha=2.0` is an arbitrary canonical choice and
+> the nominal `w_eff=20` it would imply does not apply — the
+> row is the pure-diversity limit, hence `∞`. One run covers
+> the whole `ds_alpha>0` ray. Hash `fcf634a1`.
+>
 > **Fixed:** method=`mcts_sem_v02`, **`cov_scope=local`**,
 > **`embeds_ref=relative`**, prm=qwen, bs-4, d-20, b=80,
-> proj=sparse512, cov_update=sm, cov_dtype=fp64, ds_beta=1.0,
-> prm_batch_size=1, llm=llama-1b, **lam=0.01**, data.level=5,
+> proj=sparse512, cov_update=sm, cov_dtype=fp64,
+> ds_beta=1.0 (except `w_eff=∞`: 0), prm_batch_size=1,
+> llm=llama-1b, **lam=0.01**, data.level=5,
 > run.num_trials=2.
 >
 > ⚠️ Two cells are **already scored** and shared with the
@@ -1476,9 +1488,13 @@ Two activities, two shapes:
 > `w_eff=0` anchor is skipped, 5 with it. At ~4.9 hr/trial ×
 > 2 trials that is ~39 GPU-hours for the four.
 >
+> `w_eff=1000` extension (`ds_alpha=100`): hash `bee44ba9`,
+> planned, not queued.
+>
 > **W&B:** mrcj4roh (`w_eff=1`), 56py1gze (`w_eff=10`),
 > do0kywnf (`w_eff=0.1`), 6hd81evk (`w_eff=0.3`),
-> lfq6vnc6 (`w_eff=3`), z548ni00 (`w_eff=100`).
+> lfq6vnc6 (`w_eff=3`), z548ni00 (`w_eff=100`),
+> odil9olu (`w_eff=∞`).
 
 | llm | prm | lam | ds_alpha | w_eff | trials | status | pass@gb | naive@gb | wei@gb | maj@gb | hr/trial |
 |---|---|---|---|---|---|---|---|---|---|---|---|
@@ -1489,21 +1505,37 @@ Two activities, two shapes:
 | llama-1b | qwen | 0.01 | 0.3 | 3 | 2 | scored | .3731<br>±.0296 | .2873<br>±.0277 | .2537<br>±.0266 | .1903<br>±.0240 | 4.88 |
 | llama-1b | qwen | 0.01 | 1.0 | 10 | 2 | scored | .3134<br>±.0284 | .2351<br>±.0260 | .2239<br>±.0255 | .1828<br>±.0237 | 4.88 |
 | llama-1b | qwen | 0.01 | 10 | 100 | 2 | scored | .3246<br>±.0287 | .2164<br>±.0252 | .1978<br>±.0244 | .1679<br>±.0229 | 5.13 |
+| llama-1b | qwen | 0.01 | 100 | 1000 | 2 | inqueue | — | — | — | — | — |
+| llama-1b | qwen | 0.01 | 2.0 | ∞ | 2 | scored | .3433<br>±.0291 | .2388<br>±.0261 | .1978<br>±.0244 | .1567<br>±.0222 | 4.91 |
 
-> **Analysis.** Two of seven cells measured, both inherited from
-> the `embeds_ref` comparison, and they **disagree in sign**
-> against `absolute` — the only model in the section where that
-> happens. `relative` falls from .3657 at `w_eff=1` to .3134 at
-> 10 while `absolute` climbs from .3284 to .3694 over the same
-> span, so the arms are moving in opposite directions, not
-> merely offset. The five unmeasured cells decide whether that
-> is a real crossing or two ~1 SE wobbles.
-> **Limitations / follow-up:** the low end (`w_eff` 0.1, 0.3) is
-> where a `relative` peak would have to sit if the crossing is
-> real, and those two are the cheapest cells in the table —
-> queue them first. `w_eff=100` is the least informative here:
-> `relative` is already declining by 10, and on qwen-7b and
-> qwen-3b the 100 endpoint only confirmed monotone decay.
+> **Analysis.** All 7 finite cells plus the `∞` bookend
+> scored; only `w_eff=1000` remains queued. The `relative`
+> curve runs .2388 / .3358 / .2948 / .3657 / .3731 / .3134 /
+> .3246 over `w_eff` 0 -> 100: an interior **peak at
+> `w_eff=3` (.3731)** with 1 nearly tied (.3657), then a drop
+> at 10 and a flat tail. Against `absolute` (max .3694 *at*
+> 10, where `relative` is near its minimum) the sign-crossing
+> reading stands: the two arms peak at different `w_eff` and
+> move in opposite directions across the 1 -> 10 span — this
+> stays the only model in the section where that happens.
+>
+> The **`∞` row lands at .3433, above both `w_eff=10` (.3134)
+> and 100 (.3246)** — dropping the q-term entirely beats
+> down-weighting it. Pure diversity keeps most of the
+> coverage gain (+.1045 over `w_eff=0`, −.0298 under the
+> peak) at clean spend (78.3 of 80 gens, 2.2 % capped). But
+> selection pays: maj .1567 is the worst cell in the table
+> and wei .1978 ties `w_eff=0` — coverage without any q-signal
+> in the tree gives the rerankers nothing to lock onto. The
+> non-monotone tail (10 < 100 < ∞) suggests the 10/100 dip is
+> q-diversity interference rather than too much diversity per
+> se.
+> **Limitations / follow-up:** 2 trials everywhere; the
+> ⚠-flagged `w_eff=0` anchor mismatch (.2388 here vs .2724 in
+> `tbl-375fa0`, which this row should reproduce exactly) is
+> unresolved and caps how firmly the low end can be read.
+> `w_eff=1000` (inqueue) sits between 100 and ∞ and will
+> check whether the recovery is monotone in the tail.
 > Feeds key: `tbl-ba6b11`.
 
 #### lam / ds_alpha joint sweep (llama-3b, embeds_ref=relative)
@@ -1540,10 +1572,19 @@ Two activities, two shapes:
 > here would produce a genuinely new number rather than a
 > plumbing check.
 >
+> ⚠️ **The `w_eff=∞` row is `ds_beta=0`** — q-value dropped
+> from selection, children ranked by the diversity bonus alone
+> after each node's first visit; the pure-diversity bookend of
+> `w_eff=0`. `ds_alpha=2.0` is an arbitrary pin: at `ds_beta=0`
+> the argmax is invariant to `ds_alpha`'s positive scale, so
+> one run covers all `ds_alpha>0` (full note at `tbl-ba6b11`).
+> Hash `70941147`.
+>
 > **Fixed:** method=`mcts_sem_v02`, **`cov_scope=local`**,
 > **`embeds_ref=relative`**, prm=qwen, bs-4, d-20, b=80,
-> proj=sparse512, cov_update=sm, cov_dtype=fp64, ds_beta=1.0,
-> prm_batch_size=1, llm=llama-3b, **lam=0.01**, data.level=5,
+> proj=sparse512, cov_update=sm, cov_dtype=fp64,
+> ds_beta=1.0 (except `w_eff=∞`: 0), prm_batch_size=1,
+> llm=llama-3b, **lam=0.01**, data.level=5,
 > run.num_trials=2.
 >
 > ⚠️ Two cells are **already running** and shared with the
@@ -1555,6 +1596,9 @@ Two activities, two shapes:
 > `w_eff=0` anchor. At ~7.5 hr/trial × 2 trials (15 h per cell)
 > this is the **most expensive table in the family** — ~75
 > GPU-hours for all five, ~60 without the anchor.
+>
+> `w_eff=1000` extension (`ds_alpha=100`): hash `7fe63b3a`,
+> planned, not queued.
 >
 > **W&B:** 78xtrykd (`w_eff=1`), 89h5elal (`w_eff=10`),
 > 67f2dbqa (`w_eff=0`), vhs7vds0 (`w_eff=0.1`),
@@ -1570,6 +1614,8 @@ Two activities, two shapes:
 | llama-3b | qwen | 0.01 | 0.3 | 3 | 2 | scored | .5821<br>±.0302 | .4291<br>±.0303 | .3918<br>±.0299 | .3731<br>±.0296 | 6.85 |
 | llama-3b | qwen | 0.01 | 1.0 | 10 | 2 | scored | .5485<br>±.0305 | .3993<br>±.0300 | .3619<br>±.0294 | .3470<br>±.0291 | 7.08 |
 | llama-3b | qwen | 0.01 | 10 | 100 | 2 | scored | .5522<br>±.0304 | .4254<br>±.0303 | .3993<br>±.0300 | .3694<br>±.0295 | 7.05 |
+| llama-3b | qwen | 0.01 | 100 | 1000 | 2 | inqueue | — | — | — | — | — |
+| llama-3b | qwen | 0.01 | 2.0 | ∞ | 2 | running | — | — | — | — | — |
 
 > **Analysis.** Complete (7/7, closed 2026-08-03). The curve
 > rises steadily off the no-diversity baseline and then turns
@@ -1633,10 +1679,19 @@ Two activities, two shapes:
 > value (.5970) exactly. Listed for grid symmetry; **do not
 > queue it** except as a plumbing check.
 >
+> ⚠️ **The `w_eff=∞` row is `ds_beta=0`** — q-value dropped
+> from selection, children ranked by the diversity bonus alone
+> after each node's first visit; the pure-diversity bookend of
+> `w_eff=0`. `ds_alpha=2.0` is an arbitrary pin: at `ds_beta=0`
+> the argmax is invariant to `ds_alpha`'s positive scale, so
+> one run covers all `ds_alpha>0` (full note at `tbl-ba6b11`).
+> Hash `25ad1220`.
+>
 > **Fixed:** method=`mcts_sem_v02`, **`cov_scope=local`**,
 > **`embeds_ref=relative`**, prm=qwen, bs-4, d-20, b=80,
-> proj=sparse512, cov_update=sm, cov_dtype=fp64, ds_beta=1.0,
-> prm_batch_size=1, llm=qwen-3b, **lam=0.01**, data.level=5,
+> proj=sparse512, cov_update=sm, cov_dtype=fp64,
+> ds_beta=1.0 (except `w_eff=∞`: 0), prm_batch_size=1,
+> llm=qwen-3b, **lam=0.01**, data.level=5,
 > run.num_trials=2.
 >
 > ⚠️ Two cells are **already scored** and shared with the
@@ -1646,6 +1701,9 @@ Two activities, two shapes:
 > (optional, see above), `0.1` `507d12ce`, `0.3` `cb6356ce`,
 > `3` `65a044ea`, `100` `0a3fc03a`. Net cost 4 cells if the
 > `w_eff=0` anchor is skipped, 5 with it.
+>
+> `w_eff=1000` extension (`ds_alpha=100`): hash `0e5a4ae2`,
+> planned, not queued.
 >
 > **W&B:** decwj7la (`w_eff=10`), x52dugmp (`w_eff=100`),
 > u2i8huih (`w_eff=0.1`), spakquo1 (`w_eff=0.3`),
@@ -1660,6 +1718,8 @@ Two activities, two shapes:
 | qwen-3b | qwen | 0.01 | 0.3 | 3 | 2 | scored | .7127<br>±.0277 | .6157<br>±.0298 | .5709<br>±.0303 | .5336<br>±.0305 | 6.35 |
 | qwen-3b | qwen | 0.01 | 1.0 | 10 | 2 | scored | .7090<br>±.0278 | .5970<br>±.0300 | .5522<br>±.0304 | .5149<br>±.0306 | 6.24 |
 | qwen-3b | qwen | 0.01 | 10 | 100 | 2 | scored | .6940<br>±.0282 | .5560<br>±.0304 | .5410<br>±.0305 | .5075<br>±.0306 | 6.11 |
+| qwen-3b | qwen | 0.01 | 100 | 1000 | 2 | inqueue | — | — | — | — | — |
+| qwen-3b | qwen | 0.01 | 2.0 | ∞ | 2 | running | — | — | — | — | — |
 
 > **Analysis.** Three of seven cells measured — `w_eff` 1 and 10
 > inherited from the `embeds_ref` comparison, plus the
@@ -1724,10 +1784,19 @@ Two activities, two shapes:
 > unless you want that assertion tested end to end; the
 > `absolute` number is the answer.
 >
+> ⚠️ **The `w_eff=∞` row is `ds_beta=0`** — q-value dropped
+> from selection, children ranked by the diversity bonus alone
+> after each node's first visit; the pure-diversity bookend of
+> `w_eff=0`. `ds_alpha=2.0` is an arbitrary pin: at `ds_beta=0`
+> the argmax is invariant to `ds_alpha`'s positive scale, so
+> one run covers all `ds_alpha>0` (full note at `tbl-ba6b11`).
+> Hash `5f55f3d4`.
+>
 > **Fixed:** method=`mcts_sem_v02`, **`cov_scope=local`**,
 > **`embeds_ref=relative`**, prm=qwen, bs-4, d-20, b=80,
-> proj=sparse512, cov_update=sm, cov_dtype=fp64, ds_beta=1.0,
-> prm_batch_size=1, llm=qwen-7b gptq-int4, **lam=0.01**,
+> proj=sparse512, cov_update=sm, cov_dtype=fp64,
+> ds_beta=1.0 (except `w_eff=∞`: 0), prm_batch_size=1,
+> llm=qwen-7b gptq-int4, **lam=0.01**,
 > data.level=5, run.num_trials=2.
 >
 > ⚠️ Two cells are **already scored** and shared with the
@@ -1737,6 +1806,9 @@ Two activities, two shapes:
 > (optional, see above), `0.1` `f5251f86`, `0.3` `45e2d3ac`,
 > `3` `3e3fe251`, `100` `f0fcf038`. Net cost 4 cells if the
 > `w_eff=0` anchor is skipped, 5 with it.
+>
+> `w_eff=1000` extension (`ds_alpha=100`): hash `62928ad5`,
+> planned, not queued.
 >
 > **W&B:** bk2rou47 (`w_eff=1`), n2iiuppj (`w_eff=10`),
 > m1g6t5dk (`w_eff=100`), 1nv4x6v7 (`w_eff=0.1`),
@@ -1751,6 +1823,8 @@ Two activities, two shapes:
 | qwen-7b gptq-int4 | qwen | 0.01 | 0.3 | 3 | 2 | scored | .7761<br>±.0255 | .6157<br>±.0298 | .5672<br>±.0303 | .5634<br>±.0304 | 5.58 |
 | qwen-7b gptq-int4 | qwen | 0.01 | 1.0 | 10 | 2 | scored | .7761<br>±.0255 | .5634<br>±.0304 | .5672<br>±.0303 | .5597<br>±.0304 | 5.59 |
 | qwen-7b gptq-int4 | qwen | 0.01 | 10 | 100 | 2 | scored | .7537<br>±.0264 | .5896<br>±.0301 | .5784<br>±.0302 | .5597<br>±.0304 | 5.61 |
+| qwen-7b gptq-int4 | qwen | 0.01 | 100 | 1000 | 2 | inqueue | — | — | — | — | — |
+| qwen-7b gptq-int4 | qwen | 0.01 | 2.0 | ∞ | 2 | running | — | — | — | — | — |
 
 > **Analysis.** Three of seven cells measured — `w_eff` 1 and
 > 10 from the `embeds_ref` comparison, plus the `w_eff=100`
@@ -1804,10 +1878,19 @@ Two activities, two shapes:
 > `absolute` local counterpart** — queuing it here yields a new
 > number, not a plumbing check.
 >
+> ⚠️ **The `w_eff=∞` row is `ds_beta=0`** — q-value dropped
+> from selection, children ranked by the diversity bonus alone
+> after each node's first visit; the pure-diversity bookend of
+> `w_eff=0`. `ds_alpha=2.0` is an arbitrary pin: at `ds_beta=0`
+> the argmax is invariant to `ds_alpha`'s positive scale, so
+> one run covers all `ds_alpha>0` (full note at `tbl-ba6b11`).
+> Hash `8e1f48b0`.
+>
 > **Fixed:** method=`mcts_sem_v02`, **`cov_scope=local`**,
 > **`embeds_ref=relative`**, prm=qwen, bs-4, d-20, b=80,
-> proj=sparse512, cov_update=sm, cov_dtype=fp64, ds_beta=1.0,
-> prm_batch_size=1, llm=qwen-math-1.5b, **lam=0.01**,
+> proj=sparse512, cov_update=sm, cov_dtype=fp64,
+> ds_beta=1.0 (except `w_eff=∞`: 0), prm_batch_size=1,
+> llm=qwen-math-1.5b, **lam=0.01**,
 > data.level=5, run.num_trials=2.
 >
 > ⚠️ Two cells are **already running** and shared with the
@@ -1818,6 +1901,9 @@ Two activities, two shapes:
 > `100` `33b07fae`. Net cost 5 cells, or 4 without the
 > `w_eff=0` anchor. At ~5.5 hr/trial × 2 trials that is ~44-55
 > GPU-hours — the **cheapest** of the three new tables.
+>
+> `w_eff=1000` extension (`ds_alpha=100`): hash `51ea163f`,
+> planned, not queued.
 >
 > **W&B:** 6cf71i7r (`w_eff=1`), 9m9rooh6 (`w_eff=10`),
 > 23wzlc65 (`w_eff=0`), tkdotrkv (`w_eff=0.1`),
@@ -1833,6 +1919,8 @@ Two activities, two shapes:
 | qwen-math-1.5b | qwen | 0.01 | 0.3 | 3 | 2 | scored | .7239<br>±.0274 | .6082<br>±.0299 | .5933<br>±.0301 | .5970<br>±.0300 | 4.93 |
 | qwen-math-1.5b | qwen | 0.01 | 1.0 | 10 | 2 | scored | .7612<br>±.0261 | .6269<br>±.0296 | .6194<br>±.0297 | .5821<br>±.0302 | 4.82 |
 | qwen-math-1.5b | qwen | 0.01 | 10 | 100 | 2 | scored | .7425<br>±.0268 | .6306<br>±.0295 | .6007<br>±.0300 | .5784<br>±.0302 | 4.95 |
+| qwen-math-1.5b | qwen | 0.01 | 100 | 1000 | 2 | inqueue | — | — | — | — | — |
+| qwen-math-1.5b | qwen | 0.01 | 2.0 | ∞ | 2 | running | — | — | — | — | — |
 
 > **Analysis.** Complete (7/7, closed 2026-08-03): .6791
 > (`w_eff=0`), .7090 (`0.1`), .7537 (`0.3`), .7425 (`1`), .7239
@@ -3824,13 +3912,23 @@ Two activities, two shapes:
 >
 > **Why this model.** Weakest model in the grid (.5187/.5373 at b=320 global). Its b=80 relative curve is the noisiest of the five, so a budget shift will be the hardest to resolve here — this is the table to queue last.
 >
+> ⚠️ **The `w_eff=∞` row is `ds_beta=0`** — q-value dropped
+> from selection, children ranked by the diversity bonus alone
+> after each node's first visit; the pure-diversity bookend of
+> `w_eff=0`. `ds_alpha=2.0` is an arbitrary pin: at `ds_beta=0`
+> the argmax is invariant to `ds_alpha`'s positive scale, so
+> one run covers all `ds_alpha>0` (full note at `tbl-ba6b11`).
+> Hash `72e88712`.
+>
 > **Fixed:** method=`mcts_sem_v02`, **`cov_scope=local`**,
 > **`embeds_ref=relative`**, prm=qwen, bs-4, d-20, **b=320**,
 > **`llm.max_model_len=6000`**, proj=sparse512, cov_update=sm,
-> cov_dtype=fp64, ds_beta=1.0, prm_batch_size=1, llm=llama-1b,
+> cov_dtype=fp64, ds_beta=1.0 (except `w_eff=∞`: 0),
+> prm_batch_size=1, llm=llama-1b,
 > **lam=0.01**, data.level=5, run.num_trials=2.
 >
-> **All 7 cells scored.** Hashes, in `w_eff` order 0 / 0.1 /
+> **All 7 finite-`w_eff` cells scored.** Hashes, in
+> `w_eff` order 0 / 0.1 /
 > 0.3 / 1 / 3 / 10 / 100: `23ac020f`, `43a54c9e`, `6d6f1797`,
 > `6b6f7ba6`, `90aa8dc3`, `29968ec6`, `28603062`.
 > Estimated at ~19 hr/trial (~38 GPU-hours per cell, ~266 for
@@ -3838,6 +3936,9 @@ Two activities, two shapes:
 > rises monotonically with `w_eff`, so the flat estimate was
 > ~2x too high at `w_eff=0` and ~8% too low at the top.
 > Table total: **~225 GPU-hours**.
+>
+> `w_eff=1000` extension (`ds_alpha=100`): hash `53608f1b`,
+> planned, not queued.
 >
 > **W&B:** `qhmx8m1h`, `ral7kogs`, `2pa9l8dw`, `6kuu2a04`,
 > `by677a86`, `qrc14n85`, `3riihetg` (same `w_eff` order).
@@ -3851,6 +3952,8 @@ Two activities, two shapes:
 | llama-1b | qwen | 0.01 | 0.3 | 3 | 2 | scored | .5373<br>±.0305 | .3097<br>±.0283 | .2388<br>±.0261 | .2052<br>±.0247 | 18.12 |
 | llama-1b | qwen | 0.01 | 1.0 | 10 | 2 | scored | .5896<br>±.0301 | .3358<br>±.0289 | .2201<br>±.0254 | .2090<br>±.0249 | 20.16 |
 | llama-1b | qwen | 0.01 | 10 | 100 | 2 | scored | .5746<br>±.0303 | .2948<br>±.0279 | .2276<br>±.0257 | .1978<br>±.0244 | 20.56 |
+| llama-1b | qwen | 0.01 | 100 | 1000 | 2 | inqueue | — | — | — | — | — |
+| llama-1b | qwen | 0.01 | 2.0 | ∞ | 2 | running | — | — | — | — | — |
 
 > **Analysis.** Complete, 7 of 7. **The optimum moved right
 > with budget: `w_eff` 3 at b=80 (.3731) -> `w_eff` 10 at
@@ -3892,23 +3995,42 @@ Two activities, two shapes:
 >
 > **Why this model.** **Most expensive cell in the doc at ~54 GPU-hours.** Also the model whose global b=320 arm moved most between w_eff 10 and 100 (+.0410), so it has the largest predicted shift — high information, high price.
 >
+> ⚠️ **The `w_eff=∞` row is `ds_beta=0`** — q-value dropped
+> from selection, children ranked by the diversity bonus alone
+> after each node's first visit; the pure-diversity bookend of
+> `w_eff=0`. `ds_alpha=2.0` is an arbitrary pin: at `ds_beta=0`
+> the argmax is invariant to `ds_alpha`'s positive scale, so
+> one run covers all `ds_alpha>0` (full note at `tbl-ba6b11`).
+> Hash `c486d6b2`.
+>
 > **Fixed:** method=`mcts_sem_v02`, **`cov_scope=local`**,
 > **`embeds_ref=relative`**, prm=qwen, bs-4, d-20, **b=320**,
 > **`llm.max_model_len=6000`**, proj=sparse512, cov_update=sm,
-> cov_dtype=fp64, ds_beta=1.0, prm_batch_size=1, llm=llama-3b,
+> cov_dtype=fp64, ds_beta=1.0 (except `w_eff=∞`: 0),
+> prm_batch_size=1, llm=llama-3b,
 > **lam=0.01**, data.level=5, run.num_trials=2.
 >
-> **5 of 7 cells scored**; `w_eff` 10 and 100 still running.
+> **All 7 finite-`w_eff` cells scored.**
 > Hashes, in `w_eff` order 0 / 0.1 / 0.3 / 1 /
 > 3 / 10 / 100: `a3e0ebee`, `d3f2c271`, `c1783962`,
 > `6d3e6eaf`, `cb87f45a`, `0962b9ea`, `241a5113`.
 > Estimated at ~27 hr/trial (~54 GPU-hours per cell, ~378 for
-> the table); **measured 8.15 -> 25.49 hr/trial over the five
-> scored cells**, still climbing, so the two pending cells are
-> the ones the flat estimate is likeliest to under-call.
+> the table); **measured 8.15 / 16.09 / 17.74 / 21.13 / 25.49 /
+> 28.75 / 29.03 hr/trial**, monotone rising and saturating at
+> the top (+0.28 from `w_eff` 10 to 100). Actual table cost
+> **~292 GPU-hours**, ~23 % under the flat estimate.
+>
+> ⚠️ **Budget parity holds here**: `capped` is 4.1 % on both
+> top cells and measured spend is 311.0 / 309.4 generations of
+> a 320 budget — unlike the qwen-3b and qwen-7b tables, where
+> the phase ceiling binds (see their notes).
+>
+> `w_eff=1000` extension (`ds_alpha=100`): hash `e064c193`,
+> planned, not queued.
 >
 > **W&B:** `ybyetj8y`, `puxo2wg6`, `3xgi6avd`, `zy9zv9hu`,
-> `ggz0bnli` (`w_eff` 0 / 0.1 / 0.3 / 1 / 3).
+> `ggz0bnli`, `i3buuvpc`, `fjb277fe` (`w_eff` 0 / 0.1 / 0.3 /
+> 1 / 3 / 10 / 100).
 
 | llm | prm | lam | ds_alpha | w_eff | trials | status | pass@gb | naive@gb | wei@gb | maj@gb | hr/trial |
 |---|---|---|---|---|---|---|---|---|---|---|---|
@@ -3917,28 +4039,40 @@ Two activities, two shapes:
 | llama-3b | qwen | 0.01 | 0.03 | 0.3 | 2 | scored | .6231<br>±.0297 | .4291<br>±.0303 | .4179<br>±.0302 | .4104<br>±.0301 | 17.74 |
 | llama-3b | qwen | 0.01 | 0.1 | 1 | 2 | scored | .6418<br>±.0293 | .4403<br>±.0304 | .4030<br>±.0300 | .3881<br>±.0298 | 21.13 |
 | llama-3b | qwen | 0.01 | 0.3 | 3 | 2 | scored | .7052<br>±.0279 | .4366<br>±.0304 | .4104<br>±.0301 | .3843<br>±.0298 | 25.49 |
-| llama-3b | qwen | 0.01 | 1.0 | 10 | — | running | — | — | — | — | — |
-| llama-3b | qwen | 0.01 | 10 | 100 | — | running | — | — | — | — | — |
+| llama-3b | qwen | 0.01 | 1.0 | 10 | 2 | scored | .7090<br>±.0278 | .4366<br>±.0304 | .3918<br>±.0299 | .3769<br>±.0297 | 28.75 |
+| llama-3b | qwen | 0.01 | 10 | 100 | 2 | scored | .7201<br>±.0275 | .4291<br>±.0303 | .3806<br>±.0297 | .3470<br>±.0291 | 29.03 |
+| llama-3b | qwen | 0.01 | 100 | 1000 | 2 | inqueue | — | — | — | — | — |
+| llama-3b | qwen | 0.01 | 2.0 | ∞ | 2 | running | — | — | — | — | — |
 
-> **Analysis.** 5 of 7. **pass@gb is still climbing at the
-> last scored cell** — .4888 / .5784 / .6231 / .6418 / .7052
-> across `w_eff` 0 -> 3, monotone, +.2164 total. The b=80 twin
-> (`tbl-cf849a`) peaked at `w_eff=3` on a broad plateau; here
-> `w_eff=3` is the *highest* point measured and the curve has
-> not turned over, so the peak is at 3 or beyond and the two
-> pending cells decide it. Same direction as llama-1b
-> (`tbl-ec63e6`), which resolved to 10.
+> **Analysis.** 7 of 7 — complete. **pass@gb rises monotonically
+> across the entire sweep and never turns over**: .4888 / .5784
+> / .6231 / .6418 / .7052 / .7090 / .7201 for `w_eff` 0 -> 100,
+> +.2313 total. The b=80 twin (`tbl-cf849a`) peaked at
+> `w_eff=3`; at b=320 the peak is at the **grid edge** (100),
+> so this table cannot locate the optimum — it can only say it
+> is at or beyond 100. That is the same rightward move
+> llama-1b showed (`tbl-ec63e6`, peak 3 -> 10), carried
+> further. Extending the grid past `w_eff=100` is the follow-up
+> this table asks for.
 >
-> **The selection gap is starker than llama-1b's.** naive,
-> wei and maj are flat across the whole scored range — naive
-> .4328 -> .4366, wei .4067 -> .4104, maj .3619 -> .3843,
-> every step inside ±.0304. So a **+.2164 gain in coverage
-> converts to +.0038 in naive** and nothing at all in wei.
-> Whatever the extra diversity puts in the tree, none of the
-> three selectors finds it.
-> **Limitations / follow-up:** 2 trials. The flat-selector
-> result is already sharp enough to act on and does not need
-> the last two cells; the peak location does. Feeds key:
+> The rise is also **flattening**: +.0896 / +.0447 / +.0187 /
+> +.0634 / +.0038 / +.0111 per step. The last three steps
+> (`w_eff` 3 -> 10 -> 100) buy +.0149 combined for ~58
+> GPU-hours, so the practical operating point is `w_eff=3`.
+>
+> **The selection gap is starker than llama-1b's, and it
+> widens at the top.** naive/wei/maj are flat-to-declining
+> across the whole sweep — naive .4328 -> .4291, wei .4067 ->
+> .3806, maj .3619 -> .3470, i.e. **wei and maj end BELOW
+> their `w_eff=0` values**. So a +.2313 gain in coverage
+> converts to −.0037 in naive and −.0261 in wei. The
+> pass-minus-wei gap goes .0821 -> .3395, the widest in the
+> section. Whatever the extra diversity puts in the tree, all
+> three selectors not only fail to find it — they get worse.
+> **Limitations / follow-up:** 2 trials. Two concrete asks:
+> extend the grid past `w_eff=100` to bracket the peak, and
+> test a reranker at high `w_eff`, since the .3395 gap is
+> headroom no current selector reaches. Feeds key:
 > `tbl-0fd588`.
 
 
@@ -3956,45 +4090,94 @@ Two activities, two shapes:
 >
 > **Why this model.** The cleanest b=80 curve of the five: a single interior peak with monotone decay either side. If the optimum moves with budget, this is the table where it will be visible without argument.
 >
+> ⚠️ **The `w_eff=∞` row is `ds_beta=0`** — q-value dropped
+> from selection, children ranked by the diversity bonus alone
+> after each node's first visit; the pure-diversity bookend of
+> `w_eff=0`. `ds_alpha=2.0` is an arbitrary pin: at `ds_beta=0`
+> the argmax is invariant to `ds_alpha`'s positive scale, so
+> one run covers all `ds_alpha>0` (full note at `tbl-ba6b11`).
+> Hash `812c2aed`.
+>
 > **Fixed:** method=`mcts_sem_v02`, **`cov_scope=local`**,
 > **`embeds_ref=relative`**, prm=qwen, bs-4, d-20, **b=320**,
 > **`llm.max_model_len=6000`**, proj=sparse512, cov_update=sm,
-> cov_dtype=fp64, ds_beta=1.0, prm_batch_size=1, llm=qwen-3b,
+> cov_dtype=fp64, ds_beta=1.0 (except `w_eff=∞`: 0),
+> prm_batch_size=1, llm=qwen-3b,
 > **lam=0.01**, data.level=5, run.num_trials=2.
 >
-> **1 of 7 cells scored**; the other six are running.
+> **All 7 finite-`w_eff` cells scored.**
 > Hashes, in `w_eff` order 0 / 0.1 / 0.3 / 1 /
 > 3 / 10 / 100: `6ee91354`, `20b9913f`, `5a2adf1e`,
 > `d57e81fe`, `cbd8aa53`, `185cadb5`, `7ef3ad23`.
 > Estimated at ~24 hr/trial (~47 GPU-hours per cell, ~329 for
-> the table); the one measured cell came in at **6.13
-> hr/trial**, but it is `w_eff=0`, the cheapest point on every
-> model's curve, so it does not yet test the estimate.
+> the table); **measured 6.13 / 17.23 / 18.94 / 22.51 / 24.88 /
+> 25.11 / 25.00 hr/trial** — rising then saturating at ~25.
+> Actual table cost ~280 GPU-hours.
 >
-> **W&B:** `s6hfr5h7` (`w_eff` 0).
+> ⚠️ **The low-`w_eff` cells did NOT spend the b=320 budget.**
+> Measured generations are 221.2 / 247.6 / 283.8 / 311.5 /
+> 319.3 / 318.8 at `w_eff` 0.1 / 0.3 / 1 / 3 / 10 / 100, with
+> `capped` at 53.0 % / 43.7 % / 28.4 % / 8.2 % / 0.7 % / 0.7 %
+> — on half the questions at `w_eff=0.1` the phase loop hit
+> its `num_phases` ceiling before the budget was exhausted,
+> while the top three cells are effectively full-budget.
+> **`w_eff` and effective budget move together below
+> `w_eff=3`**: the low rows are smaller-budget runs, so the
+> rise .6493 → .8134 overstates the pure diversity effect; the
+> top of the curve (3 / 10 / 100) is spend-clean. Raising
+> `num_phases` matters only if the low half must be
+> re-measured cleanly.
+>
+> `w_eff=1000` extension (`ds_alpha=100`): hash `bed5d327`,
+> planned, not queued.
+>
+> **W&B:** `s6hfr5h7`, `eax8z451`, `fcqf9ap2`, `grbxex72`,
+> `b1hn1tie`, `3u9jjbhj`, `e5cvvjd6`
+> (`w_eff` 0 / 0.1 / 0.3 / 1 / 3 / 10 / 100).
 
 | llm | prm | lam | ds_alpha | w_eff | trials | status | pass@gb | naive@gb | wei@gb | maj@gb | hr/trial |
 |---|---|---|---|---|---|---|---|---|---|---|---|
 | qwen-3b | qwen | 0.01 | 0 | 0 | 2 | scored | .6493<br>±.0292 | .5896<br>±.0301 | .5560<br>±.0304 | .5299<br>±.0305 | 6.13 |
-| qwen-3b | qwen | 0.01 | 0.01 | 0.1 | — | running | — | — | — | — | — |
-| qwen-3b | qwen | 0.01 | 0.03 | 0.3 | — | running | — | — | — | — | — |
-| qwen-3b | qwen | 0.01 | 0.1 | 1 | — | running | — | — | — | — | — |
-| qwen-3b | qwen | 0.01 | 0.3 | 3 | — | running | — | — | — | — | — |
-| qwen-3b | qwen | 0.01 | 1.0 | 10 | — | running | — | — | — | — | — |
-| qwen-3b | qwen | 0.01 | 10 | 100 | — | running | — | — | — | — | — |
+| qwen-3b | qwen | 0.01 | 0.01 | 0.1 | 2 | scored | .7388<br>±.0269 | .5933<br>±.0301 | .5933<br>±.0301 | .5896<br>±.0301 | 17.23 |
+| qwen-3b | qwen | 0.01 | 0.03 | 0.3 | 2 | scored | .7836<br>±.0252 | .6007<br>±.0300 | .5821<br>±.0302 | .5597<br>±.0304 | 18.94 |
+| qwen-3b | qwen | 0.01 | 0.1 | 1 | 2 | scored | .8134<br>±.0238 | .5896<br>±.0301 | .5709<br>±.0303 | .5597<br>±.0304 | 22.51 |
+| qwen-3b | qwen | 0.01 | 0.3 | 3 | 2 | scored | .8097<br>±.0240 | .5821<br>±.0302 | .5746<br>±.0303 | .5597<br>±.0304 | 24.88 |
+| qwen-3b | qwen | 0.01 | 1.0 | 10 | 2 | scored | .8134<br>±.0238 | .5821<br>±.0302 | .5821<br>±.0302 | .5522<br>±.0304 | 25.11 |
+| qwen-3b | qwen | 0.01 | 10 | 100 | 2 | scored | .8209<br>±.0235 | .5970<br>±.0300 | .5410<br>±.0305 | .5149<br>±.0306 | 25.00 |
+| qwen-3b | qwen | 0.01 | 100 | 1000 | 2 | inqueue | — | — | — | — | — |
+| qwen-3b | qwen | 0.01 | 2.0 | ∞ | 2 | running | — | — | — | — | — |
 
-> **Analysis.** 1 of 7 — the `w_eff=0` anchor only (.6493
-> pass, .5896 naive, .5560 wei, .5299 maj). One point is not a
-> curve, so the table's question is still open; the value of
-> this row is as the no-diversity baseline the other six will
-> be read against. Its pass-minus-wei gap at `w_eff=0` is
-> .0933, mid-pack among the four models with a scored
-> `w_eff=0` cell (qwen-7b .0597, llama-3b .0821, llama-1b
-> .1007) — the gap that matters is how far it *widens* with
-> `w_eff`, which needs the pending cells.
-> **Limitations / follow-up:** 2 trials; six cells outstanding
-> and all six are running, so this table resolves on its own
-> without further queueing. Feeds key: `tbl-fee240`.
+> **Analysis.** All 7 finite cells scored. pass@gb: .6493 /
+> .7388 / .7836 / .8134 / .8097 / .8134 / .8209 for `w_eff`
+> 0 → 100. The curve **rises steeply to `w_eff=1` and then
+> plateaus**: the top four cells (1 / 3 / 10 / 100) span
+> .8097–.8209, ~0.5 SE end to end, so "peak at 100" is not
+> resolved — what is resolved is that the b=80 twin's decline
+> (`tbl-b1cb82`: .7164 at 1 falling to .6940 at 100) is
+> **gone at b=320**. Like the llamas, more budget moves the
+> useful `w_eff` range right; on this model it shows up as a
+> plateau, not a shifted peak.
+>
+> **The plateau is the spend-clean part.** Per the ⚠ above,
+> cells at `w_eff` ≤ 1 underspent (221–284 of 320
+> generations), so the +.1641 rise to `w_eff=1` mixes budget
+> with diversity. The 3 / 10 / 100 cells spent 311–319 — a
+> clean comparison — and they are flat. Read strictly, this
+> table shows diversity gains **saturating by `w_eff` ≈ 1–3**
+> on qwen-3b, in contrast to llama-3b's monotone rise through
+> 100 (`tbl-0fd588`).
+>
+> **Selection: wei/maj end below their `w_eff=0` values.**
+> naive is flat (.5896 → .5970, net +.0074); wei peaks at
+> 0.1 (.5933) and falls to .5410 at 100 (< .5560 at 0); maj
+> .5299 → .5149. The pass-minus-wei gap widens .0933 →
+> .2799 — same coverage-without-selection pattern as
+> llama-3b (.3395), second-widest in the section.
+> **Limitations / follow-up:** 2 trials; peak location inside
+> the plateau unresolved (`w_eff=1000` row `bed5d327` is the
+> probe, inqueue). The reranker case applies here too: .2799
+> of unclaimed headroom at `w_eff=100`. Feeds key:
+> `tbl-fee240`.
 
 
 #### lam / ds_alpha joint sweep (b=320, qwen-7b gptq-int4, embeds_ref=relative)
@@ -4011,52 +4194,92 @@ Two activities, two shapes:
 >
 > **Why this model.** **Cheapest cell in the block (~34 h) and the sharpest b=80 peak.** If only one model's full curve is affordable, this is it. Its global b=320 arm also shows the largest w_eff 10 -> 100 gain of any model (+.0597).
 >
+> ⚠️ **The `w_eff=∞` row is `ds_beta=0`** — q-value dropped
+> from selection, children ranked by the diversity bonus alone
+> after each node's first visit; the pure-diversity bookend of
+> `w_eff=0`. `ds_alpha=2.0` is an arbitrary pin: at `ds_beta=0`
+> the argmax is invariant to `ds_alpha`'s positive scale, so
+> one run covers all `ds_alpha>0` (full note at `tbl-ba6b11`).
+> Hash `a7c16c0f`.
+>
 > **Fixed:** method=`mcts_sem_v02`, **`cov_scope=local`**,
 > **`embeds_ref=relative`**, prm=qwen, bs-4, d-20, **b=320**,
 > **`llm.max_model_len=6000`**, proj=sparse512, cov_update=sm,
-> cov_dtype=fp64, ds_beta=1.0, prm_batch_size=1, llm=qwen-7b gptq-int4,
+> cov_dtype=fp64, ds_beta=1.0 (except `w_eff=∞`: 0),
+> prm_batch_size=1, llm=qwen-7b gptq-int4,
 > **lam=0.01**, data.level=5, run.num_trials=2.
 >
-> **3 of 7 cells scored**; `w_eff` 1, 3 and 10 running,
-> `w_eff=100` inqueue.
+> **All 7 finite-`w_eff` cells scored**; `w_eff=∞` running.
 > Hashes, in `w_eff` order 0 / 0.1 / 0.3 / 1 /
 > 3 / 10 / 100: `de70c40c`, `a611b9af`, `ea5b753c`,
 > `e7d52d10`, `3b12c605`, `b2e76a52`, `9d5af8ad`.
 > Estimated at ~17 hr/trial (~34 GPU-hours per cell, ~238 for
-> the table); **measured 2.73 / 10.13 / 12.03 hr/trial** at
-> `w_eff` 0 / 0.1 / 0.3 — far under the flat estimate so far,
-> and still the cheapest model in the block.
+> the table); **measured 2.73 / 10.13 / 12.03 / 15.48 / 18.43 /
+> 19.97 / 20.66 hr/trial** at `w_eff` 0 -> 100 (~180 GPU-hours
+> total) — still under the flat estimate, and still the
+> cheapest model in the block.
 >
-> **W&B:** `st7f0ucw`, `cet7evxz`, `jrrronst` (`w_eff` 0 /
-> 0.1 / 0.3).
+> ⚠️ **Same spend confound as the qwen-3b table.** `capped` is
+> 53.7 % at `w_eff=1`, 35.8 % at `w_eff=3`, 16.8 % at
+> `w_eff=10`, and 16.4 % at `w_eff=100`, with measured spend
+> 222.6 / 267.9 / 294.1 / 292.9 generations of a 320 budget.
+> The low-`w_eff` rows underspend more than the high ones, so
+> the `w_eff` axis and the effective-budget axis move together;
+> unlike qwen-3b, even the top of the grid is not fully
+> spend-clean here — though 10 and 100 are spend-matched
+> against each other (294.1 vs 292.9).
+>
+> `w_eff=1000` extension (`ds_alpha=100`): hash `2a405937`,
+> planned, not queued.
+>
+> **W&B:** `st7f0ucw`, `cet7evxz`, `jrrronst`, `adk7a4d4`,
+> `3f661w44`, `bhd0c234`, `d8ew9h5r`
+> (`w_eff` 0 / 0.1 / 0.3 / 1 / 3 / 10 / 100).
 
 | llm | prm | lam | ds_alpha | w_eff | trials | status | pass@gb | naive@gb | wei@gb | maj@gb | hr/trial |
 |---|---|---|---|---|---|---|---|---|---|---|---|
 | qwen-7b gptq-int4 | qwen | 0.01 | 0 | 0 | 2 | scored | .6716<br>±.0287 | .6343<br>±.0295 | .6119<br>±.0298 | .5858<br>±.0301 | 2.73 |
 | qwen-7b gptq-int4 | qwen | 0.01 | 0.01 | 0.1 | 2 | scored | .7239<br>±.0274 | .6306<br>±.0295 | .5821<br>±.0302 | .5821<br>±.0302 | 10.13 |
 | qwen-7b gptq-int4 | qwen | 0.01 | 0.03 | 0.3 | 2 | scored | .7575<br>±.0262 | .6157<br>±.0298 | .6157<br>±.0298 | .6082<br>±.0299 | 12.03 |
-| qwen-7b gptq-int4 | qwen | 0.01 | 0.1 | 1 | — | running | — | — | — | — | — |
-| qwen-7b gptq-int4 | qwen | 0.01 | 0.3 | 3 | — | running | — | — | — | — | — |
-| qwen-7b gptq-int4 | qwen | 0.01 | 1.0 | 10 | — | running | — | — | — | — | — |
-| qwen-7b gptq-int4 | qwen | 0.01 | 10 | 100 | — | running | — | — | — | — | — |
+| qwen-7b gptq-int4 | qwen | 0.01 | 0.1 | 1 | 2 | scored | .8022<br>±.0244 | .6194<br>±.0297 | .5970<br>±.0300 | .5784<br>±.0302 | 15.48 |
+| qwen-7b gptq-int4 | qwen | 0.01 | 0.3 | 3 | 2 | scored | .8545<br>±.0216 | .6007<br>±.0300 | .6306<br>±.0295 | .6157<br>±.0298 | 18.43 |
+| qwen-7b gptq-int4 | qwen | 0.01 | 1.0 | 10 | 2 | scored | .8321<br>±.0229 | .6082<br>±.0299 | .5858<br>±.0301 | .5709<br>±.0303 | 19.97 |
+| qwen-7b gptq-int4 | qwen | 0.01 | 10 | 100 | 2 | scored | .8358<br>±.0227 | .6119<br>±.0298 | .5784<br>±.0302 | .5597<br>±.0304 | 20.66 |
+| qwen-7b gptq-int4 | qwen | 0.01 | 100 | 1000 | 2 | inqueue | — | — | — | — | — |
+| qwen-7b gptq-int4 | qwen | 0.01 | 2.0 | ∞ | 2 | running | — | — | — | — | — |
 
-> **Analysis.** 3 of 7 — the low-`w_eff` end only. pass@gb
-> rises .6716 -> .7239 -> .7575 across `w_eff` 0 -> 0.3, so
-> the curve is climbing here as it does for the two llamas,
-> but every scored point is still below the b=80 twin's peak
-> (`tbl-5d64b1`, .7836 at `w_eff=1`) — and the b=320
-> `w_eff=1` cell, the direct comparison, has not landed.
-> **No budget claim can be made from these three rows.**
+> **Analysis.** All 7 finite cells in. pass@gb rises .6716 /
+> .7239 / .7575 / .8022 / .8545 across `w_eff` 0 -> 3, dips to
+> .8321 at 10, then **.8358 at 100 — the drop does not
+> continue**. The tail flattens at ~.83–.84, so `w_eff=3`
+> stands as an interior peak ~1 SE above a plateau rather than
+> the start of a decline. The 10-vs-100 pair is the cleanest
+> reading in the table — spend-matched (294.1 vs 292.9 gens)
+> and +.0037 apart — while the 3-vs-10 gap keeps its caveat:
+> 3 underspent (267.9 gens, 35.8 % capped), so its true
+> equal-spend value is likely *higher* still. **.8545 at
+> `w_eff=3` stays the highest pass@gb in the five b=320
+> `cov_scope=local` sweeps** (the doc's overall max, .8694, is
+> this same model at `w_eff=100` in the model-family comparison
+> `tbl-560ce2`) — it clears the b=80 twin's peak (`tbl-5d64b1`,
+> .7836 at `w_eff=1`) by +.0709; the b=80 peak at 1 moved to
+> ~3 at b=320, the same rightward shift as the llamas.
 >
 > Selection behaves differently here than on the llamas:
-> naive *falls* slightly (.6343 -> .6306 -> .6157) while pass
-> gains +.0859, and wei/maj move within noise. The
-> pass-minus-wei gap widens .0597 -> .1418 over three steps —
-> the same coverage-without-selection pattern, appearing this
-> early on the strongest model in the grid.
-> **Limitations / follow-up:** 2 trials; the four cells that
-> carry the table's question (`w_eff` 1, 3, 10, 100) are all
-> outstanding, three running and one inqueue. Feeds key:
+> naive falls .6343 -> .6082 -> .6119 (0 -> 10 -> 100) while
+> pass gains +.1642 to the peak, and wei/maj end −.0335 /
+> −.0261 below their `w_eff=0` values at 100. The
+> pass-minus-wei gap widens .0597 -> .2574 across the grid —
+> the same coverage-without-selection pattern, on the
+> strongest model in the grid. Notably `w_eff=3` is the one
+> cell in the section where **wei beats naive** (.6306 vs
+> .6007).
+> **Limitations / follow-up:** 2 trials; the 3-vs-10 turnover
+> is ~1 SE, so a 4-trial re-read of {3, 10} would firm it up;
+> `w_eff=∞` (running) and `w_eff=1000` (inqueue) bracket the
+> pure-diversity limit. This model is the best reranker
+> candidate — highest coverage, .2574 of unclaimed headroom,
+> and the cheapest cells in the block. Feeds key:
 > `tbl-27db3b`.
 
 
@@ -4074,41 +4297,85 @@ Two activities, two shapes:
 >
 > **Why this model.** **The one model whose global b=320 arm moves the wrong way** (.8321 at w_eff=100 against .8396 at 10), and the strongest model in the grid. Pinned to `max_model_len=4096`; the 6000 override is rejected by vLLM at startup for this model.
 >
+> ⚠️ **The `w_eff=∞` row is `ds_beta=0`** — q-value dropped
+> from selection, children ranked by the diversity bonus alone
+> after each node's first visit; the pure-diversity bookend of
+> `w_eff=0`. `ds_alpha=2.0` is an arbitrary pin: at `ds_beta=0`
+> the argmax is invariant to `ds_alpha`'s positive scale, so
+> one run covers all `ds_alpha>0` (full note at `tbl-ba6b11`).
+> Hash `c3551dbb`. The `num_phases` ceiling above applies to
+> this cell too.
+>
 > **Fixed:** method=`mcts_sem_v02`, **`cov_scope=local`**,
 > **`embeds_ref=relative`**, prm=qwen, bs-4, d-20, **b=320**,
 > **`llm.max_model_len=4096`**, proj=sparse512, cov_update=sm,
-> cov_dtype=fp64, ds_beta=1.0, prm_batch_size=1, llm=qwen-math-1.5b,
+> cov_dtype=fp64, ds_beta=1.0 (except `w_eff=∞`: 0),
+> prm_batch_size=1, llm=qwen-math-1.5b,
 > **lam=0.01**, data.level=5, run.num_trials=2.
 >
-> ⚠️ **All 7 cells are net-new — none is on disk and none has a
-> ledger entry.** Hashes, in `w_eff` order 0 / 0.1 / 0.3 / 1 /
+> **3 of 7 cells scored**; the other four are running.
+> Hashes, in `w_eff` order 0 / 0.1 / 0.3 / 1 /
 > 3 / 10 / 100: `471e8dcc`, `182fb907`, `34a1cede`,
 > `4e04da94`, `e8b44db3`, `284579d3`, `99e2a082`.
-> At ~19 hr/trial x 2 trials that is **~37 GPU-hours per
-> cell, ~259 for the table**.
+> Estimated at ~19 hr/trial (~37 GPU-hours per cell, ~259 for
+> the table); measured **5.05 / 15.64 / 17.01 hr/trial** at
+> `w_eff` 0 / 0.1 / 0.3 — the 5.05 is spend-artifact cheap
+> (warning below); the other two sit near the estimate.
 >
-> **W&B:** none yet.
+> ⚠️ **The `w_eff=0` cell barely ran.** Measured spend is
+> **55.6 generations of a 320 budget** with `capped` at
+> **95.9 %** — on 96 % of questions the phase loop hit its
+> `num_phases` ceiling almost immediately (median `nphases`
+> 999, mean completions 17.4 vs 93-166 on the other models).
+> **This row is not a b=320 measurement** and must not be
+> compared to the other models' `w_eff=0` cells as if it were.
+> The 5.05 hr/trial is cheap for the same reason. Fixing this
+> needs a `num_phases` change and a re-run, not a re-score.
+> The ceiling eases but persists off zero: `w_eff=0.1` spent
+> 254.9 gens (39.9 % capped, median `nphases` 142), `0.3`
+> spent 275.8 (29.9 %, median 58) — the worst underspend in
+> the five-model block at those `w_eff` values.
+>
+> `w_eff=1000` extension (`ds_alpha=100`): hash `f5785f94`,
+> planned, not queued.
+>
+> **W&B:** `2ecdb656`, `te73vz2z`, `zgmjxicf`
+> (`w_eff` 0 / 0.1 / 0.3).
 
 | llm | prm | lam | ds_alpha | w_eff | trials | status | pass@gb | naive@gb | wei@gb | maj@gb | hr/trial |
 |---|---|---|---|---|---|---|---|---|---|---|---|
-| qwen-math-1.5b | qwen | 0.01 | 0 | 0 | — | running | — | — | — | — | — |
-| qwen-math-1.5b | qwen | 0.01 | 0.01 | 0.1 | — | running | — | — | — | — | — |
-| qwen-math-1.5b | qwen | 0.01 | 0.03 | 0.3 | — | running | — | — | — | — | — |
+| qwen-math-1.5b | qwen | 0.01 | 0 | 0 | 2 | scored | .6940<br>±.0282 | .6455<br>±.0293 | .6381<br>±.0294 | .6045<br>±.0299 | 5.05 |
+| qwen-math-1.5b | qwen | 0.01 | 0.01 | 0.1 | 2 | scored | .7948<br>±.0247 | .6306<br>±.0295 | .6493<br>±.0292 | .6306<br>±.0295 | 15.64 |
+| qwen-math-1.5b | qwen | 0.01 | 0.03 | 0.3 | 2 | scored | .8284<br>±.0231 | .6269<br>±.0296 | .6455<br>±.0293 | .6306<br>±.0295 | 17.01 |
 | qwen-math-1.5b | qwen | 0.01 | 0.1 | 1 | — | running | — | — | — | — | — |
 | qwen-math-1.5b | qwen | 0.01 | 0.3 | 3 | — | running | — | — | — | — | — |
 | qwen-math-1.5b | qwen | 0.01 | 1.0 | 10 | — | running | — | — | — | — | — |
 | qwen-math-1.5b | qwen | 0.01 | 10 | 100 | — | running | — | — | — | — | — |
+| qwen-math-1.5b | qwen | 0.01 | 100 | 1000 | 2 | inqueue | — | — | — | — | — |
+| qwen-math-1.5b | qwen | 0.01 | 2.0 | ∞ | 2 | running | — | — | — | — | — |
 
-> **Analysis.** No data yet — 0 of 7 cells run. The b=80 twin
-> (`tbl-3a76ce`) is complete, so every row here has a measured
-> counterpart waiting; nothing can be said until at least the
-> `w_eff` 10 and 100 rows land, which are the two the global
-> b=320 tables disagree on.
-> **Limitations / follow-up:** queue by column, not by table —
-> one `w_eff` value across all five models answers "did the
-> optimum move" for ~210 GPU-hours, whereas this table alone
-> costs ~259 and answers it for one model. Feeds key:
-> `tbl-7bbbf4`.
+> **Analysis.** 3 of 7. The `w_eff=0` row stays compromised
+> (55.6 generations, not 320 — warning above); the first two
+> real readings are .7948 at `w_eff=0.1` and .8284 at `0.3`,
+> both already above the b=80 twin's whole curve (max .7612)
+> despite underspending their budget (254.9 / 275.8 gens,
+> 39.9 / 29.9 % capped) — so both are *floors* on the true
+> b=320 values. `0.3` clears `0.1` by +.0336 (~1.4 SE).
+>
+> Selection is this model's signature and it holds at b=320:
+> **wei beats naive in both scored cells** (.6493 vs .6306 at
+> 0.1; .6455 vs .6269 at 0.3) — nowhere else in the block
+> outside qwen-7b's single `w_eff=3` cell — and the
+> pass-minus-wei gap (.1455 / .1829) stays the narrowest in
+> the section, consistent with qwen-math's selectors tracking
+> its coverage best.
+> **Limitations / follow-up:** the `num_phases` ceiling is
+> still the blocking issue — capped falls 95.9 % -> 39.9 % ->
+> 29.9 % as `w_eff` rises, so the curve's *shape* is partly a
+> spend artifact until `num_phases` is raised; the four
+> running cells (1 / 3 / 10 / 100) will ease further but not
+> to zero. Decide `num_phases` before reading the full curve.
+> Feeds key: `tbl-7bbbf4`.
 
 
 ---

@@ -7263,7 +7263,7 @@
   feeds:
   - tbl-0fd588  # L5 b=320 lam/ds_alpha relative sweep, llama-3b
   group: sem-mcts
-  status: running
+  status: scored
   priority: 3
   expected_hr: 54
   note: 'b=320 sem qwen-PRM llama-3b cov_scope=local
@@ -7295,7 +7295,7 @@
   feeds:
   - tbl-0fd588  # L5 b=320 lam/ds_alpha relative sweep, llama-3b
   group: sem-mcts
-  status: running
+  status: scored
   priority: 3
   expected_hr: 54
   note: 'b=320 sem qwen-PRM llama-3b cov_scope=local
@@ -7359,7 +7359,7 @@
   feeds:
   - tbl-fee240  # L5 b=320 lam/ds_alpha relative sweep, qwen-3b
   group: sem-mcts
-  status: running
+  status: scored
   priority: 3
   expected_hr: 47
   note: 'b=320 sem qwen-PRM qwen-3b cov_scope=local
@@ -7391,7 +7391,7 @@
   feeds:
   - tbl-fee240  # L5 b=320 lam/ds_alpha relative sweep, qwen-3b
   group: sem-mcts
-  status: running
+  status: scored
   priority: 3
   expected_hr: 47
   note: 'b=320 sem qwen-PRM qwen-3b cov_scope=local
@@ -7423,7 +7423,7 @@
   feeds:
   - tbl-fee240  # L5 b=320 lam/ds_alpha relative sweep, qwen-3b
   group: sem-mcts
-  status: running
+  status: scored
   priority: 3
   expected_hr: 47
   note: 'b=320 sem qwen-PRM qwen-3b cov_scope=local
@@ -7455,7 +7455,7 @@
   feeds:
   - tbl-fee240  # L5 b=320 lam/ds_alpha relative sweep, qwen-3b
   group: sem-mcts
-  status: running
+  status: scored
   priority: 3
   expected_hr: 47
   note: 'b=320 sem qwen-PRM qwen-3b cov_scope=local
@@ -7487,7 +7487,7 @@
   feeds:
   - tbl-fee240  # L5 b=320 lam/ds_alpha relative sweep, qwen-3b
   group: sem-mcts
-  status: running
+  status: scored
   priority: 3
   expected_hr: 47
   note: 'b=320 sem qwen-PRM qwen-3b cov_scope=local
@@ -7519,7 +7519,7 @@
   feeds:
   - tbl-fee240  # L5 b=320 lam/ds_alpha relative sweep, qwen-3b
   group: sem-mcts
-  status: running
+  status: scored
   priority: 3
   expected_hr: 47
   note: 'b=320 sem qwen-PRM qwen-3b cov_scope=local
@@ -7647,7 +7647,7 @@
   feeds:
   - tbl-27db3b  # L5 b=320 lam/ds_alpha relative sweep, qwen-7b gptq-int4
   group: sem-mcts
-  status: running
+  status: scored
   priority: 3
   expected_hr: 34
   note: 'b=320 sem qwen-PRM qwen-7b gptq-int4 cov_scope=local
@@ -7679,7 +7679,7 @@
   feeds:
   - tbl-27db3b  # L5 b=320 lam/ds_alpha relative sweep, qwen-7b gptq-int4
   group: sem-mcts
-  status: running
+  status: scored
   priority: 3
   expected_hr: 34
   note: 'b=320 sem qwen-PRM qwen-7b gptq-int4 cov_scope=local
@@ -7711,7 +7711,7 @@
   feeds:
   - tbl-27db3b  # L5 b=320 lam/ds_alpha relative sweep, qwen-7b gptq-int4
   group: sem-mcts
-  status: running
+  status: scored
   priority: 3
   expected_hr: 34
   note: 'b=320 sem qwen-PRM qwen-7b gptq-int4 cov_scope=local
@@ -7743,7 +7743,7 @@
   feeds:
   - tbl-27db3b  # L5 b=320 lam/ds_alpha relative sweep, qwen-7b gptq-int4
   group: sem-mcts
-  status: running
+  status: scored
   priority: 3
   expected_hr: 34
   note: 'b=320 sem qwen-PRM qwen-7b gptq-int4 cov_scope=local
@@ -7775,7 +7775,7 @@
   feeds:
   - tbl-7bbbf4  # L5 b=320 lam/ds_alpha relative sweep, qwen-math-1.5b
   group: sem-mcts
-  status: running
+  status: scored
   priority: 3
   expected_hr: 37
   note: 'b=320 sem qwen-PRM qwen-math-1.5b cov_scope=local
@@ -7807,7 +7807,7 @@
   feeds:
   - tbl-7bbbf4  # L5 b=320 lam/ds_alpha relative sweep, qwen-math-1.5b
   group: sem-mcts
-  status: running
+  status: scored
   priority: 3
   expected_hr: 37
   note: 'b=320 sem qwen-PRM qwen-math-1.5b cov_scope=local
@@ -7839,7 +7839,7 @@
   feeds:
   - tbl-7bbbf4  # L5 b=320 lam/ds_alpha relative sweep, qwen-math-1.5b
   group: sem-mcts
-  status: running
+  status: scored
   priority: 3
   expected_hr: 37
   note: 'b=320 sem qwen-PRM qwen-math-1.5b cov_scope=local
@@ -7981,3 +7981,547 @@
     node: r5u39n1
     pid: 1803588
     at: 2026-08-11 14:02
+
+- id: sem-mcts-l5-covlocal-rel-llama1b-weffinf
+  launcher: generate_mcts_sem.py
+  hash: "fcf634a1"
+  config_root: mcts_sem_v02_prm800k
+  overrides:
+    llm: llama_1b
+    prm: qwen_prm
+    search.lam: 0.01
+    search.ds_alpha: 2.0
+    search.ds_beta: 0.0
+    search.cov_scope: local
+    search.embeds_ref: relative
+    data.level: 5
+  trials: 2
+  feeds:
+  - tbl-ba6b11  # L5 lam/ds_alpha relative sweep, llama-1b
+  group: sem-mcts
+  status: scored
+  priority: 2
+  expected_hr: 11
+  note: b=80 sem qwen-PRM llama-1b cov_scope=local
+    embeds_ref=relative, lam=0.01 ds_beta=0 ds_alpha=2.0
+    (w_eff=inf, pure diversity). Opposite bookend of
+    w_eff=0; argmax is ds_alpha-scale-invariant at beta=0,
+    so one run covers the whole ds_alpha>0 ray.
+  launch:
+    job_id: 23529443
+    node: r5u09n1
+    pid: 1903672
+    at: 2026-08-12 00:15
+- id: sem-mcts-l5-b320-covlocal-rel-llama1b-weffinf
+  launcher: generate_mcts_sem.py
+  hash: "72e88712"
+  config_root: mcts_sem_v02_prm800k
+  overrides:
+    llm: llama_1b
+    prm: qwen_prm
+    search.lam: 0.01
+    search.ds_alpha: 2.0
+    search.ds_beta: 0.0
+    search.cov_scope: local
+    search.embeds_ref: relative
+    search.gen_budget: 320
+    data.level: 5
+    llm.max_model_len: 6000
+  trials: 2
+  feeds:
+  - tbl-ec63e6  # L5 b=320 lam/ds_alpha relative sweep, llama-1b
+  group: sem-mcts
+  status: running
+  priority: 2
+  expected_hr: 42
+  note: b=320 sem qwen-PRM llama-1b cov_scope=local
+    embeds_ref=relative, lam=0.01 ds_beta=0 (w_eff=inf,
+    pure diversity). Budget twin of the b=80 cell;
+    est from w_eff=10/100 cost (20.16/20.56 hr/trial).
+  launch:
+    job_id: 23529396
+    node: r5u33n1
+    pid: 1911431
+    at: 2026-08-12 00:49
+- id: sem-mcts-l5-b320-covlocal-rel-llama3b-weffinf
+  launcher: generate_mcts_sem.py
+  hash: "c486d6b2"
+  config_root: mcts_sem_v02_prm800k
+  overrides:
+    llm: llama_3b
+    prm: qwen_prm
+    search.lam: 0.01
+    search.ds_alpha: 2.0
+    search.ds_beta: 0.0
+    search.cov_scope: local
+    search.embeds_ref: relative
+    search.gen_budget: 320
+    data.level: 5
+    llm.max_model_len: 6000
+  trials: 2
+  feeds:
+  - tbl-0fd588  # L5 b=320 lam/ds_alpha relative sweep, llama-3b
+  group: sem-mcts
+  status: running
+  priority: 2
+  expected_hr: 60
+  note: b=320 sem qwen-PRM llama-3b cov_scope=local
+    embeds_ref=relative, lam=0.01 ds_beta=0 (w_eff=inf,
+    pure diversity). est from w_eff=10/100 cost
+    (28.75/29.03 hr/trial).
+  launch:
+    job_id: 23547450
+    node: r5u09n1
+    pid: 1919872
+    at: 2026-08-12 02:42
+- id: sem-mcts-l5-b320-covlocal-rel-qwen3b-weffinf
+  launcher: generate_mcts_sem.py
+  hash: "812c2aed"
+  config_root: mcts_sem_v02_prm800k
+  overrides:
+    llm: qwen_3b
+    prm: qwen_prm
+    search.lam: 0.01
+    search.ds_alpha: 2.0
+    search.ds_beta: 0.0
+    search.cov_scope: local
+    search.embeds_ref: relative
+    search.gen_budget: 320
+    data.level: 5
+    llm.max_model_len: 6000
+  trials: 2
+  feeds:
+  - tbl-fee240  # L5 b=320 lam/ds_alpha relative sweep, qwen-3b
+  group: sem-mcts
+  status: running
+  priority: 2
+  expected_hr: 52
+  note: b=320 sem qwen-PRM qwen-3b cov_scope=local
+    embeds_ref=relative, lam=0.01 ds_beta=0 (w_eff=inf,
+    pure diversity). est from w_eff=1/10 cost
+    (22.51 / ~25.1 hr/trial).
+  launch:
+    job_id: 23547299
+    node: r5u25n1
+    pid: 1921962
+    at: 2026-08-12 03:12
+- id: sem-mcts-l5-b320-covlocal-rel-qwen7bgptq-weffinf
+  launcher: generate_mcts_sem.py
+  hash: "a7c16c0f"
+  config_root: mcts_sem_v02_prm800k
+  overrides:
+    llm: qwen_7b_gptq_int4
+    prm: qwen_prm
+    search.lam: 0.01
+    search.ds_alpha: 2.0
+    search.ds_beta: 0.0
+    search.cov_scope: local
+    search.embeds_ref: relative
+    search.gen_budget: 320
+    data.level: 5
+    llm.max_model_len: 6000
+  trials: 2
+  feeds:
+  - tbl-27db3b  # L5 b=320 lam/ds_alpha relative sweep, qwen-7b gptq-int4
+  group: sem-mcts
+  status: running
+  priority: 2
+  expected_hr: 41
+  note: b=320 sem qwen-PRM qwen-7b-gptq cov_scope=local
+    embeds_ref=relative, lam=0.01 ds_beta=0 (w_eff=inf,
+    pure diversity). est from w_eff=3/10 cost
+    (18.43/19.97 hr/trial).
+  launch:
+    job_id: 23529420
+    node: r5u05n1
+    pid: 1919873
+    at: 2026-08-12 02:42
+- id: sem-mcts-l5-b320-covlocal-rel-qwenmath15b-weffinf
+  launcher: generate_mcts_sem.py
+  hash: "c3551dbb"
+  config_root: mcts_sem_v02_prm800k
+  overrides:
+    llm: qwen_math_1_5b
+    prm: qwen_prm
+    search.lam: 0.01
+    search.ds_alpha: 2.0
+    search.ds_beta: 0.0
+    search.cov_scope: local
+    search.embeds_ref: relative
+    search.gen_budget: 320
+    data.level: 5
+    llm.max_model_len: 4096
+  trials: 2
+  feeds:
+  - tbl-7bbbf4  # L5 b=320 lam/ds_alpha relative sweep, qwen-math-1.5b
+  group: sem-mcts
+  status: running
+  priority: 2
+  expected_hr: 38
+  note: b=320 sem qwen-PRM qwen-math-1.5b cov_scope=local
+    embeds_ref=relative, lam=0.01 ds_beta=0 (w_eff=inf,
+    pure diversity). Flat ~19 hr/trial estimate; subject
+    to the same num_phases spend ceiling as its siblings
+    (see tbl-7bbbf4 warning).
+  launch:
+    job_id: 23535506
+    node: r5u39n1
+    pid: 1999318
+    at: 2026-08-12 12:13
+- id: sem-mcts-l5-covlocal-rel-llama3b-weffinf
+  launcher: generate_mcts_sem.py
+  hash: "70941147"
+  config_root: mcts_sem_v02_prm800k
+  overrides:
+    llm: llama_3b
+    prm: qwen_prm
+    search.lam: 0.01
+    search.ds_alpha: 2.0
+    search.ds_beta: 0.0
+    search.cov_scope: local
+    search.embeds_ref: relative
+    data.level: 5
+  trials: 2
+  feeds:
+  - tbl-cf849a  # L5 lam/ds_alpha relative sweep, llama-3b
+  group: sem-mcts
+  status: running
+  priority: 2
+  expected_hr: 15
+  note: b=80 sem qwen-PRM llama-3b cov_scope=local
+    embeds_ref=relative, lam=0.01 ds_beta=0 ds_alpha=2.0
+    (w_eff=inf, pure diversity). Opposite bookend of
+    w_eff=0; est from sibling top cells (~7.1 hr/trial).
+  launch:
+    job_id: 23529443
+    node: r5u09n1
+    pid: 1990778
+    at: 2026-08-12 10:44
+- id: sem-mcts-l5-covlocal-rel-qwen3b-weffinf
+  launcher: generate_mcts_sem.py
+  hash: "25ad1220"
+  config_root: mcts_sem_v02_prm800k
+  overrides:
+    llm: qwen_3b
+    prm: qwen_prm
+    search.lam: 0.01
+    search.ds_alpha: 2.0
+    search.ds_beta: 0.0
+    search.cov_scope: local
+    search.embeds_ref: relative
+    data.level: 5
+  trials: 2
+  feeds:
+  - tbl-b1cb82  # L5 lam/ds_alpha relative sweep, qwen-3b
+  group: sem-mcts
+  status: running
+  priority: 2
+  expected_hr: 13
+  note: b=80 sem qwen-PRM qwen-3b cov_scope=local
+    embeds_ref=relative, lam=0.01 ds_beta=0 ds_alpha=2.0
+    (w_eff=inf, pure diversity). Opposite bookend of
+    w_eff=0; est from sibling top cells (~6.3 hr/trial).
+  launch:
+    job_id: 23535507
+    node: r5u39n1
+    pid: 2027097
+    at: 2026-08-12 15:12
+- id: sem-mcts-l5-covlocal-rel-qwen7bgptq-weffinf
+  launcher: generate_mcts_sem.py
+  hash: "5f55f3d4"
+  config_root: mcts_sem_v02_prm800k
+  overrides:
+    llm: qwen_7b_gptq_int4
+    prm: qwen_prm
+    search.lam: 0.01
+    search.ds_alpha: 2.0
+    search.ds_beta: 0.0
+    search.cov_scope: local
+    search.embeds_ref: relative
+    data.level: 5
+  trials: 2
+  feeds:
+  - tbl-5d64b1  # L5 lam/ds_alpha relative sweep, qwen-7b gptq-int4
+  group: sem-mcts
+  status: running
+  priority: 2
+  expected_hr: 12
+  note: b=80 sem qwen-PRM qwen-7b-gptq cov_scope=local
+    embeds_ref=relative, lam=0.01 ds_beta=0 ds_alpha=2.0
+    (w_eff=inf, pure diversity). Opposite bookend of
+    w_eff=0; est from sibling top cells (~5.6 hr/trial).
+  launch:
+    job_id: 23535503
+    node: r5u29n1
+    pid: 2085485
+    at: 2026-08-12 18:12
+- id: sem-mcts-l5-covlocal-rel-qwenmath15b-weffinf
+  launcher: generate_mcts_sem.py
+  hash: "8e1f48b0"
+  config_root: mcts_sem_v02_prm800k
+  overrides:
+    llm: qwen_math_1_5b
+    prm: qwen_prm
+    search.lam: 0.01
+    search.ds_alpha: 2.0
+    search.ds_beta: 0.0
+    search.cov_scope: local
+    search.embeds_ref: relative
+    data.level: 5
+  trials: 2
+  feeds:
+  - tbl-3a76ce  # L5 lam/ds_alpha relative sweep, qwen-math-1.5b
+  group: sem-mcts
+  status: running
+  priority: 2
+  expected_hr: 11
+  note: b=80 sem qwen-PRM qwen-math-1.5b cov_scope=local
+    embeds_ref=relative, lam=0.01 ds_beta=0 ds_alpha=2.0
+    (w_eff=inf, pure diversity). Opposite bookend of
+    w_eff=0; est from sibling top cells (~5.0 hr/trial).
+  launch:
+    job_id: 23535501
+    node: r5u05n1
+    pid: 2106195
+    at: 2026-08-12 20:12
+- id: sem-mcts-l5-b320-covlocal-rel-llama1b-weff1000
+  launcher: generate_mcts_sem.py
+  hash: "53608f1b"
+  config_root: mcts_sem_v02_prm800k
+  overrides:
+    llm: llama_1b
+    prm: qwen_prm
+    search.lam: 0.01
+    search.ds_alpha: 100
+    search.cov_scope: local
+    search.embeds_ref: relative
+    search.gen_budget: 320
+    data.level: 5
+    llm.max_model_len: 6000
+  trials: 2
+  feeds:
+  - tbl-ec63e6  # L5 b=320 lam/ds_alpha relative sweep, llama-1b
+  group: sem-mcts
+  status: inqueue
+  priority: 2.1
+  expected_hr: 42
+  note: b=320 sem qwen-PRM llama-1b cov_scope=local
+    embeds_ref=relative, lam=0.01 ds_alpha=100
+    (w_eff=1000). Extends the grid past w_eff=100.
+
+- id: sem-mcts-l5-b320-covlocal-rel-llama3b-weff1000
+  launcher: generate_mcts_sem.py
+  hash: "e064c193"
+  config_root: mcts_sem_v02_prm800k
+  overrides:
+    llm: llama_3b
+    prm: qwen_prm
+    search.lam: 0.01
+    search.ds_alpha: 100
+    search.cov_scope: local
+    search.embeds_ref: relative
+    search.gen_budget: 320
+    data.level: 5
+    llm.max_model_len: 6000
+  trials: 2
+  feeds:
+  - tbl-0fd588  # L5 b=320 lam/ds_alpha relative sweep, llama-3b
+  group: sem-mcts
+  status: inqueue
+  priority: 2.1
+  expected_hr: 60
+  note: b=320 sem qwen-PRM llama-3b cov_scope=local
+    embeds_ref=relative, lam=0.01 ds_alpha=100
+    (w_eff=1000). Extends the grid past w_eff=100. The cell tbl-0fd588 Analysis asked for
+    (peak at grid edge w_eff=100).
+
+- id: sem-mcts-l5-b320-covlocal-rel-qwen3b-weff1000
+  launcher: generate_mcts_sem.py
+  hash: "bed5d327"
+  config_root: mcts_sem_v02_prm800k
+  overrides:
+    llm: qwen_3b
+    prm: qwen_prm
+    search.lam: 0.01
+    search.ds_alpha: 100
+    search.cov_scope: local
+    search.embeds_ref: relative
+    search.gen_budget: 320
+    data.level: 5
+    llm.max_model_len: 6000
+  trials: 2
+  feeds:
+  - tbl-fee240  # L5 b=320 lam/ds_alpha relative sweep, qwen-3b
+  group: sem-mcts
+  status: inqueue
+  priority: 2.1
+  expected_hr: 52
+  note: b=320 sem qwen-PRM qwen-3b cov_scope=local
+    embeds_ref=relative, lam=0.01 ds_alpha=100
+    (w_eff=1000). Extends the grid past w_eff=100.
+
+- id: sem-mcts-l5-b320-covlocal-rel-qwen7bgptq-weff1000
+  launcher: generate_mcts_sem.py
+  hash: "2a405937"
+  config_root: mcts_sem_v02_prm800k
+  overrides:
+    llm: qwen_7b_gptq_int4
+    prm: qwen_prm
+    search.lam: 0.01
+    search.ds_alpha: 100
+    search.cov_scope: local
+    search.embeds_ref: relative
+    search.gen_budget: 320
+    data.level: 5
+    llm.max_model_len: 6000
+  trials: 2
+  feeds:
+  - tbl-27db3b  # L5 b=320 lam/ds_alpha relative sweep, qwen-7b gptq-int4
+  group: sem-mcts
+  status: inqueue
+  priority: 2.1
+  expected_hr: 41
+  note: b=320 sem qwen-PRM qwen-7b-gptq cov_scope=local
+    embeds_ref=relative, lam=0.01 ds_alpha=100
+    (w_eff=1000). Extends the grid past w_eff=100.
+
+- id: sem-mcts-l5-b320-covlocal-rel-qwenmath15b-weff1000
+  launcher: generate_mcts_sem.py
+  hash: "f5785f94"
+  config_root: mcts_sem_v02_prm800k
+  overrides:
+    llm: qwen_math_1_5b
+    prm: qwen_prm
+    search.lam: 0.01
+    search.ds_alpha: 100
+    search.cov_scope: local
+    search.embeds_ref: relative
+    search.gen_budget: 320
+    data.level: 5
+    llm.max_model_len: 4096
+  trials: 2
+  feeds:
+  - tbl-7bbbf4  # L5 b=320 lam/ds_alpha relative sweep, qwen-math-1.5b
+  group: sem-mcts
+  status: inqueue
+  priority: 2.1
+  expected_hr: 38
+  note: b=320 sem qwen-PRM qwen-math-1.5b cov_scope=local
+    embeds_ref=relative, lam=0.01 ds_alpha=100
+    (w_eff=1000). Extends the grid past w_eff=100. Subject to the num_phases spend
+    ceiling (see tbl-7bbbf4 warning).
+
+- id: sem-mcts-l5-covlocal-rel-llama1b-weff1000
+  launcher: generate_mcts_sem.py
+  hash: "bee44ba9"
+  config_root: mcts_sem_v02_prm800k
+  overrides:
+    llm: llama_1b
+    prm: qwen_prm
+    search.lam: 0.01
+    search.ds_alpha: 100
+    search.cov_scope: local
+    search.embeds_ref: relative
+    data.level: 5
+  trials: 2
+  feeds:
+  - tbl-ba6b11  # L5 lam/ds_alpha relative sweep, llama-1b
+  group: sem-mcts
+  status: inqueue
+  priority: 2.1
+  expected_hr: 11
+  note: b=80 sem qwen-PRM llama-1b cov_scope=local
+    embeds_ref=relative, lam=0.01 ds_alpha=100
+    (w_eff=1000). Extends the grid past w_eff=100.
+
+- id: sem-mcts-l5-covlocal-rel-llama3b-weff1000
+  launcher: generate_mcts_sem.py
+  hash: "7fe63b3a"
+  config_root: mcts_sem_v02_prm800k
+  overrides:
+    llm: llama_3b
+    prm: qwen_prm
+    search.lam: 0.01
+    search.ds_alpha: 100
+    search.cov_scope: local
+    search.embeds_ref: relative
+    data.level: 5
+  trials: 2
+  feeds:
+  - tbl-cf849a  # L5 lam/ds_alpha relative sweep, llama-3b
+  group: sem-mcts
+  status: inqueue
+  priority: 2.1
+  expected_hr: 15
+  note: b=80 sem qwen-PRM llama-3b cov_scope=local
+    embeds_ref=relative, lam=0.01 ds_alpha=100
+    (w_eff=1000). Extends the grid past w_eff=100.
+
+- id: sem-mcts-l5-covlocal-rel-qwen3b-weff1000
+  launcher: generate_mcts_sem.py
+  hash: "0e5a4ae2"
+  config_root: mcts_sem_v02_prm800k
+  overrides:
+    llm: qwen_3b
+    prm: qwen_prm
+    search.lam: 0.01
+    search.ds_alpha: 100
+    search.cov_scope: local
+    search.embeds_ref: relative
+    data.level: 5
+  trials: 2
+  feeds:
+  - tbl-b1cb82  # L5 lam/ds_alpha relative sweep, qwen-3b
+  group: sem-mcts
+  status: inqueue
+  priority: 2.1
+  expected_hr: 13
+  note: b=80 sem qwen-PRM qwen-3b cov_scope=local
+    embeds_ref=relative, lam=0.01 ds_alpha=100
+    (w_eff=1000). Extends the grid past w_eff=100.
+
+- id: sem-mcts-l5-covlocal-rel-qwen7bgptq-weff1000
+  launcher: generate_mcts_sem.py
+  hash: "62928ad5"
+  config_root: mcts_sem_v02_prm800k
+  overrides:
+    llm: qwen_7b_gptq_int4
+    prm: qwen_prm
+    search.lam: 0.01
+    search.ds_alpha: 100
+    search.cov_scope: local
+    search.embeds_ref: relative
+    data.level: 5
+  trials: 2
+  feeds:
+  - tbl-5d64b1  # L5 lam/ds_alpha relative sweep, qwen-7b gptq-int4
+  group: sem-mcts
+  status: inqueue
+  priority: 2.1
+  expected_hr: 12
+  note: b=80 sem qwen-PRM qwen-7b-gptq cov_scope=local
+    embeds_ref=relative, lam=0.01 ds_alpha=100
+    (w_eff=1000). Extends the grid past w_eff=100.
+
+- id: sem-mcts-l5-covlocal-rel-qwenmath15b-weff1000
+  launcher: generate_mcts_sem.py
+  hash: "51ea163f"
+  config_root: mcts_sem_v02_prm800k
+  overrides:
+    llm: qwen_math_1_5b
+    prm: qwen_prm
+    search.lam: 0.01
+    search.ds_alpha: 100
+    search.cov_scope: local
+    search.embeds_ref: relative
+    data.level: 5
+  trials: 2
+  feeds:
+  - tbl-3a76ce  # L5 lam/ds_alpha relative sweep, qwen-math-1.5b
+  group: sem-mcts
+  status: inqueue
+  priority: 2.1
+  expected_hr: 11
+  note: b=80 sem qwen-PRM qwen-math-1.5b cov_scope=local
+    embeds_ref=relative, lam=0.01 ds_alpha=100
+    (w_eff=1000). Extends the grid past w_eff=100.
