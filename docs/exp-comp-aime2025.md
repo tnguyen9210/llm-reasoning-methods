@@ -994,15 +994,15 @@ Two activities, two shapes:
 > 15bl4u7o (`w_eff=1`), nciclzqg (`w_eff=3`),
 > im2kla67 (`w_eff=10`), dlj079h6 (`w_eff=100`).
 
-| llm | prm | lam | ds_alpha | w_eff | trials | status | pass@gb | naive@gb | wei@gb | maj@gb | hr/trial |
-|---|---|---|---|---|---|---|---|---|---|---|---|
-| llama-1b | qwen | 0.01 | 0 | 0 | — | planned | — | — | — | — | — |
-| llama-1b | qwen | 0.01 | 0.01 | 0.1 | 4 | scored | .0083<br>±.0083 | .0083<br>±.0083 | .0083<br>±.0083 | .0000<br>±.0000 | 1.31 |
-| llama-1b | qwen | 0.01 | 0.03 | 0.3 | 4 | scored | .0250<br>±.0143 | .0167<br>±.0117 | .0167<br>±.0117 | .0000<br>±.0000 | 1.27 |
-| llama-1b | qwen | 0.01 | 0.1 | 1 | 4 | scored | .0083<br>±.0083 | .0083<br>±.0083 | .0000<br>±.0000 | .0000<br>±.0000 | 1.29 |
-| llama-1b | qwen | 0.01 | 0.3 | 3 | 4 | scored | .0083<br>±.0083 | .0083<br>±.0083 | .0083<br>±.0083 | .0083<br>±.0083 | 1.34 |
-| llama-1b | qwen | 0.01 | 1.0 | 10 | 4 | scored | .0083<br>±.0083 | .0000<br>±.0000 | .0000<br>±.0000 | .0000<br>±.0000 | 1.30 |
-| llama-1b | qwen | 0.01 | 10 | 100 | 4 | scored | .0250<br>±.0143 | .0000<br>±.0000 | .0000<br>±.0000 | .0083<br>±.0083 | 1.31 |
+| llm | prm | lam | ds_alpha | w_eff | trials | status | pass@gb | naive@gb | wei@gb | maj@gb | %max_phase | hr/trial |
+|---|---|---|---|---|---|---|---|---|---|---|---|---|
+| llama-1b | qwen | 0.01 | 0 | 0 | — | planned | — | — | — | — | — | — |
+| llama-1b | qwen | 0.01 | 0.01 | 0.1 | 4 | scored | .0083<br>±.0083 | .0083<br>±.0083 | .0083<br>±.0083 | .0000<br>±.0000 | 9.2% | 1.31 |
+| llama-1b | qwen | 0.01 | 0.03 | 0.3 | 4 | scored | .0250<br>±.0143 | .0167<br>±.0117 | .0167<br>±.0117 | .0000<br>±.0000 | 8.3% | 1.27 |
+| llama-1b | qwen | 0.01 | 0.1 | 1 | 4 | scored | .0083<br>±.0083 | .0083<br>±.0083 | .0000<br>±.0000 | .0000<br>±.0000 | 1.7% | 1.29 |
+| llama-1b | qwen | 0.01 | 0.3 | 3 | 4 | scored | .0083<br>±.0083 | .0083<br>±.0083 | .0083<br>±.0083 | .0083<br>±.0083 | 0.8% | 1.34 |
+| llama-1b | qwen | 0.01 | 1.0 | 10 | 4 | scored | .0083<br>±.0083 | .0000<br>±.0000 | .0000<br>±.0000 | .0000<br>±.0000 | 0.0% | 1.30 |
+| llama-1b | qwen | 0.01 | 10 | 100 | 4 | scored | .0250<br>±.0143 | .0000<br>±.0000 | .0000<br>±.0000 | .0083<br>±.0083 | 0.0% | 1.31 |
 
 > **Analysis.** Complete (6/7, closed 2026-08-03; only the
 > `w_eff=0` anchor is unqueued). **The model is at the floor and
@@ -1061,15 +1061,15 @@ Two activities, two shapes:
 > kwziq7zb (`1`), m3q0x26b (`3`), mxcfrmy6 (`10`),
 > lf5mom0m (`100`).
 
-| llm | prm | lam | ds_alpha | w_eff | trials | status | pass@gb | naive@gb | wei@gb | maj@gb | hr/trial |
-|---|---|---|---|---|---|---|---|---|---|---|---|
-| llama-3b | qwen | 0.01 | 0 | 0 | — | planned | — | — | — | — | — |
-| llama-3b | qwen | 0.01 | 0.01 | 0.1 | 4 | scored | .0667<br>±.0229 | .0250<br>±.0143 | .0250<br>±.0143 | .0083<br>±.0083 | 1.70 |
-| llama-3b | qwen | 0.01 | 0.03 | 0.3 | 4 | scored | .0583<br>±.0215 | .0500<br>±.0200 | .0417<br>±.0183 | .0333<br>±.0165 | 1.69 |
-| llama-3b | qwen | 0.01 | 0.1 | 1 | 4 | scored | .0667<br>±.0229 | .0333<br>±.0165 | .0250<br>±.0143 | .0167<br>±.0117 | 1.73 |
-| llama-3b | qwen | 0.01 | 0.3 | 3 | 4 | scored | .0667<br>±.0229 | .0333<br>±.0165 | .0167<br>±.0117 | .0167<br>±.0117 | 1.79 |
-| llama-3b | qwen | 0.01 | 1.0 | 10 | 4 | scored | .0500<br>±.0200 | .0417<br>±.0183 | .0167<br>±.0117 | .0167<br>±.0117 | 1.82 |
-| llama-3b | qwen | 0.01 | 10 | 100 | 4 | scored | .0667<br>±.0229 | .0333<br>±.0165 | .0250<br>±.0143 | .0083<br>±.0083 | 1.84 |
+| llm | prm | lam | ds_alpha | w_eff | trials | status | pass@gb | naive@gb | wei@gb | maj@gb | %max_phase | hr/trial |
+|---|---|---|---|---|---|---|---|---|---|---|---|---|
+| llama-3b | qwen | 0.01 | 0 | 0 | — | planned | — | — | — | — | — | — |
+| llama-3b | qwen | 0.01 | 0.01 | 0.1 | 4 | scored | .0667<br>±.0229 | .0250<br>±.0143 | .0250<br>±.0143 | .0083<br>±.0083 | 19.2% | 1.70 |
+| llama-3b | qwen | 0.01 | 0.03 | 0.3 | 4 | scored | .0583<br>±.0215 | .0500<br>±.0200 | .0417<br>±.0183 | .0333<br>±.0165 | 14.2% | 1.69 |
+| llama-3b | qwen | 0.01 | 0.1 | 1 | 4 | scored | .0667<br>±.0229 | .0333<br>±.0165 | .0250<br>±.0143 | .0167<br>±.0117 | 11.7% | 1.73 |
+| llama-3b | qwen | 0.01 | 0.3 | 3 | 4 | scored | .0667<br>±.0229 | .0333<br>±.0165 | .0167<br>±.0117 | .0167<br>±.0117 | 4.2% | 1.79 |
+| llama-3b | qwen | 0.01 | 1.0 | 10 | 4 | scored | .0500<br>±.0200 | .0417<br>±.0183 | .0167<br>±.0117 | .0167<br>±.0117 | 0.0% | 1.82 |
+| llama-3b | qwen | 0.01 | 10 | 100 | 4 | scored | .0667<br>±.0229 | .0333<br>±.0165 | .0250<br>±.0143 | .0083<br>±.0083 | 0.8% | 1.84 |
 
 > **Analysis.** Complete (6/7, closed 2026-08-03; only the
 > `w_eff=0` anchor is unqueued). pass@gb is **flat across the
@@ -1127,15 +1127,15 @@ Two activities, two shapes:
 > 2026-08-03 15:06 preemption; it resumed from trial 2 and
 > completed 2026-08-04 02:40.
 
-| llm | prm | lam | ds_alpha | w_eff | trials | status | pass@gb | naive@gb | wei@gb | maj@gb | hr/trial |
-|---|---|---|---|---|---|---|---|---|---|---|---|
-| qwen-3b | qwen | 0.01 | 0 | 0 | — | planned | — | — | — | — | — |
-| qwen-3b | qwen | 0.01 | 0.01 | 0.1 | 4 | scored | .2167<br>±.0378 | .1167<br>±.0294 | .1250<br>±.0303 | .1083<br>±.0285 | 1.61 |
-| qwen-3b | qwen | 0.01 | 0.03 | 0.3 | 4 | scored | .1750<br>±.0348 | .1333<br>±.0312 | .0917<br>±.0265 | .0917<br>±.0265 | 1.65 |
-| qwen-3b | qwen | 0.01 | 0.1 | 1 | 4 | scored | .1833<br>±.0355 | .0917<br>±.0265 | .1083<br>±.0285 | .0917<br>±.0265 | 1.77 |
-| qwen-3b | qwen | 0.01 | 0.3 | 3 | 4 | scored | .1917<br>±.0361 | .0917<br>±.0265 | .0417<br>±.0183 | .0500<br>±.0200 | 1.79 |
-| qwen-3b | qwen | 0.01 | 1.0 | 10 | 4 | scored | .1417<br>±.0320 | .1167<br>±.0294 | .0750<br>±.0241 | .0833<br>±.0253 | 1.76 |
-| qwen-3b | qwen | 0.01 | 10 | 100 | 4 | scored | .2083<br>±.0372 | .1333<br>±.0312 | .0833<br>±.0253 | .0917<br>±.0265 | 1.78 |
+| llm | prm | lam | ds_alpha | w_eff | trials | status | pass@gb | naive@gb | wei@gb | maj@gb | %max_phase | hr/trial |
+|---|---|---|---|---|---|---|---|---|---|---|---|---|
+| qwen-3b | qwen | 0.01 | 0 | 0 | — | planned | — | — | — | — | — | — |
+| qwen-3b | qwen | 0.01 | 0.01 | 0.1 | 4 | scored | .2167<br>±.0378 | .1167<br>±.0294 | .1250<br>±.0303 | .1083<br>±.0285 | 31.7% | 1.61 |
+| qwen-3b | qwen | 0.01 | 0.03 | 0.3 | 4 | scored | .1750<br>±.0348 | .1333<br>±.0312 | .0917<br>±.0265 | .0917<br>±.0265 | 14.2% | 1.65 |
+| qwen-3b | qwen | 0.01 | 0.1 | 1 | 4 | scored | .1833<br>±.0355 | .0917<br>±.0265 | .1083<br>±.0285 | .0917<br>±.0265 | 1.7% | 1.77 |
+| qwen-3b | qwen | 0.01 | 0.3 | 3 | 4 | scored | .1917<br>±.0361 | .0917<br>±.0265 | .0417<br>±.0183 | .0500<br>±.0200 | 0.0% | 1.79 |
+| qwen-3b | qwen | 0.01 | 1.0 | 10 | 4 | scored | .1417<br>±.0320 | .1167<br>±.0294 | .0750<br>±.0241 | .0833<br>±.0253 | 0.0% | 1.76 |
+| qwen-3b | qwen | 0.01 | 10 | 100 | 4 | scored | .2083<br>±.0372 | .1333<br>±.0312 | .0833<br>±.0253 | .0917<br>±.0265 | 0.0% | 1.78 |
 
 > **Analysis.** Complete (6/7, closed 2026-08-04 when the
 > requeued `w_eff=1` cell landed; only the `w_eff=0` anchor is
@@ -1209,15 +1209,15 @@ Two activities, two shapes:
 > 0pdey277 (`1`), 2lv9q0h0 (`3`), 3tgx7jk5 (`10`),
 > m2vkpi68 (`100`).
 
-| llm | prm | lam | ds_alpha | w_eff | trials | status | pass@gb | naive@gb | wei@gb | maj@gb | hr/trial |
-|---|---|---|---|---|---|---|---|---|---|---|---|
-| qwen-7b gptq-int4 | qwen | 0.01 | 0 | 0 | — | planned | — | — | — | — | — |
-| qwen-7b gptq-int4 | qwen | 0.01 | 0.01 | 0.1 | 4 | scored | .2583<br>±.0401 | .1583<br>±.0335 | .1333<br>±.0312 | .1500<br>±.0327 | 1.35 |
-| qwen-7b gptq-int4 | qwen | 0.01 | 0.03 | 0.3 | 4 | scored | .2667<br>±.0405 | .1750<br>±.0348 | .1833<br>±.0355 | .1500<br>±.0327 | 1.53 |
-| qwen-7b gptq-int4 | qwen | 0.01 | 0.1 | 1 | 4 | scored | .2833<br>±.0413 | .1667<br>±.0342 | .1667<br>±.0342 | .1583<br>±.0335 | 1.66 |
-| qwen-7b gptq-int4 | qwen | 0.01 | 0.3 | 3 | 4 | scored | .2667<br>±.0405 | .1417<br>±.0320 | .1417<br>±.0320 | .1333<br>±.0312 | 1.66 |
-| qwen-7b gptq-int4 | qwen | 0.01 | 1.0 | 10 | 4 | scored | .2417<br>±.0392 | .1250<br>±.0303 | .1500<br>±.0327 | .1500<br>±.0327 | 1.64 |
-| qwen-7b gptq-int4 | qwen | 0.01 | 10 | 100 | 4 | scored | .2500<br>±.0397 | .0917<br>±.0265 | .1250<br>±.0303 | .1083<br>±.0285 | 1.70 |
+| llm | prm | lam | ds_alpha | w_eff | trials | status | pass@gb | naive@gb | wei@gb | maj@gb | %max_phase | hr/trial |
+|---|---|---|---|---|---|---|---|---|---|---|---|---|
+| qwen-7b gptq-int4 | qwen | 0.01 | 0 | 0 | — | planned | — | — | — | — | — | — |
+| qwen-7b gptq-int4 | qwen | 0.01 | 0.01 | 0.1 | 4 | scored | .2583<br>±.0401 | .1583<br>±.0335 | .1333<br>±.0312 | .1500<br>±.0327 | 51.7% | 1.35 |
+| qwen-7b gptq-int4 | qwen | 0.01 | 0.03 | 0.3 | 4 | scored | .2667<br>±.0405 | .1750<br>±.0348 | .1833<br>±.0355 | .1500<br>±.0327 | 23.3% | 1.53 |
+| qwen-7b gptq-int4 | qwen | 0.01 | 0.1 | 1 | 4 | scored | .2833<br>±.0413 | .1667<br>±.0342 | .1667<br>±.0342 | .1583<br>±.0335 | 6.7% | 1.66 |
+| qwen-7b gptq-int4 | qwen | 0.01 | 0.3 | 3 | 4 | scored | .2667<br>±.0405 | .1417<br>±.0320 | .1417<br>±.0320 | .1333<br>±.0312 | 4.2% | 1.66 |
+| qwen-7b gptq-int4 | qwen | 0.01 | 1.0 | 10 | 4 | scored | .2417<br>±.0392 | .1250<br>±.0303 | .1500<br>±.0327 | .1500<br>±.0327 | 1.7% | 1.64 |
+| qwen-7b gptq-int4 | qwen | 0.01 | 10 | 100 | 4 | scored | .2500<br>±.0397 | .0917<br>±.0265 | .1250<br>±.0303 | .1083<br>±.0285 | 0.0% | 1.70 |
 
 > **Analysis.** Complete (6/7, closed 2026-08-04; only the
 > `w_eff=0` anchor is unqueued). pass@gb traces .2583, .2667,
@@ -1281,15 +1281,15 @@ Two activities, two shapes:
 > guwclvd6 (`1`), hrdmywwy (`3`), a2het6g4 (`10`),
 > 01p1o27c (`100`).
 
-| llm | prm | lam | ds_alpha | w_eff | trials | status | pass@gb | naive@gb | wei@gb | maj@gb | hr/trial |
-|---|---|---|---|---|---|---|---|---|---|---|---|
-| qwen-math-1.5b | qwen | 0.01 | 0 | 0 | — | planned | — | — | — | — | — |
-| qwen-math-1.5b | qwen | 0.01 | 0.01 | 0.1 | 4 | scored | .2167<br>±.0378 | .1583<br>±.0335 | .1500<br>±.0327 | .1417<br>±.0320 | 1.43 |
-| qwen-math-1.5b | qwen | 0.01 | 0.03 | 0.3 | 4 | scored | .2417<br>±.0392 | .1417<br>±.0320 | .1667<br>±.0342 | .1583<br>±.0335 | 1.45 |
-| qwen-math-1.5b | qwen | 0.01 | 0.1 | 1 | 4 | scored | .2583<br>±.0401 | .1667<br>±.0342 | .1833<br>±.0355 | .1833<br>±.0355 | 1.47 |
-| qwen-math-1.5b | qwen | 0.01 | 0.3 | 3 | 4 | scored | .2500<br>±.0397 | .1500<br>±.0327 | .1250<br>±.0303 | .1333<br>±.0312 | 1.44 |
-| qwen-math-1.5b | qwen | 0.01 | 1.0 | 10 | 4 | scored | .2750<br>±.0409 | .1917<br>±.0361 | .1583<br>±.0335 | .1500<br>±.0327 | 1.45 |
-| qwen-math-1.5b | qwen | 0.01 | 10 | 100 | 4 | scored | .3083<br>±.0423 | .1833<br>±.0355 | .1833<br>±.0355 | .1583<br>±.0335 | 1.45 |
+| llm | prm | lam | ds_alpha | w_eff | trials | status | pass@gb | naive@gb | wei@gb | maj@gb | %max_phase | hr/trial |
+|---|---|---|---|---|---|---|---|---|---|---|---|---|
+| qwen-math-1.5b | qwen | 0.01 | 0 | 0 | — | planned | — | — | — | — | — | — |
+| qwen-math-1.5b | qwen | 0.01 | 0.01 | 0.1 | 4 | scored | .2167<br>±.0378 | .1583<br>±.0335 | .1500<br>±.0327 | .1417<br>±.0320 | 27.5% | 1.43 |
+| qwen-math-1.5b | qwen | 0.01 | 0.03 | 0.3 | 4 | scored | .2417<br>±.0392 | .1417<br>±.0320 | .1667<br>±.0342 | .1583<br>±.0335 | 5.8% | 1.45 |
+| qwen-math-1.5b | qwen | 0.01 | 0.1 | 1 | 4 | scored | .2583<br>±.0401 | .1667<br>±.0342 | .1833<br>±.0355 | .1833<br>±.0355 | 1.7% | 1.47 |
+| qwen-math-1.5b | qwen | 0.01 | 0.3 | 3 | 4 | scored | .2500<br>±.0397 | .1500<br>±.0327 | .1250<br>±.0303 | .1333<br>±.0312 | 0.8% | 1.44 |
+| qwen-math-1.5b | qwen | 0.01 | 1.0 | 10 | 4 | scored | .2750<br>±.0409 | .1917<br>±.0361 | .1583<br>±.0335 | .1500<br>±.0327 | 0.0% | 1.45 |
+| qwen-math-1.5b | qwen | 0.01 | 10 | 100 | 4 | scored | .3083<br>±.0423 | .1833<br>±.0355 | .1833<br>±.0355 | .1583<br>±.0335 | 0.0% | 1.45 |
 
 > **Analysis.** Complete (6/7, closed 2026-08-04; only the
 > `w_eff=0` anchor is unqueued). pass@gb climbs almost
@@ -2346,15 +2346,15 @@ Two activities, two shapes:
 >
 > **W&B:** none yet (no b=320 local-scope runs).
 
-| llm | prm | lam | ds_alpha | w_eff | trials | status | pass@gb | naive@gb | wei@gb | maj@gb | hr/trial |
-|---|---|---|---|---|---|---|---|---|---|---|---|
-| llama-1b | qwen | 0.01 | 0 | 0 | — | planned | — | — | — | — | — |
-| llama-1b | qwen | 0.01 | 0.01 | 0.1 | — | planned | — | — | — | — | — |
-| llama-1b | qwen | 0.01 | 0.03 | 0.3 | — | planned | — | — | — | — | — |
-| llama-1b | qwen | 0.01 | 0.1 | 1 | — | planned | — | — | — | — | — |
-| llama-1b | qwen | 0.01 | 0.3 | 3 | — | planned | — | — | — | — | — |
-| llama-1b | qwen | 0.01 | 1.0 | 10 | — | planned | — | — | — | — | — |
-| llama-1b | qwen | 0.01 | 10 | 100 | — | planned | — | — | — | — | — |
+| llm | prm | lam | ds_alpha | w_eff | trials | status | pass@gb | naive@gb | wei@gb | maj@gb | %max_phase | hr/trial |
+|---|---|---|---|---|---|---|---|---|---|---|---|---|
+| llama-1b | qwen | 0.01 | 0 | 0 | — | planned | — | — | — | — | — | — |
+| llama-1b | qwen | 0.01 | 0.01 | 0.1 | — | planned | — | — | — | — | — | — |
+| llama-1b | qwen | 0.01 | 0.03 | 0.3 | — | planned | — | — | — | — | — | — |
+| llama-1b | qwen | 0.01 | 0.1 | 1 | — | planned | — | — | — | — | — | — |
+| llama-1b | qwen | 0.01 | 0.3 | 3 | — | planned | — | — | — | — | — | — |
+| llama-1b | qwen | 0.01 | 1.0 | 10 | — | planned | — | — | — | — | — | — |
+| llama-1b | qwen | 0.01 | 10 | 100 | — | planned | — | — | — | — | — | — |
 
 > **Analysis.** No data yet — nothing to take away.
 > **Limitations / follow-up:** do not queue this table ahead of
@@ -2400,15 +2400,15 @@ Two activities, two shapes:
 >
 > **W&B:** none yet (no b=320 local-scope runs).
 
-| llm | prm | lam | ds_alpha | w_eff | trials | status | pass@gb | naive@gb | wei@gb | maj@gb | hr/trial |
-|---|---|---|---|---|---|---|---|---|---|---|---|
-| llama-3b | qwen | 0.01 | 0 | 0 | — | planned | — | — | — | — | — |
-| llama-3b | qwen | 0.01 | 0.01 | 0.1 | 4 | scored | .0833<br>±.0253 | .0417<br>±.0183 | .0333<br>±.0165 | .0333<br>±.0165 | 4.48 |
-| llama-3b | qwen | 0.01 | 0.03 | 0.3 | 4 | scored | .0750<br>±.0241 | .0500<br>±.0200 | .0500<br>±.0200 | .0417<br>±.0183 | 4.80 |
-| llama-3b | qwen | 0.01 | 0.1 | 1 | 4 | scored | .1167<br>±.0294 | .0417<br>±.0183 | .0250<br>±.0143 | .0167<br>±.0117 | 5.87 |
-| llama-3b | qwen | 0.01 | 0.3 | 3 | 4 | scored | .1583<br>±.0335 | .0500<br>±.0200 | .0333<br>±.0165 | .0167<br>±.0117 | 6.67 |
-| llama-3b | qwen | 0.01 | 1.0 | 10 | 4 | scored | .1167<br>±.0294 | .0500<br>±.0200 | .0417<br>±.0183 | .0083<br>±.0083 | 7.54 |
-| llama-3b | qwen | 0.01 | 10 | 100 | 4 | scored | .2000<br>±.0367 | .0750<br>±.0241 | .0500<br>±.0200 | .0167<br>±.0117 | 7.55 |
+| llm | prm | lam | ds_alpha | w_eff | trials | status | pass@gb | naive@gb | wei@gb | maj@gb | %max_phase | hr/trial |
+|---|---|---|---|---|---|---|---|---|---|---|---|---|
+| llama-3b | qwen | 0.01 | 0 | 0 | — | planned | — | — | — | — | — | — |
+| llama-3b | qwen | 0.01 | 0.01 | 0.1 | 4 | scored | .0833<br>±.0253 | .0417<br>±.0183 | .0333<br>±.0165 | .0333<br>±.0165 | 72.5% | 4.48 |
+| llama-3b | qwen | 0.01 | 0.03 | 0.3 | 4 | scored | .0750<br>±.0241 | .0500<br>±.0200 | .0500<br>±.0200 | .0417<br>±.0183 | 68.3% | 4.80 |
+| llama-3b | qwen | 0.01 | 0.1 | 1 | 4 | scored | .1167<br>±.0294 | .0417<br>±.0183 | .0250<br>±.0143 | .0167<br>±.0117 | 38.3% | 5.87 |
+| llama-3b | qwen | 0.01 | 0.3 | 3 | 4 | scored | .1583<br>±.0335 | .0500<br>±.0200 | .0333<br>±.0165 | .0167<br>±.0117 | 24.2% | 6.67 |
+| llama-3b | qwen | 0.01 | 1.0 | 10 | 4 | scored | .1167<br>±.0294 | .0500<br>±.0200 | .0417<br>±.0183 | .0083<br>±.0083 | 3.3% | 7.54 |
+| llama-3b | qwen | 0.01 | 10 | 100 | 4 | scored | .2000<br>±.0367 | .0750<br>±.0241 | .0500<br>±.0200 | .0167<br>±.0117 | 0.0% | 7.55 |
 
 > **Analysis.** No data yet — nothing to take away.
 > **Limitations / follow-up:** the cheapest informative version
@@ -2450,15 +2450,15 @@ Two activities, two shapes:
 >
 > **W&B:** none yet (no b=320 local-scope runs).
 
-| llm | prm | lam | ds_alpha | w_eff | trials | status | pass@gb | naive@gb | wei@gb | maj@gb | hr/trial |
-|---|---|---|---|---|---|---|---|---|---|---|---|
-| qwen-3b | qwen | 0.01 | 0 | 0 | — | planned | — | — | — | — | — |
-| qwen-3b | qwen | 0.01 | 0.01 | 0.1 | 4 | scored | .2667<br>±.0405 | .1500<br>±.0327 | .1167<br>±.0294 | .1167<br>±.0294 | 3.72 |
-| qwen-3b | qwen | 0.01 | 0.03 | 0.3 | 4 | scored | .2667<br>±.0405 | .1750<br>±.0348 | .1000<br>±.0275 | .1000<br>±.0275 | 4.91 |
-| qwen-3b | qwen | 0.01 | 0.1 | 1 | 4 | scored | .3167<br>±.0426 | .1500<br>±.0327 | .0917<br>±.0265 | .0917<br>±.0265 | 6.44 |
-| qwen-3b | qwen | 0.01 | 0.3 | 3 | 4 | scored | .3000<br>±.0420 | .1000<br>±.0275 | .0833<br>±.0253 | .0833<br>±.0253 | 7.10 |
-| qwen-3b | qwen | 0.01 | 1.0 | 10 | 4 | scored | .2667<br>±.0405 | .1250<br>±.0303 | .0667<br>±.0229 | .0667<br>±.0229 | 7.20 |
-| qwen-3b | qwen | 0.01 | 10 | 100 | 4 | scored | .3750<br>±.0444 | .1333<br>±.0312 | .0833<br>±.0253 | .0917<br>±.0265 | 7.13 |
+| llm | prm | lam | ds_alpha | w_eff | trials | status | pass@gb | naive@gb | wei@gb | maj@gb | %max_phase | hr/trial |
+|---|---|---|---|---|---|---|---|---|---|---|---|---|
+| qwen-3b | qwen | 0.01 | 0 | 0 | — | planned | — | — | — | — | — | — |
+| qwen-3b | qwen | 0.01 | 0.01 | 0.1 | 4 | scored | .2667<br>±.0405 | .1500<br>±.0327 | .1167<br>±.0294 | .1167<br>±.0294 | 82.5% | 3.72 |
+| qwen-3b | qwen | 0.01 | 0.03 | 0.3 | 4 | scored | .2667<br>±.0405 | .1750<br>±.0348 | .1000<br>±.0275 | .1000<br>±.0275 | 66.7% | 4.91 |
+| qwen-3b | qwen | 0.01 | 0.1 | 1 | 4 | scored | .3167<br>±.0426 | .1500<br>±.0327 | .0917<br>±.0265 | .0917<br>±.0265 | 29.2% | 6.44 |
+| qwen-3b | qwen | 0.01 | 0.3 | 3 | 4 | scored | .3000<br>±.0420 | .1000<br>±.0275 | .0833<br>±.0253 | .0833<br>±.0253 | 5.0% | 7.10 |
+| qwen-3b | qwen | 0.01 | 1.0 | 10 | 4 | scored | .2667<br>±.0405 | .1250<br>±.0303 | .0667<br>±.0229 | .0667<br>±.0229 | 0.0% | 7.20 |
+| qwen-3b | qwen | 0.01 | 10 | 100 | 4 | scored | .3750<br>±.0444 | .1333<br>±.0312 | .0833<br>±.0253 | .0917<br>±.0265 | 0.0% | 7.13 |
 
 > **Analysis.** No data yet — nothing to take away.
 > **Limitations / follow-up:** wait for the b=80 `w_eff=1`
@@ -2504,15 +2504,15 @@ Two activities, two shapes:
 >
 > **W&B:** none yet (no b=320 local-scope runs).
 
-| llm | prm | lam | ds_alpha | w_eff | trials | status | pass@gb | naive@gb | wei@gb | maj@gb | hr/trial |
-|---|---|---|---|---|---|---|---|---|---|---|---|
-| qwen-7b gptq-int4 | qwen | 0.01 | 0 | 0 | — | planned | — | — | — | — | — |
-| qwen-7b gptq-int4 | qwen | 0.01 | 0.01 | 0.1 | 4 | scored | .2750<br>±.0409 | .1833<br>±.0355 | .1583<br>±.0335 | .1583<br>±.0335 | 2.36 |
-| qwen-7b gptq-int4 | qwen | 0.01 | 0.03 | 0.3 | 4 | scored | .2917<br>±.0417 | .1583<br>±.0335 | .1500<br>±.0327 | .1417<br>±.0320 | 3.48 |
-| qwen-7b gptq-int4 | qwen | 0.01 | 0.1 | 1 | 4 | scored | .3250<br>±.0429 | .1667<br>±.0342 | .1333<br>±.0312 | .1250<br>±.0303 | 4.99 |
-| qwen-7b gptq-int4 | qwen | 0.01 | 0.3 | 3 | 4 | scored | .3667<br>±.0442 | .1417<br>±.0320 | .1333<br>±.0312 | .1250<br>±.0303 | 6.10 |
-| qwen-7b gptq-int4 | qwen | 0.01 | 1.0 | 10 | 4 | scored | .3917<br>±.0447 | .1667<br>±.0342 | .1667<br>±.0342 | .1667<br>±.0342 | 6.46 |
-| qwen-7b gptq-int4 | qwen | 0.01 | 10 | 100 | 4 | scored | .3750<br>±.0444 | .1583<br>±.0335 | .1500<br>±.0327 | .1417<br>±.0320 | 6.56 |
+| llm | prm | lam | ds_alpha | w_eff | trials | status | pass@gb | naive@gb | wei@gb | maj@gb | %max_phase | hr/trial |
+|---|---|---|---|---|---|---|---|---|---|---|---|---|
+| qwen-7b gptq-int4 | qwen | 0.01 | 0 | 0 | — | planned | — | — | — | — | — | — |
+| qwen-7b gptq-int4 | qwen | 0.01 | 0.01 | 0.1 | 4 | scored | .2750<br>±.0409 | .1833<br>±.0355 | .1583<br>±.0335 | .1583<br>±.0335 | 91.7% | 2.36 |
+| qwen-7b gptq-int4 | qwen | 0.01 | 0.03 | 0.3 | 4 | scored | .2917<br>±.0417 | .1583<br>±.0335 | .1500<br>±.0327 | .1417<br>±.0320 | 75.8% | 3.48 |
+| qwen-7b gptq-int4 | qwen | 0.01 | 0.1 | 1 | 4 | scored | .3250<br>±.0429 | .1667<br>±.0342 | .1333<br>±.0312 | .1250<br>±.0303 | 48.3% | 4.99 |
+| qwen-7b gptq-int4 | qwen | 0.01 | 0.3 | 3 | 4 | scored | .3667<br>±.0442 | .1417<br>±.0320 | .1333<br>±.0312 | .1250<br>±.0303 | 13.3% | 6.10 |
+| qwen-7b gptq-int4 | qwen | 0.01 | 1.0 | 10 | 4 | scored | .3917<br>±.0447 | .1667<br>±.0342 | .1667<br>±.0342 | .1667<br>±.0342 | 4.2% | 6.46 |
+| qwen-7b gptq-int4 | qwen | 0.01 | 10 | 100 | 4 | scored | .3750<br>±.0444 | .1583<br>±.0335 | .1500<br>±.0327 | .1417<br>±.0320 | 1.7% | 6.56 |
 
 > **Analysis.** No data yet — nothing to take away.
 > **Limitations / follow-up:** **queue this table first.** It
@@ -2558,15 +2558,15 @@ Two activities, two shapes:
 >
 > **W&B:** none yet (no b=320 local-scope runs).
 
-| llm | prm | lam | ds_alpha | w_eff | trials | status | pass@gb | naive@gb | wei@gb | maj@gb | hr/trial |
-|---|---|---|---|---|---|---|---|---|---|---|---|
-| qwen-math-1.5b | qwen | 0.01 | 0 | 0 | — | planned | — | — | — | — | — |
-| qwen-math-1.5b | qwen | 0.01 | 0.01 | 0.1 | 4 | scored | .2667<br>±.0405 | .1500<br>±.0327 | .1917<br>±.0361 | .1917<br>±.0361 | 3.48 |
-| qwen-math-1.5b | qwen | 0.01 | 0.03 | 0.3 | 4 | scored | .3333<br>±.0432 | .1500<br>±.0327 | .1750<br>±.0348 | .1667<br>±.0342 | 4.35 |
-| qwen-math-1.5b | qwen | 0.01 | 0.1 | 1 | 4 | scored | .4000<br>±.0449 | .1667<br>±.0342 | .1750<br>±.0348 | .1833<br>±.0355 | 5.33 |
-| qwen-math-1.5b | qwen | 0.01 | 0.3 | 3 | 4 | scored | .4000<br>±.0449 | .1833<br>±.0355 | .1833<br>±.0355 | .1917<br>±.0361 | 5.81 |
-| qwen-math-1.5b | qwen | 0.01 | 1.0 | 10 | 4 | scored | .3750<br>±.0444 | .1833<br>±.0355 | .2000<br>±.0367 | .1917<br>±.0361 | 5.88 |
-| qwen-math-1.5b | qwen | 0.01 | 10 | 100 | 4 | scored | .4000<br>±.0449 | .2000<br>±.0367 | .1833<br>±.0355 | .1750<br>±.0348 | 5.76 |
+| llm | prm | lam | ds_alpha | w_eff | trials | status | pass@gb | naive@gb | wei@gb | maj@gb | %max_phase | hr/trial |
+|---|---|---|---|---|---|---|---|---|---|---|---|---|
+| qwen-math-1.5b | qwen | 0.01 | 0 | 0 | — | planned | — | — | — | — | — | — |
+| qwen-math-1.5b | qwen | 0.01 | 0.01 | 0.1 | 4 | scored | .2667<br>±.0405 | .1500<br>±.0327 | .1917<br>±.0361 | .1917<br>±.0361 | 74.2% | 3.48 |
+| qwen-math-1.5b | qwen | 0.01 | 0.03 | 0.3 | 4 | scored | .3333<br>±.0432 | .1500<br>±.0327 | .1750<br>±.0348 | .1667<br>±.0342 | 61.7% | 4.35 |
+| qwen-math-1.5b | qwen | 0.01 | 0.1 | 1 | 4 | scored | .4000<br>±.0449 | .1667<br>±.0342 | .1750<br>±.0348 | .1833<br>±.0355 | 26.7% | 5.33 |
+| qwen-math-1.5b | qwen | 0.01 | 0.3 | 3 | 4 | scored | .4000<br>±.0449 | .1833<br>±.0355 | .1833<br>±.0355 | .1917<br>±.0361 | 4.2% | 5.81 |
+| qwen-math-1.5b | qwen | 0.01 | 1.0 | 10 | 4 | scored | .3750<br>±.0444 | .1833<br>±.0355 | .2000<br>±.0367 | .1917<br>±.0361 | 0.0% | 5.88 |
+| qwen-math-1.5b | qwen | 0.01 | 10 | 100 | 4 | scored | .4000<br>±.0449 | .2000<br>±.0367 | .1833<br>±.0355 | .1750<br>±.0348 | 0.0% | 5.76 |
 
 > **Analysis.** No data yet — nothing to take away.
 > **Limitations / follow-up:** do not queue before the b=80
