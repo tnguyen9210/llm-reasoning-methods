@@ -762,32 +762,43 @@ Two activities, two shapes:
 | qwen-math-1.5b | qwen | 1.0 | 3.0 | 3.0 | — | planned | — | — | — | — | — |
 | qwen-math-1.5b | qwen | 0.1 | 0.949 | 3.0 | — | planned | — | — | — | — | — |
 | qwen-math-1.5b | qwen | 0.01 | 0.3 | 3.0 | — | planned | — | — | — | — | — |
-| qwen-math-1.5b | qwen | **1.0** | **10** | **10** | 2 | scored | .7425<br>±.0268 | .6381<br>±.0294 | .6157<br>±.0298 | .6082<br>±.0299 | 4.85 |
+| qwen-math-1.5b | qwen | **1.0** | **10** | **10** | 2 | scored | .7164<br>±.0276 | .5896<br>±.0301 | .5746<br>±.0303 | .5597<br>±.0304 | 4.85 |
 | qwen-math-1.5b | qwen | 0.1 | 3.16 | 10 | 2 | scored | .7015<br>±.0280 | .6119<br>±.0298 | .5970<br>±.0300 | .5821<br>±.0302 | 4.81 |
 | qwen-math-1.5b | qwen | **0.01** | **1.0** | **10** | 2 | scored | .7500<br>±.0265 | .6343<br>±.0295 | .6157<br>±.0298 | .6007<br>±.0300 | 4.79 |
 | qwen-math-1.5b | qwen | 1.0 | 100 | 100 | 2 | scored | .6866<br>±.0284 | .5970<br>±.0300 | .5709<br>±.0303 | .5410<br>±.0305 | 4.75 |
 | qwen-math-1.5b | qwen | 0.1 | 31.6 | 100 | 2 | scored | .7164<br>±.0276 | .6082<br>±.0299 | .6007<br>±.0300 | .5933<br>±.0301 | 4.76 |
-| qwen-math-1.5b | qwen | 0.01 | 10 | 100 | 2 | scored | .7164<br>±.0276 | .5896<br>±.0301 | .5746<br>±.0303 | .5597<br>±.0304 | 4.83 |
+| qwen-math-1.5b | qwen | 0.01 | 10 | 100 | 2 | scored | .7425<br>±.0268 | .6381<br>±.0294 | .6157<br>±.0298 | .6082<br>±.0299 | 4.83 |
 | qwen-math-1.5b | qwen | 1.0 | 1000 | 1000 | 2 | scored | .6754<br>±.0287 | .6007<br>±.0300 | .5709<br>±.0303 | .5597<br>±.0304 | 4.83 |
 | qwen-math-1.5b | qwen | 0.1 | 316.2 | 1000 | 2 | scored | .7463<br>±.0266 | .6306<br>±.0295 | .5933<br>±.0301 | .5522<br>±.0304 | 4.81 |
 | qwen-math-1.5b | qwen | 0.01 | 100 | 1000 | 2 | scored | .7201<br>±.0275 | .6119<br>±.0298 | .5896<br>±.0301 | .5560<br>±.0304 | 4.73 |
 
+> ⚠️ **Corrected 2026-08-13:** the `w_eff=10, lam=1.0` and
+> `w_eff=100, lam=0.01` rows had their four accuracy cells
+> transposed with each other since they were first recorded
+> (`hr/trial` was unaffected). Caught by recomputing every cell
+> for the `peak` column; the recompute, each run's
+> `manifest.json` `config_identity`, and the `eval/*` summary
+> W&B has held since the original scoring pass all agree, so the
+> paste into the table was the only thing wrong. The analysis
+> below is rewritten on the corrected numbers.
+>
 > **Analysis.** 9/22 cells scored (2 trials each). Step-1 pair
-> (`w_eff=10`, `lam=1.0` vs `lam=0.01`): pass@gb .7425 vs .7500 —
-> within SEM (±.027/±.027), no strong `lam` effect at this
-> checkpoint. `lam=0.1` sits between them at .7015, noticeably
-> lower than both — the widest spread in this table so far,
-> though still within ~1 SEM of either endpoint. `w_eff=100`
-> shows a similar pattern (`lam=1.0` .6866 vs `lam=0.01`/`lam=0.1`
-> both ~.716) — `lam=1.0` trending lowest at both checkpoints. The
-> new `w_eff=1000` step continues this: `lam=1.0` .6754 is the
-> lowest of the three again, vs. `lam=0.1` .7463 (the highest) and
-> `lam=0.01` .7201 — `lam=1.0` now trending lowest at all three
-> checkpoints tested (`w_eff=10/100/1000`).
+> (`w_eff=10`, `lam=1.0` vs `lam=0.01`): pass@gb .7164 vs .7500 —
+> a .034 gap against ±.028/±.027, so ~1.2 SEM: suggestive of a
+> `lam` effect at this checkpoint, not resolved by n=2. `lam=0.1`
+> is the lowest of the three here at .7015, so `lam` is not
+> ordered monotonically at `w_eff=10`. `w_eff=100` IS monotone in
+> `lam`: .6866 / .7164 / .7425 as `lam` falls 1.0 -> 0.1 -> 0.01,
+> the cleanest single-checkpoint trend in this table. `w_eff=1000`
+> breaks the ordering again — `lam=1.0` .6754 lowest, but
+> `lam=0.1` .7463 above `lam=0.01` .7201. Net: `lam=1.0` is
+> lowest at two of the three checkpoints (100, 1000) and second
+> lowest at `w_eff=10`, which is weaker than a clean trend.
 > **Limitations / follow-up:** 13/22 cells still unrun — the
 > `w_eff=1/3` blocks, the `w_eff=0.1/0.3` on-ramp, and the
-> `w_eff=0` gap-closer; only 2 trials/cell so the `lam=1.0`
-> low-trend above is suggestive, not conclusive.
+> `w_eff=0` gap-closer; only 2 trials/cell, and with the three
+> checkpoints disagreeing on the `lam` ordering, the `lam=1.0`
+> low-trend is at best suggestive.
 
 #### embeds_center_mode comparison (lam=0.01/ds_alpha=1)
 <!-- table-id: tbl-e58353 -->
