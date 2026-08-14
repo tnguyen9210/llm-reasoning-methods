@@ -57,6 +57,7 @@ from utils.configs import (
     BLMCTSKubeV01Config, BLMCTSKubeV02Config,
     BLMCTSKdepthV01Config, BLMCTSKdepthV02Config,
     BLMCTSSemConfig, BLMCTSSemV02Config,
+    MCTSCntConfig, MCTSSemV01Config, MCTSSemV02Config,
 )
 from utils.load_data import load_data_hf
 
@@ -78,6 +79,13 @@ METHODS = {
                         "mcts_bl_sem_v01_prm800k", True),
     "mcts_bl_sem_v02": ("core.mcts_bl_sem_search_v02_00_00",
                         "mcts_bl_sem_v02_prm800k", True),
+    # Non-bl production methods (added 2026-08-13 for the
+    # sem-vs-cnt artifact). Their cores return the short 8/9-item
+    # tuple — run_one recovers the node counters from the tree.
+    "mcts_cnt_v01": ("core.mcts_cnt_search_v01_00_00",
+                     "mcts_cnt_prm800k", False),
+    "mcts_sem_v02": ("core.mcts_sem_search_v02_00_00",
+                     "mcts_sem_v02_prm800k", True),
 }
 
 
@@ -93,6 +101,9 @@ def register_schemas():
         ("mcts_bl_kdepth_v02_schema", BLMCTSKdepthV02Config),
         ("mcts_bl_sem_v01_schema", BLMCTSSemConfig),
         ("mcts_bl_sem_v02_schema", BLMCTSSemV02Config),
+        ("mcts_cnt_schema", MCTSCntConfig),
+        ("mcts_sem_v01_schema", MCTSSemV01Config),
+        ("mcts_sem_v02_schema", MCTSSemV02Config),
     ]
     for name, node in pairs:
         cs.store(group="search", name=name, node=node)
@@ -187,16 +198,39 @@ def run_one(method, q_idx, question, cfg, core_mod, takes_embeds,
 
     start = time.time()
     try:
-        (completions, comp_depth, comp_phase, comp_gen,
-         q_total_gens, q_last_phase, phase_depths,
-         q_nodes_max_depth,
-         phase_selected_depth, phase_selected_q, phase_selected_score,
-         q_nodes_total, q_nodes_terminal,
-         q_nodes_completed) = core_mod.mcts_search(*search_args)
+        ret = core_mod.mcts_search(*search_args)
     finally:
         root_logger.removeHandler(fh)
         fh.close()
     elapsed = time.time() - start
+
+    (completions, comp_depth, comp_phase, comp_gen,
+     q_total_gens, q_last_phase, phase_depths,
+     q_nodes_max_depth) = ret[:8]
+    if len(ret) == 14:
+        # bl cores: six extra diagnostics recorded in-search.
+        (phase_selected_depth, phase_selected_q,
+         phase_selected_score, q_nodes_total,
+         q_nodes_terminal, q_nodes_completed) = ret[8:]
+    else:
+        # mcts_cnt (8-tuple) / mcts_sem_v02 (9-tuple ending in
+        # cnt_cov_nodes): no per-phase selection trace; the node
+        # counters are recovered from the finished tree instead
+        # (identical to the bl counters, which include the root).
+        phase_selected_depth = None
+        phase_selected_q = None
+        phase_selected_score = None
+
+        def _count(node):
+            tot, term, comp = 1, int(node.is_terminal), \
+                int(node.is_completed)
+            for c in node.children:
+                t, e, m = _count(c)
+                tot, term, comp = tot + t, term + e, comp + m
+            return tot, term, comp
+
+        (q_nodes_total, q_nodes_terminal,
+         q_nodes_completed) = _count(agent.root)
 
     with open(tree_path, "w", encoding="utf-8") as f:
         json.dump(node_to_dict(agent.root), f, indent=1,
