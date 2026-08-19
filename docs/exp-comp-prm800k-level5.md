@@ -18,6 +18,11 @@ by gen_budget, plus a cross-algorithm best-config summary.
     - [model family, size, quantization comparison (RLHFlowPRM)](#model-family-size-quantization-comparison-rlhflowprm) · `tbl-d6065d`
     - [model family, size, quantization comparison (QwenPRM)](#model-family-size-quantization-comparison-qwenprm) · `tbl-afdda0`
     - [agg_strategy comparison (qwen-3b, qwen-math-1.5b)](#agg_strategy-comparison-qwen-3b-qwen-math-15b) · `tbl-a45ce2`
+    - [cpuct sweep (llama-1b)](#cpuct-sweep-llama-1b) · `tbl-e0b779`
+    - [cpuct sweep (llama-3b)](#cpuct-sweep-llama-3b) · `tbl-ed4e96`
+    - [cpuct sweep (qwen-3b)](#cpuct-sweep-qwen-3b) · `tbl-c93854`
+    - [cpuct sweep (qwen-7b gptq-int4)](#cpuct-sweep-qwen-7b-gptq-int4) · `tbl-0f6c1a`
+    - [cpuct sweep (qwen-math-1.5b)](#cpuct-sweep-qwen-math-15b) · `tbl-57b084`
   - [sem-mcts-v02](#sem-mcts-v02)
     - [embeds_strategy × scope sweep (QwenPRM)](#embeds_strategy-scope-sweep-qwenprm) · `tbl-666cb6`
     - [lam / ds_alpha joint sweep (llama-1b)](#lam-ds_alpha-joint-sweep-llama-1b) · `tbl-a554c7`
@@ -75,22 +80,35 @@ by gen_budget, plus a cross-algorithm best-config summary.
     - [model family, size, quantization comparison (QwenPRM, lam=0.01/ds_alpha=1)](#model-family-size-quantization-comparison-qwenprm-lam001ds_alpha1-1) · `tbl-369e81`
   - [sem-mcts-bl-v02](#sem-mcts-bl-v02)
     - [model family, size, quantization comparison (QwenPRM, parent_blend/alpha=1.0, lam=0.01/ds_alpha=10)](#model-family-size-quantization-comparison-qwenprm-parent_blendalpha10-lam001ds_alpha10) · `tbl-e9dbbb`
-- [**Tuning tables \[gen_budget=160, 320, …\] *(future)***](#tuning-tables-gen_budget160-320-future)
+- [**Tuning tables \[gen_budget=320\]**](#tuning-tables-gen_budget320)
   - [cnt-mcts](#cnt-mcts-1)
-    - [model family comparison (b=320, QwenPRM)](#model-family-comparison-b320-qwenprm) · `tbl-867868`
+    - [model family comparison (QwenPRM)](#model-family-comparison-qwenprm) · `tbl-867868`
   - [sem-mcts-v02](#sem-mcts-v02-1)
-    - [model family comparison (b=320, QwenPRM, lam=0.01/ds_alpha=1)](#model-family-comparison-b320-qwenprm-lam001ds_alpha1) · `tbl-900e87`
-    - [model family comparison (b=320, QwenPRM, lam=0.01/ds_alpha=10)](#model-family-comparison-b320-qwenprm-lam001ds_alpha10) · `tbl-01c466`
-    - [model family comparison (b=320, QwenPRM, lam=0.01/ds_alpha=1, embeds_center_mode=local)](#model-family-comparison-b320-qwenprm-lam001ds_alpha1-embeds_center_modelocal) · `tbl-6a015e`
-    - [model family comparison (b=320, QwenPRM, lam=0.01/ds_alpha=10, embeds_center_mode=local)](#model-family-comparison-b320-qwenprm-lam001ds_alpha10-embeds_center_modelocal) · `tbl-560ce2`
+    - [model family comparison (QwenPRM, lam=0.01/ds_alpha=1)](#model-family-comparison-qwenprm-lam001ds_alpha1) · `tbl-900e87`
+    - [model family comparison (QwenPRM, lam=0.01/ds_alpha=10)](#model-family-comparison-qwenprm-lam001ds_alpha10) · `tbl-01c466`
+    - [model family comparison (QwenPRM, lam=0.01/ds_alpha=1, embeds_center_mode=local)](#model-family-comparison-qwenprm-lam001ds_alpha1-embeds_center_modelocal) · `tbl-6a015e`
+    - [model family comparison (QwenPRM, lam=0.01/ds_alpha=10, embeds_center_mode=local)](#model-family-comparison-qwenprm-lam001ds_alpha10-embeds_center_modelocal) · `tbl-560ce2`
   - [sem-mcts-v02 \[cov_scope=local\]](#sem-mcts-v02-cov_scopelocal-1)
-    - [lam / ds_alpha joint sweep (b=320, llama-1b, embeds_ref=relative)](#lam-ds_alpha-joint-sweep-b320-llama-1b-embeds_refrelative) · `tbl-ec63e6`
-    - [lam / ds_alpha joint sweep (b=320, llama-3b, embeds_ref=relative)](#lam-ds_alpha-joint-sweep-b320-llama-3b-embeds_refrelative) · `tbl-0fd588`
-    - [lam / ds_alpha joint sweep (b=320, qwen-3b, embeds_ref=relative)](#lam-ds_alpha-joint-sweep-b320-qwen-3b-embeds_refrelative) · `tbl-fee240`
-    - [lam / ds_alpha joint sweep (b=320, qwen-7b gptq-int4, embeds_ref=relative)](#lam-ds_alpha-joint-sweep-b320-qwen-7b-gptq-int4-embeds_refrelative) · `tbl-27db3b`
-    - [lam / ds_alpha joint sweep (b=320, qwen-math-1.5b, embeds_ref=relative)](#lam-ds_alpha-joint-sweep-b320-qwen-math-15b-embeds_refrelative) · `tbl-7bbbf4`
+    - [lam / ds_alpha joint sweep (llama-1b, embeds_ref=relative)](#lam-ds_alpha-joint-sweep-llama-1b-embeds_refrelative-1) · `tbl-ec63e6`
+    - [lam / ds_alpha joint sweep (llama-3b, embeds_ref=relative)](#lam-ds_alpha-joint-sweep-llama-3b-embeds_refrelative-1) · `tbl-0fd588`
+    - [lam / ds_alpha joint sweep (qwen-3b, embeds_ref=relative)](#lam-ds_alpha-joint-sweep-qwen-3b-embeds_refrelative-1) · `tbl-fee240`
+    - [lam / ds_alpha joint sweep (qwen-7b gptq-int4, embeds_ref=relative)](#lam-ds_alpha-joint-sweep-qwen-7b-gptq-int4-embeds_refrelative-1) · `tbl-27db3b`
+    - [lam / ds_alpha joint sweep (qwen-math-1.5b, embeds_ref=relative)](#lam-ds_alpha-joint-sweep-qwen-math-15b-embeds_refrelative-1) · `tbl-7bbbf4`
+- [**Tuning tables \[gen_budget=320, batch_size=8\]**](#tuning-tables-gen_budget320-batch_size8)
+  - [cnt-mcts](#cnt-mcts-2)
+    - [cpuct sweep (llama-1b)](#cpuct-sweep-llama-1b-1) · `tbl-1629fa`
+    - [cpuct sweep (llama-3b)](#cpuct-sweep-llama-3b-1) · `tbl-7d2cbf`
+    - [cpuct sweep (qwen-3b)](#cpuct-sweep-qwen-3b-1) · `tbl-6a598f`
+    - [cpuct sweep (qwen-7b gptq-int4)](#cpuct-sweep-qwen-7b-gptq-int4-1) · `tbl-25c7d9`
+    - [cpuct sweep (qwen-math-1.5b)](#cpuct-sweep-qwen-math-15b-1) · `tbl-f6e8cf`
+  - [cnt-mcts \[temperature=0.5\]](#cnt-mcts-temperature05)
+    - [cpuct sweep (llama-1b)](#cpuct-sweep-llama-1b-2) · `tbl-78e158`
+    - [cpuct sweep (llama-3b)](#cpuct-sweep-llama-3b-2) · `tbl-5c5613`
+    - [cpuct sweep (qwen-3b)](#cpuct-sweep-qwen-3b-2) · `tbl-063d52`
+    - [cpuct sweep (qwen-7b gptq-int4)](#cpuct-sweep-qwen-7b-gptq-int4-2) · `tbl-50dc81`
+    - [cpuct sweep (qwen-math-1.5b)](#cpuct-sweep-qwen-math-15b-2) · `tbl-f808c7`
 
-*60 tables. Regenerate with `python scripts/gen_toc.py`.*
+*75 tables. Regenerate with `python scripts/gen_toc.py`.*
 <!-- toc:end -->
 
 ## Purpose
@@ -527,6 +545,392 @@ Two activities, two shapes:
 | qwen-math-1.5b | qwen | min | — | planned | — | — | — | — | — |
 | qwen-math-1.5b | qwen | prod | — | planned | — | — | — | — | — |
 | qwen-math-1.5b | qwen | last | — | planned | — | — | — | — | — |
+
+#### cpuct sweep (llama-1b)
+<!-- table-id: tbl-e0b779 -->
+> **Compares:** sensitivity of cnt-mcts to the exploration /
+> exploitation ratio `cpuct/q_beta`, swept {0, 1.0, 2.0, 10, ∞}
+> around the file-default 2.0 that every other cnt-mcts table
+> inherits. After a node's first visit, selection ranks
+> children by
+> `q_beta*q + cpuct*sqrt(log(N_parent)/N_child)`
+> (`core/mcts_cnt_search_v01_00_00.py::puct`), so the bracket
+> runs pure exploitation → pure exploration: `0` zeroes the
+> bonus (selection is argmax q with uniform random tie-break),
+> `1.0` halves the default, `10` sits 5× above it, and the last
+> row zeroes `q_beta` instead (see below). cnt-mcts is the
+> reference arm of every sem-vs-cnt comparison in this doc and
+> its cpuct has never been tuned at level 5; the KUBE analogue
+> (`kube_c sweep × model family`, `tbl-61a2b9`) came out
+> completely flat at b=80 — this sweep asks the same question
+> of plain UCT, per model.
+>
+> ⚠️ **The `∞` arm is the `q_beta=0` row** (last row; its
+> `cpuct` cell reads 2.0 only because some positive value must
+> be named). At `q_beta=0` the score term vanishes exactly and
+> `cpuct` becomes a common positive scale on every child, so
+> the value of cpuct cannot change the argmax — children are
+> ordered by visit count alone and equal-visit ties break
+> uniformly at random. That is the ratio's exact `∞` limit,
+> reached by construction rather than by numerical accident.
+> It is the same device sem-mcts-v02 uses for its `w_eff=∞`
+> arm: `ds_beta=0` with `ds_alpha` pinned at an arbitrary 2.0.
+>
+> ⚠️ This row **replaces the earlier `cpuct=1e18` stand-in**,
+> which is retired. Literal `inf` breaks selection (whenever
+> `log(N_parent)=0` the bonus evaluates `inf*0=NaN`, NaN fails
+> every argmax comparison, and `select_child` returns no
+> child), and `1e18` only worked by float64 spacing swallowing
+> q — a numerical argument rather than an algebraic one.
+> `q_beta=0` reproduces it pick-for-pick
+> (`unittests/check_cnt_q_beta.py` C3) with no NaN hazard and
+> no reliance on spacing. (At parent visit 1 selection is a raw
+> q argmax for every arm — the first-visit branch, mirroring
+> sem's `_select_by_q_value`; that is the algorithm, not the
+> arm.)
+>
+> ⚠️ **Every row runs at `tie_tol=1e-4`**, the sem-mcts-v02
+> selection tie band, not the cnt file default `0.0`
+> (exact-equality ties). This is a sweep-wide knob, not a
+> `cpuct=0` detail: siblings with equal visit counts share an
+> identical bonus term, so their puct gap IS their q gap at
+> every cpuct, and a q gap ≤1e-4 is a near-tie for the whole
+> bracket. One tie rule across the arms keeps them mutually
+> comparable. It also makes the `0` row an
+> independent-implementation replica of this model's sem
+> `w_eff=0` (`ds_alpha=0`) arm — code-verified 2026-08-14
+> (decisions-log): identical greedy-on-q policy, phase loop,
+> candidate dedupe, scoring and per-question seeding, with the
+> tie band the only remaining gap, so matching numbers
+> validate both zero limits and a mismatch localizes a bug.
+>
+> ⚠️ Consequence: the `cpuct=2.0` row is **no longer** the
+> shared `tbl-afdda0` model-family run — that one is
+> `tie_tol=0.0`. It is a net-new cell, so the sweep is not
+> directly comparable against the `tie_tol=0.0` cnt-mcts
+> baseline used elsewhere in this doc; read the arms against
+> the sweep's own `2.0` row, not against `tbl-afdda0`.
+>
+> ⚠️ cpuct here is NOT comparable to the bl-v02 tables'
+> `cpuct` (different value/bonus shapes per score_mode, see
+> `tbl-249fa2`) nor to `kube_c`.
+>
+> ⚠️⚠️ **THE `cpuct=0` ROWS DID NOT SPEND THE BUDGET — read
+> every endpoint comparison in this sweep with that in mind.**
+> The `%max_phase` column (added 2026-08-16, measured across
+> all 25 cells) splits the bracket in two:
+>
+> | model | `0` | `1.0` | `2.0` | `10` | `∞` |
+> |---|---|---|---|---|---|
+> | llama-1b | **56.3%** | 1.9% | 2.2% | 2.6% | 1.1% |
+> | llama-3b | **77.6%** | 4.5% | 1.9% | 2.6% | 2.2% |
+> | qwen-3b | **80.2%** | 0.0% | 0.0% | 0.0% | 0.0% |
+> | qwen-7b gptq | **94.8%** | 3.7% | 5.6% | 4.1% | 4.5% |
+> | qwen-math-1.5b | **81.0%** | 0.0% | 0.0% | 0.0% | 0.0% |
+>
+> Measured generations tell the same story: `cpuct=0` spends
+> **18.9 / 36.1 / 36.3 / 39.1 / 49.6** of the nominal 80
+> (qwen-7b / llama-3b / qwen-math / qwen-3b / llama-1b), i.e.
+> **24-62 % of the budget**, while all twenty other cells land
+> at 77-80. The mechanism is structural, not a config slip:
+> with the exploration bonus zeroed, selection is a pure q
+> argmax, so every phase re-descends the same greedy path and
+> the tree degenerates toward a chain — `num_phases` runs out
+> before `gen_budget` does. It is the same effect the sem
+> tables document at low `w_eff` (`tbl-fee240`'s underspend ⚠),
+> reached from the cnt side.
+>
+> **What this costs the sweep's headline.** "Pure exploitation
+> is worst" is measured against a run that used a quarter to
+> two-thirds of the compute the other arms got, so the
+> `0`-vs-rest gap is a **joint** exploitation+budget effect and
+> its exploration-only component is unidentified. The *interior*
+> comparisons (`1.0` / `2.0` / `10` / `∞`) are unaffected —
+> those four are spend-matched to within ~3 pts of
+> `%max_phase` in every model — which is precisely the
+> comparison the sweep found flat. So the two findings survive
+> in asymmetric health: **"the interior is flat" is clean;
+> "cpuct=0 is much worse" is confounded.**
+>
+> Deconfounding needs a `cpuct=0` cell at raised `num_phases`
+> (enough that `%max_phase` drops near 0), one per model —
+> not queued.
+>
+> **Fixed:** method=`mcts_cnt_v01`, prm=qwen, agg_strategy=
+> `last`, bs-4, d-20, b=80, prm_batch_size=1, tie_tol=1e-4,
+> tmpl=model-family default, llm=llama-1b, data.level=5,
+> run.num_trials=2.
+>
+> All 5 cells are net new: `0` `168e5d39`, `1.0` `0684faea`,
+> `2.0` `0457f1fd`, `10` `83a9358a`, `q_beta=0` `0690006c` — 5
+> cells × 2 trials at ~2.98 hr/trial ≈ 30 GPU-h.
+>
+> **W&B:** `0` `xbjil8x2`, `1.0` `gvjcd3ab`, `2.0` `74xqi51t`,
+> `10` `f3hs6fjt`, `q_beta=0` `17pjhgt4`.
+
+| llm | prm | cpuct | q_beta | trials | status | pass@gb | naive@gb | wei@gb | maj@gb | %max_phase | hr/trial |
+|---|---|---|---|---|---|---|---|---|---|---|---|
+| llama-1b | qwen | 0 | 1.0 | 2 | scored | .3022<br>±.0281 | .2537<br>±.0266 | .2388<br>±.0261 | .1866<br>±.0238 | 56.3% | 2.17 |
+| llama-1b | qwen | 1.0 | 1.0 | 2 | scored | .3433<br>±.0291 | .2463<br>±.0264 | .2388<br>±.0261 | .1940<br>±.0242 | 1.9% | 3.02 |
+| llama-1b | qwen | 2.0 | 1.0 | 2 | scored | .3470<br>±.0291 | .2575<br>±.0268 | .2239<br>±.0255 | .1791<br>±.0235 | 2.2% | 2.96 |
+| llama-1b | qwen | 10 | 1.0 | 2 | scored | .3396<br>±.0290 | .2500<br>±.0265 | .2015<br>±.0245 | .1679<br>±.0229 | 2.6% | 3.00 |
+| llama-1b | qwen | 2.0 | 0 | 2 | scored | .3619<br>±.0294 | .2687<br>±.0271 | .2127<br>±.0250 | .1791<br>±.0235 | 1.1% | 3.07 |
+
+> **Limitations / follow-up:** all 5 scored 2026-08-15. The
+> `2.0` re-run is what makes the sweep self-contained;
+> `tbl-afdda0`'s `.3619` is not a substitute for it
+> (different tie rule).
+>
+> **The `w_eff=0` third draw came in ABOVE both priors, not
+> between them:** `.3022` here against `tbl-375fa0`'s `.2724`
+> (absolute) and `tbl-ba6b11`'s `.2388` (relative), where
+> exact reproduction was expected of all three — at
+> `ds_alpha=0` the diversity term is multiplied by zero, so
+> `embeds_ref` cannot matter. Three draws of one policy now
+> span `.2388`–`.3022`, a 6.3-pt range (~1.6 z on n=2), which
+> is the reproduction envelope for this cell rather than
+> evidence for any one value.
+>
+> What DOES replicate is the search structure: `%max_phase`
+> is **56.3 % here vs 56.7 %** in `tbl-ba6b11`, i.e. the two
+> implementations drive the same fraction of question-trials
+> into the phase ceiling while their accuracies differ. Read
+> that as: the greedy policy ports correctly and the spread
+> is downstream sampling/grading noise, not a selection bug.
+> Cost differs sharply though — 2.17 vs 4.30 hr/trial for the
+> same policy (see the `cpuct=0` speed note in
+> `docs/decisions-log.md`). Feeds key: `tbl-e0b779`.
+
+#### cpuct sweep (llama-3b)
+<!-- table-id: tbl-ed4e96 -->
+> **Compares:** the same {0, 1.0, 2.0, 10, ∞} cpuct bracket as
+> the llama-1b sweep above — see its preamble for the
+> selection formula, the `∞ = q_beta=0` construction, the
+> sweep-wide `tie_tol=1e-4` tie band (and why the `cpuct=2.0`
+> row is no longer shared with `tbl-afdda0`), and the
+> comparability ⚠s.
+>
+> ⚠️⚠️ **The `cpuct=0` row underspent the budget** — see
+> the sweep-wide `%max_phase` ⚠ in the llama-1b preamble.
+> This model's `0` cell is in the `%max_phase` column
+> below; the interior arms are spend-matched, the `0`-vs-
+> rest gap is not.
+>
+> **Fixed:** method=`mcts_cnt_v01`, prm=qwen, agg_strategy=
+> `last`, bs-4, d-20, b=80, prm_batch_size=1, tie_tol=1e-4,
+> tmpl=model-family default, llm=llama-3b, data.level=5,
+> run.num_trials=2.
+>
+> All 5 cells are net new: `0` `52587dd7`, `1.0` `74d19ad8`,
+> `2.0` `98b6bf68`, `10` `ba9bbab2`, `q_beta=0` `e0298dac` — 5
+> cells × 2 trials at ~5.13 hr/trial ≈ 51 GPU-h.
+>
+> **W&B:** `0` `v3go2c9y`, `1.0` `19795y5w`, `2.0` `reimxtj3`,
+> `10` `igenok8k`, `q_beta=0` `3nlq76ng`.
+
+| llm | prm | cpuct | q_beta | trials | status | pass@gb | naive@gb | wei@gb | maj@gb | %max_phase | hr/trial |
+|---|---|---|---|---|---|---|---|---|---|---|---|
+| llama-3b | qwen | 0 | 1.0 | 2 | scored | .4627<br>±.0305 | .3993<br>±.0300 | .3731<br>±.0296 | .3582<br>±.0293 | 77.6% | 2.82 |
+| llama-3b | qwen | 1.0 | 1.0 | 2 | scored | .5560<br>±.0304 | .4104<br>±.0301 | .3955<br>±.0299 | .3545<br>±.0293 | 4.5% | 5.23 |
+| llama-3b | qwen | 2.0 | 1.0 | 2 | scored | .5597<br>±.0304 | .4067<br>±.0301 | .3806<br>±.0297 | .3694<br>±.0295 | 1.9% | 5.33 |
+| llama-3b | qwen | 10 | 1.0 | 2 | scored | .5597<br>±.0304 | .4179<br>±.0302 | .3993<br>±.0300 | .3769<br>±.0297 | 2.6% | 5.25 |
+| llama-3b | qwen | 2.0 | 0 | 2 | scored | .5634<br>±.0304 | .3993<br>±.0300 | .3657<br>±.0295 | .3358<br>±.0289 | 2.2% | 5.29 |
+
+> **Limitations / follow-up:** all 5 scored. `1.0` was
+> killed at 0h45m and relaunched from trial 0 under the new
+> tie band.
+>
+> **The climb is entirely the `0` step, and that step is
+> confounded.** pass@gb runs `.4627` (`0`) → `.5560` (`1.0`)
+> → `.5597` (`2.0`) → `.5597` (`10`) → `.5634` (`q_beta=0`):
+> +9.3 pts from `0` to `1.0`, then **0.7 pts across the whole
+> interior**. But `0` capped at **77.6 %** and spent 36.1 of
+> 80 generations against 77-79 for every other arm, so the
+> 9.3-pt step prices in a 2x budget difference and is not an
+> exploration measurement. What the table does establish
+> cleanly is the flat interior — those four are spend-matched
+> — which is the opposite of a monotone climb and closer to
+> the KUBE analogue's flatness (`tbl-61a2b9`) than the
+> earlier three-cell read suggested. The gain that does exist
+> is pass@gb only; naive@gb is flat throughout (`.3993` →
+> `.4104` → `.4067` → `.4179` → `.3993`), so wider candidate
+> pools are not reaching the PRM's pick. The `0` row
+> doubles as this model's cnt-vs-sem `w_eff=0` cross-check —
+> its counterpart is the `w_eff=0` row of the cov_scope=local
+> sem sweeps, not scored for every model yet. Feeds key:
+> `tbl-ed4e96`.
+
+#### cpuct sweep (qwen-3b)
+<!-- table-id: tbl-c93854 -->
+> **Compares:** the same {0, 1.0, 2.0, 10, ∞} cpuct bracket as
+> the llama-1b sweep above — see its preamble for the
+> selection formula, the `∞ = q_beta=0` construction, the
+> sweep-wide `tie_tol=1e-4` tie band (and why the `cpuct=2.0`
+> row is no longer shared with `tbl-afdda0`), and the
+> comparability ⚠s.
+>
+> ⚠️⚠️ **The `cpuct=0` row underspent the budget** — see
+> the sweep-wide `%max_phase` ⚠ in the llama-1b preamble.
+> This model's `0` cell is in the `%max_phase` column
+> below; the interior arms are spend-matched, the `0`-vs-
+> rest gap is not.
+>
+> **Fixed:** method=`mcts_cnt_v01`, prm=qwen, agg_strategy=
+> `last`, bs-4, d-20, b=80, prm_batch_size=1, tie_tol=1e-4,
+> tmpl=model-family default, llm=qwen-3b, data.level=5,
+> run.num_trials=2.
+>
+> All 5 cells are net new: `0` `d5659708`, `1.0` `6274e969`,
+> `2.0` `8af13d59`, `10` `c121cda5`, `q_beta=0` `53d2ed4b` — 5
+> cells × 2 trials at ~4.63 hr/trial ≈ 46 GPU-h.
+>
+> **W&B:** `0` `18wp7koy`, `1.0` `1cfcy0jd`, `2.0` `baepmnsh`,
+> `10` `s4g3xks1`, `q_beta=0` `c0f4bbjf`.
+
+| llm | prm | cpuct | q_beta | trials | status | pass@gb | naive@gb | wei@gb | maj@gb | %max_phase | hr/trial |
+|---|---|---|---|---|---|---|---|---|---|---|---|
+| qwen-3b | qwen | 0 | 1.0 | 2 | scored | .6082<br>±.0299 | .5746<br>±.0303 | .5597<br>±.0304 | .5373<br>±.0305 | 80.2% | 2.36 |
+| qwen-3b | qwen | 1.0 | 1.0 | 2 | scored | .7015<br>±.0280 | .5858<br>±.0301 | .5746<br>±.0303 | .5224<br>±.0306 | 0.0% | 4.52 |
+| qwen-3b | qwen | 2.0 | 1.0 | 2 | scored | .7127<br>±.0277 | .5933<br>±.0301 | .5858<br>±.0301 | .5522<br>±.0304 | 0.0% | 4.61 |
+| qwen-3b | qwen | 10 | 1.0 | 2 | scored | .6791<br>±.0286 | .5709<br>±.0303 | .5485<br>±.0305 | .5224<br>±.0306 | 0.0% | 4.53 |
+| qwen-3b | qwen | 2.0 | 0 | 2 | scored | .7276<br>±.0272 | .5709<br>±.0303 | .5522<br>±.0304 | .5299<br>±.0305 | 0.0% | 4.56 |
+
+> **Limitations / follow-up:** all 5 scored 2026-08-15.
+> `1.0` and
+> `10` were killed at ~5h25m and relaunched from trial 0
+> under the new tie band (~9.2 GPU-h of `tie_tol=0` work
+> discarded — each had one complete scored trial).
+>
+> **Not monotone in cpuct, and the one big step is
+> confounded.** pass@gb: `.6082` (`0`) → `.7015` (`1.0`) →
+> `.7127` (`2.0`) → `.6791` (`10`) → `.7276` (`q_beta=0`).
+> The interior spans `.6791`–`.7127`, ~1.2 SEM end to end and
+> non-monotone (`10` sits *below* both `1.0` and `2.0`), so
+> the data supports no ordering within it. The `0`-vs-rest
+> gap of ~10 pts looks decisive but **`0` capped at 80.2 %
+> and spent 39.1 of 80 generations** while every other cell
+> here spent the full 80 at 0.0 % capped — this model has the
+> cleanest spend split in the sweep and therefore the
+> clearest confound. naive@gb is flat across all five
+> (`.5709`–`.5858`), the same pass-only pattern as
+> llama-3b. The `0` row doubles as this model's cnt-vs-sem
+> `w_eff=0` cross-check — its counterpart is the `w_eff=0`
+> row of the cov_scope=local sem sweeps, not scored for every
+> model yet. Feeds key: `tbl-c93854`.
+
+#### cpuct sweep (qwen-7b gptq-int4)
+<!-- table-id: tbl-0f6c1a -->
+> **Compares:** the same {0, 1.0, 2.0, 10, ∞} cpuct bracket as
+> the llama-1b sweep above — see its preamble for the
+> selection formula, the `∞ = q_beta=0` construction, the
+> sweep-wide `tie_tol=1e-4` tie band (and why the `cpuct=2.0`
+> row is no longer shared with `tbl-afdda0`), and the
+> comparability ⚠s.
+>
+> ⚠️⚠️ **The `cpuct=0` row underspent the budget** — see
+> the sweep-wide `%max_phase` ⚠ in the llama-1b preamble.
+> This model's `0` cell is in the `%max_phase` column
+> below; the interior arms are spend-matched, the `0`-vs-
+> rest gap is not.
+>
+> **Fixed:** method=`mcts_cnt_v01`, prm=qwen, agg_strategy=
+> `last`, bs-4, d-20, b=80, prm_batch_size=1, tie_tol=1e-4,
+> tmpl=model-family default, llm=qwen-7b gptq-int4,
+> data.level=5, run.num_trials=2.
+>
+> All 5 cells are net new: `0` `985fe03d`, `1.0` `3b1ac370`,
+> `2.0` `21274bdb`, `10` `1e0bb1b4`, `q_beta=0` `fa370043` — 5
+> cells × 2 trials at ~4.19 hr/trial ≈ 42 GPU-h.
+>
+> **W&B:** `0` `lggy2kh6`, `1.0` `l424f0vo`, `2.0` `wezl6l6v`,
+> `10` `ewzgewjo`, `q_beta=0` `g1dxnmjq`.
+
+| llm | prm | cpuct | q_beta | trials | status | pass@gb | naive@gb | wei@gb | maj@gb | %max_phase | hr/trial |
+|---|---|---|---|---|---|---|---|---|---|---|---|
+| qwen-7b gptq-int4 | qwen | 0 | 1.0 | 2 | scored | .6194<br>±.0297 | .5746<br>±.0303 | .5261<br>±.0306 | .5224<br>±.0306 | 94.8% | 1.11 |
+| qwen-7b gptq-int4 | qwen | 1.0 | 1.0 | 2 | scored | .7761<br>±.0255 | .6119<br>±.0298 | .5896<br>±.0301 | .5709<br>±.0303 | 3.7% | 4.16 |
+| qwen-7b gptq-int4 | qwen | 2.0 | 1.0 | 2 | scored | .7799<br>±.0254 | .5784<br>±.0302 | .5821<br>±.0302 | .5634<br>±.0304 | 5.6% | 4.10 |
+| qwen-7b gptq-int4 | qwen | 10 | 1.0 | 2 | scored | .7724<br>±.0257 | .6157<br>±.0298 | .5560<br>±.0304 | .5485<br>±.0305 | 4.1% | 4.25 |
+| qwen-7b gptq-int4 | qwen | 2.0 | 0 | 2 | scored | .7836<br>±.0252 | .6082<br>±.0299 | .5709<br>±.0303 | .5522<br>±.0304 | 4.5% | 4.16 |
+
+> **Limitations / follow-up:** all 5 scored 2026-08-15; the
+> interior (`1.0`, `2.0`, `10`) landed together on
+> 2026-08-15.
+>
+> **The largest endpoint gap in the sweep is also the most
+> confounded one.** pass@gb `.6194` (`0`) → `.7836`
+> (`q_beta=0`), +16.4 pts, ~4 SEM — but `0` capped at
+> **94.8 %** and spent **18.9 of 80 generations, 24 % of the
+> budget**, the worst underspend of all 25 cells. A 4-SEM gap
+> against a quarter-budget run is not evidence that
+> exploration beats exploitation; it is mostly evidence that
+> 19 generations beat 78. The interior (`1.0` `.7761`, `2.0`
+> `.7799`, `10` `.7724`, `∞` `.7836`) is spend-matched at
+> 3.7-5.6 % capped and spans 1.1 pts — flat, like every other
+> model. naive@gb moves far less than pass@gb (`.5746` →
+> `.6082`), the usual coverage-without-selection pattern. The
+> 1.11 vs 4.16 hr/trial cost gap, previously read as a
+> `cpuct=0` speedup (0.28x of estimate), is now explained:
+> the cell was 0.24x the work. The `0` row doubles as this model's cnt-vs-sem
+> `w_eff=0` cross-check — its counterpart is the `w_eff=0`
+> row of the cov_scope=local sem sweeps, not scored for
+> every model yet. Feeds key: `tbl-0f6c1a`.
+
+#### cpuct sweep (qwen-math-1.5b)
+<!-- table-id: tbl-57b084 -->
+> **Compares:** the same {0, 1.0, 2.0, 10, ∞} cpuct bracket as
+> the llama-1b sweep above — see its preamble for the
+> selection formula, the `∞ = q_beta=0` construction, the
+> sweep-wide `tie_tol=1e-4` tie band (and why the `cpuct=2.0`
+> row is no longer shared with `tbl-afdda0`), and the
+> comparability ⚠s.
+>
+> ⚠️⚠️ **The `cpuct=0` row underspent the budget** — see
+> the sweep-wide `%max_phase` ⚠ in the llama-1b preamble.
+> This model's `0` cell is in the `%max_phase` column
+> below; the interior arms are spend-matched, the `0`-vs-
+> rest gap is not.
+>
+> **Fixed:** method=`mcts_cnt_v01`, prm=qwen, agg_strategy=
+> `last`, bs-4, d-20, b=80, prm_batch_size=1, tie_tol=1e-4,
+> tmpl=model-family default, llm=qwen-math-1.5b,
+> data.level=5, run.num_trials=2.
+>
+> All 5 cells are net new: `0` `986947bd`, `1.0` `f41fd3d7`,
+> `2.0` `b3cc37eb`, `10` `8ed2954f`, `q_beta=0` `6d9bd147` — 5
+> cells × 2 trials at ~3.37 hr/trial ≈ 34 GPU-h.
+>
+> **W&B:** `0` `xmd58mfa`, `1.0` `q4d5tfza`, `2.0` `6asy9n88`,
+> `10` `9sjwdrwp`, `q_beta=0` `60cmdicc`.
+
+| llm | prm | cpuct | q_beta | trials | status | pass@gb | naive@gb | wei@gb | maj@gb | %max_phase | hr/trial |
+|---|---|---|---|---|---|---|---|---|---|---|---|
+| qwen-math-1.5b | qwen | 0 | 1.0 | 2 | scored | .7127<br>±.0277 | .6530<br>±.0291 | .6381<br>±.0294 | .5970<br>±.0300 | 81.0% | 1.67 |
+| qwen-math-1.5b | qwen | 1.0 | 1.0 | 2 | scored | .7388<br>±.0269 | .6157<br>±.0298 | .6306<br>±.0295 | .6269<br>±.0296 | 0.0% | 3.33 |
+| qwen-math-1.5b | qwen | 2.0 | 1.0 | 2 | scored | .7575<br>±.0262 | .6493<br>±.0292 | .6157<br>±.0298 | .6007<br>±.0300 | 0.0% | 3.38 |
+| qwen-math-1.5b | qwen | 10 | 1.0 | 2 | scored | .7351<br>±.0270 | .6269<br>±.0296 | .5970<br>±.0300 | .5821<br>±.0302 | 0.0% | 3.37 |
+| qwen-math-1.5b | qwen | 2.0 | 0 | 2 | scored | .7463<br>±.0266 | .6194<br>±.0297 | .6045<br>±.0299 | .5896<br>±.0301 | 0.0% | 3.33 |
+
+> **Limitations / follow-up:** all 5 scored.
+>
+> **The weakest endpoint effect of the five models, and the
+> most interesting one for exactly that reason.** pass@gb
+> `.7127` (`0`) → `.7463` (`q_beta=0`), +3.4 pts, ~1.2 SEM —
+> not separable at n=2. The striking part is that `0` capped
+> at **81.0 %** and spent 36.3 of 80 generations, so this
+> model **gets within 3.4 pts of the full-budget arms on 45 %
+> of the budget**. Where qwen-7b lost 16.4 pts to the same
+> underspend, qwen-math-1.5b barely notices it: the strongest
+> model in the set extracts nearly all its accuracy from the
+> first ~36 generations, which is a statement about the base
+> policy rather than about cpuct. naive@gb actually moves the
+> other way (`.6530` → `.6194`), so extra candidates may even
+> cost the PRM's pick. The interior is flat and fully spent
+> (`1.0` `.7388`, `2.0` `.7575`, `10` `.7351`, all 0.0 %
+> capped), spanning 2.2 pts. The `0` row doubles as this
+> model's cnt-vs-sem `w_eff=0` cross-check — its counterpart
+> is the `w_eff=0` row of the cov_scope=local sem sweeps,
+> not scored for every model yet. Feeds key: `tbl-57b084`.
 
 ### sem-mcts-v02
 
@@ -1545,7 +1949,7 @@ Two activities, two shapes:
 | llama-1b | qwen | 0.01 | 0.3 | 3 | 2 | scored | .3731<br>±.0296 | .2873<br>±.0277 | .2537<br>±.0266 | .1903<br>±.0240 | 3.7% | 4.88 |
 | llama-1b | qwen | 0.01 | 1.0 | 10 | 2 | scored | .3134<br>±.0284 | .2351<br>±.0260 | .2239<br>±.0255 | .1828<br>±.0237 | 1.5% | 4.88 |
 | llama-1b | qwen | 0.01 | 10 | 100 | 2 | scored | .3246<br>±.0287 | .2164<br>±.0252 | .1978<br>±.0244 | .1679<br>±.0229 | 1.9% | 5.13 |
-| llama-1b | qwen | 0.01 | 100 | 1000 | 2 | running | — | — | — | — | — | — |
+| llama-1b | qwen | 0.01 | 100 | 1000 | 2 | scored | .3396<br>±.0290 | .2761<br>±.0274 | .2201<br>±.0254 | .1940<br>±.0242 | 2.2% | 4.95 |
 | llama-1b | qwen | 0.01 | 2.0 | ∞ | 2 | scored | .3433<br>±.0291 | .2388<br>±.0261 | .1978<br>±.0244 | .1567<br>±.0222 | 2.2% | 4.91 |
 
 > **Analysis.** All 7 finite cells plus the `∞` bookend
@@ -1654,7 +2058,7 @@ Two activities, two shapes:
 | llama-3b | qwen | 0.01 | 0.3 | 3 | 2 | scored | .5821<br>±.0302 | .4291<br>±.0303 | .3918<br>±.0299 | .3731<br>±.0296 | 6.7% | 6.85 |
 | llama-3b | qwen | 0.01 | 1.0 | 10 | 2 | scored | .5485<br>±.0305 | .3993<br>±.0300 | .3619<br>±.0294 | .3470<br>±.0291 | 4.1% | 7.08 |
 | llama-3b | qwen | 0.01 | 10 | 100 | 2 | scored | .5522<br>±.0304 | .4254<br>±.0303 | .3993<br>±.0300 | .3694<br>±.0295 | 3.4% | 7.05 |
-| llama-3b | qwen | 0.01 | 100 | 1000 | 2 | running | — | — | — | — | — | — |
+| llama-3b | qwen | 0.01 | 100 | 1000 | 2 | scored | .5858<br>±.0301 | .3955<br>±.0299 | .3545<br>±.0293 | .3209<br>±.0286 | 1.9% | 7.33 |
 | llama-3b | qwen | 0.01 | 2.0 | ∞ | 2 | scored | .5896<br>±.0301 | .4440<br>±.0304 | .3769<br>±.0297 | .3470<br>±.0291 | 3.0% | 7.15 |
 
 > **Analysis.** Finite grid complete (7/7, closed 2026-08-03);
@@ -1773,7 +2177,7 @@ Two activities, two shapes:
 | qwen-3b | qwen | 0.01 | 0.3 | 3 | 2 | scored | .7127<br>±.0277 | .6157<br>±.0298 | .5709<br>±.0303 | .5336<br>±.0305 | 0.4% | 6.35 |
 | qwen-3b | qwen | 0.01 | 1.0 | 10 | 2 | scored | .7090<br>±.0278 | .5970<br>±.0300 | .5522<br>±.0304 | .5149<br>±.0306 | 0.0% | 6.24 |
 | qwen-3b | qwen | 0.01 | 10 | 100 | 2 | scored | .6940<br>±.0282 | .5560<br>±.0304 | .5410<br>±.0305 | .5075<br>±.0306 | 0.0% | 6.11 |
-| qwen-3b | qwen | 0.01 | 100 | 1000 | 2 | running | — | — | — | — | — | — |
+| qwen-3b | qwen | 0.01 | 100 | 1000 | 2 | scored | .6679<br>±.0288 | .5597<br>±.0304 | .5373<br>±.0305 | .5149<br>±.0306 | 0.4% | 6.22 |
 | qwen-3b | qwen | 0.01 | 2.0 | ∞ | 2 | scored | .6866<br>±.0284 | .5858<br>±.0301 | .5336<br>±.0305 | .4963<br>±.0306 | 0.0% | 6.17 |
 
 > **Analysis.** Finite grid complete (7/7) plus the `∞`
@@ -1893,7 +2297,7 @@ Two activities, two shapes:
 | qwen-7b gptq-int4 | qwen | 0.01 | 0.3 | 3 | 2 | scored | .7761<br>±.0255 | .6157<br>±.0298 | .5672<br>±.0303 | .5634<br>±.0304 | 9.0% | 5.58 |
 | qwen-7b gptq-int4 | qwen | 0.01 | 1.0 | 10 | 2 | scored | .7761<br>±.0255 | .5634<br>±.0304 | .5672<br>±.0303 | .5597<br>±.0304 | 5.2% | 5.59 |
 | qwen-7b gptq-int4 | qwen | 0.01 | 10 | 100 | 2 | scored | .7537<br>±.0264 | .5896<br>±.0301 | .5784<br>±.0302 | .5597<br>±.0304 | 6.0% | 5.61 |
-| qwen-7b gptq-int4 | qwen | 0.01 | 100 | 1000 | 2 | inqueue | — | — | — | — | — | — |
+| qwen-7b gptq-int4 | qwen | 0.01 | 100 | 1000 | 2 | scored | .7761<br>±.0255 | .5672<br>±.0303 | .5522<br>±.0304 | .5448<br>±.0305 | 6.0% | 5.67 |
 | qwen-7b gptq-int4 | qwen | 0.01 | 2.0 | ∞ | 2 | scored | .7799<br>±.0254 | .6082<br>±.0299 | .5672<br>±.0303 | .5485<br>±.0305 | 3.4% | 5.66 |
 
 > **Analysis.** Finite grid complete (7/7) plus the `∞`
@@ -1997,7 +2401,7 @@ Two activities, two shapes:
 | qwen-math-1.5b | qwen | 0.01 | 0.3 | 3 | 2 | scored | .7239<br>±.0274 | .6082<br>±.0299 | .5933<br>±.0301 | .5970<br>±.0300 | 0.4% | 4.93 |
 | qwen-math-1.5b | qwen | 0.01 | 1.0 | 10 | 2 | scored | .7612<br>±.0261 | .6269<br>±.0296 | .6194<br>±.0297 | .5821<br>±.0302 | 0.0% | 4.82 |
 | qwen-math-1.5b | qwen | 0.01 | 10 | 100 | 2 | scored | .7425<br>±.0268 | .6306<br>±.0295 | .6007<br>±.0300 | .5784<br>±.0302 | 0.0% | 4.95 |
-| qwen-math-1.5b | qwen | 0.01 | 100 | 1000 | 2 | inqueue | — | — | — | — | — | — |
+| qwen-math-1.5b | qwen | 0.01 | 100 | 1000 | 2 | scored | .7201<br>±.0275 | .6007<br>±.0300 | .5896<br>±.0301 | .5634<br>±.0304 | 0.0% | 4.83 |
 | qwen-math-1.5b | qwen | 0.01 | 2.0 | ∞ | 2 | scored | .7313<br>±.0271 | .6269<br>±.0296 | .5821<br>±.0302 | .5858<br>±.0301 | 0.0% | 4.84 |
 
 > **Analysis.** Complete (7/7, closed 2026-08-03): .6791
@@ -3497,17 +3901,22 @@ Two activities, two shapes:
 > search.score_mode=parent_blend search.alpha=1.0 search.lam=0.01
 > search.ds_alpha=10`.
 
-## Tuning tables [gen_budget=160, 320, …] *(future)*
-> Add a new `## Tuning tables [gen_budget=N]` section, then
-> `###` per algorithm and `#####` per model as above, when
-> those runs start. Expected sparser (less tuning at high
-> budget). The within-algorithm scaling curve (80→160→320) is
-> read across the `gen_budget=N` tuning sections; the Summary
-> above carries the cross-algorithm cut per budget.
+## Tuning tables [gen_budget=320]
+> Same layout as the `[gen_budget=80]` section above — `###`
+> per algorithm, `####` per comparison — at
+> `search.gen_budget=320`, and every table here scores with
+> `prm=qwen_prm`. Sparser by design: less tuning at high
+> budget. Table titles omit the budget, which this section
+> header carries; each table's **Fixed** block still states
+> `b=320` explicitly. The within-algorithm scaling curve
+> (80→320) is read across the `gen_budget=N` tuning
+> sections; the Summary above carries the cross-algorithm
+> cut per budget. No `gen_budget=160` runs exist yet — add a
+> `## Tuning tables [gen_budget=160]` section if they do.
 
 ### cnt-mcts
 
-#### model family comparison (b=320, QwenPRM)
+#### model family comparison (QwenPRM)
 <!-- table-id: tbl-867868 -->
 > **Compares:** the same 5-model family/size/quantization sweep
 > as the `[gen_budget=80]` table above, but at
@@ -3562,7 +3971,7 @@ Two activities, two shapes:
 
 ### sem-mcts-v02
 
-#### model family comparison (b=320, QwenPRM, lam=0.01/ds_alpha=1)
+#### model family comparison (QwenPRM, lam=0.01/ds_alpha=1)
 <!-- table-id: tbl-900e87 -->
 > **Compares:** the same 5-model family/size/quantization sweep
 > as the b=80 `model family, size, quantization comparison
@@ -3666,7 +4075,7 @@ Two activities, two shapes:
 > b=320 *does* fit in 4096 and the "permanently blocked" framing
 > above applies only to mml6000, not to the model.
 
-#### model family comparison (b=320, QwenPRM, lam=0.01/ds_alpha=10)
+#### model family comparison (QwenPRM, lam=0.01/ds_alpha=10)
 <!-- table-id: tbl-01c466 -->
 > **Compares:** identical setup to the `ds_alpha=1` table above,
 > at `ds_alpha=10` instead of `1.0` (10× the diversity weight,
@@ -3738,7 +4147,7 @@ Two activities, two shapes:
 > question (see the `ds_alpha=1` table's note); if 4096 proves
 > sufficient, both b=320 sem tables can be completed at 5/5.
 
-#### model family comparison (b=320, QwenPRM, lam=0.01/ds_alpha=1, embeds_center_mode=local)
+#### model family comparison (QwenPRM, lam=0.01/ds_alpha=1, embeds_center_mode=local)
 <!-- table-id: tbl-6a015e -->
 > **Compares:** the `ds_alpha=1` b=320 table above (`tbl-900e87`,
 > no centering) against the same five cells run with
@@ -3835,7 +4244,7 @@ Two activities, two shapes:
 > `tbl-900e87`; if 4096 turns out to be insufficient at b=320,
 > that cell dies with its twin.
 
-#### model family comparison (b=320, QwenPRM, lam=0.01/ds_alpha=10, embeds_center_mode=local)
+#### model family comparison (QwenPRM, lam=0.01/ds_alpha=10, embeds_center_mode=local)
 <!-- table-id: tbl-560ce2 -->
 > **Compares:** same as the `ds_alpha=1, embeds_center_mode=local`
 > table above (`tbl-6a015e`), at the next `w_eff` checkpoint —
@@ -3984,7 +4393,7 @@ Two activities, two shapes:
 > and is pinned to **4096** — the same split the existing b=320
 > tables use (`-mml4096` entries).
 
-#### lam / ds_alpha joint sweep (b=320, llama-1b, embeds_ref=relative)
+#### lam / ds_alpha joint sweep (llama-1b, embeds_ref=relative)
 <!-- table-id: tbl-ec63e6 -->
 > **Compares:** the b=80 `lam / ds_alpha joint sweep (llama-1b,
 > embeds_ref=relative)` grid (`tbl-ba6b11`) at `gen_budget=320`.
@@ -4038,8 +4447,8 @@ Two activities, two shapes:
 | llama-1b | qwen | 0.01 | 0.3 | 3 | 2 | scored | .5373<br>±.0305 | .3097<br>±.0283 | .2388<br>±.0261 | .2052<br>±.0247 | 21.3% | 18.12 |
 | llama-1b | qwen | 0.01 | 1.0 | 10 | 2 | scored | .5896<br>±.0301 | .3358<br>±.0289 | .2201<br>±.0254 | .2090<br>±.0249 | 4.9% | 20.16 |
 | llama-1b | qwen | 0.01 | 10 | 100 | 2 | scored | .5746<br>±.0303 | .2948<br>±.0279 | .2276<br>±.0257 | .1978<br>±.0244 | 2.2% | 20.56 |
-| llama-1b | qwen | 0.01 | 100 | 1000 | 2 | running | — | — | — | — | — | — |
-| llama-1b | qwen | 0.01 | 2.0 | ∞ | 2 | running | — | — | — | — | — | — |
+| llama-1b | qwen | 0.01 | 100 | 1000 | 2 | scored | .5112<br>±.0306 | .2575<br>±.0268 | .2388<br>±.0261 | .1978<br>±.0244 | 3.4% | 20.49 |
+| llama-1b | qwen | 0.01 | 2.0 | ∞ | 2 | scored | .5336<br>±.0305 | .2948<br>±.0279 | .2575<br>±.0268 | .2239<br>±.0255 | 3.4% | 20.44 |
 
 > **Analysis.** Complete, 7 of 7. **The optimum moved right
 > with budget: `w_eff` 3 at b=80 (.3731) -> `w_eff` 10 at
@@ -4067,7 +4476,7 @@ Two activities, two shapes:
 > more budget. Feeds key: `tbl-ec63e6`.
 
 
-#### lam / ds_alpha joint sweep (b=320, llama-3b, embeds_ref=relative)
+#### lam / ds_alpha joint sweep (llama-3b, embeds_ref=relative)
 <!-- table-id: tbl-0fd588 -->
 > **Compares:** the b=80 `lam / ds_alpha joint sweep (llama-3b,
 > embeds_ref=relative)` grid (`tbl-cf849a`) at `gen_budget=320`.
@@ -4115,8 +4524,8 @@ Two activities, two shapes:
 > planned, not queued.
 >
 > **W&B:** `ybyetj8y`, `puxo2wg6`, `3xgi6avd`, `zy9zv9hu`,
-> `ggz0bnli`, `i3buuvpc`, `fjb277fe` (`w_eff` 0 / 0.1 / 0.3 /
-> 1 / 3 / 10 / 100).
+> `ggz0bnli`, `i3buuvpc`, `fjb277fe`, `5b73qfgd` (`w_eff` 0 /
+> 0.1 / 0.3 / 1 / 3 / 10 / 100 / 1000).
 
 | llm | prm | lam | ds_alpha | w_eff | trials | status | pass@gb | naive@gb | wei@gb | maj@gb | %max_phase | hr/trial |
 |---|---|---|---|---|---|---|---|---|---|---|---|---|
@@ -4127,8 +4536,8 @@ Two activities, two shapes:
 | llama-3b | qwen | 0.01 | 0.3 | 3 | 2 | scored | .7052<br>±.0279 | .4366<br>±.0304 | .4104<br>±.0301 | .3843<br>±.0298 | 23.5% | 25.49 |
 | llama-3b | qwen | 0.01 | 1.0 | 10 | 2 | scored | .7090<br>±.0278 | .4366<br>±.0304 | .3918<br>±.0299 | .3769<br>±.0297 | 4.1% | 28.75 |
 | llama-3b | qwen | 0.01 | 10 | 100 | 2 | scored | .7201<br>±.0275 | .4291<br>±.0303 | .3806<br>±.0297 | .3470<br>±.0291 | 4.1% | 29.03 |
-| llama-3b | qwen | 0.01 | 100 | 1000 | 2 | running | — | — | — | — | — | — |
-| llama-3b | qwen | 0.01 | 2.0 | ∞ | 2 | running | — | — | — | — | — | — |
+| llama-3b | qwen | 0.01 | 100 | 1000 | 2 | scored | .7239<br>±.0274 | .4440<br>±.0304 | .3843<br>±.0298 | .3582<br>±.0293 | 4.9% | 28.76 |
+| llama-3b | qwen | 0.01 | 2.0 | ∞ | 2 | scored | .7388<br>±.0269 | .4664<br>±.0305 | .3769<br>±.0297 | .3396<br>±.0290 | 3.4% | 29.31 |
 
 > **Analysis.** 7 of 7 — complete. **pass@gb rises monotonically
 > across the entire sweep and never turns over**: .4888 / .5784
@@ -4162,7 +4571,7 @@ Two activities, two shapes:
 > `tbl-0fd588`.
 
 
-#### lam / ds_alpha joint sweep (b=320, qwen-3b, embeds_ref=relative)
+#### lam / ds_alpha joint sweep (qwen-3b, embeds_ref=relative)
 <!-- table-id: tbl-fee240 -->
 > **Compares:** the b=80 `lam / ds_alpha joint sweep (qwen-3b,
 > embeds_ref=relative)` grid (`tbl-b1cb82`) at `gen_budget=320`.
@@ -4191,7 +4600,7 @@ Two activities, two shapes:
 > prm_batch_size=1, llm=qwen-3b,
 > **lam=0.01**, data.level=5, run.num_trials=2.
 >
-> **All 7 finite-`w_eff` cells scored.**
+> **All 8 finite-`w_eff` cells scored.**
 > Hashes, in `w_eff` order 0 / 0.1 / 0.3 / 1 /
 > 3 / 10 / 100: `6ee91354`, `20b9913f`, `5a2adf1e`,
 > `d57e81fe`, `cbd8aa53`, `185cadb5`, `7ef3ad23`.
@@ -4215,11 +4624,11 @@ Two activities, two shapes:
 > re-measured cleanly.
 >
 > `w_eff=1000` extension (`ds_alpha=100`): hash `bed5d327`,
-> planned, not queued.
+> scored, 24.71 hr/trial.
 >
 > **W&B:** `s6hfr5h7`, `eax8z451`, `fcqf9ap2`, `grbxex72`,
-> `b1hn1tie`, `3u9jjbhj`, `e5cvvjd6`
-> (`w_eff` 0 / 0.1 / 0.3 / 1 / 3 / 10 / 100).
+> `b1hn1tie`, `3u9jjbhj`, `e5cvvjd6`, `4sk5q6si`
+> (`w_eff` 0 / 0.1 / 0.3 / 1 / 3 / 10 / 100 / 1000).
 
 | llm | prm | lam | ds_alpha | w_eff | trials | status | pass@gb | naive@gb | wei@gb | maj@gb | %max_phase | hr/trial |
 |---|---|---|---|---|---|---|---|---|---|---|---|---|
@@ -4230,12 +4639,19 @@ Two activities, two shapes:
 | qwen-3b | qwen | 0.01 | 0.3 | 3 | 2 | scored | .8097<br>±.0240 | .5821<br>±.0302 | .5746<br>±.0303 | .5597<br>±.0304 | 8.2% | 24.88 |
 | qwen-3b | qwen | 0.01 | 1.0 | 10 | 2 | scored | .8134<br>±.0238 | .5821<br>±.0302 | .5821<br>±.0302 | .5522<br>±.0304 | 0.7% | 25.11 |
 | qwen-3b | qwen | 0.01 | 10 | 100 | 2 | scored | .8209<br>±.0235 | .5970<br>±.0300 | .5410<br>±.0305 | .5149<br>±.0306 | 0.7% | 25.00 |
-| qwen-3b | qwen | 0.01 | 100 | 1000 | 2 | inqueue | — | — | — | — | — | — |
-| qwen-3b | qwen | 0.01 | 2.0 | ∞ | 2 | running | — | — | — | — | — | — |
+| qwen-3b | qwen | 0.01 | 100 | 1000 | 2 | scored | .8134<br>±.0238 | .5597<br>±.0304 | .5821<br>±.0302 | .5448<br>±.0305 | 0.4% | 24.71 |
+| qwen-3b | qwen | 0.01 | 2.0 | ∞ | 2 | scored | .8060<br>±.0242 | .6194<br>±.0297 | .5522<br>±.0304 | .5149<br>±.0306 | 1.1% | 24.38 |
 
-> **Analysis.** All 7 finite cells scored. pass@gb: .6493 /
-> .7388 / .7836 / .8134 / .8097 / .8134 / .8209 for `w_eff`
-> 0 → 100. The curve **rises steeply to `w_eff=1` and then
+> **Analysis.** All 8 finite cells scored. pass@gb: .6493 /
+> .7388 / .7836 / .8134 / .8097 / .8134 / .8209 / .8134 for
+> `w_eff` 0 → 1000. **The `w_eff=1000` probe lands inside the
+> plateau, not above it**: .8134 sits between the 10 (.8134)
+> and 100 (.8209) cells, ~0.25 SE from either, so a 10x
+> extension past 100 buys nothing and the "peak at 100" read
+> is now positively ruled out rather than merely unresolved.
+> It also spends the budget cleanly (`%max_phase` 0.4 %,
+> 319.2 gens), so this is not an underspend artifact.
+> The curve **rises steeply to `w_eff=1` and then
 > plateaus**: the top four cells (1 / 3 / 10 / 100) span
 > .8097–.8209, ~0.5 SE end to end, so "peak at 100" is not
 > resolved — what is resolved is that the b=80 twin's decline
@@ -4259,14 +4675,14 @@ Two activities, two shapes:
 > .5299 → .5149. The pass-minus-wei gap widens .0933 →
 > .2799 — same coverage-without-selection pattern as
 > llama-3b (.3395), second-widest in the section.
-> **Limitations / follow-up:** 2 trials; peak location inside
-> the plateau unresolved (`w_eff=1000` row `bed5d327` is the
-> probe, inqueue). The reranker case applies here too: .2799
-> of unclaimed headroom at `w_eff=100`. Feeds key:
-> `tbl-fee240`.
+> **Limitations / follow-up:** 2 trials; the plateau is flat
+> from `w_eff=1` through 1000 and the probe row `bed5d327`
+> settled it — no further extension is worth running. The
+> reranker case applies here too: .2799 of unclaimed headroom
+> at `w_eff=100`. Feeds key: `tbl-fee240`.
 
 
-#### lam / ds_alpha joint sweep (b=320, qwen-7b gptq-int4, embeds_ref=relative)
+#### lam / ds_alpha joint sweep (qwen-7b gptq-int4, embeds_ref=relative)
 <!-- table-id: tbl-27db3b -->
 > **Compares:** the b=80 `lam / ds_alpha joint sweep (qwen-7b gptq-int4,
 > embeds_ref=relative)` grid (`tbl-5d64b1`) at `gen_budget=320`.
@@ -4331,8 +4747,8 @@ Two activities, two shapes:
 | qwen-7b gptq-int4 | qwen | 0.01 | 0.3 | 3 | 2 | scored | .8545<br>±.0216 | .6007<br>±.0300 | .6306<br>±.0295 | .6157<br>±.0298 | 35.8% | 18.43 |
 | qwen-7b gptq-int4 | qwen | 0.01 | 1.0 | 10 | 2 | scored | .8321<br>±.0229 | .6082<br>±.0299 | .5858<br>±.0301 | .5709<br>±.0303 | 16.8% | 19.97 |
 | qwen-7b gptq-int4 | qwen | 0.01 | 10 | 100 | 2 | scored | .8358<br>±.0227 | .6119<br>±.0298 | .5784<br>±.0302 | .5597<br>±.0304 | 16.4% | 20.66 |
-| qwen-7b gptq-int4 | qwen | 0.01 | 100 | 1000 | 2 | running | — | — | — | — | — | — |
-| qwen-7b gptq-int4 | qwen | 0.01 | 2.0 | ∞ | 2 | running | — | — | — | — | — | — |
+| qwen-7b gptq-int4 | qwen | 0.01 | 100 | 1000 | 2 | scored | .8582<br>±.0213 | .5746<br>±.0303 | .5746<br>±.0303 | .5597<br>±.0304 | 17.9% | 20.26 |
+| qwen-7b gptq-int4 | qwen | 0.01 | 2.0 | ∞ | 2 | scored | .8545<br>±.0216 | .6381<br>±.0294 | .5970<br>±.0300 | .5746<br>±.0303 | 15.3% | 20.49 |
 
 > **Analysis.** All 7 finite cells in. pass@gb rises .6716 /
 > .7239 / .7575 / .8022 / .8545 across `w_eff` 0 -> 3, dips to
@@ -4369,7 +4785,7 @@ Two activities, two shapes:
 > `tbl-27db3b`.
 
 
-#### lam / ds_alpha joint sweep (b=320, qwen-math-1.5b, embeds_ref=relative)
+#### lam / ds_alpha joint sweep (qwen-math-1.5b, embeds_ref=relative)
 <!-- table-id: tbl-7bbbf4 -->
 > **Compares:** the b=80 `lam / ds_alpha joint sweep (qwen-math-1.5b,
 > embeds_ref=relative)` grid (`tbl-3a76ce`) at `gen_budget=320`.
@@ -4443,8 +4859,8 @@ Two activities, two shapes:
 | qwen-math-1.5b | qwen | 0.01 | 0.3 | 3 | 2 | scored | .8396<br>±.0225 | .6530<br>±.0291 | .6381<br>±.0294 | .6231<br>±.0297 | 4.5% | 20.17 |
 | qwen-math-1.5b | qwen | 0.01 | 1.0 | 10 | 2 | scored | .8619<br>±.0211 | .6754<br>±.0287 | .6455<br>±.0293 | .6381<br>±.0294 | 0.0% | 19.69 |
 | qwen-math-1.5b | qwen | 0.01 | 10 | 100 | 2 | scored | .8321<br>±.0229 | .6343<br>±.0295 | .6269<br>±.0296 | .6082<br>±.0299 | 0.7% | 19.02 |
-| qwen-math-1.5b | qwen | 0.01 | 100 | 1000 | 2 | running | — | — | — | — | — | — |
-| qwen-math-1.5b | qwen | 0.01 | 2.0 | ∞ | 2 | running | — | — | — | — | — | — |
+| qwen-math-1.5b | qwen | 0.01 | 100 | 1000 | 2 | scored | .8209<br>±.0235 | .6679<br>±.0288 | .6306<br>±.0295 | .6119<br>±.0298 | 1.1% | 18.91 |
+| qwen-math-1.5b | qwen | 0.01 | 2.0 | ∞ | 2 | scored | .8321<br>±.0229 | .6716<br>±.0287 | .6381<br>±.0294 | .6157<br>±.0298 | 0.4% | 18.89 |
 
 > **Analysis.** Complete (7/7, closed 2026-08-13). The curve
 > rises monotonically to **.8619 at `w_eff=10` — the peak,
@@ -4474,6 +4890,479 @@ Two activities, two shapes:
 > ordering (3 < 10 > 100, all clean cells) is settled. The
 > `w_eff=1000` extension is already running (`w8sub3bh`) and
 > will extend the tail. Feeds key: `tbl-7bbbf4`.
+
+
+---
+
+## Tuning tables [gen_budget=320, batch_size=8]
+> Same layout as the `[gen_budget=80]` and `[gen_budget=320]`
+> sections above, at `search.gen_budget=320` **and**
+> `search.batch_size=8` — double the file default of 4, which
+> every other table in this doc inherits. `batch_size` is the
+> number of candidates generated per expansion, so at a fixed
+> generation budget it trades expansion *count* against
+> expansion *width*: b=320/bs-4 buys 80 narrow expansions,
+> b=320/bs-8 buys 40 wide ones. The tree therefore gets
+> shallower and bushier at the same generation cost, which is
+> the question this section exists to answer. Table titles
+> omit budget and batch size; this header carries both, and
+> each table's **Fixed** block still states `bs-8` and `b=320`
+> explicitly.
+
+### cnt-mcts
+
+#### cpuct sweep (llama-1b)
+<!-- table-id: tbl-1629fa -->
+> **Compares:** the two endpoints of the cnt-mcts
+> exploration/exploitation bracket — the file-default
+> `cpuct=2.0` and the `∞` limit — at b=320/bs-8. This is the
+> deliberate 2-arm cut of the 5-arm `{0, 1.0, 2.0, 10, ∞}`
+> sweeps in the `[gen_budget=80]` section (`tbl-e0b779` …
+> `tbl-57b084`): those found `∞` the best or near-best arm and
+> a large `cpuct=0`-vs-rest gap that widens as the policy
+> weakens — **but the 2026-08-16 `%max_phase` pass showed the
+> `cpuct=0` cells spent only 24-62 % of their budget, so that
+> gap is confounded and the surviving clean finding is that
+> the INTERIOR (`1.0` / `2.0` / `10` / `∞`) is flat.** See the
+> sweep-wide ⚠ in `tbl-e0b779`.
+>
+> That reframing raises the value of these tables rather than
+> lowering it: `cpuct=2.0` vs `∞` is exactly the spend-matched
+> half of the bracket, so these cells test the one contrast
+> the b=80 sweep measured cleanly, at 4× budget and 2× batch.
+>
+> ⚠️ **The `∞` arm is the `q_beta=0` row** (`cpuct` reads 2.0
+> only because some positive value must be named). At
+> `q_beta=0` the score term vanishes exactly and `cpuct`
+> becomes a common positive scale on every child, so its value
+> cannot change the argmax — children are ordered by visit
+> count alone, equal-visit ties breaking uniformly at random.
+> That is the ratio's exact `∞` limit, reached by construction
+> rather than numerically; see the `tbl-e0b779` preamble for
+> why the retired `cpuct=1e18` stand-in was not.
+>
+> ⚠️ **Both rows run at `tie_tol=1e-4`**, matching the b=80
+> cpuct sweeps rather than the cnt file default `0.0`. Sibling
+> nodes with equal visit counts share an identical bonus term,
+> so their puct gap IS their q gap; one tie band across the
+> arms keeps them mutually comparable.
+>
+> ⚠️ **No clean single-axis comparison exists yet.** Against
+> the b=80 cpuct sweeps these tables move budget *and* batch
+> size together; against the b=320 `model family comparison
+> (QwenPRM)` (`tbl-867868`) they move batch size *and* tie_tol
+> (that table is `tie_tol=0.0`, and has no `∞` arm). Only the
+> within-table `2.0` vs `∞` contrast is clean. Deconfounding
+> batch size would take a b=320/bs-4/`tie_tol=1e-4` row per
+> model — 5 further cells, not authored here.
+>
+> **Fixed:** method=`mcts_cnt_v01`, prm=qwen, agg_strategy=
+> `last`, **bs-8**, d-20, **b=320**, prm_batch_size=1,
+> tie_tol=1e-4, tmpl=model-family default, llm=llama-1b,
+> data.level=5, run.num_trials=2.
+>
+> Both cells are net new: `2.0` `ed025a59`, `q_beta=0`
+> `c950218f`. Cost is unmeasured at bs-8; this model ran
+> 12.1 hr/trial at b=320/bs-4, so 2 cells × 2 trials is
+> ≈ 48 GPU-h on that extrapolation.
+>
+> **W&B:** `2.0` `seaw0kq9`; `q_beta=0` failed before trial 2.
+
+| llm | prm | cpuct | q_beta | trials | status | pass@gb | naive@gb | wei@gb | maj@gb | hr/trial |
+|---|---|---|---|---|---|---|---|---|---|---|
+| llama-1b | qwen | 2.0 | 1.0 | 2 | scored | .5634<br>±.0304 | .3619<br>±.0294 | .3134<br>±.0284 | .2724<br>±.0272 | 19.69 |
+| llama-1b | qwen | 2.0 | 0 | — | running | — | — | — | — | — |
+
+> **Analysis.** Both cells queued 2026-08-15 at priority 4;
+> neither launched yet. The
+> prediction from the b=80 sweeps is that `∞` ≥ `2.0` in every
+> model and that the gap shrinks as the policy strengthens —
+> if bs-8 flips any of that, the exploration advantage is a
+> narrow-expansion artifact rather than a property of the
+> value estimate, which would matter for every cnt-mcts
+> baseline in this doc.
+> **Limitations / follow-up:** 2 trials/cell (SEM ~±.03);
+> 2 arms cannot show non-monotonicity, and the b=80 qwen-3b
+> sweep was non-monotone (`10` < `1.0`), so a flat `2.0`-vs-`∞`
+> result here does not rule out interior structure. Launch per
+> cell: `generate_mcts_cnt.py --config-name mcts_cnt_prm800k
+> llm=llama_1b prm=qwen_prm data.level=5 search.gen_budget=320
+> search.batch_size=8 search.cpuct=2.0 search.q_beta=<1.0|0.0>
+> search.tie_tol=0.0001`. Feeds key: `tbl-1629fa`.
+
+#### cpuct sweep (llama-3b)
+<!-- table-id: tbl-7d2cbf -->
+> **Compares:** the same `cpuct=2.0` vs `∞` cut at b=320/bs-8
+> as the llama-1b sweep above — see its preamble for the
+> `∞ = q_beta=0` construction, the sweep-wide `tie_tol=1e-4`
+> tie band, and the comparability ⚠s.
+>
+> **Fixed:** method=`mcts_cnt_v01`, prm=qwen, agg_strategy=
+> `last`, **bs-8**, d-20, **b=320**, prm_batch_size=1,
+> tie_tol=1e-4, tmpl=model-family default, llm=llama-3b,
+> data.level=5, run.num_trials=2.
+>
+> Both cells are net new: `2.0` `bc7075a9`, `q_beta=0` `3d53ca5a`.
+> Cost is unmeasured at bs-8; this model ran 20.9 hr/trial at
+> b=320/bs-4, so 2 cells × 2 trials is ≈ 84 GPU-h on that
+> extrapolation.
+>
+> **W&B:** `2.0` `q99z8ia6`, `q_beta=0` `0z56b3m6`.
+
+| llm | prm | cpuct | q_beta | trials | status | pass@gb | naive@gb | wei@gb | maj@gb | hr/trial |
+|---|---|---|---|---|---|---|---|---|---|---|
+| llama-3b | qwen | 2.0 | 1.0 | 2 | scored | .7425<br>±.0268 | .4925<br>±.0306 | .4664<br>±.0305 | .4179<br>±.0302 | 30.30 |
+| llama-3b | qwen | 2.0 | 0 | 2 | scored | .7612<br>±.0261 | .4664<br>±.0305 | .4552<br>±.0305 | .3993<br>±.0300 | 31.08 |
+
+> **Analysis.** Both cells queued 2026-08-15 at priority 1.5;
+> neither launched yet. Read
+> against this model's b=80 cpuct sweep (`tbl-ed4e96`) for the
+> budget/batch effect, and against the llama-1b table above
+> for the cross-model pattern.
+> **Limitations / follow-up:** 2 trials/cell (SEM ~±.03);
+> 2 arms cannot show non-monotonicity. Launch per cell:
+> `generate_mcts_cnt.py --config-name mcts_cnt_prm800k
+> llm=llama_3b prm=qwen_prm data.level=5 search.gen_budget=320
+> search.batch_size=8 search.cpuct=2.0 search.q_beta=<1.0|0.0>
+> search.tie_tol=0.0001`. Feeds key: `tbl-7d2cbf`.
+
+#### cpuct sweep (qwen-3b)
+<!-- table-id: tbl-6a598f -->
+> **Compares:** the same `cpuct=2.0` vs `∞` cut at b=320/bs-8
+> as the llama-1b sweep above — see its preamble for the
+> `∞ = q_beta=0` construction, the sweep-wide `tie_tol=1e-4`
+> tie band, and the comparability ⚠s.
+>
+> **Fixed:** method=`mcts_cnt_v01`, prm=qwen, agg_strategy=
+> `last`, **bs-8**, d-20, **b=320**, prm_batch_size=1,
+> tie_tol=1e-4, tmpl=model-family default, llm=qwen-3b,
+> data.level=5, run.num_trials=2.
+>
+> Both cells are net new: `2.0` `3729aac2`, `q_beta=0` `72b3201f`.
+> Cost is unmeasured at bs-8; this model ran 18.2 hr/trial at
+> b=320/bs-4, so 2 cells × 2 trials is ≈ 73 GPU-h on that
+> extrapolation.
+>
+> **W&B:** `2.0` `v3gskehi`, `q_beta=0` `6dldqsfl`.
+
+| llm | prm | cpuct | q_beta | trials | status | pass@gb | naive@gb | wei@gb | maj@gb | hr/trial |
+|---|---|---|---|---|---|---|---|---|---|---|
+| qwen-3b | qwen | 2.0 | 1.0 | 2 | scored | .8134<br>±.0238 | .6418<br>±.0293 | .6381<br>±.0294 | .6007<br>±.0300 | 25.59 |
+| qwen-3b | qwen | 2.0 | 0 | 2 | scored | .8022<br>±.0244 | .6381<br>±.0294 | .5970<br>±.0300 | .5709<br>±.0303 | 25.58 |
+
+> **Analysis.** Both cells queued 2026-08-15 at priority 1;
+> neither launched yet. Read
+> against this model's b=80 cpuct sweep (`tbl-c93854`) for the
+> budget/batch effect, and against the llama-1b table above
+> for the cross-model pattern.
+> **Limitations / follow-up:** 2 trials/cell (SEM ~±.03);
+> 2 arms cannot show non-monotonicity. Launch per cell:
+> `generate_mcts_cnt.py --config-name mcts_cnt_prm800k
+> llm=qwen_3b prm=qwen_prm data.level=5 search.gen_budget=320
+> search.batch_size=8 search.cpuct=2.0 search.q_beta=<1.0|0.0>
+> search.tie_tol=0.0001`. Feeds key: `tbl-6a598f`.
+
+#### cpuct sweep (qwen-7b gptq-int4)
+<!-- table-id: tbl-25c7d9 -->
+> **Compares:** the same `cpuct=2.0` vs `∞` cut at b=320/bs-8
+> as the llama-1b sweep above — see its preamble for the
+> `∞ = q_beta=0` construction, the sweep-wide `tie_tol=1e-4`
+> tie band, and the comparability ⚠s.
+>
+> **Fixed:** method=`mcts_cnt_v01`, prm=qwen, agg_strategy=
+> `last`, **bs-8**, d-20, **b=320**, prm_batch_size=1,
+> tie_tol=1e-4, tmpl=model-family default, llm=qwen-7b gptq-int4,
+> data.level=5, run.num_trials=2.
+>
+> Both cells are net new: `2.0` `3a30dd30`, `q_beta=0` `2e8cfc57`.
+> Cost is unmeasured at bs-8; this model ran 14.5 hr/trial at
+> b=320/bs-4, so 2 cells × 2 trials is ≈ 58 GPU-h on that
+> extrapolation.
+>
+> **W&B:** `2.0` `5tzyysxw`, `q_beta=0` `ftp4fk2o`.
+
+| llm | prm | cpuct | q_beta | trials | status | pass@gb | naive@gb | wei@gb | maj@gb | hr/trial |
+|---|---|---|---|---|---|---|---|---|---|---|
+| qwen-7b gptq-int4 | qwen | 2.0 | 1.0 | 2 | scored | .8358<br>±.0227 | .6679<br>±.0288 | .6231<br>±.0297 | .6157<br>±.0298 | 27.78 |
+| qwen-7b gptq-int4 | qwen | 2.0 | 0 | 2 | scored | .8396<br>±.0225 | .6381<br>±.0294 | .6082<br>±.0299 | .6007<br>±.0300 | 26.81 |
+
+> **Analysis.** Both cells queued 2026-08-15 at priority 2;
+> neither launched yet. Read
+> against this model's b=80 cpuct sweep (`tbl-0f6c1a`) for the
+> budget/batch effect, and against the llama-1b table above
+> for the cross-model pattern.
+> **Limitations / follow-up:** 2 trials/cell (SEM ~±.03);
+> 2 arms cannot show non-monotonicity. Launch per cell:
+> `generate_mcts_cnt.py --config-name mcts_cnt_prm800k
+> llm=qwen_7b_gptq_int4 prm=qwen_prm data.level=5 search.gen_budget=320
+> search.batch_size=8 search.cpuct=2.0 search.q_beta=<1.0|0.0>
+> search.tie_tol=0.0001`. Feeds key: `tbl-25c7d9`.
+
+#### cpuct sweep (qwen-math-1.5b)
+<!-- table-id: tbl-f6e8cf -->
+> **Compares:** the same `cpuct=2.0` vs `∞` cut at b=320/bs-8
+> as the llama-1b sweep above — see its preamble for the
+> `∞ = q_beta=0` construction, the sweep-wide `tie_tol=1e-4`
+> tie band, and the comparability ⚠s.
+>
+> **Fixed:** method=`mcts_cnt_v01`, prm=qwen, agg_strategy=
+> `last`, **bs-8**, d-20, **b=320**, prm_batch_size=1,
+> tie_tol=1e-4, tmpl=model-family default, llm=qwen-math-1.5b,
+> data.level=5, run.num_trials=2.
+>
+> Both cells are net new: `2.0` `1878c98a`, `q_beta=0` `21377ad4`.
+> Cost is unmeasured at bs-8; this model ran 13.48 hr/trial at
+> b=320/bs-4, so 2 cells × 2 trials is ≈ 54 GPU-h on that
+> extrapolation.
+>
+> **W&B:** `2.0` `gkdo0nyy`, `q_beta=0` `b483ipt8`.
+
+| llm | prm | cpuct | q_beta | trials | status | pass@gb | naive@gb | wei@gb | maj@gb | hr/trial |
+|---|---|---|---|---|---|---|---|---|---|---|
+| qwen-math-1.5b | qwen | 2.0 | 1.0 | 2 | scored | .8582<br>±.0213 | .6903<br>±.0283 | .6604<br>±.0290 | .6306<br>±.0295 | 19.31 |
+| qwen-math-1.5b | qwen | 2.0 | 0 | 2 | scored | .8470<br>±.0220 | .6754<br>±.0287 | .6455<br>±.0293 | .6306<br>±.0295 | 19.12 |
+
+> **Analysis.** Both cells queued 2026-08-15 at priority 3;
+> neither launched yet. Read
+> against this model's b=80 cpuct sweep (`tbl-57b084`) for the
+> budget/batch effect, and against the llama-1b table above
+> for the cross-model pattern.
+> **Limitations / follow-up:** 2 trials/cell (SEM ~±.03);
+> 2 arms cannot show non-monotonicity. Launch per cell:
+> `generate_mcts_cnt.py --config-name mcts_cnt_prm800k
+> llm=qwen_math_1_5b prm=qwen_prm data.level=5 search.gen_budget=320
+> search.batch_size=8 search.cpuct=2.0 search.q_beta=<1.0|0.0>
+> search.tie_tol=0.0001`. Feeds key: `tbl-f6e8cf`.
+
+
+### cnt-mcts [temperature=0.5]
+> Same `cpuct=2.0` vs `∞` cut as the `### cnt-mcts` block above,
+> at the same b=320/bs-8, but sampling at
+> **`gen.temperature=0.5`** instead of the file default `0.8`.
+> Titles omit the temperature; this `###` header carries it.
+>
+> ⚠️ **Temperature is not a neutral knob for this method.** At
+> each expansion the launcher replicates ONE prompt
+> `batch_size` times (`mcts_cnt_search_v01_00_00.py`, the
+> `current_templated * config.search.batch_size` line) and
+> dedupes the results by next-step text, so the sampler's
+> randomness is the ONLY thing that makes the 8 candidates
+> differ. Lowering T sharpens the next-token distribution, so
+> more of the 8 collapse to the same continuation and the
+> effective branching factor falls — at `T=0` every expansion
+> would yield exactly one candidate and the tree would
+> degenerate to a chain. These cells therefore measure
+> *narrower but individually better* candidates against the
+> `T=0.8` block's wider, noisier ones.
+>
+> Read against the `T=0.8` tables the expected signature is
+> **pass@gb down, naive/wei/maj@gb flat or up**: coverage falls
+> with diversity while the PRM's selection job gets easier. A
+> result that moves both the same way would contradict the
+> coverage-vs-selection split the b=80 cpuct sweep showed.
+>
+> ⚠️ `gen.temperature` does NOT appear in the result-dir name
+> (`...--bs-8--b-320--cfg-<hash>`), so these dirs are
+> distinguishable from their `T=0.8` twins only by config hash.
+> Match on the hash, never on the directory stem.
+
+
+#### cpuct sweep (llama-1b)
+<!-- table-id: tbl-78e158 -->
+> **Compares:** the `cpuct=2.0` vs `∞` endpoints at b=320/bs-8
+> and `gen.temperature=0.5`. See the `### cnt-mcts` block above
+> for the `∞ = q_beta=0` construction, the sweep-wide
+> `tie_tol=1e-4` tie band, and the comparability ⚠s; see this
+> block's preamble for what temperature does to expansion
+> width.
+>
+> **Fixed:** method=`mcts_cnt_v01`, prm=qwen, agg_strategy=
+> `last`, **bs-8**, d-20, **b=320**, **temperature=0.5**,
+> prm_batch_size=1, tie_tol=1e-4, tmpl=model-family default,
+> llm=llama-1b, data.level=5, run.num_trials=2.
+>
+> Both cells are net new: `2.0` `53ac89c3`, `q_beta=0`
+> `265f6156`. Cost is unmeasured; inherited from this model's
+> b=320/bs-4 rate of 12.1 hr/trial, 2 cells × 2 trials is
+> ≈ 48 GPU-h. Direct counterpart: `tbl-1629fa` (`T=0.8`).
+>
+> **W&B:** none yet.
+
+| llm | prm | cpuct | q_beta | trials | status | pass@gb | naive@gb | wei@gb | maj@gb | hr/trial |
+|---|---|---|---|---|---|---|---|---|---|---|
+| llama-1b | qwen | 2.0 | 1.0 | — | running | — | — | — | — | — |
+| llama-1b | qwen | 2.0 | 0 | — | running | — | — | — | — | — |
+
+> **Analysis.** Both cells queued 2026-08-15 at priority 8; neither
+> launched yet. The
+> question is whether the `T=0.8` endpoint gap survives a
+> sharper sampler, and whether the pass-minus-selection spread
+> narrows as predicted.
+> **Limitations / follow-up:** 2 trials/cell (SEM ~±.03); 2
+> arms cannot show interior structure. Temperature and nothing
+> else separates these cells from `tbl-1629fa`, so that pair is a
+> clean one-axis contrast — the only one in this section.
+> Launch per cell: `generate_mcts_cnt.py --config-name
+> mcts_cnt_prm800k llm=llama_1b prm=qwen_prm data.level=5
+> search.gen_budget=320 search.batch_size=8 search.cpuct=2.0
+> search.q_beta=<1.0|0.0> search.tie_tol=0.0001
+> gen.temperature=0.5`. Feeds key: `tbl-78e158`.
+
+
+#### cpuct sweep (llama-3b)
+<!-- table-id: tbl-5c5613 -->
+> **Compares:** the `cpuct=2.0` vs `∞` endpoints at b=320/bs-8
+> and `gen.temperature=0.5`, as the llama-1b table above — see
+> it and this block's preamble for the construction and the ⚠s.
+>
+> **Fixed:** method=`mcts_cnt_v01`, prm=qwen, agg_strategy=
+> `last`, **bs-8**, d-20, **b=320**, **temperature=0.5**,
+> prm_batch_size=1, tie_tol=1e-4, tmpl=model-family default,
+> llm=llama-3b, data.level=5, run.num_trials=2.
+>
+> Both cells are net new: `2.0` `223c552b`, `q_beta=0` `352706ac`.
+> Cost is unmeasured; inherited from this model's b=320/bs-4
+> rate of 20.9 hr/trial, 2 cells × 2 trials is ≈ 84 GPU-h.
+> Direct counterpart: `tbl-7d2cbf` (`T=0.8`).
+>
+> **W&B:** none yet.
+
+| llm | prm | cpuct | q_beta | trials | status | pass@gb | naive@gb | wei@gb | maj@gb | hr/trial |
+|---|---|---|---|---|---|---|---|---|---|---|
+| llama-3b | qwen | 2.0 | 1.0 | — | running | — | — | — | — | — |
+| llama-3b | qwen | 2.0 | 0 | — | running | — | — | — | — | — |
+
+> **Analysis.** Both cells queued 2026-08-15 at priority 5.5; neither
+> launched yet. The
+> question is whether the `T=0.8` endpoint gap survives a
+> sharper sampler, and whether the pass-minus-selection spread
+> narrows as predicted.
+> **Limitations / follow-up:** 2 trials/cell (SEM ~±.03); 2
+> arms cannot show interior structure. Temperature and nothing
+> else separates these cells from `tbl-7d2cbf`, so that pair is a
+> clean one-axis contrast — the only one in this section.
+> Launch per cell: `generate_mcts_cnt.py --config-name
+> mcts_cnt_prm800k llm=llama_3b prm=qwen_prm data.level=5
+> search.gen_budget=320 search.batch_size=8 search.cpuct=2.0
+> search.q_beta=<1.0|0.0> search.tie_tol=0.0001
+> gen.temperature=0.5`. Feeds key: `tbl-5c5613`.
+
+
+#### cpuct sweep (qwen-3b)
+<!-- table-id: tbl-063d52 -->
+> **Compares:** the `cpuct=2.0` vs `∞` endpoints at b=320/bs-8
+> and `gen.temperature=0.5`, as the llama-1b table above — see
+> it and this block's preamble for the construction and the ⚠s.
+>
+> **Fixed:** method=`mcts_cnt_v01`, prm=qwen, agg_strategy=
+> `last`, **bs-8**, d-20, **b=320**, **temperature=0.5**,
+> prm_batch_size=1, tie_tol=1e-4, tmpl=model-family default,
+> llm=qwen-3b, data.level=5, run.num_trials=2.
+>
+> Both cells are net new: `2.0` `eee567d7`, `q_beta=0` `6cc0c740`.
+> Cost is unmeasured; inherited from this model's b=320/bs-4
+> rate of 18.2 hr/trial, 2 cells × 2 trials is ≈ 73 GPU-h.
+> Direct counterpart: `tbl-6a598f` (`T=0.8`).
+>
+> **W&B:** `2.0` `n51341ob`.
+
+| llm | prm | cpuct | q_beta | trials | status | pass@gb | naive@gb | wei@gb | maj@gb | hr/trial |
+|---|---|---|---|---|---|---|---|---|---|---|
+| qwen-3b | qwen | 2.0 | 1.0 | 2 | scored | .8246<br>±.0233 | .6194<br>±.0297 | .5970<br>±.0300 | .5373<br>±.0305 | 24.69 |
+| qwen-3b | qwen | 2.0 | 0 | — | running | — | — | — | — | — |
+
+> **Analysis.** Both cells queued 2026-08-15 at priority 5; neither
+> launched yet. The
+> question is whether the `T=0.8` endpoint gap survives a
+> sharper sampler, and whether the pass-minus-selection spread
+> narrows as predicted.
+> **Limitations / follow-up:** 2 trials/cell (SEM ~±.03); 2
+> arms cannot show interior structure. Temperature and nothing
+> else separates these cells from `tbl-6a598f`, so that pair is a
+> clean one-axis contrast — the only one in this section.
+> Launch per cell: `generate_mcts_cnt.py --config-name
+> mcts_cnt_prm800k llm=qwen_3b prm=qwen_prm data.level=5
+> search.gen_budget=320 search.batch_size=8 search.cpuct=2.0
+> search.q_beta=<1.0|0.0> search.tie_tol=0.0001
+> gen.temperature=0.5`. Feeds key: `tbl-063d52`.
+
+
+#### cpuct sweep (qwen-7b gptq-int4)
+<!-- table-id: tbl-50dc81 -->
+> **Compares:** the `cpuct=2.0` vs `∞` endpoints at b=320/bs-8
+> and `gen.temperature=0.5`, as the llama-1b table above — see
+> it and this block's preamble for the construction and the ⚠s.
+>
+> **Fixed:** method=`mcts_cnt_v01`, prm=qwen, agg_strategy=
+> `last`, **bs-8**, d-20, **b=320**, **temperature=0.5**,
+> prm_batch_size=1, tie_tol=1e-4, tmpl=model-family default,
+> llm=qwen-7b gptq-int4, data.level=5, run.num_trials=2.
+>
+> Both cells are net new: `2.0` `afd5be08`, `q_beta=0` `b6553eb2`.
+> Cost is unmeasured; inherited from this model's b=320/bs-4
+> rate of 14.5 hr/trial, 2 cells × 2 trials is ≈ 58 GPU-h.
+> Direct counterpart: `tbl-25c7d9` (`T=0.8`).
+>
+> **W&B:** none yet.
+
+| llm | prm | cpuct | q_beta | trials | status | pass@gb | naive@gb | wei@gb | maj@gb | hr/trial |
+|---|---|---|---|---|---|---|---|---|---|---|
+| qwen-7b gptq-int4 | qwen | 2.0 | 1.0 | — | running | — | — | — | — | — |
+| qwen-7b gptq-int4 | qwen | 2.0 | 0 | — | running | — | — | — | — | — |
+
+> **Analysis.** Both cells queued 2026-08-15 at priority 6; neither
+> launched yet. The
+> question is whether the `T=0.8` endpoint gap survives a
+> sharper sampler, and whether the pass-minus-selection spread
+> narrows as predicted.
+> **Limitations / follow-up:** 2 trials/cell (SEM ~±.03); 2
+> arms cannot show interior structure. Temperature and nothing
+> else separates these cells from `tbl-25c7d9`, so that pair is a
+> clean one-axis contrast — the only one in this section.
+> Launch per cell: `generate_mcts_cnt.py --config-name
+> mcts_cnt_prm800k llm=qwen_7b_gptq_int4 prm=qwen_prm data.level=5
+> search.gen_budget=320 search.batch_size=8 search.cpuct=2.0
+> search.q_beta=<1.0|0.0> search.tie_tol=0.0001
+> gen.temperature=0.5`. Feeds key: `tbl-50dc81`.
+
+
+#### cpuct sweep (qwen-math-1.5b)
+<!-- table-id: tbl-f808c7 -->
+> **Compares:** the `cpuct=2.0` vs `∞` endpoints at b=320/bs-8
+> and `gen.temperature=0.5`, as the llama-1b table above — see
+> it and this block's preamble for the construction and the ⚠s.
+>
+> **Fixed:** method=`mcts_cnt_v01`, prm=qwen, agg_strategy=
+> `last`, **bs-8**, d-20, **b=320**, **temperature=0.5**,
+> prm_batch_size=1, tie_tol=1e-4, tmpl=model-family default,
+> llm=qwen-math-1.5b, data.level=5, run.num_trials=2.
+>
+> Both cells are net new: `2.0` `78ad8f09`, `q_beta=0` `555b0e4d`.
+> Cost is unmeasured; inherited from this model's b=320/bs-4
+> rate of 13.48 hr/trial, 2 cells × 2 trials is ≈ 54 GPU-h.
+> Direct counterpart: `tbl-f6e8cf` (`T=0.8`).
+>
+> **W&B:** none yet.
+
+| llm | prm | cpuct | q_beta | trials | status | pass@gb | naive@gb | wei@gb | maj@gb | hr/trial |
+|---|---|---|---|---|---|---|---|---|---|---|
+| qwen-math-1.5b | qwen | 2.0 | 1.0 | — | running | — | — | — | — | — |
+| qwen-math-1.5b | qwen | 2.0 | 0 | — | running | — | — | — | — | — |
+
+> **Analysis.** Both cells queued 2026-08-15 at priority 7; neither
+> launched yet. The
+> question is whether the `T=0.8` endpoint gap survives a
+> sharper sampler, and whether the pass-minus-selection spread
+> narrows as predicted.
+> **Limitations / follow-up:** 2 trials/cell (SEM ~±.03); 2
+> arms cannot show interior structure. Temperature and nothing
+> else separates these cells from `tbl-f6e8cf`, so that pair is a
+> clean one-axis contrast — the only one in this section.
+> Launch per cell: `generate_mcts_cnt.py --config-name
+> mcts_cnt_prm800k llm=qwen_math_1_5b prm=qwen_prm data.level=5
+> search.gen_budget=320 search.batch_size=8 search.cpuct=2.0
+> search.q_beta=<1.0|0.0> search.tie_tol=0.0001
+> gen.temperature=0.5`. Feeds key: `tbl-f808c7`.
 
 
 ---

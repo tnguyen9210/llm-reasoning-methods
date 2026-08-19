@@ -26,6 +26,7 @@
   overrides:
     prm: qwen_prm
     data.level: 5
+    search.cpuct: 2.0
   trials: 2
   feeds:
   - level5-cnt-model-family-qwen
@@ -43,6 +44,7 @@
     llm: llama_3b
     prm: qwen_prm
     data.level: 5
+    search.cpuct: 2.0
   trials: 2
   feeds:
   - level5-cnt-model-family-qwen
@@ -60,6 +62,7 @@
     llm: qwen_3b
     prm: qwen_prm
     data.level: 5
+    search.cpuct: 2.0
   trials: 2
   feeds:
   - level5-cnt-model-family-qwen
@@ -77,6 +80,7 @@
     llm: qwen_7b_gptq_int4
     prm: qwen_prm
     data.level: 5
+    search.cpuct: 2.0
   trials: 2
   feeds:
   - level5-cnt-model-family-qwen
@@ -94,6 +98,7 @@
     llm: qwen_math_1_5b
     prm: qwen_prm
     data.level: 5
+    search.cpuct: 2.0
   trials: 2
   feeds:
   - level5-cnt-model-family-qwen
@@ -8031,7 +8036,7 @@
   feeds:
   - tbl-ec63e6  # L5 b=320 lam/ds_alpha relative sweep, llama-1b
   group: sem-mcts
-  status: running
+  status: scored
   priority: 2
   expected_hr: 42
   note: b=320 sem qwen-PRM llama-1b cov_scope=local
@@ -8062,7 +8067,7 @@
   feeds:
   - tbl-0fd588  # L5 b=320 lam/ds_alpha relative sweep, llama-3b
   group: sem-mcts
-  status: running
+  status: scored
   priority: 2
   expected_hr: 60
   note: b=320 sem qwen-PRM llama-3b cov_scope=local
@@ -8093,7 +8098,7 @@
   feeds:
   - tbl-fee240  # L5 b=320 lam/ds_alpha relative sweep, qwen-3b
   group: sem-mcts
-  status: running
+  status: scored
   priority: 2
   expected_hr: 52
   note: b=320 sem qwen-PRM qwen-3b cov_scope=local
@@ -8124,7 +8129,7 @@
   feeds:
   - tbl-27db3b  # L5 b=320 lam/ds_alpha relative sweep, qwen-7b gptq-int4
   group: sem-mcts
-  status: running
+  status: scored
   priority: 2
   expected_hr: 41
   note: b=320 sem qwen-PRM qwen-7b-gptq cov_scope=local
@@ -8155,7 +8160,7 @@
   feeds:
   - tbl-7bbbf4  # L5 b=320 lam/ds_alpha relative sweep, qwen-math-1.5b
   group: sem-mcts
-  status: running
+  status: scored
   priority: 2
   expected_hr: 38
   note: b=320 sem qwen-PRM qwen-math-1.5b cov_scope=local
@@ -8302,7 +8307,7 @@
   feeds:
   - tbl-ec63e6  # L5 b=320 lam/ds_alpha relative sweep, llama-1b
   group: sem-mcts
-  status: running
+  status: scored
   priority: 2.1
   expected_hr: 42
   note: b=320 sem qwen-PRM llama-1b cov_scope=local
@@ -8331,7 +8336,7 @@
   feeds:
   - tbl-0fd588  # L5 b=320 lam/ds_alpha relative sweep, llama-3b
   group: sem-mcts
-  status: running
+  status: scored
   priority: 2.1
   expected_hr: 60
   note: b=320 sem qwen-PRM llama-3b cov_scope=local
@@ -8361,9 +8366,14 @@
   feeds:
   - tbl-fee240  # L5 b=320 lam/ds_alpha relative sweep, qwen-3b
   group: sem-mcts
-  status: inqueue
+  status: scored
   priority: 2.1
   expected_hr: 52
+  launch:
+    job_id: 23560035
+    node: r5u09n1
+    pid: 2777381
+    at: 2026-08-14 00:12
   note: b=320 sem qwen-PRM qwen-3b cov_scope=local
     embeds_ref=relative, lam=0.01 ds_alpha=100
     (w_eff=1000). Extends the grid past w_eff=100.
@@ -8386,7 +8396,7 @@
   feeds:
   - tbl-27db3b  # L5 b=320 lam/ds_alpha relative sweep, qwen-7b gptq-int4
   group: sem-mcts
-  status: running
+  status: scored
   priority: 2.1
   expected_hr: 41
   note: b=320 sem qwen-PRM qwen-7b-gptq cov_scope=local
@@ -8415,7 +8425,7 @@
   feeds:
   - tbl-7bbbf4  # L5 b=320 lam/ds_alpha relative sweep, qwen-math-1.5b
   group: sem-mcts
-  status: running
+  status: scored
   priority: 2.1
   expected_hr: 38
   note: b=320 sem qwen-PRM qwen-math-1.5b cov_scope=local
@@ -8443,7 +8453,7 @@
   feeds:
   - tbl-ba6b11  # L5 lam/ds_alpha relative sweep, llama-1b
   group: sem-mcts
-  status: running
+  status: scored
   priority: 2.1
   expected_hr: 11
   note: b=80 sem qwen-PRM llama-1b cov_scope=local
@@ -8470,7 +8480,7 @@
   feeds:
   - tbl-cf849a  # L5 lam/ds_alpha relative sweep, llama-3b
   group: sem-mcts
-  status: running
+  status: scored
   priority: 2.1
   expected_hr: 15
   note: b=80 sem qwen-PRM llama-3b cov_scope=local
@@ -8497,7 +8507,7 @@
   feeds:
   - tbl-b1cb82  # L5 lam/ds_alpha relative sweep, qwen-3b
   group: sem-mcts
-  status: running
+  status: scored
   priority: 2.1
   expected_hr: 13
   note: b=80 sem qwen-PRM qwen-3b cov_scope=local
@@ -8524,9 +8534,14 @@
   feeds:
   - tbl-5d64b1  # L5 lam/ds_alpha relative sweep, qwen-7b gptq-int4
   group: sem-mcts
-  status: inqueue
+  status: scored
   priority: 2.1
   expected_hr: 12
+  launch:
+    job_id: 23535503
+    node: r5u29n1
+    pid: 2777486
+    at: 2026-08-14 00:12
   note: b=80 sem qwen-PRM qwen-7b-gptq cov_scope=local
     embeds_ref=relative, lam=0.01 ds_alpha=100
     (w_eff=1000). Extends the grid past w_eff=100.
@@ -8547,9 +8562,1211 @@
   feeds:
   - tbl-3a76ce  # L5 lam/ds_alpha relative sweep, qwen-math-1.5b
   group: sem-mcts
-  status: inqueue
+  status: scored
   priority: 2.1
   expected_hr: 11
+  launch:
+    job_id: 23535501
+    node: r5u05n1
+    pid: 2785097
+    at: 2026-08-14 00:40
   note: b=80 sem qwen-PRM qwen-math-1.5b cov_scope=local
     embeds_ref=relative, lam=0.01 ds_alpha=100
     (w_eff=1000). Extends the grid past w_eff=100.
+
+- id: cnt-mcts-l5-cpuct1-qwen3b
+  launcher: generate_mcts_cnt.py
+  hash: "6274e969"
+  config_root: mcts_cnt_prm800k
+  overrides:
+    llm: qwen_3b
+    prm: qwen_prm
+    data.level: 5
+    search.cpuct: 1.0
+    search.q_beta: 1.0
+    search.tie_tol: 1.0e-4
+  trials: 2
+  feeds:
+  - tbl-c93854  # cpuct sweep (qwen-3b)
+  group: cnt-mcts
+  status: scored
+  priority: 1
+  expected_hr: 10
+  history:
+  - {at: 2026-08-14 11:2x, job_id: 23547299, outcome: respec,
+     trials_done: 0, note: killed at ~5h25m, hash 10d8cc4d ->
+     6274e969 (tie_tol=1e-4 swept-wide, Tuan 2026-08-14)}
+  launch:
+    job_id: 23547299
+    node: r5u25n1
+    pid: 2947892
+    at: 2026-08-14 11:33
+  note: b=80 cnt qwen-PRM qwen-3b, cpuct=1.0 (half the 2.0
+    default). cpuct sweep row; baseline hr/trial 4.63.
+
+- id: cnt-mcts-l5-cpuct10-qwen3b
+  launcher: generate_mcts_cnt.py
+  hash: "c121cda5"
+  config_root: mcts_cnt_prm800k
+  overrides:
+    llm: qwen_3b
+    prm: qwen_prm
+    data.level: 5
+    search.cpuct: 10.0
+    search.q_beta: 1.0
+    search.tie_tol: 1.0e-4
+  trials: 2
+  feeds:
+  - tbl-c93854  # cpuct sweep (qwen-3b)
+  group: cnt-mcts
+  status: scored
+  priority: 1
+  expected_hr: 10
+  history:
+  - {at: 2026-08-14 11:2x, job_id: 23535506, outcome: respec,
+     trials_done: 0, note: killed at ~5h25m, hash 234e6802 ->
+     c121cda5 (tie_tol=1e-4 swept-wide, Tuan 2026-08-14)}
+  launch:
+    job_id: 23535506
+    node: r5u39n1
+    pid: 2947893
+    at: 2026-08-14 11:33
+  note: b=80 cnt qwen-PRM qwen-3b, cpuct=10.0 (5x the 2.0
+    default). cpuct sweep row; baseline hr/trial 4.63.
+
+- id: cnt-mcts-l5-cpuct1-llama3b
+  launcher: generate_mcts_cnt.py
+  hash: "74d19ad8"
+  config_root: mcts_cnt_prm800k
+  overrides:
+    llm: llama_3b
+    prm: qwen_prm
+    data.level: 5
+    search.cpuct: 1.0
+    search.q_beta: 1.0
+    search.tie_tol: 1.0e-4
+  trials: 2
+  feeds:
+  - tbl-ed4e96  # cpuct sweep (llama-3b)
+  group: cnt-mcts
+  status: scored
+  priority: 2
+  expected_hr: 11
+  history:
+  - {at: 2026-08-14 11:2x, job_id: 23535501, outcome: respec,
+     trials_done: 0, note: killed at ~0h45m, hash b8a3675f ->
+     74d19ad8 (tie_tol=1e-4 swept-wide, Tuan 2026-08-14)}
+  launch:
+    job_id: 23535501
+    node: r5u05n1
+    pid: 2947894
+    at: 2026-08-14 11:33
+  note: b=80 cnt qwen-PRM llama-3b, cpuct=1.0 (half the 2.0
+    default). cpuct sweep row; baseline hr/trial 5.13.
+
+- id: cnt-mcts-l5-cpuct10-llama3b
+  launcher: generate_mcts_cnt.py
+  hash: "ba9bbab2"
+  config_root: mcts_cnt_prm800k
+  overrides:
+    llm: llama_3b
+    prm: qwen_prm
+    data.level: 5
+    search.cpuct: 10.0
+    search.q_beta: 1.0
+    search.tie_tol: 1.0e-4
+  trials: 2
+  feeds:
+  - tbl-ed4e96  # cpuct sweep (llama-3b)
+  group: cnt-mcts
+  status: scored
+  priority: 2
+  expected_hr: 11
+  note: b=80 cnt qwen-PRM llama-3b, cpuct=10.0 (5x the 2.0
+    default). cpuct sweep row; baseline hr/trial 5.13.
+  launch:
+    job_id: 23547299
+    node: r5u25n1
+    pid: 3095314
+    at: 2026-08-14 23:41
+
+- id: cnt-mcts-l5-cpuct0-llama1b
+  launcher: generate_mcts_cnt.py
+  hash: "168e5d39"
+  config_root: mcts_cnt_prm800k
+  overrides:
+    llm: llama_1b
+    prm: qwen_prm
+    data.level: 5
+    search.cpuct: 0.0
+    search.q_beta: 1.0
+    search.tie_tol: 1.0e-4
+  trials: 2
+  feeds:
+  - tbl-e0b779  # cpuct sweep (llama-1b), cpuct=0 row
+  group: cnt-mcts
+  status: scored
+  priority: 1.5
+  expected_hr: 7
+  launch:
+    job_id: 23535503
+    node: r5u29n1
+    pid: 2958430
+    at: 2026-08-14 12:15
+  note: b=80 cnt qwen-PRM llama-1b, cpuct=0 + tie_tol=1e-4 —
+    sem-aligned greedy anchor, distribution-identical to sem-v02
+    w_eff=0 (decisions-log 2026-08-14). Third draw for the
+    tbl-375fa0 (.2724) vs tbl-ba6b11 (.2388) w_eff=0 question.
+
+- id: cnt-mcts-l5-cpuct0-llama3b
+  launcher: generate_mcts_cnt.py
+  hash: "52587dd7"
+  config_root: mcts_cnt_prm800k
+  overrides:
+    llm: llama_3b
+    prm: qwen_prm
+    data.level: 5
+    search.cpuct: 0.0
+    search.q_beta: 1.0
+    search.tie_tol: 1.0e-4
+  trials: 2
+  feeds:
+  - tbl-ed4e96  # cpuct sweep (llama-3b), cpuct=0 row
+  group: cnt-mcts
+  status: scored
+  priority: 1.5
+  expected_hr: 11
+  note: b=80 cnt qwen-PRM llama-3b, cpuct=0 + tie_tol=1e-4 —
+    sem-aligned greedy anchor (decisions-log 2026-08-14).
+  launch:
+    job_id: 23563673
+    node: r5u05n1
+    pid: 3060932
+    at: 2026-08-14 20:41
+
+- id: cnt-mcts-l5-cpuct0-qwen3b
+  launcher: generate_mcts_cnt.py
+  hash: "d5659708"
+  config_root: mcts_cnt_prm800k
+  overrides:
+    llm: qwen_3b
+    prm: qwen_prm
+    data.level: 5
+    search.cpuct: 0.0
+    search.q_beta: 1.0
+    search.tie_tol: 1.0e-4
+  trials: 2
+  feeds:
+  - tbl-c93854  # cpuct sweep (qwen-3b), cpuct=0 row
+  group: cnt-mcts
+  status: scored
+  priority: 1.5
+  expected_hr: 10
+  note: b=80 cnt qwen-PRM qwen-3b, cpuct=0 + tie_tol=1e-4 —
+    sem-aligned greedy anchor (decisions-log 2026-08-14).
+  launch:
+    job_id: 23535503
+    node: r5u29n1
+    pid: 3019680
+    at: 2026-08-14 17:12
+
+- id: cnt-mcts-l5-cpuct0-qwen7bgptq
+  launcher: generate_mcts_cnt.py
+  hash: "985fe03d"
+  config_root: mcts_cnt_prm800k
+  overrides:
+    llm: qwen_7b_gptq_int4
+    prm: qwen_prm
+    data.level: 5
+    search.cpuct: 0.0
+    search.q_beta: 1.0
+    search.tie_tol: 1.0e-4
+  trials: 2
+  feeds:
+  - tbl-0f6c1a  # cpuct sweep (qwen-7b gptq), cpuct=0 row
+  group: cnt-mcts
+  status: scored
+  priority: 1.5
+  expected_hr: 9
+  note: b=80 cnt qwen-PRM qwen-7b gptq-int4, cpuct=0 +
+    tie_tol=1e-4 — sem-aligned greedy anchor (decisions-log
+    2026-08-14).
+  launch:
+    job_id: 23547299
+    node: r5u25n1
+    pid: 3066754
+    at: 2026-08-14 21:11
+
+- id: cnt-mcts-l5-cpuct0-qwenmath15b
+  launcher: generate_mcts_cnt.py
+  hash: "986947bd"
+  config_root: mcts_cnt_prm800k
+  overrides:
+    llm: qwen_math_1_5b
+    prm: qwen_prm
+    data.level: 5
+    search.cpuct: 0.0
+    search.q_beta: 1.0
+    search.tie_tol: 1.0e-4
+  trials: 2
+  feeds:
+  - tbl-57b084  # cpuct sweep (qwen-math-1.5b), cpuct=0 row
+  group: cnt-mcts
+  status: scored
+  priority: 1.5
+  expected_hr: 8
+  note: b=80 cnt qwen-PRM qwen-math-1.5b, cpuct=0 +
+    tie_tol=1e-4 — sem-aligned greedy anchor (decisions-log
+    2026-08-14).
+  launch:
+    job_id: 23564180
+    node: r5u35n1
+    pid: 3095313
+    at: 2026-08-14 23:41
+
+- id: cnt-mcts-l5-qbeta0-llama1b
+  launcher: generate_mcts_cnt.py
+  hash: "0690006c"
+  config_root: mcts_cnt_prm800k
+  overrides:
+    llm: llama_1b
+    prm: qwen_prm
+    data.level: 5
+    search.cpuct: 2.0
+    search.q_beta: 0.0
+    search.tie_tol: 1.0e-4
+  trials: 2
+  feeds:
+  - tbl-e0b779  # cpuct sweep (llama-1b), q_beta=0 row
+  group: cnt-mcts
+  status: scored
+  priority: 1
+  expected_hr: 7
+  note: b=80 cnt qwen-PRM llama-1b, q_beta=0 — the sweep's
+    exploration limit (cpuct inert at q_beta=0; 2.0 named for
+    the record). Replaces the retired cpuct=1e18 stand-in,
+    reproduced pick-for-pick (decisions-log 2026-08-14).
+  launch:
+    job_id: 23563673
+    node: r5u05n1
+    pid: 2984839
+    at: 2026-08-14 14:12
+
+- id: cnt-mcts-l5-qbeta0-llama3b
+  launcher: generate_mcts_cnt.py
+  hash: "e0298dac"
+  config_root: mcts_cnt_prm800k
+  overrides:
+    llm: llama_3b
+    prm: qwen_prm
+    data.level: 5
+    search.cpuct: 2.0
+    search.q_beta: 0.0
+    search.tie_tol: 1.0e-4
+  trials: 2
+  feeds:
+  - tbl-ed4e96  # cpuct sweep (llama-3b), q_beta=0 row
+  group: cnt-mcts
+  status: scored
+  priority: 1
+  expected_hr: 11
+  note: b=80 cnt qwen-PRM llama-3b, q_beta=0 — the sweep's
+    exploration limit (decisions-log 2026-08-14).
+  launch:
+    job_id: 23563675
+    node: r5u09n1
+    pid: 2984840
+    at: 2026-08-14 14:12
+
+- id: cnt-mcts-l5-qbeta0-qwen3b
+  launcher: generate_mcts_cnt.py
+  hash: "53d2ed4b"
+  config_root: mcts_cnt_prm800k
+  overrides:
+    llm: qwen_3b
+    prm: qwen_prm
+    data.level: 5
+    search.cpuct: 2.0
+    search.q_beta: 0.0
+    search.tie_tol: 1.0e-4
+  trials: 2
+  feeds:
+  - tbl-c93854  # cpuct sweep (qwen-3b), q_beta=0 row
+  group: cnt-mcts
+  status: scored
+  priority: 1
+  expected_hr: 10
+  note: b=80 cnt qwen-PRM qwen-3b, q_beta=0 — the sweep's
+    exploration limit (decisions-log 2026-08-14).
+  launch:
+    job_id: 23564180
+    node: r5u35n1
+    pid: 2984841
+    at: 2026-08-14 14:12
+
+- id: cnt-mcts-l5-qbeta0-qwen7bgptq
+  launcher: generate_mcts_cnt.py
+  hash: "fa370043"
+  config_root: mcts_cnt_prm800k
+  overrides:
+    llm: qwen_7b_gptq_int4
+    prm: qwen_prm
+    data.level: 5
+    search.cpuct: 2.0
+    search.q_beta: 0.0
+    search.tie_tol: 1.0e-4
+  trials: 2
+  feeds:
+  - tbl-0f6c1a  # cpuct sweep (qwen-7b gptq-int4), q_beta=0 row
+  group: cnt-mcts
+  status: scored
+  priority: 1
+  expected_hr: 9
+  note: b=80 cnt qwen-PRM qwen-7b gptq-int4, q_beta=0 — the
+    sweep's exploration limit (decisions-log 2026-08-14).
+  launch:
+    job_id: 23547450
+    node: r5u09n1
+    pid: 2990750
+    at: 2026-08-14 14:41
+
+- id: cnt-mcts-l5-qbeta0-qwenmath15b
+  launcher: generate_mcts_cnt.py
+  hash: "6d9bd147"
+  config_root: mcts_cnt_prm800k
+  overrides:
+    llm: qwen_math_1_5b
+    prm: qwen_prm
+    data.level: 5
+    search.cpuct: 2.0
+    search.q_beta: 0.0
+    search.tie_tol: 1.0e-4
+  trials: 2
+  feeds:
+  - tbl-57b084  # cpuct sweep (qwen-math-1.5b), q_beta=0 row
+  group: cnt-mcts
+  status: scored
+  priority: 1
+  expected_hr: 8
+  note: b=80 cnt qwen-PRM qwen-math-1.5b, q_beta=0 — the
+    sweep's exploration limit (decisions-log 2026-08-14).
+  launch:
+    job_id: 23535504
+    node: r5u33n1
+    pid: 3002190
+    at: 2026-08-14 15:41
+
+- id: cnt-mcts-l5-cpuct1-llama1b
+  launcher: generate_mcts_cnt.py
+  hash: "0684faea"
+  config_root: mcts_cnt_prm800k
+  overrides:
+    llm: llama_1b
+    prm: qwen_prm
+    data.level: 5
+    search.cpuct: 1.0
+    search.q_beta: 1.0
+    search.tie_tol: 1.0e-4
+  trials: 2
+  feeds:
+  - tbl-e0b779  # cpuct sweep (llama-1b), cpuct=1 row
+  group: cnt-mcts
+  status: scored
+  priority: 2
+  expected_hr: 7
+  note: b=80 cnt qwen-PRM llama-1b, cpuct=1.0 (half the 2.0 default).
+  launch:
+    job_id: 23547450
+    node: r5u09n1
+    pid: 3095315
+    at: 2026-08-14 23:41
+
+- id: cnt-mcts-l5-cpuct2-llama1b
+  launcher: generate_mcts_cnt.py
+  hash: "0457f1fd"
+  config_root: mcts_cnt_prm800k
+  overrides:
+    llm: llama_1b
+    prm: qwen_prm
+    data.level: 5
+    search.cpuct: 2.0
+    search.q_beta: 1.0
+    search.tie_tol: 1.0e-4
+  trials: 2
+  feeds:
+  - tbl-e0b779  # cpuct sweep (llama-1b), cpuct=2 row
+  group: cnt-mcts
+  status: scored
+  priority: 2
+  expected_hr: 7
+  note: b=80 cnt qwen-PRM llama-1b, cpuct=2.0 — the sweep's internal reference; a fresh
+    run at tie_tol=1e-4, NOT the shared tbl-afdda0 entry.
+  launch:
+    job_id: 23563676
+    node: r5u29n1
+    pid: 3136927
+    at: 2026-08-15 03:49
+
+- id: cnt-mcts-l5-cpuct10-llama1b
+  launcher: generate_mcts_cnt.py
+  hash: "83a9358a"
+  config_root: mcts_cnt_prm800k
+  overrides:
+    llm: llama_1b
+    prm: qwen_prm
+    data.level: 5
+    search.cpuct: 10.0
+    search.q_beta: 1.0
+    search.tie_tol: 1.0e-4
+  trials: 2
+  feeds:
+  - tbl-e0b779  # cpuct sweep (llama-1b), cpuct=1 row
+  group: cnt-mcts
+  status: scored
+  priority: 2
+  expected_hr: 7
+  note: b=80 cnt qwen-PRM llama-1b, cpuct=10.0 (5x the 2.0 default).
+  launch:
+    job_id: 23563673
+    node: r5u05n1
+    pid: 3136928
+    at: 2026-08-15 03:49
+
+- id: cnt-mcts-l5-cpuct2-llama3b
+  launcher: generate_mcts_cnt.py
+  hash: "98b6bf68"
+  config_root: mcts_cnt_prm800k
+  overrides:
+    llm: llama_3b
+    prm: qwen_prm
+    data.level: 5
+    search.cpuct: 2.0
+    search.q_beta: 1.0
+    search.tie_tol: 1.0e-4
+  trials: 2
+  feeds:
+  - tbl-ed4e96  # cpuct sweep (llama-3b), cpuct=2 row
+  group: cnt-mcts
+  status: scored
+  priority: 2
+  expected_hr: 11
+  note: b=80 cnt qwen-PRM llama-3b, cpuct=2.0 — the sweep's internal reference; a fresh
+    run at tie_tol=1e-4, NOT the shared tbl-afdda0 entry.
+  launch:
+    job_id: 23563675
+    node: r5u09n1
+    pid: 3136929
+    at: 2026-08-15 03:49
+
+- id: cnt-mcts-l5-cpuct2-qwen3b
+  launcher: generate_mcts_cnt.py
+  hash: "8af13d59"
+  config_root: mcts_cnt_prm800k
+  overrides:
+    llm: qwen_3b
+    prm: qwen_prm
+    data.level: 5
+    search.cpuct: 2.0
+    search.q_beta: 1.0
+    search.tie_tol: 1.0e-4
+  trials: 2
+  feeds:
+  - tbl-c93854  # cpuct sweep (qwen-3b), cpuct=2 row
+  group: cnt-mcts
+  status: scored
+  priority: 2
+  expected_hr: 10
+  note: b=80 cnt qwen-PRM qwen-3b, cpuct=2.0 — the sweep's internal reference; a fresh
+    run at tie_tol=1e-4, NOT the shared tbl-afdda0 entry.
+  launch:
+    job_id: 23564180
+    node: r5u35n1
+    pid: 3136930
+    at: 2026-08-15 03:49
+
+- id: cnt-mcts-l5-cpuct1-qwen7bgptq
+  launcher: generate_mcts_cnt.py
+  hash: "3b1ac370"
+  config_root: mcts_cnt_prm800k
+  overrides:
+    llm: qwen_7b_gptq_int4
+    prm: qwen_prm
+    data.level: 5
+    search.cpuct: 1.0
+    search.q_beta: 1.0
+    search.tie_tol: 1.0e-4
+  trials: 2
+  feeds:
+  - tbl-0f6c1a  # cpuct sweep (qwen-7b gptq-int4), cpuct=1 row
+  group: cnt-mcts
+  status: scored
+  priority: 2
+  expected_hr: 9
+  note: b=80 cnt qwen-PRM qwen-7b gptq-int4, cpuct=1.0 (half the 2.0 default).
+  launch:
+    job_id: 23564216
+    node: r5u39n1
+    pid: 3226221
+    at: 2026-08-15 04:36
+
+- id: cnt-mcts-l5-cpuct2-qwen7bgptq
+  launcher: generate_mcts_cnt.py
+  hash: "21274bdb"
+  config_root: mcts_cnt_prm800k
+  overrides:
+    llm: qwen_7b_gptq_int4
+    prm: qwen_prm
+    data.level: 5
+    search.cpuct: 2.0
+    search.q_beta: 1.0
+    search.tie_tol: 1.0e-4
+  trials: 2
+  feeds:
+  - tbl-0f6c1a  # cpuct sweep (qwen-7b gptq-int4), cpuct=2 row
+  group: cnt-mcts
+  status: scored
+  priority: 2
+  expected_hr: 9
+  note: b=80 cnt qwen-PRM qwen-7b gptq-int4, cpuct=2.0 — the sweep's internal reference; a fresh
+    run at tie_tol=1e-4, NOT the shared tbl-afdda0 entry.
+  launch:
+    job_id: 23564217
+    node: r5u39n1
+    pid: 3226222
+    at: 2026-08-15 04:36
+
+- id: cnt-mcts-l5-cpuct10-qwen7bgptq
+  launcher: generate_mcts_cnt.py
+  hash: "1e0bb1b4"
+  config_root: mcts_cnt_prm800k
+  overrides:
+    llm: qwen_7b_gptq_int4
+    prm: qwen_prm
+    data.level: 5
+    search.cpuct: 10.0
+    search.q_beta: 1.0
+    search.tie_tol: 1.0e-4
+  trials: 2
+  feeds:
+  - tbl-0f6c1a  # cpuct sweep (qwen-7b gptq-int4), cpuct=1 row
+  group: cnt-mcts
+  status: scored
+  priority: 2
+  expected_hr: 9
+  note: b=80 cnt qwen-PRM qwen-7b gptq-int4, cpuct=10.0 (5x the 2.0 default).
+  launch:
+    job_id: 23564218
+    node: r5u33n1
+    pid: 3227949
+    at: 2026-08-15 04:49
+
+- id: cnt-mcts-l5-cpuct1-qwenmath15b
+  launcher: generate_mcts_cnt.py
+  hash: "f41fd3d7"
+  config_root: mcts_cnt_prm800k
+  overrides:
+    llm: qwen_math_1_5b
+    prm: qwen_prm
+    data.level: 5
+    search.cpuct: 1.0
+    search.q_beta: 1.0
+    search.tie_tol: 1.0e-4
+  trials: 2
+  feeds:
+  - tbl-57b084  # cpuct sweep (qwen-math-1.5b), cpuct=1 row
+  group: cnt-mcts
+  status: scored
+  priority: 2
+  expected_hr: 8
+  note: b=80 cnt qwen-PRM qwen-math-1.5b, cpuct=1.0 (half the 2.0 default).
+  launch:
+    job_id: 23564220
+    node: r5u39n1
+    pid: 3235284
+    at: 2026-08-15 05:49
+
+- id: cnt-mcts-l5-cpuct2-qwenmath15b
+  launcher: generate_mcts_cnt.py
+  hash: "b3cc37eb"
+  config_root: mcts_cnt_prm800k
+  overrides:
+    llm: qwen_math_1_5b
+    prm: qwen_prm
+    data.level: 5
+    search.cpuct: 2.0
+    search.q_beta: 1.0
+    search.tie_tol: 1.0e-4
+  trials: 2
+  feeds:
+  - tbl-57b084  # cpuct sweep (qwen-math-1.5b), cpuct=2 row
+  group: cnt-mcts
+  status: scored
+  priority: 2
+  expected_hr: 8
+  note: b=80 cnt qwen-PRM qwen-math-1.5b, cpuct=2.0 — the sweep's internal reference; a fresh
+    run at tie_tol=1e-4, NOT the shared tbl-afdda0 entry.
+  launch:
+    job_id: 23547450
+    node: r5u09n1
+    pid: 3238814
+    at: 2026-08-15 06:19
+
+- id: cnt-mcts-l5-cpuct10-qwenmath15b
+  launcher: generate_mcts_cnt.py
+  hash: "8ed2954f"
+  config_root: mcts_cnt_prm800k
+  overrides:
+    llm: qwen_math_1_5b
+    prm: qwen_prm
+    data.level: 5
+    search.cpuct: 10.0
+    search.q_beta: 1.0
+    search.tie_tol: 1.0e-4
+  trials: 2
+  feeds:
+  - tbl-57b084  # cpuct sweep (qwen-math-1.5b), cpuct=1 row
+  group: cnt-mcts
+  status: scored
+  priority: 2
+  expected_hr: 8
+  note: b=80 cnt qwen-PRM qwen-math-1.5b, cpuct=10.0 (5x the 2.0 default).
+  launch:
+    job_id: 23555379
+    node: r5u17n1
+    pid: 3252230
+    at: 2026-08-15 09:19
+- id: cnt-mcts-l5-b320-bs8-cpuct2-qwen3b
+  launcher: generate_mcts_cnt.py
+  hash: "3729aac2"
+  config_root: mcts_cnt_prm800k
+  overrides:
+    llm: qwen_3b
+    prm: qwen_prm
+    data.level: 5
+    search.gen_budget: 320
+    search.batch_size: 8
+    search.cpuct: 2.0
+    search.q_beta: 1.0
+    search.tie_tol: 1.0e-4
+  trials: 2
+  feeds:
+  - tbl-6a598f  # cpuct sweep (qwen-3b), b=320/bs-8, cpuct=2.0 row
+  group: cnt-mcts
+  status: scored
+  priority: 1
+  expected_hr: 36
+  note: b=320 bs-8 cnt qwen-PRM qwen-3b, cpuct=2.0 (file default).
+  launch:
+    job_id: 23564219
+    node: r5u29n1
+    pid: 3264824
+    at: 2026-08-15 10:46
+- id: cnt-mcts-l5-b320-bs8-qbeta0-qwen3b
+  launcher: generate_mcts_cnt.py
+  hash: "72b3201f"
+  config_root: mcts_cnt_prm800k
+  overrides:
+    llm: qwen_3b
+    prm: qwen_prm
+    data.level: 5
+    search.gen_budget: 320
+    search.batch_size: 8
+    search.cpuct: 2.0
+    search.q_beta: 0.0
+    search.tie_tol: 1.0e-4
+  trials: 2
+  feeds:
+  - tbl-6a598f  # cpuct sweep (qwen-3b), b=320/bs-8, q_beta=0 (cpuct/q_beta = inf) row
+  group: cnt-mcts
+  status: scored
+  priority: 1
+  expected_hr: 36
+  note: b=320 bs-8 cnt qwen-PRM qwen-3b, q_beta=0, the cpuct/q_beta=inf limit.
+  launch:
+    job_id: 23564221
+    node: r5u25n1
+    pid: 3271118
+    at: 2026-08-15 11:23
+- id: cnt-mcts-l5-b320-bs8-cpuct2-llama3b
+  launcher: generate_mcts_cnt.py
+  hash: "bc7075a9"
+  config_root: mcts_cnt_prm800k
+  overrides:
+    llm: llama_3b
+    prm: qwen_prm
+    data.level: 5
+    search.gen_budget: 320
+    search.batch_size: 8
+    search.cpuct: 2.0
+    search.q_beta: 1.0
+    search.tie_tol: 1.0e-4
+  trials: 2
+  feeds:
+  - tbl-7d2cbf  # cpuct sweep (llama-3b), b=320/bs-8, cpuct=2.0 row
+  group: cnt-mcts
+  status: scored
+  priority: 1.5
+  expected_hr: 42
+  note: b=320 bs-8 cnt qwen-PRM llama-3b, cpuct=2.0 (file default).
+  launch:
+    job_id: 23564220
+    node: r5u39n1
+    pid: 3277685
+    at: 2026-08-15 12:49
+- id: cnt-mcts-l5-b320-bs8-qbeta0-llama3b
+  launcher: generate_mcts_cnt.py
+  hash: "3d53ca5a"
+  config_root: mcts_cnt_prm800k
+  overrides:
+    llm: llama_3b
+    prm: qwen_prm
+    data.level: 5
+    search.gen_budget: 320
+    search.batch_size: 8
+    search.cpuct: 2.0
+    search.q_beta: 0.0
+    search.tie_tol: 1.0e-4
+  trials: 2
+  feeds:
+  - tbl-7d2cbf  # cpuct sweep (llama-3b), b=320/bs-8, q_beta=0 (cpuct/q_beta = inf) row
+  group: cnt-mcts
+  status: scored
+  priority: 1.5
+  expected_hr: 42
+  note: b=320 bs-8 cnt qwen-PRM llama-3b, q_beta=0, the cpuct/q_beta=inf limit.
+  launch:
+    job_id: 23564217
+    node: r5u39n1
+    pid: 3280005
+    at: 2026-08-15 13:19
+- id: cnt-mcts-l5-b320-bs8-cpuct2-qwen7bgptq
+  launcher: generate_mcts_cnt.py
+  hash: "3a30dd30"
+  config_root: mcts_cnt_prm800k
+  overrides:
+    llm: qwen_7b_gptq_int4
+    prm: qwen_prm
+    data.level: 5
+    search.gen_budget: 320
+    search.batch_size: 8
+    search.cpuct: 2.0
+    search.q_beta: 1.0
+    search.tie_tol: 1.0e-4
+  trials: 2
+  feeds:
+  - tbl-25c7d9  # cpuct sweep (qwen-7b gptq-int4), b=320/bs-8, cpuct=2.0 row
+  group: cnt-mcts
+  status: scored
+  priority: 2
+  expected_hr: 29
+  note: b=320 bs-8 cnt qwen-PRM qwen-7b gptq-int4, cpuct=2.0 (file default).
+  launch:
+    job_id: 23564218
+    node: r5u33n1
+    pid: 3282322
+    at: 2026-08-15 13:49
+- id: cnt-mcts-l5-b320-bs8-qbeta0-qwen7bgptq
+  launcher: generate_mcts_cnt.py
+  hash: "2e8cfc57"
+  config_root: mcts_cnt_prm800k
+  overrides:
+    llm: qwen_7b_gptq_int4
+    prm: qwen_prm
+    data.level: 5
+    search.gen_budget: 320
+    search.batch_size: 8
+    search.cpuct: 2.0
+    search.q_beta: 0.0
+    search.tie_tol: 1.0e-4
+  trials: 2
+  feeds:
+  - tbl-25c7d9  # cpuct sweep (qwen-7b gptq-int4), b=320/bs-8, q_beta=0 (cpuct/q_beta = inf) row
+  group: cnt-mcts
+  status: scored
+  priority: 2
+  expected_hr: 29
+  note: b=320 bs-8 cnt qwen-PRM qwen-7b gptq-int4, q_beta=0, the cpuct/q_beta=inf limit.
+  launch:
+    job_id: 23564216
+    node: r5u39n1
+    pid: 3282386
+    at: 2026-08-15 13:49
+- id: cnt-mcts-l5-b320-bs8-cpuct2-qwenmath15b
+  launcher: generate_mcts_cnt.py
+  hash: "1878c98a"
+  config_root: mcts_cnt_prm800k
+  overrides:
+    llm: qwen_math_1_5b
+    prm: qwen_prm
+    data.level: 5
+    search.gen_budget: 320
+    search.batch_size: 8
+    search.cpuct: 2.0
+    search.q_beta: 1.0
+    search.tie_tol: 1.0e-4
+  trials: 2
+  feeds:
+  - tbl-f6e8cf  # cpuct sweep (qwen-math-1.5b), b=320/bs-8, cpuct=2.0 row
+  group: cnt-mcts
+  status: scored
+  priority: 3
+  expected_hr: 27
+  note: b=320 bs-8 cnt qwen-PRM qwen-math-1.5b, cpuct=2.0 (file default).
+  launch:
+    job_id: 23564180
+    node: r5u35n1
+    pid: 3282450
+    at: 2026-08-15 13:49
+- id: cnt-mcts-l5-b320-bs8-qbeta0-qwenmath15b
+  launcher: generate_mcts_cnt.py
+  hash: "21377ad4"
+  config_root: mcts_cnt_prm800k
+  overrides:
+    llm: qwen_math_1_5b
+    prm: qwen_prm
+    data.level: 5
+    search.gen_budget: 320
+    search.batch_size: 8
+    search.cpuct: 2.0
+    search.q_beta: 0.0
+    search.tie_tol: 1.0e-4
+  trials: 2
+  feeds:
+  - tbl-f6e8cf  # cpuct sweep (qwen-math-1.5b), b=320/bs-8, q_beta=0 (cpuct/q_beta = inf) row
+  group: cnt-mcts
+  status: scored
+  priority: 3
+  expected_hr: 27
+  note: b=320 bs-8 cnt qwen-PRM qwen-math-1.5b, q_beta=0, the cpuct/q_beta=inf limit.
+  launch:
+    job_id: 23568259
+    node: r5u09n1
+    pid: 3283578
+    at: 2026-08-15 13:51
+- id: cnt-mcts-l5-b320-bs8-cpuct2-llama1b
+  launcher: generate_mcts_cnt.py
+  hash: "ed025a59"
+  config_root: mcts_cnt_prm800k
+  overrides:
+    llm: llama_1b
+    prm: qwen_prm
+    data.level: 5
+    search.gen_budget: 320
+    search.batch_size: 8
+    search.cpuct: 2.0
+    search.q_beta: 1.0
+    search.tie_tol: 1.0e-4
+  trials: 2
+  feeds:
+  - tbl-1629fa  # cpuct sweep (llama-1b), b=320/bs-8, cpuct=2.0 row
+  group: cnt-mcts
+  status: scored
+  priority: 4
+  expected_hr: 24
+  note: b=320 bs-8 cnt qwen-PRM llama-1b, cpuct=2.0 (file default).
+  launch:
+    job_id: 23563675
+    node: r5u09n1
+    pid: 3328933
+    at: 2026-08-15 14:49
+- id: cnt-mcts-l5-b320-bs8-qbeta0-llama1b
+  launcher: generate_mcts_cnt.py
+  hash: "c950218f"
+  config_root: mcts_cnt_prm800k
+  overrides:
+    llm: llama_1b
+    prm: qwen_prm
+    data.level: 5
+    search.gen_budget: 320
+    search.batch_size: 8
+    search.cpuct: 2.0
+    search.q_beta: 0.0
+    search.tie_tol: 1.0e-4
+  trials: 2
+  feeds:
+  - tbl-1629fa  # cpuct sweep (llama-1b), b=320/bs-8, q_beta=0 (cpuct/q_beta = inf) row
+  group: cnt-mcts
+  status: running
+  history:
+    - {at: 2026-08-17 18:45, job_id: 23555379, outcome: stalled, trials_done: 1}
+  priority: 4
+  expected_hr: 21
+  note: b=320 bs-8 cnt qwen-PRM llama-1b, q_beta=0, the cpuct/q_beta=inf limit. REQUEUED 2026-08-17, resumes from trial 2 (trial 1 done+scored at 19.78 hr) so expected_hr covers one trial only.
+  launch:
+    job_id: 23564218
+    node: r5u33n1
+    pid: 3714783
+    at: 2026-08-18 02:48
+
+- id: cnt-mcts-l5-b320-bs8-t05-cpuct2-qwen3b
+  launcher: generate_mcts_cnt.py
+  hash: "eee567d7"
+  config_root: mcts_cnt_prm800k
+  overrides:
+    llm: qwen_3b
+    prm: qwen_prm
+    data.level: 5
+    search.gen_budget: 320
+    search.batch_size: 8
+    search.cpuct: 2.0
+    search.q_beta: 1.0
+    search.tie_tol: 1.0e-4
+    gen.temperature: 0.5
+  trials: 2
+  feeds:
+  - tbl-063d52  # cpuct sweep (qwen-3b), b=320/bs-8 T=0.5, cpuct=2.0 row
+  group: cnt-mcts
+  status: scored
+  priority: 5
+  expected_hr: 36
+  note: b=320 bs-8 T=0.5 cnt qwen-PRM qwen-3b, cpuct=2.0 (file default).
+  launch:
+    job_id: 23564222
+    node: r5u25n1
+    pid: 3378928
+    at: 2026-08-16 02:39
+- id: cnt-mcts-l5-b320-bs8-t05-qbeta0-qwen3b
+  launcher: generate_mcts_cnt.py
+  hash: "6cc0c740"
+  config_root: mcts_cnt_prm800k
+  overrides:
+    llm: qwen_3b
+    prm: qwen_prm
+    data.level: 5
+    search.gen_budget: 320
+    search.batch_size: 8
+    search.cpuct: 2.0
+    search.q_beta: 0.0
+    search.tie_tol: 1.0e-4
+    gen.temperature: 0.5
+  trials: 2
+  feeds:
+  - tbl-063d52  # cpuct sweep (qwen-3b), b=320/bs-8 T=0.5, q_beta=0 (cpuct/q_beta = inf) row
+  group: cnt-mcts
+  status: running
+  history:
+    - {at: 2026-08-17 18:45, job_id: 23560035, outcome: stalled, trials_done: 1}
+  priority: 5
+  expected_hr: 26
+  note: b=320 bs-8 T=0.5 cnt qwen-PRM qwen-3b, q_beta=0, the cpuct/q_beta=inf limit. REQUEUED 2026-08-17, resumes from trial 2 (trial 1 done+scored at 25.02 hr) so expected_hr covers one trial only.
+  launch:
+    job_id: 23564220
+    node: r5u39n1
+    pid: 3714782
+    at: 2026-08-18 02:48
+- id: cnt-mcts-l5-b320-bs8-t05-cpuct2-llama3b
+  launcher: generate_mcts_cnt.py
+  hash: "223c552b"
+  config_root: mcts_cnt_prm800k
+  overrides:
+    llm: llama_3b
+    prm: qwen_prm
+    data.level: 5
+    search.gen_budget: 320
+    search.batch_size: 8
+    search.cpuct: 2.0
+    search.q_beta: 1.0
+    search.tie_tol: 1.0e-4
+    gen.temperature: 0.5
+  trials: 2
+  feeds:
+  - tbl-5c5613  # cpuct sweep (llama-3b), b=320/bs-8 T=0.5, cpuct=2.0 row
+  group: cnt-mcts
+  status: running
+  priority: 5.5
+  expected_hr: 42
+  note: b=320 bs-8 T=0.5 cnt qwen-PRM llama-3b, cpuct=2.0 (file default).
+  launch:
+    job_id: 23568271
+    node: r5u05n1
+    pid: 3536577
+    at: 2026-08-16 15:39
+- id: cnt-mcts-l5-b320-bs8-t05-qbeta0-llama3b
+  launcher: generate_mcts_cnt.py
+  hash: "352706ac"
+  config_root: mcts_cnt_prm800k
+  overrides:
+    llm: llama_3b
+    prm: qwen_prm
+    data.level: 5
+    search.gen_budget: 320
+    search.batch_size: 8
+    search.cpuct: 2.0
+    search.q_beta: 0.0
+    search.tie_tol: 1.0e-4
+    gen.temperature: 0.5
+  trials: 2
+  feeds:
+  - tbl-5c5613  # cpuct sweep (llama-3b), b=320/bs-8 T=0.5, q_beta=0 (cpuct/q_beta = inf) row
+  group: cnt-mcts
+  status: running
+  priority: 5.5
+  expected_hr: 42
+  note: b=320 bs-8 T=0.5 cnt qwen-PRM llama-3b, q_beta=0, the cpuct/q_beta=inf limit.
+  launch:
+    job_id: 23569443
+    node: r5u05n1
+    pid: 3536659
+    at: 2026-08-16 15:39
+- id: cnt-mcts-l5-b320-bs8-t05-cpuct2-qwen7bgptq
+  launcher: generate_mcts_cnt.py
+  hash: "afd5be08"
+  config_root: mcts_cnt_prm800k
+  overrides:
+    llm: qwen_7b_gptq_int4
+    prm: qwen_prm
+    data.level: 5
+    search.gen_budget: 320
+    search.batch_size: 8
+    search.cpuct: 2.0
+    search.q_beta: 1.0
+    search.tie_tol: 1.0e-4
+    gen.temperature: 0.5
+  trials: 2
+  feeds:
+  - tbl-50dc81  # cpuct sweep (qwen-7b gptq-int4), b=320/bs-8 T=0.5, cpuct=2.0 row
+  group: cnt-mcts
+  status: running
+  priority: 6
+  expected_hr: 29
+  note: b=320 bs-8 T=0.5 cnt qwen-PRM qwen-7b gptq-int4, cpuct=2.0 (file default).
+  launch:
+    job_id: 23570604
+    node: r5u09n1
+    pid: 3536724
+    at: 2026-08-16 15:39
+- id: cnt-mcts-l5-b320-bs8-t05-qbeta0-qwen7bgptq
+  launcher: generate_mcts_cnt.py
+  hash: "b6553eb2"
+  config_root: mcts_cnt_prm800k
+  overrides:
+    llm: qwen_7b_gptq_int4
+    prm: qwen_prm
+    data.level: 5
+    search.gen_budget: 320
+    search.batch_size: 8
+    search.cpuct: 2.0
+    search.q_beta: 0.0
+    search.tie_tol: 1.0e-4
+    gen.temperature: 0.5
+  trials: 2
+  feeds:
+  - tbl-50dc81  # cpuct sweep (qwen-7b gptq-int4), b=320/bs-8 T=0.5, q_beta=0 (cpuct/q_beta = inf) row
+  group: cnt-mcts
+  status: running
+  priority: 6
+  expected_hr: 29
+  note: b=320 bs-8 T=0.5 cnt qwen-PRM qwen-7b gptq-int4, q_beta=0, the cpuct/q_beta=inf limit.
+  launch:
+    job_id: 23564223
+    node: r5u17n1
+    pid: 3563208
+    at: 2026-08-16 22:09
+- id: cnt-mcts-l5-b320-bs8-t05-cpuct2-qwenmath15b
+  launcher: generate_mcts_cnt.py
+  hash: "78ad8f09"
+  config_root: mcts_cnt_prm800k
+  overrides:
+    llm: qwen_math_1_5b
+    prm: qwen_prm
+    data.level: 5
+    search.gen_budget: 320
+    search.batch_size: 8
+    search.cpuct: 2.0
+    search.q_beta: 1.0
+    search.tie_tol: 1.0e-4
+    gen.temperature: 0.5
+  trials: 2
+  feeds:
+  - tbl-f808c7  # cpuct sweep (qwen-math-1.5b), b=320/bs-8 T=0.5, cpuct=2.0 row
+  group: cnt-mcts
+  status: running
+  priority: 7
+  expected_hr: 39
+  note: b=320 bs-8 T=0.5 cnt qwen-PRM qwen-math-1.5b, cpuct=2.0 (file default).
+  launch:
+    job_id: 23568259
+    node: r5u09n1
+    pid: 3587659
+    at: 2026-08-17 05:55
+- id: cnt-mcts-l5-b320-bs8-t05-qbeta0-qwenmath15b
+  launcher: generate_mcts_cnt.py
+  hash: "555b0e4d"
+  config_root: mcts_cnt_prm800k
+  overrides:
+    llm: qwen_math_1_5b
+    prm: qwen_prm
+    data.level: 5
+    search.gen_budget: 320
+    search.batch_size: 8
+    search.cpuct: 2.0
+    search.q_beta: 0.0
+    search.tie_tol: 1.0e-4
+    gen.temperature: 0.5
+  trials: 2
+  feeds:
+  - tbl-f808c7  # cpuct sweep (qwen-math-1.5b), b=320/bs-8 T=0.5, q_beta=0 (cpuct/q_beta = inf) row
+  group: cnt-mcts
+  status: running
+  priority: 7
+  expected_hr: 39
+  note: b=320 bs-8 T=0.5 cnt qwen-PRM qwen-math-1.5b, q_beta=0, the cpuct/q_beta=inf limit.
+  launch:
+    job_id: 23564219
+    node: r5u29n1
+    pid: 3627139
+    at: 2026-08-17 15:32
+- id: cnt-mcts-l5-b320-bs8-t05-cpuct2-llama1b
+  launcher: generate_mcts_cnt.py
+  hash: "53ac89c3"
+  config_root: mcts_cnt_prm800k
+  overrides:
+    llm: llama_1b
+    prm: qwen_prm
+    data.level: 5
+    search.gen_budget: 320
+    search.batch_size: 8
+    search.cpuct: 2.0
+    search.q_beta: 1.0
+    search.tie_tol: 1.0e-4
+    gen.temperature: 0.5
+  trials: 2
+  feeds:
+  - tbl-78e158  # cpuct sweep (llama-1b), b=320/bs-8 T=0.5, cpuct=2.0 row
+  group: cnt-mcts
+  status: running
+  priority: 8
+  expected_hr: 40
+  note: b=320 bs-8 T=0.5 cnt qwen-PRM llama-1b, cpuct=2.0 (file default).
+  launch:
+    job_id: 23564221
+    node: r5u25n1
+    pid: 3631737
+    at: 2026-08-17 16:32
+- id: cnt-mcts-l5-b320-bs8-t05-qbeta0-llama1b
+  launcher: generate_mcts_cnt.py
+  hash: "265f6156"
+  config_root: mcts_cnt_prm800k
+  overrides:
+    llm: llama_1b
+    prm: qwen_prm
+    data.level: 5
+    search.gen_budget: 320
+    search.batch_size: 8
+    search.cpuct: 2.0
+    search.q_beta: 0.0
+    search.tie_tol: 1.0e-4
+    gen.temperature: 0.5
+  trials: 2
+  feeds:
+  - tbl-78e158  # cpuct sweep (llama-1b), b=320/bs-8 T=0.5, q_beta=0 (cpuct/q_beta = inf) row
+  group: cnt-mcts
+  status: running
+  priority: 8
+  expected_hr: 40
+  note: b=320 bs-8 T=0.5 cnt qwen-PRM llama-1b, q_beta=0, the cpuct/q_beta=inf limit.
+  launch:
+    job_id: 23564222
+    node: r5u25n1
+    pid: 3728975
+    at: 2026-08-18 05:48
