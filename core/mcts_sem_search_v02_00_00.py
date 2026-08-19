@@ -195,6 +195,7 @@ _LOCAL_COV_MAX_BYTES = 4 * 2**30      # 4 GiB
 
 def _diverse_select(
     V_inv, q_embeds, q_scores, ds_alpha, ds_beta, cov_dtype=np.float64,
+    tie_tol=1e-4,
 ):
     """Pick the one arm maximizing `beta*score + alpha*diversity`.
 
@@ -209,8 +210,10 @@ def _diverse_select(
     runs at a controlled precision rather than whatever NumPy's mixed-
     dtype promotion happens to pick.
 
-    Ties (within `tol`) are broken by uniform random sampling, which
+    Ties (within `tie_tol` — `search.tie_tol`, historically the
+    hardcoded 1e-4) are broken by uniform random sampling, which
     avoids the systematic bias of picking the first argmax.
+    tie_tol=0.0 = exact-equality ties (cnt-mcts's default).
 
     (Single-arm selection: the caller always picks one child at a time.
     A K>1 batch variant would need a sequential within-call update of
@@ -219,7 +222,7 @@ def _diverse_select(
     """
     q_embeds = np.asarray(q_embeds, dtype=cov_dtype)
     q_scores = np.asarray(q_scores)
-    tol = 1e-4
+    tol = tie_tol
 
     # Diversity bonus per arm: sqrt(x^T V^-1 x). Implemented as a
     # single einsum to avoid a Python-level loop over arms.
@@ -1018,11 +1021,12 @@ class MCTS(BaseTree):
         anything from these children), so a plain q-value argmax
         gives cleaner signal than mixing in noise from V.
 
-        Ties (within `tol`) are broken by uniform random sampling —
-        the same tolerance-based scheme `_diverse_select` uses, so both
+        Ties (within `search.tie_tol`, historically the hardcoded
+        1e-4) are broken by uniform random sampling — the same
+        tolerance-based scheme `_diverse_select` uses, so both
         selection paths handle near-equal values consistently (exact
         float `==` would miss ties differing by ~1e-16 and reintroduce
-        a first-argmax bias).
+        a first-argmax bias). tie_tol=0.0 = exact-equality ties.
         """
         qs = [ch.q_value() for ch in node.children]
         for ch in node.children:
@@ -1034,7 +1038,7 @@ class MCTS(BaseTree):
         if not qs:
             return None
 
-        tol = 1e-4
+        tol = self.config.search.tie_tol
         best_q = max(qs)
         best_childs = [
             ch for ch, q in zip(node.children, qs)
@@ -1069,6 +1073,7 @@ class MCTS(BaseTree):
             self.config.search.ds_alpha * log_nvisit_parent,
             self.config.search.ds_beta,
             cov_dtype=self.cov_dtype,
+            tie_tol=self.config.search.tie_tol,
         )
         return _children[best_idx] if _children else None
 

@@ -22,6 +22,9 @@ gen_budget: 80          # total generations across the full run
 lam: 0.01               # ridge: V_0 = lam * I
 ds_alpha: 100.0         # diversity weight
 ds_beta: 1.0            # q-value weight
+tie_tol: 1.0e-4         # selection tie band (both paths): 1e-4 =
+                        #   the historical hardcoded band; 0.0 =
+                        #   exact-equality ties (cnt-mcts-aligned)
 
 # embedding extraction. Pipeline: pool -> project -> center -> normalize.
 embeds_strategy: last   # "last" | "avg"

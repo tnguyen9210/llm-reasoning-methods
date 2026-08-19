@@ -14,4 +14,14 @@ max_depth: 20
 negative_reward: 0
 num_phases: 1000
 gen_budget: 80          # total generations across the full run
-cpuct: 2.0
+# selection (after a node's first visit; the first visit is a raw
+# q-value argmax, as in sem-mcts-v02):
+#   q_beta*q_value + cpuct*sqrt(log(parent_visits)/visits)
+cpuct: 2.0              # exploration weight
+q_beta: 1.0             # exploitation weight (sem's ds_beta
+                        #   analogue): 1.0 = historical; 0.0 =
+                        #   pure exploration, the exact cpuct->inf
+                        #   limit without the 1e18 stand-in
+tie_tol: 0.0            # select_child tie band: 0.0 = exact-equality
+                        #   ties (historical); 1e-4 = sem-mcts-v02-
+                        #   aligned uniform tie-break within the band

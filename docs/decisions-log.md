@@ -14,6 +14,103 @@ scaffold, it also gets a standalone file in [decisions/](decisions/);
 the log entry then carries a one-line pointer to it rather than
 repeating the full writeup.
 
+## 2026-08-14 — Search, Config: `q_beta` exploitation weight + first-visit q-argmax branch for cnt-mcts
+
+**Context:** cnt-mcts exposed only `cpuct` (exploration weight),
+while sem-mcts-v02 exposes the full pair `ds_beta*score +
+ds_alpha*diversity`. That asymmetry made the two methods'
+INFINITE-exploration limits incomparable, and forced the ugly
+`cpuct=1e18` stand-in for the `∞` arm (literal `inf` NaNs out via
+`inf*0` when `log(N_parent)=0`; 1e18 works only because float64
+spacing swallows q).
+**Decision:** new `search.q_beta` on `MCTSCntConfig`; selection
+after a node's first visit maximizes `q_beta*q + cpuct*u`. Plus
+an explicit FIRST-VISIT branch in `select_child` — raw q argmax
+at `node.visit_count()==1` — mirroring sem-mcts-v02's
+`_select_by_q_value` dispatch at the same condition. Default
+`q_beta=1.0` is registered in `_HASH_EXCLUDE_IF_DEFAULT`, so
+every recorded cnt hash is unchanged (verified: baseline
+llama-1b cpuct=2.0 composes to `0f003563` with and without an
+explicit `q_beta=1.0`; `q_beta=0.0` is hash-visible as
+`bf21290d`). Pinned by `unittests/check_cnt_q_beta.py` (12
+checks).
+**Why the first-visit branch:** at `q_beta=1.0` it is a no-op —
+`log(parent_visits)=0` already zeroes u at visit 1 and
+`1.0*q + 0.0` is q exactly, so trajectories replay bit-for-bit
+(pinned, RNG stream included). It is load-bearing at
+`q_beta=0`: without it every first-descent value scales to 0 and
+the pick degenerates to a coin flip, whereas sem at `ds_beta=0`
+still does a q argmax there. With the branch, the two methods'
+first-visit behavior is identical (same dispatch condition, same
+raw-q argmax, same `tie_tol` band).
+**Payoff:** `q_beta=0` is an EXACT pure-exploration arm at any
+`cpuct>0` — no float-spacing trick, no NaN hazard — and it
+reproduces the `cpuct=1e18` stand-in pick-for-pick (test C3), so
+it supersedes `1e18` as the sweep's `∞` row.
+**Known limit (do not overclaim):** `q_beta=0` is NOT a
+cross-implementation replica of sem's `ds_beta=0` the way
+`cpuct=0` replicates `ds_alpha=0`. After the first visit cnt
+ranks by `1/sqrt(n_i)` (count novelty) while sem ranks by
+`sqrt(u_i' V_n^-1 u_i)` (direction novelty in the local
+covariance). They coincide only if sibling vectors are
+orthogonal with equal norms — then `V_n^-1` is diagonal and the
+bonus collapses to `(lam + n_i c^2)^-1/2`, a decreasing function
+of the count. Real siblings are correlated and unequal-norm, so
+the limits differ: sem's folds shrink correlated siblings too,
+and it ranks by displacement magnitude before any fold.
+
+## 2026-08-14 — Search, Config: `tie_tol` select_child tie band for cnt-mcts (sem-aligned ties, hash-neutral default)
+
+**Context:** cnt-mcts v01 broke selection ties by exact float
+equality while sem-mcts-v02 randomizes uniformly within a 1e-4
+band, so the two methods' zero-exploration limits (cpuct=0 vs
+ds_alpha=0) — otherwise verified identical (same q definition,
+phase loop, dedupe, scoring, seeding) — differed exactly on
+near-ties (q gap ≤ 1e-4, which saturated PRM scores do produce).
+**Decision:** new `search.tie_tol` knob on `MCTSCntConfig`;
+`select_child` picks uniformly among children within `tie_tol`
+of the max PUCT value. Default 0.0 reproduces the historical
+behavior bit-for-bit (RNG stream included — one random.choice
+per call either way) and is registered in
+`_HASH_EXCLUDE_IF_DEFAULT`, so every recorded cnt config_hash
+is unchanged; `search.tie_tol=1e-4` is a hash-visible variant
+matching sem's band. Pinned by
+`unittests/check_cnt_tie_tol.py`.
+Mirrored the same day on sem-mcts-v02: `MCTSSemV02Config.tie_tol`
+(default 1e-4 = the historical hardcoded band,
+neutral-registered; 0.0 = exact ties, cnt-aligned), threaded
+through `_select_by_q_value` / `_diverse_select`. Because the
+two families' neutrals differ (0.0 cnt, 1e-4 sem),
+`_HASH_EXCLUDE_IF_DEFAULT` entries may now be method-prefix
+dicts resolved by `_neutral_for` on `search.method`. Pinned by
+`unittests/check_sem_tie_tol.py`; the cov_scope RNG-equivalence
+check still passes unchanged.
+**Why:** hardcoding the band would have silently changed the
+policy behind every existing cnt hash, breaking the hash ⇔
+experiment invariant; the flag route (house pattern — cf. the
+2026-07-28 cov_scope/embeds_ref entry) makes alignment an
+explicit, hash-tracked choice. Payoff: a `cpuct=0 tie_tol=1e-4`
+run is distribution-identical to sem-v02's `w_eff=0` arm, so it
+can serve as a cross-implementation anchor — e.g. for the open
+tbl-375fa0 (.2724) vs tbl-ba6b11 (.2388) `w_eff=0` dispute.
+**Follow-on (same day, Tuan's call):** all five level-5 cpuct
+sweep tables (`tbl-e0b779` / `ed4e96` / `c93854` / `0f6c1a` /
+`57b084`) adopt `tie_tol=1e-4` on EVERY row, not just
+`cpuct=0`. The band is a sweep-wide policy choice, not a
+`cpuct=0` special case: equal-visit siblings share an identical
+bonus `cpuct*sqrt(log N_parent / n)`, so their PUCT gap is
+exactly their q gap at any cpuct. (An earlier draft of the
+doc preamble claimed the band was inert for cpuct>0 — wrong;
+it is inert only between children with DIFFERENT visit
+counts.) Accepted cost: the `cpuct=2.0` rows stop being the
+shared `tbl-afdda0` model-family runs (`tie_tol=0.0`) and
+become 5 net-new cells, so each sweep is internally consistent
+but no longer directly comparable to the doc's `tie_tol=0.0`
+cnt-mcts baseline — the sweep's own `2.0` row is its
+reference. Three in-flight cells (qwen-3b `1.0`/`10`,
+llama-3b `1.0`) were killed and relaunched from trial 0,
+discarding ~10.7 GPU-h.
+
 ## 2026-08-12 — Workflow, Docs: trial-count continuations reuse the entry; n=4 tables live in the same doc, n=2 tables freeze (undecided)
 
 **Context:** extending the `cov_scope=local` `embeds_ref=relative`

@@ -229,6 +229,27 @@ class MCTSCntConfig(SearchConfig):
     gen_budget: int = 80          # total generations across the run
     cpuct: float = 2.0
 
+    # Weight on the exploitation term: selection maximizes
+    # q_beta*q + cpuct*sqrt(log(N_parent)/n_child). Mirrors
+    # sem-mcts-v02's ds_beta (q weight) alongside ds_alpha
+    # (bonus weight), so both methods expose the same
+    # exploitation/exploration pair. 1.0 = the historical
+    # behavior; 0.0 = pure exploration, the exact cpuct->inf
+    # limit without the cpuct=1e18 float-spacing stand-in.
+    # Neutral default is hash-excluded so every pre-existing
+    # config_hash is unchanged (see _HASH_EXCLUDE_IF_DEFAULT).
+    q_beta: float = 1.0
+
+    # select_child tie-break tolerance: children within tie_tol of
+    # the max PUCT value tie and break uniformly at random. 0.0 =
+    # the historical exact-equality tie-break (bit-identical
+    # trajectories, RNG stream included); 1e-4 = sem-mcts-v02's
+    # band (_select_by_q_value / _diverse_select), aligning the two
+    # methods' zero-exploration limits (cpuct=0 vs ds_alpha=0).
+    # Neutral default is hash-excluded so every pre-existing
+    # config_hash is unchanged (see _HASH_EXCLUDE_IF_DEFAULT).
+    tie_tol: float = 0.0
+
     # PRM forward-pass micro-batch *inside* the search loop (distinct
     # from prm.score_batch_size, which scores the final dataset). Kept
     # small because in-loop scoring is per-candidate-set. Mirrors
@@ -642,6 +663,13 @@ class MCTSSemV01Config(SearchConfig):
     lam: float = 0.01             # ridge: V_0 = lam * I
     ds_alpha: float = 100.0       # diversity weight
     ds_beta: float = 1.0          # q-value weight
+
+    # Selection tie band (both paths: first-visit q-argmax and the
+    # diversity path): candidates within tie_tol of the max tie and
+    # break uniformly at random. 1e-4 = the historical hardcoded
+    # band (neutral, hash-excluded — see _HASH_EXCLUDE_IF_DEFAULT);
+    # 0.0 = exact-equality ties, matching cnt-mcts's default.
+    tie_tol: float = 1e-4
 
     # Embedding extraction (see core._extract_embeds). Pipeline order
     # is pool -> project -> center -> normalize.
@@ -1084,8 +1112,35 @@ _HASH_EXCLUDE_IF_DEFAULT = {
         # recorded before the merge is unchanged.
         "cov_scope": "global",
         "embeds_ref": "absolute",
+        # Added 2026-08-14 with the select_child tie-band knobs.
+        # The neutral (pre-knob) value differs by family: cnt-mcts
+        # historically broke ties by exact equality (0.0) while
+        # sem-mcts-v02 hardcoded a 1e-4 band — so the entry is a
+        # method-prefix dict resolved by _neutral_for ("" is the
+        # fallback). Each family's historical value is dropped from
+        # its identity, keeping every pre-knob config_hash
+        # unchanged; the other value is hash-visible.
+        "tie_tol": {"mcts_sem": 1e-4, "": 0.0},
+        # Added 2026-08-14 with the cnt-mcts q_beta knob (only
+        # MCTSCntConfig defines it). 1.0 is the pre-knob weight,
+        # so hash-excluding it keeps every recorded cnt hash;
+        # q_beta=0.0 (pure exploration) is hash-visible.
+        "q_beta": 1.0,
     },
 }
+
+
+def _neutral_for(spec, method):
+    """Resolve a _HASH_EXCLUDE_IF_DEFAULT entry to this config's
+    neutral value: a plain value applies to every method; a
+    {method_prefix: value} dict ("" = fallback) covers knobs whose
+    pre-knob behavior differed across families (e.g. tie_tol)."""
+    if not isinstance(spec, dict):
+        return spec
+    for pref, val in spec.items():
+        if pref and method.startswith(pref):
+            return val
+    return spec.get("")
 
 
 def _resolved(cfg):
@@ -1112,10 +1167,12 @@ def config_identity(cfg) -> dict:
             continue
         exclude = _HASH_EXCLUDE.get(group, set())
         neutral = _HASH_EXCLUDE_IF_DEFAULT.get(group, {})
+        method = str(gvals.get("method", ""))
         out[group] = {
             k: v for k, v in gvals.items()
             if k not in exclude
-            and not (k in neutral and v == neutral[k])
+            and not (k in neutral
+                     and v == _neutral_for(neutral[k], method))
         }
     return out
 

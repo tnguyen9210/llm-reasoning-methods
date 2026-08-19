@@ -11,9 +11,18 @@ Algorithm sketch
           `config.search.batch_size` next-step continuations via vLLM,
           dedupe by text, score with the PRM, and add as children.
           Charges gen_budget.
-        - Select one child by PUCT:
-              q_value + cpuct * sqrt(log(parent_visits) / visits)
-          Uniform random tie-break.
+        - Select one child. On the node's FIRST visit, by raw
+          q_value; afterwards by PUCT:
+              q_beta * q_value
+                  + cpuct * sqrt(log(parent_visits) / visits)
+          Children within `tie_tol` of the max tie and break
+          uniformly at random (tie_tol=0.0, the default, = exact
+          ties — the historical behavior). Defaults q_beta=1.0
+          with the first-visit split reproduce the plain
+          `q + cpuct*u` formula exactly; the split and the weight
+          mirror sem-mcts-v02 (_select_by_q_value dispatch,
+          ds_beta/ds_alpha), so q_beta=0 is a clean pure-
+          exploration arm.
       Backprop the terminal node's q-value to the root.
 
 Variant lineage: docs/algorithms.md.
@@ -97,7 +106,15 @@ class MCTSNode(BaseNode):
             return
         self.parent.update_recursive(value, start_node)
 
-    def puct(self, cpuct=2) -> float:
+    def puct(self, cpuct=2, q_beta=1.0) -> float:
+        """`q_beta*q + cpuct*sqrt(log(N_parent)/n_child)`.
+
+        `q_beta` weights exploitation the way `cpuct` weights
+        exploration (sem-mcts-v02 spells the same pair ds_beta /
+        ds_alpha). The default 1.0 is the historical formula
+        exactly: multiplying by 1.0 is a float64 identity, so
+        recorded trajectories are unchanged.
+        """
         if not self.parent:
             return 0.0
         q = self.q_value() if self.visit_count() > 0 else 0.0
@@ -107,7 +124,7 @@ class MCTSNode(BaseNode):
             u = 0.0
         else:
             u = cpuct * np.sqrt(np.log(parent_visits) / visits)
-        return q + u
+        return q_beta * q + u
 
     def __repr__(self):
         return (
@@ -201,30 +218,62 @@ class MCTS(BaseTree):
     # ----- Selection ------------------------------------------------- #
 
     def select_child(self, node, from_root: bool = False):
-        """Pick the child with the highest PUCT value, uniform
-        random tie-break. Returns None if no children.
-        """
-        best_value = -float("inf")
-        best_childs: List[Any] = []
+        """Pick a child: raw q-value on the node's FIRST visit,
+        `q_beta*q + cpuct*u` on every later one. Children within
+        `search.tie_tol` of the max tie and break uniformly at
+        random (exactly one random.choice per call either way).
 
+        The first-visit split mirrors sem-mcts-v02's dispatch
+        (`select_child` -> `_select_by_q_value` at
+        `visit_count()==1`): on the first descent every child has
+        one visit and a q equal to its PRM candidate score, so the
+        exploration term carries no information yet. At the default
+        `q_beta=1.0` the branch is a no-op — `log(parent_visits)=0`
+        already zeroes u at visit 1, and `1.0*q + 0.0` is q
+        exactly, so trajectories are bit-identical, RNG stream
+        included. It is load-bearing at `q_beta=0`, the pure
+        exploration arm: without the branch the first pick would
+        degenerate to a coin flip (every value scaled to 0) instead
+        of the q argmax sem-mcts-v02 performs there.
+
+        tie_tol=0.0 (default) reproduces the historical
+        exact-equality tie-break bit-for-bit; tie_tol=1e-4 matches
+        sem-mcts-v02's band (`_select_by_q_value` /
+        `_diverse_select`), aligning the two methods'
+        zero-exploration limits (cpuct=0 here, ds_alpha=0 there).
+        Returns None if no children.
+        """
+        first_visit = node.visit_count() == 1
+        sel_values: List[float] = []
         for child_node in node.children:
-            puct_value = child_node.puct(cpuct=self.config.search.cpuct)
-            if puct_value == best_value:
-                best_childs.append(child_node)
-            elif puct_value > best_value:
-                best_value = puct_value
-                best_childs = [child_node]
+            if first_visit:
+                sel_value = child_node.q_value()
+            else:
+                sel_value = child_node.puct(
+                    cpuct=self.config.search.cpuct,
+                    q_beta=self.config.search.q_beta,
+                )
+            sel_values.append(sel_value)
 
             logging.fatal(f"{child_node.tag}")
             logging.fatal(f"   q-value = {child_node.q_value():0.4f}")
-            logging.fatal(f"   u-value = {puct_value - child_node.q_value():0.4f}")
-            logging.fatal(f"   puct = {puct_value:0.4f}")
+            logging.fatal(
+                f"   u-value = "
+                f"{sel_value - child_node.q_value():0.4f}"
+            )
+            logging.fatal(f"   sel_value = {sel_value:0.4f}")
+            logging.fatal(f"   first_visit = {first_visit}")
             logging.fatal(f"   nvisit = {child_node.visit_count():0.2f}")
             logging.fatal(f"   parent.nvisit = {node.visit_count():0.2f}")
             logging.fatal(f"   is_terminal = {child_node.is_terminal}")
 
-        if not best_childs:
+        if not sel_values:
             return None
+        best_value = max(sel_values)
+        best_childs = [
+            ch for ch, v in zip(node.children, sel_values)
+            if abs(best_value - v) <= self.config.search.tie_tol
+        ]
         selected_node = random.choice(best_childs)
         logging.fatal(f"selected_child = {selected_node.tag}")
         return selected_node
