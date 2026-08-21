@@ -4966,12 +4966,12 @@ Two activities, two shapes:
 > 12.1 hr/trial at b=320/bs-4, so 2 cells × 2 trials is
 > ≈ 48 GPU-h on that extrapolation.
 >
-> **W&B:** `2.0` `seaw0kq9`; `q_beta=0` failed before trial 2.
+> **W&B:** `2.0` `seaw0kq9`; `q_beta=0` `kb9se9jk`.
 
 | llm | prm | cpuct | q_beta | trials | status | pass@gb | naive@gb | wei@gb | maj@gb | hr/trial |
 |---|---|---|---|---|---|---|---|---|---|---|
 | llama-1b | qwen | 2.0 | 1.0 | 2 | scored | .5634<br>±.0304 | .3619<br>±.0294 | .3134<br>±.0284 | .2724<br>±.0272 | 19.69 |
-| llama-1b | qwen | 2.0 | 0 | — | running | — | — | — | — | — |
+| llama-1b | qwen | 2.0 | 0 | 2 | scored | .5858<br>±.0301 | .3396<br>±.0290 | .2761<br>±.0274 | .2351<br>±.0260 | 20.19 |
 
 > **Analysis.** Both cells queued 2026-08-15 at priority 4;
 > neither launched yet. The
@@ -5186,11 +5186,11 @@ Two activities, two shapes:
 > b=320/bs-4 rate of 12.1 hr/trial, 2 cells × 2 trials is
 > ≈ 48 GPU-h. Direct counterpart: `tbl-1629fa` (`T=0.8`).
 >
-> **W&B:** none yet.
+> **W&B:** `2.0` `hs4xk929`.
 
 | llm | prm | cpuct | q_beta | trials | status | pass@gb | naive@gb | wei@gb | maj@gb | hr/trial |
 |---|---|---|---|---|---|---|---|---|---|---|
-| llama-1b | qwen | 2.0 | 1.0 | — | running | — | — | — | — | — |
+| llama-1b | qwen | 2.0 | 1.0 | 2 | scored | .5522<br>±.0304 | .3172<br>±.0285 | .2873<br>±.0277 | .2351<br>±.0260 | 16.53 |
 | llama-1b | qwen | 2.0 | 0 | — | running | — | — | — | — | — |
 
 > **Analysis.** Both cells queued 2026-08-15 at priority 8; neither
@@ -5225,12 +5225,12 @@ Two activities, two shapes:
 > rate of 20.9 hr/trial, 2 cells × 2 trials is ≈ 84 GPU-h.
 > Direct counterpart: `tbl-7d2cbf` (`T=0.8`).
 >
-> **W&B:** none yet.
+> **W&B:** `2.0` `q65p4gmk`; `q_beta=0` `vyw53f0a`.
 
 | llm | prm | cpuct | q_beta | trials | status | pass@gb | naive@gb | wei@gb | maj@gb | hr/trial |
 |---|---|---|---|---|---|---|---|---|---|---|
-| llama-3b | qwen | 2.0 | 1.0 | — | running | — | — | — | — | — |
-| llama-3b | qwen | 2.0 | 0 | — | running | — | — | — | — | — |
+| llama-3b | qwen | 2.0 | 1.0 | 2 | scored | .7090<br>±.0278 | .4963<br>±.0306 | .4478<br>±.0304 | .4030<br>±.0300 | 29.11 |
+| llama-3b | qwen | 2.0 | 0 | 2 | scored | .7351<br>±.0270 | .4366<br>±.0304 | .4142<br>±.0301 | .3545<br>±.0293 | 29.98 |
 
 > **Analysis.** Both cells queued 2026-08-15 at priority 5.5; neither
 > launched yet. The
@@ -5264,12 +5264,12 @@ Two activities, two shapes:
 > rate of 18.2 hr/trial, 2 cells × 2 trials is ≈ 73 GPU-h.
 > Direct counterpart: `tbl-6a598f` (`T=0.8`).
 >
-> **W&B:** `2.0` `n51341ob`.
+> **W&B:** `2.0` `n51341ob`; `q_beta=0` `p6m6ruvj`.
 
 | llm | prm | cpuct | q_beta | trials | status | pass@gb | naive@gb | wei@gb | maj@gb | hr/trial |
 |---|---|---|---|---|---|---|---|---|---|---|
 | qwen-3b | qwen | 2.0 | 1.0 | 2 | scored | .8246<br>±.0233 | .6194<br>±.0297 | .5970<br>±.0300 | .5373<br>±.0305 | 24.69 |
-| qwen-3b | qwen | 2.0 | 0 | — | running | — | — | — | — | — |
+| qwen-3b | qwen | 2.0 | 0 | 2 | scored | .8060<br>±.0242 | .6045<br>±.0299 | .5933<br>±.0301 | .5373<br>±.0305 | 24.83 |
 
 > **Analysis.** Both cells queued 2026-08-15 at priority 5; neither
 > launched yet. The
@@ -5303,12 +5303,12 @@ Two activities, two shapes:
 > rate of 14.5 hr/trial, 2 cells × 2 trials is ≈ 58 GPU-h.
 > Direct counterpart: `tbl-25c7d9` (`T=0.8`).
 >
-> **W&B:** none yet.
+> **W&B:** `2.0` `sbxaik1g`; `q_beta=0` `o7215xmv`.
 
 | llm | prm | cpuct | q_beta | trials | status | pass@gb | naive@gb | wei@gb | maj@gb | hr/trial |
 |---|---|---|---|---|---|---|---|---|---|---|
-| qwen-7b gptq-int4 | qwen | 2.0 | 1.0 | — | running | — | — | — | — | — |
-| qwen-7b gptq-int4 | qwen | 2.0 | 0 | — | running | — | — | — | — | — |
+| qwen-7b gptq-int4 | qwen | 2.0 | 1.0 | 2 | scored | .8470<br>±.0220 | .6567<br>±.0291 | .6007<br>±.0300 | .5858<br>±.0301 | 27.91 |
+| qwen-7b gptq-int4 | qwen | 2.0 | 0 | 2 | scored | .8433<br>±.0222 | .6343<br>±.0295 | .6082<br>±.0299 | .5896<br>±.0301 | 26.94 |
 
 > **Analysis.** Both cells queued 2026-08-15 at priority 6; neither
 > launched yet. The
@@ -5342,12 +5342,12 @@ Two activities, two shapes:
 > rate of 13.48 hr/trial, 2 cells × 2 trials is ≈ 54 GPU-h.
 > Direct counterpart: `tbl-f6e8cf` (`T=0.8`).
 >
-> **W&B:** none yet.
+> **W&B:** `2.0` `4brbpfoa`; `q_beta=0` `4nbrk7sq`.
 
 | llm | prm | cpuct | q_beta | trials | status | pass@gb | naive@gb | wei@gb | maj@gb | hr/trial |
 |---|---|---|---|---|---|---|---|---|---|---|
-| qwen-math-1.5b | qwen | 2.0 | 1.0 | — | running | — | — | — | — | — |
-| qwen-math-1.5b | qwen | 2.0 | 0 | — | running | — | — | — | — | — |
+| qwen-math-1.5b | qwen | 2.0 | 1.0 | 2 | scored | .8470<br>±.0220 | .6754<br>±.0287 | .6604<br>±.0290 | .6194<br>±.0297 | 17.22 |
+| qwen-math-1.5b | qwen | 2.0 | 0 | 2 | scored | .8545<br>±.0216 | .6828<br>±.0285 | .6716<br>±.0287 | .6231<br>±.0297 | 17.26 |
 
 > **Analysis.** Both cells queued 2026-08-15 at priority 7; neither
 > launched yet. The

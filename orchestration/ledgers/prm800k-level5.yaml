@@ -9486,7 +9486,7 @@
   feeds:
   - tbl-1629fa  # cpuct sweep (llama-1b), b=320/bs-8, q_beta=0 (cpuct/q_beta = inf) row
   group: cnt-mcts
-  status: running
+  status: scored
   history:
     - {at: 2026-08-17 18:45, job_id: 23555379, outcome: stalled, trials_done: 1}
   priority: 4
@@ -9543,7 +9543,7 @@
   feeds:
   - tbl-063d52  # cpuct sweep (qwen-3b), b=320/bs-8 T=0.5, q_beta=0 (cpuct/q_beta = inf) row
   group: cnt-mcts
-  status: running
+  status: scored
   history:
     - {at: 2026-08-17 18:45, job_id: 23560035, outcome: stalled, trials_done: 1}
   priority: 5
@@ -9572,7 +9572,7 @@
   feeds:
   - tbl-5c5613  # cpuct sweep (llama-3b), b=320/bs-8 T=0.5, cpuct=2.0 row
   group: cnt-mcts
-  status: running
+  status: scored
   priority: 5.5
   expected_hr: 42
   note: b=320 bs-8 T=0.5 cnt qwen-PRM llama-3b, cpuct=2.0 (file default).
@@ -9599,7 +9599,7 @@
   feeds:
   - tbl-5c5613  # cpuct sweep (llama-3b), b=320/bs-8 T=0.5, q_beta=0 (cpuct/q_beta = inf) row
   group: cnt-mcts
-  status: running
+  status: scored
   priority: 5.5
   expected_hr: 42
   note: b=320 bs-8 T=0.5 cnt qwen-PRM llama-3b, q_beta=0, the cpuct/q_beta=inf limit.
@@ -9626,7 +9626,7 @@
   feeds:
   - tbl-50dc81  # cpuct sweep (qwen-7b gptq-int4), b=320/bs-8 T=0.5, cpuct=2.0 row
   group: cnt-mcts
-  status: running
+  status: scored
   priority: 6
   expected_hr: 29
   note: b=320 bs-8 T=0.5 cnt qwen-PRM qwen-7b gptq-int4, cpuct=2.0 (file default).
@@ -9653,7 +9653,7 @@
   feeds:
   - tbl-50dc81  # cpuct sweep (qwen-7b gptq-int4), b=320/bs-8 T=0.5, q_beta=0 (cpuct/q_beta = inf) row
   group: cnt-mcts
-  status: running
+  status: scored
   priority: 6
   expected_hr: 29
   note: b=320 bs-8 T=0.5 cnt qwen-PRM qwen-7b gptq-int4, q_beta=0, the cpuct/q_beta=inf limit.
@@ -9680,7 +9680,7 @@
   feeds:
   - tbl-f808c7  # cpuct sweep (qwen-math-1.5b), b=320/bs-8 T=0.5, cpuct=2.0 row
   group: cnt-mcts
-  status: running
+  status: scored
   priority: 7
   expected_hr: 39
   note: b=320 bs-8 T=0.5 cnt qwen-PRM qwen-math-1.5b, cpuct=2.0 (file default).
@@ -9707,7 +9707,7 @@
   feeds:
   - tbl-f808c7  # cpuct sweep (qwen-math-1.5b), b=320/bs-8 T=0.5, q_beta=0 (cpuct/q_beta = inf) row
   group: cnt-mcts
-  status: running
+  status: scored
   priority: 7
   expected_hr: 39
   note: b=320 bs-8 T=0.5 cnt qwen-PRM qwen-math-1.5b, q_beta=0, the cpuct/q_beta=inf limit.
@@ -9734,7 +9734,7 @@
   feeds:
   - tbl-78e158  # cpuct sweep (llama-1b), b=320/bs-8 T=0.5, cpuct=2.0 row
   group: cnt-mcts
-  status: running
+  status: scored
   priority: 8
   expected_hr: 40
   note: b=320 bs-8 T=0.5 cnt qwen-PRM llama-1b, cpuct=2.0 (file default).
@@ -9766,7 +9766,10 @@
   expected_hr: 40
   note: b=320 bs-8 T=0.5 cnt qwen-PRM llama-1b, q_beta=0, the cpuct/q_beta=inf limit.
   launch:
-    job_id: 23564222
-    node: r5u25n1
-    pid: 3728975
-    at: 2026-08-18 05:48
+    job_id: 23592471
+    node: r5u17n1
+    pid: 3930267
+    at: 2026-08-20 19:17
+  history:
+  - {at: 2026-08-20 14:55, job_id: 23564222, outcome: stalled,
+     trials_done: 1}
