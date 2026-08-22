@@ -5186,12 +5186,12 @@ Two activities, two shapes:
 > b=320/bs-4 rate of 12.1 hr/trial, 2 cells × 2 trials is
 > ≈ 48 GPU-h. Direct counterpart: `tbl-1629fa` (`T=0.8`).
 >
-> **W&B:** `2.0` `hs4xk929`.
+> **W&B:** `2.0` `hs4xk929`; `q_beta=0` `48o6uprp`.
 
 | llm | prm | cpuct | q_beta | trials | status | pass@gb | naive@gb | wei@gb | maj@gb | hr/trial |
 |---|---|---|---|---|---|---|---|---|---|---|
 | llama-1b | qwen | 2.0 | 1.0 | 2 | scored | .5522<br>±.0304 | .3172<br>±.0285 | .2873<br>±.0277 | .2351<br>±.0260 | 16.53 |
-| llama-1b | qwen | 2.0 | 0 | — | running | — | — | — | — | — |
+| llama-1b | qwen | 2.0 | 0 | 2 | scored | .5149<br>±.0306 | .3246<br>±.0287 | .2276<br>±.0257 | .1978<br>±.0244 | 17.10 |
 
 > **Analysis.** Both cells queued 2026-08-15 at priority 8; neither
 > launched yet. The

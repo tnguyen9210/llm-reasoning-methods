@@ -15,17 +15,11 @@ by gen_budget, plus a cross-algorithm best-config summary.
 - [**Summary — results per (algorithm, model, budget)**](#summary-results-per-algorithm-model-budget)
 - [**Tuning tables \[gen_budget=80\]**](#tuning-tables-gen_budget80)
   - [cnt-mcts](#cnt-mcts)
-    - [custom vs native template comparison](#custom-vs-native-template-comparison) · `tbl-c1962a`
-    - [prm_batch_size sweep](#prm_batch_size-sweep) · `tbl-0642eb`
-    - [rlhflow vs qwen PRM comparison](#rlhflow-vs-qwen-prm-comparison) · `tbl-ab03de`
-    - [enforce_eager comparison](#enforce_eager-comparison) · `tbl-bfab79`
-    - [model family, size, quantization comparison](#model-family-size-quantization-comparison) · `tbl-8ca223`
-  - [cnt-mcts (updated)](#cnt-mcts-updated)
-    - [custom vs native template comparison](#custom-vs-native-template-comparison-1) · `tbl-55d130`
-    - [prm_batch_size sweep](#prm_batch_size-sweep-1) · `tbl-b5bc59`
-    - [rlhflow vs qwen PRM comparison](#rlhflow-vs-qwen-prm-comparison-1) · `tbl-ef6f98`
-    - [enforce_eager comparison](#enforce_eager-comparison-1) · `tbl-adf2f8`
-    - [model family, size, quantization comparison](#model-family-size-quantization-comparison-1) · `tbl-702925`
+    - [custom vs native template comparison](#custom-vs-native-template-comparison) · `tbl-55d130`
+    - [prm_batch_size sweep](#prm_batch_size-sweep) · `tbl-b5bc59`
+    - [rlhflow vs qwen PRM comparison](#rlhflow-vs-qwen-prm-comparison) · `tbl-ef6f98`
+    - [enforce_eager comparison](#enforce_eager-comparison) · `tbl-adf2f8`
+    - [model family, size, quantization comparison](#model-family-size-quantization-comparison) · `tbl-702925`
     - [model family, size, quantization comparison (qwen PRM)](#model-family-size-quantization-comparison-qwen-prm) · `tbl-6fe5a2`
     - [agg_strategy comparison (qwen-3b, qwen-math-1.5b)](#agg_strategy-comparison-qwen-3b-qwen-math-15b) · `tbl-3ea294`
   - [sem-mcts-v02](#sem-mcts-v02)
@@ -36,9 +30,9 @@ by gen_budget, plus a cross-algorithm best-config summary.
     - [lam / ds_alpha joint sweep (v02, llama-1b, step 1 done)](#lam-ds_alpha-joint-sweep-v02-llama-1b-step-1-done) · `tbl-0efc55`
     - [lam / ds_alpha joint sweep (v02, llama-3b, step 1 done)](#lam-ds_alpha-joint-sweep-v02-llama-3b-step-1-done) · `tbl-f50e22`
     - [lam / ds_alpha joint sweep (v02, qwen-math-1.5b)](#lam-ds_alpha-joint-sweep-v02-qwen-math-15b) · `tbl-7491b1`
-    - [model family, size, quantization comparison](#model-family-size-quantization-comparison-2) · `tbl-0c4ffd`
+    - [model family, size, quantization comparison](#model-family-size-quantization-comparison-1) · `tbl-0c4ffd`
     - [model family, size, quantization comparison (qwen PRM)](#model-family-size-quantization-comparison-qwen-prm-1) · `tbl-352d94`
-    - [rlhflow vs qwen PRM comparison](#rlhflow-vs-qwen-prm-comparison-2) · `tbl-b4c266`
+    - [rlhflow vs qwen PRM comparison](#rlhflow-vs-qwen-prm-comparison-1) · `tbl-b4c266`
     - [agg_strategy comparison (qwen-3b, qwen-math-1.5b)](#agg_strategy-comparison-qwen-3b-qwen-math-15b-1) · `tbl-baf795`
     - [agg_strategy comparison (qwen-3b, qwen-math-1.5b, lam=0.1, w_eff=10)](#agg_strategy-comparison-qwen-3b-qwen-math-15b-lam01-w_eff10) · `tbl-b1e565`
     - [agg_strategy comparison (qwen-3b, qwen-math-1.5b, lam=0.1, w_eff=100)](#agg_strategy-comparison-qwen-3b-qwen-math-15b-lam01-w_eff100) · `tbl-db5810`
@@ -65,11 +59,10 @@ by gen_budget, plus a cross-algorithm best-config summary.
     - [model family comparison (b=320, qwen PRM, lam=0.1, w_eff=10)](#model-family-comparison-b320-qwen-prm-lam01-w_eff10) · `tbl-e144a5`
     - [model family comparison (b=320, qwen PRM, lam=0.1, w_eff=100)](#model-family-comparison-b320-qwen-prm-lam01-w_eff100) · `tbl-179d62`
 - [**Run log (newest first)**](#run-log-newest-first)
-  - [2026-06-18 — cnt-mcts / llama-1b / custom / cpuct=2.0 / b=80](#2026-06-18-cnt-mcts-llama-1b-custom-cpuct20-b80)
 - [**Standing comparison questions**](#standing-comparison-questions)
 - [**Links & connections**](#links-connections)
 
-*39 tables. Regenerate with `python scripts/gen_toc.py`.*
+*34 tables. Regenerate with `python scripts/gen_toc.py`.*
 <!-- toc:end -->
 
 ## Purpose
@@ -133,13 +126,12 @@ instead of one wide sparse grid.)
 ## Cross-algorithm summary (qwen PRM)
 > One table per model, one row per algorithm — pulled directly from
 > each algorithm's own "model family, size, quantization comparison
-> (qwen PRM)" table above/below (`cnt-mcts (updated)`, `sem-mcts`,
+> (qwen PRM)" table above/below (`cnt-mcts`, `sem-mcts`,
 > `cnt-mcts-bl-v01`, `kube-mcts-bl-v01`, `kdepth-mcts-bl-v01`,
 > `sem-mcts-bl-v01`). All rows fixed at b=80, bs-4, d-20,
 > agg_strategy=`last`, tmpl=model-family default (native for Qwen,
-> custom for Llama), prm=qwen. `cnt-mcts` row is method=`mcts_cnt_v01`
-> (the post-`_split_steps`-fix table, not the older pre-fix
-> `mcts_cnt` section). `sem-mcts` row is `mcts_sem_v02` (PRM embeds),
+> custom for Llama), prm=qwen. `cnt-mcts` row is
+> method=`mcts_cnt_v01`. `sem-mcts` row is `mcts_sem_v02` (PRM embeds),
 > `ds_alpha=100` (w_eff not applicable — that knob is bl_sem-specific).
 > `sem-mcts-bl-v01` row uses the `w_eff=100` table (more complete than
 > `w_eff=10` at time of writing: 5/7 vs. 4/7 cells scored); see that
@@ -300,7 +292,7 @@ instead of one wide sparse grid.)
 
 | Concept | Code `method=` | Core module | Status |
 |---|---|---|---|
-| cnt-mcts | `mcts_cnt` | `mcts_cnt_search_v01_00_00` | runs logged |
+| cnt-mcts | `mcts_cnt_v01` | `mcts_cnt_search_v01_00_00` | runs logged |
 | sem-mcts (PRM) | `mcts_sem_v02` | `mcts_sem_search_v02_00_00` | runs logged |
 | sem-mcts (policy) | `mcts_sem_v01` | `mcts_sem_search_v01_00_00` | runnable, no runs yet |
 | cnt-mcts-bl v01 | `mcts_bl_cnt_v01` | `mcts_bl_cnt_search_v01_00_00` | runs logged |
@@ -393,383 +385,88 @@ instead of one wide sparse grid.)
 > (expected sparser — less tuning at high budget).
 
 ### cnt-mcts
-> knobs: template, cpuct (bs-4, d-20 fixed). method=`mcts_cnt`.
-> No cpuct sweep yet — every row is the default 2.0. All four
-> @gb metrics shown for review; the Summary above promotes
-> whichever row scores highest on **pass@gb** across all knobs
-> jointly (template + cpuct, once swept) per model — not a
-> template-specific pick. Metric `—` = scored but not
-> backfilled; `generated` = raw output, not scored.
-
-#### custom vs native template comparison
-<!-- table-id: tbl-c1962a -->
-> **Compares:** `tmpl` (custom vs. native chat template) — the
-> only varying knob; all other knobs held at default and dropped
-> as columns. Kept as separate per-model tables (rather than one
-> merged table) so each model's caveats stay attached to its own
-> rows.
->
-> **Fixed:** cpuct=2.0, bs-4, d-20, prm_batch_size=2.
-> `hr/trial`: GPTQ rows read from `timing_state.json`; fp16 rows
-> predate that file, so theirs is the mean of `time_per_trial_hr`
-> over all logged trials in W&B.
->
-> ⚠️ **custom = template-bug on every Qwen row below
-> (qwen-math-1.5b, qwen-3b gptq-int4, qwen-7b gptq-int4) — NOT a
-> clean custom-vs-native signal for Qwen.** These runs predate the
-> 2026-06-19 fix and force-apply the hardcoded Llama-3.1-vendored
-> `custom_chat_template` to Qwen's tokenizer regardless of `llm=`;
-> Qwen was never trained on these tokens, so completions can leak
-> raw `<|eot_id|>`-style markup after the boxed answer
-> (`llm-reasoning-mcts-exp-todo` Track 1). Llama rows are
-> unaffected (custom is Llama's native template). **Fixed
-> 2026-06-19** — `gen.use_custom_template` now defaults per model
-> family (Qwen → native, else → custom); each ⚠ row below would
-> need a post-fix re-run for a clean number.
-> ⚠️ qwen-math-1.5b custom's `9.31*` hr/trial is a single-trial
-> value (only trial 0's timing logged) inflated by the
-> template-bug's leaked-text slowdown — not a clean 2-trial
-> runtime read; see analysis below.
-> ⚠️ qwen-3b/qwen-7b gptq-int4 rows run at `prm_batch_size=2`, not
-> the fp16 rows' default — not directly comparable to the fp16
-> pairs on `hr/trial`.
->
-> **W&B:** qwen-math-1.5b custom `kk32i2lp`.
-
-| llm | tmpl | trials | status | pass@gb | naive@gb | wei@gb | maj@gb | hr/trial |
-|---|---|---|---|---|---|---|---|---|
-| llama-1b | **custom** | 4 | scored | **.648<br>±.042** | .492<br>±.044 | .469<br>±.044 | .414<br>±.044 | 2.42 |
-| llama-1b | native | 2 | scored | .566<br>±.031 | .371<br>±.030 | .348<br>±.030 | .313<br>±.029 | 2.56 |
-
-| llm | tmpl | trials | status | pass@gb | naive@gb | wei@gb | maj@gb | hr/trial |
-|---|---|---|---|---|---|---|---|---|
-| llama-3b | **custom** | 4 | scored | **.744<br>±.019** | .508<br>±.022 | .586<br>±.022 | .582<br>±.022 | 3.99 |
-| llama-3b | native | 4 | scored | .732<br>±.020 | .520<br>±.022 | .547<br>±.022 | .529<br>±.022 | 3.98 |
-
-| llm | tmpl | trials | status | pass@gb | naive@gb | wei@gb | maj@gb | hr/trial |
-|---|---|---|---|---|---|---|---|---|
-| qwen-3b | native | 4 | scored | .873<br>±.015 | .689<br>±.021 | .727<br>±.020 | .715<br>±.020 | 3.80 |
-
-| llm | tmpl | trials | status | pass@gb | naive@gb | wei@gb | maj@gb | hr/trial |
-|---|---|---|---|---|---|---|---|---|
-| qwen-math-1.5b | custom | 2 | scored ⚠ | .894<br>±.019 | .742<br>±.027 | .770<br>±.026 | .758<br>±.027 | 9.31* |
-| qwen-math-1.5b | native | 2 | scored | .879<br>±.020 | .746<br>±.027 | .770<br>±.026 | .758<br>±.027 | 3.08 |
-
-| llm | tmpl | trials | status | pass@gb | naive@gb | wei@gb | maj@gb | hr/trial |
-|---|---|---|---|---|---|---|---|---|
-| qwen-3b gptq-int4 | custom | 3 | scored ⚠ | .680<br>±.024 | .578<br>±.025 | .628<br>±.025 | .604<br>±.025 | 2.87 |
-| qwen-3b gptq-int4 | native | 2 | scored | .797<br>±.025 | .652<br>±.030 | .676<br>±.029 | .688<br>±.029 | 2.74 |
-
-| llm | tmpl | trials | status | pass@gb | naive@gb | wei@gb | maj@gb | hr/trial |
-|---|---|---|---|---|---|---|---|---|
-| qwen-7b gptq-int4 | custom | 3 | scored ⚠ | .867<br>±.017 | .760<br>±.022 | .794<br>±.021 | .784<br>±.021 | 3.18 |
-| qwen-7b gptq-int4 | native | 2 | scored | .902<br>±.019 | .672<br>±.029 | .750<br>±.027 | .754<br>±.027 | 3.21 |
-
-> **Analysis.** For Llama, custom beats native at both sizes
-> (1b: .648 vs .566; 3b: .744 vs .732, smaller gap) — custom is
-> Llama's native template, so this is the expected direction.
-> For Qwen, the custom rows are all template-bug-corrupted, so no
-> clean custom-vs-native verdict exists yet — qwen-math-1.5b's
-> corrupted custom (.894) and clean native (.879) land within
-> noise of each other anyway, and qwen-7b gptq-int4 custom trails
-> native (.867 vs .902) despite the leak, suggesting native is
-> the safer Qwen default regardless of precision. qwen-math-1.5b
-> custom's `9.31*` hr/trial reflects the bug's leaked-text
-> slowdown (the running average over both trials, not a
-> single-trial artifact), not a real native-vs-custom runtime
-> delta — don't read it as such.
-> **Limitations / follow-up:** every Qwen custom row needs a
-> post-2026-06-19-fix re-run to get a real custom-vs-native
-> signal; the qwen-3b/qwen-7b gptq-int4 rows additionally aren't
-> prmbs-matched to the fp16 rows, so their `hr/trial` only
-> compares within their own pair, not across precision.
-
-#### prm_batch_size sweep
-<!-- table-id: tbl-0642eb -->
-> **Compares:** the in-loop PRM scoring micro-batch
-> (`search.prm_batch_size`, [utils/configs.py](../utils/configs.py))
-> — same search config otherwise, so pass@gb should be ~flat
-> across rows (modulo sampling noise); the point is the
-> **runtime/throughput and memory** delta, not a new accuracy
-> result.
->
-> **Fixed:** llama-1b, tmpl=custom, cpuct=2.0, bs-4, d-20, b=80.
->
-> ⚠️ rlhflow/qwen prm_bs∈{1,4} rows are 2-trial runs scored
-> 2026-06-21; prm_bs=2 not explicitly run yet (the existing
-> baseline cell uses a different trial count/path, so it's left
-> out rather than presented as a matched data point).
->
-> **W&B:** rlhflow prm_bs=1 `1c9026yj`, prm_bs=4 `wb2un007`;
-> qwen prm_bs=1 `8vvw5usb`, prm_bs=4 `u9itrf7k`.
-
-| llm | prm | prm_bs | trials | status | pass@gb | hr/trial | peak GPU mem (GB) |
-|---|---|---|---|---|---|---|---|
-| llama-1b | rlhflow | 1 | 2 | scored | .617<br>±.030 | 2.51 | 30.23 |
-| llama-1b | rlhflow | 2 | — | not run | — | — | — |
-| llama-1b | rlhflow | 4 | 2 | scored | .641<br>±.030 | 2.38 | 31.68 |
-| llama-1b | qwen | 1 | 2 | scored | .633<br>±.030 | 2.35 | 27.49 |
-| llama-1b | qwen | 4 | 2 | scored | .676<br>±.029 | 2.31 | 28.68 |
-
-> **Analysis.** Within the n=2 rows, pass@gb is flat within ~1
-> SEM across prm_bs (rlhflow: .617/.641; qwen: .633/.676) — no
-> accuracy regression from larger micro-batches, as expected;
-> hr/trial also flat (~2.3-2.5 hr), so this sweep shows no
-> throughput win at this model/budget scale. **Peak GPU mem is
-> NOT flat, though** — `prm_bs=4` consistently costs ~1.2-1.5 GB
-> more than `prm_bs=1` (rlhflow: 30.23→31.68 GB; qwen:
-> 27.49→28.68 GB), pulled from W&B's auto-logged
-> `system.gpu.0.memoryAllocatedBytes` (max over each run's
-> history; no explicit code instrumentation — not in
-> `timing_state.json` or `wandb.log()` calls in
-> [generate_mcts_cnt.py](../generate_mcts_cnt.py)). So `prm_bs=1`
-> is the safer default if memory headroom is the binding
-> constraint (V100S 32GB): same accuracy, same speed, less
-> memory pressure, at this model/budget scale.
-> **Limitations / follow-up:** n=2 trials per cell and prm_bs=2
-> untested — full writeup incl. why the pass@gb gap isn't real
-> and the trial count needed to actually resolve it:
-> [findings/exp-findings/prm-batch-size-throughput-memory.md](findings/exp-findings/prm-batch-size-throughput-memory.md).
-
-#### rlhflow vs qwen PRM comparison
-<!-- table-id: tbl-ab03de -->
-> **Compares:** `prm.kind` (Llama-8B-PRM "rlhflow" vs
-> Qwen-Math-7B-PRM "qwen") — the *scoring* model, not the policy
-> LLM. Both PRMs support scoring via `PRM_REGISTRY`/`build_prm()`
-> (decisions-log.md, 2026-06-19); this is the scoring-side
-> counterpart to the embeds-source ablation (sem-mcts,
-> PRM-as-embedder, 2026-06-20).
->
-> **Fixed:** tmpl=custom (legacy rlhflow rows) / model-family
-> default (new qwen-PRM `cfg-*` rows), cpuct=2.0, bs-4, d-20, b=80.
->
-> ⚠️ llama-1b has both PRMs at matched `prm_bs=1`, 2 trials each.
-> llama-3b/qwen-3b/qwen-math-1.5b's qwen-PRM rows are matched to
-> each other at `prm_bs=1`, 2 trials (new `cfg-*` dirs, scored +
-> logged 2026-06-22) but NOT matched to their own rlhflow row: the
-> rlhflow rows' trial count varies (4/4/2) and prmbs isn't pinned
-> to 1 — llama-3b/qwen-3b's legacy `tmpl-custom` dirs predate the
-> `prm_batch_size` field entirely (`mcts_cnt`'s schema has no such
-> knob — assumed `prmbs=4` here, not recorded). GPTQ-int4 rows
-> still have no qwen-PRM run (rlhflow-only so far).
->
-> **W&B:** llama-1b rlhflow `1c9026yj`, llama-1b qwen `8vvw5usb`;
-> llama-3b qwen `5opc7rii`; qwen-3b qwen `9kxy56vs`; qwen-math-1.5b
-> qwen `9skdu6r4`.
-
-| llm | prm | prmbs | trials | status | pass@gb | naive@gb | wei@gb | maj@gb | hr/trial |
-|---|---|---|---|---|---|---|---|---|---|
-| llama-1b | rlhflow | 1 | 2 | scored | .617<br>±.030 | .434<br>±.031 | .461<br>±.031 | .434<br>±.031 | 2.51 |
-| llama-1b | qwen | 1 | 2 | scored | .633<br>±.030 | .531<br>±.031 | .492<br>±.031 | .449<br>±.031 | 2.35 |
-| llama-3b | rlhflow | 4 (assumed, legacy) | 4 | scored | .744<br>±.019 | .508<br>±.022 | .586<br>±.022 | .582<br>±.022 | 3.99 |
-| llama-3b | qwen | 1 | 2 | scored | .785<br>±.026 | .688<br>±.029 | .648<br>±.030 | .629<br>±.030 | 4.16 |
-| qwen-3b | rlhflow | 4 (assumed, legacy) | 4 | scored | .873<br>±.015 | .689<br>±.021 | .727<br>±.020 | .715<br>±.020 | 3.80 |
-| qwen-3b | qwen | 1 | 2 | scored | .867<br>±.021 | .758<br>±.027 | .777<br>±.026 | .766<br>±.027 | 3.82 |
-| qwen-math-1.5b | rlhflow | 4 (assumed, legacy) | 2 | scored | .879<br>±.020 | .746<br>±.027 | .770<br>±.026 | .758<br>±.027 | 3.08 |
-| qwen-math-1.5b | qwen | 1 | 2 | scored | .898<br>±.019 | .809<br>±.025 | .773<br>±.026 | .785<br>±.026 | 2.86 |
-
-> **Analysis.** At llama-1b and llama-3b, qwen-PRM scoring edges
-> out rlhflow on pass@gb (.633 vs .617; .785 vs .744); at
-> qwen-math-1.5b it edges out too (.898 vs .879); at qwen-3b
-> rlhflow is marginally ahead (.873 vs .867). All gaps are within
-> ~1 SEM at n=2-4 trials per cell — read as "qwen-PRM is at least
-> competitive everywhere, possibly slightly ahead at
-> smaller/non-Qwen models," not a settled result. naive/wei/maj
-> follow the same direction as pass@gb at every model except
-> qwen-math-1.5b, where qwen-PRM's naive (.809) and maj (.785)
-> lead but wei (.773) trails rlhflow's wei (.770) only marginally
-> — no metric flips the overall pass@gb ranking. **Runtime:**
-> qwen-PRM hr/trial is close to rlhflow's at every model (within
-> ±0.2hr) except llama-3b, where qwen-PRM is slower (4.16 vs
-> 3.99) — the opposite direction from the sem-mcts version of
-> this table, where qwen-PRM ran faster throughout; likely just
-> noise at n=2 trials since both PRMs score at the same
-> `prm_batch_size=1` here.
-> **Limitations / follow-up:** the llama-3b/qwen-3b/qwen-math-1.5b
-> qwen-PRM rows are new `cfg-*` dirs, distinct from the older
-> unscored `llama-3b/prm-qwen/prmbs-4` legacy dir (still exists
-> ungenerated/unscored, unrelated to this table now). rlhflow's
-> prmbs-4-assumed legacy rows would need a clean prmbs-1 re-run
-> to fully isolate `prm.kind` from `prm_batch_size`.
-
-#### enforce_eager comparison
-<!-- table-id: tbl-bfab79 -->
-> **Compares:** `llm.enforce_eager` (vLLM's CUDA-graph toggle —
-> `True` disables CUDA graphs, `False`/default uses them) at
-> fixed model.
->
-> **Fixed:** llama-3b, rlhflow, tmpl=custom, cpuct=2.0, bs-4, d-20,
-> b=80.
->
-> ⚠️ Only llama-3b/rlhflow currently has both values run (the
-> legacy `tmpl-custom` dir at `enforce_eager=False`, confirmed via
-> W&B config, vs. `cfg-e829c53b` at `enforce_eager=True`) — a
-> single-row, single-model comparison, not a sweep. **Not
-> matched:** trial count (4 vs 2) and `prm_batch_size` (legacy
-> dir's PRM scoring batch size predates the field and isn't
-> recorded; `cfg-e829c53b` is prm_batch_size=1) — treat as a rough
-> signal, not a controlled ablation. Per [[feedback_prefer_eager_false]],
-> every other table in this doc uses the `enforce_eager=False`
-> run for a given cell — this is the only place an
-> `enforce_eager=True` row should appear.
->
-> **W&B:** llama-3b eager=False `97w1z01n`, eager=True `e5ki98he`.
-
-| llm | prm | enforce_eager | trials | status | pass@gb | naive@gb | wei@gb | maj@gb | hr/trial |
-|---|---|---|---|---|---|---|---|---|---|
-| llama-3b | rlhflow | False (default) | 4 | scored | .744<br>±.019 | .508<br>±.022 | .586<br>±.022 | .582<br>±.022 | 3.99 |
-| llama-3b | rlhflow | True | 2 | scored | .746<br>±.027 | .504<br>±.031 | .602<br>±.031 | .594<br>±.031 | 4.65 |
-
-> **Analysis.** pass@gb is essentially identical (.744 vs .746,
-> well within 1 SEM) — `enforce_eager` looks accuracy-neutral
-> here, as expected (it only changes vLLM's execution mode, not
-> sampling). **hr/trial is notably higher with eager mode on**
-> (4.65 vs 3.99, ~17% slower) — consistent with CUDA graphs
-> normally speeding up decode; eager mode forgoes that.
-> **Limitations / follow-up:** with only 2-4 trials and an
-> unmatched prm_batch_size, treat the runtime gap as suggestive,
-> not conclusive — a matched-trial, matched-prmbs re-run would
-> confirm it. No other model/PRM combination has both eager
-> values run yet, so this can't be checked for generality.
-
-#### model family, size, quantization comparison
-<!-- table-id: tbl-8ca223 -->
-> **Compares:** model family, size, and quantization jointly —
-> `llm` is a single combined string (model-precision) rather
-> than split columns, since this varies model+precision per row
-> (unlike the template comparison's single-knob isolation).
->
-> **Fixed:** cpuct=2.0, bs-4, d-20, b=80, tmpl=model-family
-> default (native for Qwen, custom for Llama, per the
-> 2026-06-19 per-family default fix above).
->
-> ⚠️ GPTQ rows use prm_batch_size=2 (vs. the fp16 rows' default)
-> and read `hr/trial` from `timing_state.json`; fp16 rows predate
-> that file, so theirs is the mean of `time_per_trial_hr` over
-> all logged trials in W&B (4 trials for llama-1b/3b and qwen-3b
-> fp16, 2 for qwen-math-1.5b fp16) — the fp16/GPTQ runtime
-> comparison isn't perfectly apples-to-apples.
-
-| llm | trials | status | pass@gb | naive@gb | wei@gb | maj@gb | hr/trial |
-|---|---|---|---|---|---|---|---|
-| llama-1b fp16 | 4 | scored | .648<br>±.042 | .492<br>±.044 | .469<br>±.044 | .414<br>±.044 | 2.42 |
-| llama-3b fp16 | 4 | scored | .744<br>±.019 | .508<br>±.022 | .586<br>±.022 | .582<br>±.022 | 3.99 |
-| llama-3b gptq | 3 | scored | .721<br>±.023 | .492<br>±.026 | .537<br>±.026 | .531<br>±.026 | 2.92 |
-| qwen-3b fp16 | 4 | scored | .873<br>±.015 | .689<br>±.021 | .727<br>±.020 | .715<br>±.020 | 3.80 |
-| qwen-3b gptq-int4 | 2 | scored | .797<br>±.025 | .652<br>±.030 | .676<br>±.029 | .688<br>±.029 | 2.74 |
-| qwen-7b gptq-int4 | 2 | scored | .902<br>±.019 | .672<br>±.029 | .750<br>±.027 | .754<br>±.027 | 3.21 |
-| qwen-math-1.5b fp16 | 2 | scored | .879<br>±.020 | .746<br>±.027 | .770<br>±.026 | .758<br>±.027 | 3.08 |
-
-> **Analysis.** GPTQ trades a modest accuracy hit for faster
-> trials at matched budget — llama-3b gptq is ~27% faster than
-> its fp16 counterpart (2.92 vs 3.99 hr) but loses ~2.3 pts
-> pass@gb (.721 vs .744); qwen-3b gptq-int4 is ~28% faster than
-> fp16 (2.74 vs 3.80 hr) but loses ~7.6 pts (.797 vs .873) — a
-> bigger accuracy cost than Llama at the same size. qwen-7b
-> gptq-int4 is the standout: .902 pass@gb, the best score in
-> this table, while still running faster than every fp16 row
-> except llama-1b — int4 lets the 7B model run cheaper than the
-> 3B fp16 models while beating them on accuracy.
-> **Limitations / follow-up:** trial counts are small and uneven
-> (2-4), and the GPTQ rows' `prm_batch_size` mismatch means the
-> fp16/GPTQ runtime comparison should be read for direction, not
-> exact percentages. A matched-prmbs re-run would sharpen the
-> runtime deltas.
-
-### cnt-mcts (updated)
-> method=`mcts_cnt_v01`. Corrected reruns following the
-> `PRM._split_steps` fix (2026-07-06 — see
+> method=`mcts_cnt_v01`. Scoring uses the post-`PRM._split_steps`-fix
+> path (2026-07-06 — see
 > [findings/coding-findings/prm-step-split-trailing-separator.md](findings/coding-findings/prm-step-split-trailing-separator.md)
-> and `docs/decisions-log.md`), which affected `agg_strategy="last"`
-> scoring for non-terminal candidates in every table below. The
-> `### cnt-mcts` section above is kept as-is (method=`mcts_cnt`,
-> pre-fix) for comparison; do not edit it. Table shapes copied
-> from there; rows to be filled in as reruns land.
+> and `docs/decisions-log.md`). Rows fill in as runs land.
 
 #### custom vs native template comparison
 <!-- table-id: tbl-55d130 -->
 
 | llm | tmpl | trials | status | pass@gb | naive@gb | wei@gb | maj@gb | hr/trial |
 |---|---|---|---|---|---|---|---|---|
-| llama-1b | custom | — | to rerun | — | — | — | — | — |
-| llama-1b | native | — | to rerun | — | — | — | — | — |
+| llama-1b | custom | — | planned | — | — | — | — | — |
+| llama-1b | native | — | planned | — | — | — | — | — |
 
 | llm | tmpl | trials | status | pass@gb | naive@gb | wei@gb | maj@gb | hr/trial |
 |---|---|---|---|---|---|---|---|---|
-| llama-3b | custom | — | to rerun | — | — | — | — | — |
-| llama-3b | native | — | to rerun | — | — | — | — | — |
+| llama-3b | custom | — | planned | — | — | — | — | — |
+| llama-3b | native | — | planned | — | — | — | — | — |
 
 | llm | tmpl | trials | status | pass@gb | naive@gb | wei@gb | maj@gb | hr/trial |
 |---|---|---|---|---|---|---|---|---|
-| qwen-3b | native | — | to rerun | — | — | — | — | — |
+| qwen-3b | native | — | planned | — | — | — | — | — |
 
 | llm | tmpl | trials | status | pass@gb | naive@gb | wei@gb | maj@gb | hr/trial |
 |---|---|---|---|---|---|---|---|---|
-| qwen-math-1.5b | custom | — | to rerun | — | — | — | — | — |
-| qwen-math-1.5b | native | — | to rerun | — | — | — | — | — |
+| qwen-math-1.5b | custom | — | planned | — | — | — | — | — |
+| qwen-math-1.5b | native | — | planned | — | — | — | — | — |
 
 | llm | tmpl | trials | status | pass@gb | naive@gb | wei@gb | maj@gb | hr/trial |
 |---|---|---|---|---|---|---|---|---|
-| qwen-3b gptq-int4 | custom | — | to rerun | — | — | — | — | — |
-| qwen-3b gptq-int4 | native | — | to rerun | — | — | — | — | — |
+| qwen-3b gptq-int4 | custom | — | planned | — | — | — | — | — |
+| qwen-3b gptq-int4 | native | — | planned | — | — | — | — | — |
 
 | llm | tmpl | trials | status | pass@gb | naive@gb | wei@gb | maj@gb | hr/trial |
 |---|---|---|---|---|---|---|---|---|
-| qwen-7b gptq-int4 | custom | — | to rerun | — | — | — | — | — |
-| qwen-7b gptq-int4 | native | — | to rerun | — | — | — | — | — |
+| qwen-7b gptq-int4 | custom | — | planned | — | — | — | — | — |
+| qwen-7b gptq-int4 | native | — | planned | — | — | — | — | — |
 
 #### prm_batch_size sweep
 <!-- table-id: tbl-b5bc59 -->
 
 | prm | prm_bs | trials | status | pass@gb | hr/trial | peak GPU mem (GB) |
 |---|---|---|---|---|---|---|
-| rlhflow | 1 | — | to rerun | — | — | — |
-| rlhflow | 2 | — | to rerun | — | — | — |
-| rlhflow | 4 | — | to rerun | — | — | — |
-| qwen | 1 | — | to rerun | — | — | — |
-| qwen | 4 | — | to rerun | — | — | — |
+| rlhflow | 1 | — | planned | — | — | — |
+| rlhflow | 2 | — | planned | — | — | — |
+| rlhflow | 4 | — | planned | — | — | — |
+| qwen | 1 | — | planned | — | — | — |
+| qwen | 4 | — | planned | — | — | — |
 
 #### rlhflow vs qwen PRM comparison
 <!-- table-id: tbl-ef6f98 -->
 
 | llm | prm | prmbs | trials | status | pass@gb | naive@gb | wei@gb | maj@gb | hr/trial |
 |---|---|---|---|---|---|---|---|---|---|
-| llama-1b | rlhflow | 1 | — | to rerun | — | — | — | — | — |
-| llama-1b | qwen | 1 | — | to rerun | — | — | — | — | — |
-| llama-3b | rlhflow | — | — | to rerun | — | — | — | — | — |
-| llama-3b | qwen | 1 | — | to rerun | — | — | — | — | — |
-| qwen-3b | rlhflow | — | — | to rerun | — | — | — | — | — |
-| qwen-3b | qwen | 1 | — | to rerun | — | — | — | — | — |
-| qwen-math-1.5b | rlhflow | — | — | to rerun | — | — | — | — | — |
-| qwen-math-1.5b | qwen | 1 | — | to rerun | — | — | — | — | — |
+| llama-1b | rlhflow | 1 | — | planned | — | — | — | — | — |
+| llama-1b | qwen | 1 | — | planned | — | — | — | — | — |
+| llama-3b | rlhflow | — | — | planned | — | — | — | — | — |
+| llama-3b | qwen | 1 | — | planned | — | — | — | — | — |
+| qwen-3b | rlhflow | — | — | planned | — | — | — | — | — |
+| qwen-3b | qwen | 1 | — | planned | — | — | — | — | — |
+| qwen-math-1.5b | rlhflow | — | — | planned | — | — | — | — | — |
+| qwen-math-1.5b | qwen | 1 | — | planned | — | — | — | — | — |
 
 #### enforce_eager comparison
 <!-- table-id: tbl-adf2f8 -->
 
 | llm | prm | enforce_eager | trials | status | pass@gb | naive@gb | wei@gb | maj@gb | hr/trial |
 |---|---|---|---|---|---|---|---|---|---|
-| llama-3b | rlhflow | False (default) | — | to rerun | — | — | — | — | — |
-| llama-3b | rlhflow | True | 2 | scored | .7461<br>±.0273 | .5039<br>±.0313 | .6016<br>±.0307 | .5938<br>±.0308 | 4.65 |
+| llama-3b | rlhflow | False (default) | — | planned | — | — | — | — | — |
+| llama-3b | rlhflow | True | — | planned | — | — | — | — | — |
 
-> **Analysis.** True arm scored 2026-07-23 (the mcts_cnt rerun,
-> W&B `e5ki98he`); the False arm still awaits its rerun.
-> Informal cross-check against the rlhflow model-family table's
-> llama-3b fp16 cell below (.7422, 4.44 hr, eager off): accuracy
-> unchanged (< 1 SEM) and eager costs ~5% wall-clock —
-> consistent with `enforce_eager=True` only disabling CUDA
-> graphs. Informal because that cell is a separate v01-flavor
-> run, not this table's False arm.
-> **Limitations / follow-up:** ledger
-> orchestration/ledgers/prm800k-level4.yaml (`cnt-mcts-e829c53b`), feeds
-> `tbl-adf2f8`. The controlled read needs the False-arm rerun.
+> **Analysis.** No data yet — nothing to take away.
+> **Limitations / follow-up:** per
+> [[feedback_prefer_eager_false]], every other table in this doc
+> uses `enforce_eager=False` runs — this is the only place a
+> `True` row should appear. Feeds key: `tbl-adf2f8`.
 
 #### model family, size, quantization comparison
 <!-- table-id: tbl-702925 -->
 > **Fixed:** method=`mcts_cnt_v01`, prm=rlhflow, agg_strategy=
-> `last`, cpuct=2.0, bs-4, d-20, b=80, prm_batch_size=1 (default,
-> unlike the pre-fix `### cnt-mcts` table's GPTQ rows which used
-> prm_batch_size=2 — here every row uses the same default, so
-> fp16/GPTQ runtimes are directly comparable), tmpl=model-family
+> `last`, cpuct=2.0, bs-4, d-20, b=80, prm_batch_size=1
+> (default, matched across every row, so fp16/GPTQ runtimes are
+> directly comparable), tmpl=model-family
 > default (native for Qwen, custom for Llama).
 >
 > **W&B:** llama-1b `w0e8cidi`, llama-3b fp16 `87yk0nf9`, llama-3b
@@ -818,8 +515,9 @@ instead of one wide sparse grid.)
 > same 7 model/quant configs, different scoring PRM.
 >
 > **W&B:** llama-1b `cqbxegfu`, llama-3b `sfy5oinp`, llama-3b gptq
-> `34hihgfu`, qwen-3b gptq-int4 `pr4yz0v3`, qwen-7b gptq-int4
-> `pk4vy32g` (all generated 2026-07-07; scoring backfilled via
+> `34hihgfu`, qwen-3b `pdbevuhd`, qwen-3b gptq-int4 `pr4yz0v3`,
+> qwen-7b gptq-int4 `pk4vy32g`, qwen-math-1.5b `yhnrcuhd`
+> (all generated 2026-07-07; scoring backfilled via
 > `compute_stats.py`).
 
 | llm | trials | status | pass@gb | naive@gb | wei@gb | maj@gb | hr/trial |
@@ -840,7 +538,7 @@ instead of one wide sparse grid.)
 > other table's fixed default; `"min"` and `"prod"` are
 > implemented but not yet reported anywhere in this doc. Prompted
 > by the `_split_steps` fix (`agg="last"`-specific bug, see
-> `### cnt-mcts (updated)` header above) — `"min"` in particular
+> `### cnt-mcts` header above) — `"min"` in particular
 > is a useful cross-check since it's structurally less exposed to
 > that bug (a holistic bogus score rarely wins a min() over a
 > trajectory with a genuinely bad step).
@@ -1572,17 +1270,17 @@ instead of one wide sparse grid.)
 
 | llm | prm | agg_strategy | trials | status | pass@gb | naive@gb | wei@gb | maj@gb | hr/trial |
 |---|---|---|---|---|---|---|---|---|---|
-| qwen-3b | rlhflow | min | — | to rerun | — | — | — | — | — |
-| qwen-3b | rlhflow | prod | — | to rerun | — | — | — | — | — |
-| qwen-3b | rlhflow | last | — | to rerun | — | — | — | — | — |
-| qwen-3b | qwen | min | — | to rerun | — | — | — | — | — |
-| qwen-3b | qwen | prod | — | to rerun | — | — | — | — | — |
+| qwen-3b | rlhflow | min | — | planned | — | — | — | — | — |
+| qwen-3b | rlhflow | prod | — | planned | — | — | — | — | — |
+| qwen-3b | rlhflow | last | — | planned | — | — | — | — | — |
+| qwen-3b | qwen | min | — | planned | — | — | — | — | — |
+| qwen-3b | qwen | prod | — | planned | — | — | — | — | — |
 | qwen-3b | qwen | last | 2 | scored (pre-fix backup) | .8750<br>±.0207 | .7734<br>±.0262 | .7461<br>±.0273 | .7227<br>±.0280 | 5.00 |
-| qwen-math-1.5b | rlhflow | min | — | to rerun | — | — | — | — | — |
-| qwen-math-1.5b | rlhflow | prod | — | to rerun | — | — | — | — | — |
-| qwen-math-1.5b | rlhflow | last | — | to rerun | — | — | — | — | — |
-| qwen-math-1.5b | qwen | min | — | to rerun | — | — | — | — | — |
-| qwen-math-1.5b | qwen | prod | — | to rerun | — | — | — | — | — |
+| qwen-math-1.5b | rlhflow | min | — | planned | — | — | — | — | — |
+| qwen-math-1.5b | rlhflow | prod | — | planned | — | — | — | — | — |
+| qwen-math-1.5b | rlhflow | last | — | planned | — | — | — | — | — |
+| qwen-math-1.5b | qwen | min | — | planned | — | — | — | — | — |
+| qwen-math-1.5b | qwen | prod | — | planned | — | — | — | — | — |
 | qwen-math-1.5b | qwen | last | 2 | scored (pre-fix backup) | .8750<br>±.0207 | .7969<br>±.0252 | .7734<br>±.0262 | .7578<br>±.0268 | 3.96 |
 
 #### agg_strategy comparison (qwen-3b, qwen-math-1.5b, lam=0.1, w_eff=10)
@@ -1980,7 +1678,7 @@ instead of one wide sparse grid.)
 #### model family, size, quantization comparison (qwen PRM)
 <!-- table-id: tbl-deb9f9 -->
 > **Compares:** model family, size, and quantization jointly —
-> same 7-model/quant grid as cnt-mcts (updated)'s equivalent
+> same 7-model/quant grid as cnt-mcts's equivalent
 > table above, so a direct bl_cnt-vs-cnt read is possible once
 > both are filled. All 7 cells are new for bl_cnt_v01 with the
 > qwen PRM.
@@ -2495,16 +2193,6 @@ instead of one wide sparse grid.)
 ## Run log (newest first)
 > One dated block per run/comparison: hypothesis → result →
 > follow-up. Append-only; newest at top.
-
-### 2026-06-18 — cnt-mcts / llama-1b / custom / cpuct=2.0 / b=80
-- **hypothesis:** baseline reference cell for the custom
-  template; expect higher solution depth than native.
-- **result:** pass@gb .648±.042, naive@gb .492±.044,
-  wei@gb .469±.044, maj@gb .414±.044 (4 trials);
-  ncomps 16.1±0.6, depth 8.6±0.1. W&B `fpgp2si1`.
-- **follow-up:** sweep cpuct (0.5/1/2/4) on this anchor cell
-  (`llm-reasoning-mcts-exp-todo` Track 1); backfill the
-  other scored cnt-mcts pass@gb into the table above.
 
 ## Standing comparison questions
 - Does sem-UCT beat cnt-UCT at matched budget? (needs

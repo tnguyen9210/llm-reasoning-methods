@@ -9761,7 +9761,7 @@
   feeds:
   - tbl-78e158  # cpuct sweep (llama-1b), b=320/bs-8 T=0.5, q_beta=0 (cpuct/q_beta = inf) row
   group: cnt-mcts
-  status: running
+  status: scored
   priority: 8
   expected_hr: 40
   note: b=320 bs-8 T=0.5 cnt qwen-PRM llama-1b, q_beta=0, the cpuct/q_beta=inf limit.
