@@ -393,7 +393,7 @@
     search.gen_budget: 320
   trials: 2
   feeds:
-  - cnt-mcts/model-family-b320-qwen
+  - tbl-4e21d6  # model family comparison (b=320, qwen PRM)
   group: cnt-mcts
   status: scored
   priority: 2
@@ -408,7 +408,7 @@
     search.gen_budget: 320
   trials: 2
   feeds:
-  - cnt-mcts/model-family-b320-qwen
+  - tbl-4e21d6  # model family comparison (b=320, qwen PRM)
   group: cnt-mcts
   status: scored
   priority: 2
@@ -423,7 +423,7 @@
     search.gen_budget: 320
   trials: 2
   feeds:
-  - cnt-mcts/model-family-b320-qwen
+  - tbl-4e21d6  # model family comparison (b=320, qwen PRM)
   group: cnt-mcts
   status: scored
   priority: 2
@@ -438,7 +438,7 @@
     search.gen_budget: 320
   trials: 2
   feeds:
-  - cnt-mcts/model-family-b320-qwen
+  - tbl-4e21d6  # model family comparison (b=320, qwen PRM)
   group: cnt-mcts
   status: scored
   priority: 2
@@ -453,7 +453,7 @@
     search.gen_budget: 320
   trials: 2
   feeds:
-  - cnt-mcts/model-family-b320-qwen
+  - tbl-4e21d6  # model family comparison (b=320, qwen PRM)
   group: cnt-mcts
   status: scored
   priority: 2
