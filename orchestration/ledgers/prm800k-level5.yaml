@@ -254,6 +254,8 @@
   trials: 2
   feeds:
   - tbl-a554c7  # lam/ds_alpha joint sweep (llama-1b)
+  - tbl-73533c  # model family (QwenPRM, ds_alpha=1)
+  - tbl-e58353  # embeds_center_mode (ds_alpha=1), none row
   group: sem-mcts
   status: scored
   priority: 2
@@ -311,6 +313,8 @@
   trials: 2
   feeds:
   - tbl-a554c7  # lam/ds_alpha joint sweep (llama-1b)
+  - tbl-cf8fea  # model family (QwenPRM, ds_alpha=10)
+  - tbl-2e75f2  # embeds_center_mode (ds_alpha=10), none row
   group: sem-mcts
   status: scored
   priority: 2
@@ -484,6 +488,8 @@
   trials: 2
   feeds:
   - tbl-591232  # lam/ds_alpha joint sweep (llama-3b)
+  - tbl-73533c  # model family (QwenPRM, ds_alpha=1)
+  - tbl-e58353  # embeds_center_mode (ds_alpha=1), none row
   group: sem-mcts
   status: scored
   priority: 2
@@ -544,6 +550,8 @@
   trials: 2
   feeds:
   - tbl-591232  # lam/ds_alpha joint sweep (llama-3b)
+  - tbl-cf8fea  # model family (QwenPRM, ds_alpha=10)
+  - tbl-2e75f2  # embeds_center_mode (ds_alpha=10), none row
   group: sem-mcts
   status: scored
   priority: 2
@@ -624,6 +632,8 @@
   trials: 2
   feeds:
   - tbl-21bde4  # lam/ds_alpha joint sweep (qwen-7b gptq)
+  - tbl-73533c  # model family (QwenPRM, ds_alpha=1)
+  - tbl-e58353  # embeds_center_mode (ds_alpha=1), none row
   group: sem-mcts
   status: scored
   priority: 1
@@ -644,6 +654,8 @@
   trials: 2
   feeds:
   - tbl-21bde4  # lam/ds_alpha joint sweep (qwen-7b gptq)
+  - tbl-cf8fea  # model family (QwenPRM, ds_alpha=10)
+  - tbl-2e75f2  # embeds_center_mode (ds_alpha=10), none row
   group: sem-mcts
   status: scored
   priority: 1
@@ -784,6 +796,8 @@
   trials: 2
   feeds:
   - tbl-a12d4f  # lam/ds_alpha joint sweep (qwen-math-1.5b)
+  - tbl-73533c  # model family (QwenPRM, ds_alpha=1)
+  - tbl-e58353  # embeds_center_mode (ds_alpha=1), none row
   group: sem-mcts
   status: scored
   priority: 1
@@ -1872,6 +1886,7 @@
   trials: 2
   feeds:
   - tbl-e58353  # embeds_center_mode (lam=0.01/ds_alpha=1)
+  - tbl-73533c  # model family (QwenPRM, ds_alpha=1)
   group: sem-mcts
   status: scored
   priority: 1
@@ -2026,6 +2041,7 @@
   trials: 2
   feeds:
   - tbl-2e75f2  # embeds_center_mode (lam=0.01/ds_alpha=10)
+  - tbl-cf8fea  # model family (QwenPRM, ds_alpha=10)
   group: sem-mcts
   status: scored
   priority: 1

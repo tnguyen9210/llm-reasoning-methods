@@ -523,7 +523,8 @@
     search.lam: 0.1
     search.ds_alpha: 3.16
   trials: 2
-  feeds: []
+  feeds:
+  - tbl-0efc55  # lam/ds_alpha joint sweep (v02, llama-1b)
   group: sem-mcts
   status: scored
   priority: 2
@@ -539,7 +540,8 @@
     search.lam: 0.1
     search.ds_alpha: 3.16
   trials: 2
-  feeds: []
+  feeds:
+  - tbl-7fec69  # model family (qwen PRM, w_eff=10), sem-bl
   group: sem-mcts-bl
   status: scored
   priority: 2
@@ -553,7 +555,8 @@
   overrides:
     llm: qwen_math_1_5b
   trials: 2
-  feeds: []
+  feeds:
+  - tbl-702925  # model family (rlhflow PRM), cnt-mcts
   group: cnt-mcts
   status: scored
   priority: 2
@@ -581,7 +584,8 @@
   overrides:
     llm: qwen_3b_gptq_int4
   trials: 2
-  feeds: []
+  feeds:
+  - tbl-702925  # model family (rlhflow PRM), cnt-mcts
   group: cnt-mcts
   status: scored
   priority: 2
@@ -597,7 +601,8 @@
     search.lam: 0.1
     search.ds_alpha: 3.16
   trials: 2
-  feeds: []
+  feeds:
+  - tbl-f50e22  # lam/ds_alpha joint sweep (v02, llama-3b)
   group: sem-mcts
   status: scored
   priority: 2
@@ -626,7 +631,8 @@
     search.lam: 0.1
     search.ds_alpha: 3.16
   trials: 2
-  feeds: []
+  feeds:
+  - tbl-7fec69  # model family (qwen PRM, w_eff=10), sem-bl
   group: sem-mcts-bl
   status: scored
   priority: 2
@@ -671,7 +677,8 @@
     search.lam: 1.0
     search.ds_alpha: 1.0
   trials: 2
-  feeds: []
+  feeds:
+  - tbl-f50e22  # lam/ds_alpha joint sweep (v02, llama-3b)
   group: sem-mcts
   status: scored
   priority: 2
@@ -704,7 +711,8 @@
     search.lam: 0.1
     search.ds_alpha: 31.6
   trials: 2
-  feeds: []
+  feeds:
+  - tbl-ed6194  # model family (qwen PRM, w_eff=100), sem-bl
   group: sem-mcts-bl
   status: scored
   priority: 2
@@ -768,7 +776,8 @@
     search.lam: 0.1
     search.ds_alpha: 31.6
   trials: 2
-  feeds: []
+  feeds:
+  - tbl-ed6194  # model family (qwen PRM, w_eff=100), sem-bl
   group: sem-mcts-bl
   status: scored
   priority: 2
@@ -798,7 +807,8 @@
     search.lam: 1.0
     search.ds_alpha: 3.0
   trials: 2
-  feeds: []
+  feeds:
+  - tbl-0efc55  # lam/ds_alpha joint sweep (v02, llama-1b)
   group: sem-mcts
   status: scored
   priority: 2
@@ -814,7 +824,8 @@
     search.lam: 0.1
     search.ds_alpha: 0.949
   trials: 2
-  feeds: []
+  feeds:
+  - tbl-0efc55  # lam/ds_alpha joint sweep (v02, llama-1b)
   group: sem-mcts
   status: scored
   priority: 2
@@ -846,7 +857,8 @@
     search.lam: 0.1
     search.ds_alpha: 3.16
   trials: 2
-  feeds: []
+  feeds:
+  - tbl-7fec69  # model family (qwen PRM, w_eff=10), sem-bl
   group: sem-mcts-bl
   status: scored
   priority: 2
@@ -877,7 +889,8 @@
     search.lam: 0.1
     search.ds_alpha: 31.6
   trials: 2
-  feeds: []
+  feeds:
+  - tbl-7491b1  # lam/ds_alpha joint sweep (v02, qwen-math-1.5b)
   group: sem-mcts
   status: scored
   priority: 2
@@ -948,7 +961,8 @@
     search.lam: 0.1
     search.ds_alpha: 0.316
   trials: 2
-  feeds: []
+  feeds:
+  - tbl-0efc55  # lam/ds_alpha joint sweep (v02, llama-1b)
   group: sem-mcts
   status: scored
   priority: 2
@@ -976,7 +990,8 @@
     llm: qwen_3b
     prm: qwen_prm
   trials: 2
-  feeds: []
+  feeds:
+  - tbl-deb9f9  # model family (qwen PRM), cnt-bl
   group: cnt-mcts-bl
   status: scored
   priority: 2
@@ -1050,7 +1065,8 @@
     llm: qwen_7b_gptq_int4
     prm: qwen_prm
   trials: 2
-  feeds: []
+  feeds:
+  - tbl-deb9f9  # model family (qwen PRM), cnt-bl
   group: cnt-mcts-bl
   status: scored
   priority: 2
@@ -1062,7 +1078,8 @@
   config_root: mcts_cnt_prm800k
   overrides: {}
   trials: 2
-  feeds: []
+  feeds:
+  - tbl-702925  # model family (rlhflow PRM), cnt-mcts
   group: cnt-mcts
   status: scored
   priority: 2
@@ -1076,7 +1093,8 @@
     llm: qwen_math_1_5b
     prm: qwen_prm
   trials: 2
-  feeds: []
+  feeds:
+  - tbl-deb9f9  # model family (qwen PRM), cnt-bl
   group: cnt-mcts-bl
   status: scored
   priority: 2
@@ -1109,7 +1127,8 @@
     search.lam: 0.1
     search.ds_alpha: 0.316
   trials: 2
-  feeds: []
+  feeds:
+  - tbl-f50e22  # lam/ds_alpha joint sweep (v02, llama-3b)
   group: sem-mcts
   status: scored
   priority: 2
@@ -1174,7 +1193,8 @@
     search.lam: 0.1
     search.ds_alpha: 31.6
   trials: 2
-  feeds: []
+  feeds:
+  - tbl-0efc55  # lam/ds_alpha joint sweep (v02, llama-1b)
   group: sem-mcts
   status: scored
   priority: 2
@@ -1203,7 +1223,8 @@
   overrides:
     llm: llama_3b
   trials: 2
-  feeds: []
+  feeds:
+  - tbl-702925  # model family (rlhflow PRM), cnt-mcts
   group: cnt-mcts
   status: scored
   priority: 2
@@ -1216,7 +1237,8 @@
   overrides:
     llm: qwen_3b
   trials: 2
-  feeds: []
+  feeds:
+  - tbl-702925  # model family (rlhflow PRM), cnt-mcts
   group: cnt-mcts
   status: scored
   priority: 2
@@ -1229,7 +1251,8 @@
   overrides:
     llm: llama_3b_gptq
   trials: 2
-  feeds: []
+  feeds:
+  - tbl-702925  # model family (rlhflow PRM), cnt-mcts
   group: cnt-mcts
   status: scored
   priority: 2
@@ -1272,7 +1295,8 @@
   overrides:
     prm: qwen_prm
   trials: 2
-  feeds: []
+  feeds:
+  - tbl-deb9f9  # model family (qwen PRM), cnt-bl
   group: cnt-mcts-bl
   status: scored
   priority: 2
@@ -1304,7 +1328,8 @@
     search.lam: 0.1
     search.ds_alpha: 31.6
   trials: 2
-  feeds: []
+  feeds:
+  - tbl-f50e22  # lam/ds_alpha joint sweep (v02, llama-3b)
   group: sem-mcts
   status: scored
   priority: 2
@@ -1331,7 +1356,8 @@
   overrides:
     llm: qwen_7b_gptq_int4
   trials: 2
-  feeds: []
+  feeds:
+  - tbl-702925  # model family (rlhflow PRM), cnt-mcts
   group: cnt-mcts
   status: scored
   priority: 2
@@ -1346,7 +1372,8 @@
     search.lam: 0.1
     search.ds_alpha: 31.6
   trials: 2
-  feeds: []
+  feeds:
+  - tbl-ed6194  # model family (qwen PRM, w_eff=100), sem-bl
   group: sem-mcts-bl
   status: scored
   priority: 2
@@ -1363,7 +1390,8 @@
     search.lam: 1.0
     search.ds_alpha: 3.0
   trials: 2
-  feeds: []
+  feeds:
+  - tbl-f50e22  # lam/ds_alpha joint sweep (v02, llama-3b)
   group: sem-mcts
   status: scored
   priority: 2
@@ -1379,7 +1407,8 @@
     search.lam: 1.0
     search.ds_alpha: 1.0
   trials: 2
-  feeds: []
+  feeds:
+  - tbl-0efc55  # lam/ds_alpha joint sweep (v02, llama-1b)
   group: sem-mcts
   status: scored
   priority: 2
@@ -1440,7 +1469,8 @@
     search.lam: 0.1
     search.ds_alpha: 0.949
   trials: 2
-  feeds: []
+  feeds:
+  - tbl-f50e22  # lam/ds_alpha joint sweep (v02, llama-3b)
   group: sem-mcts
   status: scored
   priority: 2
@@ -1457,7 +1487,8 @@
     search.lam: 0.1
     search.ds_alpha: 3.16
   trials: 2
-  feeds: []
+  feeds:
+  - tbl-7fec69  # model family (qwen PRM, w_eff=10), sem-bl
   group: sem-mcts-bl
   status: scored
   priority: 2
@@ -1474,7 +1505,8 @@
     search.lam: 0.1
     search.ds_alpha: 31.6
   trials: 2
-  feeds: []
+  feeds:
+  - tbl-ed6194  # model family (qwen PRM, w_eff=100), sem-bl
   group: sem-mcts-bl
   status: scored
   priority: 2
@@ -1491,7 +1523,8 @@
     search.lam: 0.1
     search.ds_alpha: 31.6
   trials: 2
-  feeds: []
+  feeds:
+  - tbl-ed6194  # model family (qwen PRM, w_eff=100), sem-bl
   group: sem-mcts-bl
   status: scored
   priority: 2
@@ -1524,7 +1557,8 @@
   overrides:
     prm: qwen_prm
   trials: 2
-  feeds: []
+  feeds:
+  - tbl-fbd467  # model family (qwen PRM), kube-bl
   group: kube-mcts-bl
   status: scored
   priority: 2
@@ -1542,7 +1576,8 @@
     llm: llama_3b
     prm: qwen_prm
   trials: 2
-  feeds: []
+  feeds:
+  - tbl-fbd467  # model family (qwen PRM), kube-bl
   group: kube-mcts-bl
   status: scored
   priority: 2
@@ -1560,7 +1595,8 @@
     llm: qwen_3b
     prm: qwen_prm
   trials: 2
-  feeds: []
+  feeds:
+  - tbl-fbd467  # model family (qwen PRM), kube-bl
   group: kube-mcts-bl
   status: scored
   priority: 2
@@ -1578,7 +1614,8 @@
     llm: qwen_7b_gptq_int4
     prm: qwen_prm
   trials: 2
-  feeds: []
+  feeds:
+  - tbl-fbd467  # model family (qwen PRM), kube-bl
   group: kube-mcts-bl
   status: scored
   priority: 2
@@ -1596,7 +1633,8 @@
     llm: qwen_math_1_5b
     prm: qwen_prm
   trials: 2
-  feeds: []
+  feeds:
+  - tbl-fbd467  # model family (qwen PRM), kube-bl
   group: kube-mcts-bl
   status: scored
   priority: 2
@@ -1613,7 +1651,8 @@
   overrides:
     prm: qwen_prm
   trials: 2
-  feeds: []
+  feeds:
+  - tbl-7367f8  # model family (qwen PRM), kdepth-bl
   group: kdepth-mcts-bl
   status: scored
   priority: 2
@@ -1631,7 +1670,8 @@
     llm: llama_3b
     prm: qwen_prm
   trials: 2
-  feeds: []
+  feeds:
+  - tbl-7367f8  # model family (qwen PRM), kdepth-bl
   group: kdepth-mcts-bl
   status: scored
   priority: 2
@@ -1649,7 +1689,8 @@
     llm: qwen_3b
     prm: qwen_prm
   trials: 2
-  feeds: []
+  feeds:
+  - tbl-7367f8  # model family (qwen PRM), kdepth-bl
   group: kdepth-mcts-bl
   status: scored
   priority: 2
@@ -1667,7 +1708,8 @@
     llm: qwen_7b_gptq_int4
     prm: qwen_prm
   trials: 2
-  feeds: []
+  feeds:
+  - tbl-7367f8  # model family (qwen PRM), kdepth-bl
   group: kdepth-mcts-bl
   status: scored
   priority: 2
@@ -1685,7 +1727,8 @@
     llm: qwen_math_1_5b
     prm: qwen_prm
   trials: 2
-  feeds: []
+  feeds:
+  - tbl-7367f8  # model family (qwen PRM), kdepth-bl
   group: kdepth-mcts-bl
   status: scored
   priority: 2
@@ -1705,7 +1748,8 @@
     search.lam: 0.1
     search.ds_alpha: 3.16
   trials: 2
-  feeds: []
+  feeds:
+  - tbl-7fec69  # model family (qwen PRM, w_eff=10), sem-bl
   group: sem-mcts-bl
   status: scored
   priority: 2
@@ -1722,7 +1766,8 @@
     search.lam: 0.1
     search.ds_alpha: 3.16
   trials: 2
-  feeds: []
+  feeds:
+  - tbl-7fec69  # model family (qwen PRM, w_eff=10), sem-bl
   group: sem-mcts-bl
   status: failed
   launch:
@@ -1754,7 +1799,8 @@
     search.lam: 0.1
     search.ds_alpha: 31.6
   trials: 2
-  feeds: []
+  feeds:
+  - tbl-ed6194  # model family (qwen PRM, w_eff=100), sem-bl
   group: sem-mcts-bl
   status: failed
   priority: 2

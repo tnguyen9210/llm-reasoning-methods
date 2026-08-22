@@ -142,6 +142,7 @@
   feeds:
   - aime2025-sem-centermode-lam0.01-weff10
   - aime2025-sem-lam-dsalpha-sweep-llama1b
+  - tbl-cfd7cf  # model family (QwenPRM, ds_alpha=1)
   group: sem-mcts
   status: scored
   priority: 1.4
@@ -191,6 +192,7 @@
   trials: 4
   feeds:
   - aime2025-sem-centermode-lam0.01-weff10
+  - tbl-cfd7cf  # model family (QwenPRM, ds_alpha=1)
   group: sem-mcts
   status: scored
   priority: 1.4
@@ -216,6 +218,7 @@
   feeds:
   - aime2025-sem-centermode-lam0.01-weff10
   - aime2025-sem-lam-dsalpha-sweep-qwen7bgptq
+  - tbl-cfd7cf  # model family (QwenPRM, ds_alpha=1)
   group: sem-mcts
   status: scored
   priority: 1.4
@@ -241,6 +244,7 @@
   feeds:
   - aime2025-sem-centermode-lam0.01-weff10
   - aime2025-sem-lam-dsalpha-sweep-qwenmath15b
+  - tbl-cfd7cf  # model family (QwenPRM, ds_alpha=1)
   group: sem-mcts
   status: scored
   priority: 1.4
@@ -266,6 +270,7 @@
   feeds:
   - aime2025-sem-centermode-lam0.01-weff100
   - aime2025-sem-lam-dsalpha-sweep-llama1b
+  - tbl-878af9  # model family (QwenPRM, ds_alpha=10)
   group: sem-mcts
   status: scored
   priority: 1.4
@@ -291,6 +296,7 @@
   feeds:
   - aime2025-sem-centermode-lam0.01-weff100
   - aime2025-sem-lam-dsalpha-sweep-llama3b
+  - tbl-878af9  # model family (QwenPRM, ds_alpha=10)
   group: sem-mcts
   status: scored
   priority: 1.4
@@ -315,6 +321,7 @@
   trials: 4
   feeds:
   - aime2025-sem-centermode-lam0.01-weff100
+  - tbl-878af9  # model family (QwenPRM, ds_alpha=10)
   group: sem-mcts
   status: scored
   priority: 1.4
@@ -340,6 +347,7 @@
   feeds:
   - aime2025-sem-centermode-lam0.01-weff100
   - aime2025-sem-lam-dsalpha-sweep-qwen7bgptq
+  - tbl-878af9  # model family (QwenPRM, ds_alpha=10)
   group: sem-mcts
   status: scored
   priority: 1.4
@@ -365,6 +373,7 @@
   feeds:
   - aime2025-sem-centermode-lam0.01-weff100
   - aime2025-sem-lam-dsalpha-sweep-qwenmath15b
+  - tbl-878af9  # model family (QwenPRM, ds_alpha=10)
   group: sem-mcts
   status: scored
   priority: 1.4
