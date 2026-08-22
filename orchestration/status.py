@@ -792,6 +792,7 @@ _DOC_HEADER_ALIASES = {
     "center": "search.embeds_center_mode",
     "strategy": "search.embeds_strategy",
     "scope": "search.embeds_scope",
+    "agg": "search.agg_strategy",
 }
 
 

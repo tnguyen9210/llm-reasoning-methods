@@ -168,6 +168,7 @@
   feeds:
   - aime2025-sem-centermode-lam0.01-weff10
   - aime2025-sem-lam-dsalpha-sweep-llama3b
+  - tbl-cfd7cf  # model family (QwenPRM, ds_alpha=1)
   group: sem-mcts
   status: scored
   priority: 1.4

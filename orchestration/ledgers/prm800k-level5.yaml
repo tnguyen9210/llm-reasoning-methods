@@ -2858,6 +2858,7 @@
   trials: 2
   feeds:
   - level5-kdepth-bl-v02-model-family-parent-blend-a1.0-qwen
+  - tbl-1b443b  # score_mode sweep (kdepth-v02, qwen-3b)
   group: kdepth-mcts-bl-v02
   status: scored
   priority: 1.7
@@ -2935,6 +2936,7 @@
   trials: 2
   feeds:
   - level5-kdepth-bl-v02-model-family-parent-blend-qwen
+  - tbl-1b443b  # score_mode sweep (kdepth-v02, qwen-3b)
   group: kdepth-mcts-bl-v02
   status: scored
   priority: 1.7

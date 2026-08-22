@@ -571,7 +571,8 @@
     prm: qwen_prm
     gen.agg_strategy: min
   trials: 2
-  feeds: []
+  feeds:
+  - tbl-3ea294  # agg_strategy comparison, cnt-mcts
   group: cnt-mcts
   status: scored
   priority: 2
@@ -616,7 +617,8 @@
     prm: qwen_prm
     search.ds_alpha: 0.1
   trials: 2
-  feeds: []
+  feeds:
+  - tbl-0efc55  # lam/ds_alpha joint sweep (v02, llama-1b)
   group: sem-mcts
   status: scored
   priority: 2
@@ -646,7 +648,8 @@
   overrides:
     prm: qwen_prm
   trials: 2
-  feeds: []
+  feeds:
+  - tbl-6fe5a2  # model family (qwen PRM)
   group: cnt-mcts
   status: scored
   priority: 2
@@ -661,7 +664,8 @@
     prm: qwen_prm
     search.ds_alpha: 1.0
   trials: 2
-  feeds: []
+  feeds:
+  - tbl-82c90f  # embeds_strategy x scope (v02, qwen PRM)
   group: sem-mcts
   status: scored
   priority: 2
@@ -694,7 +698,8 @@
     search.ds_alpha: 1.0
     search.embeds_strategy: avg
   trials: 2
-  feeds: []
+  feeds:
+  - tbl-82c90f  # embeds_strategy x scope (v02, qwen PRM)
   group: sem-mcts
   status: scored
   priority: 2
@@ -729,7 +734,8 @@
     search.lam: 0.1
     search.ds_alpha: 31.6
   trials: 2
-  feeds: []
+  feeds:
+  - tbl-db5810  # agg_strategy (lam=0.1, w_eff=100)
   group: sem-mcts
   status: scored
   priority: 2
@@ -744,7 +750,8 @@
     llm: qwen_3b
     gen.agg_strategy: prod
   trials: 2
-  feeds: []
+  feeds:
+  - tbl-3ea294  # agg_strategy comparison, cnt-mcts
   group: cnt-mcts
   status: scored
   priority: 2
@@ -792,7 +799,8 @@
     llm: qwen_3b_gptq_int4
     prm: qwen_prm
   trials: 2
-  feeds: []
+  feeds:
+  - tbl-6fe5a2  # model family (qwen PRM)
   group: cnt-mcts
   status: scored
   priority: 2
@@ -873,7 +881,8 @@
     llm: qwen_3b
     gen.agg_strategy: min
   trials: 2
-  feeds: []
+  feeds:
+  - tbl-3ea294  # agg_strategy comparison, cnt-mcts
   group: cnt-mcts
   status: scored
   priority: 2
@@ -908,7 +917,9 @@
     search.lam: 0.1
     search.ds_alpha: 3.16
   trials: 2
-  feeds: []
+  feeds:
+  - tbl-7491b1  # lam/ds_alpha joint sweep (v02, qwen-math-1.5b)
+  - tbl-b1e565  # agg_strategy (lam=0.1, w_eff=10)
   group: sem-mcts
   status: scored
   priority: 2
@@ -927,7 +938,8 @@
     search.ds_alpha: 3.16
     search.embeds_strategy: avg
   trials: 2
-  feeds: []
+  feeds:
+  - tbl-82c90f  # embeds_strategy x scope (v02, qwen PRM)
   group: sem-mcts
   status: scored
   priority: 2
@@ -945,7 +957,8 @@
     search.ds_alpha: 31.6
     search.embeds_strategy: avg
   trials: 2
-  feeds: []
+  feeds:
+  - tbl-82c90f  # embeds_strategy x scope (v02, qwen PRM)
   group: sem-mcts
   status: scored
   priority: 2
@@ -976,7 +989,8 @@
     llm: qwen_math_1_5b
     gen.agg_strategy: prod
   trials: 2
-  feeds: []
+  feeds:
+  - tbl-3ea294  # agg_strategy comparison, cnt-mcts
   group: cnt-mcts
   status: scored
   priority: 2
@@ -1021,7 +1035,8 @@
     prm: qwen_prm
     gen.agg_strategy: min
   trials: 2
-  feeds: []
+  feeds:
+  - tbl-3ea294  # agg_strategy comparison, cnt-mcts
   group: cnt-mcts
   status: scored
   priority: 2
@@ -1036,7 +1051,8 @@
     prm: qwen_prm
     gen.agg_strategy: prod
   trials: 2
-  feeds: []
+  feeds:
+  - tbl-3ea294  # agg_strategy comparison, cnt-mcts
   group: cnt-mcts
   status: scored
   priority: 2
@@ -1050,7 +1066,8 @@
     prm: qwen_prm
     search.ds_alpha: 0.3
   trials: 2
-  feeds: []
+  feeds:
+  - tbl-0efc55  # lam/ds_alpha joint sweep (v02, llama-1b)
   group: sem-mcts
   status: scored
   priority: 2
@@ -1110,7 +1127,8 @@
     search.ds_alpha: 10.0
     search.embeds_strategy: avg
   trials: 2
-  feeds: []
+  feeds:
+  - tbl-82c90f  # embeds_strategy x scope (v02, qwen PRM)
   group: sem-mcts
   status: scored
   priority: 2
@@ -1145,7 +1163,8 @@
     search.ds_alpha: 3.16
     gen.agg_strategy: min
   trials: 2
-  feeds: []
+  feeds:
+  - tbl-b1e565  # agg_strategy (lam=0.1, w_eff=10)
   group: sem-mcts
   status: scored
   priority: 2
@@ -1161,7 +1180,8 @@
     prm: qwen_prm
     search.lam: 1.0
   trials: 2
-  feeds: []
+  feeds:
+  - tbl-f50e22  # lam/ds_alpha joint sweep (v02, llama-3b)
   group: sem-mcts
   status: scored
   priority: 2
@@ -1177,7 +1197,8 @@
     search.lam: 0.1
     search.ds_alpha: 3.16
   trials: 2
-  feeds: []
+  feeds:
+  - tbl-b1e565  # agg_strategy (lam=0.1, w_eff=10)
   group: sem-mcts
   status: scored
   priority: 2
@@ -1266,7 +1287,8 @@
     llm: qwen_7b_gptq_int4
     prm: qwen_prm
   trials: 2
-  feeds: []
+  feeds:
+  - tbl-6fe5a2  # model family (qwen PRM)
   group: cnt-mcts
   status: scored
   priority: 2
@@ -1281,7 +1303,8 @@
     prm: qwen_prm
     search.ds_alpha: 1.0
   trials: 2
-  feeds: []
+  feeds:
+  - tbl-7491b1  # lam/ds_alpha joint sweep (v02, qwen-math-1.5b)
   group: sem-mcts
   status: scored
   priority: 2
@@ -1312,7 +1335,8 @@
     prm: qwen_prm
     search.ds_alpha: 0.1
   trials: 2
-  feeds: []
+  feeds:
+  - tbl-f50e22  # lam/ds_alpha joint sweep (v02, llama-3b)
   group: sem-mcts
   status: scored
   priority: 2
@@ -1423,7 +1447,8 @@
     prm: qwen_prm
     search.ds_alpha: 0.3
   trials: 2
-  feeds: []
+  feeds:
+  - tbl-f50e22  # lam/ds_alpha joint sweep (v02, llama-3b)
   group: sem-mcts
   status: scored
   priority: 2
@@ -1438,7 +1463,8 @@
     prm: qwen_prm
     search.lam: 1.0
   trials: 2
-  feeds: []
+  feeds:
+  - tbl-0efc55  # lam/ds_alpha joint sweep (v02, llama-1b)
   group: sem-mcts
   status: scored
   priority: 2
@@ -1453,7 +1479,8 @@
     llm: qwen_math_1_5b
     gen.agg_strategy: min
   trials: 2
-  feeds: []
+  feeds:
+  - tbl-3ea294  # agg_strategy comparison, cnt-mcts
   group: cnt-mcts
   status: scored
   priority: 2
@@ -1542,7 +1569,8 @@
     search.ds_alpha: 3.16
     gen.agg_strategy: prod
   trials: 2
-  feeds: []
+  feeds:
+  - tbl-b1e565  # agg_strategy (lam=0.1, w_eff=10)
   group: sem-mcts
   status: scored
   priority: 2

@@ -3599,8 +3599,8 @@ Two activities, two shapes:
 
 | llm | score_mode | alpha | gamma | trials | status | pass@gb | naive@gb | wei@gb | maj@gb | hr/trial |
 |---|---|---|---|---|---|---|---|---|---|---|
-| qwen-3b | parent_blend | 1.0 | — | — | running | — | — | — | — | — |
-| qwen-3b | parent_blend | 0.8 | — | — | running | — | — | — | — | — |
+| qwen-3b | parent_blend | 1.0 | — | 2 | scored | .6455<br>±.0293 | .5896<br>±.0301 | .5933<br>±.0301 | .5933<br>±.0301 | — |
+| qwen-3b | parent_blend | 0.8 | — | 2 | scored | .6231<br>±.0297 | .5709<br>±.0303 | .5522<br>±.0304 | .5410<br>±.0305 | — |
 | qwen-3b | parent_blend | 0.6 | — | — | planned | — | — | — | — | — |
 | qwen-3b | path_decay | — | 1.0 | — | planned | — | — | — | — | — |
 | qwen-3b | path_decay | — | 0.8 | — | planned | — | — | — | — | — |
