@@ -29,7 +29,7 @@
     search.cpuct: 2.0
   trials: 2
   feeds:
-  - level5-cnt-model-family-qwen
+  - tbl-afdda0  # model family (QwenPRM), cnt-mcts
   group: cnt-mcts
   status: scored
   priority: 2
@@ -47,7 +47,7 @@
     search.cpuct: 2.0
   trials: 2
   feeds:
-  - level5-cnt-model-family-qwen
+  - tbl-afdda0  # model family (QwenPRM), cnt-mcts
   group: cnt-mcts
   status: scored
   priority: 2
@@ -65,7 +65,7 @@
     search.cpuct: 2.0
   trials: 2
   feeds:
-  - level5-cnt-model-family-qwen
+  - tbl-afdda0  # model family (QwenPRM), cnt-mcts
   group: cnt-mcts
   status: scored
   priority: 2
@@ -83,7 +83,7 @@
     search.cpuct: 2.0
   trials: 2
   feeds:
-  - level5-cnt-model-family-qwen
+  - tbl-afdda0  # model family (QwenPRM), cnt-mcts
   group: cnt-mcts
   status: scored
   priority: 2
@@ -101,7 +101,7 @@
     search.cpuct: 2.0
   trials: 2
   feeds:
-  - level5-cnt-model-family-qwen
+  - tbl-afdda0  # model family (QwenPRM), cnt-mcts
   group: cnt-mcts
   status: scored
   priority: 2
@@ -120,7 +120,7 @@
     data.level: 5
   trials: 2
   feeds:
-  - level5-sem-lam-dsalpha-llama1b
+  - tbl-a554c7  # lam/ds_alpha joint sweep (llama-1b)
   group: sem-mcts
   status: scored
   priority: 2
@@ -139,7 +139,7 @@
     data.level: 5
   trials: 2
   feeds:
-  - level5-sem-lam-dsalpha-llama1b
+  - tbl-a554c7  # lam/ds_alpha joint sweep (llama-1b)
   group: sem-mcts
   status: scored
   priority: 2
@@ -158,7 +158,7 @@
     data.level: 5
   trials: 2
   feeds:
-  - level5-sem-lam-dsalpha-llama1b
+  - tbl-a554c7  # lam/ds_alpha joint sweep (llama-1b)
   group: sem-mcts
   status: scored
   priority: 2
@@ -177,7 +177,7 @@
     data.level: 5
   trials: 2
   feeds:
-  - level5-sem-lam-dsalpha-llama1b
+  - tbl-a554c7  # lam/ds_alpha joint sweep (llama-1b)
   group: sem-mcts
   status: scored
   priority: 2
@@ -196,7 +196,7 @@
     data.level: 5
   trials: 2
   feeds:
-  - level5-sem-lam-dsalpha-llama1b
+  - tbl-a554c7  # lam/ds_alpha joint sweep (llama-1b)
   group: sem-mcts
   status: scored
   priority: 2
@@ -215,7 +215,7 @@
     data.level: 5
   trials: 2
   feeds:
-  - level5-sem-lam-dsalpha-llama1b
+  - tbl-a554c7  # lam/ds_alpha joint sweep (llama-1b)
   group: sem-mcts
   status: scored
   priority: 2
@@ -234,7 +234,7 @@
     data.level: 5
   trials: 2
   feeds:
-  - level5-sem-lam-dsalpha-llama1b
+  - tbl-a554c7  # lam/ds_alpha joint sweep (llama-1b)
   group: sem-mcts
   status: scored
   priority: 2
@@ -253,7 +253,7 @@
     data.level: 5
   trials: 2
   feeds:
-  - level5-sem-lam-dsalpha-llama1b
+  - tbl-a554c7  # lam/ds_alpha joint sweep (llama-1b)
   group: sem-mcts
   status: scored
   priority: 2
@@ -272,7 +272,7 @@
     data.level: 5
   trials: 2
   feeds:
-  - level5-sem-lam-dsalpha-llama1b
+  - tbl-a554c7  # lam/ds_alpha joint sweep (llama-1b)
   group: sem-mcts
   status: scored
   priority: 2
@@ -291,7 +291,7 @@
     data.level: 5
   trials: 2
   feeds:
-  - level5-sem-lam-dsalpha-llama1b
+  - tbl-a554c7  # lam/ds_alpha joint sweep (llama-1b)
   group: sem-mcts
   status: scored
   priority: 2
@@ -310,7 +310,7 @@
     data.level: 5
   trials: 2
   feeds:
-  - level5-sem-lam-dsalpha-llama1b
+  - tbl-a554c7  # lam/ds_alpha joint sweep (llama-1b)
   group: sem-mcts
   status: scored
   priority: 2
@@ -329,7 +329,7 @@
     data.level: 5
   trials: 2
   feeds:
-  - level5-sem-lam-dsalpha-llama3b
+  - tbl-591232  # lam/ds_alpha joint sweep (llama-3b)
   group: sem-mcts
   status: scored
   priority: 2
@@ -348,7 +348,7 @@
     data.level: 5
   trials: 2
   feeds:
-  - level5-sem-lam-dsalpha-llama3b
+  - tbl-591232  # lam/ds_alpha joint sweep (llama-3b)
   group: sem-mcts
   status: scored
   priority: 2
@@ -367,7 +367,7 @@
     data.level: 5
   trials: 2
   feeds:
-  - level5-sem-lam-dsalpha-llama3b
+  - tbl-591232  # lam/ds_alpha joint sweep (llama-3b)
   group: sem-mcts
   status: scored
   priority: 2
@@ -386,7 +386,7 @@
     data.level: 5
   trials: 2
   feeds:
-  - level5-sem-lam-dsalpha-llama3b
+  - tbl-591232  # lam/ds_alpha joint sweep (llama-3b)
   group: sem-mcts
   status: scored
   priority: 2
@@ -405,7 +405,7 @@
     data.level: 5
   trials: 2
   feeds:
-  - level5-sem-lam-dsalpha-llama3b
+  - tbl-591232  # lam/ds_alpha joint sweep (llama-3b)
   group: sem-mcts
   status: scored
   priority: 2
@@ -424,7 +424,7 @@
     data.level: 5
   trials: 2
   feeds:
-  - level5-sem-lam-dsalpha-llama3b
+  - tbl-591232  # lam/ds_alpha joint sweep (llama-3b)
   group: sem-mcts
   status: scored
   priority: 2
@@ -443,7 +443,7 @@
     data.level: 5
   trials: 2
   feeds:
-  - level5-sem-lam-dsalpha-llama3b
+  - tbl-591232  # lam/ds_alpha joint sweep (llama-3b)
   group: sem-mcts
   status: scored
   priority: 2
@@ -463,7 +463,7 @@
     data.level: 5
   trials: 2
   feeds:
-  - level5-sem-lam-dsalpha-llama3b
+  - tbl-591232  # lam/ds_alpha joint sweep (llama-3b)
   group: sem-mcts
   status: scored
   priority: 2
@@ -483,7 +483,7 @@
     data.level: 5
   trials: 2
   feeds:
-  - level5-sem-lam-dsalpha-llama3b
+  - tbl-591232  # lam/ds_alpha joint sweep (llama-3b)
   group: sem-mcts
   status: scored
   priority: 2
@@ -503,7 +503,7 @@
     data.level: 5
   trials: 2
   feeds:
-  - level5-sem-lam-dsalpha-llama3b
+  - tbl-591232  # lam/ds_alpha joint sweep (llama-3b)
   group: sem-mcts
   status: scored
   priority: 2
@@ -523,7 +523,7 @@
     data.level: 5
   trials: 2
   feeds:
-  - level5-sem-lam-dsalpha-llama3b
+  - tbl-591232  # lam/ds_alpha joint sweep (llama-3b)
   group: sem-mcts
   status: scored
   priority: 2
@@ -543,7 +543,7 @@
     data.level: 5
   trials: 2
   feeds:
-  - level5-sem-lam-dsalpha-llama3b
+  - tbl-591232  # lam/ds_alpha joint sweep (llama-3b)
   group: sem-mcts
   status: scored
   priority: 2
@@ -563,7 +563,7 @@
     data.level: 5
   trials: 2
   feeds:
-  - level5-sem-lam-dsalpha-llama3b
+  - tbl-591232  # lam/ds_alpha joint sweep (llama-3b)
   group: sem-mcts
   status: scored
   priority: 2
@@ -583,7 +583,7 @@
     data.level: 5
   trials: 2
   feeds:
-  - level5-sem-lam-dsalpha-llama3b
+  - tbl-591232  # lam/ds_alpha joint sweep (llama-3b)
   group: sem-mcts
   status: scored
   priority: 2
@@ -603,7 +603,7 @@
     data.level: 5
   trials: 2
   feeds:
-  - level5-sem-lam-dsalpha-llama3b
+  - tbl-591232  # lam/ds_alpha joint sweep (llama-3b)
   group: sem-mcts
   status: scored
   priority: 2
@@ -623,7 +623,7 @@
     data.level: 5
   trials: 2
   feeds:
-  - level5-sem-lam-dsalpha-qwen7bgptq
+  - tbl-21bde4  # lam/ds_alpha joint sweep (qwen-7b gptq)
   group: sem-mcts
   status: scored
   priority: 1
@@ -643,7 +643,7 @@
     data.level: 5
   trials: 2
   feeds:
-  - level5-sem-lam-dsalpha-qwen7bgptq
+  - tbl-21bde4  # lam/ds_alpha joint sweep (qwen-7b gptq)
   group: sem-mcts
   status: scored
   priority: 1
@@ -663,7 +663,7 @@
     data.level: 5
   trials: 2
   feeds:
-  - level5-sem-lam-dsalpha-qwen7bgptq
+  - tbl-21bde4  # lam/ds_alpha joint sweep (qwen-7b gptq)
   group: sem-mcts
   status: scored
   priority: 1
@@ -683,7 +683,7 @@
     data.level: 5
   trials: 2
   feeds:
-  - level5-sem-lam-dsalpha-qwen7bgptq
+  - tbl-21bde4  # lam/ds_alpha joint sweep (qwen-7b gptq)
   group: sem-mcts
   status: scored
   priority: 1
@@ -703,7 +703,7 @@
     data.level: 5
   trials: 2
   feeds:
-  - level5-sem-lam-dsalpha-qwen7bgptq
+  - tbl-21bde4  # lam/ds_alpha joint sweep (qwen-7b gptq)
   group: sem-mcts
   status: scored
   priority: 1
@@ -723,7 +723,7 @@
     data.level: 5
   trials: 2
   feeds:
-  - level5-sem-lam-dsalpha-qwen7bgptq
+  - tbl-21bde4  # lam/ds_alpha joint sweep (qwen-7b gptq)
   group: sem-mcts
   status: scored
   priority: 1
@@ -743,7 +743,7 @@
     data.level: 5
   trials: 2
   feeds:
-  - level5-sem-lam-dsalpha-qwenmath15b
+  - tbl-a12d4f  # lam/ds_alpha joint sweep (qwen-math-1.5b)
   group: sem-mcts
   status: scored
   priority: 1
@@ -763,7 +763,7 @@
     data.level: 5
   trials: 2
   feeds:
-  - level5-sem-lam-dsalpha-qwenmath15b
+  - tbl-a12d4f  # lam/ds_alpha joint sweep (qwen-math-1.5b)
   group: sem-mcts
   status: scored
   priority: 1
@@ -783,7 +783,7 @@
     data.level: 5
   trials: 2
   feeds:
-  - level5-sem-lam-dsalpha-qwenmath15b
+  - tbl-a12d4f  # lam/ds_alpha joint sweep (qwen-math-1.5b)
   group: sem-mcts
   status: scored
   priority: 1
@@ -803,7 +803,7 @@
     data.level: 5
   trials: 2
   feeds:
-  - level5-sem-lam-dsalpha-qwenmath15b
+  - tbl-a12d4f  # lam/ds_alpha joint sweep (qwen-math-1.5b)
   group: sem-mcts
   status: scored
   priority: 1
@@ -823,7 +823,7 @@
     data.level: 5
   trials: 2
   feeds:
-  - level5-sem-lam-dsalpha-qwenmath15b
+  - tbl-a12d4f  # lam/ds_alpha joint sweep (qwen-math-1.5b)
   group: sem-mcts
   status: scored
   priority: 1
@@ -843,7 +843,7 @@
     data.level: 5
   trials: 2
   feeds:
-  - level5-sem-lam-dsalpha-qwenmath15b
+  - tbl-a12d4f  # lam/ds_alpha joint sweep (qwen-math-1.5b)
   group: sem-mcts
   status: scored
   priority: 1
@@ -863,7 +863,7 @@
     data.level: 5
   trials: 2
   feeds:
-  - level5-sem-lam-dsalpha-llama1b
+  - tbl-a554c7  # lam/ds_alpha joint sweep (llama-1b)
   group: sem-mcts
   status: scored
   priority: 1
@@ -883,7 +883,7 @@
     data.level: 5
   trials: 2
   feeds:
-  - level5-sem-lam-dsalpha-llama1b
+  - tbl-a554c7  # lam/ds_alpha joint sweep (llama-1b)
   group: sem-mcts
   status: scored
   priority: 2
@@ -909,7 +909,7 @@
     data.level: 5
   trials: 2
   feeds:
-  - level5-sem-lam-dsalpha-llama1b
+  - tbl-a554c7  # lam/ds_alpha joint sweep (llama-1b)
   group: sem-mcts
   status: scored
   priority: 2
@@ -935,7 +935,7 @@
     data.level: 5
   trials: 2
   feeds:
-  - level5-sem-lam-dsalpha-llama1b
+  - tbl-a554c7  # lam/ds_alpha joint sweep (llama-1b)
   group: sem-mcts
   status: scored
   priority: 1
@@ -955,7 +955,7 @@
     data.level: 5
   trials: 2
   feeds:
-  - level5-sem-lam-dsalpha-qwenmath15b
+  - tbl-a12d4f  # lam/ds_alpha joint sweep (qwen-math-1.5b)
   group: sem-mcts
   status: scored
   priority: 2
@@ -981,7 +981,7 @@
     data.level: 5
   trials: 2
   feeds:
-  - level5-sem-lam-dsalpha-qwenmath15b
+  - tbl-a12d4f  # lam/ds_alpha joint sweep (qwen-math-1.5b)
   group: sem-mcts
   status: scored
   priority: 2
@@ -1007,7 +1007,7 @@
     data.level: 5
   trials: 2
   feeds:
-  - level5-sem-lam-dsalpha-qwenmath15b
+  - tbl-a12d4f  # lam/ds_alpha joint sweep (qwen-math-1.5b)
   group: sem-mcts
   status: scored
   priority: 2
@@ -1033,7 +1033,7 @@
     data.level: 5
   trials: 2
   feeds:
-  - level5-sem-lam-dsalpha-qwen7bgptq
+  - tbl-21bde4  # lam/ds_alpha joint sweep (qwen-7b gptq)
   group: sem-mcts
   status: scored
   priority: 1
@@ -1053,7 +1053,7 @@
     data.level: 5
   trials: 2
   feeds:
-  - level5-sem-lam-dsalpha-qwen7bgptq
+  - tbl-21bde4  # lam/ds_alpha joint sweep (qwen-7b gptq)
   group: sem-mcts
   status: scored
   priority: 2
@@ -1079,7 +1079,7 @@
     data.level: 5
   trials: 2
   feeds:
-  - level5-sem-lam-dsalpha-qwen7bgptq
+  - tbl-21bde4  # lam/ds_alpha joint sweep (qwen-7b gptq)
   group: sem-mcts
   status: scored
   priority: 2
@@ -1548,7 +1548,7 @@
     data.level: 5
   trials: 2
   feeds:
-  - level5-kube-bl-v01-model-family-qwen3b
+  - tbl-622bce  # model family (QwenPRM), kube-bl-v01
   - level5-kube-bl-v01-kubec-sweep-qwen
   group: kube-mcts-bl
   status: scored
@@ -1571,7 +1571,7 @@
     data.level: 5
   trials: 2
   feeds:
-  - level5-kdepth-bl-v01-model-family-qwen3b
+  - tbl-d1a3ce  # model family (QwenPRM), kdepth-bl-v01
   group: kdepth-mcts-bl
   status: scored
   priority: 1.7
@@ -1821,7 +1821,7 @@
     data.level: 5
   trials: 2
   feeds:
-  - level5-sem-centermode-lam0.01-weff10
+  - tbl-e58353  # embeds_center_mode (lam=0.01/ds_alpha=1)
   group: sem-mcts
   status: scored
   priority: 1
@@ -1847,7 +1847,7 @@
     data.level: 5
   trials: 2
   feeds:
-  - level5-sem-centermode-lam0.01-weff10
+  - tbl-e58353  # embeds_center_mode (lam=0.01/ds_alpha=1)
   group: sem-mcts
   status: scored
   priority: 1
@@ -1871,7 +1871,7 @@
     data.level: 5
   trials: 2
   feeds:
-  - level5-sem-centermode-lam0.01-weff10
+  - tbl-e58353  # embeds_center_mode (lam=0.01/ds_alpha=1)
   group: sem-mcts
   status: scored
   priority: 1
@@ -1897,7 +1897,7 @@
     data.level: 5
   trials: 2
   feeds:
-  - level5-sem-centermode-lam0.01-weff10
+  - tbl-e58353  # embeds_center_mode (lam=0.01/ds_alpha=1)
   group: sem-mcts
   status: scored
   priority: 1
@@ -1923,7 +1923,7 @@
     data.level: 5
   trials: 2
   feeds:
-  - level5-sem-centermode-lam0.01-weff10
+  - tbl-e58353  # embeds_center_mode (lam=0.01/ds_alpha=1)
   group: sem-mcts
   status: scored
   priority: 1
@@ -1949,7 +1949,7 @@
     data.level: 5
   trials: 2
   feeds:
-  - level5-sem-centermode-lam0.01-weff10
+  - tbl-e58353  # embeds_center_mode (lam=0.01/ds_alpha=1)
   group: sem-mcts
   status: scored
   priority: 1
@@ -1975,7 +1975,7 @@
     data.level: 5
   trials: 2
   feeds:
-  - level5-sem-centermode-lam0.01-weff100
+  - tbl-2e75f2  # embeds_center_mode (lam=0.01/ds_alpha=10)
   group: sem-mcts
   status: scored
   priority: 1
@@ -2001,7 +2001,7 @@
     data.level: 5
   trials: 2
   feeds:
-  - level5-sem-centermode-lam0.01-weff100
+  - tbl-2e75f2  # embeds_center_mode (lam=0.01/ds_alpha=10)
   group: sem-mcts
   status: scored
   priority: 1
@@ -2025,7 +2025,7 @@
     data.level: 5
   trials: 2
   feeds:
-  - level5-sem-centermode-lam0.01-weff100
+  - tbl-2e75f2  # embeds_center_mode (lam=0.01/ds_alpha=10)
   group: sem-mcts
   status: scored
   priority: 1
@@ -2051,7 +2051,7 @@
     data.level: 5
   trials: 2
   feeds:
-  - level5-sem-centermode-lam0.01-weff100
+  - tbl-2e75f2  # embeds_center_mode (lam=0.01/ds_alpha=10)
   group: sem-mcts
   status: scored
   priority: 1
@@ -2077,7 +2077,7 @@
     data.level: 5
   trials: 2
   feeds:
-  - level5-sem-centermode-lam0.01-weff100
+  - tbl-2e75f2  # embeds_center_mode (lam=0.01/ds_alpha=10)
   group: sem-mcts
   status: scored
   priority: 1
@@ -2103,7 +2103,7 @@
     data.level: 5
   trials: 2
   feeds:
-  - level5-sem-centermode-lam0.01-weff100
+  - tbl-2e75f2  # embeds_center_mode (lam=0.01/ds_alpha=10)
   group: sem-mcts
   status: scored
   priority: 1
@@ -2125,7 +2125,7 @@
     data.level: 5
   trials: 2
   feeds:
-  - level5-cnt-bl-v01-model-family-qwen
+  - tbl-6557b7  # model family (QwenPRM), cnt-bl-v01
   group: cnt-mcts-bl-v01
   status: scored
   priority: 1
@@ -2146,7 +2146,7 @@
     data.level: 5
   trials: 2
   feeds:
-  - level5-cnt-bl-v01-model-family-qwen
+  - tbl-6557b7  # model family (QwenPRM), cnt-bl-v01
   group: cnt-mcts-bl-v01
   status: scored
   priority: 1
@@ -2167,7 +2167,7 @@
     data.level: 5
   trials: 2
   feeds:
-  - level5-cnt-bl-v01-model-family-qwen
+  - tbl-6557b7  # model family (QwenPRM), cnt-bl-v01
   group: cnt-mcts-bl-v01
   status: scored
   priority: 1
@@ -2188,7 +2188,7 @@
     data.level: 5
   trials: 2
   feeds:
-  - level5-cnt-bl-v01-model-family-qwen
+  - tbl-6557b7  # model family (QwenPRM), cnt-bl-v01
   group: cnt-mcts-bl-v01
   status: scored
   priority: 1.7
@@ -2209,7 +2209,7 @@
     data.level: 5
   trials: 2
   feeds:
-  - level5-cnt-bl-v01-model-family-qwen
+  - tbl-6557b7  # model family (QwenPRM), cnt-bl-v01
   group: cnt-mcts-bl-v01
   status: scored
   priority: 1.7
@@ -2230,7 +2230,7 @@
     data.level: 5
   trials: 2
   feeds:
-  - level5-kube-bl-v01-model-family-qwen
+  - tbl-622bce  # model family (QwenPRM), kube-bl-v01
   - level5-kube-bl-v01-kubec-sweep-qwen
   group: kube-mcts-bl-v01
   status: scored
@@ -2252,7 +2252,7 @@
     data.level: 5
   trials: 2
   feeds:
-  - level5-kube-bl-v01-model-family-qwen
+  - tbl-622bce  # model family (QwenPRM), kube-bl-v01
   - level5-kube-bl-v01-kubec-sweep-qwen
   group: kube-mcts-bl-v01
   status: scored
@@ -2274,7 +2274,7 @@
     data.level: 5
   trials: 2
   feeds:
-  - level5-kube-bl-v01-model-family-qwen
+  - tbl-622bce  # model family (QwenPRM), kube-bl-v01
   - level5-kube-bl-v01-kubec-sweep-qwen
   group: kube-mcts-bl-v01
   status: scored
@@ -2296,7 +2296,7 @@
     data.level: 5
   trials: 2
   feeds:
-  - level5-kube-bl-v01-model-family-qwen
+  - tbl-622bce  # model family (QwenPRM), kube-bl-v01
   - level5-kube-bl-v01-kubec-sweep-qwen
   group: kube-mcts-bl-v01
   status: scored
@@ -2318,7 +2318,7 @@
     data.level: 5
   trials: 2
   feeds:
-  - level5-kdepth-bl-v01-model-family-qwen
+  - tbl-d1a3ce  # model family (QwenPRM), kdepth-bl-v01
   group: kdepth-mcts-bl-v01
   status: scored
   priority: 1.5
@@ -2339,7 +2339,7 @@
     data.level: 5
   trials: 2
   feeds:
-  - level5-kdepth-bl-v01-model-family-qwen
+  - tbl-d1a3ce  # model family (QwenPRM), kdepth-bl-v01
   group: kdepth-mcts-bl-v01
   status: scored
   priority: 1.5
@@ -2360,7 +2360,7 @@
     data.level: 5
   trials: 2
   feeds:
-  - level5-kdepth-bl-v01-model-family-qwen
+  - tbl-d1a3ce  # model family (QwenPRM), kdepth-bl-v01
   group: kdepth-mcts-bl-v01
   status: scored
   priority: 1.5
@@ -2381,7 +2381,7 @@
     data.level: 5
   trials: 2
   feeds:
-  - level5-kdepth-bl-v01-model-family-qwen
+  - tbl-d1a3ce  # model family (QwenPRM), kdepth-bl-v01
   group: kdepth-mcts-bl-v01
   status: scored
   priority: 1.7
@@ -2403,7 +2403,8 @@
     search.lam: 0.01
     search.ds_alpha: 10
   trials: 2
-  feeds: []
+  feeds:
+  - tbl-c43f9b  # model family (QwenPRM, ds_alpha=10), sem-bl-v01
   group: sem-mcts-bl-v01
   status: failed
   priority: 1
@@ -2428,7 +2429,7 @@
     search.ds_alpha: 10
   trials: 2
   feeds:
-  - level5-sem-bl-v01-model-family-weff100-qwen
+  - tbl-c43f9b  # model family (QwenPRM, ds_alpha=10), sem-bl-v01
   group: sem-mcts-bl-v01
   status: scored
   priority: 1
@@ -2451,7 +2452,7 @@
     search.ds_alpha: 10
   trials: 2
   feeds:
-  - level5-sem-bl-v01-model-family-weff100-qwen
+  - tbl-c43f9b  # model family (QwenPRM, ds_alpha=10), sem-bl-v01
   group: sem-mcts-bl-v01
   status: scored
   priority: 1
@@ -2473,7 +2474,8 @@
     search.lam: 0.01
     search.ds_alpha: 10
   trials: 2
-  feeds: []
+  feeds:
+  - tbl-c43f9b  # model family (QwenPRM, ds_alpha=10), sem-bl-v01
   group: sem-mcts-bl-v01
   status: failed
   priority: 1.7
@@ -2498,7 +2500,7 @@
     search.ds_alpha: 10
   trials: 2
   feeds:
-  - level5-sem-bl-v01-model-family-weff100-qwen
+  - tbl-c43f9b  # model family (QwenPRM, ds_alpha=10), sem-bl-v01
   group: sem-mcts-bl-v01
   status: scored
   priority: 1.7
@@ -2616,7 +2618,8 @@
     search.lam: 0.01
     search.ds_alpha: 10
   trials: 2
-  feeds: []
+  feeds:
+  - tbl-e9dbbb  # model family (QwenPRM, a=1.0/ds_alpha=10), sem-bl-v02
   group: sem-mcts-bl-v02
   status: failed
   priority: 0.7
@@ -2693,7 +2696,8 @@
     search.lam: 0.01
     search.ds_alpha: 10
   trials: 2
-  feeds: []
+  feeds:
+  - tbl-e9dbbb  # model family (QwenPRM, a=1.0/ds_alpha=10), sem-bl-v02
   group: sem-mcts-bl-v02
   status: failed
   priority: 1.7

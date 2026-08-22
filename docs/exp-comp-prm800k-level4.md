@@ -632,7 +632,7 @@ instead of one wide sparse grid.)
 
 | llm | proj | cov_update | trials | status | pass@gb | hr/trial |
 |---|---|---|---|---|---|---|
-| llama-1b | none | exact | — | planned | — | — |
+| llama-1b | none | exact | — | failed | — | — |
 | llama-1b | none | sm (prmbs-2) | 2 | scored ⚠ | .6328<br>±.0302 | 12.05 |
 | llama-1b | sparse512 | exact | — | planned | — | — |
 | llama-1b | sparse512 | sm | 2 | scored | .5938<br>±.0308 | 4.27 |
@@ -719,7 +719,7 @@ instead of one wide sparse grid.)
 
 | llm | strategy | scope | lam | ds_alpha | w_eff | trials | status | pass@gb | naive@gb | wei@gb | maj@gb | hr/trial |
 |---|---|---|---|---|---|---|---|---|---|---|---|---|
-| llama-3b | last | full | 0.01 | 100 | 1000 | 2 | done (see ds_alpha=100) | — | — | — | — | — |
+| llama-3b | last | full | 0.01 | 100 | 1000 | 2 | scored | — | — | — | — | — |
 | llama-3b | last | full | 0.01 | 1.0 | 10 | 2 | scored (see lam/ds_alpha joint sweep) | .7500<br>±.0271 | .6562<br>±.0297 | .6562<br>±.0297 | .6523<br>±.0298 | 5.23 |
 | llama-3b | last | full | 0.01 | 10 | 100 | 2 | scored (see lam/ds_alpha joint sweep) | .7695<br>±.0264 | .6797<br>±.0292 | .6445<br>±.0300 | .6211<br>±.0304 | 5.44 |
 | llama-3b | last | full | 0.1 | 3.16 | 10 | 2 | scored (see lam/ds_alpha joint sweep) | .7578<br>±.0268 | .6719<br>±.0294 | .6602<br>±.0297 | .6289<br>±.0303 | 5.32 |
@@ -1166,10 +1166,10 @@ instead of one wide sparse grid.)
 | llama-1b fp16 | 2 | scored | .6133<br>±.0305 | .4961<br>±.0313 | .4492<br>±.0311 | .3906<br>±.0306 | 3.90 |
 | llama-3b fp16 | 2 | scored | .7656<br>±.0265 | .6562<br>±.0297 | .6289<br>±.0303 | .6016<br>±.0307 | 5.43 |
 | llama-3b gptq | 2 | scored | .7148<br>±.0283 | .6094<br>±.0306 | .5625<br>±.0311 | .5078<br>±.0313 | 4.45 |
-| qwen-3b fp16 | 2 | scored (pre-fix backup) | .8750<br>±.0207 | .7734<br>±.0262 | .7461<br>±.0273 | .7227<br>±.0280 | 5.00 |
+| qwen-3b fp16 | 2 | scored | .8750<br>±.0207 | .7734<br>±.0262 | .7461<br>±.0273 | .7227<br>±.0280 | 5.00 |
 | qwen-3b gptq-int4 | 2 | scored | .7930<br>±.0254 | .6953<br>±.0288 | .6953<br>±.0288 | .6875<br>±.0290 | 3.87 |
 | qwen-7b gptq-int4 | 2 | scored | .9375<br>±.0152 | .8164<br>±.0242 | .8086<br>±.0246 | .8047<br>±.0248 | 4.20 |
-| qwen-math-1.5b fp16 | 2 | scored (pre-fix backup) | .8750<br>±.0207 | .7969<br>±.0252 | .7734<br>±.0262 | .7578<br>±.0268 | 3.96 |
+| qwen-math-1.5b fp16 | 2 | scored | .8750<br>±.0207 | .7969<br>±.0252 | .7734<br>±.0262 | .7578<br>±.0268 | 3.96 |
 
 > **Analysis.** qwen-7b gptq-int4 is the standout — **.9375**
 > pass@gb, comfortably the best in this table and ahead of every

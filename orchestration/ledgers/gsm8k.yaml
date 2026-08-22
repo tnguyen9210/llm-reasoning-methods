@@ -29,7 +29,7 @@
     data: gsm8k
   trials: 2
   feeds:
-  - gsm8k-cnt-model-family-qwen
+  - tbl-ed4d78  # model family (QwenPRM), cnt-mcts
   group: cnt-mcts
   status: scored
   priority: 2
@@ -45,7 +45,7 @@
     data: gsm8k
   trials: 2
   feeds:
-  - gsm8k-cnt-model-family-qwen
+  - tbl-ed4d78  # model family (QwenPRM), cnt-mcts
   group: cnt-mcts
   status: scored
   priority: 2
@@ -61,7 +61,7 @@
     data: gsm8k
   trials: 2
   feeds:
-  - gsm8k-cnt-model-family-qwen
+  - tbl-ed4d78  # model family (QwenPRM), cnt-mcts
   group: cnt-mcts
   status: scored
   priority: 2
@@ -79,7 +79,7 @@
     data: gsm8k
   trials: 2
   feeds:
-  - gsm8k-cnt-model-family-qwen
+  - tbl-ed4d78  # model family (QwenPRM), cnt-mcts
   group: cnt-mcts
   status: scored
   priority: 2
@@ -95,7 +95,7 @@
     data: gsm8k
   trials: 2
   feeds:
-  - gsm8k-cnt-model-family-qwen
+  - tbl-ed4d78  # model family (QwenPRM), cnt-mcts
   group: cnt-mcts
   status: scored
   priority: 2
