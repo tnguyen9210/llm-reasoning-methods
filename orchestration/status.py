@@ -738,7 +738,12 @@ def _norm_cell(cell):
 
 
 def _cell_matches(cell, value):
-    """Does a (normalized) row cell denote this override value?"""
+    """Does a (normalized) row cell denote this override value?
+    NB: value None stringifies to "None", so an entry leaving a
+    key unset TRUE-matches a literal `none` cell -- load-bearing:
+    baseline (no-override) entries own the `none` rows of the
+    embeds_center_mode tables (2026-08-22). Every other explicit
+    cell excludes an unset entry (conservative)."""
     c = _norm_cell(cell)
     if c in ("—", "-", ""):
         return None  # not applicable in this row -- neutral
@@ -756,7 +761,17 @@ def _cell_matches(cell, value):
 def _entry_value(entry, key):
     """The entry's effective value for an override key, or None if
     the entry doesn't set it (conf default -- v1 does not compose
-    to resolve defaults; unmatched rows surface in the report)."""
+    to resolve defaults; unmatched rows surface in the report).
+    The synthetic key __w_eff__ computes the derived doc column
+    w_eff = ds_alpha / sqrt(lam), snapped to 2 significant digits
+    (sweep ds_alpha values are themselves rounded, e.g. 0.316)."""
+    if key == "__w_eff__":
+        da = _entry_value(entry, "search.ds_alpha")
+        lam = _entry_value(entry, "search.lam")
+        try:
+            return float(f"{float(da) / float(lam) ** 0.5:.2g}")
+        except (TypeError, ValueError):
+            return None
     ov = entry.get("overrides") or {}
     if isinstance(ov, dict):
         return ov.get(key)
@@ -767,12 +782,36 @@ def _entry_value(entry, key):
     return None
 
 
+_DOC_HEADER_ALIASES = {
+    # doc column label -> the override key it denotes. Applied
+    # unconditionally (not only for keys the fed entries carry):
+    # an entry leaving the key unset is then conservatively
+    # excluded from rows with an explicit cell value instead of
+    # wildcard-grabbing them (a defaults-only entry once grabbed
+    # a `blocked` strategy-x-scope row, 2026-08-22).
+    "center": "search.embeds_center_mode",
+    "strategy": "search.embeds_strategy",
+    "scope": "search.embeds_scope",
+}
+
+
 def _map_columns(headers, varied_keys):
     """header index -> override key, for headers that name a varied
-    key ('alpha' -> search.alpha; 'llm' -> llm)."""
+    key ('alpha' -> search.alpha; 'llm' -> llm). Doc-label special
+    cases: _DOC_HEADER_ALIASES, and the derived `w_eff` column
+    (= ds_alpha / sqrt(lam)) mapped to the synthetic __w_eff__ key
+    that _entry_value computes. Without these, the axis is
+    invisible to the matcher and sibling entries collapse into
+    "2 candidate entries" skips (2026-08-22)."""
     out = {}
     for i, htxt in enumerate(headers):
         h = htxt.strip().lower()
+        if h == "w_eff":
+            out[i] = "__w_eff__"
+            continue
+        if h in _DOC_HEADER_ALIASES:
+            out[i] = _DOC_HEADER_ALIASES[h]
+            continue
         for k in varied_keys:
             tail = k.rsplit(".", 1)[-1].lower()
             if h == k.lower() or h == tail:
@@ -863,6 +902,12 @@ def sync_doc(doc_path, entries, apply=False):
                 ok = True
                 for ci, k in colmap.items():
                     if ci >= len(cells):
+                        continue
+                    if (k == "__w_eff__"
+                            and _norm_cell(cells[ci]) in ("∞", "inf")):
+                        # special limit arm -- the formula cannot
+                        # render ∞; the raw lam/ds_alpha columns
+                        # discriminate these rows
                         continue
                     hit = _cell_matches(cells[ci], _entry_value(e, k))
                     if hit is False:

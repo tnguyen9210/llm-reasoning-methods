@@ -14,6 +14,33 @@ scaffold, it also gets a standalone file in [decisions/](decisions/);
 the log entry then carries a one-line pointer to it rather than
 repeating the full writeup.
 
+## 2026-08-22 — Tracking: sync-doc matcher learns derived/aliased doc columns
+
+**Context:** `--sync-doc` mapped table columns to override keys
+by name only, so the derived `w_eff` column and the `center` /
+`strategy` / `scope` labels were invisible to the row matcher.
+Sibling entries collapsed into "2 candidate entries" skips (34
+across the docs: aime embeds_center_mode 20, level-5 embeds_ref
+10 + centermode 4), local runs were silently credited to `none`
+rows, and a defaults-only entry wildcard-grabbed a `blocked`
+strategy-x-scope row — one `--apply` away from a wrong flip.
+**Decision:** three matcher changes in `orchestration/status.py`:
+(1) `_DOC_HEADER_ALIASES` maps doc labels to override keys,
+applied unconditionally — an entry leaving the key unset is
+conservatively excluded from rows with explicit cells instead of
+matching them; (2) a synthetic `__w_eff__` key computes
+`w_eff = ds_alpha / sqrt(lam)` (snapped to 2 significant digits;
+`∞` cells are neutral — the limit arm is discriminated by its
+raw lam/ds_alpha columns); (3) the `str(None)` -> `none` cell
+match is documented as load-bearing (baseline no-override
+entries own the `none` rows). Feeds were already correct — no
+ledger changes. Net: 2-candidate skips 34 -> 0, zero proposed
+patches on all five stems; 12 rows now report honest
+"0 candidate" skips where wildcard mis-matches used to hide
+(8 centermode `none` rows whose baseline runs live in the
+sweeps — wireable later with W&B verification — and 4
+strategy-x-scope rows of a defaults-only entry).
+
 ## 2026-08-14 — Search, Config: `q_beta` exploitation weight + first-visit q-argmax branch for cnt-mcts
 
 **Context:** cnt-mcts exposed only `cpuct` (exploration weight),
