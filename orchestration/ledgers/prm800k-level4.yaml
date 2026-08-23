@@ -302,23 +302,6 @@
   status: scored
   priority: 2
   note: qwen-PRM ds_alpha=10 qwen-math-1.5b
-- id: sem-mcts-7a4be169
-  launcher: generate_mcts_sem.py
-  hash: 7a4be169
-  config_root: mcts_sem_v02_prm800k
-  overrides:
-    llm: qwen_math_1_5b
-    prm: qwen_prm
-    search.ds_alpha: 100
-    llm.use_custom_template: false
-  trials: 2
-  feeds:
-  - tbl-93c239  # ds_alpha sweep (v02, qwen PRM)
-  - tbl-352d94  # model family (v02, qwen PRM)
-  group: sem-mcts
-  status: scored
-  priority: 2
-  note: qwen-PRM ds_alpha=100 qwen-math-1.5b (= model-family fp16 default)
 - id: sem-mcts-f2cbd3de
   launcher: generate_mcts_sem.py
   hash: f2cbd3de
@@ -472,20 +455,6 @@
   status: scored
   priority: 2
   note: qwen-PRM sem model-family llama-3b gptq
-- id: sem-mcts-77cae091
-  launcher: generate_mcts_sem.py
-  hash: 77cae091
-  config_root: mcts_sem_v02_prm800k
-  overrides:
-    llm: qwen_3b
-    prm: qwen_prm
-  trials: 2
-  feeds:
-  - tbl-352d94  # model family (v02, qwen PRM)
-  group: sem-mcts
-  status: scored
-  priority: 2
-  note: qwen-PRM sem model-family qwen-3b fp16
 - id: sem-mcts-7095316b
   launcher: generate_mcts_sem.py
   hash: 7095316b

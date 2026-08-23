@@ -185,7 +185,7 @@ instead of one wide sparse grid.)
 | algorithm | trials | status | pass@gb | naive@gb | wei@gb | maj@gb | hr/trial |
 |---|---|---|---|---|---|---|---|
 | cnt-mcts | 2 | scored | .8789<br>±.0204 | .7461<br>±.0273 | .7695<br>±.0264 | .7617<br>±.0267 | 3.76 |
-| sem-mcts | 2 | scored (pre-fix backup) | .8750<br>±.0207 | .7734<br>±.0262 | .7461<br>±.0273 | .7227<br>±.0280 | 5.00 |
+| sem-mcts | — | planned | — | — | — | — | — |
 | cnt-mcts-bl-v01 | 2 | scored | .6445<br>±.0300 | .6328<br>±.0302 | .6172<br>±.0304 | .6094<br>±.0306 | 3.50 |
 | kube-mcts-bl-v01 | 2 | scored | .8320<br>±.0234 | .7617<br>±.0267 | .7422<br>±.0274 | .7344<br>±.0277 | 3.31 |
 | kdepth-mcts-bl-v01 | 2 | scored | .8164<br>±.0242 | .7539<br>±.0270 | .7461<br>±.0273 | .7344<br>±.0277 | 3.00 |
@@ -222,7 +222,7 @@ instead of one wide sparse grid.)
 | algorithm | trials | status | pass@gb | naive@gb | wei@gb | maj@gb | hr/trial |
 |---|---|---|---|---|---|---|---|
 | cnt-mcts | 2 | scored | .8906<br>±.0195 | .8008<br>±.0250 | .8047<br>±.0248 | .7891<br>±.0255 | 2.84 |
-| sem-mcts | 2 | scored (pre-fix backup) | .8750<br>±.0207 | .7969<br>±.0252 | .7734<br>±.0262 | .7578<br>±.0268 | 3.96 |
+| sem-mcts | — | planned | — | — | — | — | — |
 | cnt-mcts-bl-v01 | 2 | scored | .6836<br>±.0291 | .6562<br>±.0297 | .6602<br>±.0297 | .6562<br>±.0297 | 2.75 |
 | kube-mcts-bl-v01 | 2 | scored | .8359<br>±.0232 | .7773<br>±.0261 | .7617<br>±.0267 | .7695<br>±.0264 | 2.71 |
 | kdepth-mcts-bl-v01 | 2 | scored | .8164<br>±.0242 | .7422<br>±.0274 | .7461<br>±.0273 | .7461<br>±.0273 | 2.58 |
@@ -837,7 +837,8 @@ instead of one wide sparse grid.)
 > llama-3b 10/100/1000 `qvp2vneb`/`ynia3d1p`/`7ccy14de` — the 1000
 > run is one of the two runs recovered by the 2026-06-24 run_id
 > resume-fragmentation fix (`docs/decisions-log.md`), not a fresh run;
-> qwen-math-1.5b 10/100/1000 `6hbme316`/`q0d6yk4f`/`sczanhp2`.
+> qwen-math-1.5b 10/1000 `6hbme316`/`sczanhp2` (the ds_alpha=100
+> run was purged with the pre-fix backups, 2026-08-22).
 
 | llm | ds_alpha | trials | status | pass@gb | naive@gb | wei@gb | maj@gb | hr/trial |
 |---|---|---|---|---|---|---|---|---|
@@ -848,14 +849,16 @@ instead of one wide sparse grid.)
 | llama-3b | 100 (default) | 2 | scored | .7656<br>±.0265 | .6562<br>±.0297 | .6289<br>±.0303 | .6016<br>±.0307 | 5.43 |
 | llama-3b | 1000 | 2 | scored | .7617<br>±.0267 | .6562<br>±.0297 | .6172<br>±.0304 | .5898<br>±.0308 | 5.61 |
 | qwen-math-1.5b | 10 | 2 | scored | .8789<br>±.0204 | .7969<br>±.0252 | .7891<br>±.0255 | .7695<br>±.0264 | 3.98 |
-| qwen-math-1.5b | 100 (default) | 2 | scored | .8750<br>±.0207 | .7969<br>±.0252 | .7734<br>±.0262 | .7578<br>±.0268 | 3.96 |
+| qwen-math-1.5b | 100 (default) | — | planned | — | — | — | — | — |
 | qwen-math-1.5b | 1000 | 2 | scored | .8750<br>±.0207 | .8008<br>±.0250 | .7500<br>±.0271 | .7539<br>±.0270 | 3.92 |
 
 > **Analysis.** The "magnitude past ~10 doesn't matter" shape
 > from the rlhflow table holds under qwen-PRM scoring too: within
 > each model, pass@gb is flat across 10/100/1000 to within SEM
 > (llama-1b .621/.613/.629; llama-3b .770/.766/.762;
-> qwen-math-1.5b .879/.875/.875). Now that all 9 cells are in, the
+> qwen-math-1.5b .879/—/.875 — the ds_alpha=100 cell was reset
+> to planned 2026-08-22, pre-fix backup purged). With 8 of 9
+> cells in, the
 > flatness holds cleanly at llama-3b too — .762 (ds_alpha=1000) is
 > within 1 SEM of both .770 (10) and .766 (100), no trend in
 > either direction. So the ds_alpha plateau is robust to PRM
@@ -1148,16 +1151,15 @@ instead of one wide sparse grid.)
 > `cov_update=sherman_morrison` (sm), ds_alpha=100, ds_beta=1.0,
 > prm_batch_size=1.
 >
-> ⚠️ All 7 cells scored as of 2026-07-07. **qwen-3b fp16**
-> (`cfg-77cae091`) and **qwen-math-1.5b fp16** (`cfg-7a4be169`)
-> are read from the pre-fix `--prefix-backup` copies (numbers
-> below), not the in-progress precautionary regen described in
-> `docs/decisions-log.md` (2026-07-07 entry) — that regen is expected
-> to reproduce these exact numbers (verified no-op at existing
-> hashes); re-check this row once it lands and is diffed.
+> ⚠️ **qwen-3b fp16** (`cfg-77cae091`) and **qwen-math-1.5b
+> fp16** (`cfg-7a4be169`) had only pre-fix `--prefix-backup`
+> scores (see `docs/decisions-log.md` 2026-07-07); the backups,
+> W&B runs, and ledger entries were purged 2026-08-22 per Tuan
+> and both cells reset to `planned` — rerun to fill. The other
+> 5 cells scored 2026-07-07.
 >
-> **W&B:** fp16 rows are the cfg-`f24283b8`/`2b647a18`/`7a4be169`
-> runs (see ds_alpha-sweep-qwen), qwen-3b fp16 `jun56c12`;
+> **W&B:** llama fp16 rows are the cfg-`f24283b8`/`2b647a18`
+> runs (see ds_alpha-sweep-qwen);
 > gptq/gptq-int4 rows: llama-3b gptq `u4w3ylt1`, qwen-3b gptq-int4
 > `oe1lbvdy`, qwen-7b gptq-int4 `l38fiewz`.
 
@@ -1166,30 +1168,21 @@ instead of one wide sparse grid.)
 | llama-1b fp16 | 2 | scored | .6133<br>±.0305 | .4961<br>±.0313 | .4492<br>±.0311 | .3906<br>±.0306 | 3.90 |
 | llama-3b fp16 | 2 | scored | .7656<br>±.0265 | .6562<br>±.0297 | .6289<br>±.0303 | .6016<br>±.0307 | 5.43 |
 | llama-3b gptq | 2 | scored | .7148<br>±.0283 | .6094<br>±.0306 | .5625<br>±.0311 | .5078<br>±.0313 | 4.45 |
-| qwen-3b fp16 | 2 | scored | .8750<br>±.0207 | .7734<br>±.0262 | .7461<br>±.0273 | .7227<br>±.0280 | 5.00 |
+| qwen-3b fp16 | — | planned | — | — | — | — | — |
 | qwen-3b gptq-int4 | 2 | scored | .7930<br>±.0254 | .6953<br>±.0288 | .6953<br>±.0288 | .6875<br>±.0290 | 3.87 |
 | qwen-7b gptq-int4 | 2 | scored | .9375<br>±.0152 | .8164<br>±.0242 | .8086<br>±.0246 | .8047<br>±.0248 | 4.20 |
-| qwen-math-1.5b fp16 | 2 | scored | .8750<br>±.0207 | .7969<br>±.0252 | .7734<br>±.0262 | .7578<br>±.0268 | 3.96 |
+| qwen-math-1.5b fp16 | — | planned | — | — | — | — | — |
 
 > **Analysis.** qwen-7b gptq-int4 is the standout — **.9375**
 > pass@gb, comfortably the best in this table and ahead of every
 > fp16 row too, echoing the cnt-mcts version of this comparison
 > (where qwen-7b gptq-int4 also topped its table). llama-3b gptq
-> trails its fp16 counterpart by ~5 pts (.7148 vs .7656); qwen-3b
-> gptq-int4 trails qwen-3b fp16 by a larger ~8pt gap (.7930 vs
-> .8750) — so quantization's accuracy cost is actually *larger*
-> for Qwen-3b here than for Llama-3b, the opposite of what the
-> single gptq-int4 vs fp16 comparison alone might have suggested.
-> qwen-3b fp16 (.8750) and qwen-math-1.5b fp16 (.8750) tie exactly
-> at n=2 despite very different model sizes — worth another look
-> once the regen confirms these numbers are stable, not just a
-> coincidence of a 2-trial sample.
+> trails its fp16 counterpart by ~5 pts (.7148 vs .7656); the
+> qwen-3b fp16-vs-gptq read is pending the qwen-3b fp16 rerun.
 > **Limitations / follow-up:** qwen-3b fp16 and qwen-math-1.5b
-> fp16 are currently read from pre-fix backups pending the
-> regen's completion — see `docs/decisions-log.md` 2026-07-07 for why
-> and what to verify (should be byte-identical; if not, re-open
-> every sem-mcts result for scrutiny). n=2 throughout, so read
-> gaps within ~1 SEM as ties.
+> fp16 were reset to planned 2026-08-22 — their pre-fix backups
+> were purged per Tuan, closing the 2026-07-07 regen thread.
+> n=2 throughout, so read gaps within ~1 SEM as ties.
 > Once qwen-3b fp16 lands, the key remaining read is whether
 > qwen-3b gptq-int4's accuracy cost (vs fp16) is smaller than
 > Llama's, matching or diverging from the rlhflow table's
@@ -1275,13 +1268,13 @@ instead of one wide sparse grid.)
 | qwen-3b | rlhflow | last | — | planned | — | — | — | — | — |
 | qwen-3b | qwen | min | — | planned | — | — | — | — | — |
 | qwen-3b | qwen | prod | — | planned | — | — | — | — | — |
-| qwen-3b | qwen | last | 2 | scored (pre-fix backup) | .8750<br>±.0207 | .7734<br>±.0262 | .7461<br>±.0273 | .7227<br>±.0280 | 5.00 |
+| qwen-3b | qwen | last | — | planned | — | — | — | — | — |
 | qwen-math-1.5b | rlhflow | min | — | planned | — | — | — | — | — |
 | qwen-math-1.5b | rlhflow | prod | — | planned | — | — | — | — | — |
 | qwen-math-1.5b | rlhflow | last | — | planned | — | — | — | — | — |
 | qwen-math-1.5b | qwen | min | — | planned | — | — | — | — | — |
 | qwen-math-1.5b | qwen | prod | — | planned | — | — | — | — | — |
-| qwen-math-1.5b | qwen | last | 2 | scored (pre-fix backup) | .8750<br>±.0207 | .7969<br>±.0252 | .7734<br>±.0262 | .7578<br>±.0268 | 3.96 |
+| qwen-math-1.5b | qwen | last | — | planned | — | — | — | — | — |
 
 #### agg_strategy comparison (qwen-3b, qwen-math-1.5b, lam=0.1, w_eff=10)
 <!-- table-id: tbl-b1e565 -->

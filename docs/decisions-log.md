@@ -14,6 +14,22 @@ scaffold, it also gets a standalone file in [decisions/](decisions/);
 the log entry then carries a one-line pointer to it rather than
 repeating the full writeup.
 
+## 2026-08-22 — Results: pre-fix backup pair purged; cells reset to planned
+
+**Context:** the 2026-07-07 entry left qwen-3b fp16
+(cfg-77cae091) and qwen-math-1.5b fp16 (cfg-7a4be169) scored
+from pre-fix `--prefix-backup` copies pending a precautionary
+regen; the regen never landed as regular result dirs, so the
+backups stayed the only data behind those cells.
+**Decision (per Tuan):** purge rather than carry the caveat —
+both backup dirs, both W&B runs (`jun56c12`, `q0d6yk4f`), and
+both ledger entries removed; every doc cell they fed reset to
+`planned` (tbl-352d94 x2, tbl-93c239 ds_alpha=100 x1,
+tbl-baf795 `last` x2, and the sem-mcts rows of the qwen-3b /
+qwen-math cross-algorithm summaries). Rerunning the two configs
+recreates them fresh under post-fix scoring. Closes the
+2026-07-07 regen thread.
+
 ## 2026-08-22 — Tracking: sync-doc matcher learns derived/aliased doc columns
 
 **Context:** `--sync-doc` mapped table columns to override keys
