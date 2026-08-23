@@ -52,6 +52,10 @@ per-doc ledgers under `orchestration/`.
   never launch or record results by hand.
 - Doc status cells are DERIVED from the ledger
   (`status.py --sync-doc`).
+- A pre-commit hook (`scripts/hooks/`, enabled via
+  `core.hooksPath`) auto-runs `status.py --verify`
+  when conf/, launcher, or schema files are staged;
+  it blocks on hash drift.
 - Technical decisions -> `docs/decisions-log.md`
   (+ `docs/decisions/`); algorithm registry ->
   `docs/algorithms.md`; planning lives in the vault,

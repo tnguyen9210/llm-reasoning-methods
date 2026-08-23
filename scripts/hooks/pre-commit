@@ -1,0 +1,27 @@
+#!/usr/bin/env bash
+# pre-commit: hash-drift preflight (docs/decisions-log.md
+# 2026-08-22). If the staged changes touch a config-composition
+# surface (conf/, a launcher, the config schemas, or status.py
+# itself), recompose every ledger entry and block the commit on
+# drift. Bypass for a known-good case: git commit --no-verify.
+set -u
+
+changed=$(git diff --cached --name-only --diff-filter=ACMRD)
+pattern='^(conf/|generate_[^/]+\.py$|orchestration/status\.py$|utils/configs\.py$)'
+if ! printf '%s\n' "$changed" | grep -qE "$pattern"; then
+    exit 0
+fi
+
+echo "[pre-commit] config surface staged -> running" \
+     "orchestration/status.py --verify (~30 s)"
+out=$(python orchestration/status.py --verify 2>&1)
+rc=$?
+printf '%s\n' "$out" | tail -5
+if [ $rc -ne 0 ] || ! printf '%s\n' "$out" | grep -q '^# OK:'; then
+    echo "[pre-commit] BLOCKED: --verify did not come back clean" >&2
+    echo "  (hash drift, or the py311 env is not active)." >&2
+    echo "  Fix the drift, or bypass once with:" >&2
+    echo "      git commit --no-verify" >&2
+    exit 1
+fi
+echo "[pre-commit] verify clean -- proceeding"

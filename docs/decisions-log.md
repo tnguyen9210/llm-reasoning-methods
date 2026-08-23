@@ -14,6 +14,23 @@ scaffold, it also gets a standalone file in [decisions/](decisions/);
 the log entry then carries a one-line pointer to it rather than
 repeating the full writeup.
 
+## 2026-08-22 — Tracking: pre-commit hash-drift preflight
+
+**Context:** hash drift comes from edits to the
+config-composition surface (conf/, the `generate_*` launchers,
+`utils/configs.py` schemas, `status.py` itself) and was only
+caught when someone happened to run `--verify` — the
+`mcts_cnt` rename drifted undetected for ~6 weeks.
+**Decision:** a tracked git pre-commit hook
+(`scripts/hooks/pre-commit`, enabled via
+`git config core.hooksPath scripts/hooks`) recomposes every
+ledger entry (`--verify`) whenever a staged file touches that
+surface and blocks the commit unless it returns `# OK`.
+Fail-closed — an inactive py311 env also blocks — with
+`git commit --no-verify` as the explicit bypass; non-config
+commits take a fast path and are untouched. Closes the
+workflow-routines preflight backlog item.
+
 ## 2026-08-22 — Results: pre-fix backup pair purged; cells reset to planned
 
 **Context:** the 2026-07-07 entry left qwen-3b fp16
