@@ -1,0 +1,224 @@
+# Per-doc experiment ledger (workflow v2) -- one entry per
+# launchable run, cradle to grave. Companion doc:
+#   docs/exp-comp-aime2024.md
+#
+# status: planned | inqueue | running | scored | failed
+#   planned  -> NOT USED: an authored-but-unqueued table cell
+#               has NO entry here at all (Tuan's rule,
+#               2026-07-24). Doc rows may read `planned`;
+#               a ledger entry is born when he queues it,
+#               i.e. at `inqueue`.
+#   inqueue  -> Tuan queued it (priority: lower drains first)
+#   running  -> launched (launch: block records where)
+#   scored   -> numbers audited into the doc tables
+#   failed   -> terminal until Tuan requeues it
+
+- id: cnt-mcts-aime24-cpuct2-llama1b
+  launcher: generate_mcts_cnt.py
+  hash: "67b86794"
+  config_root: mcts_cnt_prm800k
+  overrides:
+    llm: llama_1b
+    prm: qwen_prm
+    data: aime2024
+    search.cpuct: 2.0
+    search.q_beta: 1.0
+    search.tie_tol: 1.0e-4
+  trials: 4
+  feeds:
+  - tbl-6c1b54  # cpuct sweep (llama-1b), cpuct=2.0 row
+  group: cnt-mcts
+  status: running
+  priority: 2
+  expected_hr: 4
+  launch:
+    job_id: 23594127
+    node: r5u15n1
+    pid: 78714
+    at: 2026-08-22 21:24
+  note: b=80 aime2024 cnt qwen-PRM llama-1b, cpuct=2.0 — level-5 bracket endpoint
+
+- id: cnt-mcts-aime24-qbeta0-llama1b
+  launcher: generate_mcts_cnt.py
+  hash: "32037fb9"
+  config_root: mcts_cnt_prm800k
+  overrides:
+    llm: llama_1b
+    prm: qwen_prm
+    data: aime2024
+    search.cpuct: 2.0
+    search.q_beta: 0.0
+    search.tie_tol: 1.0e-4
+  trials: 4
+  feeds:
+  - tbl-6c1b54  # cpuct sweep (llama-1b), q_beta=0 row
+  group: cnt-mcts
+  status: running
+  priority: 2
+  expected_hr: 4
+  launch:
+    job_id: 23594125
+    node: r5u33n1
+    pid: 78715
+    at: 2026-08-22 21:24
+  note: b=80 aime2024 cnt qwen-PRM llama-1b, q_beta=0 — the ∞ arm
+
+- id: cnt-mcts-aime24-cpuct2-llama3b
+  launcher: generate_mcts_cnt.py
+  hash: "5a2b5fcf"
+  config_root: mcts_cnt_prm800k
+  overrides:
+    llm: llama_3b
+    prm: qwen_prm
+    data: aime2024
+    search.cpuct: 2.0
+    search.q_beta: 1.0
+    search.tie_tol: 1.0e-4
+  trials: 4
+  feeds:
+  - tbl-3544e1  # cpuct sweep (llama-3b), cpuct=2.0 row
+  group: cnt-mcts
+  status: inqueue
+  priority: 2
+  expected_hr: 5
+  note: b=80 aime2024 cnt qwen-PRM llama-3b, cpuct=2.0 — level-5 bracket endpoint
+
+- id: cnt-mcts-aime24-qbeta0-llama3b
+  launcher: generate_mcts_cnt.py
+  hash: "a8e2fc0d"
+  config_root: mcts_cnt_prm800k
+  overrides:
+    llm: llama_3b
+    prm: qwen_prm
+    data: aime2024
+    search.cpuct: 2.0
+    search.q_beta: 0.0
+    search.tie_tol: 1.0e-4
+  trials: 4
+  feeds:
+  - tbl-3544e1  # cpuct sweep (llama-3b), q_beta=0 row
+  group: cnt-mcts
+  status: inqueue
+  priority: 2
+  expected_hr: 5
+  note: b=80 aime2024 cnt qwen-PRM llama-3b, q_beta=0 — the ∞ arm
+
+- id: cnt-mcts-aime24-cpuct2-qwen3b
+  launcher: generate_mcts_cnt.py
+  hash: "34dd0ab2"
+  config_root: mcts_cnt_prm800k
+  overrides:
+    llm: qwen_3b
+    prm: qwen_prm
+    data: aime2024
+    search.cpuct: 2.0
+    search.q_beta: 1.0
+    search.tie_tol: 1.0e-4
+  trials: 4
+  feeds:
+  - tbl-e35b67  # cpuct sweep (qwen-3b), cpuct=2.0 row
+  group: cnt-mcts
+  status: inqueue
+  priority: 2
+  expected_hr: 5
+  note: b=80 aime2024 cnt qwen-PRM qwen-3b, cpuct=2.0 — level-5 bracket endpoint
+
+- id: cnt-mcts-aime24-qbeta0-qwen3b
+  launcher: generate_mcts_cnt.py
+  hash: "b64fdaa6"
+  config_root: mcts_cnt_prm800k
+  overrides:
+    llm: qwen_3b
+    prm: qwen_prm
+    data: aime2024
+    search.cpuct: 2.0
+    search.q_beta: 0.0
+    search.tie_tol: 1.0e-4
+  trials: 4
+  feeds:
+  - tbl-e35b67  # cpuct sweep (qwen-3b), q_beta=0 row
+  group: cnt-mcts
+  status: inqueue
+  priority: 2
+  expected_hr: 5
+  note: b=80 aime2024 cnt qwen-PRM qwen-3b, q_beta=0 — the ∞ arm (best pass@gb on level 5)
+
+- id: cnt-mcts-aime24-cpuct2-qwen7b
+  launcher: generate_mcts_cnt.py
+  hash: "ce6604b9"
+  config_root: mcts_cnt_prm800k
+  overrides:
+    llm: qwen_7b_gptq_int4
+    prm: qwen_prm
+    data: aime2024
+    search.cpuct: 2.0
+    search.q_beta: 1.0
+    search.tie_tol: 1.0e-4
+  trials: 4
+  feeds:
+  - tbl-323b0e  # cpuct sweep (qwen-7b gptq-int4), cpuct=2.0 row
+  group: cnt-mcts
+  status: inqueue
+  priority: 2
+  expected_hr: 10
+  note: b=80 aime2024 cnt qwen-PRM qwen-7b-gptq, cpuct=2.0 — level-5 bracket endpoint
+
+- id: cnt-mcts-aime24-qbeta0-qwen7b
+  launcher: generate_mcts_cnt.py
+  hash: "21b72156"
+  config_root: mcts_cnt_prm800k
+  overrides:
+    llm: qwen_7b_gptq_int4
+    prm: qwen_prm
+    data: aime2024
+    search.cpuct: 2.0
+    search.q_beta: 0.0
+    search.tie_tol: 1.0e-4
+  trials: 4
+  feeds:
+  - tbl-323b0e  # cpuct sweep (qwen-7b gptq-int4), q_beta=0 row
+  group: cnt-mcts
+  status: inqueue
+  priority: 2
+  expected_hr: 10
+  note: b=80 aime2024 cnt qwen-PRM qwen-7b-gptq, q_beta=0 — the ∞ arm
+
+- id: cnt-mcts-aime24-cpuct2-qwenmath
+  launcher: generate_mcts_cnt.py
+  hash: "a17a6ca6"
+  config_root: mcts_cnt_prm800k
+  overrides:
+    llm: qwen_math_1_5b
+    prm: qwen_prm
+    data: aime2024
+    search.cpuct: 2.0
+    search.q_beta: 1.0
+    search.tie_tol: 1.0e-4
+  trials: 4
+  feeds:
+  - tbl-7f1b6a  # cpuct sweep (qwen-math-1.5b), cpuct=2.0 row
+  group: cnt-mcts
+  status: inqueue
+  priority: 2
+  expected_hr: 4
+  note: b=80 aime2024 cnt qwen-PRM qwen-math-1.5b, cpuct=2.0 — level-5 bracket endpoint
+
+- id: cnt-mcts-aime24-qbeta0-qwenmath
+  launcher: generate_mcts_cnt.py
+  hash: "2cce8bee"
+  config_root: mcts_cnt_prm800k
+  overrides:
+    llm: qwen_math_1_5b
+    prm: qwen_prm
+    data: aime2024
+    search.cpuct: 2.0
+    search.q_beta: 0.0
+    search.tie_tol: 1.0e-4
+  trials: 4
+  feeds:
+  - tbl-7f1b6a  # cpuct sweep (qwen-math-1.5b), q_beta=0 row
+  group: cnt-mcts
+  status: inqueue
+  priority: 2
+  expected_hr: 4
+  note: b=80 aime2024 cnt qwen-PRM qwen-math-1.5b, q_beta=0 — the ∞ arm

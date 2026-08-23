@@ -90,6 +90,7 @@ LEDGER_DOC = {
     "prm800k-level3": f"{ROOT}/docs/exp-comp-prm800k-level3.md",
     "gsm8k": f"{ROOT}/docs/exp-comp-gsm8k.md",
     "aime2025": f"{ROOT}/docs/exp-comp-aime2025.md",
+    "aime2024": f"{ROOT}/docs/exp-comp-aime2024.md",
     "misc": None,
 }
 
