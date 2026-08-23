@@ -1294,7 +1294,7 @@ Two activities, two shapes:
 | qwen-3b | qwen | local | 2 | scored | .6903<br>±.0283 | .5560<br>±.0304 | .5261<br>±.0306 | .4963<br>±.0306 | 6.20 |
 | qwen-7b gptq-int4 | qwen | none | 2 | scored | .7873<br>±.0250 | .6045<br>±.0299 | .5634<br>±.0304 | .5634<br>±.0304 | 5.54 |
 | qwen-7b gptq-int4 | qwen | local | 2 | scored | .7836<br>±.0252 | .5933<br>±.0301 | .5784<br>±.0302 | .5560<br>±.0304 | 5.63 |
-| qwen-math-1.5b | qwen | none | 2 | scored | .7164<br>±.0276 | .5896<br>±.0301 | .5746<br>±.0303 | .5597<br>±.0304 | 4.83 |
+| qwen-math-1.5b | qwen | none | 2 | scored | .7425<br>±.0268 | .6381<br>±.0294 | .6157<br>±.0298 | .6082<br>±.0299 | 4.83 |
 | qwen-math-1.5b | qwen | local | 2 | scored | .7463<br>±.0266 | .6194<br>±.0297 | .6045<br>±.0299 | .5746<br>±.0303 | 4.81 |
 
 > **Analysis.** 10/10 cells scored (2 trials each), but three of
@@ -1417,7 +1417,7 @@ Two activities, two shapes:
 | llama-3b fp16 | 2 | scored | .5485<br>±.0305 | .4328<br>±.0303 | .3619<br>±.0294 | .3321<br>±.0288 | 6.99 |
 | qwen-3b fp16 | 2 | scored | .6642<br>±.0289 | .5634<br>±.0304 | .5261<br>±.0306 | .5000<br>±.0306 | 6.07 |
 | qwen-7b gptq-int4 | 2 | scored | .7873<br>±.0250 | .6045<br>±.0299 | .5634<br>±.0304 | .5634<br>±.0304 | 5.54 |
-| qwen-math-1.5b fp16 | 2 | scored | .7164<br>±.0276 | .5896<br>±.0301 | .5746<br>±.0303 | .5597<br>±.0304 | 4.83 |
+| qwen-math-1.5b fp16 | 2 | scored | .7425<br>±.0268 | .6381<br>±.0294 | .6157<br>±.0298 | .6082<br>±.0299 | 4.83 |
 
 > **Analysis.** 5/5 cells filled (qwen-3b newly computed this
 > pass; the other 4 cited from existing scored data — 3 of which

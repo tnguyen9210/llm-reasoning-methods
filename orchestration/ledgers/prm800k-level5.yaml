@@ -858,6 +858,8 @@
   trials: 2
   feeds:
   - tbl-a12d4f  # lam/ds_alpha joint sweep (qwen-math-1.5b)
+  - tbl-cf8fea  # model family (QwenPRM, ds_alpha=10)
+  - tbl-2e75f2  # embeds_center_mode (ds_alpha=10), none row
   group: sem-mcts
   status: scored
   priority: 1
