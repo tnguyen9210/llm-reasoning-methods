@@ -3856,3 +3856,183 @@
   history:
     - {at: 2026-08-05 23:05, job_id: 23477898, outcome: stalled, trials_done: 3,
        cause: 'SLURM walltime expiry ~21:38 on 23477898; run reached ~21h20m of a 20 h estimate and lost trial 4.'}
+
+- id: cnt-mcts-aime25-b320-bs8-cpuct2-llama1b
+  launcher: generate_mcts_cnt.py
+  hash: "be1a7907"
+  config_root: mcts_cnt_prm800k
+  overrides: {llm: llama_1b, prm: qwen_prm, data: aime2025, search.gen_budget: 320, search.batch_size: 8, search.cpuct: 2.0, search.q_beta: 1.0, search.tie_tol: 0.0001}
+  trials: 4
+  feeds: [tbl-fdb675]  # cpuct sweep (b=320, llama-1b)
+  group: cnt-mcts
+  status: scored
+  priority: 2
+  expected_hr: 20
+  note: b=320 bs-8 aime2025 cnt qwen-PRM llama-1b, cpuct=2.0 endpoint
+  launch:
+    job_id: 23665892
+    node: r5u03n1
+    pid: 2069366
+    at: 2026-08-25 19:58
+
+- id: cnt-mcts-aime25-b320-bs8-qbeta0-llama1b
+  launcher: generate_mcts_cnt.py
+  hash: "1fdd4804"
+  config_root: mcts_cnt_prm800k
+  overrides: {llm: llama_1b, prm: qwen_prm, data: aime2025, search.gen_budget: 320, search.batch_size: 8, search.cpuct: 2.0, search.q_beta: 0.0, search.tie_tol: 0.0001}
+  trials: 4
+  feeds: [tbl-fdb675]  # cpuct sweep (b=320, llama-1b)
+  group: cnt-mcts
+  status: scored
+  priority: 2
+  expected_hr: 20
+  note: b=320 bs-8 aime2025 cnt qwen-PRM llama-1b, q_beta=0 the infinity arm
+  launch:
+    job_id: 23665753
+    node: r5u09n1
+    pid: 2069367
+    at: 2026-08-25 19:58
+
+- id: cnt-mcts-aime25-b320-bs8-cpuct2-llama3b
+  launcher: generate_mcts_cnt.py
+  hash: "fe9aca14"
+  config_root: mcts_cnt_prm800k
+  overrides: {llm: llama_3b, prm: qwen_prm, data: aime2025, search.gen_budget: 320, search.batch_size: 8, search.cpuct: 2.0, search.q_beta: 1.0, search.tie_tol: 0.0001}
+  trials: 4
+  feeds: [tbl-3c3842]  # cpuct sweep (b=320, llama-3b)
+  group: cnt-mcts
+  status: scored
+  priority: 2
+  expected_hr: 30
+  note: b=320 bs-8 aime2025 cnt qwen-PRM llama-3b, cpuct=2.0 endpoint
+  launch:
+    job_id: 23653442
+    node: r5u17n1
+    pid: 2070102
+    at: 2026-08-25 20:00
+
+- id: cnt-mcts-aime25-b320-bs8-qbeta0-llama3b
+  launcher: generate_mcts_cnt.py
+  hash: "36926eb4"
+  config_root: mcts_cnt_prm800k
+  overrides: {llm: llama_3b, prm: qwen_prm, data: aime2025, search.gen_budget: 320, search.batch_size: 8, search.cpuct: 2.0, search.q_beta: 0.0, search.tie_tol: 0.0001}
+  trials: 4
+  feeds: [tbl-3c3842]  # cpuct sweep (b=320, llama-3b)
+  group: cnt-mcts
+  status: scored
+  priority: 2
+  expected_hr: 30
+  note: b=320 bs-8 aime2025 cnt qwen-PRM llama-3b, q_beta=0 the infinity arm
+  launch:
+    job_id: 23653440
+    node: r5u39n1
+    pid: 2070780
+    at: 2026-08-25 20:08
+
+- id: cnt-mcts-aime25-b320-bs8-cpuct2-qwen3b
+  launcher: generate_mcts_cnt.py
+  hash: "fba9798f"
+  config_root: mcts_cnt_prm800k
+  overrides: {llm: qwen_3b, prm: qwen_prm, data: aime2025, search.gen_budget: 320, search.batch_size: 8, search.cpuct: 2.0, search.q_beta: 1.0, search.tie_tol: 0.0001}
+  trials: 4
+  feeds: [tbl-eb6ce4]  # cpuct sweep (b=320, qwen-3b)
+  group: cnt-mcts
+  status: scored
+  priority: 2
+  expected_hr: 31
+  note: b=320 bs-8 aime2025 cnt qwen-PRM qwen-3b, cpuct=2.0 endpoint
+  launch:
+    job_id: 23653422
+    node: r5u17n1
+    pid: 2086125
+    at: 2026-08-26 00:38
+
+- id: cnt-mcts-aime25-b320-bs8-qbeta0-qwen3b
+  launcher: generate_mcts_cnt.py
+  hash: "a1275195"
+  config_root: mcts_cnt_prm800k
+  overrides: {llm: qwen_3b, prm: qwen_prm, data: aime2025, search.gen_budget: 320, search.batch_size: 8, search.cpuct: 2.0, search.q_beta: 0.0, search.tie_tol: 0.0001}
+  trials: 4
+  feeds: [tbl-eb6ce4]  # cpuct sweep (b=320, qwen-3b)
+  group: cnt-mcts
+  status: scored
+  priority: 2
+  expected_hr: 31
+  note: b=320 bs-8 aime2025 cnt qwen-PRM qwen-3b, q_beta=0 the infinity arm
+  launch:
+    job_id: 23665891
+    node: r5u03n1
+    pid: 2087745
+    at: 2026-08-26 01:08
+
+- id: cnt-mcts-aime25-b320-bs8-cpuct2-qwen7b
+  launcher: generate_mcts_cnt.py
+  hash: "fa24d75f"
+  config_root: mcts_cnt_prm800k
+  overrides: {llm: qwen_7b_gptq_int4, prm: qwen_prm, data: aime2025, search.gen_budget: 320, search.batch_size: 8, search.cpuct: 2.0, search.q_beta: 1.0, search.tie_tol: 0.0001}
+  trials: 4
+  feeds: [tbl-f2ddb0]  # cpuct sweep (b=320, qwen-7b gptq-int4)
+  group: cnt-mcts
+  status: scored
+  priority: 2
+  expected_hr: 36
+  note: b=320 bs-8 aime2025 cnt qwen-PRM qwen-7b-gptq, cpuct=2.0 endpoint
+  launch:
+    job_id: 23653439
+    node: r5u39n1
+    pid: 2098339
+    at: 2026-08-26 04:38
+
+- id: cnt-mcts-aime25-b320-bs8-qbeta0-qwen7b
+  launcher: generate_mcts_cnt.py
+  hash: "e93b2f52"
+  config_root: mcts_cnt_prm800k
+  overrides: {llm: qwen_7b_gptq_int4, prm: qwen_prm, data: aime2025, search.gen_budget: 320, search.batch_size: 8, search.cpuct: 2.0, search.q_beta: 0.0, search.tie_tol: 0.0001}
+  trials: 4
+  feeds: [tbl-f2ddb0]  # cpuct sweep (b=320, qwen-7b gptq-int4)
+  group: cnt-mcts
+  status: scored
+  priority: 2
+  expected_hr: 36
+  note: b=320 bs-8 aime2025 cnt qwen-PRM qwen-7b-gptq, q_beta=0 the infinity arm
+  launch:
+    job_id: 23653425
+    node: r5u25n1
+    pid: 2098340
+    at: 2026-08-26 04:38
+
+- id: cnt-mcts-aime25-b320-bs8-cpuct2-qwenmath
+  launcher: generate_mcts_cnt.py
+  hash: "0bd5f6b6"
+  config_root: mcts_cnt_prm800k
+  overrides: {llm: qwen_math_1_5b, prm: qwen_prm, data: aime2025, search.gen_budget: 320, search.batch_size: 8, search.cpuct: 2.0, search.q_beta: 1.0, search.tie_tol: 0.0001}
+  trials: 4
+  feeds: [tbl-7da6c0]  # cpuct sweep (b=320, qwen-math-1.5b)
+  group: cnt-mcts
+  status: scored
+  priority: 2
+  expected_hr: 32
+  note: b=320 bs-8 aime2025 cnt qwen-PRM qwen-math-1.5b, cpuct=2.0 endpoint
+  launch:
+    job_id: 23665892
+    node: r5u03n1
+    pid: 2140979
+    at: 2026-08-26 17:38
+
+- id: cnt-mcts-aime25-b320-bs8-qbeta0-qwenmath
+  launcher: generate_mcts_cnt.py
+  hash: "4b6bf0d2"
+  config_root: mcts_cnt_prm800k
+  overrides: {llm: qwen_math_1_5b, prm: qwen_prm, data: aime2025, search.gen_budget: 320, search.batch_size: 8, search.cpuct: 2.0, search.q_beta: 0.0, search.tie_tol: 0.0001}
+  trials: 4
+  feeds: [tbl-7da6c0]  # cpuct sweep (b=320, qwen-math-1.5b)
+  group: cnt-mcts
+  status: scored
+  priority: 2
+  expected_hr: 32
+  note: b=320 bs-8 aime2025 cnt qwen-PRM qwen-math-1.5b, q_beta=0 the infinity arm
+  launch:
+    job_id: 23665753
+    node: r5u09n1
+    pid: 2143325
+    at: 2026-08-26 18:08

@@ -2142,6 +2142,211 @@ Two activities, two shapes:
 > **Limitations / follow-up:** entire table planned; launch is
 > the GSM8K counterpart's command with `data=aime2025`.
 
+#### cpuct sweep (b=320, llama-1b)
+<!-- table-id: tbl-fdb675 -->
+> **Compares:** the {`2.0`, `∞`} endpoints at **b=320/bs-8** on
+> AIME 2025 — the AIME 2025 counterpart of the aime2024 sweep
+> (`tbl-60a9d3` in exp-comp-aime2024.md; see its preamble for
+> the `∞ = q_beta=0` construction and the sweep-wide
+> `tie_tol=1e-4` tie band) and of the level-5 b=320/bs-8 sweep
+> (`tbl-1629fa`). Level 5 found `2.0` ≥ `∞` on all selection
+> metrics at this scale; the first completed aime2024 pair
+> (llama-3b) reproduced the selection-side flip but not the
+> pass@gb sign. This sweep asks whether AIME 2025 agrees.
+>
+> ⚠️ **n=30**: one AIME trial is 30 questions, so cell values
+> quantize at ≈ .0333 and 4-trial SEMs stay wide; treat gaps
+> under ~2 SEM as noise.
+>
+> **Fixed:** method=`mcts_cnt_v01`, prm=qwen, agg_strategy=
+> `last`, **bs-8**, d-20, **b=320**, prm_batch_size=1,
+> tie_tol=1e-4, tmpl=model-family default, llm=llama-1b,
+> data=aime2025, **run.num_trials=4**.
+>
+> Both cells are net new: `2.0` `be1a7907`, `q_beta=0`
+> `1fdd4804`. Cost from the measured aime2024 b=320/bs-8 rate
+> for this model (4.75 hr/trial): ~19 h/cell, 2 cells × 4
+> trials ≈ 38 GPU-h. Likely a ceiling: the scored aime2025
+> b=320/bs-4 family table (`tbl-f31bf0`) ran 3.2-5.3 hr/trial
+> across models.
+>
+> **W&B:** `2.0` `xcu8a7ow`, `q_beta=0` `8lxeu0th`.
+
+| llm | prm | cpuct | q_beta | trials | status | pass@gb | naive@gb | wei@gb | maj@gb | hr/trial |
+|---|---|---|---|---|---|---|---|---|---|---|
+| llama-1b | qwen | 2.0 | 1.0 | 4 | scored | .0333<br>±.0165 | .0167<br>±.0117 | .0083<br>±.0083 | .0000<br>±.0000 | 5.18 |
+| llama-1b | qwen | 2.0 | 0 | 4 | scored | .0417<br>±.0183 | .0000<br>±.0000 | .0000<br>±.0000 | .0000<br>±.0000 | 5.32 |
+
+> **Analysis.** Scored 2026-11-10, 4/4 trials per cell. A floor
+> cell: `2.0` and `∞` solve 4 and 5 of 120 question-trials on
+> pass@gb, and the selection metrics sit at 0-2 of 120, so there
+> is no signal either way.
+>
+> **The sweep's headline, across all five models.** pass@gb and
+> wei@gb, `2.0` → `∞` (Δ in units of 1/120 = .0083):
+>
+> | model | pass 2.0 | pass ∞ | Δ | wei 2.0 | wei ∞ | Δ |
+> |---|---|---|---|---|---|---|
+> | llama-1b | .0333 | .0417 | +.0083 | .0083 | .0000 | −.0083 |
+> | llama-3b | .1750 | .1417 | −.0333 | .0667 | .0500 | −.0167 |
+> | qwen-3b | .3417 | .3167 | −.0250 | .1417 | .1000 | −.0417 |
+> | qwen-7b gptq | .4333 | .4000 | −.0333 | .1667 | .1833 | +.0167 |
+> | qwen-math-1.5b | .4000 | .4167 | +.0167 | .1750 | .2250 | +.0500 |
+>
+> **No consistent direction.** `∞` is lower on pass@gb for three
+> models and on wei@gb for three, and no gap exceeds about one
+> standard error of the difference (≈ ±.05-.06 at n=30 × 4
+> trials). The model-wise pass@gb signs do not replicate the
+> aime2024 b=320/bs-8 sweep (`tbl-60a9d3` family): they agree on
+> 2 of 5 models (qwen-3b, qwen-math). Level 5 at this scale had
+> `∞` lower on wei@gb for all five (`tbl-1629fa` family); AIME
+> 2025 shows that only for the three weaker models. The one
+> pattern that holds across both AIME sets is qwen-math
+> (`tbl-7da6c0`). Measured cost for the sweep: ≈ 276 GPU-h.
+> **Limitations / follow-up:** 4 trials, n=30 (1 question =
+> .0333) — single-cell gaps will not clear noise; the value is
+> the five-model sign pattern. Launch per cell:
+> `generate_mcts_cnt.py --config-name mcts_cnt_prm800k
+> llm=llama_1b prm=qwen_prm data=aime2025
+> search.gen_budget=320 search.batch_size=8 search.cpuct=2.0
+> search.q_beta=<1.0|0.0> search.tie_tol=0.0001`. Feeds key:
+> `tbl-fdb675`.
+
+#### cpuct sweep (b=320, llama-3b)
+<!-- table-id: tbl-3c3842 -->
+> **Compares:** same {`2.0`, `∞`} endpoints at b=320/bs-8 as
+> the llama-1b table above — see its preamble for the
+> construction, the tie band, and the n=30 ⚠.
+>
+> **Fixed:** as llama-1b table above, llm=llama-3b.
+>
+> Both cells are net new: `2.0` `fe9aca14`, `q_beta=0`
+> `36926eb4`. aime2024 b=320/bs-8 ran 7.12-7.27 hr/trial →
+> ~29 h/cell, 2 cells × 4 trials ≈ 58 GPU-h.
+>
+> **W&B:** `2.0` `b9vkjdq7`, `q_beta=0` `mnnmsj80`.
+
+| llm | prm | cpuct | q_beta | trials | status | pass@gb | naive@gb | wei@gb | maj@gb | hr/trial |
+|---|---|---|---|---|---|---|---|---|---|---|
+| llama-3b | qwen | 2.0 | 1.0 | 4 | scored | .1750<br>±.0348 | .0833<br>±.0253 | .0667<br>±.0229 | .0250<br>±.0143 | 7.68 |
+| llama-3b | qwen | 2.0 | 0 | 4 | scored | .1417<br>±.0320 | .0583<br>±.0215 | .0500<br>±.0200 | .0083<br>±.0083 | 7.75 |
+
+> **Analysis.** `∞` is lower on all four metrics: pass@gb .1750
+> → .1417 (−4 of 120 question-trials), wei@gb .0667 → .0500,
+> maj@gb .0250 → .0083. The selection-side drop matches this
+> model's b=320/bs-8 pairs on level 5 (`tbl-1629fa` family) and
+> aime2024 (`tbl-92bbfb`), where pass@gb instead edged up under
+> `∞`. Every gap is inside one standard error of the difference.
+> **Limitations / follow-up:** 4 trials, n=30. Launch per cell:
+> `generate_mcts_cnt.py --config-name mcts_cnt_prm800k
+> llm=llama_3b prm=qwen_prm data=aime2025
+> search.gen_budget=320 search.batch_size=8 search.cpuct=2.0
+> search.q_beta=<1.0|0.0> search.tie_tol=0.0001`. Feeds key:
+> `tbl-3c3842`.
+
+#### cpuct sweep (b=320, qwen-3b)
+<!-- table-id: tbl-eb6ce4 -->
+> **Compares:** same {`2.0`, `∞`} endpoints at b=320/bs-8 as
+> the llama-1b table above — see its preamble for the
+> construction, the tie band, and the n=30 ⚠.
+>
+> **Fixed:** as llama-1b table above, llm=qwen-3b.
+>
+> Both cells are net new: `2.0` `fba9798f`, `q_beta=0`
+> `a1275195`. aime2024 b=320/bs-8 ran 7.56 hr/trial (2.0 arm)
+> → ~30 h/cell, 2 cells × 4 trials ≈ 60 GPU-h.
+>
+> **W&B:** `2.0` `isxgosc1`, `q_beta=0` `68nlipml`.
+
+| llm | prm | cpuct | q_beta | trials | status | pass@gb | naive@gb | wei@gb | maj@gb | hr/trial |
+|---|---|---|---|---|---|---|---|---|---|---|
+| qwen-3b | qwen | 2.0 | 1.0 | 4 | scored | .3417<br>±.0435 | .1917<br>±.0361 | .1417<br>±.0320 | .1333<br>±.0312 | 7.37 |
+| qwen-3b | qwen | 2.0 | 0 | 4 | scored | .3167<br>±.0426 | .1750<br>±.0348 | .1000<br>±.0275 | .1083<br>±.0285 | 7.43 |
+
+> **Analysis.** `∞` is lower on all four metrics, the largest gap
+> being wei@gb .1417 → .1000 (−5 of 120 question-trials). This is
+> the most consistent model of the sweep: its b=320/bs-8 pairs on
+> level 5 and aime2024 (`tbl-cdd5ce`) also have `∞` lower on all
+> four metrics. Each gap alone is still inside noise; the value
+> is the three-dataset agreement.
+> **Limitations / follow-up:** 4 trials, n=30. Launch per cell:
+> `generate_mcts_cnt.py --config-name mcts_cnt_prm800k
+> llm=qwen_3b prm=qwen_prm data=aime2025
+> search.gen_budget=320 search.batch_size=8 search.cpuct=2.0
+> search.q_beta=<1.0|0.0> search.tie_tol=0.0001`. Feeds key:
+> `tbl-eb6ce4`.
+
+#### cpuct sweep (b=320, qwen-7b gptq-int4)
+<!-- table-id: tbl-f2ddb0 -->
+> **Compares:** same {`2.0`, `∞`} endpoints at b=320/bs-8 as
+> the llama-1b table above — see its preamble for the
+> construction, the tie band, and the n=30 ⚠.
+>
+> **Fixed:** as llama-1b table above, llm=qwen-7b gptq-int4.
+>
+> Both cells are net new: `2.0` `fa24d75f`, `q_beta=0`
+> `e93b2f52`. Estimated ~70 GPU-h from the aime2024 b=320/bs-8
+> pair; measured 8.21 / 8.19 hr/trial ≈ 66 GPU-h.
+>
+> **W&B:** `2.0` `qu4qjeal`, `q_beta=0` `41q6vucs`.
+
+| llm | prm | cpuct | q_beta | trials | status | pass@gb | naive@gb | wei@gb | maj@gb | hr/trial |
+|---|---|---|---|---|---|---|---|---|---|---|
+| qwen-7b gptq-int4 | qwen | 2.0 | 1.0 | 4 | scored | .4333<br>±.0454 | .1750<br>±.0348 | .1667<br>±.0342 | .1667<br>±.0342 | 8.21 |
+| qwen-7b gptq-int4 | qwen | 2.0 | 0 | 4 | scored | .4000<br>±.0449 | .1583<br>±.0335 | .1833<br>±.0355 | .1667<br>±.0342 | 8.19 |
+
+> **Analysis.** Scored 2026-11-10, 4/4 trials per cell. Mixed:
+> `2.0` leads on pass@gb (.4333 vs .4000) and naive@gb, `∞` on
+> wei@gb (+.0167), and maj@gb is tied. The aime2024 b=320/bs-8
+> pair for this model (`tbl-029590`) had `∞` ahead on pass@gb
+> (+.0417), so the pass@gb sign flips between the two AIME sets
+> and neither reading is stable.
+> **Limitations / follow-up:** 4 trials, n=30. Launch per cell:
+> `generate_mcts_cnt.py --config-name mcts_cnt_prm800k
+> llm=qwen_7b_gptq_int4 prm=qwen_prm data=aime2025
+> search.gen_budget=320 search.batch_size=8 search.cpuct=2.0
+> search.q_beta=<1.0|0.0> search.tie_tol=0.0001`. Feeds key:
+> `tbl-f2ddb0`.
+
+#### cpuct sweep (b=320, qwen-math-1.5b)
+<!-- table-id: tbl-7da6c0 -->
+> **Compares:** same {`2.0`, `∞`} endpoints at b=320/bs-8 as
+> the llama-1b table above — see its preamble for the
+> construction, the tie band, and the n=30 ⚠. qwen-math was
+> the one b=80 aime2024 model where `2.0` beat `∞`, and its
+> aime2024 b=320 pair is the model-dependence test — this is
+> the AIME 2025 replicate.
+>
+> **Fixed:** as llama-1b table above, llm=qwen-math-1.5b.
+>
+> Both cells are net new: `2.0` `0bd5f6b6`, `q_beta=0`
+> `4b6bf0d2`. Estimated ~61 GPU-h from the aime2024 b=320/bs-8
+> pair; measured 5.93 / 5.84 hr/trial ≈ 47 GPU-h.
+>
+> **W&B:** `2.0` `zudt9luw`, `q_beta=0` `6dqiqmd0`.
+
+| llm | prm | cpuct | q_beta | trials | status | pass@gb | naive@gb | wei@gb | maj@gb | hr/trial |
+|---|---|---|---|---|---|---|---|---|---|---|
+| qwen-math-1.5b | qwen | 2.0 | 1.0 | 4 | scored | .4000<br>±.0449 | .1750<br>±.0348 | .1750<br>±.0348 | .1667<br>±.0342 | 5.93 |
+| qwen-math-1.5b | qwen | 2.0 | 0 | 4 | scored | .4167<br>±.0452 | .1917<br>±.0361 | .2250<br>±.0383 | .1917<br>±.0361 | 5.84 |
+
+> **Analysis.** Scored 2026-11-10, 4/4 trials per cell. `∞` is
+> ahead on all four metrics: pass@gb .4000 → .4167, wei@gb
+> .1750 → .2250 (+6 of 120 question-trials, the largest gap of
+> the sweep, about one standard error of the difference). This
+> replicates the aime2024 b=320/bs-8 pair (`tbl-d21ec1`), where
+> `∞` was also ahead on all four, and reverses this model's
+> b=80 result (`2.0` ahead on aime2024 and level 5). Level 5 at
+> b=320/bs-8 still has `2.0` ≥ `∞` for qwen-math, so the flip is
+> AIME-specific: the answer to the model-dependence question is
+> "budget- and dataset-dependent", not a fixed model trait.
+> **Limitations / follow-up:** 4 trials, n=30. Launch per cell:
+> `generate_mcts_cnt.py --config-name mcts_cnt_prm800k
+> llm=qwen_math_1_5b prm=qwen_prm data=aime2025
+> search.gen_budget=320 search.batch_size=8 search.cpuct=2.0
+> search.q_beta=<1.0|0.0> search.tie_tol=0.0001`. Feeds key:
+> `tbl-7da6c0`.
+
 ### sem-mcts-v02
 
 #### model family comparison (b=320, QwenPRM, lam=0.1, w_eff=10)
